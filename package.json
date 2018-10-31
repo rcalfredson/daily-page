@@ -1,7 +1,7 @@
 {
-  "name": "conclave",
+  "name": "daily-page",
   "version": "1.0.0",
-  "description": "Peer-to-peer collaborative text editor",
+  "description": "",
   "main": "app.js",
   "scripts": {
     "pretest": "eslint server/",
@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Super-NES/conclave.git"
+    "url": "https://github.com/rcalfredson/daily-page.git"
   },
-  "author": "Super-NES",
-  "license": "ISC",
+  "author": "Robert C. Alfredson",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Super-NES/conclave/issues"
+    "url": "https://github.com/rcalfredson/daily-page/issues"
   },
-  "homepage": "https://github.com/Super-NES/conclave#readme",
+  "homepage": "https://github.com/rcalfredson/daily-page",
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
