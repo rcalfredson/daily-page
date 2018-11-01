@@ -1,11 +1,13 @@
 const express = require('express');
 const jwtHelper = require('./server/jwt-helper');
 const mongo = require('./server/mongo');
+const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3000;
 const backendURL = process.env.BACKEND_URL || `http://localhost:${port}`;
 
 app.use(express.static('public'));
+app.use(bodyParser.json());
 app.set('views', './views');
 app.set('view engine', 'pug');
 
@@ -18,6 +20,21 @@ app.get('/', async (req, res) => {
     return;
   }
   res.redirect(`/?${peerIDs[Math.floor(Math.random() * peerIDs.length)]}`);
+});
+
+app.post('/updatePage', async (req, res) => {
+  try {
+    jwtHelper.verifyReq(req);
+  } catch (error) {
+    res.sendStatus(403);
+    return;
+  }
+  try {
+    await mongo.updatePage(req.body.content);
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(500).send({error: error.message});
+  }
 });
 
 app.post('/peerID/:id', async (req, res) => {
