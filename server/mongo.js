@@ -21,7 +21,7 @@ async function init() {
     socketTimeoutMS,
   });
   db = await connection.db(dbName);
-  collection = await db.collection('session-data');
+  collection = db.collection(collectionName);
 }
 
 async function peerIDs() {
@@ -33,13 +33,13 @@ async function peerIDs() {
 async function addPeer(id) {
   await init();
 
-  return await collection.updateOne({ _id: peerIDs }, { $push: { peerIDs: id } });
+  return collection.updateOne({ _id: peerIDs }, { $push: { peerIDs: id } });
 }
 
 async function removePeer(id) {
   await init();
 
-  return await collection.updateOne({ _id: peerIDs }, { $pull: { peerIDs: id } });
+  return collection.updateOne({ _id: peerIDs }, { $pull: { peerIDs: id } });
 }
 
 module.exports = {
