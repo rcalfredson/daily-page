@@ -37,7 +37,22 @@ app.post('/updatePage', async (req, res) => {
   }
 });
 
-app.post('/peerID/:id', async (req, res) => {
+app.get('/peers', async (req, res) => {
+  try {
+    jwtHelper.verifyReq(req);
+  } catch (error) {
+    res.sendStatus(403);
+    return;
+  }
+
+  try {
+    res.send({ids: await mongo.peerIDs()});
+  } catch (error) {
+    res.status(500).send({error: error.message});
+  }
+});
+
+app.post('/peers/:id', async (req, res) => {
   try {
     jwtHelper.verifyReq(req);
   } catch (error) {
@@ -52,7 +67,7 @@ app.post('/peerID/:id', async (req, res) => {
   }
 });
 
-app.delete('/peerID/:id', async (req, res) => {
+app.delete('/peers/:id', async (req, res) => {
   try {
     jwtHelper.verifyReq(req);
   } catch (error) {
