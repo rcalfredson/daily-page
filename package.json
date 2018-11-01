@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "pretest": "eslint server/",
+    "pretest": "eslint server/ lib/backendHelper.js",
     "test": "jasmine",
     "start": "node app.js",
     "build": "babel lib -d build",
