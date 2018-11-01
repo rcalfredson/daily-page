@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongodb');
-const moment = require('moment-timezone');
+const dateUtils = require('./dateUtils');
 
 const user = 'daily-page-admin';
 const pw = process.env.MONGO_DB_PW;
@@ -52,16 +52,21 @@ async function removePeer(id) {
   return collections.session.updateOne({ _id: peerIDs }, { $pull: { peerIDs: id } });
 }
 
+async function getPage() {
+  await initPagesCollection();
+  return (await collections.pages.findOne({ _id: dateUtils.currentDate() })).content;
+}
+
 async function updatePage(content) {
   await initPagesCollection();
-  const currentDate = moment(Date.now()).tz('Europe/London').format('YYYY-MM-DD');
   return collections.pages
-    .updateOne({ _id: currentDate }, { $set: { content } }, { upsert: true });
+    .updateOne({ _id: dateUtils.currentDate() }, { $set: { content } }, { upsert: true });
 }
 
 module.exports = {
   peerIDs,
   addPeer,
   removePeer,
+  getPage,
   updatePage,
 };

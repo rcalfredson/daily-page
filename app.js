@@ -22,7 +22,21 @@ app.get('/', async (req, res) => {
   res.redirect(`/?${peerIDs[Math.floor(Math.random() * peerIDs.length)]}`);
 });
 
-app.post('/updatePage', async (req, res) => {
+app.get('/page', async (req, res) => {
+  try {
+    jwtHelper.verifyReq(req);
+  } catch (error) {
+    res.sendStatus(403);
+    return;
+  }
+  try {
+    res.send({content: await mongo.getPage()});
+  } catch (error) {
+    res.status(500).send({error: error.message});
+  }
+});
+
+app.post('/page', async (req, res) => {
   try {
     jwtHelper.verifyReq(req);
   } catch (error) {
