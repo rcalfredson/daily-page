@@ -52,15 +52,24 @@ async function removePeer(id) {
   return collections.session.updateOne({ _id: peerIDs }, { $pull: { peerIDs: id } });
 }
 
-async function getPage() {
-  await initPagesCollection();
-  return (await collections.pages.findOne({ _id: dateUtils.currentDate() })).content;
-}
-
 async function updatePage(content) {
   await initPagesCollection();
   return collections.pages
     .updateOne({ _id: dateUtils.currentDate() }, { $set: { content } }, { upsert: true });
+}
+
+async function currentPage() {
+  return collections.pages.findOne({ _id: dateUtils.currentDate() });
+}
+
+async function getPage() {
+  await initPagesCollection();
+  try {
+    return (await currentPage()).content;
+  } catch (error) {
+    await updatePage('');
+    return (await currentPage()).content;
+  }
 }
 
 module.exports = {
