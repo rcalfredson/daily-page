@@ -58,17 +58,17 @@ async function updatePage(content) {
     .updateOne({ _id: dateUtils.currentDate() }, { $set: { content } }, { upsert: true });
 }
 
-async function currentPage() {
-  return collections.pages.findOne({ _id: dateUtils.currentDate() });
+async function pageByDate(date) {
+  return collections.pages.findOne({ _id: date });
 }
 
-async function getPage() {
+async function getPage(date = dateUtils.currentDate()) {
   await initPagesCollection();
   try {
-    return (await currentPage()).content;
+    return (await pageByDate(date)).content;
   } catch (error) {
     await updatePage('');
-    return (await currentPage()).content;
+    return (await pageByDate(date)).content;
   }
 }
 

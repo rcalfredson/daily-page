@@ -22,7 +22,7 @@ app.get('/', async (req, res) => {
   res.redirect(`/?${peerIDs[Math.floor(Math.random() * peerIDs.length)]}`);
 });
 
-app.get('/page', async (req, res) => {
+app.get('/page/:date*?', async (req, res) => {
   try {
     jwtHelper.verifyReq(req);
   } catch (error) {
@@ -30,7 +30,7 @@ app.get('/page', async (req, res) => {
     return;
   }
   try {
-    res.send({content: await mongo.getPage()});
+    res.send({content: await mongo.getPage(req.params.date)});
   } catch (error) {
     res.status(500).send({error: error.message});
   }
