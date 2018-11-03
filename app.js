@@ -7,7 +7,7 @@ const mongo = require('./server/mongo');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const backendURL = process.env.BACKEND_URL || `http://localhost:${port}`;
+const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/api/v1`;
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
