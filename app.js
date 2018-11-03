@@ -96,14 +96,6 @@ app.delete('/peers/:id', async (req, res) => {
   }
 });
 
-app.get('/about', function (req, res) {
-  res.render('about', {title: 'About'});
-});
-
-app.get('/bots', function(req, res) {
-  res.render('bots', {title: 'Talk to Bots'});
-});
-
 app.get('/idLength', function (req, res) {
   res.render('idGraph');
 });

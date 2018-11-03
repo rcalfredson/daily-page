@@ -9,14 +9,29 @@ block nav
     a.link(href='https://conclave-team.github.io/conclave-site/team/' target="_blank") Our Team
   .github
     a.link(href='https://github.com/conclave-team/conclave' target="_blank") Fork on GitHub
-
-block link
-  p.sharing-link
-    a.link(id='myLink' target="_blank") Sharing Link
-    span(id="myLinkInput" class="aside disappear")
-    span(class="copy-container" data-tooltip="Copy to Clipboard")
-      i(data-feather="copy" class="copy-link" color="rgb(17, 117, 232)")
-    span(class="copy-status") Copied!
+block content
+  p#safari Your browser doesn't support WebRTC yet.</br></br>Please use the Chrome or Firefox desktop browsers.
+  #conclave.hide
+    .text-wrapper
+      .editor
+        .header
+          p.sharing-link
+            a.link(id='myLink' target="_blank") Sharing Link
+            span(id="myLinkInput" class="aside disappear")
+            span(class="copy-container" data-tooltip="Copy to Clipboard")
+              i(data-feather="copy" class="copy-link" color="rgb(17, 117, 232)")
+            span(class="copy-status") Copied!
+          button#download(type='button') Save
+          label#upload(for='file') Upload
+          input#file(type='file' accept='.txt, .js, .rb, .md')
+        textarea(row='10' col='20')
+      p#peerId Peers:
+    .video-modal.hide
+      .video-bar
+          i(data-feather="minus" class="minimize")
+          i(data-feather='x' class="exit")
+      video
+  include loading.pug
 
 block scripts
   script.
