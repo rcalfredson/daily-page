@@ -116,6 +116,17 @@ app.get('/arraysGraph', function (req, res) {
   res.render('arraysGraph');
 })
 
+app.get('/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', async (req, res) => {
+  var content;
+
+  try {
+    content = (await mongo.getPage(req.params.date)).replace(/\n/g, '<br>');
+  } catch (error) {
+    res.status(404).send('We cannot find that page.');
+  }
+  res.send(content);
+});
+
 var srv = app.listen(port, function() {
 	console.log('Listening on '+port)
 })
