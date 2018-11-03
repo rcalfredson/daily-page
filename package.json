@@ -4,11 +4,11 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "pretest": "eslint app.js server/ lib/backendHelper.js",
+    "pretest": "eslint app.js server/ lib/backendHelper.js lib/archivedPage.js",
     "test": "jasmine",
     "start": "node app.js",
     "build": "babel lib -d build",
-    "compile": "browserify build/main.js -o public/js/bundle.js",
+    "compile": "browserify build/main.js -o public/js/bundle.js && browserify build/archivedPage.js -o public/js/archivedPage.js",
     "postinstall": "npm run build && npm run compile",
     "local": "npm run build && npm run compile && npm start",
     "perform": "babel-node performance/script.js",

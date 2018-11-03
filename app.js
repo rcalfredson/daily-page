@@ -30,8 +30,10 @@ app.get('/', async (req, res) => {
 
 app.get('/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', async (req, res) => {
   res.render('archivedPage', {
-    title: `Daily Page for ${req.params.date}`
-  })
+    title: `Daily Page for ${req.params.date}`,
+    backendURL,
+    sessionID: jwtHelper.expiringKey(),
+  });
 });
 
 const srv = app.listen(port, () => {

@@ -27,7 +27,5 @@ block content
   include loading.pug
 
 block scripts
-  script.
-    sessionID = "#{sessionID}"
-    backendURL = "#{backendURL}"
+  include envImport.pug
   script(src='js/bundle.js')
