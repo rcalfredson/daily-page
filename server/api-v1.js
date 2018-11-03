@@ -24,7 +24,7 @@ module.exports = (app, mongo) => {
   router.post('/page', authenticate, async (req, res) => {
     try {
       await mongo.updatePage(req.body.content);
-      res.sendStatus(200);
+      res.json({ updated: new Date().getTime() });
     } catch (error) {
       res.status(500).send({ error: error.message });
     }

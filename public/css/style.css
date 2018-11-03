@@ -197,6 +197,12 @@ button:hover {
   cursor: pointer;
 }
 
+#sync-infobox {
+  display: inline-block;
+  padding-left: 760px;
+  text-align: right;
+  vertical-align: 14px;
+ }
 
 /* COMMENTED OUT: Phone icons have been removed so removing pointer cursor */
 /* li span:hover {
