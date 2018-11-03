@@ -118,7 +118,7 @@ NavBar
 Editor
 ****************/
 
-#conclave {
+#daily-page {
   width: 100%;
   margin: 0 auto;
 }
@@ -420,7 +420,7 @@ ToolTip
   Loading
 *************/
 
-#conclave.hide + .loading {
+#daily-page.hide + .loading {
   display: block;
 }
 
