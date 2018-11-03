@@ -1,0 +1,32 @@
+const router = require('express').Router();
+const jwtHelper = require('./jwt-helper');
+const mongo = require('./mongo');
+
+function authenticate(req, res, next) {
+  try {
+    jwtHelper.verifyReq(req);
+    next();
+  } catch (error) {
+    res.sendStatus(403);
+  }
+}
+
+module.exports = (app) => {
+  app.use('/api/v1', router);
+
+  router.get('/page/:date*?', authenticate, async (req, res) => {
+    try {
+      res.send({ content: await mongo.getPage(req.params.date) });
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
+
+  router.get('/peers', authenticate, async (req, res) => {
+    try {
+      res.send({ ids: await mongo.peerIDs() });
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
+};

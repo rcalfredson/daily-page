@@ -1,4 +1,5 @@
 const express = require('express');
+const useAPIV1 = require('./server/api-v1');
 const jwtHelper = require('./server/jwt-helper');
 const mongo = require('./server/mongo');
 const bodyParser = require('body-parser');
@@ -10,6 +11,7 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.set('views', './views');
 app.set('view engine', 'pug');
+useAPIV1(app);
 
 app.get('/', async (req, res) => {
   let peerIDs = await mongo.peerIDs();
@@ -22,20 +24,6 @@ app.get('/', async (req, res) => {
   res.redirect(`/?${peerIDs[Math.floor(Math.random() * peerIDs.length)]}`);
 });
 
-app.get('/page/:date*?', async (req, res) => {
-  try {
-    jwtHelper.verifyReq(req);
-  } catch (error) {
-    res.sendStatus(403);
-    return;
-  }
-  try {
-    res.send({content: await mongo.getPage(req.params.date)});
-  } catch (error) {
-    res.status(500).send({error: error.message});
-  }
-});
-
 app.post('/page', async (req, res) => {
   try {
     jwtHelper.verifyReq(req);
@@ -46,21 +34,6 @@ app.post('/page', async (req, res) => {
   try {
     await mongo.updatePage(req.body.content);
     res.sendStatus(200);
-  } catch (error) {
-    res.status(500).send({error: error.message});
-  }
-});
-
-app.get('/peers', async (req, res) => {
-  try {
-    jwtHelper.verifyReq(req);
-  } catch (error) {
-    res.sendStatus(403);
-    return;
-  }
-
-  try {
-    res.send({ids: await mongo.peerIDs()});
   } catch (error) {
     res.status(500).send({error: error.message});
   }
