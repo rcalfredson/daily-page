@@ -1,14 +1,7 @@
 extends layout.pug
 
 block nav
-  .about
-    a.link(href='/about' target="_blank") What is Daily Page?
-  .case-study
-    a.link(href='https://conclave-team.github.io/conclave-site/' target="_blank") Case Study
-  .team
-    a.link(href='https://conclave-team.github.io/conclave-site/team/' target="_blank") Our Team
-  .github
-    a.link(href='https://github.com/conclave-team/conclave' target="_blank") Fork on GitHub
+  include navLinks.pug
 block content
   p#safari Your browser doesn't support WebRTC yet.</br></br>Please use the Chrome or Firefox desktop browsers.
   #daily-page.hide

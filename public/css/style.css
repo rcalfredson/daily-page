@@ -420,7 +420,7 @@ ToolTip
   Loading
 *************/
 
-#daily-page.hide + .loading {
+.hide + .loading {
   display: block;
 }
 
