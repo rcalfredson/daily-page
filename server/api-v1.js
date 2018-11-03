@@ -38,4 +38,22 @@ module.exports = (app) => {
       res.status(500).send({ error: error.message });
     }
   });
+
+  router.delete('/peers/:id', authenticate, async (req, res) => {
+    try {
+      await mongo.removePeer(req.params.id);
+      res.sendStatus(200);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
+
+  router.post('/peers/:id', authenticate, async (req, res) => {
+    try {
+      await mongo.addPeer(req.params.id);
+      res.sendStatus(200);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
 };

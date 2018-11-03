@@ -24,36 +24,6 @@ app.get('/', async (req, res) => {
   res.redirect(`/?${peerIDs[Math.floor(Math.random() * peerIDs.length)]}`);
 });
 
-app.post('/peers/:id', async (req, res) => {
-  try {
-    jwtHelper.verifyReq(req);
-  } catch (error) {
-    res.sendStatus(403);
-    return;
-  }
-  try {
-    await mongo.addPeer(req.params.id);
-    res.sendStatus(200);
-  } catch (error) {
-    res.status(500).send({error: error.message});
-  }
-});
-
-app.delete('/peers/:id', async (req, res) => {
-  try {
-    jwtHelper.verifyReq(req);
-  } catch (error) {
-    res.sendStatus(403);
-    return;
-  }
-  try {
-    await mongo.removePeer(req.params.id);
-    res.sendStatus(200);
-  } catch (error) {
-    res.status(500).send({error: error.message});
-  }
-});
-
 app.get('/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', async (req, res) => {
   var content;
 
