@@ -96,18 +96,6 @@ app.delete('/peers/:id', async (req, res) => {
   }
 });
 
-app.get('/idLength', function (req, res) {
-  res.render('idGraph');
-});
-
-app.get('/opTime', function (req, res) {
-  res.render('timeGraph');
-})
-
-app.get('/arraysGraph', function (req, res) {
-  res.render('arraysGraph');
-})
-
 app.get('/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', async (req, res) => {
   var content;
 
