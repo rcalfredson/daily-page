@@ -22,6 +22,15 @@ module.exports = (app) => {
     }
   });
 
+  router.post('/page', authenticate, async (req, res) => {
+    try {
+      await mongo.updatePage(req.body.content);
+      res.sendStatus(200);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
+
   router.get('/peers', authenticate, async (req, res) => {
     try {
       res.send({ ids: await mongo.peerIDs() });
