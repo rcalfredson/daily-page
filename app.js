@@ -1,5 +1,6 @@
 const express = require('express');
 const useAPIV1 = require('./server/api-v1');
+const cache = require('./server/cache');
 const jwtHelper = require('./server/jwt-helper');
 const mongo = require('./server/mongo');
 const bodyParser = require('body-parser');
@@ -14,7 +15,7 @@ app.set('view engine', 'pug');
 useAPIV1(app);
 
 app.get('/', async (req, res) => {
-  let peerIDs = await mongo.peerIDs();
+  let peerIDs = await cache.get('peerIDs', mongo.peerIDs);
   if (Object.keys(req.query).length != 0 || peerIDs.length == 0) {
     res.render('index', {title: 'Conclave',
       backendURL,
