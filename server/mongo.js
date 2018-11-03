@@ -11,7 +11,7 @@ const collections = { session: null, pages: null };
 let connection;
 let db;
 
-async function initDB() {
+async function initConnection() {
   const connectTimeoutMS = process.env.MONGODB_CONNECT_TIMEOUT || 15000;
   const socketTimeoutMS = process.env.MONGODB_SOCKET_TIMEOUT || 30000;
 
@@ -21,6 +21,11 @@ async function initDB() {
     connectTimeoutMS,
     socketTimeoutMS,
   });
+}
+
+initConnection();
+
+async function initDB() {
   db = await connection.db(dbName);
 }
 

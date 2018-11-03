@@ -13,7 +13,7 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.set('views', './views');
 app.set('view engine', 'pug');
-useAPIV1(app);
+useAPIV1(app, mongo);
 
 app.get('/', async (req, res) => {
   const peerIDs = await cache.get('peerIDs', mongo.peerIDs);

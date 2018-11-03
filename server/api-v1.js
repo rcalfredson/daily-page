@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const jwtHelper = require('./jwt-helper');
-const mongo = require('./mongo');
 
 function authenticate(req, res, next) {
   try {
@@ -11,7 +10,7 @@ function authenticate(req, res, next) {
   }
 }
 
-module.exports = (app) => {
+module.exports = (app, mongo) => {
   app.use('/api/v1', router);
 
   router.get('/page/:date*?', authenticate, async (req, res) => {
