@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongodb');
-const dateUtils = require('./dateUtils');
+const dateHelper = require('../build/dateHelper');
 
 const user = 'daily-page-admin';
 const pw = process.env.MONGO_DB_PW;
@@ -60,14 +60,14 @@ async function removePeer(id) {
 async function updatePage(content) {
   await initPagesCollection();
   return collections.pages
-    .updateOne({ _id: dateUtils.currentDate() }, { $set: { content } }, { upsert: true });
+    .updateOne({ _id: dateHelper.currentDate() }, { $set: { content } }, { upsert: true });
 }
 
 async function pageByDate(date) {
   return collections.pages.findOne({ _id: date });
 }
 
-async function getPage(date = dateUtils.currentDate()) {
+async function getPage(date = dateHelper.currentDate()) {
   await initPagesCollection();
   try {
     return (await pageByDate(date)).content;
