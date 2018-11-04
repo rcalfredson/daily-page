@@ -26,6 +26,10 @@ block content
           i(data-feather='x' class="exit")
       video
   include loading.pug
+  include closedPage.pug
+  script(src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js")
+  script.
+    feather.replace({ 'stroke-width': 3 });
 
 block scripts
   include envImport.pug

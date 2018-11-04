@@ -430,7 +430,11 @@ ToolTip
   display: block;
 }
 
-.loading {
+:not(.hide) + .loading + .closed {
+  display: block;
+}
+
+.loading, .closed {
   display: none;
   color: rgb(17, 117, 232);
   position: absolute;
@@ -438,6 +442,22 @@ ToolTip
   left: 50%;
   transform: translate(-50%);
   z-index: 1000;
+}
+
+.closed {
+  background-color: rgba(10, 11, 37, 0.301);
+  height: 100%;
+  left: 0;
+  padding-top: 300px;
+  text-align: center;
+  top: 0;
+  transform: unset;
+  width: 100%;
+}
+
+.closed p {
+  display: inline;
+  font-size: 23px;
 }
 
 .loading p {
