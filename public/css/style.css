@@ -3,16 +3,6 @@ Fonts
 ****************/
 
 @font-face {
-  font-family: "InputLight";
-  src: url('../assets/fonts/InputSans-Light.ttf');
-}
-
-@font-face {
-  font-family: "InputMedium";
-  src: url('../assets/fonts/InputSans-Medium.ttf');
-}
-
-@font-face {
   font-family: 'Rubik-Regular';
   src: url('../assets/fonts/Rubik-Regular.ttf');
 }
