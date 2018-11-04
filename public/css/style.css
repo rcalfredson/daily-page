@@ -221,6 +221,7 @@ button:hover {
 
  #closing-soon-infobox {
    color: rgb(228, 21, 66);
+   visibility: hidden;
    width: 467px;
  }
 
@@ -237,7 +238,7 @@ button:hover {
  }
 
  #sync-infobox {
-  margin-left: 275px;
+  margin-left: 350px;
  }
 
 /* COMMENTED OUT: Phone icons have been removed so removing pointer cursor */
