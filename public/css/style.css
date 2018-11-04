@@ -12,6 +12,21 @@ Fonts
   src: url('../assets/fonts/InputSans-Medium.ttf');
 }
 
+@font-face {
+  font-family: 'Rubik-Regular';
+  src: url('../assets/fonts/Rubik-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Rubik-Medium';
+  src: url('../assets/fonts/Rubik-Medium.ttf');
+}
+
+@font-face {
+  font-family: 'Rubik-Light';
+  src: url('../assets/fonts/Rubik-Light.ttf');
+}
+
 /****************
 animations
 ****************/
@@ -26,16 +41,18 @@ General
 ****************/
 
 body {
-  font-family: "InputLight";
-  margin: 0;
+  font-family: "Rubik-Regular";
+  letter-spacing: 1.5px;
+  margin: 0 auto;;
   padding: 15px;
-  background-color: #fcfcfc;
+  background-color: #ffffff;
+  width: 79%;
 }
 
 h1 {
   margin: 0 0 0 10px;
   padding-bottom: 20px;
-  font-family: "InputMedium";
+  font-family: "Rubik-Regular";
 }
 
 p {
@@ -48,7 +65,7 @@ a {
 }
 
 a.link {
-  color: rgb(17, 117, 232);
+  color: rgb(17, 87, 170);
   position: relative;
   margin-right: 10px;
   vertical-align: 5px;
@@ -58,10 +75,10 @@ a.link:before {
   content: "";
   position: absolute;
   width: 100%;
-  height: 1px;
+  height: 2px;
   bottom: 0;
   left: 0;
-  background-color: rgb(17, 117, 232);
+  background-color: rgb(17, 87, 170);
   visibility: hidden;
   -webkit-transform: scaleX(0);
   transform: scaleX(0);
@@ -95,15 +112,20 @@ NavBar
 ****************/
 
 .navbar {
+  border-radius: 10px;
   display: flex;
   justify-content: left;
   min-width: 710px;
+  margin-bottom: 20px;
+  padding-top: 20px;
 }
 
 .nav-items {
+  font-family: 'Rubik-Medium';
   flex-grow: .75;
   display: flex;
   justify-content: space-evenly;
+  padding-top: 10px;
 }
 
 .logo {
@@ -111,7 +133,7 @@ NavBar
 }
 
 .logo:hover {
-  color: rgb(17, 117, 232);
+  color: rgb(17, 87, 170);
 }
 
 /****************
@@ -174,12 +196,12 @@ label, button {
   float: right;
   padding: 0 15px;
   border-radius: 5px;
-  border: 1px solid rgb(17, 117, 232);
+  border: 1px solid rgb(17, 87, 170);
   margin: 0 0 10px 10px;
-  font-family: "InputLight";
+  font-family: "Rubik-Light";
   font-size: 12px;
   line-height: 32px;
-  color: rgb(17, 117, 232);
+  color: rgb(17, 87, 170);
   cursor: pointer;
   background-color: white;
 }
@@ -197,11 +219,15 @@ button:hover {
   cursor: pointer;
 }
 
+#download-box {
+  float: right;
+}
+
 #sync-infobox {
-  display: inline-block;
-  padding-left: 760px;
-  text-align: right;
-  vertical-align: 14px;
+  float: left;
+  font-size: 13px;
+  margin-left: 747px;
+  padding-top: 8px;
  }
 
 /* COMMENTED OUT: Phone icons have been removed so removing pointer cursor */
@@ -258,23 +284,27 @@ CodeMirror
 ********************/
 
 .CodeMirror {
-  font-family: 'InputLight';
   border-radius: 8px;
   line-height: 1.5em;
   border: none;
-  box-shadow: 0 2px 20px -2px rgba(17, 117, 232, 0.15);
+  box-shadow: 0 1px 20px -2px rgba(17, 117, 232, 0.075);
   clear: both;
   padding: 0;
-  height: 560px;
+  height: auto;
   width: 100%;
 }
 
-.CodeMirror-focused {
-  box-shadow: 0 2px 20px -2px rgba(17, 117, 232, 0.4);
+.CodeMirror-code:last-child {
+  margin-bottom: 10px;
 }
 
-.CodeMirror-scroll {
-  padding: 10px;
+.CodeMirror pre {
+  font-family: 'Rubik-Regular';
+  font-size: 21px;
+}
+
+.CodeMirror-focused {
+  box-shadow: 0 1px 20px -2px rgba(17, 117, 232, 0.4);
 }
 
 /********************
@@ -430,13 +460,13 @@ ToolTip
   display: block;
 }
 
-:not(.hide) + .loading + .closed {
+.disabled:not(.hide) + .loading + .closed {
   display: block;
 }
 
 .loading, .closed {
   display: none;
-  color: rgb(17, 117, 232);
+  color: rgb(17, 87, 170);
   position: absolute;
   top: 20%;
   left: 50%;
@@ -486,7 +516,7 @@ ToolTip
   margin: 0 auto;
   width: 15%;
   height: 15%;
-  background-color: rgb(17, 117, 232);
+  background-color: rgb(17, 87, 170);
   border-radius: 100%;
   -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
           animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;

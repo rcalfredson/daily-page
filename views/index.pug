@@ -8,16 +8,15 @@ block content
     .text-wrapper
       .editor
         .header
-          p.sharing-link
+          p.sharing-link(style="display: none")
             a.link(id='myLink' target="_blank") Sharing Link
             span(id="myLinkInput" class="aside disappear")
             span(class="copy-container" data-tooltip="Copy to Clipboard")
-              i(data-feather="copy" class="copy-link" color="rgb(17, 117, 232)")
+              i(data-feather="copy" class="copy-link" color="rgb(17, 87, 170)")
             span(class="copy-status") Copied!
           #sync-infobox
-          button#download(type='button') Download
-          label#upload(for='file') Upload
-          input#file(type='file' accept='.txt, .js, .rb, .md')
+          #download-box
+            button#download(type='button') Download
         textarea(row='10' col='20')
       p#peerId Peers:
     .video-modal.hide
