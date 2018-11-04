@@ -33,7 +33,7 @@ General
 body {
   font-family: "Rubik-Regular";
   letter-spacing: 1.5px;
-  margin: 0 auto;;
+  margin: 0 auto;
   padding: 15px;
   background-color: #ffffff;
   width: 79%;
@@ -213,11 +213,31 @@ button:hover {
   float: right;
 }
 
-#sync-infobox {
+#sync-infobox, #closing-soon-infobox {
   float: left;
   font-size: 13px;
-  margin-left: 747px;
   padding-top: 8px;
+ }
+
+ #closing-soon-infobox {
+   color: rgb(228, 21, 66);
+   width: 467px;
+ }
+
+ #closing-soon-text {
+   background-color: rgb(241, 213, 219);
+   border-radius: 2.5px;
+   display: inline-block;
+   margin-bottom: 5px;
+   padding: 4px;
+ }
+
+ #closing-soon-text p {
+   display: inline;
+ }
+
+ #sync-infobox {
+  margin-left: 275px;
  }
 
 /* COMMENTED OUT: Phone icons have been removed so removing pointer cursor */
