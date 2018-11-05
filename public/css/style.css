@@ -45,6 +45,10 @@ h1 {
   font-family: "Rubik-Regular";
 }
 
+h2 {
+  margin-top: 0;
+}
+
 p {
   font-size: 14px;
 }
@@ -210,10 +214,6 @@ button:hover {
   cursor: pointer;
 }
 
-#date h2 {
-  margin-top: 0;
-}
-
 #download-box {
   float: right;
 }
@@ -251,6 +251,24 @@ button:hover {
 /* li span:hover {
   cursor: pointer;
 } */
+
+/****************
+About page
+****************/
+
+.about h1 {
+  padding-bottom: 0;
+  padding-top: 20px
+}
+
+.about p {
+  font-size: 18px;
+  margin-left: 50px;
+}
+
+.about-subtitle {
+  display: flex;
+}
 
 /****************
 Video
