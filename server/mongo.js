@@ -23,8 +23,6 @@ async function initConnection() {
   });
 }
 
-initConnection();
-
 async function initDB() {
   db = await connection.db(dbName);
 }
@@ -78,6 +76,7 @@ async function getPage(date = dateHelper.currentDate()) {
 }
 
 module.exports = {
+  initConnection,
   peerIDs,
   addPeer,
   removePeer,
