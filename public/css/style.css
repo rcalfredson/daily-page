@@ -147,6 +147,7 @@ Editor
 }
 
 .header {
+  display: flex;
   width: 100%;
 }
 
@@ -238,8 +239,7 @@ button:hover {
  }
 
  #sync-infobox {
-  position: relative;
-  margin-left: 690px;
+  margin-left: auto;
   padding-top: 8.5px;
  }
 
