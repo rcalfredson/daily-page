@@ -210,6 +210,10 @@ button:hover {
   cursor: pointer;
 }
 
+#date h2 {
+  margin-top: 0;
+}
+
 #download-box {
   float: right;
 }

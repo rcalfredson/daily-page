@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const peerServer = require('peer');
+const dateHelper = require('./build/dateHelper');
 const useAPIV1 = require('./server/api-v1');
 const cache = require('./server/cache');
 const jwtHelper = require('./server/jwt-helper');
@@ -24,6 +25,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       if (Object.keys(req.query).length !== 0 || peerIDs.length === 0) {
         res.render('index', {
           title: 'Daily Page',
+          date: dateHelper.currentDate('long'),
           backendURL,
           sessionID: jwtHelper.expiringKey(),
         });
