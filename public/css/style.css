@@ -238,7 +238,9 @@ button:hover {
  }
 
  #sync-infobox {
-  margin-left: 358px;
+  position: relative;
+  margin-left: 690px;
+  padding-top: 8.5px;
  }
 
 /* COMMENTED OUT: Phone icons have been removed so removing pointer cursor */
