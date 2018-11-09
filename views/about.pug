@@ -21,7 +21,21 @@ block content
       | Nobody knows yet, so make your mark and let's see what happens when every internet user in
       | the world is given a pen to write on the same page.
 
-    h1(style="color: #1FBCF0") ★ What happens if this site gets big?
+    h1(style="color: #1FBCF0") ★ How will this site scale?
     p
-      | With enough concurrent users on the site, unfortunately it will become impossible
-      | for all of them to edit the same document.
+      | Unfortunately, there is a practical and technical limit on the number of users who can edit
+      | the same document simultaneously. If a single page per day becomes unsustainable or
+      | unreasonably chaotic, then the site will be segmented into rooms: A, B, C, and so forth.
+      | If a single user arrives at the site, they will be directed to a random room, e.g., A.
+    p
+      | Any newly-arriving users will be directed to that same room until it reaches capacity, at
+      | which point a new room will be opened up. From there forward, users will be directed by
+      | default to the least-populated room. If all users leave a room, then incoming users will no
+      | longer be directed there. However, at the same time, any user will be able to navigate to a
+      | specific room by request, provided it is still below capacity. The Daily Page will then
+      | consist of the contents of all rooms that were used that day, linked end-to-end (e.g. room
+      | B's page begins where room A's page leaves off).
+    p
+      | If rooms get introduced, they will be intentionally devoid of predefined topics, nor will
+      | they be given colorful names. The intent is that the culture and focus of that room will be
+      | determined entirely by those who choose to make it their own.
