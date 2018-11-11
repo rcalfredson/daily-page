@@ -33,7 +33,7 @@ module.exports = (app, mongo) => {
 
   router.get('/peers', authenticate, async (req, res) => {
     try {
-      res.send({ ids: await mongo.peerIDs() });
+      res.send(JSON.stringify(await mongo.peerIDs()));
     } catch (error) {
       res.status(500).send({ error: error.message });
     }

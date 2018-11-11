@@ -42,7 +42,13 @@ async function initSessionCollection() {
 
 async function peerIDs() {
   await initSessionCollection();
-  return (await collections.session.findOne({ _id: peerIDs })).peerIDs;
+  const doc = await collections.session.findOne({ _id: peerIDs });
+  delete doc._id; // eslint-disable-line no-underscore-dangle
+  return doc;
+}
+
+async function rooms() {
+  return Object.keys(await peerIDs());
 }
 
 async function addPeer(id) {
@@ -79,6 +85,7 @@ async function getPage(date = dateHelper.currentDate()) {
 module.exports = {
   initConnection,
   peerIDs,
+  rooms,
   addPeer,
   removePeer,
   getPage,

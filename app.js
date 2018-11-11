@@ -20,18 +20,38 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     app.set('view engine', 'pug');
     useAPIV1(app, mongo);
 
-    app.get('/', async (req, res) => {
-      const peerIDs = await cache.get('peerIDs', mongo.peerIDs);
-      if (Object.keys(req.query).length !== 0 || peerIDs.length === 0) {
+    app.get('/:room*?', async (req, res) => {
+      const maxCapacity = 6;
+      const roomReq = req.params.room;
+      const rooms = await cache.get('rooms', mongo.rooms);
+      const peerIDs = (await cache.get('peerIDs', mongo.peerIDs));
+      const roomsVacant = rooms.filter(room => peerIDs[room].length < maxCapacity);
+
+      if (roomReq && !rooms.includes(roomReq)) {
+        res.redirect('/');
+        return;
+      }
+
+      if (!roomReq) {
+        res.redirect(`/${roomsVacant[Math.floor(Math.random() * roomsVacant.length)]}`);
+        return;
+      }
+
+      if (peerIDs[roomReq].length >= 6) {
+        res.send('too many people in the room.');
+        return;
+      }
+      if (Object.keys(req.query).length !== 0 || peerIDs[roomReq].length === 0) {
         res.render('index', {
           title: 'Daily Page',
           date: dateHelper.currentDate('long'),
+          room: roomReq,
           backendURL,
           sessionID: jwtHelper.expiringKey(),
         });
         return;
       }
-      res.redirect(`/?${peerIDs[Math.floor(Math.random() * peerIDs.length)]}`);
+      res.redirect(`/${roomReq}?${peerIDs[roomReq][Math.floor(Math.random() * peerIDs.length)]}`);
     });
 
     app.get('/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', async (req, res) => {
