@@ -1,6 +1,7 @@
 {
   "env": {
-    "browser": 1
+    "browser": 1,
+    "jquery": 1
   },
   "globals": {
     "backendURL": true,
