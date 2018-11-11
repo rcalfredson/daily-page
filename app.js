@@ -42,7 +42,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       });
     });
 
-    app.get('/about', (_, res) => res.render('about'));
+    app.get('/about', (_, res) => res.render('about', { title: 'Daily Page - About' }));
 
     const srv = app.listen(port, () => {
       console.log(`Listening on ${port}`); // eslint-disable-line no-console

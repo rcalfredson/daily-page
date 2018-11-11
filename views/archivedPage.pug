@@ -1,9 +1,9 @@
-extends layout.pug
+extends layout
 block nav
-  include navLinks.pug
+  include navLinks
 block content
   #viewer.hide
-  include loading.pug
+  include loading
 block scripts
-  include envImport.pug
+  include envImport
   script(src='js/archivedPage.js')

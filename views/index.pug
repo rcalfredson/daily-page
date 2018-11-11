@@ -1,6 +1,6 @@
-extends layout.pug
+extends layout
 block nav
-  include navLinks.pug
+  include navLinks
 block content
   p#safari Your browser doesn't support WebRTC yet.</br></br>Please use the Chrome or Firefox desktop browsers.
   #daily-page.hide
@@ -30,12 +30,13 @@ block content
           i(data-feather="minus" class="minimize")
           i(data-feather='x' class="exit")
       video
-  include loading.pug
-  include closedPage.pug
+  include loading
+  include closedPage
   script(src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js")
   script.
     feather.replace({ 'stroke-width': 3 });
 
 block scripts
-  include envImport.pug
+  include envImport
   script(src='js/bundle.js')
+  script(src='js/clearSelection.js')
