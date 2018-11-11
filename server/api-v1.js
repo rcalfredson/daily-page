@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const cache = require('./cache');
 const jwtHelper = require('./jwt-helper');
 
 function authenticate(req, res, next) {
@@ -15,7 +16,7 @@ module.exports = (app, mongo) => {
 
   router.get('/page/:date*?', authenticate, async (req, res) => {
     try {
-      res.send({ content: await mongo.getPage(req.params.date) });
+      res.send(JSON.stringify(await cache.get(req.params.date, mongo.getPage, [req.params.date])));
     } catch (error) {
       res.status(500).send({ error: error.message });
     }

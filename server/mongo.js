@@ -58,7 +58,7 @@ async function removePeer(id) {
 async function updatePage(content) {
   await initPagesCollection();
   return collections.pages
-    .updateOne({ _id: dateHelper.currentDate() }, { $set: { content } }, { upsert: true });
+    .updateOne({ _id: dateHelper.currentDate() }, { $set: { content, lastUpdate: new Date().getTime() } }, { upsert: true });
 }
 
 async function pageByDate(date) {
@@ -68,10 +68,10 @@ async function pageByDate(date) {
 async function getPage(date = dateHelper.currentDate()) {
   await initPagesCollection();
   try {
-    return (await pageByDate(date)).content;
+    return pageByDate(date);
   } catch (error) {
     await updatePage('');
-    return (await pageByDate(date)).content;
+    return pageByDate(date);
   }
 }
 
