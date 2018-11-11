@@ -2,8 +2,9 @@ const { MongoClient } = require('mongodb');
 const dateHelper = require('../build/dateHelper');
 
 const user = 'daily-page-admin';
+const addr = process.env.MONGO_DB_ADDR;
 const pw = process.env.MONGO_DB_PW;
-const url = `mongodb+srv://${user}:${pw}@dailypage-olyqk.gcp.mongodb.net/test?retryWrites=true`;
+const url = `mongodb+srv://${user}:${pw}@${addr}?retryWrites=true`;
 const dbName = 'daily-page';
 const collectionNames = { session: 'session-data', pages: 'pages' };
 const collections = { session: null, pages: null };
