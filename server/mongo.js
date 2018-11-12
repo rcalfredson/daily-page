@@ -41,45 +41,49 @@ async function initSessionCollection() {
   await initCollection('session');
 }
 
-async function peerIDs() {
+async function peerIDs(room = null) {
   await initSessionCollection();
   const doc = await collections.session.findOne({ _id: peerIDs });
   delete doc._id; // eslint-disable-line no-underscore-dangle
-  return doc;
+  return room ? doc[room] : doc;
 }
 
 async function rooms() {
   return Object.keys(await peerIDs());
 }
 
-async function addPeer(id) {
+async function addPeer(id, room) {
   await initSessionCollection();
-  return collections.session.updateOne({ _id: peerIDs }, { $push: { peerIDs: id } });
+  return collections.session.updateOne({ _id: peerIDs }, { $push: { [room]: id } });
 }
 
-async function removePeer(id) {
+async function removePeer(id, room) {
   await initSessionCollection();
-  return collections.session.updateOne({ _id: peerIDs }, { $pull: { peerIDs: id } });
+  return collections.session.updateOne({ _id: peerIDs }, { $pull: { [room]: id } });
 }
 
-async function updatePage(content) {
+async function updatePage(content, room) {
   await initPagesCollection();
   return collections.pages
-    .updateOne({ _id: dateHelper.currentDate() },
+    .updateOne({ date: dateHelper.currentDate(), room },
       { $set: { content, lastUpdate: new Date().getTime() } }, { upsert: true });
 }
 
-async function pageByDate(date) {
-  return collections.pages.findOne({ _id: date });
+async function pageByDate(date, room) {
+  return collections.pages.findOne({ date, room });
 }
 
-async function getPage(date = dateHelper.currentDate()) {
+async function getPage(date = dateHelper.currentDate(), room) {
   await initPagesCollection();
   try {
-    return pageByDate(date);
+    const page = await pageByDate(date, room);
+    if (!page) {
+      throw new Error('Page does not exist.');
+    }
+    return page;
   } catch (error) {
-    await updatePage('');
-    return pageByDate(date);
+    await updatePage('', room);
+    return pageByDate(date, room);
   }
 }
 

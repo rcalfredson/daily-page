@@ -20,20 +20,45 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     app.set('view engine', 'pug');
     useAPIV1(app, mongo);
 
+    const srv = app.listen(port, () => {
+      console.log(`Listening on ${port}`); // eslint-disable-line no-console
+    });
+
+    app.use('/peerjs', peerServer.ExpressPeerServer(srv, {
+      debug: true,
+    }));
+
+    app.get('/:room/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', async (req, res) => {
+      res.render('archivedPage', {
+        title: `Daily Page for ${req.params.date}`,
+        backendURL,
+        room: req.params.room,
+        sessionID: jwtHelper.expiringKey(),
+      });
+    });
+
+    app.get('/about', (_, res) => res.render('about', { title: 'Daily Page - About' }));
+
     app.get('/:room*?', async (req, res) => {
       const maxCapacity = 6;
       const roomReq = req.params.room;
       const rooms = await cache.get('rooms', mongo.rooms);
       const peerIDs = (await cache.get('peerIDs', mongo.peerIDs));
-      const roomsVacant = rooms.filter(room => peerIDs[room].length < maxCapacity);
+      const roomsVacant = rooms.filter(room => peerIDs[room].length < maxCapacity)
+        .sort((roomA, roomB) => peerIDs[roomB].length - peerIDs[roomA].length);
 
       if (roomReq && !rooms.includes(roomReq)) {
         res.redirect('/');
         return;
       }
 
+      if (roomsVacant.length === 0) {
+        res.send('no room at the inn.');
+        return;
+      }
+
       if (!roomReq) {
-        res.redirect(`/${roomsVacant[Math.floor(Math.random() * roomsVacant.length)]}`);
+        res.redirect(`/${roomsVacant[0]}`);
         return;
       }
 
@@ -51,26 +76,8 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
         });
         return;
       }
-      res.redirect(`/${roomReq}?${peerIDs[roomReq][Math.floor(Math.random() * peerIDs.length)]}`);
+      res.redirect(`/${roomReq}?${peerIDs[roomReq][Math.floor(Math.random() * peerIDs[roomReq].length)]}`);
     });
-
-    app.get('/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', async (req, res) => {
-      res.render('archivedPage', {
-        title: `Daily Page for ${req.params.date}`,
-        backendURL,
-        sessionID: jwtHelper.expiringKey(),
-      });
-    });
-
-    app.get('/about', (_, res) => res.render('about', { title: 'Daily Page - About' }));
-
-    const srv = app.listen(port, () => {
-      console.log(`Listening on ${port}`); // eslint-disable-line no-console
-    });
-
-    app.use('/peerjs', peerServer.ExpressPeerServer(srv, {
-      debug: true,
-    }));
   } catch (error) {
     console.log(`Server startup failed: ${error.message}`); // eslint-disable-line no-console
   }

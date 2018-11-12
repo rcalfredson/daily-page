@@ -5,6 +5,7 @@
   },
   "globals": {
     "backendURL": true,
-    "sessionID": true
+    "sessionID": true,
+    "room": true
   }
 }
