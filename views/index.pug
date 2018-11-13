@@ -7,7 +7,7 @@ block content
     .text-wrapper
       .editor
         #date
-          h2= date
+          h2 #{date} - #{room.charAt(0).toUpperCase() + room.slice(1)} Room.
         .header
           p.sharing-link(style="display: none")
             a.link(id='myLink' target="_blank") Sharing Link
