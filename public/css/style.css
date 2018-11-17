@@ -258,7 +258,7 @@ About page
 
 .about h1 {
   padding-bottom: 0;
-  padding-top: 20px
+  padding-top: 20px;
 }
 
 .about p {
@@ -268,6 +268,14 @@ About page
 
 .about-subtitle {
   display: flex;
+}
+
+/****************
+Archive pages
+****************/
+
+#viewer {
+  font-family: 'Rubik-Regular';
 }
 
 /****************

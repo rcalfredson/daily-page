@@ -5,6 +5,7 @@ const dateHelper = require('./build/dateHelper');
 const useAPIV1 = require('./server/api-v1');
 const cache = require('./server/cache');
 const jwtHelper = require('./server/jwt-helper');
+const viewHelper = require('./server/view-helper');
 const mongo = require('./server/mongo');
 
 const app = express();
@@ -12,6 +13,8 @@ const port = process.env.PORT || 3000;
 const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/api/v1`;
 
 (async () => {
+  const dateParam = ':date([0-9]{4}-[0-9]{2}-[0-9]{2})';
+
   try {
     await mongo.initConnection();
     app.use(express.static('public'));
@@ -28,11 +31,21 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       debug: true,
     }));
 
-    app.get('/:room/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', async (req, res) => {
+    app.get(`/${dateParam}`, async (req, res) => {
       res.render('archivedPage', {
         title: `Daily Page for ${req.params.date}`,
         backendURL,
-        room: req.params.room,
+        sessionID: jwtHelper.expiringKey(),
+      });
+    });
+
+    app.get(`/:room/${dateParam}`, (req, res) => {
+      const roomReq = req.params.room;
+
+      res.render('archivedPage', {
+        title: `Daily Page for ${req.params.date} - ${viewHelper.capitalize(roomReq)} Room`,
+        backendURL,
+        room: roomReq,
         sessionID: jwtHelper.expiringKey(),
       });
     });
@@ -67,10 +80,13 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
         return;
       }
       if (Object.keys(req.query).length !== 0 || peerIDs[roomReq].length === 0) {
+        const date = dateHelper.currentDate('long');
+
         res.render('index', {
           title: 'Daily Page',
-          date: dateHelper.currentDate('long'),
+          date,
           room: roomReq,
+          header: `${date} - ${viewHelper.capitalize(roomReq)} Room.`,
           backendURL,
           sessionID: jwtHelper.expiringKey(),
         });

@@ -69,22 +69,43 @@ async function updatePage(content, room) {
       { $set: { content, lastUpdate: new Date().getTime() } }, { upsert: true });
 }
 
-async function pageByDate(date, room) {
+async function pageByDate(date) {
+  const content = (await collections.pages.find({ date }).toArray()).sort((docA, docB) => {
+    const roomA = docA.room.toUpperCase();
+    const roomB = docB.room.toUpperCase();
+
+    if (roomA < roomB) {
+      return -1;
+    }
+    return (roomA > roomB) ? 1 : 0;
+  }).map(doc => doc.content).join('\n');
+
+  return content ? { content } : null;
+}
+
+async function pageByDateAndRoom(date, room) {
   return collections.pages.findOne({ date, room });
 }
 
-async function getPage(date = dateHelper.currentDate(), room) {
-  await initPagesCollection();
+async function getPageForRoom(date, room) {
   try {
-    const page = await pageByDate(date, room);
+    const page = await pageByDateAndRoom(date, room);
     if (!page) {
       throw new Error('Page does not exist.');
     }
     return page;
   } catch (error) {
     await updatePage('', room);
-    return pageByDate(date, room);
+    return pageByDateAndRoom(date, room);
   }
+}
+
+async function getPage(date = dateHelper.currentDate(), room = null) {
+  await initPagesCollection();
+  if (room) {
+    return getPageForRoom(date, room);
+  }
+  return pageByDate(date);
 }
 
 module.exports = {
