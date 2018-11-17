@@ -64,8 +64,11 @@ async function removePeer(id, room) {
 
 async function updatePage(content, room) {
   await initPagesCollection();
+  const date = dateHelper.currentDate();
+  const dateArray = date.split('-');
+
   return collections.pages
-    .updateOne({ date: dateHelper.currentDate(), room },
+    .updateOne({ date, room, year: dateArray[0], month: dateArray[1], day: dateArray[2] },
       { $set: { content, lastUpdate: new Date().getTime() } }, { upsert: true });
 }
 
