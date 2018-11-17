@@ -68,8 +68,10 @@ async function updatePage(content, room) {
   const dateArray = date.split('-');
 
   return collections.pages
-    .updateOne({ date, room, year: dateArray[0], month: dateArray[1], day: dateArray[2] },
-      { $set: { content, lastUpdate: new Date().getTime() } }, { upsert: true });
+    .updateOne({
+      date, room, year: dateArray[0], month: dateArray[1], day: dateArray[2],
+    },
+    { $set: { content, lastUpdate: new Date().getTime() } }, { upsert: true });
 }
 
 async function pageByDate(date) {
