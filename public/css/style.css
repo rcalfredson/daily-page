@@ -87,6 +87,7 @@ a.link:hover:before, .selected a.link:before {
 }
 
 strong {
+  font-family: 'Rubik-Regular';
   font-size: 18px;
 }
 
@@ -318,7 +319,7 @@ Archive pages
 ****************/
 
 #viewer {
-  font-family: 'Rubik-Regular';
+  font-family: 'Rubik-Light';
 }
 
 /****************
