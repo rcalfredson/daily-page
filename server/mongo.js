@@ -92,6 +92,12 @@ async function pageByDateAndRoom(date, room) {
   return collections.pages.findOne({ date, room });
 }
 
+async function getPageDatesByYearAndMonth(year, month) {
+  await initPagesCollection();
+  return (await collections.pages.find({ year, month }).toArray()).map(doc => doc.date)
+    .filter((v, i, a) => a.indexOf(v) === i);
+}
+
 async function getPageForRoom(date, room) {
   try {
     const page = await pageByDateAndRoom(date, room);
@@ -121,4 +127,5 @@ module.exports = {
   removePeer,
   getPage,
   updatePage,
+  getPageDatesByYearAndMonth,
 };

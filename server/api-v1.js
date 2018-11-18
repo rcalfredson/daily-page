@@ -27,6 +27,17 @@ module.exports = (app, mongo) => {
 
   router.get('/page/:room/:date*?', authenticate, sendPage);
 
+  router.get('/pageDates/:year([0-9]{4})/:month(1[0-2]|[1-9])', authenticate, async (req, res) => {
+    const { year, month } = req.params.year;
+
+    try {
+      res.send(JSON.stringify(await cache.get(`${year}-${month}`, mongo.getPageDatesByYearAndMonth,
+        [req.params.year, req.params.month])));
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
+
   router.post('/page/:room', authenticate, async (req, res) => {
     try {
       await mongo.updatePage(req.body.content, req.params.room);

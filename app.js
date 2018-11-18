@@ -31,7 +31,19 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       debug: true,
     }));
 
-    app.get(`/${dateParam}`, async (req, res) => {
+    app.get('/:year([0-9]{4})/:month(1[0-2]|[1-9])', (req, res) => {
+      const { year, month } = req.params;
+
+      res.render('yearMonth', {
+        title: `Daily Pages for ${viewHelper.monthName(month)} ${year}`,
+        year,
+        month,
+        backendURL,
+        sessionID: jwtHelper.expiringKey(),
+      });
+    });
+
+    app.get(`/${dateParam}`, (req, res) => {
       res.render('archivedPage', {
         title: `Daily Page for ${req.params.date}`,
         backendURL,
@@ -39,7 +51,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       });
     });
 
-    app.get(`/:room/${dateParam}`, (req, res) => {
+    app.get(`/:room([a-zA-Z]+)/${dateParam}`, (req, res) => {
       const roomReq = req.params.room;
 
       res.render('archivedPage', {

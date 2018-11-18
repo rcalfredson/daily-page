@@ -322,6 +322,27 @@ Archive pages
   font-family: 'Rubik-Light';
 }
 
+.year-month {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.date-link {
+  background-color: rgb(195, 204, 230);
+  border-radius: 3px;
+  display: block;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  -webkit-transition: background-color 600ms linear;
+  transition: background-color 600ms linear;
+}
+
+.date-link:hover {
+  background-color: rgb(170, 233, 204);
+}
+
 /****************
 Video
 ****************/
