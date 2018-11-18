@@ -3,7 +3,7 @@ block nav
   include navLinks
 block content
   .about
-    h1(style="color: #1FBCF0") ★ What is this site for?
+    h1 ★ What is this site for?
     p To give the world a blank slate.
     p
       | All visitors to the site are connected in a real-time, anonymous, collaborative editing
@@ -21,7 +21,7 @@ block content
       | Nobody knows yet, so make your mark and let's see what happens when every internet user in
       | the world is given a pen to write on the same page.
 
-    h1(style="color: #1FBCF0") ★ How does this site work?
+    h1 ★ How does this site work?
     p
       | There is a practical and technical limit on the number of users who can edit the same
       | document simultaneously, at least for the moment. While each day's writing ultimately
@@ -41,4 +41,25 @@ block content
     p
       | The rooms have been given intentionally nondescript and open-ended names, with the intention
       | that the users will determine each room's topics, culture, and focus, rather than the
-      | opposite. 
+      | opposite.
+    h1 ★ What else is there to know?
+    p The editor supports three formatting styles, each with its own delimiter:
+      |  asterisk (*) for
+      strong  bold
+      | ,
+      |  underscore (_) for
+      em  italic
+      | , and tilde (~) for 
+      del strikethrough
+      | .
+    p For example, if the editor contains this text,
+      p.example What the world needs *now* is _love ~and chocolate-covered Funyuns~_.
+      p.example Delimiters appear when written with backslashes: \*, \_, and \~.
+    p then that text will be rendered in the archive view as
+      p.example What the world needs
+        strong  now
+        |   is
+        em  love 
+          del and chocolate-covered Funyuns
+        | .
+      p.example Delimiters appear when written with backslashes: *, _, and ~.

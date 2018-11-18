@@ -87,7 +87,7 @@ a.link:hover:before, .selected a.link:before {
 }
 
 strong {
-  font-size: 17px;
+  font-size: 18px;
 }
 
 .hide, .hide * {
@@ -293,6 +293,7 @@ About page
 ****************/
 
 .about h1 {
+  color: #1FBCF0;
   padding-bottom: 0;
   padding-top: 20px;
 }
@@ -304,6 +305,12 @@ About page
 
 .about-subtitle {
   display: flex;
+}
+
+.about .example {
+  padding-left: 80px;
+  margin-bottom: 0;
+  margin-top: 0;
 }
 
 /****************
