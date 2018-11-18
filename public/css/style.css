@@ -165,6 +165,38 @@ Editor
   justify-content: space-between;
 }
 
+#inactive-warning {
+  background-color: rgb(232, 243, 231);
+  border: 5px solid rgb(191, 243, 230);
+  border-radius: 4px;
+  font-size: 20px;
+  height: 170px;
+  left: 32%;
+  margin: -220px 0 0 0;
+  padding: 6px;
+  position: fixed;
+  text-align: center;
+  top: 50%;
+  width: 400px;
+  z-index: 99;
+}
+
+.inactive-dismiss#box {
+  height: 40%;
+  margin: 0 auto;
+  padding-top: 20px;
+  text-align: center;
+  width: 70%;
+}
+
+button.inactive-dismiss {
+  background-color: rgb(191, 243, 230);
+  border-color: rgb(194, 191, 243);
+  float: unset;
+  margin: 0 auto;
+  width: 60px;
+}
+
 #ownName {
   float: left;
   margin-left: 5px;
