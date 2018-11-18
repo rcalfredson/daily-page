@@ -86,6 +86,10 @@ a.link:hover:before, .selected a.link:before {
   transform: scaleX(1);
 }
 
+strong {
+  font-size: 17px;
+}
+
 .hide, .hide * {
   visibility: hidden;
 }
