@@ -95,13 +95,15 @@ async function pageByDateAndRoom(date, room) {
 
 async function getPageDatesByYearAndMonth(year, month) {
   await initPagesCollection();
-  return (await collections.pages.find({ year, month }).toArray()).map(doc => doc.date)
-    .filter((v, i, a) => a.indexOf(v) === i);
+  return (await collections.pages.find({ year, month }).sort({ date: -1 }).toArray())
+    .map(doc => doc.date).filter((v, i, a) => a.indexOf(v) === i);
 }
 
-async function getPageDatesByMonthYearCombo() {
+async function getPageMonthYearCombos() {
   await initPagesCollection();
-  return (await collections.pages.aggregate([{ $group: { _id: { year: '$year', month: '$month' } } }]).toArray())
+  return (await collections.pages.aggregate([
+    { $sort: { year: 1, month: 1 } },
+    { $group: { _id: { year: '$year', month: '$month' } } }]).toArray())
     .map(doc => ({ year: doc._id.year, month: doc._id.month }));
 }
 
@@ -135,5 +137,5 @@ module.exports = {
   getPage,
   updatePage,
   getPageDatesByYearAndMonth,
-  getPageDatesByMonthYearCombo,
+  getPageMonthYearCombos,
 };

@@ -38,6 +38,14 @@ module.exports = (app, mongo) => {
     }
   });
 
+  router.get('/pageDates', authenticate, async (_, res) => {
+    try {
+      res.send(JSON.stringify(await cache.get('monthYearCombos', mongo.getPageMonthYearCombos)));
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
+
   router.post('/page/:room', authenticate, async (req, res) => {
     try {
       await mongo.updatePage(req.body.content, req.params.room);

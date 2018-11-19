@@ -31,6 +31,14 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       debug: true,
     }));
 
+    app.get('/archive', (_, res) => {
+      res.render('archive', {
+        title: 'Archive',
+        backendURL,
+        sessionID: jwtHelper.expiringKey(),
+      });
+    });
+
     app.get('/:year([0-9]{4})/:month(1[0-2]|[1-9])', (req, res) => {
       const { year, month } = req.params;
 
