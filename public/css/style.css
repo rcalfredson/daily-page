@@ -332,6 +332,11 @@ Archive pages
   font-family: 'Rubik-Light';
 }
 
+#viewer a {
+  text-decoration: underline dotted rgb(116, 137, 163);
+  color: rgb(0, 0, 0);
+}
+
 .year-month {
   display: flex;
   flex-wrap: wrap;
