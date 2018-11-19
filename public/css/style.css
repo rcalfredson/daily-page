@@ -26,6 +26,16 @@ animations
   to { opacity: 0; }
 }
 
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@-webkit-keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 /****************
 General
 ****************/
@@ -570,6 +580,11 @@ ToolTip
 
 .disabled:not(.hide) + .loading + .closed {
   display: block;
+}
+
+.loading {
+  -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+          animation: fadein 2s;
 }
 
 .loading, .closed {

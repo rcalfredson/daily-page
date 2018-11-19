@@ -35,7 +35,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       const { year, month } = req.params;
 
       res.render('yearMonth', {
-        title: `Daily Pages for ${viewHelper.monthName(month)} ${year}`,
+        title: `Daily Pages for ${dateHelper.monthName(month)} ${year}`,
         year,
         month,
         backendURL,
