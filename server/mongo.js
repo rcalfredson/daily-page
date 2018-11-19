@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const { MongoClient } = require('mongodb');
 const dateHelper = require('../build/dateHelper');
 
@@ -98,6 +99,12 @@ async function getPageDatesByYearAndMonth(year, month) {
     .filter((v, i, a) => a.indexOf(v) === i);
 }
 
+async function getPageDatesByMonthYearCombo() {
+  await initPagesCollection();
+  return (await collections.pages.aggregate([{ $group: { _id: { year: '$year', month: '$month' } } }]).toArray())
+    .map(doc => ({ year: doc._id.year, month: doc._id.month }));
+}
+
 async function getPageForRoom(date, room) {
   try {
     const page = await pageByDateAndRoom(date, room);
@@ -128,4 +135,5 @@ module.exports = {
   getPage,
   updatePage,
   getPageDatesByYearAndMonth,
+  getPageDatesByMonthYearCombo,
 };
