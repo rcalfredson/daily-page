@@ -332,7 +332,7 @@ Archive pages
   font-family: 'Rubik-Light';
 }
 
-#viewer a {
+#viewer a:not(.date-link) {
   text-decoration: underline dotted rgb(116, 137, 163);
   color: rgb(0, 0, 0);
 }
