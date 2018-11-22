@@ -91,7 +91,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
 
       if (roomsVacant.length === 0) {
         res.render('fullCapacity', {
-          title: 'Daily Page - At Full Capacity!'
+          title: 'Daily Page - At Full Capacity!',
         });
         return;
       }
@@ -102,7 +102,9 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       }
 
       if (peerIDs[roomReq].length >= 6) {
-        res.send('too many people in the room.');
+        res.render('fullRoom', {
+          room: viewHelper.capitalize(roomReq),
+        });
         return;
       }
       if (Object.keys(req.query).length !== 0 || peerIDs[roomReq].length === 0) {

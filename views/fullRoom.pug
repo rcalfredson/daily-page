@@ -3,10 +3,10 @@ block nav
   include navLinks
 block content
   #viewer
-    h1 Sorry; all editing rooms are currently 
-      span(style="color: #e53449") occupied.
+    h1 Sorry; the #{room} Room is now 
+      span(style="color: #e53449") fully occupied.
     h2
       | Please 
-      a(href="/") try again right now
+      a(href="/") try a different room
       |  or come back another time.
     include consolation
