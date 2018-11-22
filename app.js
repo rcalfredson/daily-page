@@ -39,6 +39,10 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       });
     });
 
+    app.get('/today', (_, res) => {
+      res.redirect(`/${dateHelper.currentDate()}`);
+    });
+
     app.get('/:year([0-9]{4})/:month(1[0-2]|[1-9])', (req, res) => {
       const { year, month } = req.params;
 
@@ -86,7 +90,9 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       }
 
       if (roomsVacant.length === 0) {
-        res.send('no room at the inn.');
+        res.render('fullCapacity', {
+          title: 'Daily Page - At Full Capacity!'
+        });
         return;
       }
 

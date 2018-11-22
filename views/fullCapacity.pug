@@ -2,4 +2,14 @@ extends layout
 block nav
   include navLinks
 block content
-  p No room at the inn.
+  #viewer
+    h2 Sorry; all editing rooms are currently occupied.
+    h3
+      | Please 
+      a(href="/") try again right now
+      |  or come back another time.
+    h3
+      | While you wait, feel free to read 
+      a(href="/today") today's page in its current revision,
+      |  or to 
+      a(href="/archive") browse the archive.
