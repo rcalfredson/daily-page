@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const { MongoClient } = require('mongodb');
+const sanitizeHtml = require('sanitize-html');
 const dateHelper = require('../build/dateHelper');
 
 const user = 'daily-page-admin';
@@ -72,7 +73,7 @@ async function updatePage(content, room) {
     .updateOne({
       date, room, year: dateArray[0], month: dateArray[1], day: dateArray[2],
     },
-    { $set: { content, lastUpdate: new Date().getTime() } }, { upsert: true });
+    { $set: { content: sanitizeHtml(content), lastUpdate: new Date().getTime() } }, { upsert: true });
 }
 
 async function pageByDate(date) {
