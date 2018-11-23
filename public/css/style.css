@@ -349,6 +349,7 @@ Archive and static pages
 
 #viewer {
   font-family: 'Rubik-Light';
+  padding-left: 20px;
 }
 
 #viewer a:not(.date-link), .info a {
