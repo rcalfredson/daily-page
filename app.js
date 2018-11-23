@@ -22,7 +22,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     app.use(bodyParser.json());
     app.set('views', './views');
     app.set('view engine', 'pug');
-    const whitelist = ['http://www.dailypage.org', 'http://localhost:3000'];
+    const whitelist = ['https://www.dailypage.org', 'http://localhost:3000'];
     const corsOptions = {
       origin: (origin, callback) => {
         console.log(origin)
