@@ -597,7 +597,7 @@ ToolTip
 
 .loading, .closed {
   display: none;
-  color: rgb(17, 87, 170);
+  color: rgb(26, 167, 214);
   position: absolute;
   top: 20%;
   left: 50%;
