@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "engines": {
+    "node": "8.x"
+  },
   "scripts": {
     "pretest": "eslint app.js server/ lib/archive.js lib/archivedPage.js lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js lib/yearMonth.js",
     "test": "jasmine",
