@@ -91,13 +91,14 @@ async function pageByDate(date) {
   return content ? { content } : null;
 }
 
-async function pageByDateAndRoom(date, room) {
-  return collections.pages.findOne({ date, room });
+async function pageByDateAndRoom(date, room, options) {
+  return collections.pages.findOne({ date, room },
+    { projection: options ? Object.assign({ _id: 0 }, options) : null });
 }
 
 async function getPageDatesByYearAndMonth(year, month) {
   await initPagesCollection();
-  return (await collections.pages.find({ year, month }).sort({ date: -1 }).toArray())
+  return (await collections.pages.find({ year, month }, { date: 1 }).sort({ date: -1 }).toArray())
     .map(doc => doc.date).filter((v, i, a) => a.indexOf(v) === i);
 }
 
@@ -109,23 +110,23 @@ async function getPageMonthYearCombos() {
     .map(doc => ({ year: doc._id.year, month: doc._id.month }));
 }
 
-async function getPageForRoom(date, room) {
+async function getPageForRoom(date, room, options) {
   try {
-    const page = await pageByDateAndRoom(date, room);
+    const page = await pageByDateAndRoom(date, room, options);
     if (!page) {
       throw new Error('Page does not exist.');
     }
     return page;
   } catch (error) {
     await updatePage('', room);
-    return pageByDateAndRoom(date, room);
+    return pageByDateAndRoom(date, room, options);
   }
 }
 
-async function getPage(date = dateHelper.currentDate(), room = null) {
+async function getPage(date = dateHelper.currentDate(), room = null, options = null) {
   await initPagesCollection();
   if (room) {
-    return getPageForRoom(date, room);
+    return getPageForRoom(date, room, options);
   }
   return pageByDate(date);
 }

@@ -17,7 +17,7 @@ module.exports = (app, mongo) => {
   async function sendPage(req, res) {
     try {
       res.send(JSON.stringify(await cache.get(req.params.date, mongo.getPage,
-        [req.params.date, req.params.room])));
+        [req.params.date, req.params.room, req.query])));
     } catch (error) {
       res.status(500).send({ error: error.message });
     }

@@ -25,7 +25,6 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     const whitelist = ['https://www.dailypage.org', 'http://localhost:3000'];
     const corsOptions = {
       origin: (origin, callback) => {
-        console.log(origin)
         if (whitelist.indexOf(origin) !== -1 || !origin) {
           callback(null, true);
         } else {
@@ -87,6 +86,8 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
         sessionID: jwtHelper.expiringKey(),
       });
     });
+
+    app.get('/support', (_, res) => res.render('support', { title: 'Daily Page - Support' }));
 
     app.get('/about', (_, res) => res.render('about', { title: 'Daily Page - About' }));
 

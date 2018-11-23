@@ -69,7 +69,7 @@ a {
 }
 
 a.link {
-  color: rgb(17, 87, 170);
+  color: rgb(26, 167, 214);
   position: relative;
   margin-right: 10px;
   vertical-align: 5px;
@@ -82,7 +82,7 @@ a.link:before {
   height: 2px;
   bottom: 0;
   left: 0;
-  background-color: rgb(17, 87, 170);
+  background-color: rgb(26, 167, 214);
   visibility: hidden;
   -webkit-transform: scaleX(0);
   transform: scaleX(0);
@@ -142,7 +142,7 @@ NavBar
 }
 
 .logo:hover {
-  color: rgb(17, 87, 170);
+  color: #2626F0;
 }
 
 /****************
@@ -300,51 +300,8 @@ button:hover {
 } */
 
 /****************
-About page
-****************/
-
-.about h1 {
-  color: #1FBCF0;
-  padding-bottom: 0;
-  padding-top: 20px;
-}
-
-.about p {
-  font-size: 18px;
-  margin-left: 40px;
-}
-
-.about-subtitle {
-  display: flex;
-}
-
-.about .example {
-  padding-left: 80px;
-  margin-bottom: 0;
-  margin-top: 0;
-}
-
-/****************
 Archive and static pages
 ****************/
-
-#viewer {
-  font-family: 'Rubik-Light';
-}
-
-#viewer a:not(.date-link) {
-  text-decoration: underline dotted rgb(116, 137, 163);
-  color: rgb(0, 0, 0);
-}
-
-#viewer h2 {
-  padding-left: 20px;
-}
-
-.year-month {
-  display: flex;
-  flex-wrap: wrap;
-}
 
 .date-link {
   background-color: rgb(195, 204, 230);
@@ -360,6 +317,47 @@ Archive and static pages
 
 .date-link:hover {
   background-color: rgb(170, 233, 204);
+}
+
+.info h1 {
+  color: #1FBCF0;
+  padding-bottom: 0;
+  padding-left: 1em;
+  padding-top: 20px;
+  text-indent:-1.3em;
+}
+
+.info p {
+  font-size: 18px;
+  margin-left: 46px;
+}
+
+.info-subtitle {
+  display: flex;
+}
+
+.info .example {
+  padding-left: 80px;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.year-month {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#viewer {
+  font-family: 'Rubik-Light';
+}
+
+#viewer a:not(.date-link), .info a {
+  text-decoration: underline dotted rgb(116, 137, 163);
+  color: rgb(0, 0, 0);
+}
+
+#viewer h2 {
+  padding-left: 20px;
 }
 
 /****************
