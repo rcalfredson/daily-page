@@ -22,12 +22,6 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     app.use(bodyParser.json());
     app.set('views', './views');
     app.set('view engine', 'pug');
-    useAPIV1(app, mongo);
-
-    const srv = app.listen(port, () => {
-      console.log(`Listening on ${port}`); // eslint-disable-line no-console
-    });
-
     const whitelist = ['http://www.dailypage.org', 'http://localhost:3000'];
     const corsOptions = {
       origin: (origin, callback) => {
@@ -41,6 +35,11 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     };
     app.use(cors(corsOptions));
     app.options('*', cors(corsOptions));
+    useAPIV1(app, mongo);
+
+    const srv = app.listen(port, () => {
+      console.log(`Listening on ${port}`); // eslint-disable-line no-console
+    });
 
     app.use('/peerjs', peerServer.ExpressPeerServer(srv, {
       debug: true,
