@@ -117,7 +117,8 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       }
 
       if (!roomReq) {
-        res.redirect(`/${roomsVacant[0]}`);
+        res.redirect(`/${peerIDs[roomsVacant[0]].length !== peerIDs[roomsVacant[roomsVacant.length - 1]].length ? roomsVacant[0] :
+          roomsVacant[Math.floor(Math.random() * roomsVacant.length)]}`);
         return;
       }
 
