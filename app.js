@@ -31,8 +31,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     const whitelist = ['http://www.dailypage.org', 'http://localhost:3000'];
     const corsOptions = {
       origin: (origin, callback) => {
-        console.log(`origin is ${origin}`);
-        if (whitelist.indexOf(origin) !== -1) {
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
           callback(null, true);
         } else {
           callback(new Error('Not allowed by CORS'));
