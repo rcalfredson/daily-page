@@ -30,13 +30,15 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     };
     app.use(cors(corsOptions));
     app.options('*', cors(corsOptions));
-    app.use((req, res, next) => {
-      if (req.headers['x-forwarded-proto'] !== 'https') {
-        res.redirect(`https://${req.headers.host}${req.path}`);
-      } else {
-        next();
-      }
-    });
+    if (process.env.NODE_ENV === 'production') {
+      app.use((req, res, next) => {
+        if (req.headers['x-forwarded-proto'] !== 'https') {
+          res.redirect(`https://${req.headers.host}${req.path}`);
+        } else {
+          next();
+        }
+      });
+    }
     app.use(express.static('public'));
     app.use(bodyParser.json());
     app.set('views', './views');
