@@ -18,10 +18,6 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
 
   try {
     await mongo.initConnection();
-    app.use(express.static('public'));
-    app.use(bodyParser.json());
-    app.set('views', './views');
-    app.set('view engine', 'pug');
     const whitelist = ['https://www.dailypage.org', 'http://localhost:3000'];
     const corsOptions = {
       origin: (origin, callback) => {
@@ -34,6 +30,17 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     };
     app.use(cors(corsOptions));
     app.options('*', cors(corsOptions));
+    app.use((req, res, next) => {
+      if (req.headers['x-forwarded-proto'] !== 'https') {
+        res.redirect(`https://${req.headers.host}${req.path}`);
+      } else {
+        next();
+      }
+    });
+    app.use(express.static('public'));
+    app.use(bodyParser.json());
+    app.set('views', './views');
+    app.set('view engine', 'pug');
     useAPIV1(app, mongo);
 
     const srv = app.listen(port, () => {
@@ -117,8 +124,8 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       }
 
       if (!roomReq) {
-        res.redirect(`/${peerIDs[roomsVacant[0]].length !== peerIDs[roomsVacant[roomsVacant.length - 1]].length ? roomsVacant[0] :
-          roomsVacant[Math.floor(Math.random() * roomsVacant.length)]}`);
+        res.redirect(`/${peerIDs[roomsVacant[0]].length !== peerIDs[roomsVacant[roomsVacant.length - 1]].length ? roomsVacant[0]
+          : roomsVacant[Math.floor(Math.random() * roomsVacant.length)]}`);
         return;
       }
 
