@@ -27,7 +27,7 @@ module.exports = (app, mongo) => {
 
   router.get('/page/:room/:date*?', authenticate, sendPage);
 
-  router.get('/pageDates/:year([0-9]{4})/:month(1[0-2]|[1-9])', authenticate, async (req, res) => {
+  router.get('/pageDates/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', authenticate, async (req, res) => {
     const { year, month } = req.params.year;
 
     try {

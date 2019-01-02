@@ -65,7 +65,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       res.redirect(`/${dateHelper.currentDate()}`);
     });
 
-    app.get('/:year([0-9]{4})/:month(1[0-2]|[1-9])', (req, res) => {
+    app.get('/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', (req, res) => {
       const { year, month } = req.params;
       const formattedTime = `${dateHelper.monthName(month)} ${year}`;
 
