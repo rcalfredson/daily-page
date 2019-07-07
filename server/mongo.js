@@ -10,6 +10,7 @@ const url = `mongodb+srv://${user}:${pw}@${addr}?retryWrites=true`;
 const dbName = 'daily-page';
 const collectionNames = { session: 'session-data', pages: 'pages' };
 const collections = { session: null, pages: null };
+const collectionSuffix = process.env.NODE_ENV === 'production' ? '' : '-test';
 
 let connection;
 let db;
@@ -32,7 +33,7 @@ async function initDB() {
 
 async function initCollection(name) {
   await initDB();
-  collections[name] = await db.collection(collectionNames[name]);
+  collections[name] = await db.collection(`${collectionNames[name]}${collectionSuffix}`);
 }
 
 async function initPagesCollection() {
