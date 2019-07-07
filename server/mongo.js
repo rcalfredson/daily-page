@@ -79,7 +79,13 @@ async function updatePage(content, room) {
 }
 
 async function pageByDate(date) {
-  const content = (await collections.pages.find({ date }).toArray()).sort((docA, docB) => {
+  const pages = await collections.pages.find({ date }).toArray();
+
+  if (pages.length === 0) {
+    return null;
+  }
+
+  const content = (pages).sort((docA, docB) => {
     const roomA = docA.room.toUpperCase();
     const roomB = docB.room.toUpperCase();
 
@@ -89,7 +95,7 @@ async function pageByDate(date) {
     return (roomA > roomB) ? 1 : 0;
   }).map(doc => doc.content).join('\n');
 
-  return content ? { content } : null;
+  return { content };
 }
 
 async function pageByDateAndRoom(date, room, options) {
