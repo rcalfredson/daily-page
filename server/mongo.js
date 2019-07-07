@@ -112,9 +112,14 @@ async function getPageDatesByYearAndMonth(year, month) {
 async function getPageMonthYearCombos() {
   await initPagesCollection();
   return (await collections.pages.aggregate([
-    { $sort: { year: 1, month: 1 } },
-    { $group: { _id: { year: '$year', month: '$month' } } }]).toArray())
-    .map(doc => ({ year: doc._id.year, month: doc._id.month }));
+    { $project: { date: { $dateFromString: { dateString: '$date' } }, year: '$year', month: '$month' } },
+    { $sort: { date: -1 } }]).toArray())
+    .reduce((accumulator, doc) => {
+      if (!accumulator.some(result => result.year === doc.year && result.month === doc.month)) {
+        return accumulator.concat({ year: doc.year, month: doc.month });
+      }
+      return accumulator;
+    }, []);
 }
 
 async function getPageForRoom(date, room, options) {
