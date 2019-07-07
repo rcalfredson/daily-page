@@ -36,6 +36,7 @@
     "body-parser": "^1.18.3",
     "browserify": "^16.2.3",
     "cors": "^2.8.5",
+    "easymde": "^2.6.1",
     "express": "^4.16.2",
     "feather-icons": "^4.0.0",
     "humanize-duration": "^3.15.3",
@@ -49,7 +50,6 @@
     "pug": "^2.0.0-rc.4",
     "rxjs": "^5.5.2",
     "sanitize-html": "^1.19.1",
-    "simplemde": "^1.11.2",
     "sorted-cmp-array": "^2.0.1",
     "uuid": "^3.1.0"
   },
