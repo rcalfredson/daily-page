@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "engines": {
-    "node": "8.x"
+    "node": "^12.6.0"
   },
   "scripts": {
     "pretest": "eslint app.js server/ lib/archive.js lib/archivedPage.js lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js lib/yearMonth.js",
