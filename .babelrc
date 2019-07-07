@@ -1,4 +1,11 @@
 {
-  "presets": ["es2015", "stage-3"],
-  "plugins": []
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "useBuiltIns": "entry",
+        "corejs": 2
+      }
+    ]
+  ]
 }
