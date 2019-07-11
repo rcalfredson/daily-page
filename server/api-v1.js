@@ -1,83 +1,23 @@
 const router = require('express').Router();
-const cache = require('./cache');
-const jwtHelper = require('./jwt-helper');
+const helpers = require('./api-v1-helpers');
 
 module.exports = (app, mongo) => {
+  helpers.init(mongo);
   app.use('/api/v1', router);
 
-  function authenticate(req, res, next) {
-    try {
-      jwtHelper.verifyReq(req);
-      next();
-    } catch (error) {
-      res.sendStatus(403);
-    }
-  }
+  router.get('/page/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', helpers.authenticate, helpers.sendPage);
 
-  async function sendPage(req, res) {
-    try {
-      res.send(JSON.stringify(await cache.get(req.params.date, mongo.getPage,
-        [req.params.date, req.params.room, req.query])));
-    } catch (error) {
-      res.status(500).send({ error: error.message });
-    }
-  }
+  router.get('/page/:room/:date*?', helpers.authenticate, helpers.sendPage);
 
-  router.get('/page/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', authenticate, sendPage);
+  router.get('/pageDates/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', helpers.authenticate, helpers.pageDatesForYearMonthCombo);
 
-  router.get('/page/:room/:date*?', authenticate, sendPage);
+  router.get('/pageDates', helpers.authenticate, helpers.allYearMonthCombos);
 
-  router.get('/pageDates/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', authenticate, async (req, res) => {
-    const { year, month } = req.params;
+  router.post('/page/:room', helpers.authenticate, helpers.updatePageForRoom);
 
-    try {
-      res.send(JSON.stringify(await cache.get(`${year}-${month}`, mongo.getPageDatesByYearAndMonth,
-        [year, month])));
-    } catch (error) {
-      res.status(500).send({ error: error.message });
-    }
-  });
+  router.get('/peers/:room*?', helpers.authenticate, helpers.peersForRoom);
 
-  router.get('/pageDates', authenticate, async (_, res) => {
-    try {
-      res.send(JSON.stringify(await cache.get('monthYearCombos', mongo.getPageMonthYearCombos)));
-    } catch (error) {
-      res.status(500).send({ error: error.message });
-    }
-  });
+  router.delete('/peers/:room/:id', helpers.authenticate, helpers.removePeerFromRoom);
 
-  router.post('/page/:room', authenticate, async (req, res) => {
-    try {
-      await mongo.updatePage(req.body.content, req.params.room);
-      res.json({ updated: new Date().getTime() });
-    } catch (error) {
-      res.status(500).send({ error: error.message });
-    }
-  });
-
-  router.get('/peers/:room*?', authenticate, async (req, res) => {
-    try {
-      res.send(JSON.stringify(await mongo.peerIDs(req.params.room)));
-    } catch (error) {
-      res.status(500).send({ error: error.message });
-    }
-  });
-
-  router.delete('/peers/:room/:id', authenticate, async (req, res) => {
-    try {
-      await mongo.removePeer(req.params.id, req.params.room);
-      res.sendStatus(200);
-    } catch (error) {
-      res.status(500).send({ error: error.message });
-    }
-  });
-
-  router.post('/peers/:room/:id', authenticate, async (req, res) => {
-    try {
-      await mongo.addPeer(req.params.id, req.params.room);
-      res.sendStatus(200);
-    } catch (error) {
-      res.status(500).send({ error: error.message });
-    }
-  });
+  router.post('/peers/:room/:id', helpers.authenticate, helpers.addPeerToRoom);
 };
