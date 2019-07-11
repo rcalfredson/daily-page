@@ -7,11 +7,11 @@
     "node": "^12.6.0"
   },
   "scripts": {
-    "pretest": "eslint app.js server/ lib/archive.js lib/archivedPage.js lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js lib/yearMonth.js",
+    "pretest": "eslint app.js server/ lib/archivedPage.js lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js lib/yearMonth.js",
     "test": "jasmine",
     "start": "node app.js",
     "build": "babel lib -d build",
-    "compile": "browserify build/main.js -o public/js/bundle.js && browserify build/archive.js -o public/js/archive.js && browserify build/archivedPage.js -o public/js/archivedPage.js && browserify build/clearSelection.js -o public/js/clearSelection.js && browserify build/yearMonth.js -o public/js/yearMonth.js",
+    "compile": "browserify build/main.js -o public/js/bundle.js && browserify build/archivedPage.js -o public/js/archivedPage.js && browserify build/clearSelection.js -o public/js/clearSelection.js && browserify build/yearMonth.js -o public/js/yearMonth.js",
     "postinstall": "npm run build && npm run compile",
     "local": "npm run build && npm run compile && npm start",
     "perform": "babel-node performance/script.js",

@@ -1,5 +1,12 @@
-extends viewerWithLoad
+extends viewer
 prepend content
   h1 Archive
-append scripts
-  script(src='/js/archive.js')
+append content
+  #viewer.year-month
+    if !combos || combos.length === 0
+      p Sorry; something went wrong while loading the archive.
+    else
+      each combo in combos
+        a.date-link(
+          href=combo.year + '/' + combo.month
+        ) #{monthNames[combo.month - 1]} #{combo.year}

@@ -53,11 +53,12 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       debug: true,
     }));
 
-    app.get('/archive', (_, res) => {
+    app.get('/archive', async (_, res) => {
+      const combos = await cache.get('monthYearCombos', mongo.getPageMonthYearCombos);
+
       res.render('archive', {
+        combos,
         title: 'Archive',
-        backendURL,
-        sessionID: jwtHelper.expiringKey(),
       });
     });
 
