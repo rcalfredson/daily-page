@@ -1,5 +1,10 @@
-extends viewerWithLoad
+extends viewer
 prepend content
   h1= header
-append scripts
-  script(src='/js/archivedPage.js')
+append content
+  #viewer
+    if errorMessage
+      p #{errorMessage}
+    else
+      div !{text}
+      

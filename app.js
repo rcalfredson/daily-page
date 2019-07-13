@@ -31,6 +31,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     app.use(cors(corsOptions));
     app.options('*', cors(corsOptions));
     if (process.env.NODE_ENV === 'production') {
+      /*
       app.use((req, res, next) => {
         if (req.headers['x-forwarded-proto'] !== 'https') {
           res.redirect(`https://${req.headers.host}${req.path}`);
@@ -38,6 +39,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
           next();
         }
       });
+      */
     }
     app.use(express.static('public'));
     app.use(bodyParser.json());
@@ -78,25 +80,34 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       });
     });
 
-    app.get(`/${dateParam}`, (req, res) => {
+    app.get(`/${dateParam}`, async (req, res) => {
       const formattedTime = dateHelper.formatDate(req.params.date, 'long');
+      const pageData = await cache.get(req.params.date, mongo.getPage,
+        [req.params.date, req.params.room, req.query]);
+
+      const [errorMessage, text] = viewHelper.archiveContent(pageData);
 
       res.render('archivedPage', {
         title: `Daily Page for ${formattedTime}`,
         header: formattedTime,
-        backendURL,
-        sessionID: jwtHelper.expiringKey(),
+        errorMessage,
+        text,
       });
     });
 
-    app.get(`/:room([a-zA-Z]+)/${dateParam}`, (req, res) => {
+    app.get(`/:room([a-zA-Z]+)/${dateParam}`, async (req, res) => {
       const roomReq = req.params.room;
+      const dateAndRoom = `${dateHelper.formatDate(req.params.date, 'long')} - ${viewHelper.capitalize(roomReq)} Room`;
+      const pageData = await cache.get(req.params.date, mongo.getPage,
+        [req.params.date, roomReq, req.query]);
+
+      const [errorMessage, text] = viewHelper.archiveContent(pageData);
 
       res.render('archivedPage', {
-        title: `Daily Page for ${dateHelper.formatDate(req.params.date, 'long')} - ${viewHelper.capitalize(roomReq)} Room`,
-        backendURL,
-        room: roomReq,
-        sessionID: jwtHelper.expiringKey(),
+        title: `Daily Page for ${dateAndRoom}`,
+        header: dateAndRoom,
+        errorMessage,
+        text,
       });
     });
 
