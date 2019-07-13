@@ -1,8 +1,12 @@
-extends viewerWithLoad
+extends viewer
 prepend content
   h1= header
-append scripts
-  script.
-    year = "#{year}"
-    month = "#{month}"
-  script(src='/js/yearMonth.js')
+append content
+  #viewer.year-month
+    if !dates || dates.length === 0
+      p We could not find any pages during that timeframe.
+    else
+      each date in dates
+        a.date-link(
+          href='../' + date
+        ) #{date}
