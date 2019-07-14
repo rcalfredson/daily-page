@@ -304,8 +304,9 @@ Archive and static pages
 ****************/
 
 .date-link {
-  background-color: rgb(195, 204, 230);
+  background-color: rgb(84, 86, 207);
   border-radius: 3px;
+  color: white;
   display: block;
   margin-bottom: 18px;
   margin-left: 10px;
@@ -317,7 +318,7 @@ Archive and static pages
 }
 
 .date-link:hover {
-  background-color: rgb(170, 233, 204);
+  background-color: rgb(15, 182, 104);
 }
 
 .info h1 {
