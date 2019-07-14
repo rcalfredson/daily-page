@@ -62,6 +62,10 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       });
     });
 
+    app.get('/random', (_, res) => {
+      res.render('randomString');
+    })
+
     app.get('/today', (_, res) => {
       res.redirect(`/${dateHelper.currentDate()}`);
     });

@@ -1,0 +1,59 @@
+extends viewer
+prepend content
+  h1 Random Writer
+append content
+  #viewer
+    script.
+      const scale = (num, in_min, in_max, out_min, out_max) => {
+        return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+      };
+      const newIndex = () => {
+        return Math.round(scale(Number((window.crypto.getRandomValues(new Uint32Array(1))[0]).toString().slice(-3, -1)), 0, 99, 0, 47));
+      }
+      const shuffle = (array) => {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+      }
+
+      let oldChar;
+
+      let charMap = shuffle('abcdefghijklmnopqrstuvwxyz'.split('')
+        .concat([
+          '&ensp;', '&ensp;', '&ensp;', '&ensp;', '&ensp;', '&ensp;', '&ensp;',
+          'a', 'a', 'a',
+          'e', 'e', 'e',
+          'i', 'i', 'i',
+          'o', 'o', 'o',
+          'u', 'u', 'u']));
+      console.log(charMap);
+      runGenerator = () => {
+        let index = newIndex();
+        
+        if ((oldChar === '&ensp;' && charMap[index] === '&ensp;') || (new Date().getTime() % 10 === 9)) {
+          while (charMap[index] === '&ensp;') {
+            index = newIndex();
+          }
+        }
+        oldChar = charMap[index];        
+        document.getElementById('random')[charMap[index] === '&ensp;' ?
+          'innerHTML' : 'innerText'] += charMap[index];
+      };
+      let stringMaker = setInterval(runGenerator, 130);
+    span.text#random
+    br
+    br
+    a.hover-effect-link.tall-button(onclick="document.getElementById('random').innerText = ''") Clear
+    a.hover-effect-link.tall-button#stop(onclick="clearInterval(stringMaker); stringMaker = false; document.getElementById('restart').style.display = 'inline-block'; document.getElementById('stop').style.display = 'none';") Stop writing
+    a.hover-effect-link.tall-button#restart(onclick="stringMaker = setInterval(runGenerator, 130); document.getElementById('stop').style.display = 'inline-block'; document.getElementById('restart').style.display = 'none';") Start writing
+    script.
+      document.getElementById('restart').style.display = 'none';

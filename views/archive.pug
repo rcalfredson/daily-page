@@ -7,6 +7,6 @@ append content
       p Sorry; something went wrong while loading the archive.
     else
       each combo in combos
-        a.date-link(
+        a.hover-effect-link(
           href=combo.year + '/' + combo.month
         ) #{monthNames[combo.month - 1]} #{combo.year}

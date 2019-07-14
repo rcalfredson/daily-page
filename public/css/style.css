@@ -303,7 +303,7 @@ button:hover {
 Archive and static pages
 ****************/
 
-.date-link {
+.hover-effect-link {
   background-color: rgb(84, 86, 207);
   border-radius: 3px;
   color: white;
@@ -317,8 +317,13 @@ Archive and static pages
   transition: background-color 600ms linear;
 }
 
-.date-link:hover {
+.hover-effect-link:hover {
   background-color: rgb(15, 182, 104);
+}
+
+.tall-button {
+  padding: 15px;
+  display: inline-block;
 }
 
 .info h1 {
@@ -354,7 +359,7 @@ Archive and static pages
   padding-left: 20px;
 }
 
-#viewer a:not(.date-link), .info a {
+#viewer a:not(.hover-effect-link), .info a {
   text-decoration: underline dotted rgb(116, 137, 163);
   color: rgb(0, 0, 0);
 }
