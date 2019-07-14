@@ -63,7 +63,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     });
 
     app.get('/random', (_, res) => {
-      res.render('randomString');
+      res.render('randomWriter', {title: 'Random Writer'});
     })
 
     app.get('/today', (_, res) => {
