@@ -20,6 +20,7 @@ async function initConnection() {
   const socketTimeoutMS = process.env.MONGODB_SOCKET_TIMEOUT || 30000;
 
   connection = await MongoClient.connect(url, {
+    useUnifiedTopology: true,
     useNewUrlParser: true,
     poolSize: 10,
     connectTimeoutMS,
@@ -93,29 +94,39 @@ async function pageByDate(date) {
       return -1;
     }
     return (roomA > roomB) ? 1 : 0;
-  }).map(doc => doc.content).join('\n');
+  }).map((doc) => doc.content).join('\n');
 
   return { content };
 }
 
 async function pageByDateAndRoom(date, room, options) {
   return collections.pages.findOne({ date, room },
-    { projection: options ? Object.assign({ _id: 0 }, options) : null });
+    { projection: options ? Object.assign(options, { _id: 0 }) : null });
 }
 
 async function getPageDatesByYearAndMonth(year, month) {
   await initPagesCollection();
   return (await collections.pages.find({ year, month }, { date: 1 }).sort({ date: -1 }).toArray())
-    .map(doc => doc.date).filter((v, i, a) => a.indexOf(v) === i);
+    .reduce((accumulator, doc) => {
+      if (doc.content !== '') {
+        return accumulator.concat(doc);
+      }
+      return accumulator;
+    }, [])
+    .map((doc) => doc.date).filter((v, i, a) => a.indexOf(v) === i);
 }
 
 async function getPageMonthYearCombos() {
   await initPagesCollection();
   return (await collections.pages.aggregate([
-    { $project: { date: { $dateFromString: { dateString: '$date' } }, year: '$year', month: '$month' } },
+    {
+      $project: {
+        date: { $dateFromString: { dateString: '$date' } }, year: '$year', month: '$month', content: '$content',
+      },
+    },
     { $sort: { date: -1 } }]).toArray())
     .reduce((accumulator, doc) => {
-      if (!accumulator.some(result => result.year === doc.year && result.month === doc.month)) {
+      if (!accumulator.some((result) => result.year === doc.year && result.month === doc.month) && doc.content !== '') {
         return accumulator.concat({ year: doc.year, month: doc.month });
       }
       return accumulator;

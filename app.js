@@ -63,8 +63,8 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     });
 
     app.get('/random', (_, res) => {
-      res.render('randomWriter', {title: 'Random Writer'});
-    })
+      res.render('randomWriter', { title: 'Random Writer' });
+    });
 
     app.get('/today', (_, res) => {
       res.redirect(`/${dateHelper.currentDate()}`);
@@ -122,7 +122,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       const roomReq = req.params.room;
       const rooms = await cache.get('rooms', mongo.rooms);
       const peerIDs = (await cache.get('peerIDs', mongo.peerIDs));
-      const roomsVacant = rooms.filter(room => peerIDs[room].length < maxCapacity)
+      const roomsVacant = rooms.filter((room) => peerIDs[room].length < maxCapacity)
         .sort((roomA, roomB) => peerIDs[roomB].length - peerIDs[roomA].length);
 
       if (roomReq && !rooms.includes(roomReq)) {
