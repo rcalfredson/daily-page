@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "engines": {
-    "node": "^12.6.0"
+    "node": "^13.2.0"
   },
   "scripts": {
     "pretest": "eslint app.js server/ lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js",
