@@ -38,8 +38,10 @@
     "easymde": "^2.8.0",
     "express": "^4.16.2",
     "feather-icons": "^4.0.0",
+    "googleapis": "^45.0.0",
     "humanize-duration": "^3.15.3",
     "jquery": "^3.4.1",
+    "jsdom": "^15.2.1",
     "jsonwebtoken": "^8.3.0",
     "memory-cache": "^0.2.0",
     "moment-timezone": "^0.5.23",
@@ -63,7 +65,6 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "jasmine": "^2.8.0",
-    "jsdom": "^11.3.0"
+    "jasmine": "^2.8.0"
   }
 }

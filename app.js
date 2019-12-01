@@ -8,6 +8,7 @@ const cache = require('./server/cache');
 const jwtHelper = require('./server/jwt-helper');
 const viewHelper = require('./server/view-helper');
 const mongo = require('./server/mongo');
+const google = require('./server/google');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,6 +19,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
 
   try {
     await mongo.initConnection();
+    google.init(mongo);
     const whitelist = ['https://dailypage.org', 'http://localhost:3000'];
     const corsOptions = {
       origin: (origin, callback) => {
@@ -64,6 +66,37 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
 
     app.get('/random', (_, res) => {
       res.render('randomWriter', { title: 'Random Writer' });
+    });
+
+    app.get('/baseball', async (_, res) => {
+      const docTitles = await google.docTitles();
+      const sortable = [];
+      Object.keys(docTitles).forEach((title) => sortable.push([title, docTitles[title]]));
+      sortable.sort((a, b) => {
+        if (a[1] > b[1]) { return -1; }
+        if (b[1] > a[1]) { return 1; }
+        return 0;
+      });
+      const firstNumericElement = sortable.findIndex((el) => !Number.isNaN(parseInt(el[1], 10)));
+      const generalSortable = sortable.slice(0, firstNumericElement);
+      generalSortable.sort((a, b) => {
+        if (a[1] > b[1]) { return 1; }
+        if (b[1] > a[1]) { return -1; }
+        return 0;
+      });
+      const titlesWithHeaders = {
+        'General notes': generalSortable,
+        'Daily notes': sortable.slice(firstNumericElement, sortable.length),
+      };
+      res.render('linkList', {
+        basePath: '/baseball',
+        header: "Robert's Miscellaneous Baseball Notes",
+        titlesWithHeaders,
+      });
+    });
+
+    app.get('/baseball/:docID', async (req, res) => {
+      res.send(await google.docText(req.params.docID));
     });
 
     app.get('/today', (_, res) => {

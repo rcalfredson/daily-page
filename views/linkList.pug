@@ -1,0 +1,17 @@
+title #{header}
+
+link(rel='stylesheet' href='/css/googleDocs.css')
+
+div(id='header')
+  p(id='headerText') #{header}
+  div(style="display: inline-block; width: 230px;")
+    a(href='/') ← homepage
+    a(href='/archive' style="float: right;") ← archive
+
+
+for titleList, subHeader in titlesWithHeaders
+  h3 #{subHeader}
+  ul
+    each title in titleList
+      li
+        a(href=`${basePath}/${title[0]}`) #{title[1]}

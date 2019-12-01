@@ -1,0 +1,18 @@
+html * {
+  font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+}
+
+#header {
+  padding: 8px 30px 0px 15px;
+  position: relative;
+  background-color: #FFA500;
+  min-height: 80px;
+}
+
+#headerText {
+  color: rgb(7, 146, 81);
+  position: absolute;
+  bottom: 0;
+  font-size: 32px;
+  margin-bottom: 9px;
+}

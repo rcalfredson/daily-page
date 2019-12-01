@@ -3,6 +3,7 @@
 /public/js/clearSelection.js
 /build
 debug.js
+credentials.json
 .DS_Store
 /performance/logs/*
 !/performance/logs/.gitkeep

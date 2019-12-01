@@ -8,8 +8,12 @@ const addr = process.env.MONGO_DB_ADDR;
 const pw = process.env.MONGO_DB_PW;
 const url = `mongodb+srv://${user}:${pw}@${addr}?retryWrites=true`;
 const dbName = 'daily-page';
-const collectionNames = { session: 'session-data', pages: 'pages' };
-const collections = { session: null, pages: null };
+const collectionNames = {
+  session: 'session-data',
+  pages: 'pages',
+  backup: 'doc-backup',
+};
+const collections = { session: null, pages: null, backup: null };
 const collectionSuffix = process.env.NODE_ENV === 'production' ? '' : '-test';
 
 let connection;
@@ -43,6 +47,28 @@ async function initPagesCollection() {
 
 async function initSessionCollection() {
   await initCollection('session');
+}
+
+async function initBackupCollection() {
+  await initCollection('backup');
+}
+
+async function updateDocMappings(mappings) {
+  await initBackupCollection();
+  await collections.backup.replaceOne({ _id: 'docMappings' }, mappings, { upsert: true });
+  await collections.backup.updateOne({ _id: 'lastUpdate' }, { $set: { ts: new Date().getTime() } });
+}
+
+async function getDocMappings() {
+  await initBackupCollection();
+  const update = await collections.backup.findOne({ _id: 'lastUpdate' });
+
+  if (new Date().getTime() - update.ts > 5 * 60 * 1000) {
+    throw new Error('Doc mappings outdated');
+  }
+  const doc = await collections.backup.findOne({ _id: 'docMappings' });
+  delete doc._id; // eslint-disable-line no-underscore-dangle
+  return doc;
 }
 
 async function peerIDs(room = null) {
@@ -162,6 +188,8 @@ module.exports = {
   removePeer,
   getPage,
   updatePage,
+  getDocMappings,
+  updateDocMappings,
   getPageDatesByYearAndMonth,
   getPageMonthYearCombos,
 };
