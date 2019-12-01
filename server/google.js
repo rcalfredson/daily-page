@@ -6,6 +6,8 @@ const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const fs = require('fs');
 
+const cache = require('./cache');
+
 const scopes = ['https://www.googleapis.com/auth/drive'];
 let credentials;
 let auth;
@@ -34,7 +36,7 @@ async function docTitles() {
     });
   }
   try {
-    return await mongo.getDocMappings();
+    return await cache.get('docMappings', mongo.getDocMappings);
   } catch (error) {
     const queryParams = {
       pageSize: 500,
@@ -50,7 +52,7 @@ async function docTitles() {
       updateTitles(res);
     }
     await mongo.updateDocMappings(titles);
-    return mongo.getDocMappings();
+    return cache.get('docMappings', mongo.getDocMappings);
   }
 }
 
@@ -68,6 +70,7 @@ async function docText(fileId) {
 
   const dom = new JSDOM(res.data);
   const style = dom.window.document.createElement('link');
+  const titles = await docTitles();
   style.rel = 'stylesheet';
   style.href = '/css/googleDocs.css';
   dom.window.document.querySelector('head').appendChild(style);
@@ -78,12 +81,20 @@ async function docText(fileId) {
     uls[ul].className = '';
   });
 
+  const links = dom.window.document.getElementsByTagName('a');
+  Object.keys(links).forEach((pageLink) => {
+    if (Object.keys(titles).some((docKey) => links[pageLink].href.includes(docKey))) {
+      const components = links[pageLink].href.split('/');
+      links[pageLink].href = `/baseball/${components[components.length - 2]}`;
+    }
+  });
+
   const listItems = dom.window.document.getElementsByTagName('li');
   Object.keys(listItems).forEach((listItem) => {
     listItems[listItem].style.marginLeft = `${(parseInt(listItems[listItem].style.marginLeft.split('px')[0], 10) / 2).toString()}px`;
   });
   const titleEl = dom.window.document.createElement('div');
-  const docTitle = (await docTitles())[fileId];
+  const docTitle = titles[fileId];
   const titleHeader = dom.window.document.createElement('h2');
   titleHeader.style.marginBottom = '2px';
   titleHeader.textContent = docTitle;
