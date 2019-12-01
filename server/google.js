@@ -93,19 +93,22 @@ async function docText(fileId) {
   Object.keys(listItems).forEach((listItem) => {
     listItems[listItem].style.marginLeft = `${(parseInt(listItems[listItem].style.marginLeft.split('px')[0], 10) / 2).toString()}px`;
   });
-  const titleEl = dom.window.document.createElement('div');
+  const headerDiv = dom.window.document.createElement('div');
   const docTitle = titles[fileId];
   const titleHeader = dom.window.document.createElement('h2');
   titleHeader.style.marginBottom = '2px';
   titleHeader.textContent = docTitle;
-  titleEl.appendChild(titleHeader);
-  dom.window.document.querySelector('body').insertAdjacentElement('afterbegin', titleEl);
+  const titleEl = dom.window.document.createElement('title');
+  titleEl.textContent = docTitle;
+  headerDiv.appendChild(titleHeader);
+  dom.window.document.querySelector('head').appendChild(titleEl);
+  dom.window.document.querySelector('body').insertAdjacentElement('afterbegin', headerDiv);
   const backEl = dom.window.document.createElement('a');
   backEl.href = '/baseball';
   backEl.textContent = 'Go back';
-  titleEl.insertAdjacentElement('beforeend', backEl);
+  headerDiv.insertAdjacentElement('beforeend', backEl);
   for (let index = 0; index < 2; index += 1) {
-    titleEl.appendChild(dom.window.document.createElement('br'));
+    headerDiv.appendChild(dom.window.document.createElement('br'));
   }
   return dom.serialize();
 }
