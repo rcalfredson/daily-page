@@ -152,7 +152,7 @@ async function getPageMonthYearCombos() {
     },
     { $sort: { date: -1 } }]).toArray())
     .reduce((accumulator, doc) => {
-      if (!accumulator.some((result) => result.year === doc.year && result.month === doc.month) && doc.content !== '') {
+      if (!accumulator.some((result) => result.year === doc.year && result.month === doc.month) && !(doc.content.charCodeAt(0) === 8203 && doc.content.length === 1) && doc.content.replace(/\s+/g, '').length > 0) {
         return accumulator.concat({ year: doc.year, month: doc.month });
       }
       return accumulator;
