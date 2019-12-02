@@ -134,7 +134,7 @@ async function getPageDatesByYearAndMonth(year, month) {
   await initPagesCollection();
   return (await collections.pages.find({ year, month }, { date: 1 }).sort({ date: -1 }).toArray())
     .reduce((accumulator, doc) => {
-      if (doc.content !== '') {
+      if (!(doc.content.charCodeAt(0) === 8203 && doc.content.length === 1) && doc.content.replace(/\s+/g, '').length > 0) {
         return accumulator.concat(doc);
       }
       return accumulator;
