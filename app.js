@@ -84,9 +84,17 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
         if (b[1] > a[1]) { return -1; }
         return 0;
       });
+      const dateSortable = sortable.slice(firstNumericElement, sortable.length);
+      dateSortable.sort((a, b) => {
+        const date1 = Date.parse(a[1]);
+        const date2 = Date.parse(b[1]);
+        if (date1 > date2) { return -1; }
+        if (date2 > date1) { return 1; }
+        return 0;
+      });
       const titlesWithHeaders = {
         'General notes': generalSortable,
-        'Daily notes': sortable.slice(firstNumericElement, sortable.length),
+        'Daily notes': dateSortable,
       };
       res.render('linkList', {
         basePath: '/baseball',
