@@ -76,9 +76,14 @@ async function docText(fileId) {
   dom.window.document.querySelector('head').appendChild(style);
   dom.window.document.querySelector('body').style = 'font-family: "Times New Roman"; margin-left: 20px;';
 
-  const uls = dom.window.document.getElementsByTagName('ul');
-  Object.keys(uls).forEach((ul) => {
-    uls[ul].className = '';
+  const lists = [dom.window.document.getElementsByTagName('ul'),
+    dom.window.document.getElementsByTagName('ol')];
+
+  lists.forEach((list) => {
+    const htmlList = list;
+    Object.keys(htmlList).forEach((listItem) => {
+      htmlList[listItem].className = '';
+    });
   });
 
   const links = dom.window.document.getElementsByTagName('a');
