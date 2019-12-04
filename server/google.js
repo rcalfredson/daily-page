@@ -79,10 +79,13 @@ async function docText(fileId) {
   const lists = [dom.window.document.getElementsByTagName('ul'),
     dom.window.document.getElementsByTagName('ol')];
 
-  lists.forEach((list) => {
+  const typeMaps = {'36pt': ['disc', '1'], '72pt': ['circle', 'a'], '108pt': ['square', 'i']};
+
+  lists.forEach((list, listIndex) => {
     const htmlList = list;
     Object.keys(htmlList).forEach((listItem) => {
       htmlList[listItem].className = '';
+      htmlList[listItem].type = typeMaps[htmlList[listItem].firstChild.style.marginLeft][listIndex];
     });
   });
 
@@ -96,7 +99,7 @@ async function docText(fileId) {
 
   const listItems = dom.window.document.getElementsByTagName('li');
   Object.keys(listItems).forEach((listItem) => {
-    listItems[listItem].style.marginLeft = `${(parseInt(listItems[listItem].style.marginLeft.split('px')[0], 10) / 2).toString()}px`;
+    listItems[listItem].style.marginLeft = `${(parseInt(listItems[listItem].style.marginLeft.split('px')[0], 10) / 1.5).toString()}px`;
   });
   const headerDiv = dom.window.document.createElement('div');
   const docTitle = titles[fileId];
