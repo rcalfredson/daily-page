@@ -112,7 +112,6 @@ async function docText(fileId) {
   dom.window.document.querySelector('head').appendChild(titleEl);
   dom.window.document.querySelector('body').insertAdjacentElement('afterbegin', headerDiv);
   const backEl = dom.window.document.createElement('a');
-  dom.window.document.querySelector('body').style.maxWidth = '1000px';
   backEl.href = '/baseball';
   backEl.textContent = 'Go back';
   headerDiv.insertAdjacentElement('beforeend', backEl);
