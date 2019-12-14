@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const peerServer = require('peer');
+const stream = require('stream');
 const dateHelper = require('./build/dateHelper');
 const useAPIV1 = require('./server/api-v1');
 const cache = require('./server/cache');
@@ -106,6 +107,42 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     app.get('/baseball/:docID', async (req, res) => {
       res.send(await google.docText(req.params.docID));
     });
+
+    app.get('/stream/:fileID', (req, res) => {
+      res.render('audioPlayer', {
+        host: req.headers.host,
+        fileID: req.params.fileID
+      });
+    });
+
+    app.get('/audio/:fileID', async (req, res) => {
+      let buffer = await cache.get(req.params.fileID, google.wavFromText, [req.params.fileID], 5 * 60 * 1000);
+      let total = buffer.byteLength;
+      if (req.headers.range) {
+              const range = req.headers.range;
+              const parts = range.replace(/bytes=/, '').split('-');
+              const partialStart = parts[0];
+              const partialEnd = parts[1];
+  
+              const start = parseInt(partialStart, 10);
+              const end = partialEnd ? parseInt(partialEnd, 10) : total - 1;
+              const chunksize = (end - start) + 1;
+              var readStream = new stream.PassThrough();
+              readStream.end(buffer);
+  
+              res.writeHead(206, {
+                  'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
+                  'Accept-Ranges': 'bytes', 'Content-Length': chunksize,
+                  'Content-Type': 'audio/wav'
+              });
+              readStream.pipe(res);
+            } else {
+              var readStream = new stream.PassThrough();
+              readStream.end(buffer);
+              res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'audio/wav' });
+              readStream.pipe(res);
+            }
+  });
 
     app.get('/today', (_, res) => {
       res.redirect(`/${dateHelper.currentDate()}`);

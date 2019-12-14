@@ -1,7 +1,10 @@
 /* eslint-disable no-await-in-loop */
 const baseballFolderID = process.env.BASEBALL_FOLDER_ID;
+const musicFolderID = process.env.MUSIC_FOLDER_ID;
 const { google } = require('googleapis');
 const jsdom = require('jsdom');
+const Promise = require('bluebird');
+const stripBom = require('strip-bom');
 
 const { JSDOM } = jsdom;
 const fs = require('fs');
@@ -69,12 +72,17 @@ async function docText(fileId) {
   }
 
   const dom = new JSDOM(res.data);
-  const style = dom.window.document.createElement('link');
+  const styleLink = dom.window.document.createElement('link');
+  const faviconLink = dom.window.document.createElement('link');
+  faviconLink.rel = 'shortcut icon';
+  faviconLink.href = '/assets/img/favicon.ico';
   const titles = await docTitles();
-  style.rel = 'stylesheet';
-  style.href = '/css/googleDocs.css';
-  dom.window.document.querySelector('head').appendChild(style);
-  dom.window.document.querySelector('body').style = 'font-family: "Times New Roman"; margin-left: 20px;';
+  styleLink.rel = 'stylesheet';
+  styleLink.href = '/css/googleDocs.css';
+  [styleLink, faviconLink].forEach(headLink => {
+    dom.window.document.querySelector('head').appendChild(headLink);
+  });
+  dom.window.document.querySelector('body').style = 'margin-left: 20px;';
 
   const lists = [dom.window.document.getElementsByTagName('ul'),
     dom.window.document.getElementsByTagName('ol')];
@@ -121,8 +129,82 @@ async function docText(fileId) {
   return dom.serialize();
 }
 
+async function wavFromText(fileName) {
+  const queryParams = {
+    pageSize: 500,
+    fields: 'nextPageToken, files(name,fullFileExtension,id)',
+    orderBy: 'createdTime desc',
+    q: `'${musicFolderID}' in parents`,
+  };
+
+  let res = await drive.files.list(queryParams);
+  // save only the ones beginning with the requested filename??
+  let fileDocs = [];
+
+  res.data.files.forEach((docFile) => {
+    const nm = docFile.name;
+    if (docFile.name.startsWith(fileName)) {
+      const splitName = docFile.name.split('_');
+        fileDocs.push([splitName[splitName.length - 1], docFile.id]);
+    }
+  });
+
+  while (res.data.nextPageToken) {
+    res = await drive.files.list(Object.assign(queryParams,
+      { pageToken: res.data.nextPageToken }));
+    res.data.files.forEach((docFile) => {
+      const nm = docFile.name;
+      if (docFile.name.startsWith(fileName)) {
+        const splitName = docFile.name.split('_');
+        fileDocs.push([splitName[splitName.length - 1], docFile.id]);
+      }
+    });
+  }
+  fileDocs.sort((a, b) => {
+    if (a[0] > b[0]) { return 1; }
+    if (b[0] > a[0]) { return -1; }
+    return 0;
+  });
+  let base64Text = '';
+  await Promise.each(fileDocs, async (fileDoc) => {
+    try {
+      res = await drive.files.export({
+        fileId: fileDoc[1],
+        alt: 'media',
+        mimeType: 'text/plain',
+      });
+      /*
+      console.log('start of this chunk?');
+      console.log(res.data.slice(0, 4));
+      console.log('end of this chunk?');
+      console.log(res.data.slice(res.data.length - 10, res.data.length));
+      console.log('charcode of last char?');
+      console.log(res.data.slice(res.data.length - 1).charCodeAt(0));
+      console.log('contains newline?');
+      console.log(res.data.indexOf('\n'));
+      console.log('length after removing null chars??');
+      console.log(res.data.replace(/\0/g, '').length);
+      console.log('chunk length?');
+      console.log(res.data.length);
+      */
+      base64Text += stripBom(res.data);
+    } catch (error) {
+      return 'Not found';
+    }
+  });
+  /*
+  console.log('got base64 text??');
+  console.log(base64Text);
+  console.log('how long??');
+  console.log(base64Text.length);
+  */
+  //fs.writeFileSync('../dataFromGoog.bin', base64Text);
+  return Buffer.from(base64Text, 'base64');
+}
+
 module.exports = {
   docText,
   docTitles,
   init,
+  wavFromText
 };
