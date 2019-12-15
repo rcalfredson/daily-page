@@ -129,31 +129,80 @@ async function docText(fileId) {
   return dom.serialize();
 }
 
-async function wavFromText(fileName) {
+async function getTracks(albumID) {
+  let metaFileID = (await drive.files.list({
+    fields: 'files(id)',
+    orderBy: 'createdTime desc',
+    q: `'${albumID}' in parents and name = 'meta'`
+  })).data.files[0].id;
+  let trackData = await drive.files.export({
+    fileId: metaFileID,
+    alt: 'media',
+    mimeType: 'text/plain',
+  });
+  return stripBom(trackData.data).split('~').map(el => el.split('*'));
+}
+
+async function getAlbums() {
   const queryParams = {
     pageSize: 500,
     fields: 'nextPageToken, files(name,fullFileExtension,id)',
     orderBy: 'createdTime desc',
-    q: `'${musicFolderID}' in parents`,
+    q: `'${musicFolderID}' in parents and mimeType = 'application/vnd.google-apps.folder'`,
   };
 
   let res = await drive.files.list(queryParams);
-  // save only the ones beginning with the requested filename??
   let fileDocs = [];
 
   res.data.files.forEach((docFile) => {
-    const nm = docFile.name;
-    if (docFile.name.startsWith(fileName)) {
-      const splitName = docFile.name.split('_');
-        fileDocs.push([splitName[splitName.length - 1], docFile.id]);
-    }
+        fileDocs.push([docFile.id, docFile.name]);
   });
 
   while (res.data.nextPageToken) {
     res = await drive.files.list(Object.assign(queryParams,
       { pageToken: res.data.nextPageToken }));
     res.data.files.forEach((docFile) => {
-      const nm = docFile.name;
+        fileDocs.push([docFile.id, docFile.name]);
+  })
+}
+fileDocs.sort((a, b) => {
+  if (a[1] > b[1]) { return 1; }
+  if (b[1] > a[1]) { return -1; }
+  return 0;
+});
+return {'Albums': fileDocs};
+}
+
+async function wavFromText(fileName, parentName) {
+  //console.log('getting wav from text?');
+  const queryParams = {
+    pageSize: 500,
+    fields: 'nextPageToken, files(name,fullFileExtension,id)',
+    orderBy: 'createdTime desc',
+    q: `'${parentName || musicFolderID}' in parents and name contains '${fileName}'`,
+  };
+
+  //console.log('query');
+  //console.log(queryParams);
+
+  let res = await drive.files.list(queryParams);
+  // save only the ones beginning with the requested filename??
+  let fileDocs = [];
+
+  //console.log('check1');
+
+  res.data.files.forEach((docFile) => {
+    if (docFile.name.startsWith(fileName)) {
+      const splitName = docFile.name.split('_');
+        fileDocs.push([splitName[splitName.length - 1], docFile.id]);
+    }
+  });
+  //console.log('check2');
+
+  while (res.data.nextPageToken) {
+    res = await drive.files.list(Object.assign(queryParams,
+      { pageToken: res.data.nextPageToken }));
+    res.data.files.forEach((docFile) => {
       if (docFile.name.startsWith(fileName)) {
         const splitName = docFile.name.split('_');
         fileDocs.push([splitName[splitName.length - 1], docFile.id]);
@@ -161,13 +210,17 @@ async function wavFromText(fileName) {
     });
   }
   fileDocs.sort((a, b) => {
-    if (a[0] > b[0]) { return 1; }
-    if (b[0] > a[0]) { return -1; }
-    return 0;
+    var aSplit = a[0].split('_');
+    var bSplit = b[0].split('_');
+    var numA = parseInt(aSplit[aSplit.length - 1], 10);
+    var numB = parseInt(bSplit[bSplit.length - 1], 10);
+    return numA - numB;
   });
   let base64Text = '';
   await Promise.each(fileDocs, async (fileDoc) => {
     try {
+      //console.log('trying to get this file?');
+      //console.log(fileDoc);
       res = await drive.files.export({
         fileId: fileDoc[1],
         alt: 'media',
@@ -206,5 +259,7 @@ module.exports = {
   docText,
   docTitles,
   init,
-  wavFromText
+  wavFromText,
+  getAlbums,
+  getTracks,
 };

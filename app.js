@@ -98,14 +98,49 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
         'Daily notes': dateSortable,
       };
       res.render('linkList', {
-        basePath: '/baseball',
-        header: "Robert's Miscellaneous Baseball Notes",
+        basePaths: '/baseball',
+        title: "Robert's Miscellaneous Baseball Notes",
         titlesWithHeaders,
       });
     });
 
     app.get('/baseball/:docID', async (req, res) => {
       res.send(await google.docText(req.params.docID));
+    });
+
+    app.get('/music', async (req, res) => {
+      res.render('linkList', {
+        basePaths: '/album',
+        title: 'Browse music',
+        titlesWithHeaders: await google.getAlbums(),
+        footer: 'Note: for educational purposes only. No rights owned to the music.'
+      });
+    });
+
+    app.get('/album/:albumID/:trackID', async (req, res) => {
+      let trackList = await cache.get(req.params.albumID, google.getTracks, [req.params.albumID])
+      let trackID = req.params.trackID;
+      var trackPos = trackList.findIndex(el => el[0] === trackID);
+      var nextTrackIndex = trackPos + 1;
+      if (trackPos === trackList.length - 1) {
+        nextTrackIndex = 0;
+      }
+      cache.get(trackList[nextTrackIndex][0], google.wavFromText, [trackList[nextTrackIndex][0], req.params.albumID], 15*60*1000);
+      res.render('audioPlayer', {
+        host: req.headers.host,
+        title: trackList[trackPos][1],
+        albumID: req.params.albumID,
+        trackID: req.params.trackID,
+        nextTrackIndex: nextTrackIndex,
+        trackPos: trackPos,
+        trackList: trackList
+      })
+    })
+
+    app.get('/album/:albumID', async (req, res) => {
+      //res.send(await google.getTracks(req.params.albumID))
+
+      res.redirect(`/album/${req.params.albumID}/${(await cache.get(req.params.albumID, google.getTracks, [req.params.albumID]))[0][0]}`);
     });
 
     app.get('/stream/:fileID', (req, res) => {
@@ -115,8 +150,8 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       });
     });
 
-    app.get('/audio/:fileID', async (req, res) => {
-      let buffer = await cache.get(req.params.fileID, google.wavFromText, [req.params.fileID], 5 * 60 * 1000);
+    app.get('/audio/:fileID/:albumID*?', async (req, res) => {
+      let buffer = await cache.get(req.params.fileID, google.wavFromText, [req.params.fileID, req.params.albumID], 5 * 60 * 1000);
       let total = buffer.byteLength;
       if (req.headers.range) {
               const range = req.headers.range;

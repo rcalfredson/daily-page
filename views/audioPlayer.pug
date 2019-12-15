@@ -1,10 +1,21 @@
-doctype html
-html(lang="en")
-  head
-    block head
-      meta(name="viewport" content="width=device-width, initial-scale=1.0")
-      link(rel='shortcut icon' href='/assets/img/favicon.ico')
-audio(controls src='http://' + host + '/audio/' + fileID)
-  | Your browser does not support the
-  code  audio
-  | element.
+extends layoutMin
+block content
+  script.
+    function goToNextTrack(trackID) {
+      window.location.href = `./${trackID}`;
+    }
+  a(href='/music') ←
+  br
+  audio(controls
+    autoplay=true
+    onended="goToNextTrack('" + trackList[nextTrackIndex][0] + "')"
+    src='http://' + host + '/audio/' + trackID + '/' + albumID)
+    | Your browser does not support the
+    code  audio
+    | element.
+  p Tracks
+  ol
+    for track, trackIndex in trackList
+      li
+        a(href=track[0]) #{track[1]}
+        span #{(trackIndex === trackPos ? ' *' : '')}

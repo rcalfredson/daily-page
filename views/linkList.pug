@@ -1,23 +1,25 @@
-doctype html
-html(lang="en")
-  head
-    block head
-      meta(name="viewport" content="width=device-width, initial-scale=1.0")
-      link(rel='shortcut icon' href='/assets/img/favicon.ico')
-title #{header}
-
-link(rel='stylesheet' href='/css/googleDocs.css')
-
-div(id='header')
-  p(id='headerText') #{header}
-  div(style="display: inline-block; width: 230px;")
-    a(href='/') ← homepage
-    a(href='/archive' style="float: right;") ← archive
+extends layoutMin
+block content
+  link(rel='stylesheet' href='/css/googleDocs.css')
+  div(id='header')
+    p(id='headerText') #{title}
+    div(style="display: inline-block; width: 230px;")
+      a(href='/') ← homepage
+      a(href='/archive' style="float: right;") ← archive
 
 
-for titleList, subHeader in titlesWithHeaders
-  h3 #{subHeader}
-  ul
-    each title in titleList
-      li
-        a(href=`${basePath}/${title[0]}`) #{title[1]}
+  - var index = 0
+  for titleList, subHeader in titlesWithHeaders
+    h3 #{subHeader}
+    ul
+      each title in titleList
+        li
+          -
+            var baseComponent = basePaths;
+            if (Array.isArray(basePaths)) {
+              baseComponent = basePaths[index];
+            }
+          a(href=`${baseComponent}/${title[0]}`) #{title[1]}
+      - index +=1
+
+  p #{footer}
