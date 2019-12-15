@@ -112,12 +112,13 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       res.render('linkList', {
         basePaths: '/album',
         title: 'Browse music',
-        titlesWithHeaders: await google.getAlbums(),
+        titlesWithHeaders: await cache.get('albums', google.getAlbums, [], 40*1000),
         footer: 'Note: for educational purposes only. No rights owned to the music.'
       });
     });
 
     app.get('/album/:albumID/:trackID', async (req, res) => {
+      let albumName = (await cache.get('albums', google.getAlbums, [], 40*1000))['Albums'].find(el => el[0] === req.params.albumID)[1];
       let trackList = await cache.get(req.params.albumID, google.getTracks, [req.params.albumID])
       let trackID = req.params.trackID;
       var trackPos = trackList.findIndex(el => el[0] === trackID);
@@ -130,6 +131,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
         host: req.headers.host,
         title: trackList[trackPos][1],
         albumID: req.params.albumID,
+        albumName,
         trackID: req.params.trackID,
         nextTrackIndex: nextTrackIndex,
         trackPos: trackPos,

@@ -6,6 +6,7 @@ block content
     }
   a(href='/music') ←
   br
+  p Album: #{albumName}
   audio(controls
     autoplay=true
     onended="goToNextTrack('" + trackList[nextTrackIndex][0] + "')"
