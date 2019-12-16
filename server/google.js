@@ -173,8 +173,9 @@ fileDocs.sort((a, b) => {
 return {'Albums': fileDocs};
 }
 
-async function wavFromText(fileName, parentName) {
+async function wavFromText(fileName, parentName, start = null, end = null) {
   //console.log('getting wav from text?');
+  const bytesPerChunk = 1125000;
   const queryParams = {
     pageSize: 500,
     fields: 'nextPageToken, files(name,fullFileExtension,id)',
@@ -217,6 +218,19 @@ async function wavFromText(fileName, parentName) {
     return numA - numB;
   });
   let base64Text = '';
+  if (start !== null) {
+    let startIndex = Math.floor(start / bytesPerChunk);
+    // example: file is three chunks. byteLength: 3375000
+    // request one: start = 0, end = 1125000
+    let endIndex = Math.ceil(end / bytesPerChunk);
+    /*
+    console.log(`start? ${start}`);
+    console.log(`startIndex? ${startIndex}`);
+    console.log(`end? ${end}`);
+    console.log(`endIndex? ${endIndex}`);
+    */
+    fileDocs = fileDocs.slice(startIndex, endIndex);
+  }
   await Promise.each(fileDocs, async (fileDoc) => {
     try {
       //console.log('trying to get this file?');
