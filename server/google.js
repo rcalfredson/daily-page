@@ -235,11 +235,11 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
     try {
       //console.log('trying to get this file?');
       //console.log(fileDoc);
-      res = await drive.files.export({
+      res = await cache.get(fileDoc[1], (opts) => drive.files.export(opts), [{
         fileId: fileDoc[1],
         alt: 'media',
         mimeType: 'text/plain',
-      });
+      }], 5 * 60 * 1000);
       /*
       console.log('start of this chunk?');
       console.log(res.data.slice(0, 4));
