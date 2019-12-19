@@ -163,28 +163,35 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
   
               const start = parseInt(partialStart, 10);
               let end;
-              let total = parseInt((await cache.get(req.params.albumID, google.getTracks, [req.params.albumID])).find(el => el[0] === req.params.fileID)[2], 10);
+              let total = parseInt((await cache.get(req.params.albumID, google.getTracks, [req.params.albumID], 30 * 1000)).find(el => el[0] === req.params.fileID)[2], 10);
               //console.log('total?');
               //console.log(total);
               let buffer;
               const chunksize = 1125000;
-              if (partialEnd) {
+              if (partialEnd && partialEnd !== '1') {
                 end = parseInt(partialEnd, 10)
+                if (end - start === total - 1 || end - start > chunksize) {
+                  end = start + chunksize - 1;
+                }
                 buffer = await google.wavFromText(req.params.fileID, req.params.albumID, start, end);
               } else {
                 end = start + chunksize - 1;
                 buffer = await google.wavFromText(req.params.fileID, req.params.albumID, start, end);
+                if (buffer.byteLength > 1 && partialEnd == '1') {
+                  end = 1;
+                  buffer = Buffer.from(buffer.toString('base64', 0, 1), 'base64');
+                }
               }
               // const chunksize = (end - start) + 1;
-              //console.log('buffer?');
-              //console.log(buffer);
               var readStream = new stream.PassThrough();
               readStream.end(buffer);
   
               res.writeHead(206, {
+                  'Range': 'bytes ' + start + '-' + end + '/' + total,
                   'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
-                  'Accept-Ranges': 'bytes', 'Content-Length': chunksize,
-                  'Content-Type': 'audio/wav'
+                  'Content-Length': buffer.byteLength,
+                  'Accept-Ranges': 'bytes',
+                  'Content-Type': 'audio/x-wav'
               });
               //if (partialEnd) {
                 readStream.pipe(res);
@@ -194,7 +201,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
               let total = buffer.byteLength;
               var readStream = new stream.PassThrough();
               readStream.end(buffer);
-              res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'audio/wav' });
+              res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'audio/x-wav' });
               readStream.pipe(res);
             }
   });

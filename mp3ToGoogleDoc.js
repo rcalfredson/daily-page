@@ -72,7 +72,7 @@ ffmpeg(track)
         console.log(`chunk end: ${myChunk.slice(myChunk.length - 8, myChunk.length)}`);
       });
       //console.log('entire byte size:');
-      //console.log(txt.byteLength);
+      //console.log(Buffer.from(bitmap).byteLength);
 
       await Promise.each(chunks, async (chunk, index) => {
         fileMetadata.parents = [musicFolderID];

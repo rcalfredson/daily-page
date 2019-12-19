@@ -229,8 +229,18 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
     console.log(`end? ${end}`);
     console.log(`endIndex? ${endIndex}`);
     */
+    //console.log('fileDocs before slice');
+    //console.log(fileDocs)
     fileDocs = fileDocs.slice(startIndex, endIndex);
+    /*
+    console.log('start index');
+    console.log(startIndex);
+    console.log('end index');
+    console.log(endIndex);
+    */
   }
+  //console.log('filedocs?');
+  //console.log(fileDocs);
   await Promise.each(fileDocs, async (fileDoc) => {
     try {
       //console.log('trying to get this file?');
@@ -240,6 +250,8 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
         alt: 'media',
         mimeType: 'text/plain',
       }], 5 * 60 * 1000);
+      //console.log('size of chunk in bytes?');
+      //console.log(Buffer.from(stripBom(res.data), 'base64').byteLength);
       /*
       console.log('start of this chunk?');
       console.log(res.data.slice(0, 4));
