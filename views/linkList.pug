@@ -2,10 +2,10 @@ extends layoutMin
 block content
   link(rel='stylesheet' href='/css/googleDocs.css')
   div(id='header')
-    p(id='headerText') #{title}
     div(style="display: inline-block; width: 230px;")
       a(href='/') ← homepage
       a(href='/archive' style="float: right;") ← archive
+    p(id='headerText') #{title}
 
 
   - var index = 0

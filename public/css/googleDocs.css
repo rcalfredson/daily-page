@@ -11,8 +11,10 @@ html * {
 
 #headerText {
   color: rgb(7, 146, 81);
-  position: absolute;
-  bottom: 0;
+  position: relative;
   font-size: 32px;
   margin-bottom: 9px;
+  margin-top: 15px;
+  padding-bottom: 12px;
+  padding-top: 4px;
 }

@@ -79,7 +79,7 @@ async function docText(fileId) {
   const titles = await docTitles();
   styleLink.rel = 'stylesheet';
   styleLink.href = '/css/googleDocs.css';
-  [styleLink, faviconLink].forEach(headLink => {
+  [styleLink, faviconLink].forEach((headLink) => {
     dom.window.document.querySelector('head').appendChild(headLink);
   });
   dom.window.document.querySelector('body').style = 'margin-left: 20px;';
@@ -87,13 +87,14 @@ async function docText(fileId) {
   const lists = [dom.window.document.getElementsByTagName('ul'),
     dom.window.document.getElementsByTagName('ol')];
 
-  const typeMaps = {'36pt': ['disc', '1'], '72pt': ['circle', 'a'], '108pt': ['square', 'i']};
+  const typeMaps = { 1: ['disc', '1'], 2: ['circle', 'a'], 0: ['square', 'i'] };
 
   lists.forEach((list, listIndex) => {
     const htmlList = list;
     Object.keys(htmlList).forEach((listItem) => {
+      const mapKey = (parseInt(htmlList[listItem].firstChild.style.marginLeft.split('pt')[0], 10) / 36) % 3;
       htmlList[listItem].className = '';
-      htmlList[listItem].type = typeMaps[htmlList[listItem].firstChild.style.marginLeft][listIndex];
+      htmlList[listItem].type = typeMaps[mapKey][listIndex];
     });
   });
 
@@ -130,17 +131,17 @@ async function docText(fileId) {
 }
 
 async function getTracks(albumID) {
-  let metaFileID = (await drive.files.list({
+  const metaFileID = (await drive.files.list({
     fields: 'files(id)',
     orderBy: 'createdTime desc',
-    q: `'${albumID}' in parents and name = 'meta'`
+    q: `'${albumID}' in parents and name = 'meta'`,
   })).data.files[0].id;
-  let trackData = await drive.files.export({
+  const trackData = await drive.files.export({
     fileId: metaFileID,
     alt: 'media',
     mimeType: 'text/plain',
   });
-  return stripBom(trackData.data).split('~').map(el => el.split('*'));
+  return stripBom(trackData.data).split('~').map((el) => el.split('*'));
 }
 
 async function getAlbums() {
@@ -152,29 +153,29 @@ async function getAlbums() {
   };
 
   let res = await drive.files.list(queryParams);
-  let fileDocs = [];
+  const fileDocs = [];
 
   res.data.files.forEach((docFile) => {
-        fileDocs.push([docFile.id, docFile.name]);
+    fileDocs.push([docFile.id, docFile.name]);
   });
 
   while (res.data.nextPageToken) {
     res = await drive.files.list(Object.assign(queryParams,
       { pageToken: res.data.nextPageToken }));
     res.data.files.forEach((docFile) => {
-        fileDocs.push([docFile.id, docFile.name]);
-  })
-}
-fileDocs.sort((a, b) => {
-  if (a[1] > b[1]) { return 1; }
-  if (b[1] > a[1]) { return -1; }
-  return 0;
-});
-return {'Albums': fileDocs};
+      fileDocs.push([docFile.id, docFile.name]);
+    });
+  }
+  fileDocs.sort((a, b) => {
+    if (a[1] > b[1]) { return 1; }
+    if (b[1] > a[1]) { return -1; }
+    return 0;
+  });
+  return { Albums: fileDocs };
 }
 
 async function wavFromText(fileName, parentName, start = null, end = null) {
-  //console.log('getting wav from text?');
+  // console.log('getting wav from text?');
   const bytesPerChunk = 1125000;
   const queryParams = {
     pageSize: 500,
@@ -183,54 +184,55 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
     q: `'${parentName || musicFolderID}' in parents and name contains '${fileName}'`,
   };
 
-  //console.log('query');
-  //console.log(queryParams);
+  // console.log('query');
+  // console.log(queryParams);
 
   let res = await drive.files.list(queryParams);
   // save only the ones beginning with the requested filename??
   let fileDocs = [];
 
-  //console.log('check1');
+  // console.log('check1');
 
-  res.data.files.forEach((docFile) => {
+  function addToFileDocs(docFile) {
     if (docFile.name.startsWith(fileName)) {
       const splitName = docFile.name.split('_');
-        fileDocs.push([splitName[splitName.length - 1], docFile.id]);
+      fileDocs.push([splitName[splitName.length - 1], docFile.id]);
     }
+  }
+
+  res.data.files.forEach((docFile) => {
+    addToFileDocs(docFile);
   });
-  //console.log('check2');
+  // console.log('check2');
 
   while (res.data.nextPageToken) {
     res = await drive.files.list(Object.assign(queryParams,
       { pageToken: res.data.nextPageToken }));
     res.data.files.forEach((docFile) => {
-      if (docFile.name.startsWith(fileName)) {
-        const splitName = docFile.name.split('_');
-        fileDocs.push([splitName[splitName.length - 1], docFile.id]);
-      }
+      addToFileDocs(docFile);
     });
   }
   fileDocs.sort((a, b) => {
-    var aSplit = a[0].split('_');
-    var bSplit = b[0].split('_');
-    var numA = parseInt(aSplit[aSplit.length - 1], 10);
-    var numB = parseInt(bSplit[bSplit.length - 1], 10);
+    const aSplit = a[0].split('_');
+    const bSplit = b[0].split('_');
+    const numA = parseInt(aSplit[aSplit.length - 1], 10);
+    const numB = parseInt(bSplit[bSplit.length - 1], 10);
     return numA - numB;
   });
   let base64Text = '';
   if (start !== null) {
-    let startIndex = Math.floor(start / bytesPerChunk);
+    const startIndex = Math.floor(start / bytesPerChunk);
     // example: file is three chunks. byteLength: 3375000
     // request one: start = 0, end = 1125000
-    let endIndex = Math.ceil(end / bytesPerChunk);
+    const endIndex = Math.ceil(end / bytesPerChunk);
     /*
     console.log(`start? ${start}`);
     console.log(`startIndex? ${startIndex}`);
     console.log(`end? ${end}`);
     console.log(`endIndex? ${endIndex}`);
     */
-    //console.log('fileDocs before slice');
-    //console.log(fileDocs)
+    // console.log('fileDocs before slice');
+    // console.log(fileDocs)
     fileDocs = fileDocs.slice(startIndex, endIndex);
     /*
     console.log('start index');
@@ -239,19 +241,19 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
     console.log(endIndex);
     */
   }
-  //console.log('filedocs?');
-  //console.log(fileDocs);
+  // console.log('filedocs?');
+  // console.log(fileDocs);
   await Promise.each(fileDocs, async (fileDoc) => {
     try {
-      //console.log('trying to get this file?');
-      //console.log(fileDoc);
+      // console.log('trying to get this file?');
+      // console.log(fileDoc);
       res = await cache.get(fileDoc[1], (opts) => drive.files.export(opts), [{
         fileId: fileDoc[1],
         alt: 'media',
         mimeType: 'text/plain',
       }], 5 * 60 * 1000);
-      //console.log('size of chunk in bytes?');
-      //console.log(Buffer.from(stripBom(res.data), 'base64').byteLength);
+      // console.log('size of chunk in bytes?');
+      // console.log(Buffer.from(stripBom(res.data), 'base64').byteLength);
       /*
       console.log('start of this chunk?');
       console.log(res.data.slice(0, 4));
@@ -267,6 +269,7 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
       console.log(res.data.length);
       */
       base64Text += stripBom(res.data);
+      return base64Text;
     } catch (error) {
       return 'Not found';
     }
@@ -277,7 +280,7 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
   console.log('how long??');
   console.log(base64Text.length);
   */
-  //fs.writeFileSync('../dataFromGoog.bin', base64Text);
+  // fs.writeFileSync('../dataFromGoog.bin', base64Text);
   return Buffer.from(base64Text, 'base64');
 }
 

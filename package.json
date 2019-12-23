@@ -7,7 +7,7 @@
     "node": "^13.2.0"
   },
   "scripts": {
-    "pretest": "eslint app.js server/ lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js",
+    "pretest": "eslint --fix app.js server/ lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js",
     "test": "jasmine",
     "start": "node app.js",
     "build": "babel lib -d build",
