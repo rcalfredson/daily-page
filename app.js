@@ -151,7 +151,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       });
     });
 
-    app.get('/audio/:fileID/:albumID*?', async (req, res) => {
+    app.get('/audio/:fileID/:albumID*?.wav', async (req, res) => {
       let readStream;
       if (req.headers.range) {
         const { range } = req.headers;
