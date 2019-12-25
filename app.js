@@ -119,9 +119,12 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
 
     app.get('/album/:albumID/:trackID', async (req, res) => {
       const albumName = (await cache.get('albums', google.getAlbums, [], 40 * 1000)).Albums.find((el) => el[0] === req.params.albumID)[1];
-      const trackList = await cache.get(req.params.albumID, google.getTracks, [req.params.albumID]);
+      const trackList = await cache.get(req.params.albumID, google.getTracks, [req.params.albumID],
+        2 * 60 * 1000);
       const { trackID } = req.params;
       const trackPos = trackList.findIndex((el) => el[0] === trackID);
+      const trackArtist = trackList[trackPos].length > 3 ? trackList[trackPos][3]
+        : await google.getArtist(req.params.albumID);
       let nextTrackIndex = trackPos + 1;
       if (trackPos === trackList.length - 1) {
         nextTrackIndex = 0;
@@ -129,6 +132,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       res.render('audioPlayer', {
         host: req.headers.host,
         title: trackList[trackPos][1],
+        artist: trackArtist,
         albumID: req.params.albumID,
         albumName,
         trackID: req.params.trackID,
@@ -139,9 +143,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     });
 
     app.get('/album/:albumID', async (req, res) => {
-      // res.send(await google.getTracks(req.params.albumID))
-
-      res.redirect(`/album/${req.params.albumID}/${(await cache.get(req.params.albumID, google.getTracks, [req.params.albumID]))[0][0]}`);
+      res.redirect(`/album/${req.params.albumID}/${(await cache.get(req.params.albumID, google.getTracks, [req.params.albumID], 2 * 60 * 1000))[0][0]}`);
     });
 
     app.get('/stream/:fileID', (req, res) => {

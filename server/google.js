@@ -130,18 +130,34 @@ async function docText(fileId) {
   return dom.serialize();
 }
 
-async function getTracks(albumID) {
-  const metaFileID = (await drive.files.list({
+async function getArtist(albumID) {
+  const metaFileID = (await cache.get(`${albumID}_metaID`, (opts) => drive.files.list(opts), [{
     fields: 'files(id)',
     orderBy: 'createdTime desc',
     q: `'${albumID}' in parents and name = 'meta'`,
-  })).data.files[0].id;
-  const trackData = await drive.files.export({
+  }], 5 * 60 * 1000)).data.files[0].id;
+  const metaData = stripBom((await cache.get(`${albumID}_meta`, (opts) => drive.files.export(opts), [{
     fileId: metaFileID,
     alt: 'media',
     mimeType: 'text/plain',
-  });
-  return stripBom(trackData.data).split('~').map((el) => el.split('*'));
+  }], 5 * 60 * 1000)).data);
+
+  return metaData.split('\n').length === 1 ? 'Unknown' : metaData.split('\n')[0];
+}
+
+async function getTracks(albumID) {
+  const metaFileID = (await cache.get(`${albumID}_metaID`, (opts) => drive.files.list(opts), [{
+    fields: 'files(id)',
+    orderBy: 'createdTime desc',
+    q: `'${albumID}' in parents and name = 'meta'`,
+  }], 5 * 60 * 1000)).data.files[0].id;
+  const metaData = stripBom((await cache.get(`${albumID}_meta`, (opts) => drive.files.export(opts), [{
+    fileId: metaFileID,
+    alt: 'media',
+    mimeType: 'text/plain',
+  }], 5 * 60 * 1000)).data);
+  const trackData = metaData.split('\n').length === 1 ? metaData.split('\n')[0] : metaData.split('\n')[1];
+  return trackData.split('~').map((el) => el.split('*'));
 }
 
 async function getAlbums() {
@@ -175,7 +191,6 @@ async function getAlbums() {
 }
 
 async function wavFromText(fileName, parentName, start = null, end = null) {
-  // console.log('getting wav from text?');
   const bytesPerChunk = 1125000;
   const queryParams = {
     pageSize: 500,
@@ -184,14 +199,8 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
     q: `'${parentName}' in parents and name contains '${fileName}'`,
   };
 
-  // console.log('query');
-  // console.log(queryParams);
-
   let res = await drive.files.list(queryParams);
-  // save only the ones beginning with the requested filename??
   let fileDocs = [];
-
-  // console.log('check1');
 
   function addToFileDocs(docFile) {
     if (docFile.name.startsWith(fileName)) {
@@ -203,7 +212,6 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
   res.data.files.forEach((docFile) => {
     addToFileDocs(docFile);
   });
-  // console.log('check2');
 
   while (res.data.nextPageToken) {
     res = await drive.files.list(Object.assign(queryParams,
@@ -222,29 +230,11 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
   let base64Text = '';
   if (start !== null) {
     const startIndex = Math.floor(start / bytesPerChunk);
-    // example: file is three chunks. byteLength: 3375000
-    // request one: start = 0, end = 1125000
     const endIndex = Math.ceil(end / bytesPerChunk);
-    /*
-    console.log(`start? ${start}`);
-    console.log(`startIndex? ${startIndex}`);
-    console.log(`end? ${end}`);
-    console.log(`endIndex? ${endIndex}`);
-    */
-    // console.log('fileDocs before slice');
-    // console.log(fileDocs)
     fileDocs = fileDocs.slice(startIndex, endIndex);
-    /*
-    console.log('start index');
-    console.log(startIndex);
-    console.log('end index');
-    console.log(endIndex);
-    */
   }
-  // console.log('filedocs?');
-  // console.log(fileDocs);
-  var data = {};
-  var promises = [];
+  const data = {};
+  const promises = [];
   fileDocs.forEach((fileDoc, fIdx) => {
     promises.push((async () => {
       data[fIdx] = await cache.get(fileDoc[1], (opts) => drive.files.export(opts), [{
@@ -252,13 +242,11 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
         alt: 'media',
         mimeType: 'text/plain',
       }], 5 * 60 * 1000);
-    })())
+    })());
   });
 
   await Promise.all(promises);
-  Object.keys(data).sort((a, b) => {
-    return a - b;
-  }).forEach(dataKey => {
+  Object.keys(data).sort((a, b) => a - b).forEach((dataKey) => {
     base64Text += stripBom(data[dataKey].data);
   });
   return Buffer.from(base64Text, 'base64');
@@ -269,6 +257,7 @@ module.exports = {
   docTitles,
   init,
   wavFromText,
+  getArtist,
   getAlbums,
   getTracks,
 };
