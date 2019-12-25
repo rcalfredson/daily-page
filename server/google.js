@@ -243,44 +243,24 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
   }
   // console.log('filedocs?');
   // console.log(fileDocs);
-  await Promise.each(fileDocs, async (fileDoc) => {
-    try {
-      // console.log('trying to get this file?');
-      // console.log(fileDoc);
-      res = await cache.get(fileDoc[1], (opts) => drive.files.export(opts), [{
+  var data = {};
+  var promises = [];
+  fileDocs.forEach((fileDoc, fIdx) => {
+    promises.push((async () => {
+      data[fIdx] = await cache.get(fileDoc[1], (opts) => drive.files.export(opts), [{
         fileId: fileDoc[1],
         alt: 'media',
         mimeType: 'text/plain',
       }], 5 * 60 * 1000);
-      // console.log('size of chunk in bytes?');
-      // console.log(Buffer.from(stripBom(res.data), 'base64').byteLength);
-      /*
-      console.log('start of this chunk?');
-      console.log(res.data.slice(0, 4));
-      console.log('end of this chunk?');
-      console.log(res.data.slice(res.data.length - 10, res.data.length));
-      console.log('charcode of last char?');
-      console.log(res.data.slice(res.data.length - 1).charCodeAt(0));
-      console.log('contains newline?');
-      console.log(res.data.indexOf('\n'));
-      console.log('length after removing null chars??');
-      console.log(res.data.replace(/\0/g, '').length);
-      console.log('chunk length?');
-      console.log(res.data.length);
-      */
-      base64Text += stripBom(res.data);
-      return base64Text;
-    } catch (error) {
-      return 'Not found';
-    }
+    })())
   });
-  /*
-  console.log('got base64 text??');
-  console.log(base64Text);
-  console.log('how long??');
-  console.log(base64Text.length);
-  */
-  // fs.writeFileSync('../dataFromGoog.bin', base64Text);
+
+  await Promise.all(promises);
+  Object.keys(data).sort((a, b) => {
+    return a - b;
+  }).forEach(dataKey => {
+    base64Text += stripBom(data[dataKey].data);
+  });
   return Buffer.from(base64Text, 'base64');
 }
 
