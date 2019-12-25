@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 const baseballFolderID = process.env.BASEBALL_FOLDER_ID;
-const musicFolderID = process.env.MUSIC_FOLDER_ID;
+const albumsFolderID = process.env.ALBUMS_FOLDER_ID;
 const { google } = require('googleapis');
 const jsdom = require('jsdom');
 const Promise = require('bluebird');
@@ -149,7 +149,7 @@ async function getAlbums() {
     pageSize: 500,
     fields: 'nextPageToken, files(name,fullFileExtension,id)',
     orderBy: 'createdTime desc',
-    q: `'${musicFolderID}' in parents and mimeType = 'application/vnd.google-apps.folder'`,
+    q: `'${albumsFolderID}' in parents and mimeType = 'application/vnd.google-apps.folder'`,
   };
 
   let res = await drive.files.list(queryParams);
@@ -181,7 +181,7 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
     pageSize: 500,
     fields: 'nextPageToken, files(name,fullFileExtension,id)',
     orderBy: 'createdTime desc',
-    q: `'${parentName || musicFolderID}' in parents and name contains '${fileName}'`,
+    q: `'${parentName}' in parents and name contains '${fileName}'`,
   };
 
   // console.log('query');
