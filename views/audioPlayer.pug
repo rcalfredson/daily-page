@@ -2,16 +2,31 @@ extends layoutMin
 block content
   link(rel='stylesheet' href='/css/googleDocs.css')
   script.
-    function goToNextTrack(trackID) {
-      window.location.href = `./${trackID}`;
+    var nextTrackIndex = !{JSON.stringify(nextTrackIndex)};
+    var trackList = !{JSON.stringify(trackList)};
+    var host = "#{host}";
+    var title = "#{title}";
+    var artist = "#{artist}";
+    var albumID = "#{albumID}";
+    var albumName = "#{albumName}";
+    var trackID = "#{trackID}";
+    var trackPos = "#{trackPos}";
+
+    function goToNextTrack() {
+      document.getElementById('audio-player').src = `http://${host}/audio/${trackList[nextTrackIndex][0]}/${albumID}.wav`;
+      nextTrackIndex = trackPos + 1;
+      if (trackPos === trackList.length - 1) {
+        nextTrackIndex = 0;
+      }
     }
   a(href='/music') ←
   br
   p Album: #{albumName}
   p Artist: #{artist}
-  audio(controls
+  audio#audio-player(controls
     autoplay=true
-    onended="goToNextTrack('" + trackList[nextTrackIndex][0] + "')"
+    type='audio/x-wav'
+    onended="goToNextTrack();"
     src='http://' + host + '/audio/' + trackID + '/' + albumID + '.wav')
     | Your browser does not support the
     code  audio

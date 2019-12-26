@@ -110,10 +110,44 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
 
     app.get('/music', async (req, res) => {
       res.render('linkList', {
+        basePaths: ['/artist', '/album'],
+        title: 'Music',
+        titlesWithHeaders: { Artists: [], Albums: [] },
+      });
+    });
+
+    app.get('/artist/:artistID', async (req, res) => {
+      const artistName = (await cache.get('artists', google.getArtists, [], 40 * 1000)).Artists.find((el) => el[0] === req.params.artistID)[1];
+      const albumIDs = await google.getAlbumIDsByArtist(req.params.artistID);
+      const albums = (await cache.get('albums', google.getAlbums, [], 40 * 1000)).Albums;
+
+      res.render('linkList', {
         basePaths: '/album',
-        title: 'Browse music',
+        title: '← Music',
+        titleLink: '/music',
+        titlesWithHeaders: {
+          [artistName]: albumIDs.map((albumID) => [albumID, albums.find(
+            (el) => el[0] === albumID,
+          )[1]]),
+        },
+      });
+    });
+
+    app.get('/album', async (req, res) => {
+      res.render('linkList', {
+        basePaths: '/album',
+        title: '← Music',
+        titleLink: '/music',
         titlesWithHeaders: await cache.get('albums', google.getAlbums, [], 40 * 1000),
-        footer: 'Note: for educational purposes only. No rights owned to the music.',
+      });
+    });
+
+    app.get('/artist', async (req, res) => {
+      res.render('linkList', {
+        basePaths: '/artist',
+        title: '← Music',
+        titleLink: '/music',
+        titlesWithHeaders: await cache.get('artists', google.getArtists, [], 40 * 1000),
       });
     });
 

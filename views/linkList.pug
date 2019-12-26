@@ -5,12 +5,20 @@ block content
     div(style="display: inline-block; width: 230px;")
       a(href='/') ← homepage
       a(href='/archive' style="float: right;") ← archive
-    p(id='headerText') #{title}
+    if titleLink
+      p(id='headerText')
+        a.titleLink(href=titleLink) #{title}
+    else
+      p(id='headerText') #{title}
 
 
   - var index = 0
   for titleList, subHeader in titlesWithHeaders
-    h3 #{subHeader}
+    if titleList.length === 0
+      h3
+        a(href=basePaths[index]) #{subHeader}
+    else
+      h3 #{subHeader}
     ul
       each title in titleList
         li

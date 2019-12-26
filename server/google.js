@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 const baseballFolderID = process.env.BASEBALL_FOLDER_ID;
 const albumsFolderID = process.env.ALBUMS_FOLDER_ID;
+const artistsFolderID = process.env.ARTISTS_FOLDER_ID;
 const { google } = require('googleapis');
 const jsdom = require('jsdom');
 const Promise = require('bluebird');
@@ -160,6 +161,36 @@ async function getTracks(albumID) {
   return trackData.split('~').map((el) => el.split('*'));
 }
 
+async function getArtists() {
+  const queryParams = {
+    pageSize: 500,
+    fields: 'nextPageToken, files(name,fullFileExtension,id)',
+    orderBy: 'createdTime desc',
+    q: `'${artistsFolderID}' in parents and mimeType = 'application/vnd.google-apps.document'`,
+  };
+
+  let res = await drive.files.list(queryParams);
+  const fileDocs = [];
+
+  res.data.files.forEach((docFile) => {
+    fileDocs.push([docFile.id, docFile.name]);
+  });
+
+  while (res.data.nextPageToken) {
+    res = await drive.files.list(Object.assign(queryParams,
+      { pageToken: res.data.nextPageToken }));
+    res.data.files.forEach((docFile) => {
+      fileDocs.push([docFile.id, docFile.name]);
+    });
+  }
+  fileDocs.sort((a, b) => {
+    if (a[1] > b[1]) { return 1; }
+    if (b[1] > a[1]) { return -1; }
+    return 0;
+  });
+  return { Artists: fileDocs };
+}
+
 async function getAlbums() {
   const queryParams = {
     pageSize: 500,
@@ -188,6 +219,14 @@ async function getAlbums() {
     return 0;
   });
   return { Albums: fileDocs };
+}
+
+async function getAlbumIDsByArtist(artistID) {
+  return stripBom((await cache.get(artistID, (opts) => drive.files.export(opts), [{
+    fileId: artistID,
+    alt: 'media',
+    mimeType: 'text/plain',
+  }], 5 * 60 * 1000)).data).split('\n');
 }
 
 async function wavFromText(fileName, parentName, start = null, end = null) {
@@ -258,6 +297,8 @@ module.exports = {
   init,
   wavFromText,
   getArtist,
+  getArtists,
+  getAlbumIDsByArtist,
   getAlbums,
   getTracks,
 };

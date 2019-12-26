@@ -18,3 +18,13 @@ html * {
   padding-bottom: 12px;
   padding-top: 4px;
 }
+
+.titleLink {
+  text-decoration: none;
+}
+
+.titleLink:visited
+{
+   color: #115304;
+   text-decoration: none;
+}
