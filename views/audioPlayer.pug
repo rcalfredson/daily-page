@@ -14,6 +14,7 @@ block content
 
     function goToNextTrack() {
       document.getElementById('audio-player').src = `http://${host}/audio/${trackList[nextTrackIndex][0]}/${albumID}.wav`;
+      trackPos = nextTrackIndex;
       nextTrackIndex = trackPos + 1;
       if (trackPos === trackList.length - 1) {
         nextTrackIndex = 0;

@@ -191,8 +191,6 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       let readStream;
       if (req.headers.range) {
         const { range } = req.headers;
-        // console.log('range?');
-        // console.log(range)
         const parts = range.replace(/bytes=/, '').split('-');
         const partialStart = parts[0];
         const partialEnd = parts[1];
@@ -201,8 +199,6 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
         let end;
         const total = parseInt((await cache.get(req.params.albumID, google.getTracks, [
           req.params.albumID], 30 * 1000)).find((el) => el[0] === req.params.fileID)[2], 10);
-        // console.log('total?');
-        // console.log(total);
         let buffer;
         const chunksize = 1125000;
         if (partialEnd && partialEnd !== '1') {
@@ -219,7 +215,6 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
             buffer = Buffer.from(buffer.toString('base64', 0, 1), 'base64');
           }
         }
-        // const chunksize = (end - start) + 1;
         readStream = new stream.PassThrough();
         readStream.end(buffer);
 
@@ -230,9 +225,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
           'Accept-Ranges': 'bytes',
           'Content-Type': 'audio/x-wav',
         });
-        // if (partialEnd) {
         readStream.pipe(res);
-        // }
       } else {
         const buffer = await cache.get(req.params.fileID, google.wavFromText, [req.params.fileID,
           req.params.albumID], 5 * 60 * 1000);
