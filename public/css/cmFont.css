@@ -1,0 +1,10 @@
+@font-face {
+  font-family: 'cm';
+  src: url('../assets/fonts/cm-webfont.eot');
+  src: url('../assets/fonts/cm-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../assets/fonts/cm-webfont.woff') format('woff'),
+       url('../assets/fonts/cm-webfont.ttf') format('truetype'),
+       url('../assets/fonts/cm-webfont.svg#cm') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

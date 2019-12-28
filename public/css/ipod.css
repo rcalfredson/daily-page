@@ -1,17 +1,37 @@
+@import url("cmFont.css");
+
 #ipod {
-    width: 360px;
-    height: 582px;
-    margin: 0 auto;
-    margin-top: 0px;
-    margin-top: 50px;
-    border-radius: 35px;
-    -webkit-box-shadow: 0px 50px 41px 3px rgba(0, 0, 0, .4);
-    background: linear-gradient(45deg,
-    rgba(255,255,255,1) 0%,rgba(237,237,237,1) 59%,rgba(243,243,243,1) 60%,
-    rgba(255,255,255,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=1 );
-    border-right: #C3CAD2 4px solid;
-    border-left: #909599 4px solid;
-    border-top: #D2D5DA 4px solid;
-    border-bottom: #737278 4px solid;
+  width: 360px;
+  height: 582px;
+  margin: 0 auto;
+  margin-top: 0px;
+  margin-top: 50px;
+  border-radius: 35px;
+  -webkit-box-shadow: 0px 50px 41px 3px rgba(0, 0, 0, .4);
+  background: linear-gradient(45deg,
+  rgba(255,255,255,1) 0%,rgba(237,237,237,1) 59%,rgba(243,243,243,1) 60%,
+  rgba(255,255,255,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=1 );
+  border-right: #C3CAD2 4px solid;
+  border-left: #909599 4px solid;
+  border-top: #D2D5DA 4px solid;
+  border-bottom: #737278 4px solid;
+}
+
+#screen {
+  position: relative;
+  width: 240px;
+  height: 188px;
+  top: 28px;
+  left: 56px;
+  font-family: cm, sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  color: #303531;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 3px #595854 solid;
+  box-shadow: 1px 1px 1px 1px #C0BFBD;
+  background: linear-gradient(45deg, rgba(170,167,160,1) 0%, rgba(193,190,185,1) 49%, rgba(191,190,185,1) 51%,
+    rgba(203,202,197,1) 100%);
 }
