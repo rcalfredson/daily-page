@@ -7,6 +7,7 @@ block content
     var host = "#{host}";
     var title = "#{title}";
     var artist = "#{artist}";
+    var albumArtist = "#{albumArtist}";
     var albumID = "#{albumID}";
     var albumName = "#{albumName}";
     var trackID = "#{trackID}";
@@ -19,11 +20,16 @@ block content
       if (trackPos === trackList.length - 1) {
         nextTrackIndex = 0;
       }
+      document.getElementById('artistName').innerText = trackList[trackPos].length > 3 ? trackList[trackPos][3] : albumArtist;
+      trackList.forEach((track, trackIndex) => {
+        document.getElementById(`posMarker${trackIndex}`).innerText = trackIndex === trackPos ? ' *' : '';
+      });
     }
   a(href='/music') ←
   br
   p Album: #{albumName}
-  p Artist: #{artist}
+  p Artist: 
+    span#artistName #{artist}
   audio#audio-player(controls
     autoplay=true
     type='audio/x-wav'
@@ -37,4 +43,4 @@ block content
     for track, trackIndex in trackList
       li
         a(href=track[0]) #{track[1]}
-        span #{(trackIndex === trackPos ? ' *' : '')}
+        span(id="posMarker" + trackIndex) #{(trackIndex === trackPos ? ' *' : '')}

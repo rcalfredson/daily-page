@@ -157,8 +157,8 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
         2 * 60 * 1000);
       const { trackID } = req.params;
       const trackPos = trackList.findIndex((el) => el[0] === trackID);
-      const trackArtist = trackList[trackPos].length > 3 ? trackList[trackPos][3]
-        : await google.getArtist(req.params.albumID);
+      const albumArtist = await google.getArtist(req.params.albumID);
+      const trackArtist = trackList[trackPos].length > 3 ? trackList[trackPos][3] : albumArtist;
       let nextTrackIndex = trackPos + 1;
       if (trackPos === trackList.length - 1) {
         nextTrackIndex = 0;
@@ -167,6 +167,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
         host: req.headers.host,
         title: trackList[trackPos][1],
         artist: trackArtist,
+        albumArtist,
         albumID: req.params.albumID,
         albumName,
         trackID: req.params.trackID,

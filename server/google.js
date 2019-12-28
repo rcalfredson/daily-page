@@ -143,7 +143,7 @@ async function getArtist(albumID) {
     mimeType: 'text/plain',
   }], 5 * 60 * 1000)).data);
 
-  return metaData.split('\n').length === 1 ? 'Unknown' : metaData.split('\n')[0];
+  return metaData.split('\r\n').length === 1 ? 'Unknown' : metaData.split('\r\n')[0];
 }
 
 async function getTracks(albumID) {
@@ -157,7 +157,7 @@ async function getTracks(albumID) {
     alt: 'media',
     mimeType: 'text/plain',
   }], 5 * 60 * 1000)).data);
-  const trackData = metaData.split('\n').length === 1 ? metaData.split('\n')[0] : metaData.split('\n')[1];
+  const trackData = metaData.split('\r\n').length === 1 ? metaData.split('\r\n')[0] : metaData.split('\r\n')[1];
   return trackData.split('~').map((el) => el.split('*'));
 }
 
@@ -226,7 +226,7 @@ async function getAlbumIDsByArtist(artistID) {
     fileId: artistID,
     alt: 'media',
     mimeType: 'text/plain',
-  }], 5 * 60 * 1000)).data).split('\n');
+  }], 5 * 60 * 1000)).data).split('\r\n');
 }
 
 async function wavFromText(fileName, parentName, start = null, end = null) {
