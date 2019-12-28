@@ -65,17 +65,48 @@
   display: block;
 }
 
+#screen ul {
+  display: block;
+  padding: 0;
+  cursor: pointer;
+  margin-top: 3px;
+}
+
 #screen ul a {
   display: block;
   text-decoration: none;
-  color: 
-  #303531;
+  color: #303531;
+}
+
+#screen a li {
+  list-style: none;
+  height: 24px;
+  padding-left: 7px;
+  padding-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#screen a.select li {
+  background: #303531;
+  color:#C0BDB6;
+}
+
+#screen a.select .arrow {
+  margin-left: 228px;
+  position: absolute;
+  margin-top: -23px;
+  color:#C0BDB6;
 }
 
 .tile {
   margin: 0;
   float: left;
   width: 100%;
+}
+
+.tile li {
+  white-space: nowrap;
 }
 
 .title {
