@@ -61,6 +61,17 @@
     rgb(197, 197, 203) 100%);
 }
 
+#homemenu {
+  display: block;
+}
+
+#screen ul a {
+  display: block;
+  text-decoration: none;
+  color: 
+  #303531;
+}
+
 .tile {
   margin: 0;
   float: left;
