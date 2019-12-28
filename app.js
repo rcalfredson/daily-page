@@ -108,6 +108,10 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
       res.send(await google.docText(req.params.docID));
     });
 
+    app.get('/iPod', async (req, res) => {
+      res.render('iPod');
+    });
+
     app.get('/music', async (req, res) => {
       res.render('linkList', {
         basePaths: ['/artist', '/album'],

@@ -7,3 +7,4 @@ credentials.json
 .DS_Store
 /performance/logs/*
 !/performance/logs/.gitkeep
+iPodScript.js

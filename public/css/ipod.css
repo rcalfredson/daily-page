@@ -1,0 +1,17 @@
+#ipod {
+    width: 360px;
+    height: 582px;
+    margin: 0 auto;
+    margin-top: 0px;
+    margin-top: 50px;
+    border-radius: 35px;
+    -webkit-box-shadow: 0px 50px 41px 3px rgba(0, 0, 0, .4);
+    background: linear-gradient(45deg,
+    rgba(255,255,255,1) 0%,rgba(237,237,237,1) 59%,rgba(243,243,243,1) 60%,
+    rgba(255,255,255,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=1 );
+    border-right: #C3CAD2 4px solid;
+    border-left: #909599 4px solid;
+    border-top: #D2D5DA 4px solid;
+    border-bottom: #737278 4px solid;
+}
