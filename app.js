@@ -13,7 +13,8 @@ const google = require('./server/google');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/api/v1`;
+const backendBaseUrl = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}`;
+const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
 (async () => {
   const dateParam = ':date([0-9]{4}-[0-9]{2}-[0-9]{2})';
@@ -109,7 +110,9 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
     });
 
     app.get('/iPod', async (req, res) => {
-      res.render('iPod');
+      res.render('iPod', {
+        backendURL: backendBaseUrl
+      });
     });
 
     app.get('/music', async (req, res) => {
@@ -153,6 +156,10 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
         titleLink: '/music',
         titlesWithHeaders: await cache.get('artists', google.getArtists, [], 40 * 1000),
       });
+    });
+
+    app.get('/music/meta/artist', async (req, res) => {
+      res.send(await cache.get('artists', google.getArtists, [], 40 * 1000));
     });
 
     app.get('/album/:albumID/:trackID', async (req, res) => {
@@ -333,7 +340,7 @@ const backendURL = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}/a
           date,
           room: roomReq,
           header: `${date} - ${viewHelper.capitalize(roomReq)} Room.`,
-          backendURL,
+          backendURL: backendApiUrl,
           sessionID: jwtHelper.expiringKey(),
         });
         return;

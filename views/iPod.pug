@@ -1,6 +1,8 @@
 extends layoutMin
 block content
   link(rel='stylesheet' href='/css/ipod.css')
+  script.
+    backendURL = "#{backendURL}"
   script(src='/js/jquery-1.7.1.min.js')
   script(type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js")
   script(src='/js/jquery.knob.js')
@@ -32,6 +34,10 @@ block content
           a(href="#songs")
             li Songs
             span.arrow >
+      #artists.tile(style='display:none;')
+        .title
+          span Artists
+        ul#artists-list
     #clickwheel
       #menu menu
       a(id='back' href='#')
