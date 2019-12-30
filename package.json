@@ -11,7 +11,7 @@
     "test": "jasmine",
     "start": "node app.js",
     "build": "babel lib -d build",
-    "compile": "browserify build/main.js -o public/js/bundle.js && browserify build/clearSelection.js -o public/js/clearSelection.js",
+    "compile": "browserify build/main.js -o public/js/bundle.js && browserify build/clearSelection.js -o public/js/clearSelection.js && browserify build/iPod.js -o public/js/iPod.js",
     "postinstall": "npm run build && npm run compile",
     "local": "npm run build && npm run compile && npm start",
     "perform": "babel-node performance/script.js",

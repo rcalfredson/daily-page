@@ -25,6 +25,33 @@
   border-left: 1px #C0BDB6 solid;
 }
 
+#clickwheel {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border: 2px solid #4d4d4d;
+  top: 55px;
+  left: 25px;
+  border-radius: 50%;
+  box-shadow: 2px 1px 10px 10px rgba(232, 232, 232, .4);
+}
+
+#innerwheel {
+  position: relative;
+  width: 234px;
+  height: 234px;
+  border: 2px solid #4d4d4d;
+  top: 32px;
+  left: 32px;
+  border-radius: 50%;
+  box-shadow: 2px 1px 10px 10px
+  rgba(232, 232, 232, .4);
+  background: radial-gradient(ellipse at center,
+  rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,
+    rgba(255,255,255,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=1 );
+}
+
 #ipod {
   width: 360px;
   height: 582px;
@@ -90,6 +117,12 @@
 #screen a.select li {
   background: #303531;
   color:#C0BDB6;
+}
+
+#screen a .arrow {
+  margin-left: 228px;
+  position: absolute;
+  margin-top: -23px;
 }
 
 #screen a.select .arrow {
