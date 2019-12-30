@@ -40,8 +40,26 @@ block content
         ul#artists-list
     #clickwheel
       #menu menu
+      #prev
+        .bar-left
+        .arrow-left
+        .arrow-left
+      #next
+        .bar-right
+        .arrow-right
+        .arrow-right
+      #play-pause
+        .bar-right.gap
+        .bar-right.gap
+        .arrow-right
       a(id='back' href='#')
         #topbutton.button
+      a(id='rewindbutton' href='#')
+        #leftbutton.button
+      a(id='playpausebutton' href='#')
+        #bottombutton.button
+      a(id='fastforwardbutton' href='#')
+        #rightbutton.button
 
       #innerwheel
         input(type="text" value="75" class="dial" data-width="234" data-cursor="true" data-thickness=".9" data-fgcolor="#E9EDEC" data-bgcolor="#E9EDEC" data-displayinput="true" style="width: 121px; height: 78px; position: absolute; vertical-align: middle; margin-top: 78px; margin-left: -177px; border: 0px none; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%; font: bold 58px Arial; text-align: center; color: rgb(233, 237, 236); padding: 0px; -moz-appearance: none;")

@@ -66,6 +66,55 @@
     border-left: 0px;
 }
 
+#bottombutton {
+  top: 182px;
+  left: 74px;
+  border-bottom: 0px;
+  border-right: 0px;
+}
+
+#leftbutton {
+  top: 74px;
+  left: -32px;
+  border: 0px;
+}
+
+#rightbutton {
+  top: 74px;
+  left: 179px;
+  border: 0px;
+}
+
+.bar-left {
+  width: 0;
+  height: 15px;
+  border-right: 4px 
+  #A1A5A8 solid;
+  float: left;
+}
+
+.arrow-left {
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+border-bottom: 8px solid transparent;
+border-right: 8px
+  #A1A5A8 solid;
+  float: right;
+}
+
+.arrow-right {
+  width: 0;
+  height: 0;
+  border-top: 8px solid 
+transparent;
+border-bottom: 8px solid
+transparent;
+border-left: 8px
+  #A1A5A8 solid;
+  float: left;
+}
+
   .button {
     position: absolute;
     width: 150px;
@@ -85,10 +134,52 @@
     transform: rotate(45deg);
 }
 
+.bar-right {
+  width: 0;
+  height: 15px;
+  border-left: 4px 
+  #A1A5A8 solid;
+  float: right;
+}
+
+.gap {
+  margin-left: 2px;
+}
+
+#play-pause {
+  position: absolute;
+  top: 277px;
+  left: 145px;
+  color: 
+  #979EA4;
+  font-family: cm, sans-serif;
+  font-size: 16px;
+}
+
   #menu {
   position: absolute;
   top: 7px;
   left: 127px;
+  color: 
+  #979EA4;
+  font-family: cm, sans-serif;
+  font-size: 16px;
+}
+
+#next {
+  position: absolute;
+  top: 140px;
+  left: 276px;
+  color: 
+  #979EA4;
+  font-family: cm, sans-serif;
+  font-size: 16px;
+}
+
+#prev {
+  position: absolute;
+  top: 140px;
+  left: 8px;
   color: 
   #979EA4;
   font-family: cm, sans-serif;
