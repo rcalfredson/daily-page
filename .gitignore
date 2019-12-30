@@ -1,6 +1,7 @@
 /node_modules
 /public/js/bundle.js
 /public/js/clearSelection.js
+/public/js/iPod.js
 /build
 debug.js
 credentials.json

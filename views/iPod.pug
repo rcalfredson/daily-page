@@ -2,23 +2,38 @@ extends layoutMin
 block content
   link(rel='stylesheet' href='/css/ipod.css')
   script(src='/js/jquery-1.7.1.min.js')
+  script(type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js")
   script(src='/js/jquery.knob.js')
   script(src='/js/iPod.js')
   div#ipod
-    #homemenu.tile
-      #screen
-        .battery-tip
-        .battery ||||
+    #screen
+      .battery-tip
+      .battery ||||
+      #homemenu.tile
         .title
           span iPod
         ul
-          a.select(href="#music")
+          a(href="#music")
             li Music
             span.arrow >
           a(href='#extras')
             li Extras
             span.arrow >
-      #clickwheel
-        #innerwheel
-          div(style="display: inline; width: 234px; height: 234px; opacity: 0.1;")
-            input(type="text" value="75" class="dial" data-width="234" data-cursor="true" data-thickness=".9" data-fgcolor="#E9EDEC" data-bgcolor="#E9EDEC" data-displayinput="true" style="width: 121px; height: 78px; position: absolute; vertical-align: middle; margin-top: 78px; margin-left: -177px; border: 0px none; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%; font: bold 58px Arial; text-align: center; color: rgb(233, 237, 236); padding: 0px; -moz-appearance: none;")
+      #music.tile(style='display:none;')
+        .title
+          span Music 
+        ul
+          a(href="#artists")
+            li Artists
+            span.arrow >
+          a(href="#albums")
+            li Albums
+            span.arrow >
+          a(href="#songs")
+            li Songs
+            span.arrow >
+    #clickwheel
+      #innerwheel
+        input(type="text" value="75" class="dial" data-width="234" data-cursor="true" data-thickness=".9" data-fgcolor="#E9EDEC" data-bgcolor="#E9EDEC" data-displayinput="true" style="width: 121px; height: 78px; position: absolute; vertical-align: middle; margin-top: 78px; margin-left: -177px; border: 0px none; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%; font: bold 58px Arial; text-align: center; color: rgb(233, 237, 236); padding: 0px; -moz-appearance: none;")
+        a(id='select' href='#')
+          #innerbutton
