@@ -15,29 +15,37 @@ block content
         .title
           span iPod
         ul
-          a(href="#music")
+          a(id='music-link' href="#music")
             li Music
             span.arrow >
-          a(href='#extras')
+          a(id='extras-link' href='#extras')
             li Extras
             span.arrow >
       #music.tile(style='display:none;')
         .title
           span Music 
         ul
-          a(href="#artists")
+          a(id='artists-link' href="#artists")
             li Artists
             span.arrow >
-          a(href="#albums")
+          a(id='albums-link' href="#albums")
             li Albums
             span.arrow >
-          a(href="#songs")
+          a(id='songs-link' href="#songs")
             li Songs
             span.arrow >
       #artists.tile(style='display:none;')
         .title
           span Artists
         ul#artists-list
+      #albums.tile(style='display:none;')
+        .title
+          span Albums
+        ul#albums-list
+      #songs.tile(style='display:none;')
+        .title
+          span Songs
+        ul#songs-list
     #clickwheel
       #menu menu
       #prev

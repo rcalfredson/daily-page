@@ -191,6 +191,26 @@ async function getArtists() {
   return { Artists: fileDocs };
 }
 
+async function getSongs() {
+  const {Albums} = await cache.get('albums', getAlbums, [], 40 * 1000);
+  let allTracks = [];
+  const promises = [];
+  Albums.forEach(album => {
+    promises.push((async () => {
+      allTracks.push(...(await getTracks(album[0])));
+    })());
+  });
+
+  await Promise.all(promises);
+  allTracks = allTracks.map(track => track.slice(0, 2)).sort((a, b) => {
+    if (a[1] > b[1]) { return 1; }
+    if (b[1] > a[1]) { return -1; }
+    return 0;
+  });
+
+  return { Songs: allTracks };
+}
+
 async function getAlbums() {
   const queryParams = {
     pageSize: 500,
@@ -300,5 +320,6 @@ module.exports = {
   getArtists,
   getAlbumIDsByArtist,
   getAlbums,
+  getSongs,
   getTracks,
 };

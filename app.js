@@ -162,6 +162,14 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       res.send(await cache.get('artists', google.getArtists, [], 40 * 1000));
     });
 
+    app.get('/music/meta/album', async (req, res) => {
+      res.send(await cache.get('albums', google.getAlbums, [], 40 * 1000));
+    });
+
+    app.get('/music/meta/song', async (req, res) => {
+      res.send(await cache.get('songs', google.getSongs, [], 40 * 1000))
+    });
+
     app.get('/album/:albumID/:trackID', async (req, res) => {
       const albumName = (await cache.get('albums', google.getAlbums, [], 40 * 1000)).Albums.find((el) => el[0] === req.params.albumID)[1];
       const trackList = await cache.get(req.params.albumID, google.getTracks, [req.params.albumID],
