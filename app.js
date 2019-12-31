@@ -26,6 +26,12 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
         than once every 0.1s, for music at least.
   */
 
+  function refreshMediaCache() {
+    cache.get('artists', google.getArtists, [], 110 * 60 * 1000);
+    cache.get('albums', google.getAlbums, [], 110 * 60 * 1000);
+    cache.get('songs', google.getSongs, [], 110 * 60 * 1000);
+  }
+
   try {
     await mongo.initConnection();
     google.init(mongo);
@@ -367,6 +373,12 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       }
       res.redirect(`/${roomReq}?${peerIDs[roomReq][Math.floor(Math.random() * peerIDs[roomReq].length)]}`);
     });
+    refreshMediaCache();
+    setTimeout(() => {
+      schedule.scheduleJob('48 */2 * * *', () => {
+        refreshMediaCache();
+      })
+    }, 60*1000);
   } catch (error) {
     console.log(`Server startup failed: ${error.message}`); // eslint-disable-line no-console
   }
