@@ -17,6 +17,7 @@ let credentials;
 let auth;
 let drive;
 let mongo;
+let lastRequestTime = 0;
 
 function init(mongoConnection) {
   try {
@@ -131,32 +132,46 @@ async function docText(fileId) {
   return dom.serialize();
 }
 
+async function throttleAsNeeded(funcToCall, args) {
+  return new Promise((resolve, reject) => {
+    const timeDiff = new Date() - lastRequestTime;
+    let timeToWait = 0;
+    if (timeDiff < 100) {
+      timeToWait = 100;
+    }
+    lastRequestTime = new Date();
+    setTimeout(async () => {
+      const result = await funcToCall(...args);
+      resolve(result);
+  }, timeToWait)
+})}
+
 async function getArtist(albumID) {
-  const metaFileID = (await cache.get(`${albumID}_metaID`, (opts) => drive.files.list(opts), [{
+  const metaFileID = (await cache.get(`${albumID}_metaID`, throttleAsNeeded, [(opts) => drive.files.list(opts), [{
     fields: 'files(id)',
     orderBy: 'createdTime desc',
     q: `'${albumID}' in parents and name = 'meta'`,
-  }], 5 * 60 * 1000)).data.files[0].id;
-  const metaData = stripBom((await cache.get(`${albumID}_meta`, (opts) => drive.files.export(opts), [{
+  }]], 5 * 60 * 1000)).data.files[0].id;
+  const metaData = stripBom((await cache.get(`${albumID}_meta`, throttleAsNeeded, [(opts) => drive.files.export(opts), [{
     fileId: metaFileID,
     alt: 'media',
     mimeType: 'text/plain',
-  }], 5 * 60 * 1000)).data);
+  }]], 5 * 60 * 1000)).data);
 
   return metaData.split('\r\n').length === 1 ? 'Unknown' : metaData.split('\r\n')[0];
 }
 
 async function getTracks(albumID) {
-  const metaFileID = (await cache.get(`${albumID}_metaID`, (opts) => drive.files.list(opts), [{
+  const metaFileID = (await cache.get(`${albumID}_metaID`, throttleAsNeeded, [(opts) => drive.files.list(opts), [{
     fields: 'files(id)',
     orderBy: 'createdTime desc',
     q: `'${albumID}' in parents and name = 'meta'`,
-  }], 5 * 60 * 1000)).data.files[0].id;
-  const metaData = stripBom((await cache.get(`${albumID}_meta`, (opts) => drive.files.export(opts), [{
+  }]], 5 * 60 * 1000)).data.files[0].id;
+  const metaData = stripBom((await cache.get(`${albumID}_meta`, throttleAsNeeded, [(opts) => drive.files.export(opts), [{
     fileId: metaFileID,
     alt: 'media',
     mimeType: 'text/plain',
-  }], 5 * 60 * 1000)).data);
+  }]], 5 * 60 * 1000)).data);
   const trackData = metaData.split('\r\n').length === 1 ? metaData.split('\r\n')[0] : metaData.split('\r\n')[1];
   return trackData.split('~').map((el) => el.split('*'));
 }
@@ -169,7 +184,7 @@ async function getArtists() {
     q: `'${artistsFolderID}' in parents and mimeType = 'application/vnd.google-apps.document'`,
   };
 
-  let res = await drive.files.list(queryParams);
+  let res = await throttleAsNeeded((opts) => drive.files.list(opts), [queryParams]);
   const fileDocs = [];
 
   res.data.files.forEach((docFile) => {
@@ -177,8 +192,8 @@ async function getArtists() {
   });
 
   while (res.data.nextPageToken) {
-    res = await drive.files.list(Object.assign(queryParams,
-      { pageToken: res.data.nextPageToken }));
+    res = await throttleAsNeeded((opts) => drive.files.list(opts), [Object.assign(queryParams,
+      { pageToken: res.data.nextPageToken })]);
     res.data.files.forEach((docFile) => {
       fileDocs.push([docFile.id, docFile.name]);
     });
@@ -219,7 +234,7 @@ async function getAlbums() {
     q: `'${albumsFolderID}' in parents and mimeType = 'application/vnd.google-apps.folder'`,
   };
 
-  let res = await drive.files.list(queryParams);
+  let res = await throttleAsNeeded((opts) => drive.files.list(opts), [queryParams]);
   const fileDocs = [];
 
   res.data.files.forEach((docFile) => {
@@ -227,8 +242,8 @@ async function getAlbums() {
   });
 
   while (res.data.nextPageToken) {
-    res = await drive.files.list(Object.assign(queryParams,
-      { pageToken: res.data.nextPageToken }));
+    res = await throttleAsNeeded((opts) => drive.files.list(opts), [Object.assign(queryParams,
+      { pageToken: res.data.nextPageToken })]);
     res.data.files.forEach((docFile) => {
       fileDocs.push([docFile.id, docFile.name]);
     });
@@ -242,11 +257,11 @@ async function getAlbums() {
 }
 
 async function getAlbumIDsByArtist(artistID) {
-  return stripBom((await cache.get(artistID, (opts) => drive.files.export(opts), [{
+  return stripBom((await cache.get(artistID, throttleAsNeeded, [(opts) => drive.files.export(opts), [{
     fileId: artistID,
     alt: 'media',
     mimeType: 'text/plain',
-  }], 5 * 60 * 1000)).data).split('\r\n');
+  }]], 5 * 60 * 1000)).data).split('\r\n');
 }
 
 async function wavFromText(fileName, parentName, start = null, end = null) {
@@ -258,7 +273,7 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
     q: `'${parentName}' in parents and name contains '${fileName}'`,
   };
 
-  let res = await drive.files.list(queryParams);
+  let res = await throttleAsNeeded((opts) => drive.files.list(opts), [queryParams]);
   let fileDocs = [];
 
   function addToFileDocs(docFile) {
@@ -273,8 +288,8 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
   });
 
   while (res.data.nextPageToken) {
-    res = await drive.files.list(Object.assign(queryParams,
-      { pageToken: res.data.nextPageToken }));
+    res = await throttleAsNeeded((opts) => drive.files.list(opts), [Object.assign(queryParams,
+      { pageToken: res.data.nextPageToken })]);
     res.data.files.forEach((docFile) => {
       addToFileDocs(docFile);
     });
@@ -296,11 +311,11 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
   const promises = [];
   fileDocs.forEach((fileDoc, fIdx) => {
     promises.push((async () => {
-      data[fIdx] = await cache.get(fileDoc[1], (opts) => drive.files.export(opts), [{
+      data[fIdx] = await cache.get(fileDoc[1], throttleAsNeeded, [(opts) => drive.files.export(opts), [{
         fileId: fileDoc[1],
         alt: 'media',
         mimeType: 'text/plain',
-      }], 5 * 60 * 1000);
+      }]], 5 * 60 * 1000);
     })());
   });
 

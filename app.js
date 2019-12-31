@@ -10,6 +10,7 @@ const jwtHelper = require('./server/jwt-helper');
 const viewHelper = require('./server/view-helper');
 const mongo = require('./server/mongo');
 const google = require('./server/google');
+var schedule = require('node-schedule');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,6 +19,12 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
 (async () => {
   const dateParam = ':date([0-9]{4}-[0-9]{2}-[0-9]{2})';
+
+  /*
+    _*_ Load the cache from Google every two hours.
+    ___ Stagger requests to Google to no more frequent
+        than once every 0.1s, for music at least.
+  */
 
   try {
     await mongo.initConnection();
@@ -167,7 +174,12 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     });
 
     app.get('/music/meta/song', async (req, res) => {
-      res.send(await cache.get('songs', google.getSongs, [], 40 * 1000))
+      res.send(await cache.get('songs', google.getSongs, [], 40 * 1000));
+    });
+
+    app.get('/music/meta/album/:albumID', async (req, res) => {
+      res.send(await cache.get(req.params.albumID, google.getTracks, [req.params.albumID],
+        2 * 60 * 1000));
     });
 
     app.get('/album/:albumID/:trackID', async (req, res) => {
