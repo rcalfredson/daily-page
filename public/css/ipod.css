@@ -336,6 +336,40 @@ border-left: 8px
     display:none;
     }
 
+    #playindicator{
+      display:none;
+      position: absolute;
+      width: 22px;
+      height: 20px;
+      top: 8px;
+      left: 15px;
+      width: 0; 
+      height: 0; 
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent; 
+      border-left: 8px #303531 solid;
+      float: left;
+    }
+    
+    
+    #pauseindicator{
+      display:none;
+      position: absolute;
+      width: 22px;
+      height: 20px;
+      top: 8px;
+      left: 15px;
+      float:left;
+    }
+
+    .pausebar{
+      width: 0; 
+      height: 15px; 
+      border-right: 4px #303531 solid;
+      float: left;
+      margin-right:2px;
+    }
+
   .scrolltimebar{
     position:absolute;
     width:70%;
