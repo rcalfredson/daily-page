@@ -301,6 +301,24 @@ border-left: 8px
   padding-left:5px;
   }
 
+  .volumebar {
+    position: absolute;
+    width: 70%;
+    height: 10px;
+    bottom: 19px;
+    left: 30px;
+    border: 2px 
+    #303531 solid;
+}
+
+
+.volumelevel{
+  width:0%;
+  height:100%;
+  background: #545850;
+  
+  }
+
 .songtitle, .songartist, .albumtitle{
   text-align:center;
   line-height:28px;
@@ -308,9 +326,18 @@ border-left: 8px
 
 .timevolume {
     line-height: 25px;
-    padding-left: 10px;
     padding-top: 10px;
 }
+
+.timeline {
+  overflow: hidden;
+}
+
+.scrolltimelevel{
+  width:0%;
+  height:100%;
+  float:left;
+  }
 
 .scrolltime{
   display:none;
@@ -321,7 +348,7 @@ border-left: 8px
     height:24px;
     background:url("volumeu.png") 24px 0px;
     float:left;
-    margin-left:3px;
+    margin-left:10px;
     }
     
     .volumedecr{
@@ -379,16 +406,38 @@ border-left: 8px
     border: 2px #303531 solid;
     }
 
+    .scrolltimebar span {
+      color: #303531;
+      line-height: 7px;
+      font-size: 20px;
+      height: 5px;
+      margin: 0px 0px 0 -11px;
+      display: block;
+      float: left;
+      text-shadow: rgba(0, 0, 0, 1) 0 0 0;
+      }
+
     #player{
       display:none;
       }
 
+      .time-left {
+        position: absolute;
+        bottom: 2px;
+        left: 5px;
+      }
+
+      .time-right {
+        position: absolute;
+        bottom: 2px;
+        right: 5px;
+      }
+
     .trackbar{
-      position:absolute;
-      width:65%;
+      position:relative;
+      width:90%;
       height:10px;
-      bottom:22px;
-      left:70px;
+      margin: 0 auto;
       border: 2px #303531 solid;
       -webkit-border-radius: 5px 5px 5px 5px;
       border-radius: 5px 5px 5px 5px;
