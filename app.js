@@ -192,8 +192,8 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     });
 
     app.get('/music/meta/album/:albumID', async (req, res) => {
-      res.send(await cache.get(req.params.albumID, google.getTracks, [req.params.albumID],
-        2 * 60 * 1000));
+      res.send({albumArtist: await google.getArtist(req.params.albumID), tracks: await cache.get(req.params.albumID, google.getTracks, [req.params.albumID],
+        2 * 60 * 1000)});
     });
 
     app.get('/album/:albumID/:trackID', async (req, res) => {

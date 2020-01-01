@@ -288,9 +288,79 @@ border-left: 8px
   width: 100%;
 }
 
-.tile li {
-  white-space: nowrap;
+.tile li{
+  list-style:none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space:nowrap;
+  }
+
+.tracknumber{
+  line-height:20px;
+  font-size: 12px;
+  padding-left:5px;
+  }
+
+.songtitle, .songartist, .albumtitle{
+  text-align:center;
+  line-height:28px;
+  }
+
+.timevolume {
+    line-height: 25px;
+    padding-left: 10px;
+    padding-top: 10px;
 }
+
+.scrolltime{
+  display:none;
+  }
+
+  .volumeincr{
+    width:24px;
+    height:24px;
+    background:url("volumeu.png") 24px 0px;
+    float:left;
+    margin-left:3px;
+    }
+    
+    .volumedecr{
+    width:24px;
+    height:24px;
+    background:url("volumeu.png") -4px 0px;
+    float:right;
+    margin-right:10px;
+    }
+
+  .volume{
+    display:none;
+    }
+
+  .scrolltimebar{
+    position:absolute;
+    width:70%;
+    height:10px;
+    bottom:25px;
+    left:30px;
+    border: 2px #303531 solid;
+    }
+
+    .trackbar{
+      position:absolute;
+      width:65%;
+      height:10px;
+      bottom:22px;
+      left:70px;
+      border: 2px #303531 solid;
+      -webkit-border-radius: 5px 5px 5px 5px;
+      border-radius: 5px 5px 5px 5px;
+      }
+
+      .trackbartime{
+        width:0%;
+        height:100%;
+        background: #545850;
+        }
 
 .title {
   width: 100%;

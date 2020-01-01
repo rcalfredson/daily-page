@@ -11,6 +11,31 @@ block content
     #screen
       .battery-tip
       .battery ||||
+      #audioplayer.tile
+        .title
+          span Now Playing
+        ul
+          li(class="tracknumber")
+          li(class="songtitle")
+          li(class="songartist")
+          li(class="albumtitle")
+          li(class="timevolume")
+            div(class="timeline")
+              span(class="time")
+              div(class="trackbar")
+                div(class="trackbartime")
+              div(id="player")
+				
+            div(class="volume")
+              div(class="volumeincr")
+              div(class="volumebar")
+                div(class="volumelevel")
+              div(class="volumedecr")
+				
+        div(class="scrolltime")
+          div(class="scrolltimebar")
+            div(class="scrolltimelevel")
+              span &#9830;
       #homemenu.tile
         .title
           span iPod
@@ -42,7 +67,7 @@ block content
         .title
           span Albums
         ul#albums-list
-      #songs.tile(style='display:none;')
+      #songs.tile.play(style='display:none;')
         .title
           span Songs
         ul#songs-list

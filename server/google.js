@@ -213,14 +213,18 @@ async function getSongs() {
   const promises = [];
   Albums.forEach((album) => {
     promises.push((async () => {
-      allTracks.push(...(await getTracks(album[0])));
+      const albumArtist = await getArtist(album[0]);
+      const trackData = await getTracks(album[0])
+      trackData.forEach(track => {
+        allTracks.push({id: track[0], title: track[1], album: album, artist: track.length > 3 ? track[3] : albumArtist})
+      })
     })());
   });
 
   await Promise.all(promises);
-  allTracks = allTracks.map((track) => track.slice(0, 2)).sort((a, b) => {
-    if (a[1] > b[1]) { return 1; }
-    if (b[1] > a[1]) { return -1; }
+  allTracks = allTracks.sort((a, b) => {
+    if (a.title > b.title) { return 1; }
+    if (b.title > a.title) { return -1; }
     return 0;
   });
 
