@@ -136,6 +136,13 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       });
     });
 
+    app.get('/music/meta/artist/:artistID', async (req, res) => {
+      const albumIDs = await google.getAlbumIDsByArtist(req.params.artistID);
+      const {Albums} = await cache.get('albums', google.getAlbums, [], 40 * 1000);
+      res.send(albumIDs.map((albumID) => Albums.find(
+        (el) => el[0] === albumID)));
+    });
+
     app.get('/artist/:artistID', async (req, res) => {
       const artistName = (await cache.get('artists', google.getArtists, [], 40 * 1000)).Artists.find((el) => el[0] === req.params.artistID)[1];
       const albumIDs = await google.getAlbumIDsByArtist(req.params.artistID);
