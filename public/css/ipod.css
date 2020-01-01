@@ -345,6 +345,10 @@ border-left: 8px
     border: 2px #303531 solid;
     }
 
+    #player{
+      display:none;
+      }
+
     .trackbar{
       position:absolute;
       width:65%;
