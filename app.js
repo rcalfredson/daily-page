@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const peerServer = require('peer');
 const stream = require('stream');
+const schedule = require('node-schedule');
 const dateHelper = require('./build/dateHelper');
 const useAPIV1 = require('./server/api-v1');
 const cache = require('./server/cache');
@@ -10,7 +11,6 @@ const jwtHelper = require('./server/jwt-helper');
 const viewHelper = require('./server/view-helper');
 const mongo = require('./server/mongo');
 const google = require('./server/google');
-var schedule = require('node-schedule');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -124,7 +124,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
     app.get('/iPod', async (req, res) => {
       res.render('iPod', {
-        backendURL: backendBaseUrl
+        backendURL: backendBaseUrl,
       });
     });
 
@@ -138,9 +138,10 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
     app.get('/music/meta/artist/:artistID', async (req, res) => {
       const albumIDs = await google.getAlbumIDsByArtist(req.params.artistID);
-      const {Albums} = await cache.get('albums', google.getAlbums, [], 40 * 1000);
+      const { Albums } = await cache.get('albums', google.getAlbums, [], 40 * 1000);
       res.send(albumIDs.map((albumID) => Albums.find(
-        (el) => el[0] === albumID)));
+        (el) => el[0] === albumID,
+      )));
     });
 
     app.get('/artist/:artistID', async (req, res) => {
@@ -384,8 +385,8 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     setTimeout(() => {
       schedule.scheduleJob('48 */2 * * *', () => {
         refreshMediaCache();
-      })
-    }, 60*1000);
+      });
+    }, 60 * 1000);
   } catch (error) {
     console.log(`Server startup failed: ${error.message}`); // eslint-disable-line no-console
   }
