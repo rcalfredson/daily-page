@@ -320,7 +320,7 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
         fileId: fileDoc[1],
         alt: 'media',
         mimeType: 'text/plain',
-      }]], 5 * 60 * 1000);
+      }]], 2 * 60 * 60 * 1000);
     })());
   });
 
