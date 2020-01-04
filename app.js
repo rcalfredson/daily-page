@@ -192,8 +192,11 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     });
 
     app.get('/music/meta/album/:albumID', async (req, res) => {
-      res.send({albumArtist: await google.getArtist(req.params.albumID), tracks: await cache.get(req.params.albumID, google.getTracks, [req.params.albumID],
-        2 * 60 * 1000)});
+      res.send({
+        albumArtist: await google.getArtist(req.params.albumID),
+        tracks: await cache.get(req.params.albumID, google.getTracks, [req.params.albumID],
+          2 * 60 * 1000),
+      });
     });
 
     app.get('/album/:albumID/:trackID', async (req, res) => {
@@ -249,7 +252,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
         const chunksize = 1125000;
         if (partialEnd && partialEnd !== '1') {
           end = parseInt(partialEnd, 10);
-          if (end - start === total - 1 || end - start > chunksize) {
+          if (end - start > chunksize && end - start !== total - 1) {
             end = start + chunksize - 1;
           }
           buffer = await google.wavFromText(req.params.fileID, req.params.albumID, start, end);

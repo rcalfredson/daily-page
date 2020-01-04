@@ -214,10 +214,12 @@ async function getSongs() {
   Albums.forEach((album) => {
     promises.push((async () => {
       const albumArtist = await getArtist(album[0]);
-      const trackData = await getTracks(album[0])
-      trackData.forEach(track => {
-        allTracks.push({id: track[0], title: track[1], album: album, artist: track.length > 3 ? track[3] : albumArtist})
-      })
+      const trackData = await getTracks(album[0]);
+      trackData.forEach((track) => {
+        allTracks.push({
+          id: track[0], title: track[1], album, artist: track.length > 3 ? track[3] : albumArtist,
+        });
+      });
     })());
   });
 

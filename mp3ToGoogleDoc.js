@@ -71,8 +71,6 @@ ffmpeg(track)
         console.log(`start of chunk: ${myChunk.slice(0, 8)}`);
         console.log(`chunk end: ${myChunk.slice(myChunk.length - 8, myChunk.length)}`);
       });
-      //console.log('entire byte size:');
-      //console.log(Buffer.from(bitmap).byteLength);
 
       await Promise.each(chunks, async (chunk, index) => {
         fileMetadata.parents = [musicFolderID];
@@ -99,6 +97,8 @@ ffmpeg(track)
       });
       fs.unlinkSync(`${fileName}.wav`);
       fs.unlinkSync(`${fileName}.bin`);
+      console.log('entire byte size:');
+      console.log(Buffer.from(bitmap).byteLength);
     })();
 })
 .save(`./${fileName}.wav`);//path where you want to save your file
