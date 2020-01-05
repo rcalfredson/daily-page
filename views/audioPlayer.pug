@@ -14,7 +14,7 @@ block content
     var trackPos = "#{trackPos}";
 
     function goToNextTrack() {
-      document.getElementById('audio-player').src = `http://${host}/audio/${trackList[nextTrackIndex][0]}/${albumID}.wav`;
+      document.getElementById('audio-player').src = `${host}/audio/${trackList[nextTrackIndex][0]}/${albumName}`;
       trackPos = nextTrackIndex;
       nextTrackIndex = trackPos + 1;
       if (trackPos === trackList.length - 1) {
@@ -32,9 +32,9 @@ block content
     span#artistName #{artist}
   audio#audio-player(controls
     autoplay=true
-    type='audio/x-wav'
+    type='audio/mpeg'
     onended="goToNextTrack();"
-    src='http://' + host + '/audio/' + trackID + '/' + albumID + '.wav')
+    src=host + '/audio/' + trackID + '/' + albumName)
     | Your browser does not support the
     code  audio
     | element.

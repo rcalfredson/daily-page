@@ -14,23 +14,12 @@ const google = require('./server/google');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const audioHost = 'http://roboipod.ddns.net:3000'
 const backendBaseUrl = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}`;
 const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
 (async () => {
   const dateParam = ':date([0-9]{4}-[0-9]{2}-[0-9]{2})';
-
-  /*
-    _*_ Load the cache from Google every two hours.
-    ___ Stagger requests to Google to no more frequent
-        than once every 0.1s, for music at least.
-  */
-
-  function refreshMediaCache() {
-    cache.get('artists', google.getArtists, [], 110 * 60 * 1000);
-    cache.get('albums', google.getAlbums, [], 110 * 60 * 1000);
-    cache.get('songs', google.getSongs, [], 110 * 60 * 1000);
-  }
 
   try {
     await mongo.initConnection();
@@ -124,7 +113,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
     app.get('/iPod', async (req, res) => {
       res.render('iPod', {
-        backendURL: backendBaseUrl,
+        backendURL: audioHost,
       });
     });
 
@@ -212,7 +201,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
         nextTrackIndex = 0;
       }
       res.render('audioPlayer', {
-        host: req.headers.host,
+        host: audioHost,
         title: trackList[trackPos][1],
         artist: trackArtist,
         albumArtist,
@@ -227,13 +216,6 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
     app.get('/album/:albumID', async (req, res) => {
       res.redirect(`/album/${req.params.albumID}/${(await cache.get(req.params.albumID, google.getTracks, [req.params.albumID], 2 * 60 * 1000))[0][0]}`);
-    });
-
-    app.get('/stream/:fileID', (req, res) => {
-      res.render('audioPlayer', {
-        host: req.headers.host,
-        fileID: req.params.fileID,
-      });
     });
 
     app.get('/audio/:fileID/:albumID*?.wav', async (req, res) => {
@@ -384,12 +366,6 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       }
       res.redirect(`/${roomReq}?${peerIDs[roomReq][Math.floor(Math.random() * peerIDs[roomReq].length)]}`);
     });
-    refreshMediaCache();
-    setTimeout(() => {
-      schedule.scheduleJob('48 */2 * * *', () => {
-        refreshMediaCache();
-      });
-    }, 60 * 1000);
   } catch (error) {
     console.log(`Server startup failed: ${error.message}`); // eslint-disable-line no-console
   }
