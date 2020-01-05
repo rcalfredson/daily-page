@@ -14,7 +14,7 @@ const google = require('./server/google');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const audioHost = 'http://roboipod.ddns.net:3000'
+const audioHost = 'https://ipod.dailypage.org'
 const backendBaseUrl = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}`;
 const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
