@@ -52,12 +52,22 @@ block content
           a(id='extras-link' href='#extras')
             li Extras
             span.arrow >
+          a(id='settings-link' href='#settings')
+            li Settings
+            span.arrow >
           a(id='shuffle-all-link' href='#audioplayer')
             li Shuffle Songs
             span.arrow >
           a(id='nowplaying-link' href='#audioplayer')
             li Now Playing
             span.arrow >
+      #settings.tile(style='display:none;')
+        .title
+          span Settings
+        ul
+          a(id='shuffle-setting-link')
+            li Shuffle
+            span.right-text(id='shuffle-setting') Off
       #music.tile(style='display:none;')
         .title
           span Music 

@@ -269,6 +269,19 @@ border-left: 8px
   color:#C0BDB6;
 }
 
+#screen a .right-text {
+  right: 0px;
+  position: absolute;
+  margin-top: -23px;
+}
+
+#screen a.select .right-text {
+  right: 5px;
+  position: absolute;
+  margin-top: -23px;
+  color:#C0BDB6;
+}
+
 #screen a .arrow {
   margin-left: 228px;
   position: absolute;
