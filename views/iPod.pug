@@ -85,10 +85,17 @@ block content
         .title
           span Albums
         ul#albums-list
+          a(id='song-by-album-link' href='#songs-by-album')
+            li All
+            span.arrow >
       #songs.tile.play(style='display:none;')
         .title
           span Songs
         ul#songs-list
+      #songs-by-album.tile(style='display:none;')
+        .title
+          span All Songs
+        ul#songs-by-album-list
     #clickwheel
       #menu menu
       #prev
