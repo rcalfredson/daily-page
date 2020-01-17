@@ -81,6 +81,9 @@ block content
         .title
           span Artists
         ul#artists-list
+          a(id='albums-by-artist-link' href='#albums-by-artist')
+            li All
+            span.arrow >
       #albums.tile(style='display:none;')
         .title
           span Albums
@@ -92,6 +95,10 @@ block content
         .title
           span Songs
         ul#songs-list
+      #albums-by-artist.tile(style='display:none;')
+        .title
+          span All Albums
+        ul#albums-by-artist-list
       #songs-by-album.tile(style='display:none;')
         .title
           span All Songs
