@@ -3,8 +3,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const peerServer = require('peer');
 const stream = require('stream');
-const schedule = require('node-schedule');
+const rp = require('request-promise');
 const dateHelper = require('./build/dateHelper');
+const encodeHelper = require('./build/encodeHelper');
 const useAPIV1 = require('./server/api-v1');
 const cache = require('./server/cache');
 const jwtHelper = require('./server/jwt-helper');
@@ -135,18 +136,18 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     });
 
     app.get('/artist/:artistID', async (req, res) => {
-      const artistName = (await cache.get('artists', google.getArtists, [], 40 * 1000)).Artists.find((el) => el[0] === req.params.artistID)[1];
-      const albumIDs = await google.getAlbumIDsByArtist(req.params.artistID);
-      const albums = (await cache.get('albums', google.getAlbums, [], 40 * 1000)).Albums;
+      const artistName = req.params.artistID;
+      let albums = JSON.parse(await rp(`${audioHost}/meta/music/artist/${artistName}/albums`))
+      albums = albums.map(album => {
+        return [encodeHelper.htmlString(album), album];
+      })
 
       res.render('linkList', {
-        basePaths: '/album',
+        basePaths: `/artist/${artistName}/album`,
         title: '← Music',
         titleLink: '/music',
         titlesWithHeaders: {
-          [artistName]: albumIDs.map((albumID) => [albumID, albums.find(
-            (el) => el[0] === albumID,
-          )[1]]),
+          [artistName]: albums
         },
       });
     });
@@ -161,11 +162,15 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     });
 
     app.get('/artist', async (req, res) => {
+      let artistRes = JSON.parse(await rp(`${audioHost}/meta/music/artists`));
+      artistRes = artistRes.map(artist => {
+        return [encodeHelper.htmlString(artist), artist]}
+      );
       res.render('linkList', {
         basePaths: '/artist',
         title: '← Music',
         titleLink: '/music',
-        titlesWithHeaders: await cache.get('artists', google.getArtists, [], 40 * 1000),
+        titlesWithHeaders:{'Artists': artistRes}
       });
     });
 
@@ -189,34 +194,36 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       });
     });
 
-    app.get('/album/:albumID/:trackID', async (req, res) => {
-      const albumName = (await cache.get('albums', google.getAlbums, [], 40 * 1000)).Albums.find((el) => el[0] === req.params.albumID)[1];
-      const trackList = await cache.get(req.params.albumID, google.getTracks, [req.params.albumID],
-        2 * 60 * 1000);
+    app.get('/artist/:artistID/album/:albumID/:trackID', async (req, res) => {
+      const albumName = req.params.albumID;
+      const artist = req.params.artistID;
+      const trackList = JSON.parse(await rp(`${audioHost}/meta/music/artist/${artist}/${albumName}`));
       const { trackID } = req.params;
-      const trackPos = trackList.findIndex((el) => el[0] === trackID);
-      const albumArtist = await google.getArtist(req.params.albumID);
-      const trackArtist = trackList[trackPos].length > 3 ? trackList[trackPos][3] : albumArtist;
+      const trackPos = trackList.tracks.findIndex((el) => encodeHelper.htmlString(el.name) === encodeHelper.htmlString(trackID));
+      const trackArtist = trackList.tracks[trackPos].artist || trackList.albumArtist;
       let nextTrackIndex = trackPos + 1;
       if (trackPos === trackList.length - 1) {
         nextTrackIndex = 0;
       }
       res.render('audioPlayer', {
         host: audioHost,
-        title: trackList[trackPos][1],
+        title: trackList.tracks[trackPos].name,
         artist: trackArtist,
-        albumArtist,
-        albumID: req.params.albumID,
+        albumArtist: trackList.albumArtist,
+        albumID: albumName,
         albumName,
-        trackID: req.params.trackID,
+        trackID: trackList.tracks[trackPos].id,
         nextTrackIndex,
         trackPos,
         trackList,
       });
     });
 
-    app.get('/album/:albumID', async (req, res) => {
-      res.redirect(`/album/${req.params.albumID}/${(await cache.get(req.params.albumID, google.getTracks, [req.params.albumID], 2 * 60 * 1000))[0][0]}`);
+    app.get('/artist/:artistID/album/:albumID', async (req, res) => {
+      const artist = req.params.artistID;
+      const album = req.params.albumID;
+      const albumTracks = JSON.parse(await rp(`${audioHost}/meta/music/artist/${artist}/${album}`));
+      res.redirect(`/artist/${artist}/album/${album}/${encodeHelper.htmlString(albumTracks.tracks[0].name)}`);
     });
 
     app.get('/audio/:fileID/:albumID*?.wav', async (req, res) => {

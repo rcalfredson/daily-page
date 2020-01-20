@@ -2,6 +2,7 @@
 /public/js/bundle.js
 /public/js/clearSelection.js
 /public/js/iPod.js
+/public/js/analyzeBPM.js
 /build
 debug.js
 credentials.json

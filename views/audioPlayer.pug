@@ -1,5 +1,7 @@
 extends layoutMin
 block content
+  script(src='/js/jquery-1.7.1.min.js')
+  script(src='/js/analyzeBPM.js')
   link(rel='stylesheet' href='/css/googleDocs.css')
   script.
     var nextTrackIndex = !{JSON.stringify(nextTrackIndex)};
@@ -14,33 +16,39 @@ block content
     var trackPos = "#{trackPos}";
 
     function goToNextTrack() {
-      document.getElementById('audio-player').src = `${host}/audio/${trackList[nextTrackIndex][0]}/${albumName}`;
+      document.getElementById('audio-player').src = `${host}/audio/${trackList.tracks[nextTrackIndex].id}/${albumName}`;
       trackPos = nextTrackIndex;
       nextTrackIndex = trackPos + 1;
       if (trackPos === trackList.length - 1) {
         nextTrackIndex = 0;
       }
-      document.getElementById('artistName').innerText = trackList[trackPos].length > 3 ? trackList[trackPos][3] : albumArtist;
-      trackList.forEach((track, trackIndex) => {
+      document.getElementById('artistName').innerText = trackList.tracks[trackPos].artist || albumArtist;
+      trackList.tracks.forEach((track, trackIndex) => {
         document.getElementById(`posMarker${trackIndex}`).innerText = trackIndex === trackPos ? ' *' : '';
       });
+      document.getElementById('audio-player').play();
     }
   a(href='/music') ←
   br
   p Album: #{albumName}
   p Artist: 
     span#artistName #{artist}
-  audio#audio-player(controls
-    autoplay=true
-    type='audio/mpeg'
-    onended="goToNextTrack();"
-    src=host + '/audio/' + trackID + '/' + albumName)
-    | Your browser does not support the
-    code  audio
-    | element.
+  #player-container
+    audio#audio-player(controls
+      autoplay=true
+      type='audio/mpeg'
+      crossorigin='anonymous'
+      onended="goToNextTrack();"
+      src=host + '/audio/' + trackID + '/' + albumName)
+      | Your browser does not support the
+      code  audio
+      | element.
+    script.
+      document.getElementById('audio-player').play();
+    div#beat-marker
   p Tracks
   ol
-    for track, trackIndex in trackList
+    for track, trackIndex in trackList.tracks
       li
-        a(href=track[0]) #{track[1]}
+        a(href=track.name) #{track.name}
         span(id="posMarker" + trackIndex) #{(trackIndex === trackPos ? ' *' : '')}
