@@ -50,5 +50,5 @@ block content
   ol
     for track, trackIndex in trackList.tracks
       li
-        a(href=track.name) #{track.name}
+        a(href=encodeURIComponent(track.name)) #{track.name}
         span(id="posMarker" + trackIndex) #{(trackIndex === trackPos ? ' *' : '')}
