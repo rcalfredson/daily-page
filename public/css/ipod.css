@@ -186,6 +186,10 @@ border-left: 8px
   font-size: 16px;
 }
 
+.dial {
+  color: white !important;
+}
+
 #innerwheel {
   position: relative;
   width: 234px;
