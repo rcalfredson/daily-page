@@ -1,6 +1,10 @@
 extends layoutMin
 block content
-  link(rel='stylesheet' href='/css/ipod.css')
+  case version
+    when '1g'
+      link(rel='stylesheet' href='/css/ipod.css')
+    when '2g'
+      link(rel='stylesheet' href='/css/ipod2G.css')
   script.
     backendURL = "#{backendURL}"
   script(src='/js/jquery-1.7.1.min.js')

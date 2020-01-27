@@ -116,6 +116,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     app.get('/iPod', async (req, res) => {
       res.render('iPod', {
         backendURL: audioHost,
+        version: '1g'
       });
     });
 
