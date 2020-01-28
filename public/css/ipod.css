@@ -239,8 +239,7 @@ border-left: 8px
   border-radius: 10px;
   border: 3px #595854 solid;
   box-shadow: 1px 1px 1px 1px #C0BFBD;
-  background: linear-gradient(45deg, rgb(160, 167, 170) 0%, rgb(185, 188, 193) 49%, rgb(185, 186, 191) 51%,
-    rgb(197, 197, 203) 100%);
+  background: linear-gradient(45deg, rgb(160, 167, 170) 0%, rgb(185, 188, 193) 49%, rgb(185, 186, 191) 51%, rgb(197, 197, 203) 100%);
 }
 
 #homemenu {
