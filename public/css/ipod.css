@@ -1,5 +1,6 @@
 @import url("cmFont.css");
 @import url("chicagoFont.css");
+@import url("visbyRoundFont.css");
 
 .battery {
   position: absolute;
@@ -28,22 +29,22 @@
 
 #clickwheel {
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 309px;
+  height: 309px;
   border: 2px solid #4d4d4d;
-  top: 55px;
-  left: 25px;
+  top: 54px;
+  left: 23px;
   border-radius: 50%;
   box-shadow: 2px 1px 10px 10px rgba(232, 232, 232, .4);
 }
 
 #innerbutton{
   position:absolute;
-  width:80px;
-  height:80px;
+  width:86px;
+  height:86px;
   border:2px solid #4d4d4d;
-  top:75px;
-  left:75px;
+  top:76px;
+  left:76px;
   -webkit-border-radius: 50%;
   border-radius: 50%;
   z-index:15;
@@ -62,14 +63,14 @@
 
   #topbutton {
     top: -33px;
-    left: 74px;
+    left: 80px;
     border-top: 0px;
     border-left: 0px;
 }
 
 #bottombutton {
-  top: 182px;
-  left: 74px;
+  top: 192px;
+  left: 79px;
   border-bottom: 0px;
   border-right: 0px;
 }
@@ -149,8 +150,8 @@ border-left: 8px
 
 #play-pause {
   position: absolute;
-  top: 277px;
-  left: 145px;
+  top: 284px;
+  left: 147px;
   color: 
   #979EA4;
   font-family: Chicago, sans-serif;
@@ -159,18 +160,21 @@ border-left: 8px
 
   #menu {
   position: absolute;
-  top: 7px;
-  left: 127px;
+  top: 4px;
+  left: 155px;
   color: 
   #979EA4;
-  font-family: Chicago, sans-serif;
+  font-family: Visby-Round, sans-serif;
   font-size: 16px;
+  letter-spacing: 1.4px;
+  font-weight: lighter;
+  text-align: center;
 }
 
 #next {
   position: absolute;
-  top: 140px;
-  left: 276px;
+  top: 147px;
+  left: 284px;
   color: 
   #979EA4;
   font-family: Chicago, sans-serif;
@@ -179,8 +183,8 @@ border-left: 8px
 
 #prev {
   position: absolute;
-  top: 140px;
-  left: 8px;
+  top: 147px;
+  left: 6px;
   color: 
   #979EA4;
   font-family: Chicago, sans-serif;
@@ -193,8 +197,8 @@ border-left: 8px
 
 #innerwheel {
   position: relative;
-  width: 234px;
-  height: 234px;
+  width: 242px;
+  height: 242px;
   border: 2px solid #4d4d4d;
   top: 32px;
   left: 32px;
@@ -203,13 +207,13 @@ border-left: 8px
   rgba(232, 232, 232, .4);
   background: radial-gradient(ellipse at center,
   rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,
-    rgba(255,255,255,1) 100%);
+    rgb(233, 230, 230) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=1 );
 }
 
 #ipod {
   width: 360px;
-  height: 582px;
+  height: 605px;
   margin: 0 auto;
   margin-top: 0px;
   margin-top: 50px;
@@ -227,10 +231,10 @@ border-left: 8px
 
 #screen {
   position: relative;
-  width: 240px;
-  height: 188px;
-  top: 28px;
-  left: 56px;
+  width: 246px;
+  height: 200px;
+  top: 26px;
+  left: 54px;
   font-family: Chicago, sans-serif;
   font-weight: bold;
   font-size: 16px;
@@ -239,7 +243,7 @@ border-left: 8px
   border-radius: 10px;
   border: 3px #595854 solid;
   box-shadow: 1px 1px 1px 1px #C0BFBD;
-  background: linear-gradient(45deg, rgb(160, 167, 170) 0%, rgb(185, 188, 193) 49%, rgb(185, 186, 191) 51%, rgb(197, 197, 203) 100%);
+  background: linear-gradient(45deg,  rgba(170,167,160,1) 0%,rgba(193,190,185,1) 49%,rgba(191,190,185,1) 51%,rgba(203,202,197,1) 100%);
 }
 
 #homemenu {

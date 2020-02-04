@@ -113,10 +113,10 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       res.send(await google.docText(req.params.docID));
     });
 
-    app.get('/iPod', async (req, res) => {
+    app.get('/iPod/:gen?', async (req, res) => {
       res.render('iPod', {
         backendURL: audioHost,
-        version: '1g'
+        version: req.params.gen || '1g'
       });
     });
 

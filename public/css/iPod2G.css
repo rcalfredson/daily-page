@@ -1,5 +1,5 @@
 @import url("cmFont.css");
-@import url("chicagoFont.css");
+@import url("myriadFont.css");
 
 .battery {
   position: absolute;
@@ -153,7 +153,7 @@ border-left: 8px
   left: 145px;
   color: 
   #979EA4;
-  font-family: Chicago, sans-serif;
+  font-family: Myriad, sans-serif;
   font-size: 16px;
 }
 
@@ -163,7 +163,7 @@ border-left: 8px
   left: 127px;
   color: 
   #979EA4;
-  font-family: Chicago, sans-serif;
+  font-family: Myriad, sans-serif;
   font-size: 16px;
 }
 
@@ -173,7 +173,7 @@ border-left: 8px
   left: 276px;
   color: 
   #979EA4;
-  font-family: Chicago, sans-serif;
+  font-family: Myriad, sans-serif;
   font-size: 16px;
 }
 
@@ -183,7 +183,7 @@ border-left: 8px
   left: 8px;
   color: 
   #979EA4;
-  font-family: Chicago, sans-serif;
+  font-family: Myriad, sans-serif;
   font-size: 16px;
 }
 
@@ -231,7 +231,7 @@ border-left: 8px
   height: 188px;
   top: 28px;
   left: 56px;
-  font-family: Chicago, sans-serif;
+  font-family: Myriad, sans-serif;
   font-weight: bold;
   font-size: 16px;
   color: #303531;
@@ -239,8 +239,7 @@ border-left: 8px
   border-radius: 10px;
   border: 3px #595854 solid;
   box-shadow: 1px 1px 1px 1px #C0BFBD;
-  background: linear-gradient(45deg, rgb(160, 167, 170) 0%, rgb(185, 188, 193) 49%, rgb(185, 186, 191) 51%,
-    rgb(197, 197, 203) 100%);
+  background: linear-gradient(45deg, rgb(160, 167, 170) 0%, rgb(185, 188, 193) 49%, rgb(185, 186, 191) 51%, rgb(197, 197, 203) 100%);
 }
 
 #homemenu {

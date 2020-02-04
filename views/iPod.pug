@@ -8,6 +8,7 @@ block content
   script.
     backendURL = "#{backendURL}"
   script(src='/js/jquery-1.7.1.min.js')
+  script(src='/js/circletype.min.js')
   script(type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js")
   script(src='/js/jquery.knob.js')
   script(src='/js/iPod.js')
@@ -118,6 +119,10 @@ block content
         ul#songs-by-album-list
     #clickwheel
       #menu menu
+      script.
+        $(document).ready(() => {
+          new CircleType(document.getElementById('menu')).radius(110);
+        });
       #prev
         .bar-left
         .arrow-left
