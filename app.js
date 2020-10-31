@@ -12,6 +12,7 @@ const jwtHelper = require('./server/jwt-helper');
 const viewHelper = require('./server/view-helper');
 const mongo = require('./server/mongo');
 const google = require('./server/google');
+require('./server/cron').startJobs();
 
 const app = express();
 const port = process.env.PORT || 3000;

@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+const { all } = require('bluebird');
 const { MongoClient } = require('mongodb');
 const sanitizeHtml = require('sanitize-html');
 const dateHelper = require('../build/dateHelper');
@@ -71,14 +72,29 @@ async function getDocMappings() {
   return doc;
 }
 
-async function peerIDs(room = null) {
+async function peerIDs(room = null, withTime = false) {
   await initSessionCollection();
   const doc = await collections.session.findOne({ _id: peerIDs });
   delete doc._id; // eslint-disable-line no-underscore-dangle
+  if (withTime) {
+    return doc;
+  }
   return room ? Object.keys(doc[room]) : Object.keys(doc).reduce((obj, x) => {
     obj[x] = Object.keys(doc[x]);
     return obj;
   }, {});
+}
+
+async function cleanUpOldPeerIds() {
+  const maxPeerAge = 24 * 60 * 60 * 1000;
+  const allIds = await peerIDs(null, withTime=true);
+  for (const room of Object.keys(allIds)) {
+    for (const peer in allIds[room]) {
+      if (new Date() - allIds[room][peer] > maxPeerAge) {
+        await removePeer(peer, room);
+      }
+    }
+  }
 }
 
 async function rooms() {
@@ -87,12 +103,12 @@ async function rooms() {
 
 async function addPeer(id, room) {
   await initSessionCollection();
-  return collections.session.updateOne({ _id: peerIDs }, { $set: { [room]: { [id]: new Date() } } });
+  return collections.session.updateOne({ _id: peerIDs }, { $set: { [`${room}.${id}`]: new Date() } });
 }
 
 async function removePeer(id, room) {
   await initSessionCollection();
-  return collections.session.updateOne({ _id: peerIDs }, { $unset: { [`${room.id}`]: '' } });
+  return collections.session.updateOne({ _id: peerIDs }, { $unset: { [`${room}.${id}`]: '' } });
 }
 
 async function updatePage(content, room) {
@@ -189,6 +205,7 @@ module.exports = {
   rooms,
   addPeer,
   removePeer,
+  cleanUpOldPeerIds,
   getPage,
   updatePage,
   getDocMappings,
