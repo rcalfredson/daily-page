@@ -15,7 +15,7 @@ const google = require('./server/google');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const audioHost = 'https://ipod.dailypage.org'
+const audioHost = 'https://ipod.dailypage.org';
 const backendBaseUrl = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}`;
 const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
@@ -40,7 +40,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     if (process.env.NODE_ENV === 'production') {
       app.use((req, res, next) => {
         if (req.headers['x-forwarded-proto'] !== 'https') {
-          //res.redirect(`https://${req.headers.host}${req.path}`);
+          // res.redirect(`https://${req.headers.host}${req.path}`);
           next();
         } else {
           next();
@@ -116,7 +116,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     app.get('/iPod/:gen?', async (req, res) => {
       res.render('iPod', {
         backendURL: audioHost,
-        version: req.params.gen || '1g'
+        version: req.params.gen || '1g',
       });
     });
 
@@ -138,17 +138,15 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
     app.get('/artist/:artistID', async (req, res) => {
       const artistName = req.params.artistID;
-      let albums = JSON.parse(await rp(`${audioHost}/meta/music/artist/${artistName}/albums`))
-      albums = albums.map(album => {
-        return [encodeHelper.htmlString(album), album];
-      })
+      let albums = JSON.parse(await rp(`${audioHost}/meta/music/artist/${artistName}/albums`));
+      albums = albums.map((album) => [encodeHelper.htmlString(album), album]);
 
       res.render('linkList', {
         basePaths: `/artist/${artistName}/album`,
         title: '← Music',
         titleLink: '/music',
         titlesWithHeaders: {
-          [artistName]: albums
+          [artistName]: albums,
         },
       });
     });
@@ -164,14 +162,12 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
     app.get('/artist', async (req, res) => {
       let artistRes = JSON.parse(await rp(`${audioHost}/meta/music/artists`));
-      artistRes = artistRes.map(artist => {
-        return [encodeHelper.htmlString(artist), artist]}
-      );
+      artistRes = artistRes.map((artist) => [encodeHelper.htmlString(artist), artist]);
       res.render('linkList', {
         basePaths: '/artist',
         title: '← Music',
         titleLink: '/music',
-        titlesWithHeaders:{'Artists': artistRes}
+        titlesWithHeaders: { Artists: artistRes },
       });
     });
 

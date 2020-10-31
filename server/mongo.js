@@ -75,7 +75,10 @@ async function peerIDs(room = null) {
   await initSessionCollection();
   const doc = await collections.session.findOne({ _id: peerIDs });
   delete doc._id; // eslint-disable-line no-underscore-dangle
-  return room ? doc[room] : doc;
+  return room ? Object.keys(doc[room]) : Object.keys(doc).reduce((obj, x) => {
+    obj[x] = Object.keys(doc[x]);
+    return obj;
+  }, {});
 }
 
 async function rooms() {
@@ -84,12 +87,12 @@ async function rooms() {
 
 async function addPeer(id, room) {
   await initSessionCollection();
-  return collections.session.updateOne({ _id: peerIDs }, { $push: { [room]: id } });
+  return collections.session.updateOne({ _id: peerIDs }, { $set: { [room]: { [id]: new Date() } } });
 }
 
 async function removePeer(id, room) {
   await initSessionCollection();
-  return collections.session.updateOne({ _id: peerIDs }, { $pull: { [room]: id } });
+  return collections.session.updateOne({ _id: peerIDs }, { $unset: { [`${room.id}`]: '' } });
 }
 
 async function updatePage(content, room) {
