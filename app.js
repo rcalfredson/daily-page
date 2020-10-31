@@ -362,6 +362,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
         res.render('index', {
           title: 'Daily Page',
+          description: "The world's chalkboard, saved and wiped clean each day.",
           date,
           room: roomReq,
           header: `${date} - ${viewHelper.capitalize(roomReq)} Room.`,
