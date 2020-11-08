@@ -1,10 +1,22 @@
-.about
-  a.link(href='/about') About
-.archive
-  a.link(href='/archive') Archive
-.support
-  a.link(href='/support') Support
-.baseball
-  a.link(href='/baseball') Baseball Journal
-.random
-  a.link(href='/random') Random Writer
+a(href="#main-menu-toggle"
+  id="main-menu-close"
+  class="menu-close"
+  aria-label="Close main menu")
+  span(class="sr-only") Close main menu
+  span(class="fa fa-close" aria-hidden="true")
+ul
+  li
+    .about
+      a.link(href='/about') About
+  li
+    .archive
+      a.link(href='/archive') Archive
+  li
+    .support
+      a.link(href='/support') Support
+  li
+    .baseball
+      a.link(href='/baseball') Baseball Journal
+  li
+    .random
+      a.link(href='/random') Random Writer

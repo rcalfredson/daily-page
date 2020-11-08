@@ -22,18 +22,30 @@ animations
 ****************/
 
 @keyframes blinker {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @-webkit-keyframes fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /****************
@@ -124,17 +136,19 @@ NavBar
   border-radius: 10px;
   display: flex;
   justify-content: left;
-  min-width: 710px;
   margin-bottom: 20px;
   padding-top: 20px;
 }
 
 .nav-items {
-  font-family: 'Rubik-Regular';
   flex-grow: .75;
   display: flex;
   justify-content: space-evenly;
   padding-top: 10px;
+}
+
+.nav-items div a {
+  font-family: 'Rubik-Regular';
 }
 
 .logo {
@@ -143,6 +157,219 @@ NavBar
 
 .logo:hover {
   color: #2626F0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Button styling */
+
+.menu-toggle {
+  display: inline-block;
+  padding: .75em 15px;
+  line-height: 1em;
+  font-size: 1em;
+  color: #333;
+}
+
+.menu-toggle:hover, .menu-toggle:focus {
+  color: rgb(83, 175, 218);
+}
+
+/*
+ Default styles + Mobile first
+ Offscreen menu style
+*/
+
+.main-menu {
+  position: absolute;
+  display: none;
+  left: -200px;
+  top: 0;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: visible;
+  transition: left 0.3s ease, box-shadow 0.3s ease;
+  z-index: 999;
+}
+
+.main-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 2.5em 0 0;
+  /* Hide shadow w/ -8px while 'closed' */
+  -webkit-box-shadow: -8px 0 8px rgba(0, 0, 0, .5);
+  -moz-box-shadow: -8px 0 8px rgba(0, 0, 0, .5);
+  box-shadow: -8px 0 8px rgba(0, 0, 0, .5);
+  min-height: 100%;
+  width: 200px;
+  background: #1a1a1a;
+}
+
+.main-menu a {
+  display: block;
+  padding: .75em 15px;
+  line-height: 1em;
+  font-size: 1em;
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px solid #383838;
+}
+
+.main-menu li:first-child a {
+  border-top: 1px solid #383838;
+}
+
+.main-menu a:hover, .main-menu a:focus {
+  background: #333;
+  text-decoration: underline;
+}
+
+.main-menu .menu-close {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/*
+ More to come here...
+*/
+
+/*
+ Demo purposes only
+*/
+
+/* *, *:before, *:after {
+  box-sizing: border-box;
+} */
+
+header {
+  display: flex;
+  padding-left: 30px;
+  vertical-align: middle;
+  align-items: baseline;
+}
+
+article {
+  padding: 30px;
+  width: 55em;
+  font-size: 16px;
+  line-height: 1.5em;
+}
+
+article h2 {
+  font-weight: 500;
+  font-size: 28px;
+}
+
+.main-menu:target, .main-menu[aria-expanded="true"] {
+  display: block;
+  left: 0;
+  outline: none;
+  -moz-box-shadow: 3px 0 12px rgba(0, 0, 0, .25);
+  -webkit-box-shadow: 3px 0 12px rgba(0, 0, 0, .25);
+  box-shadow: 3px 0 12px rgba(0, 0, 0, .25);
+}
+
+.main-menu:target .menu-close, .main-menu[aria-expanded="true"] .menu-close {
+  z-index: 1001;
+}
+
+.main-menu:target ul, .main-menu[aria-expanded="true"] ul {
+  position: relative;
+  z-index: 1000;
+}
+
+/* 
+ We could us `.main-menu:target:after`, but
+ it wouldn't be clickable.
+*/
+
+.main-menu:target+.backdrop, .main-menu[aria-expanded="true"]+.backdrop {
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 998;
+  background: #000;
+  background: rgba(0, 0, 0, .85);
+  cursor: default;
+}
+
+@supports (position: fixed) {
+  .main-menu, .main-menu:target+.backdrop, .main-menu[aria-expanded="true"]+.backdrop {
+    position: fixed;
+  }
+}
+
+@media (min-width: 768px) {
+  .menu-toggle, .main-menu .menu-close {
+    display: none;
+  }
+  /* Undo positioning of off-canvas menu */
+  .main-menu {
+    position: relative;
+    left: auto;
+    top: auto;
+    height: auto;
+    display: block;
+  }
+  .main-menu ul {
+    display: flex;
+    /* Undo off-canvas styling */
+    padding: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    height: auto;
+    width: auto;
+    background: none;
+  }
+  a.link {
+    color: rgb(26, 167, 214);
+    position: relative;
+    margin-right: 28px;
+    padding: 2px 0 0 0;
+  }
+  a.link:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(26, 167, 214);
+    visibility: hidden;
+    -webkit-transform: scaleX(0);
+    transform: scaleX(0);
+    -webkit-transition: all 0.3s ease-in-out 0s;
+    transition: all 0.3s ease-in-out 0s;
+  }
+  a.link:hover:before, .selected a.link:before {
+    visibility: visible;
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1);
+  }
+
+  .main-menu a:hover,
+  .main-menu a:focus {
+    background: none; /* Remove background from off-canvas styling */
+    text-decoration: none;
+  }
+
+  .main-menu a {
+    border: 0 !important; /* Remove borders from off-canvas styling */
+  }
 }
 
 /****************
@@ -160,7 +387,6 @@ Editor
   overflow: hidden;
   max-width: 1250px;
   width: 100%;
-  min-width: 600px;
   justify-content: flex-start;
   padding: 0 10px;
 }
@@ -172,8 +398,16 @@ Editor
 
 .text-wrapper {
   display: flex;
-  min-width: 600px;
   justify-content: space-between;
+}
+
+@media (max-width: 500px) {
+  .text-wrapper {
+    display: block;
+  }
+  h2 {
+    font-size: 14px;
+  }
 }
 
 #inactive-warning {
@@ -269,32 +503,33 @@ button:hover {
   float: left;
   font-size: 13px;
   padding-top: 8px;
- }
+}
 
- #closing-soon-infobox {
-   color: rgb(228, 21, 66);
-   visibility: hidden;
-   width: 467px;
- }
+#closing-soon-infobox {
+  color: rgb(228, 21, 66);
+  visibility: hidden;
+  width: 467px;
+}
 
- #closing-soon-text {
-   background-color: rgb(241, 213, 219);
-   border-radius: 2.5px;
-   display: inline-block;
-   margin-bottom: 5px;
-   padding: 4px;
- }
+#closing-soon-text {
+  background-color: rgb(241, 213, 219);
+  border-radius: 2.5px;
+  display: inline-block;
+  margin-bottom: 5px;
+  padding: 4px;
+}
 
- #closing-soon-text p {
-   display: inline;
- }
+#closing-soon-text p {
+  display: inline;
+}
 
- #sync-infobox {
+#sync-infobox {
   margin-left: auto;
   padding-top: 8.5px;
- }
+}
 
 /* COMMENTED OUT: Phone icons have been removed so removing pointer cursor */
+
 /* li span:hover {
   cursor: pointer;
 } */
@@ -331,7 +566,7 @@ Archive and static pages
   padding-bottom: 0;
   padding-left: 1em;
   padding-top: 20px;
-  text-indent:-1.3em;
+  text-indent: -1.3em;
 }
 
 .info p {
@@ -411,7 +646,6 @@ video {
   border-bottom-right-radius: 6px;
 }
 
-
 /********************
 CodeMirror
 ********************/
@@ -466,15 +700,11 @@ Calling Peer
   display: inline-block;
 }
 
-.phone-in,
-.phone-out,
-.phone-call {
+.phone-in, .phone-out, .phone-call {
   display: none;
 }
 
-.calling .phone,
-.beingCalled .phone,
-.answered .phone {
+.calling .phone, .beingCalled .phone, .answered .phone {
   display: none;
 }
 
@@ -492,10 +722,7 @@ Calling Peer
   display: inline-block;
 }
 
-.phone,
-.phone-in,
-.phone-out,
-.phone-call {
+.phone, .phone-in, .phone-out, .phone-call {
   margin-left: 5px;
   height: 20px;
   vertical-align: -5px;
@@ -517,8 +744,8 @@ ToolTip
 }
 
 /* Hide the tooltip content by default */
-[data-tooltip]:before,
-[data-tooltip]:after {
+
+[data-tooltip]:before, [data-tooltip]:after {
   visibility: hidden;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=0);
@@ -527,6 +754,7 @@ ToolTip
 }
 
 /* Position tooltip above the element */
+
 [data-tooltip]:before {
   position: absolute;
   top: 145%;
@@ -548,6 +776,7 @@ ToolTip
 }
 
 /* Triangle hack to make tooltip look like a speech bubble */
+
 [data-tooltip]:after {
   position: absolute;
   top: 115%;
@@ -563,8 +792,8 @@ ToolTip
 }
 
 /* Show tooltip content on hover */
-[data-tooltip]:hover:before,
-[data-tooltip]:hover:after {
+
+[data-tooltip]:hover:before, [data-tooltip]:hover:after {
   visibility: visible;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=100);
@@ -584,22 +813,22 @@ ToolTip
   animation: blinker 1s cubic-bezier(.5, 0, 1, 1);
 }
 
-
 /*************
   Loading
 *************/
 
-.hide + .loading {
+.hide+.loading {
   display: block;
 }
 
-.disabled:not(.hide) + .loading + .closed {
+.disabled:not(.hide)+.loading+.closed {
   display: block;
 }
 
 .loading {
-  -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
-          animation: fadein 2s;
+  -webkit-animation: fadein 2s;
+  /* Safari, Chrome and Opera > 12.1 */
+  animation: fadein 2s;
 }
 
 .loading, .closed {
@@ -657,114 +886,144 @@ ToolTip
   background-color: rgb(17, 87, 170);
   border-radius: 100%;
   -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
-          animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
+  animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
 }
+
 .sk-fading-circle .sk-circle2 {
   -webkit-transform: rotate(30deg);
-      -ms-transform: rotate(30deg);
-          transform: rotate(30deg);
+  -ms-transform: rotate(30deg);
+  transform: rotate(30deg);
 }
+
 .sk-fading-circle .sk-circle3 {
   -webkit-transform: rotate(60deg);
-      -ms-transform: rotate(60deg);
-          transform: rotate(60deg);
+  -ms-transform: rotate(60deg);
+  transform: rotate(60deg);
 }
+
 .sk-fading-circle .sk-circle4 {
   -webkit-transform: rotate(90deg);
-      -ms-transform: rotate(90deg);
-          transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
 }
+
 .sk-fading-circle .sk-circle5 {
   -webkit-transform: rotate(120deg);
-      -ms-transform: rotate(120deg);
-          transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  transform: rotate(120deg);
 }
+
 .sk-fading-circle .sk-circle6 {
   -webkit-transform: rotate(150deg);
-      -ms-transform: rotate(150deg);
-          transform: rotate(150deg);
+  -ms-transform: rotate(150deg);
+  transform: rotate(150deg);
 }
+
 .sk-fading-circle .sk-circle7 {
   -webkit-transform: rotate(180deg);
-      -ms-transform: rotate(180deg);
-          transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
 }
+
 .sk-fading-circle .sk-circle8 {
   -webkit-transform: rotate(210deg);
-      -ms-transform: rotate(210deg);
-          transform: rotate(210deg);
+  -ms-transform: rotate(210deg);
+  transform: rotate(210deg);
 }
+
 .sk-fading-circle .sk-circle9 {
   -webkit-transform: rotate(240deg);
-      -ms-transform: rotate(240deg);
-          transform: rotate(240deg);
+  -ms-transform: rotate(240deg);
+  transform: rotate(240deg);
 }
+
 .sk-fading-circle .sk-circle10 {
   -webkit-transform: rotate(270deg);
-      -ms-transform: rotate(270deg);
-          transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  transform: rotate(270deg);
 }
+
 .sk-fading-circle .sk-circle11 {
   -webkit-transform: rotate(300deg);
-      -ms-transform: rotate(300deg);
-          transform: rotate(300deg);
+  -ms-transform: rotate(300deg);
+  transform: rotate(300deg);
 }
+
 .sk-fading-circle .sk-circle12 {
   -webkit-transform: rotate(330deg);
-      -ms-transform: rotate(330deg);
-          transform: rotate(330deg);
+  -ms-transform: rotate(330deg);
+  transform: rotate(330deg);
 }
+
 .sk-fading-circle .sk-circle2:before {
   -webkit-animation-delay: -1.1s;
-          animation-delay: -1.1s;
+  animation-delay: -1.1s;
 }
+
 .sk-fading-circle .sk-circle3:before {
   -webkit-animation-delay: -1s;
-          animation-delay: -1s;
+  animation-delay: -1s;
 }
+
 .sk-fading-circle .sk-circle4:before {
   -webkit-animation-delay: -0.9s;
-          animation-delay: -0.9s;
+  animation-delay: -0.9s;
 }
+
 .sk-fading-circle .sk-circle5:before {
   -webkit-animation-delay: -0.8s;
-          animation-delay: -0.8s;
+  animation-delay: -0.8s;
 }
+
 .sk-fading-circle .sk-circle6:before {
   -webkit-animation-delay: -0.7s;
-          animation-delay: -0.7s;
+  animation-delay: -0.7s;
 }
+
 .sk-fading-circle .sk-circle7:before {
   -webkit-animation-delay: -0.6s;
-          animation-delay: -0.6s;
+  animation-delay: -0.6s;
 }
+
 .sk-fading-circle .sk-circle8:before {
   -webkit-animation-delay: -0.5s;
-          animation-delay: -0.5s;
+  animation-delay: -0.5s;
 }
+
 .sk-fading-circle .sk-circle9:before {
   -webkit-animation-delay: -0.4s;
-          animation-delay: -0.4s;
+  animation-delay: -0.4s;
 }
+
 .sk-fading-circle .sk-circle10:before {
   -webkit-animation-delay: -0.3s;
-          animation-delay: -0.3s;
+  animation-delay: -0.3s;
 }
+
 .sk-fading-circle .sk-circle11:before {
   -webkit-animation-delay: -0.2s;
-          animation-delay: -0.2s;
+  animation-delay: -0.2s;
 }
+
 .sk-fading-circle .sk-circle12:before {
   -webkit-animation-delay: -0.1s;
-          animation-delay: -0.1s;
+  animation-delay: -0.1s;
 }
 
 @-webkit-keyframes sk-circleFadeDelay {
-  0%, 39%, 100% { opacity: 0; }
-  40% { opacity: 1; }
+  0%, 39%, 100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
 }
 
 @keyframes sk-circleFadeDelay {
-  0%, 39%, 100% { opacity: 0; }
-  40% { opacity: 1; }
+  0%, 39%, 100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
 }

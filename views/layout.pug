@@ -7,6 +7,7 @@ html(lang="en")
         meta(name="description" content=description)
       meta(name="viewport" content="width=device-width, initial-scale=1.0")
       link(rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css")
+      link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet")
       link(rel='stylesheet' href='/css/style.css')
       link(rel='shortcut icon' href='/assets/img/favicon.ico')
   body
@@ -16,7 +17,18 @@ html(lang="en")
     .navbar
       a(href='/' target="_blank")
         h1.logo Daily Page
-      .nav-items
-        block nav
+      header
+        a(href="#main-menu"
+          id="main-menu-toggle"
+          class="menu-toggle"
+          aria-label="Open main menu")
+          span(class="sr-only") Open main menu
+          span(class="fa fa-bars" aria-hidden="true")
+        nav(class="nav-items" id="main-menu" class="main-menu")
+          block nav
+        a(href="#main-menu-toggle"
+          class="backdrop"
+          tabindex="-1"
+          aria-hidden="true" hidden)
     block content
     block scripts
