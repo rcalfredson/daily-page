@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "engines": {
-    "node": "^13.2.0"
+    "node": "^14.15"
   },
   "scripts": {
     "pretest": "eslint --fix app.js server/ lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js",
@@ -42,15 +42,15 @@
     "express": "^4.16.2",
     "feather-icons": "^4.0.0",
     "fluent-ffmpeg": "^2.1.2",
-    "googleapis": "^45.0.0",
+    "googleapis": "^62.0.0",
     "humanize-duration": "^3.15.3",
     "jquery": "^3.5.0",
     "jsdom": "^15.2.1",
     "jsonwebtoken": "^8.3.0",
     "memory-cache": "^0.2.0",
     "moment-timezone": "^0.5.23",
-    "mongodb": "^3.3.5",
-    "peer": "^0.2.10",
+    "mongodb": "^3.6.3",
+    "peer": "^0.5.3",
     "peerjs": "^0.3.14",
     "pug": "^2.0.0-rc.4",
     "realtime-bpm-analyzer": "^1.1.2",
@@ -63,7 +63,7 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.0",
+    "@babel/cli": "^7.12.1",
     "@babel/core": "^7.5.0",
     "@babel/preset-env": "^7.7.7",
     "babel-register": "^6.26.0",
