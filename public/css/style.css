@@ -254,8 +254,8 @@ NavBar
 header {
   display: flex;
   padding-left: 30px;
-  vertical-align: middle;
-  align-items: baseline;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 article {
