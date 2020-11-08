@@ -29,6 +29,10 @@ html * {
    text-decoration: none;
 }
 
+li {
+  margin: 10px 0;
+}
+
 #beat-marker {
   margin-top: 15px;
   height: 30px;
