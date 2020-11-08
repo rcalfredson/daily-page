@@ -659,6 +659,7 @@ CodeMirror
   padding: 0;
   height: auto;
   width: 100%;
+  box-sizing: content-box;
 }
 
 .CodeMirror-code:last-child {
