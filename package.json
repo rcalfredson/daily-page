@@ -51,7 +51,6 @@
     "moment-timezone": "^0.5.23",
     "mongodb": "^3.6.3",
     "peer": "^0.5.3",
-    "peerjs": "^0.3.14",
     "pug": "^2.0.0-rc.4",
     "realtime-bpm-analyzer": "^1.1.2",
     "request": "^2.88.0",
