@@ -38,7 +38,7 @@
     "core-js": "^2.6.11",
     "cors": "^2.8.5",
     "cron": "^1.8.2",
-    "easymde": "^2.12.1",
+    "easymde": "^2.15.0",
     "express": "^4.17.1",
     "feather-icons": "^4.28.0",
     "fluent-ffmpeg": "^2.1.2",
