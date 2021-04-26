@@ -33,9 +33,22 @@ function init(mongoConnection) {
   mongo = mongoConnection;
 }
 
+function joinWithHyphens(params, keysToCheck) {
+  let output = '';
+  keysToCheck.forEach((k, i) => {
+    let suffix = '';
+    if (i + i < keysToCheck.length) {
+      suffix = '-';
+    }
+    output += `${params[k] ? `${params[k]}${suffix}` : ''}`
+  });
+  return output;
+}
+
 async function sendPage(req, res) {
   try {
-    res.send(JSON.stringify(await cache.get(req.params.date, mongo.getPage,
+    res.send(JSON.stringify(await cache.get(
+      joinWithHyphens(req.params, ['date', 'room']), mongo.getPage,
       [req.params.date, req.params.room, req.query])));
   } catch (error) {
     res.status(500).send({ error: error.message });

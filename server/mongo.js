@@ -87,7 +87,7 @@ async function peerIDs(room = null, withTime = false) {
 
 async function cleanUpOldPeerIds() {
   const maxPeerAge = 24 * 60 * 60 * 1000;
-  const allIds = await peerIDs(null, withTime=true);
+  const allIds = await peerIDs(null, withTime = true);
   for (const room of Object.keys(allIds)) {
     for (const peer in allIds[room]) {
       if (new Date() - allIds[room][peer] > maxPeerAge) {
@@ -120,8 +120,8 @@ async function updatePage(content, room) {
     .updateOne({
       date, room, year: dateArray[0], month: dateArray[1], day: dateArray[2],
     },
-    { $set: { content: sanitizeHtml(content), lastUpdate: new Date().getTime() } },
-    { upsert: true });
+      { $set: { content: sanitizeHtml(content), lastUpdate: new Date().getTime() } },
+      { upsert: true });
 }
 
 async function pageByDate(date) {
@@ -145,6 +145,14 @@ async function pageByDate(date) {
 }
 
 async function pageByDateAndRoom(date, room, options) {
+  const keysToConvertToInt = ['lastUpdate'];
+  keysToConvertToInt.forEach(k => {
+    if (options[k] === 'true') {
+      options[k] = 1;
+    } else if (options[k] === 'false') {
+      options[k] = 0;
+    }
+  });
   return collections.pages.findOne({ date, room },
     { projection: options ? Object.assign(options, { _id: 0 }) : null });
 }
