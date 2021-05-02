@@ -76,9 +76,9 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     });
 
     app.get('/baseball', async (_, res) => {
-      const docTitles = await google.docTitles();
+      const docTitles = await google.getDocTitles();
       const sortable = [];
-      Object.keys(docTitles).forEach((title) => sortable.push([title, docTitles[title]]));
+      Object.keys(docTitles).forEach((slug) => sortable.push([slug, docTitles[slug].name]));
       sortable.sort((a, b) => {
         if (a[1] > b[1]) { return -1; }
         if (b[1] > a[1]) { return 1; }
@@ -110,8 +110,8 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       });
     });
 
-    app.get('/baseball/:docID', async (req, res) => {
-      res.send(await google.docText(req.params.docID));
+    app.get('/baseball/:pageId', async (req, res) => {
+      res.send(await google.docText(req.params.pageId));
     });
 
     app.get('/iPod/:gen?', async (req, res) => {

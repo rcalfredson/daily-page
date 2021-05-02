@@ -5,6 +5,7 @@ const artistsFolderID = process.env.ARTISTS_FOLDER_ID;
 const { google } = require('googleapis');
 const jsdom = require('jsdom');
 const Promise = require('bluebird');
+const slug = require('slug');
 const stripBom = require('strip-bom');
 
 const { JSDOM } = jsdom;
@@ -31,13 +32,14 @@ function init(mongoConnection) {
   drive = google.drive({ version: 'v3', auth });
 }
 
-async function docTitles() {
+async function getDocTitles() {
   const titles = {};
   const prefix = 'Major League Baseball: ';
   function updateTitles(res) {
     res.data.files.forEach((docFile) => {
-      const nm = docFile.name;
-      titles[docFile.id] = nm.indexOf(prefix) > -1 ? nm.split(prefix)[1] : nm;
+      let nm = docFile.name;
+      nm = nm.indexOf(prefix) > -1 ? nm.split(prefix)[1] : nm
+      titles[slug(nm)] = {name: nm, id: docFile.id};
     });
   }
   try {
@@ -61,7 +63,9 @@ async function docTitles() {
   }
 }
 
-async function docText(fileId) {
+async function docText(slug) {
+  const titles = await getDocTitles();
+  let fileId = titles[slug].id;
   let res;
   try {
     res = await drive.files.export({
@@ -78,7 +82,6 @@ async function docText(fileId) {
   const faviconLink = dom.window.document.createElement('link');
   faviconLink.rel = 'shortcut icon';
   faviconLink.href = '/assets/img/favicon.ico';
-  const titles = await docTitles();
   styleLink.rel = 'stylesheet';
   styleLink.href = '/css/googleDocs.css';
   [styleLink, faviconLink].forEach((headLink) => {
@@ -87,7 +90,7 @@ async function docText(fileId) {
   dom.window.document.querySelector('body').style = 'margin-left: 20px;';
 
   const lists = [dom.window.document.getElementsByTagName('ul'),
-    dom.window.document.getElementsByTagName('ol')];
+  dom.window.document.getElementsByTagName('ol')];
 
   const typeMaps = { 1: ['disc', '1'], 2: ['circle', 'a'], 0: ['square', 'i'] };
 
@@ -113,7 +116,7 @@ async function docText(fileId) {
     listItems[listItem].style.marginLeft = `${(parseInt(listItems[listItem].style.marginLeft.split('px')[0], 10) / 1.5).toString()}px`;
   });
   const headerDiv = dom.window.document.createElement('div');
-  const docTitle = titles[fileId];
+  const docTitle = titles[slug].name;
   const titleHeader = dom.window.document.createElement('h2');
   titleHeader.style.marginBottom = '2px';
   titleHeader.textContent = docTitle;
@@ -335,13 +338,13 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
 
 module.exports = {
   docText,
-  docTitles,
   init,
   wavFromText,
   getArtist,
   getArtists,
   getAlbumIDsByArtist,
   getAlbums,
+  getDocTitles,
   getSongs,
   getTracks,
 };
