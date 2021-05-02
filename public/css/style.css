@@ -595,7 +595,9 @@ Archive and static pages
 }
 
 #viewer a:not(.hover-effect-link), .info a {
-  text-decoration: underline dotted rgb(116, 137, 163);
+  text-decoration-style: dotted;
+  text-decoration-line: underline;
+  text-decoration-color: rgb(116, 137, 163);
   color: rgb(0, 0, 0);
 }
 
