@@ -80,13 +80,18 @@ async function docText(slug) {
   const dom = new JSDOM(res.data);
   const styleLink = dom.window.document.createElement('link');
   const faviconLink = dom.window.document.createElement('link');
+  const viewportMeta = dom.window.document.createElement('meta');
+  viewportMeta.setAttribute('name', 'viewport');
+  viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1');
   faviconLink.rel = 'shortcut icon';
   faviconLink.href = '/assets/img/favicon.ico';
   styleLink.rel = 'stylesheet';
   styleLink.href = '/css/googleDocs.css';
+
   [styleLink, faviconLink].forEach((headLink) => {
     dom.window.document.querySelector('head').appendChild(headLink);
   });
+  dom.window.document.querySelector('head').appendChild(viewportMeta);
   dom.window.document.querySelector('body').style = 'margin-left: 20px;';
 
   const lists = [dom.window.document.getElementsByTagName('ul'),
