@@ -57,6 +57,7 @@
     "request-promise": "^4.2.6",
     "rxjs": "^5.5.2",
     "sanitize-html": "^2.3.3",
+    "showdown": "^1.9.1",
     "slug": "^4.0.4",
     "sorted-cmp-array": "^2.0.1",
     "strip-bom": "^4.0.0",

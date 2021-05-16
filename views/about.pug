@@ -23,6 +23,24 @@ block content
 
     h1 ★ How does this site work?
     p
+      | The main page of the site consists of the editor and a listing of online users (currently anonymized).
+      | The editor supports 
+      a(href="https://www.markdownguide.org/basic-syntax/") standard Markdown syntax
+      | , along with limited HTML support. For example, if you wanted to include a large
+      | image, then you could use the Markdown version,
+    p.example ![A large image](https://some.host/large_img.png),
+    p but this wouldn't provide control over the width, so instead you could try HTML:
+    p.example &lt;img src="https://some.host/large_img.png" width="300px"/>
+    p
+      | To see current or past pages in rendered format, go to the 
+      a(href="archive") Archive page
+      | .
+    h1 ★ Who created this site?
+    p My name is Robert Alfredson; please check out my 
+        a(href="https://rcalfredson.github.io") home page
+        |  for information and diversions.
+    h1 ★ What else is there to know?
+    p
       | There is a practical and technical limit on the number of users who can edit the same
       | document simultaneously, at least for the moment. While each day's writing ultimately
       | produces a single page, that page is made up of many smaller pieces, each emerging from an
@@ -47,28 +65,3 @@ block content
       | data types (CRDTs) and WebRTC, extending the code base of the now-inactive 
       a(href="https://github.com/conclave-team/conclave") Conclave project
       | .
-    h1 ★ Who created this site?
-    p My name is Robert Alfredson; please check out my 
-        a(href="https://rcalfredson.github.io") home page
-        |  for information and diversions.
-    h1 ★ What else is there to know?
-    p The editor supports three formatting styles, each with its own delimiter:
-      |  asterisk (*) for
-      strong  bold
-      | ,
-      |  underscore (_) for
-      em  italic
-      | , and tilde (~) for 
-      del strikethrough
-      | .
-    p For example, if the editor contains this text,
-      p.example What the world needs *now* is _love ~and chocolate-covered Funyuns~_.
-      p.example Delimiters appear when written with backslashes: \*, \_, and \~.
-    p then that text will be rendered in the archive view as
-      p.example What the world needs
-        strong  now
-        |   is
-        em  love 
-          del and chocolate-covered Funyuns
-        | .
-      p.example Delimiters appear when written with backslashes: *, _, and ~.

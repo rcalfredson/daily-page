@@ -2,6 +2,7 @@
 const { all } = require('bluebird');
 const { MongoClient } = require('mongodb');
 const sanitizeHtml = require('sanitize-html');
+sanitizeHtml.defaults.allowedAttributes.img = ['src', 'width'];
 const dateHelper = require('../build/dateHelper');
 
 const user = 'daily-page-admin';
@@ -120,7 +121,14 @@ async function updatePage(content, room) {
     .updateOne({
       date, room, year: dateArray[0], month: dateArray[1], day: dateArray[2],
     },
-      { $set: { content: sanitizeHtml(content), lastUpdate: new Date().getTime() } },
+      {
+        $set: {
+          content: sanitizeHtml(content, {
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img'])
+          }),
+          lastUpdate: new Date().getTime()
+        }
+      },
       { upsert: true });
 }
 
