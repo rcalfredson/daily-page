@@ -7,7 +7,8 @@ const converter = new showdown.Converter();
 function archiveHTML(text) {
   text = converter.makeHtml(text);
 
-  let htmlOutput = sanitizeHTML(text, { allowedTags: sanitizeHTML.defaults.allowedTags.concat(['img']) }).replace(/\n/g, '<br>');
+  let htmlOutput = sanitizeHTML(text,
+    { allowedTags: sanitizeHTML.defaults.allowedTags.concat(['img']) }).replace(/(\\n|\n)/g, '<br>');
   return Autolinker.link(htmlOutput);
 }
 
