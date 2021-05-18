@@ -73,7 +73,7 @@ h2 {
 
 p, ul *, ol * {
   font-size: 14px;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 ul, ol {
