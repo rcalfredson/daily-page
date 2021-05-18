@@ -5,10 +5,12 @@ const showdown = require('showdown');
 const converter = new showdown.Converter();
 
 function archiveHTML(text) {
-  text = converter.makeHtml(text);
-
+  text = converter.makeHtml(text.replace(/\u00A0/g, ' '));
   let htmlOutput = sanitizeHTML(text,
-    { allowedTags: sanitizeHTML.defaults.allowedTags.concat(['img']) }).replace(/(\\n|\n)/g, '<br>');
+    { allowedTags: sanitizeHTML.defaults.allowedTags.concat(['img']) });
+  if (text.indexOf('\\n') !== -1) {
+    htmlOutput = htmlOutput.replace(/\\n/g, '<br>');
+  }
   return Autolinker.link(htmlOutput);
 }
 

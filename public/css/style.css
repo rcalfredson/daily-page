@@ -71,8 +71,13 @@ h2 {
   margin-top: 0;
 }
 
-p {
+p, ul *, ol * {
   font-size: 14px;
+  white-space: pre;
+}
+
+ul, ol {
+  margin-top: 0;
 }
 
 a {
