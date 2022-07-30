@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "engines": {
-    "node": "^14.15"
+    "node": "^16"
   },
   "scripts": {
     "pretest": "eslint --fix app.js server/ lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js",
@@ -45,7 +45,7 @@
     "googleapis": "^62.0.0",
     "humanize-duration": "^3.24.0",
     "jquery": "^3.5.1",
-    "jsdom": "^15.2.1",
+    "jsdom": "^20.0.0",
     "jsonwebtoken": "^8.5.1",
     "memory-cache": "^0.2.0",
     "moment-timezone": "^0.5.31",

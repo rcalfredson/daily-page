@@ -265,7 +265,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
         readStream.pipe(res);
       } else {
         const buffer = await cache.get(req.params.fileID, google.wavFromText, [req.params.fileID,
-          req.params.albumID], 5 * 60 * 1000);
+        req.params.albumID], 5 * 60 * 1000);
         const total = buffer.byteLength;
         readStream = new stream.PassThrough();
         readStream.end(buffer);
@@ -325,9 +325,9 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
     app.get('/about', (_, res) => res.render('about', { title: 'Daily Page - About' }));
 
-    app.get('/:room*?', async (req, res) => {
+    app.get('/*?', async (req, res) => {
       const maxCapacity = 6;
-      const roomReq = req.params.room;
+      const roomReq = req.query.room;
       const rooms = await cache.get('rooms', mongo.rooms);
       const peerIDs = (await cache.get('peerIDs', mongo.peerIDs));
       const roomsVacant = rooms.filter((room) => peerIDs[room].length < maxCapacity)
@@ -346,7 +346,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       }
 
       if (!roomReq) {
-        res.redirect(`/${peerIDs[roomsVacant[0]].length !== peerIDs[roomsVacant[roomsVacant.length - 1]].length ? roomsVacant[0]
+        res.redirect(`/?room=${peerIDs[roomsVacant[0]].length !== peerIDs[roomsVacant[roomsVacant.length - 1]].length ? roomsVacant[0]
           : roomsVacant[Math.floor(Math.random() * roomsVacant.length)]}`);
         return;
       }
@@ -357,7 +357,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
         });
         return;
       }
-      if (Object.keys(req.query).length !== 0 || peerIDs[roomReq].length === 0) {
+      if (req.query.id || peerIDs[roomReq].length === 0) {
         const date = dateHelper.currentDate('long');
 
         res.render('index', {
@@ -371,7 +371,8 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
         });
         return;
       }
-      res.redirect(`/${roomReq}?${peerIDs[roomReq][Math.floor(Math.random() * peerIDs[roomReq].length)]}`);
+      res.redirect(`/?room=${roomReq}&id=` +
+        `${peerIDs[roomReq][Math.floor(Math.random() * peerIDs[roomReq].length)]}`);
     });
   } catch (error) {
     console.log(`Server startup failed: ${error.message}`); // eslint-disable-line no-console

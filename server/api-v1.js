@@ -15,7 +15,7 @@ module.exports = (app, mongo) => {
 
   router.post('/page/:room', helpers.authenticate, helpers.updatePageForRoom);
 
-  router.get('/peers/:room*?', helpers.authenticate, helpers.peersForRoom);
+  router.get('/peers*?', helpers.authenticate, helpers.peersForRoom);
 
   router.delete('/peers/:room/:id', helpers.authenticate, helpers.removePeerFromRoom);
 

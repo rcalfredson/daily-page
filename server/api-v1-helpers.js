@@ -68,7 +68,7 @@ async function pageDatesForYearMonthCombo(req, res) {
 
 async function peersForRoom(req, res) {
   try {
-    res.send(JSON.stringify(await mongo.peerIDs(req.params.room)));
+    res.send(JSON.stringify(await mongo.peerIDs(req.query.room)));
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
