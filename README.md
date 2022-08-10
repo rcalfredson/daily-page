@@ -2,7 +2,7 @@
 
 Tool for creating a collaborative, textual record for each day. Derived from the [Conclave project](https://github.com/conclave-team/conclave).
 
-Prerequisite: Mongo DB deployment and Node.js
+Prerequisite: Mongo DB deployment and Node.js. Optional dependency: Google Cloud Platform account to enable a Google Drive-based CMS.
 
 ```
 export APP_AUTH=#string of your choice for use in authentication with the backend
