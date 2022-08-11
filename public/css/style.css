@@ -328,6 +328,7 @@ article h2 {
     top: auto;
     height: auto;
     display: block;
+    overflow-y: hidden;
   }
   .main-menu ul {
     display: flex;
