@@ -503,6 +503,7 @@ button:hover {
 
 #download-box {
   float: right;
+  display: none;
 }
 
 #sync-infobox, #closing-soon-infobox {
@@ -530,7 +531,6 @@ button:hover {
 }
 
 #sync-infobox {
-  margin-left: auto;
   padding-top: 8.5px;
   white-space: nowrap;
 }
