@@ -48,7 +48,7 @@
     "jsdom": "^20.0.0",
     "jsonwebtoken": "^8.5.1",
     "memory-cache": "^0.2.0",
-    "moment-timezone": "^0.5.31",
+    "moment-timezone": "^0.5.35",
     "mongodb": "^3.6.3",
     "peer": "^0.6",
     "pug": "^3.0.1",
