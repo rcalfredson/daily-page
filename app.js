@@ -1,9 +1,9 @@
+const stream = require('stream');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const peerServer = require('peer');
-const stream = require('stream');
-const got = require('got');
+const axios = require('axios');
 const dateHelper = require('./build/dateHelper');
 const encodeHelper = require('./build/encodeHelper');
 const useAPIV1 = require('./server/api-v1');
@@ -139,7 +139,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
     app.get('/artist/:artistID', async (req, res) => {
       const artistName = req.params.artistID;
-      let albums = JSON.parse((await got(`${audioHost}/meta/music/artist/${artistName}/albums`)).body);
+      let albums = JSON.parse((await axios.get(`${audioHost}/meta/music/artist/${artistName}/albums`)).body);
       albums = albums.map((album) => [encodeHelper.htmlString(album), album]);
 
       res.render('linkList', {
@@ -162,7 +162,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     });
 
     app.get('/artist', async (req, res) => {
-      let artistRes = JSON.parse((await got(`${audioHost}/meta/music/artists`)).body);
+      let artistRes = JSON.parse((await axios.get(`${audioHost}/meta/music/artists`)).body);
       artistRes = artistRes.map((artist) => [encodeHelper.htmlString(artist), artist]);
       res.render('linkList', {
         basePaths: '/artist',
@@ -195,7 +195,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     app.get('/artist/:artistID/album/:albumID/:trackID', async (req, res) => {
       const albumName = req.params.albumID;
       const artist = req.params.artistID;
-      const trackList = JSON.parse((await got(`${audioHost}/meta/music/artist/${artist}/${albumName}`)).body);
+      const trackList = JSON.parse((await axios.get(`${audioHost}/meta/music/artist/${artist}/${albumName}`)).body);
       const { trackID } = req.params;
       const trackPos = trackList.tracks.findIndex((el) => encodeHelper.htmlString(el.name) === encodeHelper.htmlString(trackID));
       const trackArtist = trackList.tracks[trackPos].artist || trackList.albumArtist;
@@ -220,7 +220,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     app.get('/artist/:artistID/album/:albumID', async (req, res) => {
       const artist = req.params.artistID;
       const album = req.params.albumID;
-      const albumTracks = JSON.parse((await got(`${audioHost}/meta/music/artist/${artist}/${album}`)).body);
+      const albumTracks = JSON.parse((await axios.get(`${audioHost}/meta/music/artist/${artist}/${album}`)).body);
       res.redirect(`/artist/${artist}/album/${album}/${encodeHelper.htmlString(albumTracks.tracks[0].name)}`);
     });
 
@@ -265,7 +265,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
         readStream.pipe(res);
       } else {
         const buffer = await cache.get(req.params.fileID, google.wavFromText, [req.params.fileID,
-        req.params.albumID], 5 * 60 * 1000);
+          req.params.albumID], 5 * 60 * 1000);
         const total = buffer.byteLength;
         readStream = new stream.PassThrough();
         readStream.end(buffer);
@@ -371,8 +371,8 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
         });
         return;
       }
-      res.redirect(`/?room=${roomReq}&id=` +
-        `${peerIDs[roomReq][Math.floor(Math.random() * peerIDs[roomReq].length)]}`);
+      res.redirect(`/?room=${roomReq}&id=`
+        + `${peerIDs[roomReq][Math.floor(Math.random() * peerIDs[roomReq].length)]}`);
     });
   } catch (error) {
     console.log(`Server startup failed: ${error.message}`); // eslint-disable-line no-console

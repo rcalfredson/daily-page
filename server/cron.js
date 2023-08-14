@@ -1,16 +1,16 @@
 const { CronJob } = require('cron');
-const { cleanUpOldPeerIds } = require('./mongo')
+const { cleanUpOldPeerIds } = require('./mongo');
 
-var jobs = [new CronJob('3 * * * *', async () => {
+const jobs = [new CronJob('3 * * * *', async () => {
   await cleanUpOldPeerIds();
 }, null)];
 
 function startJobs() {
-  jobs.forEach(job => {
+  jobs.forEach((job) => {
     job.start();
-  })
+  });
 }
 
 module.exports = {
-  startJobs
+  startJobs,
 };

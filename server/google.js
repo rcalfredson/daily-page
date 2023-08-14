@@ -38,8 +38,8 @@ async function getDocTitles() {
   function updateTitles(res) {
     res.data.files.forEach((docFile) => {
       let nm = docFile.name;
-      nm = nm.indexOf(prefix) > -1 ? nm.split(prefix)[1] : nm
-      titles[slug(nm)] = {name: nm, id: docFile.id};
+      nm = nm.indexOf(prefix) > -1 ? nm.split(prefix)[1] : nm;
+      titles[slug(nm)] = { name: nm, id: docFile.id };
     });
   }
   try {
@@ -65,7 +65,7 @@ async function getDocTitles() {
 
 async function docText(slug) {
   const titles = await getDocTitles();
-  let fileId = titles[slug].id;
+  const fileId = titles[slug].id;
   let res;
   try {
     res = await drive.files.export({
@@ -95,7 +95,7 @@ async function docText(slug) {
   dom.window.document.querySelector('body').style = 'margin-left: 20px;';
 
   const lists = [dom.window.document.getElementsByTagName('ul'),
-  dom.window.document.getElementsByTagName('ol')];
+    dom.window.document.getElementsByTagName('ol')];
 
   const typeMaps = { 1: ['disc', '1'], 2: ['circle', 'a'], 0: ['square', 'i'] };
 

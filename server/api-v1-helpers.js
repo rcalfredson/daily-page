@@ -40,7 +40,7 @@ function joinWithHyphens(params, keysToCheck) {
     if (i + i < keysToCheck.length) {
       suffix = '-';
     }
-    output += `${params[k] ? `${params[k]}${suffix}` : ''}`
+    output += `${params[k] ? `${params[k]}${suffix}` : ''}`;
   });
   return output;
 }
@@ -49,7 +49,8 @@ async function sendPage(req, res) {
   try {
     res.send(JSON.stringify(await cache.get(
       joinWithHyphens(req.params, ['date', 'room']), mongo.getPage,
-      [req.params.date, req.params.room, req.query])));
+      [req.params.date, req.params.room, req.query],
+    )));
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
