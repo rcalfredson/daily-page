@@ -1,17 +1,18 @@
 /* eslint-disable no-await-in-loop */
+import fs from 'fs';
+import { google } from 'googleapis';
+import jsdom from 'jsdom';
+import Promise from 'bluebird';
+import slug from 'slug';
+import stripBom from 'strip-bom';
+
+import * as cache from './cache.js';
+
 const baseballFolderID = process.env.BASEBALL_FOLDER_ID;
 const albumsFolderID = process.env.ALBUMS_FOLDER_ID;
 const artistsFolderID = process.env.ARTISTS_FOLDER_ID;
-const { google } = require('googleapis');
-const jsdom = require('jsdom');
-const Promise = require('bluebird');
-const slug = require('slug');
-const stripBom = require('strip-bom');
 
 const { JSDOM } = jsdom;
-const fs = require('fs');
-
-const cache = require('./cache');
 
 const scopes = ['https://www.googleapis.com/auth/drive'];
 let credentials;
@@ -20,7 +21,7 @@ let drive;
 let mongo;
 let lastRequestTime = 0;
 
-function init(mongoConnection) {
+export function init(mongoConnection) {
   try {
     mongo = mongoConnection;
     credentials = JSON.parse(fs.readFileSync('./credentials.json'));
@@ -32,7 +33,7 @@ function init(mongoConnection) {
   drive = google.drive({ version: 'v3', auth });
 }
 
-async function getDocTitles() {
+export async function getDocTitles() {
   const titles = {};
   const prefix = 'Major League Baseball: ';
   function updateTitles(res) {
@@ -63,7 +64,7 @@ async function getDocTitles() {
   }
 }
 
-async function docText(slug) {
+export async function docText(slug) {
   const titles = await getDocTitles();
   const fileId = titles[slug].id;
   let res;
@@ -140,7 +141,7 @@ async function docText(slug) {
   return dom.serialize();
 }
 
-async function throttleAsNeeded(funcToCall, args) {
+export async function throttleAsNeeded(funcToCall, args) {
   return new Promise((resolve, reject) => {
     const timeDiff = new Date() - lastRequestTime;
     let timeToWait = 0;
@@ -155,7 +156,7 @@ async function throttleAsNeeded(funcToCall, args) {
   });
 }
 
-async function getArtist(albumID) {
+export async function getArtist(albumID) {
   const metaFileID = (await cache.get(`${albumID}_metaID`, throttleAsNeeded, [(opts) => drive.files.list(opts), [{
     fields: 'files(id)',
     orderBy: 'createdTime desc',
@@ -170,7 +171,7 @@ async function getArtist(albumID) {
   return metaData.split('\r\n').length === 1 ? 'Unknown' : metaData.split('\r\n')[0];
 }
 
-async function getTracks(albumID) {
+export async function getTracks(albumID) {
   const metaFileID = (await cache.get(`${albumID}_metaID`, throttleAsNeeded, [(opts) => drive.files.list(opts), [{
     fields: 'files(id)',
     orderBy: 'createdTime desc',
@@ -185,7 +186,7 @@ async function getTracks(albumID) {
   return trackData.split('~').map((el) => el.split('*'));
 }
 
-async function getArtists() {
+export async function getArtists() {
   const queryParams = {
     pageSize: 500,
     fields: 'nextPageToken, files(name,fullFileExtension,id)',
@@ -215,7 +216,7 @@ async function getArtists() {
   return { Artists: fileDocs };
 }
 
-async function getSongs() {
+export async function getSongs() {
   const { Albums } = await cache.get('albums', getAlbums, [], 40 * 1000);
   let allTracks = [];
   const promises = [];
@@ -241,7 +242,7 @@ async function getSongs() {
   return { Songs: allTracks };
 }
 
-async function getAlbums() {
+export async function getAlbums() {
   const queryParams = {
     pageSize: 500,
     fields: 'nextPageToken, files(name,fullFileExtension,id)',
@@ -271,7 +272,7 @@ async function getAlbums() {
   return { Albums: fileDocs };
 }
 
-async function getAlbumIDsByArtist(artistID) {
+export async function getAlbumIDsByArtist(artistID) {
   return stripBom((await cache.get(artistID, throttleAsNeeded, [(opts) => drive.files.export(opts), [{
     fileId: artistID,
     alt: 'media',
@@ -279,7 +280,7 @@ async function getAlbumIDsByArtist(artistID) {
   }]], 5 * 60 * 1000)).data).split('\r\n');
 }
 
-async function wavFromText(fileName, parentName, start = null, end = null) {
+export async function wavFromText(fileName, parentName, start = null, end = null) {
   const bytesPerChunk = 1125000;
   const queryParams = {
     pageSize: 500,
@@ -340,16 +341,3 @@ async function wavFromText(fileName, parentName, start = null, end = null) {
   });
   return Buffer.from(base64Text, 'base64');
 }
-
-module.exports = {
-  docText,
-  init,
-  wavFromText,
-  getArtist,
-  getArtists,
-  getAlbumIDsByArtist,
-  getAlbums,
-  getDocTitles,
-  getSongs,
-  getTracks,
-};

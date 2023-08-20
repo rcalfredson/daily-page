@@ -1,7 +1,9 @@
-const router = require('express').Router();
-const helpers = require('./api-v1-helpers');
+import { Router } from 'express';
+import * as helpers from './api-v1-helpers.js';
 
-module.exports = (app, mongo) => {
+const router = Router();
+
+const useAPIV1 = (app, mongo) => {
   helpers.init(mongo);
   app.use('/api/v1', router);
 
@@ -21,3 +23,5 @@ module.exports = (app, mongo) => {
 
   router.post('/peers/:room/:id', helpers.authenticate, helpers.addPeerToRoom);
 };
+
+export default useAPIV1;

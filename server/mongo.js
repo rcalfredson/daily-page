@@ -1,10 +1,11 @@
 /* eslint-disable no-underscore-dangle */
-const { all } = require('bluebird');
-const { MongoClient } = require('mongodb');
-const sanitizeHtml = require('sanitize-html');
+import mongo from 'mongodb';
+import sanitizeHtml from 'sanitize-html';
+import DateHelper from '../lib/dateHelper.js';
+
+const { MongoClient } = mongo;
 
 sanitizeHtml.defaults.allowedAttributes.img = ['src', 'width'];
-const dateHelper = require('../build/dateHelper');
 
 const user = 'daily-page-admin';
 const addr = process.env.MONGO_DB_ADDR;
@@ -22,7 +23,7 @@ const collectionSuffix = process.env.NODE_ENV === 'production' ? '' : '-test';
 let connection;
 let db;
 
-async function initConnection() {
+export async function initConnection() {
   const connectTimeoutMS = process.env.MONGODB_CONNECT_TIMEOUT || 15000;
   const socketTimeoutMS = process.env.MONGODB_SOCKET_TIMEOUT || 30000;
 
@@ -35,34 +36,34 @@ async function initConnection() {
   });
 }
 
-async function initDB() {
+export async function initDB() {
   db = await connection.db(dbName);
 }
 
-async function initCollection(name) {
+export async function initCollection(name) {
   await initDB();
   collections[name] = await db.collection(`${collectionNames[name]}${collectionSuffix}`);
 }
 
-async function initPagesCollection() {
+export async function initPagesCollection() {
   await initCollection('pages');
 }
 
-async function initSessionCollection() {
+export async function initSessionCollection() {
   await initCollection('session');
 }
 
-async function initBackupCollection() {
+export async function initBackupCollection() {
   await initCollection('backup');
 }
 
-async function updateDocMappings(mappings) {
+export async function updateDocMappings(mappings) {
   await initBackupCollection();
   await collections.backup.replaceOne({ _id: 'docMappings' }, mappings, { upsert: true });
   await collections.backup.updateOne({ _id: 'lastUpdate' }, { $set: { ts: new Date().getTime() } });
 }
 
-async function getDocMappings() {
+export async function getDocMappings() {
   await initBackupCollection();
   const update = await collections.backup.findOne({ _id: 'lastUpdate' });
 
@@ -74,7 +75,7 @@ async function getDocMappings() {
   return doc;
 }
 
-async function peerIDs(room = null, withTime = false) {
+export async function peerIDs(room = null, withTime = false) {
   await initSessionCollection();
   const doc = await collections.session.findOne({ _id: peerIDs });
   delete doc._id; // eslint-disable-line no-underscore-dangle
@@ -87,9 +88,9 @@ async function peerIDs(room = null, withTime = false) {
   }, {});
 }
 
-async function cleanUpOldPeerIds() {
+export async function cleanUpOldPeerIds() {
   const maxPeerAge = 24 * 60 * 60 * 1000;
-  const allIds = await peerIDs(null, withTime = true);
+  const allIds = await peerIDs(null, true);
   for (const room of Object.keys(allIds)) {
     for (const peer in allIds[room]) {
       if (new Date() - allIds[room][peer] > maxPeerAge) {
@@ -99,23 +100,23 @@ async function cleanUpOldPeerIds() {
   }
 }
 
-async function rooms() {
+export async function rooms() {
   return Object.keys(await peerIDs());
 }
 
-async function addPeer(id, room) {
+export async function addPeer(id, room) {
   await initSessionCollection();
   return collections.session.updateOne({ _id: peerIDs }, { $set: { [`${room}.${id}`]: new Date() } });
 }
 
-async function removePeer(id, room) {
+export async function removePeer(id, room) {
   await initSessionCollection();
   return collections.session.updateOne({ _id: peerIDs }, { $unset: { [`${room}.${id}`]: '' } });
 }
 
-async function updatePage(content, room) {
+export async function updatePage(content, room) {
   await initPagesCollection();
-  const date = dateHelper.currentDate();
+  const date = DateHelper.currentDate();
   const dateArray = date.split('-');
 
   return collections.pages
@@ -133,7 +134,7 @@ async function updatePage(content, room) {
     { upsert: true });
 }
 
-async function pageByDate(date) {
+export async function pageByDate(date) {
   const pages = await collections.pages.find({ date }).toArray();
 
   if (pages.length === 0) {
@@ -153,7 +154,7 @@ async function pageByDate(date) {
   return { content };
 }
 
-async function pageByDateAndRoom(date, room, options) {
+export async function pageByDateAndRoom(date, room, options) {
   const keysToConvertToInt = ['lastUpdate'];
   keysToConvertToInt.forEach((k) => {
     if (options[k] === 'true') {
@@ -166,7 +167,7 @@ async function pageByDateAndRoom(date, room, options) {
     { projection: options ? Object.assign(options, { _id: 0 }) : null });
 }
 
-async function getPageDatesByYearAndMonth(year, month) {
+export async function getPageDatesByYearAndMonth(year, month) {
   await initPagesCollection();
   return (await collections.pages.find({ year, month }, { date: 1 }).sort({ date: -1 }).toArray())
     .reduce((accumulator, doc) => {
@@ -178,7 +179,7 @@ async function getPageDatesByYearAndMonth(year, month) {
     .map((doc) => doc.date).filter((v, i, a) => a.indexOf(v) === i);
 }
 
-async function getPageMonthYearCombos() {
+export async function getPageMonthYearCombos() {
   await initPagesCollection();
   return (await collections.pages.aggregate([
     {
@@ -195,7 +196,7 @@ async function getPageMonthYearCombos() {
     }, []);
 }
 
-async function getPageForRoom(date, room, options) {
+export async function getPageForRoom(date, room, options) {
   try {
     const page = await pageByDateAndRoom(date, room, options);
     if (!page) {
@@ -208,25 +209,10 @@ async function getPageForRoom(date, room, options) {
   }
 }
 
-async function getPage(date = dateHelper.currentDate(), room = null, options = null) {
+export async function getPage(date = DateHelper.currentDate(), room = null, options = null) {
   await initPagesCollection();
   if (room) {
     return getPageForRoom(date, room, options);
   }
   return pageByDate(date);
 }
-
-module.exports = {
-  initConnection,
-  peerIDs,
-  rooms,
-  addPeer,
-  removePeer,
-  cleanUpOldPeerIds,
-  getPage,
-  updatePage,
-  getDocMappings,
-  updateDocMappings,
-  getPageDatesByYearAndMonth,
-  getPageMonthYearCombos,
-};

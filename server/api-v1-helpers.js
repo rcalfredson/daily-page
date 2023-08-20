@@ -1,9 +1,9 @@
-const cache = require('./cache');
-const jwtHelper = require('./jwt-helper');
+import * as cache from './cache.js';
+import * as jwtHelper from './jwt-helper.js';
 
 let mongo;
 
-async function addPeerToRoom(req, res) {
+export async function addPeerToRoom(req, res) {
   try {
     await mongo.addPeer(req.params.id, req.params.room);
     res.sendStatus(200);
@@ -12,7 +12,7 @@ async function addPeerToRoom(req, res) {
   }
 }
 
-async function allYearMonthCombos(_, res) {
+export async function allYearMonthCombos(_, res) {
   try {
     res.send(JSON.stringify(await cache.get('monthYearCombos', mongo.getPageMonthYearCombos)));
   } catch (error) {
@@ -20,7 +20,7 @@ async function allYearMonthCombos(_, res) {
   }
 }
 
-function authenticate(req, res, next) {
+export function authenticate(req, res, next) {
   try {
     jwtHelper.verifyReq(req);
     next();
@@ -29,11 +29,11 @@ function authenticate(req, res, next) {
   }
 }
 
-function init(mongoConnection) {
+export function init(mongoConnection) {
   mongo = mongoConnection;
 }
 
-function joinWithHyphens(params, keysToCheck) {
+export function joinWithHyphens(params, keysToCheck) {
   let output = '';
   keysToCheck.forEach((k, i) => {
     let suffix = '';
@@ -45,7 +45,7 @@ function joinWithHyphens(params, keysToCheck) {
   return output;
 }
 
-async function sendPage(req, res) {
+export async function sendPage(req, res) {
   try {
     res.send(JSON.stringify(await cache.get(
       joinWithHyphens(req.params, ['date', 'room']), mongo.getPage,
@@ -56,7 +56,7 @@ async function sendPage(req, res) {
   }
 }
 
-async function pageDatesForYearMonthCombo(req, res) {
+export async function pageDatesForYearMonthCombo(req, res) {
   const { year, month } = req.params;
 
   try {
@@ -67,7 +67,7 @@ async function pageDatesForYearMonthCombo(req, res) {
   }
 }
 
-async function peersForRoom(req, res) {
+export async function peersForRoom(req, res) {
   try {
     res.send(JSON.stringify(await mongo.peerIDs(req.query.room)));
   } catch (error) {
@@ -75,7 +75,7 @@ async function peersForRoom(req, res) {
   }
 }
 
-async function removePeerFromRoom(req, res) {
+export async function removePeerFromRoom(req, res) {
   try {
     await mongo.removePeer(req.params.id, req.params.room);
     res.sendStatus(200);
@@ -84,7 +84,7 @@ async function removePeerFromRoom(req, res) {
   }
 }
 
-async function updatePageForRoom(req, res) {
+export async function updatePageForRoom(req, res) {
   try {
     await mongo.updatePage(req.body.content, req.params.room);
     res.json({ updated: new Date().getTime() });
@@ -92,15 +92,3 @@ async function updatePageForRoom(req, res) {
     res.status(500).send({ error: error.message });
   }
 }
-
-module.exports = {
-  addPeerToRoom,
-  allYearMonthCombos,
-  authenticate,
-  init,
-  pageDatesForYearMonthCombo,
-  peersForRoom,
-  removePeerFromRoom,
-  sendPage,
-  updatePageForRoom,
-};

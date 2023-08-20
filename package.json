@@ -6,10 +6,11 @@
   "engines": {
     "node": "^18"
   },
+  "type": "module",
   "scripts": {
     "pretest": "eslint --fix app.js server/ lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js",
     "test": "jasmine",
-    "start": "node app.js",
+    "start": "node -r esm app.js",
     "build": "babel lib -d build",
     "compile": "browserify build/main.js -o public/js/bundle.js && browserify build/clearSelection.js -o public/js/clearSelection.js && browserify build/iPod.js -o public/js/iPod.js && browserify build/analyzeBPM.js -o public/js/analyzeBPM.js",
     "postinstall": "npm run build && npm run compile",
@@ -43,6 +44,7 @@
     "cors": "^2.8.5",
     "cron": "^1.8.2",
     "easymde": "^2.15.0",
+    "esm": "^3.2.25",
     "express": "^4.17.3",
     "feather-icons": "^4.28.0",
     "fluent-ffmpeg": "^2.1.2",

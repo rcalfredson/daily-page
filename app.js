@@ -1,18 +1,20 @@
-const stream = require('stream');
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const peerServer = require('peer');
-const axios = require('axios');
-const dateHelper = require('./build/dateHelper');
-const encodeHelper = require('./build/encodeHelper');
-const useAPIV1 = require('./server/api-v1');
-const cache = require('./server/cache');
-const jwtHelper = require('./server/jwt-helper');
-const viewHelper = require('./server/view-helper');
-const mongo = require('./server/mongo');
-const google = require('./server/google');
-require('./server/cron').startJobs();
+import stream from 'stream';
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import peerServer from 'peer';
+import axios from 'axios';
+import DateHelper from './lib/dateHelper.js';
+import * as encodeHelper from './lib/encodeHelper.js';
+import useAPIV1 from './server/api-v1.js';
+import * as cache from './server/cache.js';
+import * as jwtHelper from './server/jwt-helper.js';
+import * as viewHelper from './server/view-helper.js';
+import * as mongo from './server/mongo.js';
+import * as google from './server/google.js';
+import { startJobs } from './server/cron.js';
+
+startJobs();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -275,12 +277,12 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     });
 
     app.get('/today', (_, res) => {
-      res.redirect(`/${dateHelper.currentDate()}`);
+      res.redirect(`/${DateHelper.currentDate()}`);
     });
 
     app.get('/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', async (req, res) => {
       const { year, month } = req.params;
-      const formattedTime = `${dateHelper.monthName(month)} ${year}`;
+      const formattedTime = `${DateHelper.monthName(month)} ${year}`;
       const dates = await cache.get(`${year}-${month}`, mongo.getPageDatesByYearAndMonth, [year, month]);
 
       res.render('yearMonth', {
@@ -291,7 +293,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     });
 
     app.get(`/${dateParam}`, async (req, res) => {
-      const formattedTime = dateHelper.formatDate(req.params.date, 'long');
+      const formattedTime = DateHelper.formatDate(req.params.date, 'long');
       const pageData = await cache.get(req.params.date, mongo.getPage,
         [req.params.date, req.params.room, req.query]);
 
@@ -307,7 +309,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
     app.get(`/:room([a-zA-Z]+)/${dateParam}`, async (req, res) => {
       const roomReq = req.params.room;
-      const dateAndRoom = `${dateHelper.formatDate(req.params.date, 'long')} - ${viewHelper.capitalize(roomReq)} Room`;
+      const dateAndRoom = `${DateHelper.formatDate(req.params.date, 'long')} - ${viewHelper.capitalize(roomReq)} Room`;
       const pageData = await cache.get(req.params.date, mongo.getPage,
         [req.params.date, roomReq, req.query]);
 
@@ -358,7 +360,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
         return;
       }
       if (req.query.id || peerIDs[roomReq].length === 0) {
-        const date = dateHelper.currentDate('long');
+        const date = DateHelper.currentDate('long');
 
         res.render('index', {
           title: 'Daily Page',
@@ -376,5 +378,6 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     });
   } catch (error) {
     console.log(`Server startup failed: ${error.message}`); // eslint-disable-line no-console
+    console.log(error.stack);
   }
 })();

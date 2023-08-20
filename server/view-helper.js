@@ -1,12 +1,12 @@
-const Autolinker = require('autolinker');
-const sanitizeHTML = require('sanitize-html');
+import Autolinker from 'autolinker';
+import sanitizeHTML from 'sanitize-html';
+import showdown from 'showdown';
 
 sanitizeHTML.defaults.allowedAttributes.img = ['src', 'width'];
-const showdown = require('showdown');
 
 const converter = new showdown.Converter();
 
-function archiveHTML(text) {
+export function archiveHTML(text) {
   text = converter.makeHtml(text.replace(/\u00A0/g, ' '));
   let htmlOutput = sanitizeHTML(text,
     { allowedTags: sanitizeHTML.defaults.allowedTags.concat(['img']) });
@@ -16,7 +16,7 @@ function archiveHTML(text) {
   return Autolinker.link(htmlOutput);
 }
 
-function archiveContent(pageData) {
+export function archiveContent(pageData) {
   let errorMessage;
   let text;
 
@@ -31,8 +31,6 @@ function archiveContent(pageData) {
   return [errorMessage, text];
 }
 
-function capitalize(word) {
+export function capitalize(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
-
-module.exports = { capitalize, archiveContent };
