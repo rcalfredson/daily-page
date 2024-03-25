@@ -267,7 +267,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
         readStream.pipe(res);
       } else {
         const buffer = await cache.get(req.params.fileID, google.wavFromText, [req.params.fileID,
-          req.params.albumID], 5 * 60 * 1000);
+        req.params.albumID], 5 * 60 * 1000);
         const total = buffer.byteLength;
         readStream = new stream.PassThrough();
         readStream.end(buffer);
@@ -325,56 +325,58 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
     app.get('/support', (_, res) => res.render('support', { title: 'Daily Page - Support' }));
 
-    app.get('/about', (_, res) => res.render('about', { title: 'Daily Page - About' }));
-
     app.get('/*?', async (req, res) => {
-      const maxCapacity = 6;
-      const roomReq = req.query.room;
-      const rooms = await cache.get('rooms', mongo.rooms);
-      const peerIDs = (await cache.get('peerIDs', mongo.peerIDs));
-      const roomsVacant = rooms.filter((room) => peerIDs[room].length < maxCapacity)
-        .sort((roomA, roomB) => peerIDs[roomB].length - peerIDs[roomA].length);
+      if (req.path === '/editor') {
+        const maxCapacity = 6;
+        const roomReq = req.query.room;
+        const rooms = await cache.get('rooms', mongo.rooms);
+        const peerIDs = (await cache.get('peerIDs', mongo.peerIDs));
+        const roomsVacant = rooms.filter((room) => peerIDs[room].length < maxCapacity)
+          .sort((roomA, roomB) => peerIDs[roomB].length - peerIDs[roomA].length);
 
-      if (roomReq && !rooms.includes(roomReq)) {
-        res.redirect('/');
-        return;
-      }
+        if (roomReq && !rooms.includes(roomReq)) {
+          res.redirect('/editor');
+          return;
+        }
 
-      if (roomsVacant.length === 0) {
-        res.render('fullCapacity', {
-          title: 'Daily Page - At Full Capacity!',
-        });
-        return;
-      }
+        if (roomsVacant.length === 0) {
+          res.render('fullCapacity', {
+            title: 'Daily Page - At Full Capacity!',
+          });
+          return;
+        }
 
-      if (!roomReq) {
-        res.redirect(`/?room=${peerIDs[roomsVacant[0]].length !== peerIDs[roomsVacant[roomsVacant.length - 1]].length ? roomsVacant[0]
-          : roomsVacant[Math.floor(Math.random() * roomsVacant.length)]}`);
-        return;
-      }
+        if (!roomReq) {
+          res.redirect(`/editor?room=${peerIDs[roomsVacant[0]].length !== peerIDs[roomsVacant[roomsVacant.length - 1]].length ? roomsVacant[0]
+            : roomsVacant[Math.floor(Math.random() * roomsVacant.length)]}`);
+          return;
+        }
 
-      if (peerIDs[roomReq].length >= 6) {
-        res.render('fullRoom', {
-          room: viewHelper.capitalize(roomReq),
-        });
-        return;
-      }
-      if (req.query.id || peerIDs[roomReq].length === 0) {
-        const date = DateHelper.currentDate('long');
+        if (peerIDs[roomReq].length >= 6) {
+          res.render('fullRoom', {
+            room: viewHelper.capitalize(roomReq),
+          });
+          return;
+        }
+        if (req.query.id || peerIDs[roomReq].length === 0) {
+          const date = DateHelper.currentDate('long');
 
-        res.render('index', {
-          title: 'Daily Page',
-          description: "The world's chalkboard, saved and wiped clean each day.",
-          date,
-          room: roomReq,
-          header: `${date} - ${viewHelper.capitalize(roomReq)} Room.`,
-          backendURL: backendApiUrl,
-          sessionID: jwtHelper.expiringKey(),
-        });
-        return;
+          res.render('index', {
+            title: 'Daily Page',
+            description: "The world's chalkboard, saved and wiped clean each day.",
+            date,
+            room: roomReq,
+            header: `${date} - ${viewHelper.capitalize(roomReq)} Room.`,
+            backendURL: backendApiUrl,
+            sessionID: jwtHelper.expiringKey(),
+          });
+          return;
+        }
+        res.redirect(`/editor?room=${roomReq}&id=`
+          + `${peerIDs[roomReq][Math.floor(Math.random() * peerIDs[roomReq].length)]}`);
+      } else {
+        res.render('about', { title: 'Daily Page - Home' });
       }
-      res.redirect(`/?room=${roomReq}&id=`
-        + `${peerIDs[roomReq][Math.floor(Math.random() * peerIDs[roomReq].length)]}`);
     });
   } catch (error) {
     console.log(`Server startup failed: ${error.message}`); // eslint-disable-line no-console
