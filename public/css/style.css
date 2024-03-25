@@ -113,6 +113,19 @@ a.link:hover:before, .selected a.link:before {
   transform: scaleX(1);
 }
 
+.call-to-action .btn {
+  padding: 10px 20px;
+  text-decoration: none;
+  color: white;
+  background-color: #007bff;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.call-to-action .btn-margin {
+  margin-right: 10px;
+}
+
 strong {
   font-family: 'Rubik-Regular';
   font-size: 18px;

@@ -1,67 +1,23 @@
 extends layout
+
 block nav
   include navLinks
+
 block content
   .info
-    h1 ★ What is this site for?
-    p To give the world a blank slate.
-    p
-      | All visitors to the site are connected in a real-time, anonymous, collaborative editing
-      | session of a single document. At midnight UTC each day, that document is locked, archived
-      | for viewing, and replaced with a fresh document.
-    P
-      | It is up to you to decide what the Daily Page is for.
+    h1 Collaborate Anonymously on a Global Writing Canvas - Unleash Your Creativity Daily
+    p Join an ever-evolving tapestry of thoughts, where each contributor's voice weaves into a daily masterpiece. At the stroke of midnight UTC, we embrace a new canvas, preserving yesterday's creation for eternity.
+    h2 The Essence of Daily Page
+    p Each visitor breathes life into the Daily Page, partaking in a real-time, anonymous collaborative journey. The document of the day, a collective endeavor, is locked at midnight UTC, archived for inspiration, and reborn anew.
+    h2 Your Role in this Collective Creation
+    p It's your imagination, your words, that define the essence of the Daily Page. What will you contribute to today's narrative?
+    h2 A Testament to Collective Creativity
+    p(style="color: #777;") Dive into the archives to witness the power of collective creativity. Each day's page stands as a testament to the stories, ideas, and whispers shared by anonymous souls around the globe.
+    .call-to-action
+      p
+        a.btn.btn-margin(href='/app') Join the Canvas Now
+      p
+        a.btn(href='/archive') Explore the Archives
+
     .info-subtitle
-      p(style="color: #00C261") Chatting?
-      p(style="color: #2626F0") Writing poetry?
-      p(style="color: #ED0909") Creating ideas to better the planet?
-      p(style="color: #FFC414") Discussing current events?
-
-    p
-      | Nobody knows yet, so let us see what happens when every internet user in
-      | the world is given a pen to write on the same page.
-
-    h1 ★ How does this site work?
-    p
-      | The main page of the site consists of the editor and a listing of online users (currently anonymized).
-      | The editor supports 
-      a(href="https://www.markdownguide.org/basic-syntax/") standard Markdown syntax
-      | , along with limited HTML support. For example, if you wanted to include a large
-      | image, then you could use the Markdown version,
-    p.example ![A large image](https://some.host/large_img.png),
-    p but this wouldn't provide control over the width, so instead you could try HTML:
-    p.example &lt;img src="https://some.host/large_img.png" width="300px"/>
-    p
-      | To see current or past pages in rendered format, go to the 
-      a(href="archive") Archive page
-      | .
-    h1 ★ Who created this site?
-    p My name is Robert Alfredson; please check out my 
-        a(href="https://rcalfredson.github.io") home page
-        |  for information and diversions.
-    h1 ★ What else is there to know?
-    p
-      | There is a practical and technical limit on the number of users who can edit the same
-      | document simultaneously, at least for the moment. While each day's writing ultimately
-      | produces a single page, that page is made up of many smaller pieces, each emerging from an
-      | individual
-      i   room.
-    p
-      | Each room has a set maximum number of occupants, and newly-arriving users are directed to
-      | the vacant room with the largest number of occupants. If all rooms happen to reach capacity,
-      | then new editors can enter only after others leave a room. (Of course, the site is open for
-      | browsing at all times, and that includes the current revision of that day's page.)
-    p
-      | The name of each room is not revealed until you arrive there, and so the only ways you can
-      | find out about a room are by 1) having the site direct you there, 2) receiving a link to a
-      | room from your friend, or 3) navigating to randomly-chosen room names until you find one
-      | that exists.
-    p
-      | The rooms have been given intentionally nondescript and open-ended names, with the intention
-      | that the users will determine each room's topics, culture, and focus, rather than the
-      | opposite.
-    p
-      | The site's interactive editing is powered by two core technologies: conflict-free replicated
-      | data types (CRDTs) and WebRTC, extending the code base of the now-inactive 
-      a(href="https://github.com/conclave-team/conclave") Conclave project
-      | .
+      p(style="color: #777;") This is your invitation to leave a mark, to be part of something bigger than yourself. Welcome to the Daily Page - where every day is a new beginning.
