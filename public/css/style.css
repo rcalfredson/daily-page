@@ -625,6 +625,11 @@ Archive and static pages
   padding-left: 20px;
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 /****************
 Video
 ****************/
