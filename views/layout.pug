@@ -10,6 +10,14 @@ html(lang="en")
       link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet")
       link(rel='stylesheet' href='/css/style.css')
       link(rel='shortcut icon' href='/assets/img/favicon.ico')
+      script(type='application/ld+json').
+        {
+          "@context": "http://schema.org",
+          "@type": "Organization",
+          "name": "Daily Page",
+          "url": "https://dailypage.org",
+          "logo": "https://dailypage.org/assets/img/favicon.ico"
+        }
   body
     -
       var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
