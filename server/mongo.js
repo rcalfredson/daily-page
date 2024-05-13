@@ -28,9 +28,7 @@ export async function initConnection() {
   const socketTimeoutMS = process.env.MONGODB_SOCKET_TIMEOUT || 30000;
 
   connection = await MongoClient.connect(url, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    poolSize: 10,
+    maxPoolSize: 10,
     connectTimeoutMS,
     socketTimeoutMS,
   });

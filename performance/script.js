@@ -1,23 +1,23 @@
 import CRDT from '../lib/crdt';
 import * as Util from './util';
 import fs from 'fs';
-import UUID from 'uuid/v1';
+import { v4 } from 'uuid';
 
 const logPath = 'performance/logs';
 
 export function mockController() {
   return {
-    siteId: UUID(),
-    broadcastInsertion: function() {},
-    broadcastDeletion: function() {},
-    insertIntoEditor: function() {},
-    deleteFromEditor: function() {},
+    siteId: v4(),
+    broadcastInsertion: function () { },
+    broadcastDeletion: function () { },
+    insertIntoEditor: function () { },
+    deleteFromEditor: function () { },
     vector: {
-      getLocalVersion: () => {},
+      getLocalVersion: () => { },
       localVersion: {
         counter: 0
       },
-      increment: function() {
+      increment: function () {
         this.localVersion.counter++;
       }
     }
@@ -195,7 +195,7 @@ ${Util.addRow(100000, crdt5, Util.remoteDeleteEnd)}
 
 `;
 
-fs.writeFile(`${logPath}/${Util.getTimestamp()}.log`, table, function(err) {
+fs.writeFile(`${logPath}/${Util.getTimestamp()}.log`, table, function (err) {
   if (err) {
     return console.log(err);
   }

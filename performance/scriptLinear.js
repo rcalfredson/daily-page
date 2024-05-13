@@ -1,22 +1,22 @@
 import CRDT from '../lib/crdtLinear';
 import * as Util from './utilLinear';
 import fs from 'fs';
-import UUID from 'uuid/v1';
+import { v4 } from 'uuid';
 
 const logPath = 'performance/logs';
 
 export function mockController() {
   return {
-    siteId: UUID(),
-    broadcastInsertion: function() {},
-    broadcastDeletion: function() {},
-    insertIntoEditor: function() {},
-    deleteFromEditor: function() {},
+    siteId: v4(),
+    broadcastInsertion: function () { },
+    broadcastDeletion: function () { },
+    insertIntoEditor: function () { },
+    deleteFromEditor: function () { },
     vector: {
       localVersion: {
         counter: 0
       },
-      increment: function() {
+      increment: function () {
         this.localVersion.counter++;
       }
     }
@@ -30,8 +30,8 @@ const crdt4 = new CRDT(mockController());
 const crdt5 = new CRDT(mockController());
 
 [crdt1, crdt2, crdt3, crdt4, crdt5].forEach(crdt => {
-  crdt.insertText = function() {};
-  crdt.deleteText = function() {};
+  crdt.insertText = function () { };
+  crdt.deleteText = function () { };
 });
 
 let table = `
@@ -184,7 +184,7 @@ ${Util.addRow(10000, crdt4, Util.remoteDeleteEnd)}
 ${Util.addRow(100000, crdt5, Util.remoteDeleteEnd)}
 `;
 
-fs.writeFile(`${logPath}/${Util.getTimestamp()}.log`, table, function(err) {
+fs.writeFile(`${logPath}/${Util.getTimestamp()}.log`, table, function (err) {
   if (err) {
     return console.log(err);
   }

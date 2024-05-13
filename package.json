@@ -4,13 +4,13 @@
   "description": "",
   "main": "app.js",
   "engines": {
-    "node": "^18"
+    "node": "^20"
   },
   "type": "module",
   "scripts": {
     "pretest": "eslint --fix app.js server/ lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js",
     "test": "jasmine",
-    "start": "node app.js",
+    "start": "node --trace-deprecation app.js",
     "build": "babel lib -d build",
     "compile": "browserify build/main.js -o public/js/bundle.js && browserify build/clearSelection.js -o public/js/clearSelection.js && browserify build/iPod.js -o public/js/iPod.js && browserify build/analyzeBPM.js -o public/js/analyzeBPM.js",
     "postinstall": "npm run build && npm run compile",
@@ -54,18 +54,17 @@
     "jsonwebtoken": "^9.0.1",
     "memory-cache": "^0.2.0",
     "moment-timezone": "^0.5.31",
-    "mongodb": "^3.6.3",
-    "peer": "^0.6",
+    "mongodb": "^6",
+    "peer": "^1",
     "pug": "^3.0.1",
-    "realtime-bpm-analyzer": "^1.1.5",
-    "request-promise": "^0.0.1",
+    "realtime-bpm-analyzer": "^4.0.2",
     "rxjs": "^5.5.2",
     "sanitize-html": "^2.12.1",
     "showdown": "^1.9.1",
     "slug": "^4.0.4",
     "sorted-cmp-array": "^2.0.1",
     "strip-bom": "^4.0.0",
-    "uuid": "^3.4.0"
+    "uuid": "^8"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",

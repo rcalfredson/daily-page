@@ -2,7 +2,7 @@ import stream from 'stream';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import peerServer from 'peer';
+import {ExpressPeerServer} from 'peer';
 import axios from 'axios';
 import DateHelper from './lib/dateHelper.js';
 import * as encodeHelper from './lib/encodeHelper.js';
@@ -60,7 +60,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       console.log(`Listening on ${port}`); // eslint-disable-line no-console
     });
 
-    app.use('/peerjs', peerServer.ExpressPeerServer(srv, {
+    app.use('/peerjs', ExpressPeerServer(srv, {
       debug: true,
     }));
 

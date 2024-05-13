@@ -1,15 +1,15 @@
 import Broadcast from '../lib/broadcast';
-import UUID from 'uuid/v1';
+import { v4 } from 'uuid';
 import { JSDOM } from 'jsdom';
 
 describe('Broadcast', () => {
   const mockController = {
-    siteId: UUID(),
+    siteId: v4(),
     peer: {
       id: 55,
-      on: function() {},
-      connect: function(id) { return { open: false, id: id, on: function() {} } },
-      call: function() {}
+      on: function () { },
+      connect: function (id) { return { open: false, id: id, on: function () { } } },
+      call: function () { }
     },
     crdt: {
       struct: []
@@ -17,14 +17,14 @@ describe('Broadcast', () => {
     vector: {
       versions: []
     },
-    addToNetwork: function() {},
-    removeFromNetwork: function() {},
-    updateRootUrl: function() {},
-    closeVideo: function() {},
-    answerCall: function() {}
+    addToNetwork: function () { },
+    removeFromNetwork: function () { },
+    updateRootUrl: function () { },
+    closeVideo: function () { },
+    answerCall: function () { }
   };
 
-  const targetId = UUID();
+  const targetId = v5();
 
   describe('constructor', () => {
     const broadcast = new Broadcast(12345);
@@ -57,19 +57,19 @@ describe('Broadcast', () => {
 
     it('adds the operation to the outgoing buffer if it is an insertion', () => {
       spyOn(broadcast, 'addToOutgoingBuffer');
-      broadcast.send({type: 'insert'});
+      broadcast.send({ type: 'insert' });
       expect(broadcast.addToOutgoingBuffer).toHaveBeenCalled();
     });
 
     it('adds the operation to the outgoing buffer if it is a deletion', () => {
       spyOn(broadcast, 'addToOutgoingBuffer');
-      broadcast.send({type: 'delete'});
+      broadcast.send({ type: 'delete' });
       expect(broadcast.addToOutgoingBuffer).toHaveBeenCalled();
     });
 
     it('does not add the operation to the outgoing buffer otherwise', () => {
       spyOn(broadcast, 'addToOutgoingBuffer');
-      broadcast.send({type: 'add to network'});
+      broadcast.send({ type: 'add to network' });
       expect(broadcast.addToOutgoingBuffer).not.toHaveBeenCalled();
     });
   });
@@ -88,13 +88,13 @@ describe('Broadcast', () => {
     });
 
     it('adds the operation to the end of the buffer', () => {
-      expect(bc.outgoingBuffer[bc.outgoingBuffer.length-1]).toEqual(5);
+      expect(bc.outgoingBuffer[bc.outgoingBuffer.length - 1]).toEqual(5);
     });
   });
 
   describe('processOutgoingBuffer', () => {
     const bc = new Broadcast(12345);
-    bc.outConns = [{peer: 6, send: function() {}}]
+    bc.outConns = [{ peer: 6, send: function () { } }]
     bc.outgoingBuffer = [1, 2, 3, 4, 5];
 
     it('sends every operation in the outgoing buffer to the connection', () => {
@@ -107,7 +107,7 @@ describe('Broadcast', () => {
   describe('bindServerEvents', () => {
     const broadcast = new Broadcast(12345);
     broadcast.controller = mockController;
-    broadcast.startPeerHeartBeat = function(peer) {};
+    broadcast.startPeerHeartBeat = function (peer) { };
 
     it("set this.peer to the peer passed in from the controller", () => {
       expect(broadcast.peer).toBeNull();
@@ -126,8 +126,8 @@ describe('Broadcast', () => {
     const bc = new Broadcast(12345);
     const peer = {
       socket: {
-        _wsOpen: function() {},
-        send: function() {}
+        _wsOpen: function () { },
+        send: function () { }
       }
     };
 
@@ -165,7 +165,7 @@ describe('Broadcast', () => {
   describe('onDisconnect', () => {
     const bc = new Broadcast(12345);
     bc.peer = {
-      on: function() {}
+      on: function () { }
     };
 
     it('calls on on this.peer', () => {
@@ -179,7 +179,7 @@ describe('Broadcast', () => {
     const broadcast = new Broadcast(12345);
     broadcast.controller = mockController;
     broadcast.peer = mockController.peer;
-    broadcast.isAlreadyConnectedOut = function() {};
+    broadcast.isAlreadyConnectedOut = function () { };
 
     it('calls add the connection to the outgoing connections', () => {
       spyOn(broadcast, 'addToOutConns');
@@ -194,14 +194,14 @@ describe('Broadcast', () => {
     const siteId = 'abc';
 
     it('forwards the connection request if max has been reached', () => {
-      bc.hasReachedMax = function() { return true };
+      bc.hasReachedMax = function () { return true };
       spyOn(bc, 'forwardConnRequest');
       bc.evaluateRequest(peerId, siteId);
       expect(bc.forwardConnRequest).toHaveBeenCalledWith(peerId, siteId);
     });
 
     it('accepts the connection request otherwise', () => {
-      bc.hasReachedMax = function() { return false };
+      bc.hasReachedMax = function () { return false };
       spyOn(bc, 'acceptConnRequest');
       bc.evaluateRequest(peerId, siteId);
       expect(bc.acceptConnRequest).toHaveBeenCalledWith(peerId, siteId);
@@ -242,7 +242,7 @@ describe('Broadcast', () => {
     const peerId = 'a1b2';
     const peer = {
       peer: 'abc',
-      send: function() {}
+      send: function () { }
     };
     bc.outConns.push(peer);
 
@@ -257,13 +257,13 @@ describe('Broadcast', () => {
     const bc = new Broadcast(123);
 
     it('pushes the connection into the outgoing connections if not already there', () => {
-      bc.isAlreadyConnectedOut = function(conn) {return false}
+      bc.isAlreadyConnectedOut = function (conn) { return false }
       bc.addToOutConns(5);
       expect(bc.outConns).toContain(5);
     });
 
     it('does not push the connection into the list if it is already there', () => {
-      bc.isAlreadyConnectedOut = function(conn) {return true}
+      bc.isAlreadyConnectedOut = function (conn) { return true }
       bc.addToOutConns(6);
       expect(bc.outConns).not.toContain(6);
     });
@@ -273,13 +273,13 @@ describe('Broadcast', () => {
     const bc = new Broadcast(123);
 
     it('pushes the connection into the incoming connections if not already there', () => {
-      bc.isAlreadyConnectedIn = function(conn) {return false}
+      bc.isAlreadyConnectedIn = function (conn) { return false }
       bc.addToInConns(5);
       expect(bc.inConns).toContain(5);
     });
 
     it('does not push the connection into the list if it is already there', () => {
-      bc.isAlreadyConnectedIn = function(conn) {return true}
+      bc.isAlreadyConnectedIn = function (conn) { return true }
       bc.addToInConns(6);
       expect(bc.inConns).not.toContain(6);
     });
@@ -292,7 +292,7 @@ describe('Broadcast', () => {
     it("calls send with type 'add to network' and newPeer and siteId passed in", () => {
       spyOn(broadcast, "send");
       broadcast.addToNetwork(5, '10');
-      expect(broadcast.send).toHaveBeenCalledWith({type:'add to network',newPeer:5, newSite: '10'});
+      expect(broadcast.send).toHaveBeenCalledWith({ type: 'add to network', newPeer: 5, newSite: '10' });
     });
   });
 
@@ -303,7 +303,7 @@ describe('Broadcast', () => {
     it("calls send with type 'remove to network' and oldPeer of id passed in", () => {
       spyOn(broadcast, "send");
       broadcast.removeFromNetwork(5);
-      expect(broadcast.send).toHaveBeenCalledWith({type:'remove from network', oldPeer:5});
+      expect(broadcast.send).toHaveBeenCalledWith({ type: 'remove from network', oldPeer: 5 });
     });
   });
 
@@ -399,7 +399,7 @@ describe('Broadcast', () => {
     const bc = new Broadcast(12345);
     bc.controller = mockController;
     bc.peer = {
-      connect: function(id) { return { id: id, on: function() {} } }
+      connect: function (id) { return { id: id, on: function () { } } }
     };
 
     it('calls addToOutConns with the connection back', () => {
@@ -433,7 +433,7 @@ describe('Broadcast', () => {
 
     const conn = {
       peer: "somebody",
-      on: function() {}
+      on: function () { }
     };
 
     it('calls adds the connection to the incoming connections list', () => {
@@ -462,7 +462,7 @@ describe('Broadcast', () => {
     it('answers, calls controller.answerCall, and calls onStream when no current stream', () => {
       const obj = {
         peer: '123',
-        answer: function() {}
+        answer: function () { }
       };
       spyOn(obj, 'answer');
       spyOn(bc.controller, 'answerCall');
@@ -476,7 +476,7 @@ describe('Broadcast', () => {
 
   describe('onStream', () => {
     const bc = new Broadcast(123);
-    const obj = { on: function() {} };
+    const obj = { on: function () { } };
 
     it('calls the on method on the object passed in', () => {
       spyOn(obj, 'on');
@@ -496,7 +496,7 @@ describe('Broadcast', () => {
     beforeEach(() => {
       bc.currentStream = {
         localStream: {
-          getTracks: function() {return [{stop: function() {}}, {stop: function() {}}]}
+          getTracks: function () { return [{ stop: function () { } }, { stop: function () { } }] }
         }
       }
     });
@@ -529,7 +529,7 @@ describe('Broadcast', () => {
     broadcast.peer = mockController.peer;
     const conn = {
       peer: "somebody",
-      on: function() {}
+      on: function () { }
     };
 
     it('calls "on" on the connection passed in', () => {
@@ -545,13 +545,13 @@ describe('Broadcast', () => {
     bc.peer = mockController.peer;
 
     it('returns a random peer id from incoming connections list', () => {
-      bc.inConns = [{peer: 1}, {peer: 2}];
+      bc.inConns = [{ peer: 1 }, { peer: 2 }];
       const rVal = bc.randomId();
       expect(1 <= rVal <= 2).toBeTruthy();
     });
 
     it('returns false if there are no possible connections', () => {
-      bc.inConns = [{peer: 55}];
+      bc.inConns = [{ peer: 55 }];
       expect(bc.randomId()).toBeFalsy();
     });
   });
@@ -562,7 +562,7 @@ describe('Broadcast', () => {
     broadcast.peer = mockController.peer;
     const conn = {
       peer: "somebody",
-      on: function() {}
+      on: function () { }
     };
 
     it('calls "on" on the connection passed in', () => {
