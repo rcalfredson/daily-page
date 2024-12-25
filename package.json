@@ -36,7 +36,7 @@
     "@babel/plugin-syntax-import-meta": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "autolinker": "^1.8.3",
-    "axios": "^1.6.0",
+    "axios": "^1.7.4",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "browserify": "^16.5.2",
