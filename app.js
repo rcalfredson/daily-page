@@ -379,7 +379,8 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       } else {
         res.render('about', {
           title: res.locals.translations.title,
-          translations: res.locals.translations
+          translations: res.locals.translations,
+          lang: res.locals.lang
         });
       }
     });
