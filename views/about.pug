@@ -3,21 +3,27 @@ extends layout
 block nav
   include navLinks
 
+block append head
+  link(rel="alternate" hreflang="en" href="https://dailypage.org/")
+  link(rel="alternate" hreflang="es" href="https://dailypage.org/?lang=es")
+  link(rel="alternate" hreflang="ru" href="https://dailypage.org/?lang=ru")
+  link(rel="alternate" hreflang="x-default" href="https://dailypage.org/")
+
 block content
   .info
-    h1 Collaborate Anonymously on a Global Writing Canvas - Unleash Your Creativity Daily
-    p Join an ever-evolving tapestry of thoughts, where each contributor's voice weaves into a daily masterpiece. At the stroke of midnight UTC, we embrace a new canvas, preserving yesterday's creation for eternity.
-    h2 The Essence of Daily Page
-    p Each visitor breathes life into the Daily Page, partaking in a real-time, anonymous collaborative journey. The document of the day, a collective endeavor, is locked at midnight UTC, archived for inspiration, and reborn anew.
-    h2 Your Role in this Collective Creation
-    p It's your imagination, your words, that define the essence of the Daily Page. What will you contribute to today's narrative?
-    h2 A Testament to Collective Creativity
-    p(style="color: #777;") Dive into the archives to witness the power of collective creativity. Each day's page stands as a testament to the stories, ideas, and whispers shared by anonymous souls around the globe.
+    h1= translations.headline
+    p= translations.paragraph1
+    h2= translations.essence
+    p= translations.paragraph2
+    h2= translations.role
+    p= translations.paragraph3
+    h2= translations.testament
+    p(style="color: #777;")= translations.paragraph4
     .call-to-action
       p
-        a.btn.btn-margin(href='/editor') Join the Canvas Now
+        a.btn.btn-margin(href='/editor')= translations.cta_join
       p
-        a.btn(href='/archive') Explore the Archives
+        a.btn(href='/archive')= translations.cta_archive
 
     .info-subtitle
-      p(style="color: #777;") This is your invitation to leave a mark, to be part of something bigger than yourself. Welcome to the Daily Page - where every day is a new beginning.
+      p(style="color: #777;")= translations.paragraph5

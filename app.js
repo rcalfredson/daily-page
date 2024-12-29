@@ -2,13 +2,14 @@ import stream from 'stream';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import {ExpressPeerServer} from 'peer';
+import { ExpressPeerServer } from 'peer';
 import axios from 'axios';
 import DateHelper from './lib/dateHelper.js';
 import * as encodeHelper from './lib/encodeHelper.js';
 import useAPIV1 from './server/api-v1.js';
 import * as cache from './server/cache.js';
 import * as jwtHelper from './server/jwt-helper.js';
+import localizationMiddleware from './server/localization.js';
 import * as viewHelper from './server/view-helper.js';
 import * as mongo from './server/mongo.js';
 import * as google from './server/google.js';
@@ -39,6 +40,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       },
     };
     app.use(cors(corsOptions));
+    app.use(localizationMiddleware);
     app.options('*', cors(corsOptions));
     if (process.env.NODE_ENV === 'production') {
       app.use((req, res, next) => {
@@ -375,7 +377,10 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
         res.redirect(`/editor?room=${roomReq}&id=`
           + `${peerIDs[roomReq][Math.floor(Math.random() * peerIDs[roomReq].length)]}`);
       } else {
-        res.render('about', { title: 'Daily Page - Home' });
+        res.render('about', {
+          title: res.locals.translations.title,
+          translations: res.locals.translations
+        });
       }
     });
   } catch (error) {
