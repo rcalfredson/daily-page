@@ -47,7 +47,7 @@
     "express": "^4.21.2",
     "feather-icons": "^4.28.0",
     "fluent-ffmpeg": "^2.1.2",
-    "googleapis": "^62.0.0",
+    "googleapis": "^144.0.0",
     "humanize-duration": "^3.24.0",
     "jquery": "^3.5.1",
     "jsdom": "^20.0.0",
@@ -66,6 +66,7 @@
     "strip-bom": "^4.0.0",
     "uuid": "^8"
   },
+  "overrides": { "whatwg-url": "^14.0.0" },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
     "@babel/core": "^7.12.3",
