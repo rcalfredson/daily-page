@@ -1,0 +1,24 @@
+extends layout
+
+block nav
+  include navLinks
+
+block scripts
+  script(src='js/room-directory.js')
+
+block content
+  h1 Room Directory
+  if topics.length === 0
+    p No rooms are available at the moment. Check back later!
+  else
+    each topicGroup in topics
+      .topic-section
+        h2.topic-header(data-topic=`${topicGroup.topic}`)
+          span.topic-title= topicGroup.topic
+          span.expand-icon.collapsed
+        .room-grid.collapsible
+          each room in topicGroup.rooms
+            .room-tile
+              a(href=`/rooms/${room._id}` title=room.name).room-link
+                .room-title= room.name
+                .room-description= room.description

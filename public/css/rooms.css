@@ -1,0 +1,181 @@
+/* ======= GENERAL STYLING ======= */
+
+/* Minimal "paper" color palette */
+:root {
+  --primary-bg: #ffffff;      /* White paper background */
+  --header-bg: #f5f5f5;       /* Slightly off-white for headers */
+  --header-hover-bg: #eeeeee; /* Even lighter hover shade */
+  --text-color: #333;         /* Standard text color */
+  --subtle-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --heavy-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Grid container for room tiles */
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin: 0 20px; /* Aligned with topic header spacing */
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: var(--subtle-shadow);
+  background: var(--primary-bg); 
+}
+
+/* Individual room tile - "paper card" style */
+.room-tile {
+  position: relative;
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #ddd;
+}
+
+.room-tile:hover {
+  transform: scale(1.03);
+  box-shadow: var(--heavy-shadow);
+}
+
+/* Room link & text style */
+.room-link {
+  text-decoration: none;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.room-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Hidden description on load, appears on hover (nice subtle effect) */
+.room-description {
+  font-size: 0.9rem;
+  color: #555;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.room-tile:hover .room-description {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ======= HEADERS ======= */
+
+.topic-section {
+  margin: 20px 0;
+  padding: 0;  /* Let the .topic-header handle its own padding */
+}
+
+/* "Paper" style topic headers */
+.topic-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--header-bg);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--subtle-shadow);
+  transition: background-color 0.2s ease;
+  user-select: none; /* Avoid text selection on click */
+  margin-bottom: 8px; /* A bit of space before content */
+}
+
+.topic-header:hover {
+  background-color: var(--header-hover-bg);
+}
+
+.topic-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+/* ======= COLLAPSIBLE AREA ======= */
+
+.room-grid.collapsible {
+  overflow: hidden;
+  max-height: 0; /* Default collapsed state */
+  transition: max-height 0.3s ease;
+}
+
+/* Hide the "sliver" altogether when collapsed */
+.room-grid.collapsed {
+  max-height: 0;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* ======= EXPAND ICON ======= */
+
+/*
+   Using a simple arrow that rotates 90° when expanded 
+   instead of the old border-based caret
+*/
+.expand-icon {
+  margin-left: 1rem;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Option A: Using a custom arrow with CSS
+     We'll show ">" or "▼" and rotate it */
+  font-size: 1.5rem;
+  color: #666; 
+  transform: rotate(0deg);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Collapsed = arrow points right, expanded = arrow points down */
+.expand-icon::before {
+  content: '▸'; /* "Black right-pointing pointer" or could be '►' or '›' */
+}
+
+.expand-icon.collapsed::before {
+  /* So it matches a right arrow when collapsed,
+     and we can rotate it for the expanded state */
+  content: '▸';
+}
+
+/*
+   When it's *not* collapsed, we rotate it to look like "down arrow"
+   or switch the character if you want a different glyph
+*/
+.expand-icon:not(.collapsed)::before {
+  content: '▾';
+}
+
+/* Alternatively, rotate the same character 
+   .expand-icon:not(.collapsed) {
+     transform: rotate(90deg);
+   }
+   .expand-icon::before {
+     content: '▸';
+   }
+*/
+
+
+/* 
+  If you prefer an SVG, you can do:
+  .expand-icon {
+    background: url('data:image/svg+xml;base64,...') no-repeat center center;
+    background-size: contain;
+  }
+  Then rotate the entire container. 
+*/
+
+
+/* ======= END OF STYLE ======= */

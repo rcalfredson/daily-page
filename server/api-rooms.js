@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getCollection, initRoomMetadataCollection } from './mongo.js';
+import { fetchAndGroupRooms } from './room-helpers.js';
 
 const router = Router();
 
@@ -8,12 +8,10 @@ const useRoomAPI = (app) => {
 
   router.get('/', async (req, res) => {
     try {
-      await initRoomMetadataCollection(); // Ensure initialization
-      const roomsCollection = await getCollection('rooms');
-      const rooms = await roomsCollection.find({}).toArray();
+      const topics = await fetchAndGroupRooms();
+      const rooms = topics.flatMap(topicGroup => topicGroup.rooms); // Flatten for API
       res.status(200).json(rooms);
     } catch (error) {
-      console.error('Error fetching rooms:', error.message);
       res.status(500).json({ error: 'Failed to fetch room metadata' });
     }
   });
