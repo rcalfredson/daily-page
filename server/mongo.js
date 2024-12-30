@@ -16,6 +16,7 @@ const collectionNames = {
   session: 'session-data',
   pages: 'pages',
   backup: 'doc-backup',
+  rooms: 'room-metadata'
 };
 const collections = { session: null, pages: null, backup: null };
 const collectionSuffix = process.env.NODE_ENV === 'production' ? '' : '-test';
@@ -43,6 +44,13 @@ export async function initCollection(name) {
   collections[name] = await db.collection(`${collectionNames[name]}${collectionSuffix}`);
 }
 
+export async function getCollection(name) {
+  if (!collections[name]) {
+    await initCollection(name);
+  }
+  return collections[name];
+}
+
 export async function initPagesCollection() {
   await initCollection('pages');
 }
@@ -53,6 +61,10 @@ export async function initSessionCollection() {
 
 export async function initBackupCollection() {
   await initCollection('backup');
+}
+
+export async function initRoomMetadataCollection() {
+  await initCollection('rooms');
 }
 
 export async function updateDocMappings(mappings) {
@@ -121,15 +133,15 @@ export async function updatePage(content, room) {
     .updateOne({
       date, room, year: dateArray[0], month: dateArray[1], day: dateArray[2],
     },
-    {
-      $set: {
-        content: sanitizeHtml(content, {
-          allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
-        }),
-        lastUpdate: new Date().getTime(),
+      {
+        $set: {
+          content: sanitizeHtml(content, {
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+          }),
+          lastUpdate: new Date().getTime(),
+        },
       },
-    },
-    { upsert: true });
+      { upsert: true });
 }
 
 export async function pageByDate(date) {
