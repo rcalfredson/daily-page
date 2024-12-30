@@ -9,6 +9,8 @@ html(lang=lang || 'en')
       link(rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css")
       link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet")
       link(rel='stylesheet' href='/css/style.css')
+      if title === 'Room Directory'
+        link(rel='stylesheet' href='/css/rooms.css')
       link(rel='shortcut icon' href='/assets/img/favicon.ico')
       include schema.pug
   body
