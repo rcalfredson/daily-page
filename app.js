@@ -7,6 +7,7 @@ import axios from 'axios';
 import DateHelper from './lib/dateHelper.js';
 import * as encodeHelper from './lib/encodeHelper.js';
 import useAPIV1 from './server/api-v1.js';
+import useRoomAPI from './server/api-rooms.js';
 import * as cache from './server/cache.js';
 import * as jwtHelper from './server/jwt-helper.js';
 import localizationMiddleware from './server/localization.js';
@@ -57,6 +58,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     app.set('views', './views');
     app.set('view engine', 'pug');
     useAPIV1(app, mongo);
+    useRoomAPI(app);
 
     const srv = app.listen(port, () => {
       console.log(`Listening on ${port}`); // eslint-disable-line no-console
