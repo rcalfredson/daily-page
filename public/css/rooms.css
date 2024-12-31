@@ -249,6 +249,8 @@
   text-align: center;
   max-width: 90%;
   width: 400px;
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 .modal-title {
