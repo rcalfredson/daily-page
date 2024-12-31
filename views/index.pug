@@ -1,12 +1,19 @@
 extends layout
+
 block nav
   include navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/editor.css')
+
 block content
   #daily-page.hide
     .text-wrapper
       .editor
         #date
           h2= header
+          p.room-description-header Click to expand room details
+          p.room-description.collapsible.hidden= description
         .header
           p.sharing-link(style="display: none")
             a.link(id='myLink' target="_blank") Sharing Link
@@ -33,5 +40,6 @@ block scripts
   include envImport
   script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
   script(src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js")
-  script(src='js/bundle.js')
-  script(src='js/clearSelection.js')
+  script(src='/js/bundle.js')
+  script(src='/js/clearSelection.js')
+  script(src='/js/editor.js')

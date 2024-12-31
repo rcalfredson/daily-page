@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.classList.remove('collapsed');
         topicSection.style.maxHeight = topicSection.scrollHeight + 'px';
       } else {
+        topicSection.style.maxHeight = 0;
         topicSection.classList.add('collapsed');
         icon.classList.add('collapsed');
-        topicSection.style.maxHeight = 0;
       }
     });
   });

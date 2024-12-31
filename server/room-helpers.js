@@ -1,12 +1,19 @@
 import { getCollection, initRoomMetadataCollection } from './mongo.js';
 
+let cachedTopics = null;
+let cacheExpiration = 0;
+
 export async function fetchAndGroupRooms() {
+  const now = Date.now();
+  if (cachedTopics && now < cacheExpiration) {
+    return cachedTopics;
+  }
+
   try {
-    await initRoomMetadataCollection(); // Ensure the collection is initialized
+    await initRoomMetadataCollection();
     const roomsCollection = await getCollection('rooms');
     const rooms = await roomsCollection.find({}).toArray();
 
-    // Group rooms by topic
     const topics = rooms.reduce((grouped, room) => {
       const topicGroup = grouped.find(g => g.topic === room.topic);
       if (topicGroup) {
@@ -16,6 +23,15 @@ export async function fetchAndGroupRooms() {
       }
       return grouped;
     }, []);
+
+    topics.sort((a, b) => a.topic.localeCompare(b.topic));
+    topics.forEach(topic => {
+      topic.rooms.sort((a, b) => a.name.localeCompare(b.name));
+    });
+
+    // Cache the sorted topics
+    cachedTopics = topics;
+    cacheExpiration = now + 10 * 60 * 1000; // Cache for 10 minutes
 
     return topics;
   } catch (error) {

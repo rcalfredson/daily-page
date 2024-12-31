@@ -10,6 +10,7 @@ import * as encodeHelper from './lib/encodeHelper.js';
 import useAPIV1 from './server/api-v1.js';
 import useRoomAPI from './server/api-rooms.js';
 import roomRoute from './server/rooms-route.js';
+import { handleRoomRequest } from './server/room-requests.js';
 import * as cache from './server/cache.js';
 import * as jwtHelper from './server/jwt-helper.js';
 import localizationMiddleware from './server/localization.js';
@@ -25,6 +26,7 @@ const port = process.env.PORT || 3000;
 const audioHost = 'https://ipod.dailypage.org';
 const backendBaseUrl = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}`;
 const backendApiUrl = `${backendBaseUrl}/api/v1`;
+const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
 (async () => {
   const dateParam = ':date([0-9]{4}-[0-9]{2}-[0-9]{2})';
@@ -56,6 +58,7 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
       });
     }
     app.use(express.static('public'));
+    app.use(express.urlencoded({ extended: true }));
     app.use(bodyParser.json());
     app.set('views', './views');
     app.set('view engine', 'pug');
@@ -300,18 +303,47 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
     });
 
     app.get(`/${dateParam}`, async (req, res) => {
-      const formattedTime = DateHelper.formatDate(req.params.date, 'long');
-      const pageData = await cache.get(req.params.date, mongo.getPage,
-        [req.params.date, req.params.room, req.query]);
+      const requestedDate = new Date(req.params.date);
 
-      const [errorMessage, text] = viewHelper.archiveContent(pageData);
+      try {
+        if (requestedDate < ROOM_BASED_CUTOFF) {
+          // Legacy Concatenated View
+          const pageData = await cache.get(req.params.date, mongo.getPage, [req.params.date]);
+          const [errorMessage, text] = viewHelper.archiveContent(pageData);
 
-      res.render('archivedPage', {
-        title: `Daily Page for ${formattedTime}`,
-        header: formattedTime,
-        errorMessage,
-        text,
-      });
+          return res.render('archivedPage', {
+            title: `Daily Page for ${DateHelper.formatDate(req.params.date, 'long')}`,
+            header: DateHelper.formatDate(req.params.date, 'long'),
+            errorMessage,
+            text,
+          });
+        } else {
+          // Room-Based View
+          const pages = await mongo.pagesByDate(req.params.date); // Fetch all pages for the date
+          const rooms = await mongo.getAllRooms(); // Fetch all room metadata
+
+          const roomContents = rooms.map((room) => {
+            const page = pages.find((p) => p.room === room._id); // Find the page matching the room
+            return {
+              name: room.name,
+              content: page ? page.content : null, // Include content or null if no page exists
+            };
+          });
+
+          res.render('archivedPage', {
+            title: `Daily Page for ${DateHelper.formatDate(req.params.date, 'long')}`,
+            header: DateHelper.formatDate(req.params.date, 'long'),
+            roomContents,
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching archive content:', error.message);
+        res.render('archivedPage', {
+          title: 'Error',
+          header: 'An Error Occurred',
+          errorMessage: 'An error occurred while loading the archive. Please try again later.',
+        });
+      }
     });
 
     app.get(`/:room([a-zA-Z]+)/${dateParam}`, async (req, res) => {
@@ -332,62 +364,58 @@ const backendApiUrl = `${backendBaseUrl}/api/v1`;
 
     app.get('/support', (_, res) => res.render('support', { title: 'Daily Page - Support' }));
 
-    app.get('/*?', async (req, res) => {
-      if (req.path === '/editor') {
-        const maxCapacity = 6;
-        const roomReq = req.query.room;
-        const rooms = await cache.get('rooms', mongo.rooms);
-        const peerIDs = (await cache.get('peerIDs', mongo.peerIDs));
-        const roomsVacant = rooms.filter((room) => peerIDs[room].length < maxCapacity)
-          .sort((roomA, roomB) => peerIDs[roomB].length - peerIDs[roomA].length);
+    app.post('/request-room', handleRoomRequest);
 
-        if (roomReq && !rooms.includes(roomReq)) {
-          res.redirect('/editor');
-          return;
+    app.get('/rooms/:room_id', async (req, res) => {
+      const { room_id } = req.params;
+
+      try {
+        // Fetch room metadata
+        const roomMetadata = await mongo.getRoomMetadata(room_id);
+        if (!roomMetadata) {
+          return res.status(404).render('error', { message: 'Room not found.' });
         }
 
-        if (roomsVacant.length === 0) {
-          res.render('fullCapacity', {
-            title: 'Daily Page - At Full Capacity!',
+        // Fetch peer IDs for the room
+        const peerIDs = await mongo.peerIDs(room_id);
+
+        if (peerIDs.length >= 6) {
+          return res.render('fullRoom', {
+            room: viewHelper.capitalize(roomMetadata.name),
+            description: roomMetadata.description,
           });
-          return;
         }
 
-        if (!roomReq) {
-          res.redirect(`/editor?room=${peerIDs[roomsVacant[0]].length !== peerIDs[roomsVacant[roomsVacant.length - 1]].length ? roomsVacant[0]
-            : roomsVacant[Math.floor(Math.random() * roomsVacant.length)]}`);
-          return;
-        }
+        // Determine the targetPeerId (random existing peer if available, or default to 0)
+        const targetPeerId = peerIDs.length > 0
+          ? peerIDs[Math.floor(Math.random() * peerIDs.length)]
+          : '0';
 
-        if (peerIDs[roomReq].length >= 6) {
-          res.render('fullRoom', {
-            room: viewHelper.capitalize(roomReq),
-          });
-          return;
-        }
-        if (req.query.id || peerIDs[roomReq].length === 0) {
-          const date = DateHelper.currentDate('long');
-
-          res.render('index', {
-            title: 'Daily Page',
-            description: "The world's chalkboard, saved and wiped clean each day.",
-            date,
-            room: roomReq,
-            header: `${date} - ${viewHelper.capitalize(roomReq)} Room.`,
-            backendURL: backendApiUrl,
-            sessionID: jwtHelper.expiringKey(),
-          });
-          return;
-        }
-        res.redirect(`/editor?room=${roomReq}&id=`
-          + `${peerIDs[roomReq][Math.floor(Math.random() * peerIDs[roomReq].length)]}`);
-      } else {
-        res.render('about', {
-          title: res.locals.translations.title,
-          translations: res.locals.translations,
-          lang: res.locals.lang
+        // Render the editor for the room
+        const date = DateHelper.currentDate('long');
+        res.render('index', {
+          title: `Daily Page - ${roomMetadata.name}`,
+          description: roomMetadata.description,
+          date,
+          room: roomMetadata._id,
+          header: `${date} - ${viewHelper.capitalize(roomMetadata.name)} Room`,
+          backendURL: backendApiUrl,
+          sessionID: jwtHelper.expiringKey(),
+          targetPeerId,
         });
+      } catch (error) {
+        console.error('Error loading room editor:', error.message);
+        res.status(500).render('error', { message: 'An error occurred while loading the room.' });
       }
+    });
+
+    app.get('/*?', async (req, res) => {
+      res.render('about', {
+        title: res.locals.translations.title,
+        translations: res.locals.translations,
+        lang: res.locals.lang
+      });
+
     });
   } catch (error) {
     console.log(`Server startup failed: ${error.message}`); // eslint-disable-line no-console

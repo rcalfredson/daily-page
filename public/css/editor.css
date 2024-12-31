@@ -1,0 +1,60 @@
+/* ====== General Editor Styling ====== */
+:root {
+  --primary-bg: #ffffff;
+  --secondary-bg: #f9f9f9;
+  --text-color: #333;
+  --highlight-color: #007bff;
+  --border-color: #ddd;
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Room description collapsible */
+.room-description-header {
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--highlight-color);
+  margin-bottom: 0.5rem;
+}
+
+.room-description {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  line-height: 1.5;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+}
+
+.room-description.collapsible.visible {
+  max-height: 200px; /* Adjust as needed */
+  opacity: 1;
+}
+
+/* Header for editor */
+#date h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+/* General editor styling */
+textarea {
+  width: 100%;
+  min-height: 400px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1rem;
+  line-height: 1.5;
+  box-shadow: var(--box-shadow);
+}
+
+/* Peers info */
+#peerId {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}

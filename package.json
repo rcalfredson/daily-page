@@ -38,7 +38,7 @@
     "autolinker": "^1.8.3",
     "axios": "^1.7.4",
     "bluebird": "^3.7.2",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.3",
     "browserify": "^16.5.2",
     "core-js": "^3.32",
     "cors": "^2.8.5",
@@ -55,6 +55,7 @@
     "memory-cache": "^0.2.0",
     "moment-timezone": "^0.5.31",
     "mongodb": "^6",
+    "nodemailer": "^6.9.16",
     "peer": "^1",
     "pug": "^3.0.1",
     "realtime-bpm-analyzer": "^4.0.2",
@@ -66,7 +67,9 @@
     "strip-bom": "^4.0.0",
     "uuid": "^8"
   },
-  "overrides": { "whatwg-url": "^14.0.0" },
+  "overrides": {
+    "whatwg-url": "^14.0.0"
+  },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
     "@babel/core": "^7.12.3",
