@@ -4,7 +4,7 @@ block nav
   include navLinks
 
 block scripts
-  script(src='js/room-directory.js')
+  script(src='/js/room-directory.js')
 
 block content
   h1 Room Directory
@@ -18,7 +18,19 @@ block content
           span.expand-icon.collapsed
         .room-grid.collapsible
           each room in topicGroup.rooms
-            .room-tile
-              a(href=`/rooms/${room._id}` title=room.name).room-link
-                .room-title= room.name
-                .room-description= room.description
+            .room-tile(
+              data-room-title=`${room.name}`
+              data-room-description=`${room.description}`
+              data-room-link=`/rooms/${room._id}`
+            )
+              a.room-link(href=`/rooms/${room._id}` title=room.name)
+                span.room-title= room.name
+                span.room-description= room.description
+  // Modal overlay for room details
+  .room-modal.hidden
+    .room-modal-content
+      h2.modal-title
+      p.modal-description
+      a.modal-link(href='#', target='_blank') Visit Room
+    span.modal-close Close
+
