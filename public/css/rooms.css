@@ -121,7 +121,6 @@
 .room-grid.collapsed {
   max-height: 0;
   padding: 0 !important;
-  margin: 0 !important;
   border: none !important;
   box-shadow: none !important;
   background: transparent !important;

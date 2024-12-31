@@ -5,6 +5,11 @@ append content
   #viewer
     if errorMessage
       p #{errorMessage}
+    else if roomContents
+      each room in roomContents
+        if room.content
+          .room-archive
+            h2= room.name
+            p= room.content
     else
       div !{text}
-      

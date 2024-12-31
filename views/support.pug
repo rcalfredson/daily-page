@@ -1,6 +1,13 @@
 extends layout
 block nav
   include navLinks
+
+block append head
+  link(rel='stylesheet' href='css/support.css')
+
+block scripts
+  script(src='/js/roomRequest.js')
+  
 block content
   .info
     h1 ★ I would like to pose a question, report a problem, or request a feature.
@@ -20,3 +27,17 @@ block content
           |  order a few bags of the toys I am selling on Amazon
         |
       span .
+    h1 ★ I would like to request a new room.
+    .room-request-container
+      form(id="roomRequestForm" class="room-request-form" enctype="application/x-www-form-urlencoded")
+        .form-group
+          label(for="room-name") Room Name
+          input#room-name(type="text" name="roomName" required)
+        .form-group
+          label(for="room-topic") Topic (optional)
+          input#room-topic(type="text" name="roomTopic")
+        .form-group
+          label(for="room-description") Description
+          textarea#room-description(name="roomDescription" rows="4" required)
+        button(type="submit" class="submit-button") Submit Request
+      .form-feedback(style="display:none;") Request submitted successfully!

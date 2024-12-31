@@ -67,6 +67,27 @@ export async function initRoomMetadataCollection() {
   await initCollection('rooms');
 }
 
+export async function getRoomMetadata(roomId) {
+  try {
+    const collection = await getCollection('rooms');
+    return await collection.findOne({ _id: roomId });
+  } catch (error) {
+    console.error(`Error fetching room metadata for ID: ${roomId}`, error.message);
+    throw error;
+  }
+}
+
+export async function getAllRooms() {
+  try {
+    await initRoomMetadataCollection(); // Ensure the collection is initialized
+    const roomsCollection = await getCollection('rooms');
+    return await roomsCollection.find({}).toArray(); // Fetch all rooms as an array
+  } catch (error) {
+    console.error('Error fetching all rooms:', error.message);
+    throw error;
+  }
+}
+
 export async function updateDocMappings(mappings) {
   await initBackupCollection();
   await collections.backup.replaceOne({ _id: 'docMappings' }, mappings, { upsert: true });
@@ -92,6 +113,7 @@ export async function peerIDs(room = null, withTime = false) {
   if (withTime) {
     return doc;
   }
+  console.log('doc rooms:', doc);
   return room ? Object.keys(doc[room]) : Object.keys(doc).reduce((obj, x) => {
     obj[x] = Object.keys(doc[x]);
     return obj;
@@ -164,6 +186,17 @@ export async function pageByDate(date) {
   return { content };
 }
 
+export async function pagesByDate(date) {
+  await initPagesCollection();
+  try {
+    const pages = await collections.pages.find({ date }).toArray();
+    return pages;
+  } catch (error) {
+    console.error(`Error fetching pages for date: ${date}`, error.message);
+    return [];
+  }
+}
+
 export async function pageByDateAndRoom(date, room, options) {
   const keysToConvertToInt = ['lastUpdate'];
   keysToConvertToInt.forEach((k) => {
@@ -199,7 +232,10 @@ export async function getPageMonthYearCombos() {
     },
     { $sort: { date: -1 } }]).toArray())
     .reduce((accumulator, doc) => {
-      if (!accumulator.some((result) => result.year === doc.year && result.month === doc.month) && !(doc.content.charCodeAt(0) === 8203 && doc.content.length === 1) && doc.content.replace(/\s+/g, '').length > 0) {
+      if (!accumulator.some(
+        (result) => result.year === doc.year && result.month === doc.month) &&
+        !(doc.content.charCodeAt(0) === 8203 && doc.content.length === 1) &&
+        doc.content.replace(/\s+/g, '').length > 0) {
         return accumulator.concat({ year: doc.year, month: doc.month });
       }
       return accumulator;
