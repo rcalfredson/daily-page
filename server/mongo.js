@@ -113,7 +113,6 @@ export async function peerIDs(room = null, withTime = false) {
   if (withTime) {
     return doc;
   }
-  console.log('doc rooms:', doc);
   return room ? Object.keys(doc[room]) : Object.keys(doc).reduce((obj, x) => {
     obj[x] = Object.keys(doc[x]);
     return obj;
