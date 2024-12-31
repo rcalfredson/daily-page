@@ -242,6 +242,7 @@
 }
 
 .room-modal-content {
+  position: relative;
   background: var(--primary-bg);
   padding: 20px;
   border-radius: 10px;
@@ -276,12 +277,29 @@
 }
 
 .modal-close {
-  cursor: pointer;
-  display: inline-block;
-  margin-top: 15px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
   color: #555;
-  font-size: 1rem;
-  text-decoration: underline;
+  font-size: 1.5rem; /* Larger for visibility */
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10; /* Ensures it's above other content */
+  transition: color 0.2s ease;
 }
+
+.modal-close:hover {
+  color: #000; /* Darker hover state for better visibility */
+}
+
+/* Optional: Add a more GUI-style feel with padding and border */
+.modal-close:focus {
+  outline: 2px solid #aaa;
+  border-radius: 50%; /* Rounded clickable area */
+}
+
+
 
 /* ======= END OF STYLE ======= */
