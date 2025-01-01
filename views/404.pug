@@ -1,0 +1,13 @@
+extends layout
+
+block nav
+  include navLinks
+
+block content
+  .not-found
+    h1 404 - Page Not Found
+    p Sorry, we couldn’t find the page you were looking for. 
+    p You can head back to 
+      a(href='/') the homepage
+      | , or check out the 
+      a(href='/rooms') rooms directory.
