@@ -588,7 +588,7 @@ Archive and static pages
   text-indent: -1.3em;
 }
 
-.info p {
+.info p, .not-found p {
   font-size: 18px;
   margin-left: 46px;
 }
@@ -613,7 +613,7 @@ Archive and static pages
   padding-left: 20px;
 }
 
-#viewer a:not(.hover-effect-link), .info a {
+#viewer a:not(.hover-effect-link), .info a, .not-found a {
   text-decoration-style: dotted;
   text-decoration-line: underline;
   text-decoration-color: rgb(116, 137, 163);

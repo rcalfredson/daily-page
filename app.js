@@ -409,13 +409,20 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       }
     });
 
-    app.get('/*?', async (req, res) => {
+    app.get('/', async (req, res) => {
       res.render('about', {
         title: res.locals.translations.title,
         translations: res.locals.translations,
         lang: res.locals.lang
       });
+    });
 
+    app.get('*', (req, res) => {
+      res.status(404).render('404', {
+        title: 'Page Not Found',
+        translations: res.locals.translations,
+        lang: res.locals.lang,
+      });
     });
   } catch (error) {
     console.log(`Server startup failed: ${error.message}`); // eslint-disable-line no-console
