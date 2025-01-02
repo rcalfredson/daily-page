@@ -46,35 +46,35 @@ export async function fetchAndGroupRooms() {
 export async function getRecentlyActiveRooms(limit = 5) {
   const now = Date.now();
 
-  // Check if the cache is valid
+  // Use cache if valid
   if (recentlyActiveCache && now < recentlyActiveCacheExpiration) {
     return recentlyActiveCache;
   }
 
   try {
     const sessionData = await getCollection('session');
-    const peerIDsDoc = await sessionData.findOne({ _id: 'peerIDs' });
+    const cursor = sessionData.find({}, { projection: { _id: 1, peers: 1 } });
 
-    if (!peerIDsDoc) return [];
+    const activityData = [];
+    await cursor.forEach(doc => {
+      const activeUsers = Object.keys(doc.peers || {}).length;
+      if (activeUsers > 0) {
+        activityData.push({ roomId: doc._id, activeUsers });
+      }
+    });
 
-    const activityData = Object.entries(peerIDsDoc)
-      .filter(([key]) => key !== '_id') // Exclude MongoDB ID field
-      .map(([roomId, peers]) => ({
-        roomId,
-        activeUsers: Object.keys(peers).length,
-      }))
-      .sort((a, b) => b.activeUsers - a.activeUsers) // Sort by activity
-      .slice(0, limit); // Limit to top N
+    activityData.sort((a, b) => b.activeUsers - a.activeUsers);
+    const topRooms = activityData.slice(0, limit);
 
     const roomMetadata = await getCollection('rooms');
     const results = await Promise.all(
-      activityData.map(async ({ roomId, activeUsers }) => {
+      topRooms.map(async ({ roomId, activeUsers }) => {
         const room = await roomMetadata.findOne({ _id: roomId });
         return room ? { ...room, activeUsers } : null;
       })
     );
 
-    // Filter out null values and store in cache
+    // Filter out null values and cache results
     recentlyActiveCache = results.filter(Boolean);
     recentlyActiveCacheExpiration = now + 60 * 1000; // Cache for 60 seconds
 
@@ -88,13 +88,13 @@ export async function getRecentlyActiveRooms(limit = 5) {
 export async function getActiveUsers(roomId) {
   try {
     const sessionData = await getCollection('session');
-    const peerIDsDoc = await sessionData.findOne({ _id: 'peerIDs' });
+    const doc = await sessionData.findOne({ _id: roomId }, { projection: { peers: 1 } });
 
-    if (!peerIDsDoc || !peerIDsDoc[roomId]) {
+    if (!doc || !doc.peers) {
       return 0; // No active users
     }
 
-    return Object.keys(peerIDsDoc[roomId]).length;
+    return Object.keys(doc.peers).length;
   } catch (error) {
     console.error(`Error fetching active users for room ${roomId}:`, error.message);
     throw error;
