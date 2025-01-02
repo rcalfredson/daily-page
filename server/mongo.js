@@ -108,41 +108,69 @@ export async function getDocMappings() {
 
 export async function peerIDs(room = null, withTime = false) {
   await initSessionCollection();
-  const doc = await collections.session.findOne({ _id: peerIDs });
-  delete doc._id; // eslint-disable-line no-underscore-dangle
-  if (withTime) {
-    return doc;
+  if (room) {
+    const doc = await collections.session.findOne({ _id: room });
+    if (!doc) return {};
+    return withTime ? doc.peers : Object.keys(doc.peers || {});
   }
-  return room ? Object.keys(doc[room]) : Object.keys(doc).reduce((obj, x) => {
-    obj[x] = Object.keys(doc[x]);
-    return obj;
-  }, {});
+
+  const cursor = await collections.session.find({}, { projection: { peers: 1 } });
+  const result = {};
+  await cursor.forEach(doc => {
+    result[doc._id] = withTime ? doc.peers : Object.keys(doc.peers || {});
+  });
+  return result;
 }
 
 export async function cleanUpOldPeerIds() {
-  const maxPeerAge = 24 * 60 * 60 * 1000;
-  const allIds = await peerIDs(null, true);
-  for (const room of Object.keys(allIds)) {
-    for (const peer in allIds[room]) {
-      if (new Date() - allIds[room][peer] > maxPeerAge) {
-        await removePeer(peer, room);
+  const maxPeerAge = 24 * 60 * 60 * 1000; // 24 hours
+  const now = new Date();
+
+  const cursor = await collections.session.find({});
+  const bulkOps = [];
+
+  await cursor.forEach(doc => {
+    const updatedPeers = {};
+    for (const [peer, timestamp] of Object.entries(doc.peers || {})) {
+      if (now - new Date(timestamp) <= maxPeerAge) {
+        updatedPeers[peer] = timestamp;
       }
     }
+    bulkOps.push({
+      updateOne: {
+        filter: { _id: doc._id },
+        update: { $set: { peers: updatedPeers } }
+      }
+    });
+  });
+
+  if (bulkOps.length) {
+    await collections.session.bulkWrite(bulkOps);
   }
 }
 
 export async function rooms() {
-  return Object.keys(await peerIDs());
+  const cursor = await collections.session.find({}, { projection: { _id: 1 } });
+  const roomIds = [];
+  await cursor.forEach(doc => roomIds.push(doc._id));
+  return roomIds;
 }
 
 export async function addPeer(id, room) {
   await initSessionCollection();
-  return collections.session.updateOne({ _id: peerIDs }, { $set: { [`${room}.${id}`]: new Date() } });
+  return collections.session.updateOne(
+    { _id: room },
+    { $set: { [`peers.${id}`]: new Date() } },
+    { upsert: true }
+  );
 }
 
 export async function removePeer(id, room) {
   await initSessionCollection();
-  return collections.session.updateOne({ _id: peerIDs }, { $unset: { [`${room}.${id}`]: '' } });
+  return collections.session.updateOne(
+    { _id: room },
+    { $unset: { [`peers.${id}`]: '' } }
+  );
 }
 
 export async function updatePage(content, room) {
