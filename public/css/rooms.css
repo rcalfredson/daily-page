@@ -57,6 +57,9 @@
   font-weight: 600;
   margin-bottom: 10px;
   margin-right: 50px;
+  max-width: calc(100% - 100px);
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 /* Hidden description on load, appears on hover (nice subtle effect) */
@@ -181,6 +184,7 @@
   padding: 3px 8px;
   border-radius: 5px;
   transition: background-color 0.3s ease;
+  z-index: 1;
 }
 
 /* Room Tiles: Add Activity on Hover */
@@ -219,6 +223,7 @@
     font-size: 1rem;
     /* Smaller title */
     font-weight: 500;
+    max-width: unset;
   }
 
   .room-description {
