@@ -11,6 +11,24 @@ block content
   if topics.length === 0
     p No rooms are available at the moment. Check back later!
   else
+    if recentlyActiveRooms && recentlyActiveRooms.length > 0
+      .topic-section
+        h2.topic-header(data-topic='Recently Active')
+          span.topic-title Recently Active
+          span.expand-icon
+        .room-grid.collapsible
+          each room in recentlyActiveRooms
+            .room-tile(
+              data-room-title=`${room.name}`
+              data-room-description=`${room.description}`
+              data-room-link=`/rooms/${room._id}`
+              data-room-active-users=`${room.activeUsers || 0}`
+            )
+              a.room-link(href=`/rooms/${room._id}` title=room.name)
+                span.room-title= room.name
+                span.room-description= room.description
+                span.room-activity= `Active Users: ${room.activeUsers}`
+
     each topicGroup in topics
       .topic-section
         h2.topic-header(data-topic=`${topicGroup.topic}`)
@@ -22,15 +40,18 @@ block content
               data-room-title=`${room.name}`
               data-room-description=`${room.description}`
               data-room-link=`/rooms/${room._id}`
+              data-room-active-users=`${room.activeUsers || 0}`
             )
               a.room-link(href=`/rooms/${room._id}` title=room.name)
                 span.room-title= room.name
                 span.room-description= room.description
+                span.room-activity
   // Modal overlay for room details
   .room-modal.hidden
     .room-modal-content
       button.modal-close(type="button" aria-label="Close") ×
       h2.modal-title
       p.modal-description
+      p.modal-active-users
       a.modal-link(href='#', target='_blank') Visit Room
 

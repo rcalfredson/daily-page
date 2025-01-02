@@ -49,7 +49,6 @@
   color: var(--text-color);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100%;
 }
 
@@ -57,6 +56,7 @@
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 10px;
+  margin-right: 50px;
 }
 
 /* Hidden description on load, appears on hover (nice subtle effect) */
@@ -167,24 +167,34 @@
   content: '▾';
 }
 
-/* Alternatively, rotate the same character 
-   .expand-icon:not(.collapsed) {
-     transform: rotate(90deg);
-   }
-   .expand-icon::before {
-     content: '▸';
-   }
-*/
+/* ======= RECENTLY ACTIVE ======= */
 
+/* Room Activity Styling (User Count) */
+.room-tile .room-activity {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #666;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 3px 8px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
 
-/* 
-  If you prefer an SVG, you can do:
-  .expand-icon {
-    background: url('data:image/svg+xml;base64,...') no-repeat center center;
-    background-size: contain;
-  }
-  Then rotate the entire container. 
-*/
+/* Room Tiles: Add Activity on Hover */
+.room-tile .room-activity {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, display 0.3s ease;
+}
+
+.room-tile:hover .room-activity {
+  opacity: 1;
+  visibility: visible;
+  background: rgba(0, 0, 0, 0.15);
+}
 
 /* Compact tiles for mobile view */
 @media (max-width: 768px) {
@@ -284,21 +294,25 @@
   background: none;
   border: none;
   color: #555;
-  font-size: 1.5rem; /* Larger for visibility */
+  font-size: 1.5rem;
+  /* Larger for visibility */
   font-weight: bold;
   cursor: pointer;
-  z-index: 10; /* Ensures it's above other content */
+  z-index: 10;
+  /* Ensures it's above other content */
   transition: color 0.2s ease;
 }
 
 .modal-close:hover {
-  color: #000; /* Darker hover state for better visibility */
+  color: #000;
+  /* Darker hover state for better visibility */
 }
 
 /* Optional: Add a more GUI-style feel with padding and border */
 .modal-close:focus {
   outline: 2px solid #aaa;
-  border-radius: 50%; /* Rounded clickable area */
+  border-radius: 50%;
+  /* Rounded clickable area */
 }
 
 
