@@ -8,6 +8,7 @@ import DateHelper from './lib/dateHelper.js';
 import * as encodeHelper from './lib/encodeHelper.js';
 
 import useAPIV1 from './server/api-v1.js';
+import { getFeaturedContent } from './server/featured-content.js';
 import useRoomAPI from './server/api-rooms.js';
 import roomRoute from './server/rooms-route.js';
 import { handleRoomRequest } from './server/room-requests.js';
@@ -410,10 +411,12 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     });
 
     app.get('/', async (req, res) => {
+      const featuredContent = await getFeaturedContent();
       res.render('about', {
         title: res.locals.translations.title,
         translations: res.locals.translations,
-        lang: res.locals.lang
+        lang: res.locals.lang,
+        featuredContent,
       });
     });
 

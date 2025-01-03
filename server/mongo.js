@@ -19,7 +19,7 @@ const collectionNames = {
   rooms: 'room-metadata'
 };
 const collections = { session: null, pages: null, backup: null };
-const collectionSuffix = process.env.NODE_ENV === 'production' ? '' : '-test';
+const collectionSuffix = process.env.NODE_ENV === 'production' ? '' : '';
 
 let connection;
 let db;

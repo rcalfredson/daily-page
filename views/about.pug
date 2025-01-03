@@ -4,6 +4,9 @@ block nav
   include navLinks
 
 block append head
+  link(rel='stylesheet' href='/css/featured.css')
+
+block append head
   link(rel="alternate" hreflang="en" href="https://dailypage.org/")
   link(rel="alternate" hreflang="es" href="https://dailypage.org/?lang=es")
   link(rel="alternate" hreflang="ru" href="https://dailypage.org/?lang=ru")
@@ -15,6 +18,17 @@ block content
     p= translations.paragraph1
     h2= translations.essence
     p= translations.paragraph2
+    if featuredContent
+      .featured-content
+        h2= translations.from_archives
+        p
+          | #{featuredContent.content}...
+          br
+          small #{translations.published_in}&nbsp;
+          a(href=`/rooms/${featuredContent.room}`)= featuredContent.room
+        p
+          a.btn(href=`/rooms/${featuredContent.room}`)= translations.go_to_room
+          a.btn.btn-secondary(href=`/${featuredContent.date}`)= translations.view_archive
     h2= translations.role
     p= translations.paragraph3
     h2= translations.testament

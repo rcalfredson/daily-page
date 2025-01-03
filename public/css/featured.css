@@ -1,0 +1,72 @@
+/* Styling for the Featured Content Section */
+.featured-content {
+  background: #f4f4f4;
+  padding: 25px;
+  border-radius: 12px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+/* Title Styling */
+.featured-content h2 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Content Preview Text */
+.featured-content p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+/* Room Link Styling */
+.featured-content small {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.featured-content a {
+  color: #0056b3; /* Distinct blue for links */
+  font-weight: bold; /* Bold to make the room name stand out */
+  text-decoration: none;
+}
+
+.featured-content a:hover {
+  text-decoration: underline; /* Interactive hover effect */
+}
+
+/* Buttons */
+.featured-content a.btn {
+  display: inline-block;
+  padding: 8px 12px;
+  margin-right: 10px;
+  font-size: 0.9rem;
+  color: #fff;
+  background-color: #007bff;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.featured-content a.btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.featured-content a.btn-secondary {
+  background-color: #6c757d;
+}
+
+.featured-content a.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Links and Spacing Between Sections */
+.featured-content p + p {
+  margin-top: 15px; /* More spacing between paragraphs */
+}
