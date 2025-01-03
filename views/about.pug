@@ -22,7 +22,7 @@ block content
       .featured-content
         h2= translations.from_archives
         p
-          | #{featuredContent.content}...
+          | !{featuredContent.content}
           br
           small #{translations.published_in}&nbsp;
           a(href=`/rooms/${featuredContent.room}`)= featuredContent.room

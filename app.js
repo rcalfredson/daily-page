@@ -325,9 +325,10 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
           const roomContents = rooms.map((room) => {
             const page = pages.find((p) => p.room === room._id); // Find the page matching the room
+            const [errorMessage, text] = viewHelper.archiveContent(page)
             return {
               name: room.name,
-              content: page ? page.content : null, // Include content or null if no page exists
+              content: page ? text : null, // Include content or null if no page exists
             };
           });
 
