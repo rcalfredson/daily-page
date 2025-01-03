@@ -1,4 +1,5 @@
 import { getCollection } from './mongo.js';
+import { archiveContent } from './view-helper.js';
 
 let cachedContent = null;
 let cacheExpiration = 0;
@@ -32,7 +33,7 @@ export async function getFeaturedContent() {
     const featured = latestContent[0];
     cachedContent = {
       room: featured.room,
-      content: featured.content.slice(0, 200),
+      content: archiveContent({content: featured.content.slice(0, 320) + '...'})[1],
       date: featured.date,
     };
 

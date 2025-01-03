@@ -22,7 +22,8 @@ export function archiveContent(pageData) {
 
   if (!pageData) {
     errorMessage = 'We could not find the page for that day.';
-  } else if (pageData.content.replace(/^(\s+|\u200b+)|(\s+|\u200b+)$/g, '') === '') {
+  } else if (!pageData.content ||
+    pageData.content.replace(/^(\s+|\u200b+)|(\s+|\u200b+)$/g, '') === '') {
     errorMessage = 'The page for this day is blank, although it was edited at least once.';
   } else {
     text = archiveHTML(pageData.content);

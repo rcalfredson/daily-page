@@ -10,6 +10,6 @@ append content
         if room.content
           .room-archive
             h2= room.name
-            p= room.content
+            div !{room.content}
     else
       div !{text}
