@@ -60,6 +60,11 @@
 
 .featured-content a.btn-secondary {
   background-color: #6c757d;
+  margin-top: 8px;
+}
+
+.featured-content a.btn + a.btn-secondary {
+  margin-top: 8px;
 }
 
 .featured-content a.btn-secondary:hover {
