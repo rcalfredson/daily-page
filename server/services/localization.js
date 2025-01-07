@@ -49,7 +49,7 @@ const localizationMiddleware = async (req, res, next) => {
 
   if (isHomePage && page) {
     try {
-      const translationsPath = path.join(__dirname, `../translations/${page}-${lang}.json`);
+      const translationsPath = path.join(__dirname, `../../translations/${page}-${lang}.json`);
       const translations = JSON.parse(await fs.readFile(translationsPath, 'utf8'));
       res.locals.lang = lang;
       res.locals.translations = validateTranslations(translations);
