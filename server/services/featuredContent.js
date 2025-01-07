@@ -1,5 +1,5 @@
-import { getCollection } from './mongo.js';
-import { archiveContent } from './view-helper.js';
+import { getCollection } from '../db/mongo.js';
+import { archiveContent } from '../utils/view.js';
 
 let cachedContent = null;
 let cacheExpiration = 0;

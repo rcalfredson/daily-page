@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { fetchAndGroupRooms, getActiveUsers } from './room-helpers.js';
+import { fetchAndGroupRooms, getActiveUsers } from '../../db/room.js';
 
 const router = Router();
 
