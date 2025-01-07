@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import mongo from 'mongodb';
 import sanitizeHtml from 'sanitize-html';
-import DateHelper from '../lib/dateHelper.js';
+import DateHelper from '../../lib/dateHelper.js';
 
 const { MongoClient } = mongo;
 
@@ -16,10 +16,12 @@ const collectionNames = {
   session: 'session-data',
   pages: 'pages',
   backup: 'doc-backup',
-  rooms: 'room-metadata'
+  rooms: 'room-metadata',
+  sites: 'sites',
+  operations: 'operations'
 };
 const collections = { session: null, pages: null, backup: null };
-const collectionSuffix = process.env.NODE_ENV === 'production' ? '' : '';
+const collectionSuffix = process.env.NODE_ENV === 'production' ? '' : '-test';
 
 let connection;
 let db;
@@ -123,6 +125,7 @@ export async function peerIDs(room = null, withTime = false) {
 }
 
 export async function cleanUpOldPeerIds() {
+  await initSessionCollection();
   const maxPeerAge = 24 * 60 * 60 * 1000; // 24 hours
   const now = new Date();
 

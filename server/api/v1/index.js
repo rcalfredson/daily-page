@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as helpers from './api-v1-helpers.js';
+import * as helpers from './helpers.js';
 
 const router = Router();
 

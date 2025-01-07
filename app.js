@@ -2,23 +2,29 @@ import stream from 'stream';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import { createServer } from 'http';
 import { ExpressPeerServer } from 'peer';
 import axios from 'axios';
 import DateHelper from './lib/dateHelper.js';
 import * as encodeHelper from './lib/encodeHelper.js';
 
-import useAPIV1 from './server/api-v1.js';
-import { getFeaturedContent } from './server/featured-content.js';
-import useRoomAPI from './server/api-rooms.js';
-import roomRoute from './server/rooms-route.js';
-import { handleRoomRequest } from './server/room-requests.js';
-import * as cache from './server/cache.js';
-import * as jwtHelper from './server/jwt-helper.js';
-import localizationMiddleware from './server/localization.js';
-import * as viewHelper from './server/view-helper.js';
-import * as mongo from './server/mongo.js';
-import * as google from './server/google.js';
-import { startJobs } from './server/cron.js';
+import useAPIV1 from './server/api/v1/index.js'; // Main API
+import useRoomAPI from './server/api/v1/rooms.js'; // Room-specific API
+
+import { getFeaturedContent } from './server/services/featuredContent.js'; // Services
+
+import roomRoute from './server/routes/rooms.js'; // Routes
+
+import { handleRoomRequest } from './server/services/roomRequests.js';
+import * as cache from './server/services/cache.js';
+import * as jwtHelper from './server/services/jwt.js';
+import localizationMiddleware from './server/services/localization.js';
+import { startJobs } from './server/services/cron.js';
+import * as google from './server/services/google.js';
+
+import * as viewHelper from './server/utils/view.js'; // Utils
+
+import * as mongo from './server/db/mongo.js'; // Database
 
 startJobs();
 
@@ -35,6 +41,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
   try {
     await mongo.initConnection();
     google.init(mongo);
+
     const whitelist = ['https://dailypage.org', 'http://localhost:3000'];
     const corsOptions = {
       origin: (origin, callback) => {
@@ -45,9 +52,11 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
         }
       },
     };
+
     app.use(cors(corsOptions));
     app.use(localizationMiddleware);
     app.options('*', cors(corsOptions));
+
     if (process.env.NODE_ENV === 'production') {
       app.use((req, res, next) => {
         if (req.headers['x-forwarded-proto'] !== 'https') {
@@ -58,22 +67,28 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
         }
       });
     }
+
     app.use(express.static('public'));
     app.use(express.urlencoded({ extended: true }));
     app.use(bodyParser.json());
     app.set('views', './views');
     app.set('view engine', 'pug');
+
     useAPIV1(app, mongo);
     useRoomAPI(app);
     app.use('/', roomRoute);
 
-    const srv = app.listen(port, () => {
-      console.log(`Listening on ${port}`); // eslint-disable-line no-console
+    const server = createServer(app)
+
+    const peerServer = ExpressPeerServer(server, {
+      debug: true,
     });
 
-    app.use('/peerjs', ExpressPeerServer(srv, {
-      debug: true,
-    }));
+    app.use('/peerjs', peerServer);
+
+    server.listen(port, () => {
+      console.log(`Listening on port ${port}`);
+    });
 
     app.get('/archive', async (_, res) => {
       const combos = await cache.get('monthYearCombos', mongo.getPageMonthYearCombos);

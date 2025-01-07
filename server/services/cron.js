@@ -1,6 +1,6 @@
 import { CronJob } from 'cron';
-import { cleanUpOldPeerIds } from './mongo.js';
-import { getFeaturedContent } from './featured-content.js';
+import { cleanUpOldPeerIds } from '../db/mongo.js';
+import { getFeaturedContent } from './featuredContent.js';
 
 const jobs = [
   new CronJob('3 * * * *', async () => {
