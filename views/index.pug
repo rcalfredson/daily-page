@@ -22,6 +22,16 @@ block content
               i(data-feather="copy" class="copy-link" color="rgb(17, 87, 170)")
             span(class="copy-status") Copied!
           #sync-infobox
+        .toolbar.sticky
+          button#open-insert-img-btn(data-tooltip="Insert Image")
+            i(data-feather="image")
+          div#insert-img-tooltip.hidden
+            form
+              input#img-url(type="text" placeholder="Enter image URL")
+              input#img-alt(type="text" placeholder="Alt text (optional)")
+              div
+                button#insert-img-confirm(type="button") Confirm
+                button#insert-img-cancel(type="button") Cancel
         textarea
       p#peerId Peers:
     .video-modal.hide

@@ -25,6 +25,7 @@ animations
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
@@ -34,6 +35,7 @@ animations
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -43,6 +45,7 @@ animations
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -333,6 +336,7 @@ article h2 {
   .menu-toggle, .main-menu .menu-close {
     display: none;
   }
+
   /* Undo positioning of off-canvas menu */
   .main-menu {
     position: relative;
@@ -342,6 +346,7 @@ article h2 {
     display: block;
     overflow-y: hidden;
   }
+
   .main-menu ul {
     display: flex;
     /* Undo off-canvas styling */
@@ -353,12 +358,14 @@ article h2 {
     width: auto;
     background: none;
   }
+
   a.link {
     color: rgb(26, 167, 214);
     position: relative;
     margin-right: 28px;
     padding: 2px 0 0 0;
   }
+
   a.link:before {
     content: "";
     position: absolute;
@@ -373,6 +380,7 @@ article h2 {
     -webkit-transition: all 0.3s ease-in-out 0s;
     transition: all 0.3s ease-in-out 0s;
   }
+
   a.link:hover:before, .selected a.link:before {
     visibility: visible;
     -webkit-transform: scaleX(1);
@@ -381,12 +389,14 @@ article h2 {
 
   .main-menu a:hover,
   .main-menu a:focus {
-    background: none; /* Remove background from off-canvas styling */
+    background: none;
+    /* Remove background from off-canvas styling */
     text-decoration: none;
   }
 
   .main-menu a {
-    border: 0 !important; /* Remove borders from off-canvas styling */
+    border: 0 !important;
+    /* Remove borders from off-canvas styling */
   }
 }
 
@@ -402,7 +412,6 @@ Editor
 .editor {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   max-width: 1250px;
   width: 100%;
   justify-content: flex-start;
@@ -423,6 +432,7 @@ Editor
   .text-wrapper {
     display: block;
   }
+
   h2 {
     font-size: 14px;
   }
@@ -545,6 +555,7 @@ button:hover {
 #sync-infobox {
   padding-top: 8.5px;
   white-space: nowrap;
+  padding-bottom: 8.5px;
 }
 
 /* COMMENTED OUT: Phone icons have been removed so removing pointer cursor */
@@ -621,7 +632,7 @@ Archive and static pages
 }
 
 img {
-  max-width: 100%;
+  max-width: 600px;
   height: auto;
 }
 
@@ -762,64 +773,44 @@ ToolTip
 
 [data-tooltip] {
   position: relative;
-  z-index: 2;
   cursor: pointer;
 }
 
 /* Hide the tooltip content by default */
 
-[data-tooltip]:before, [data-tooltip]:after {
+[data-tooltip]::before,
+[data-tooltip]::after {
   visibility: hidden;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
 /* Position tooltip above the element */
 
-[data-tooltip]:before {
-  position: absolute;
-  top: 145%;
-  left: 95%;
-  margin-bottom: 5px;
-  margin-left: -80px;
-  padding: 7px;
-  width: 130px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  background-color: #000;
-  background-color: hsla(0, 0%, 20%, 0.7);
-  color: #fff;
+[data-tooltip]::before {
   content: attr(data-tooltip);
-  text-align: center;
-  font-size: 12px;
-  line-height: 1.2;
-}
-
-/* Triangle hack to make tooltip look like a speech bubble */
-
-[data-tooltip]:after {
   position: absolute;
-  top: 115%;
-  left: 55%;
-  margin-left: -5px;
-  width: 0;
-  border-bottom: 5px solid hsla(0, 0%, 20%, 0.7);
-  border-right: 5px solid transparent;
-  border-left: 5px solid transparent;
-  content: " ";
-  font-size: 0;
-  line-height: 0;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  z-index: 10;
+  visibility: hidden;
+  opacity: 0;
 }
 
 /* Show tooltip content on hover */
 
-[data-tooltip]:hover:before, [data-tooltip]:hover:after {
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after {
   visibility: visible;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-  filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
 
@@ -1037,6 +1028,7 @@ ToolTip
   0%, 39%, 100% {
     opacity: 0;
   }
+
   40% {
     opacity: 1;
   }
@@ -1046,6 +1038,7 @@ ToolTip
   0%, 39%, 100% {
     opacity: 0;
   }
+
   40% {
     opacity: 1;
   }
