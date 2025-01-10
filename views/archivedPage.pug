@@ -12,7 +12,8 @@ append content
       each room in roomContents
         if room.content
           .room-archive
-            h2= room.name
+            a(href=`/rooms/${room.id}/${date}`)
+              h2= room.name
             div !{room.content}
     else
       div !{text}
