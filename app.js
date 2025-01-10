@@ -303,7 +303,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     });
 
     app.get('/today', (_, res) => {
-      res.redirect(`/${DateHelper.currentDate()}`);
+      res.redirect(`/rooms/overview/${DateHelper.currentDate()}`);
     });
 
     app.get('/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', async (req, res) => {
@@ -318,7 +318,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       });
     });
 
-    app.get(`/${dateParam}`, async (req, res) => {
+    app.get(`/rooms/overview/${dateParam}`, async (req, res) => {
       const requestedDate = new Date(req.params.date);
 
       try {
@@ -343,6 +343,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
             const [errorMessage, text] = viewHelper.archiveContent(page)
             return {
               name: room.name,
+              id: room._id,
               content: page ? text : null, // Include content or null if no page exists
             };
           });
@@ -350,6 +351,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           res.render('archivedPage', {
             title: `Daily Page for ${DateHelper.formatDate(req.params.date, 'long')}`,
             header: DateHelper.formatDate(req.params.date, 'long'),
+            date: req.params.date,
             roomContents,
           });
         }
@@ -363,9 +365,10 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       }
     });
 
-    app.get(`/:room([a-zA-Z]+)/${dateParam}`, async (req, res) => {
+    app.get(`/rooms/:room([a-zA-Z0-9\-]+)/${dateParam}`, async (req, res) => {
       const roomReq = req.params.room;
-      const dateAndRoom = `${DateHelper.formatDate(req.params.date, 'long')} - ${viewHelper.capitalize(roomReq)} Room`;
+      let roomMetdata = await mongo.getRoomMetadata(roomReq);
+      const dateAndRoom = `${DateHelper.formatDate(req.params.date, 'long')} - ${roomMetdata.name} Room`;
       const pageData = await cache.get(req.params.date, mongo.getPage,
         [req.params.date, roomReq, req.query]);
 

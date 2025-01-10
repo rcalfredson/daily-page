@@ -28,7 +28,7 @@ block content
           a(href=`/rooms/${featuredContent.room}`)= featuredContent.room
         p
           a.btn(href=`/rooms/${featuredContent.room}`)= translations.go_to_room
-          a.btn.btn-secondary(href=`/${featuredContent.date}`)= translations.view_archive
+          a.btn.btn-secondary(href=`/rooms/overview/${featuredContent.date}`)= translations.view_archive
     h2= translations.role
     p= translations.paragraph3
     h2= translations.testament
