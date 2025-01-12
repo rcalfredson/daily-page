@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
-import { createUser, findUserByEmail, findUserById, updateUserProfile } from '../../db/user.js';
+import { createUser, findUserByEmail, findUserByUsername, findUserById, updateUserProfile } from '../../db/user.js';
 
 const router = Router();
 
@@ -20,6 +20,12 @@ const useUserAPI = (app) => {
       const existingUser = await findUserByEmail(email);
       if (existingUser) {
         return res.status(400).json({ error: 'Email already in use' });
+      }
+
+      // Check if username is already in use
+      const existingUsernameUser = await findUserByUsername(username); // <-- Add this check
+      if (existingUsernameUser) {
+        return res.status(400).json({ error: 'Username already in use' });
       }
 
       // Hash the password

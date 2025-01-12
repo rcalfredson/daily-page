@@ -13,6 +13,12 @@ export async function createUser(userData) {
   return result.insertedId;
 }
 
+export async function findUserByUsername(username) {
+  await initUsersCollection();
+  const usersCollection = await getCollection(COLLECTION_NAME);
+  return await usersCollection.findOne({ username });
+}
+
 export async function findUserByEmail(email) {
   await initUsersCollection();
   const usersCollection = await getCollection(COLLECTION_NAME);

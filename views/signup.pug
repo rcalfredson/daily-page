@@ -1,0 +1,27 @@
+extends layout
+
+block nav
+  include navLinks
+
+block append head
+  link(rel='stylesheet' href='css/signup.css')
+
+block scripts
+  script(src='/js/signup.js')
+
+block content
+  .signup-form-container
+    h1 Create Your Account
+    p Join Daily Page to start creating and sharing your daily writing!
+    form.signup-form(id="signupForm")
+      .form-group
+        label(for="email") Email
+        input#email(type="email" name="email" required)
+      .form-group
+        label(for="username") Username
+        input#username(type="text" name="username" required)
+      .form-group
+        label(for="password") Password
+        input#password(type="password" name="password" required)
+      button.signup-button(type="submit") Sign Up
+    .form-feedback(style="display:none;") Form submission successful!
