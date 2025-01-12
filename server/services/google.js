@@ -7,10 +7,11 @@ import slug from 'slug';
 import stripBom from 'strip-bom';
 
 import * as cache from './cache.js';
+import { config } from '../../config/config.js';
 
-const baseballFolderID = process.env.BASEBALL_FOLDER_ID;
-const albumsFolderID = process.env.ALBUMS_FOLDER_ID;
-const artistsFolderID = process.env.ARTISTS_FOLDER_ID;
+const baseballFolderID = config.baseballFolderId;
+const albumsFolderID = config.albumsFolderId;
+const artistsFolderID = config.artistsFolderId;
 
 const { JSDOM } = jsdom;
 
@@ -26,7 +27,7 @@ export function init(mongoConnection) {
     mongo = mongoConnection;
     credentials = JSON.parse(fs.readFileSync('./credentials.json'));
   } catch (error) {
-    credentials = JSON.parse(process.env.GOOG_CREDS);
+    credentials = JSON.parse(config.googCreds);
     fs.writeFileSync('./credentials.json', JSON.stringify(credentials));
   }
   auth = new google.auth.JWT(credentials.client_email, null, credentials.private_key, scopes);

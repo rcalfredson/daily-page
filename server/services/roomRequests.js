@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer';
 
+import { config } from '../../config/config.js';
+
 export async function handleRoomRequest(req, res) {
   const { roomName, roomTopic, roomDescription } = req.body;
 
@@ -12,13 +14,13 @@ export async function handleRoomRequest(req, res) {
       host: 'smtp.gmail.com',
       port: 587,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: config.emailUser,
+        pass: config.emailPass,
       },
     });
   
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: config.emailUser,
       to: 'ask@dailypage.org',
       subject: `New Room Request: ${roomName}`,
       text: `

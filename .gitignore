@@ -4,6 +4,7 @@
 /public/js/iPod.js
 /public/js/analyzeBPM.js
 /build
+.env
 debug.js
 credentials.json
 .DS_Store
