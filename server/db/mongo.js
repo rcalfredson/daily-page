@@ -5,11 +5,13 @@ import DateHelper from '../../lib/dateHelper.js';
 
 const { MongoClient } = mongo;
 
+import { config } from '../../config/config.js';
+
 sanitizeHtml.defaults.allowedAttributes.img = ['src', 'width'];
 
 const user = 'daily-page-admin';
-const addr = process.env.MONGO_DB_ADDR;
-const pw = process.env.MONGO_DB_PW;
+const addr = config.mongoDbAddr;
+const pw = config.mongoDbPw;
 const url = `mongodb+srv://${user}:${pw}@${addr}?retryWrites=true`;
 const dbName = 'daily-page';
 const collectionNames = {
@@ -18,7 +20,8 @@ const collectionNames = {
   backup: 'doc-backup',
   rooms: 'room-metadata',
   sites: 'sites',
-  operations: 'operations'
+  operations: 'operations',
+  users: 'users'
 };
 const collections = { session: null, pages: null, backup: null };
 const collectionSuffix = process.env.NODE_ENV === 'production' ? '' : '-test';

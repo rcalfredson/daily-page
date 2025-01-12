@@ -8,8 +8,11 @@ import axios from 'axios';
 import DateHelper from './lib/dateHelper.js';
 import * as encodeHelper from './lib/encodeHelper.js';
 
+import { config } from './config/config.js';
+
 import useAPIV1 from './server/api/v1/index.js'; // Main API
 import useRoomAPI from './server/api/v1/rooms.js'; // Room-specific API
+import useUserAPI from './server/api/v1/users.js'; // User-specific API
 
 import { getFeaturedContent } from './server/services/featuredContent.js'; // Services
 
@@ -29,9 +32,9 @@ import * as mongo from './server/db/mongo.js'; // Database
 startJobs();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = config.port || 3000;
 const audioHost = 'https://ipod.dailypage.org';
-const backendBaseUrl = `${(process.env.BACKEND_URL || `http://localhost:${port}`)}`;
+const backendBaseUrl = `${(config.backendUrl || `http://localhost:${port}`)}`;
 const backendApiUrl = `${backendBaseUrl}/api/v1`;
 const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
@@ -76,6 +79,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     useAPIV1(app, mongo);
     useRoomAPI(app);
+    useUserAPI(app);
     app.use('/', roomRoute);
 
     const server = createServer(app)
