@@ -17,6 +17,8 @@ import useUserAPI from './server/api/v1/users.js'; // User-specific API
 import { getFeaturedContent } from './server/services/featuredContent.js'; // Services
 
 import roomRoute from './server/routes/rooms.js'; // Routes
+import usersRoute from './server/routes/users.js';
+
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
@@ -81,6 +83,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     useRoomAPI(app);
     useUserAPI(app);
     app.use('/', roomRoute);
+    app.use('/', usersRoute);
 
     const server = createServer(app)
 
