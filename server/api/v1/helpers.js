@@ -20,19 +20,6 @@ export async function allYearMonthCombos(_, res) {
   }
 }
 
-export function authenticate(req, res, next) {
-  try {
-    const token = req.cookies.auth_token;
-    if (!token) throw new Error('No token provided');
-    
-    const decoded = verifyJWT(token);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(403).json({ error: 'Unauthorized' });
-  }
-}
-
 export function init(mongoConnection) {
   mongo = mongoConnection;
 }
