@@ -15,9 +15,9 @@ const useAPIV1 = (app, mongo) => {
   router.get('/peers*?', helpers.peersForRoom); // View peers in a room
 
   // Protected Endpoints (requires logged-in user)
-  router.post('/page/:room', helpers.authenticate, helpers.updatePageForRoom); // Update content
-  router.delete('/peers/:room/:id', helpers.authenticate, helpers.removePeerFromRoom); // Remove peer
-  router.post('/peers/:room/:id', helpers.authenticate, helpers.addPeerToRoom); // Add peer
+  router.post('/page/:room', helpers.updatePageForRoom); // Update content
+  router.delete('/peers/:room/:id', helpers.removePeerFromRoom); // Remove peer
+  router.post('/peers/:room/:id', helpers.addPeerToRoom); // Add peer
 };
 
 export default useAPIV1;
