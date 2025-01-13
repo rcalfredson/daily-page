@@ -1,0 +1,21 @@
+extends layout
+
+block nav
+  include navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/dashboard.css')
+
+block content
+  div.container
+    h1 Welcome to Your Dashboard, #{user.username}!
+    p Here’s what’s happening:
+    ul
+      li Recent Activity: Nothing yet, but let’s get started!
+      li Quick Links:
+        ul
+          li: a(href='/rooms') Rooms
+          li: a(href='/archive') Archive
+          li: a(href='/profile') Profile
+    p Need help? Check out our&nbsp;
+      a.link(href='/support') support page.

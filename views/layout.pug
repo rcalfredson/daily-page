@@ -9,6 +9,8 @@ html(lang=lang || 'en')
       link(rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css")
       link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet")
       link(rel='stylesheet' href='/css/style.css')
+      link(rel="stylesheet", href="/css/auth.css")
+      script(src="/js/auth.js")
       if title === 'Room Directory'
         link(rel='stylesheet' href='/css/rooms.css')
       link(rel='shortcut icon' href='/assets/img/favicon.ico')
@@ -17,6 +19,10 @@ html(lang=lang || 'en')
     -
       var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                         'July', 'August', 'September', 'October', 'November', 'December']
+    div.auth-wrapper
+      p#welcome-message Welcome, User!
+      button#nav-logout(type="button" style="display:none;") Logout
+      a#nav-login(href="/login" style="display:none;") Login / Sign Up
     .navbar
       a(href='/')
         h1.logo Daily Page

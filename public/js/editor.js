@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     buttonsWithTooltips.forEach((button) => {
       button.removeAttribute('data-tooltip');
     });
-    console.log('Tooltips desactivados en pantallas táctiles.');
   }
 
   // Detectar iOS

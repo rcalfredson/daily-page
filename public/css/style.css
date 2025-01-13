@@ -153,18 +153,22 @@ NavBar
 ****************/
 
 .navbar {
-  border-radius: 10px;
   display: flex;
-  justify-content: left;
-  margin-bottom: 20px;
-  padding-top: 20px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
 }
 
 .nav-items {
-  flex-grow: .75;
   display: flex;
-  justify-content: space-evenly;
-  padding-top: 10px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 15px;
+  flex-grow: 1;
+  min-width: 0;
 }
 
 .nav-items div a {
@@ -332,7 +336,7 @@ article h2 {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 800px) {
   .menu-toggle, .main-menu .menu-close {
     display: none;
   }
