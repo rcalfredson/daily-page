@@ -1,6 +1,7 @@
 import stream from 'stream';
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { createServer } from 'http';
 import { ExpressPeerServer } from 'peer';
@@ -13,12 +14,13 @@ import { config } from './config/config.js';
 import useAPIV1 from './server/api/v1/index.js'; // Main API
 import useRoomAPI from './server/api/v1/rooms.js'; // Room-specific API
 import useUserAPI from './server/api/v1/users.js'; // User-specific API
+import useAuthAPI from './server/api/v1/auth.js'; // Login API
 
 import { getFeaturedContent } from './server/services/featuredContent.js'; // Services
 
 import roomRoute from './server/routes/rooms.js'; // Routes
 import usersRoute from './server/routes/users.js';
-
+import loginRoute from './server/routes/login.js';
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
@@ -73,17 +75,25 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       });
     }
 
+    app.use((req, res, next) => {
+      res.locals.user = req.user || null;
+      next();
+    });
+
     app.use(express.static('public'));
     app.use(express.urlencoded({ extended: true }));
     app.use(bodyParser.json());
+    app.use(cookieParser());
     app.set('views', './views');
     app.set('view engine', 'pug');
 
     useAPIV1(app, mongo);
     useRoomAPI(app);
     useUserAPI(app);
+    useAuthAPI(app);
     app.use('/', roomRoute);
     app.use('/', usersRoute);
+    app.use('/', loginRoute);
 
     const server = createServer(app)
 

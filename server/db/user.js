@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 import { getCollection, initCollection } from './mongo.js';
 
 const COLLECTION_NAME = 'users';
@@ -28,7 +30,7 @@ export async function findUserByEmail(email) {
 export async function findUserById(userId) {
   await initUsersCollection();
   const usersCollection = await getCollection(COLLECTION_NAME);
-  return usersCollection.findOne({ _id: userId });
+  return usersCollection.findOne({ _id: ObjectId.createFromHexString(userId) });
 }
 
 export async function updateUserProfile(userId, updates) {

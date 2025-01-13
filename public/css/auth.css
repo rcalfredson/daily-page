@@ -1,0 +1,49 @@
+.auth-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+#nav-login, #nav-logout {
+  display: inline-block;
+  font-family: 'Rubik-Medium', sans-serif;
+  font-size: 13px;
+  padding: 0px 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  line-height: 32px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#nav-logout {
+  background-color: #ff5c5c;
+}
+
+#nav-login:hover {
+  background-color: #0056b3;
+}
+
+#nav-logout:hover {
+  background-color: #cc4a4a;
+}
+
+#welcome-message {
+  font-family: 'Rubik-Regular', sans-serif;
+  font-size: 14px;
+  margin: 0 10px 0 0;
+  color: #333;
+}
+
+@media (max-width: 800px) {
+  #welcome-message {
+    font-size: 13px;
+  }
+
+  #nav-login, #nav-logout {
+    font-size: 12px;
+  }
+}

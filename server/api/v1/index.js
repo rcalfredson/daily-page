@@ -7,21 +7,17 @@ const useAPIV1 = (app, mongo) => {
   helpers.init(mongo);
   app.use('/api/v1', router);
 
-  router.get('/page/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', helpers.authenticate, helpers.sendPage);
+  // Public Endpoints (no authentication required)
+  router.get('/page/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', helpers.sendPage); // View content by date
+  router.get('/page/:room/:date*?', helpers.sendPage); // View room content by date
+  router.get('/pageDates/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', helpers.pageDatesForYearMonthCombo); // View available content dates
+  router.get('/pageDates', helpers.allYearMonthCombos); // View all content dates
+  router.get('/peers*?', helpers.peersForRoom); // View peers in a room
 
-  router.get('/page/:room/:date*?', helpers.authenticate, helpers.sendPage);
-
-  router.get('/pageDates/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', helpers.authenticate, helpers.pageDatesForYearMonthCombo);
-
-  router.get('/pageDates', helpers.authenticate, helpers.allYearMonthCombos);
-
-  router.post('/page/:room', helpers.authenticate, helpers.updatePageForRoom);
-
-  router.get('/peers*?', helpers.authenticate, helpers.peersForRoom);
-
-  router.delete('/peers/:room/:id', helpers.authenticate, helpers.removePeerFromRoom);
-
-  router.post('/peers/:room/:id', helpers.authenticate, helpers.addPeerToRoom);
+  // Protected Endpoints (requires logged-in user)
+  router.post('/page/:room', helpers.authenticate, helpers.updatePageForRoom); // Update content
+  router.delete('/peers/:room/:id', helpers.authenticate, helpers.removePeerFromRoom); // Remove peer
+  router.post('/peers/:room/:id', helpers.authenticate, helpers.addPeerToRoom); // Add peer
 };
 
 export default useAPIV1;

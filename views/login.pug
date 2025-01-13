@@ -1,0 +1,24 @@
+extends layout
+
+block nav
+  include navLinks
+
+block append head
+  link(rel='stylesheet' href='css/login.css')
+
+block scripts
+  script(src='/js/login.js')
+
+block content
+  .login-form-container
+    h1 Welcome Back!
+    p Log in to your account to continue sharing your daily writing.
+    form.login-form(id="loginForm")
+      .form-group
+        label(for="username") Username or Email
+        input#usernameOrEmail(type="text" name="username" required placeholder="Enter your username or email")
+      .form-group
+        label(for="password") Password
+        input#password(type="password" name="password" required placeholder="Enter your password")
+      button.login-button(type="submit") Log In
+    .form-feedback(style="display:none;") <!-- For success/error messages -->
