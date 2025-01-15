@@ -19,20 +19,8 @@ block content
       input#profilePicInput(type="file", accept="image/*", hidden)
     div.activity-section
       h3 Recent Activity
-      //- ul
-      //-   each activity in recentActivities
-      //-     li= activity
     div.streak-section
       h3 Writing Streak
       p #{streakDays} days in a row! Keep going!
     div.starred-rooms-placeholder
-        p You haven’t starred any rooms yet. Start exploring to find your favorites!
-    //- if starredRooms.length > 0
-    //-   div.starred-rooms
-    //-     h3 Starred Rooms
-    //-     ul
-    //-       each room in starredRooms
-    //-         li: a(href=`/rooms/${room.id}`)= room.name
-    //- else
-      div.starred-rooms-placeholder
-        p You haven’t starred any rooms yet. Start exploring to find your favorites!
+      p You haven’t starred any rooms yet. Start exploring to find your favorites!
