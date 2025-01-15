@@ -1,8 +1,13 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
-import { createUser, findUserByEmail, findUserByUsername, findUserById, updateUserProfile } from '../../db/user.js';
+import multer from 'multer';
+import {
+  createUser, findUserByEmail, findUserByUsername, findUserById, updateUserProfile
+} from '../../db/user.js';
+import { uploadProfilePic } from '../../services/uploadProfilePic.js';
 
 const router = Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 const useUserAPI = (app) => {
   app.use('/api/v1/users', router);
@@ -81,6 +86,28 @@ const useUserAPI = (app) => {
       res.status(500).json({ error: 'Failed to update profile' });
     }
   });
+
+  router.post('/:userId/uploadProfilePic', upload.single('profilePic'),
+    async (req, res) => {
+      const { userId } = req.params;
+
+      try {
+        const { imageUrl, newToken } = await uploadProfilePic(req, userId);
+
+        // Set the new JWT in the cookies
+        res.cookie('auth_token', newToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'Strict',
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+
+        res.status(200).json({ success: true, imageUrl });
+      } catch (error) {
+        console.error('Error uploading profile picture:', error.message);
+        res.status(500).json({ error: 'Failed to upload profile picture' });
+      }
+    });
 };
 
 export default useUserAPI;

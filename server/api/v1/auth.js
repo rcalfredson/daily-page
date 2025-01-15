@@ -29,7 +29,11 @@ const useAuthAPI = (app) => {
         return res.status(400).json({ error: 'Invalid password.' });
       }
 
-      const token = generateJWT({ id: user._id, username: user.username });
+      const token = generateJWT({
+        id: user._id,
+        username: user.username,
+        profilePic: user.profilePic
+      });
 
       res.cookie('auth_token', token, {
         httpOnly: true,
@@ -66,7 +70,8 @@ const useAuthAPI = (app) => {
           res.status(200).json({
             id: user._id,
             username: user.username,
-            email: user.email, // Optional
+            email: user.email,
+            profilePic: user.profilePic
           });
         })
         .catch((err) => {
