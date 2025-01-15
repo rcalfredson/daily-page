@@ -1,8 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Check if the device is a touchscreen
+  const isTouchScreen = true || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+  // Add the `touchscreen` class to the profile section if applicable
+  const profileSection = document.querySelector('.profile-section');
+  if (isTouchScreen) {
+    profileSection.classList.add('touchscreen');
+  }
+
+  // Elements for handling file uploads
   const profilePicInput = document.getElementById('profilePicInput');
   const profilePicImage = document.querySelector('.profile-pic');
   const userId = document.querySelector('.container').dataset.userId;
 
+  // Handle profile picture upload
   profilePicInput.addEventListener('change', async (event) => {
     const file = event.target.files[0];
     if (!file) return;
