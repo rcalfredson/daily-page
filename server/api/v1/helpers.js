@@ -1,5 +1,4 @@
 import * as cache from '../../services/cache.js';
-import * as jwtHelper from '../../services/jwt.js';
 
 let mongo;
 

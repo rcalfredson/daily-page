@@ -37,7 +37,7 @@ export async function updateUserProfile(userId, updates) {
   await initUsersCollection();
   const usersCollection = await getCollection(COLLECTION_NAME);
   return usersCollection.updateOne(
-    { _id: userId },
+    { _id: ObjectId.createFromHexString(userId) },
     { $set: { ...updates, updatedAt: new Date() } }
   );
 }

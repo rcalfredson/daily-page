@@ -38,3 +38,52 @@
   text-decoration: underline;
   vertical-align: unset;
 }
+
+.profile-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.profile-section h2 {
+  font-size: 20px;
+  font-family: 'Rubik-Medium';
+  color: #333;
+}
+
+.profile-pic-label {
+  position: relative;
+  cursor: pointer;
+  float: unset;
+  padding: unset;
+  border-radius: unset;
+  border: unset;
+  margin: unset;
+  line-height: unset;
+  background-color: unset;
+}
+
+.edit-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 16px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 5px;
+  display: none;
+}
+
+.profile-pic-label:hover .edit-icon {
+  display: block;
+}
