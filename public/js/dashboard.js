@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Check if the device is a touchscreen
-  const isTouchScreen = true || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const isTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
   // Add the `touchscreen` class to the profile section if applicable
   const profileSection = document.querySelector('.profile-section');

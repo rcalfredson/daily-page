@@ -1,3 +1,4 @@
+import sharp from 'sharp';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { findUserById, updateUserProfile } from '../db/user.js';
 import { generateJWT } from './jwt.js';
@@ -17,11 +18,26 @@ export const uploadProfilePic = async (req, userId) => {
     throw new Error('No file uploaded');
   }
 
-  const fileKey = `profile-pics/${userId}-${Date.now()}.${file.mimetype.split('/')[1]}`;
+  const maxWidth = 500;
+  const maxHeight = 500;
+
+  // Resize the image to fit within max dimensions
+  const resizedBuffer = await sharp(file.buffer)
+    .resize(maxWidth, maxHeight, { fit: 'inside' }) // Maintain aspect ratio
+    .toBuffer();
+
+  if (!['image/jpeg', 'image/png'].includes(file.mimetype)) {
+    throw new Error('Only JPEG and PNG images are allowed.');
+  }
+
+  const extensionMap = { 'image/jpeg': 'jpg', 'image/png': 'png' };
+  const fileExtension = extensionMap[file.mimetype] || 'bin'; // Fallback to 'bin' for unknown mimetypes
+
+  const fileKey = `profile-pics/${userId}-${Date.now()}.${fileExtension}`;
   const params = {
     Bucket: process.env.S3_BUCKET_NAME,
     Key: fileKey,
-    Body: file.buffer,
+    Body: resizedBuffer,
     ContentType: file.mimetype,
   };
 
