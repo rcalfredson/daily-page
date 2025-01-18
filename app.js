@@ -24,14 +24,24 @@ import loginRoute from './server/routes/login.js';
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
-import * as jwtHelper from './server/services/jwt.js';
 import localizationMiddleware from './server/services/localization.js';
 import { startJobs } from './server/services/cron.js';
 import * as google from './server/services/google.js';
 
 import * as viewHelper from './server/utils/view.js'; // Utils
 
-import * as mongo from './server/db/mongo.js'; // Database
+import { initMongooseConnection } from './server/db/mongoose.js';
+import {
+  pagesByDate,
+  getPageDatesByYearAndMonth,
+  getPageMonthYearCombos,
+  getPage
+} from './server/db/pageService.js';
+import {
+  getAllRooms, getRoomMetadata
+
+} from './server/db/roomService.js'
+import { getPeerIDs } from './server/db/sessionService.js';
 
 startJobs();
 
@@ -46,8 +56,8 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
   const dateParam = ':date([0-9]{4}-[0-9]{2}-[0-9]{2})';
 
   try {
-    await mongo.initConnection();
-    google.init(mongo);
+    await initMongooseConnection();
+    google.init();
 
     const whitelist = ['https://dailypage.org', 'http://localhost:3000'];
     const corsOptions = {
@@ -87,7 +97,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.set('views', './views');
     app.set('view engine', 'pug');
 
-    useAPIV1(app, mongo);
+    useAPIV1(app);
     useRoomAPI(app);
     useUserAPI(app);
     useAuthAPI(app);
@@ -108,7 +118,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     });
 
     app.get('/archive', async (_, res) => {
-      const combos = await cache.get('monthYearCombos', mongo.getPageMonthYearCombos);
+      const combos = await cache.get('monthYearCombos', getPageMonthYearCombos);
 
       res.render('archive', {
         combos,
@@ -326,7 +336,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.get('/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', async (req, res) => {
       const { year, month } = req.params;
       const formattedTime = `${DateHelper.monthName(month)} ${year}`;
-      const dates = await cache.get(`${year}-${month}`, mongo.getPageDatesByYearAndMonth, [year, month]);
+      const dates = await cache.get(`${year}-${month}`, getPageDatesByYearAndMonth, [year, month]);
 
       res.render('yearMonth', {
         title: `Daily Pages for ${formattedTime}`,
@@ -341,7 +351,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       try {
         if (requestedDate < ROOM_BASED_CUTOFF) {
           // Legacy Concatenated View
-          const pageData = await cache.get(req.params.date, mongo.getPage, [req.params.date]);
+          const pageData = await cache.get(req.params.date, getPage, [req.params.date]);
           const [errorMessage, text] = viewHelper.archiveContent(pageData);
 
           return res.render('archivedPage', {
@@ -352,8 +362,8 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           });
         } else {
           // Room-Based View
-          const pages = await mongo.pagesByDate(req.params.date); // Fetch all pages for the date
-          const rooms = await mongo.getAllRooms(); // Fetch all room metadata
+          const pages = await pagesByDate(req.params.date); // Fetch all pages for the date
+          const rooms = await getAllRooms(); // Fetch all room metadata
 
           const roomContents = rooms.map((room) => {
             const page = pages.find((p) => p.room === room._id); // Find the page matching the room
@@ -384,9 +394,9 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     app.get(`/rooms/:room([a-zA-Z0-9\-]+)/${dateParam}`, async (req, res) => {
       const roomReq = req.params.room;
-      let roomMetdata = await mongo.getRoomMetadata(roomReq);
+      let roomMetdata = await getRoomMetadata(roomReq);
       const dateAndRoom = `${DateHelper.formatDate(req.params.date, 'long')} - ${roomMetdata.name} Room`;
-      const pageData = await cache.get(req.params.date, mongo.getPage,
+      const pageData = await cache.get(req.params.date, getPage,
         [req.params.date, roomReq, req.query]);
 
       const [errorMessage, text] = viewHelper.archiveContent(pageData);
@@ -408,13 +418,13 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
       try {
         // Fetch room metadata
-        const roomMetadata = await mongo.getRoomMetadata(room_id);
+        const roomMetadata = await getRoomMetadata(room_id);
         if (!roomMetadata) {
           return res.status(404).render('error', { message: 'Room not found.' });
         }
 
         // Fetch peer IDs for the room
-        const peerIDs = await mongo.peerIDs(room_id);
+        const peerIDs = await getPeerIDs(room_id);
 
         if (peerIDs.length >= 6) {
           return res.render('fullRoom', {
@@ -437,7 +447,6 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           room: roomMetadata._id,
           header: `${date} - ${viewHelper.capitalize(roomMetadata.name)} Room`,
           backendURL: backendApiUrl,
-          sessionID: jwtHelper.expiringKey(),
           targetPeerId,
         });
       } catch (error) {

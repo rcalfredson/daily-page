@@ -1,6 +1,6 @@
 import sharp from 'sharp';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { findUserById, updateUserProfile } from '../db/user.js';
+import { findUserById, updateUserProfile } from '../db/userService.js';
 import { generateJWT } from './jwt.js';
 
 const s3 = new S3Client({

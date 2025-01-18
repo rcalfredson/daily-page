@@ -3,8 +3,7 @@ import * as helpers from './helpers.js';
 
 const router = Router();
 
-const useAPIV1 = (app, mongo) => {
-  helpers.init(mongo);
+const useAPIV1 = (app) => {
   app.use('/api/v1', router);
 
   // Public Endpoints (no authentication required)

@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { fetchAndGroupRooms, getActiveUsers } from '../../db/room.js';
+import { fetchAndGroupRooms } from '../../db/roomService.js';
+import { getActiveUsers, getRecentlyActiveRooms } from '../../db/sessionService.js';
 
 const router = Router();
 

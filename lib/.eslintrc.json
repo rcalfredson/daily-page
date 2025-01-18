@@ -5,7 +5,6 @@
   },
   "globals": {
     "backendURL": true,
-    "sessionID": true,
     "room": true,
     "year": true,
     "month": true
