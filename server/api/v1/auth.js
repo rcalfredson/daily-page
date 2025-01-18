@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
-import { findUserByEmail, findUserById, findUserByUsername } from '../../db/user.js';
+import {
+  findUserByEmail, findUserById, findUserByUsername
+} from '../../db/userService.js';
 import { generateJWT, verifyJWT } from '../../services/jwt.js';
 
 const router = Router();

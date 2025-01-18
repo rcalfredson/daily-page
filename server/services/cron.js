@@ -1,5 +1,5 @@
 import { CronJob } from 'cron';
-import { cleanUpOldPeerIds } from '../db/mongo.js';
+import { cleanUpOldPeerIds } from '../db/sessionService.js';
 import { getFeaturedContent } from './featuredContent.js';
 
 const jobs = [

@@ -1,4 +1,4 @@
-import { getCollection } from '../db/mongo.js';
+import { getLatestNonEmptyPage } from '../db/pageService.js';
 import { archiveContent } from '../utils/view.js';
 
 let cachedContent = null;
@@ -13,19 +13,7 @@ export async function getFeaturedContent() {
   }
 
   try {
-    const pagesCollection = await getCollection('pages');
-
-    const latestContent = await pagesCollection
-      .find({
-        content: {
-          $exists: true,
-          $regex: /\w/ // Matches at least one word character (alphanumeric or underscore)
-        }
-      })
-      .sort({ date: -1 })
-      .limit(1)
-      .toArray();
-
+    const latestContent = await getLatestNonEmptyPage();
     if (!latestContent.length) {
       return null;
     }

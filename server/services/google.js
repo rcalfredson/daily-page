@@ -8,6 +8,7 @@ import stripBom from 'strip-bom';
 
 import * as cache from './cache.js';
 import { config } from '../../config/config.js';
+import * as docMappingService from '../db/docMappingService.js'; 
 
 const baseballFolderID = config.baseballFolderId;
 const albumsFolderID = config.albumsFolderId;
@@ -19,12 +20,10 @@ const scopes = ['https://www.googleapis.com/auth/drive'];
 let credentials;
 let auth;
 let drive;
-let mongo;
 let lastRequestTime = 0;
 
-export function init(mongoConnection) {
+export function init() {
   try {
-    mongo = mongoConnection;
     credentials = JSON.parse(fs.readFileSync('./credentials.json'));
   } catch (error) {
     credentials = JSON.parse(config.googCreds);
@@ -45,7 +44,7 @@ export async function getDocTitles() {
     });
   }
   try {
-    return await cache.get('docMappings', mongo.getDocMappings);
+    return await cache.get('docMappings', docMappingService.getDocMappings);
   } catch (error) {
     const queryParams = {
       pageSize: 500,
@@ -60,8 +59,8 @@ export async function getDocTitles() {
         { pageToken: res.data.nextPageToken }));
       updateTitles(res);
     }
-    await mongo.updateDocMappings(titles);
-    return cache.get('docMappings', mongo.getDocMappings);
+    await docMappingService.updateDocMappings(titles);
+    return cache.get('docMappings', docMappingService.getDocMappings);
   }
 }
 

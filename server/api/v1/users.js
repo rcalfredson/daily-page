@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
+
 import {
-  createUser, findUserByEmail, findUserByUsername, findUserById, updateUserProfile
-} from '../../db/user.js';
+  createUser, findUserByEmail, findUserById, findUserByUsername, updateUserProfile
+} from '../../db/userService.js';
 import { uploadProfilePic } from '../../services/uploadProfilePic.js';
 
 const router = Router();
