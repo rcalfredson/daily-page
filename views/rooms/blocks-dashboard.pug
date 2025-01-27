@@ -3,6 +3,9 @@ extends ../layout
 block nav
   include ../navLinks
 
+block append scripts
+  script(src="/js/vote-controls.js")
+
 block append head
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel="stylesheet" href="/css/vote-controls.css")
