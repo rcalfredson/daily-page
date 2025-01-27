@@ -1,0 +1,14 @@
+div.vote-controls
+  button.vote-arrow.up(
+    title='Upvote'
+    aria-label='Upvote'
+    data-action='upvote'
+  )
+    span.icon.arrow-up
+  span.vote-count= voteCount || 0
+  button.vote-arrow.down(
+    title='Downvote'
+    aria-label='Downvote'
+    data-action='downvote'
+  )
+    span.icon.arrow-down
