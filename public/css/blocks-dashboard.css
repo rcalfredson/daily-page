@@ -4,12 +4,23 @@ ul {
 }
 
 .block-preview {
+  display: flex;
+  align-items: center;
   border: 1px solid #e0e0e0;
-  padding: 20px;
-  margin-bottom: 15px;
+  padding: 15px 20px;
+  margin-bottom: 10px;
   border-radius: 8px;
   background-color: #ffffff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.block-preview .vote-controls {
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.block-preview .content {
+  flex-grow: 1;
 }
 
 .block-preview p {

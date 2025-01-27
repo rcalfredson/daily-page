@@ -5,6 +5,7 @@ block nav
 
 block append head
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
+  link(rel="stylesheet" href="/css/vote-controls.css")
 
 prepend content
   h1= header
@@ -16,8 +17,10 @@ append content
       ul
         each block in blocks
           li.block-preview
-            a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
-            p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
-            p= block.content ? block.content.substring(0, 100) + '...' : '(No content yet)'
+            include ../partials/_vote_controls
+            div.content
+              a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
+              p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+              p= block.content ? block.content.substring(0, 100) + '...' : '(No content yet)'
     else
       p No blocks yet! Why not create the first one?
