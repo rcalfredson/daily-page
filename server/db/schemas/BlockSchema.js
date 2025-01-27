@@ -8,9 +8,12 @@ const blockSchema = new Schema({
     maxlength: 100,
     trim: true
   },
+  description: { type: String, default: '' },
+  tags: { type: [String], default: [], index: true },
   content: { type: String, default: '' },
   roomId: { type: String, required: true, index: true },
   creator: { type: String, required: true },
+  editToken: { type: String, required: false },
   collaborators: { type: [String], default: [] },
   type: { type: String, enum: ['public', 'private'], default: 'public' },
   status: {

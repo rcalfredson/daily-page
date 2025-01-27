@@ -12,11 +12,27 @@ export async function getBlockById(blockId) {
 }
 
 // Get blocks by roomId
-export async function getBlocksByRoom(roomId, status = null) {
+export async function getBlocksByRoom(roomId, options = {}) {
+  const { status, startDate, endDate, sortBy = 'createdAt' } = options;
+
   const query = { roomId };
   if (status) query.status = status;
-  return await Block.find(query).sort({ createdAt: -1 });
+
+  // Handle date filtering logic
+  if (startDate && !endDate) {
+    const exclusiveEndDate = new Date(startDate);
+    exclusiveEndDate.setDate(exclusiveEndDate.getDate() + 1);
+    query.createdAt = { $gte: new Date(startDate), $lt: exclusiveEndDate };
+  } else if (!startDate && endDate) {
+    throw new Error('Cannot provide endDate without startDate.');
+  } else if (startDate && endDate) {
+    query.createdAt = { $gte: new Date(startDate), $lt: new Date(endDate) };
+  }
+
+  return await Block.find(query).sort({ [sortBy]: -1 });
 }
+
+
 
 // Update a block by ID
 export async function updateBlock(blockId, updates) {
