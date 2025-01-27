@@ -138,11 +138,12 @@ export async function getRecentlyActiveRooms(limit = 5) {
  * Gets the number of active users in a given room
  */
 export async function getActiveUsers(roomId) {
+  // TODO: Update this logic to reflect new "active users" tracking 
+  // when rooms switch to block-level editing.
   try {
-    let doc = await Session.findOne({ _id: roomId }, { peers: 1 });
-    if (!doc || !doc.peers) return 0;
-    doc = doc.toObject();
-    return Object.keys(doc.peers).length;
+    const doc = await Session.findOne({ _id: roomId }, { peers: 1 });
+    const peers = doc?.toObject()?.peers || {};
+    return Object.keys(peers).length; // Safely handle empty/null peers
   } catch (error) {
     console.error(`Error fetching active users for room ${roomId}:`, error.message);
     throw error;

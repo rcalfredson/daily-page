@@ -11,10 +11,12 @@ import * as encodeHelper from './lib/encodeHelper.js';
 
 import { config } from './config/config.js';
 
-import useAPIV1 from './server/api/v1/index.js'; // Main API
-import useRoomAPI from './server/api/v1/rooms.js'; // Room-specific API
-import useUserAPI from './server/api/v1/users.js'; // User-specific API
-import useAuthAPI from './server/api/v1/auth.js'; // Login API
+
+import useAPIV1 from './server/api/v1/index.js';
+import useBlockAPI from './server/api/v1/blocks.js';
+import useRoomAPI from './server/api/v1/rooms.js';
+import useUserAPI from './server/api/v1/users.js';
+import useAuthAPI from './server/api/v1/auth.js';
 
 import { getFeaturedContent } from './server/services/featuredContent.js'; // Services
 
@@ -31,6 +33,7 @@ import * as google from './server/services/google.js';
 import * as viewHelper from './server/utils/view.js'; // Utils
 
 import { initMongooseConnection } from './server/db/mongoose.js';
+import { getBlocksByRoom } from './server/db/blockService.js';
 import {
   pagesByDate,
   getPageDatesByYearAndMonth,
@@ -98,6 +101,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.set('view engine', 'pug');
 
     useAPIV1(app);
+    useBlockAPI(app);
     useRoomAPI(app);
     useUserAPI(app);
     useAuthAPI(app);
@@ -414,45 +418,24 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.post('/request-room', handleRoomRequest);
 
     app.get('/rooms/:room_id', async (req, res) => {
-      const { room_id } = req.params;
-
-      try {
-        // Fetch room metadata
+      // try {
+        const { room_id } = req.params;
         const roomMetadata = await getRoomMetadata(room_id);
-        if (!roomMetadata) {
-          return res.status(404).render('error', { message: 'Room not found.' });
-        }
-
-        // Fetch peer IDs for the room
-        const peerIDs = await getPeerIDs(room_id);
-
-        if (peerIDs.length >= 6) {
-          return res.render('fullRoom', {
-            room: viewHelper.capitalize(roomMetadata.name),
-            description: roomMetadata.description,
-          });
-        }
-
-        // Determine the targetPeerId (random existing peer if available, or default to 0)
-        const targetPeerId = peerIDs.length > 0
-          ? peerIDs[Math.floor(Math.random() * peerIDs.length)]
-          : '0';
-
-        // Render the editor for the room
+        const blocks = await getBlocksByRoom(room_id);
         const date = DateHelper.currentDate('long');
-        res.render('index', {
-          title: `Daily Page - ${roomMetadata.name}`,
-          description: roomMetadata.description,
-          date,
-          room: roomMetadata._id,
-          header: `${date} - ${viewHelper.capitalize(roomMetadata.name)} Room`,
-          backendURL: backendApiUrl,
-          targetPeerId,
-        });
-      } catch (error) {
-        console.error('Error loading room editor:', error.message);
-        res.status(500).render('error', { message: 'An error occurred while loading the room.' });
-      }
+        const title = `Daily Page - ${roomMetadata.name}`
+        const header = `${date} - ${roomMetadata.name} Room`;
+        res.render('rooms/blocks-dashboard', 
+          {
+            room_id,
+            title,
+            header,
+            blocks
+          }
+        );
+      // } catch (error) {
+        // res.status(500).send('Error loading room dashboard.');
+      // }
     });
 
     app.get('/', async (req, res) => {
