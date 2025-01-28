@@ -45,6 +45,7 @@ import {
 
 } from './server/db/roomService.js'
 import { getPeerIDs } from './server/db/sessionService.js';
+import optionalAuth from './server/middleware/optionalAuth.js';
 
 startJobs();
 
@@ -417,25 +418,26 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     app.post('/request-room', handleRoomRequest);
 
-    app.get('/rooms/:room_id', async (req, res) => {
-      // try {
+    app.get('/rooms/:room_id', optionalAuth, async (req, res) => {
+      try {
         const { room_id } = req.params;
         const roomMetadata = await getRoomMetadata(room_id);
         const blocks = await getBlocksByRoom(room_id);
         const date = DateHelper.currentDate('long');
         const title = `Daily Page - ${roomMetadata.name}`
         const header = `${date} - ${roomMetadata.name} Room`;
-        res.render('rooms/blocks-dashboard', 
+        res.render('rooms/blocks-dashboard',
           {
             room_id,
             title,
             header,
-            blocks
+            blocks,
+            user: req.user
           }
         );
-      // } catch (error) {
-        // res.status(500).send('Error loading room dashboard.');
-      // }
+      } catch (error) {
+        res.status(500).send('Error loading room dashboard.');
+      }
     });
 
     app.get('/', async (req, res) => {

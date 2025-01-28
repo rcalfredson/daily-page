@@ -9,10 +9,12 @@ block append scripts
 block append head
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel="stylesheet" href="/css/vote-controls.css")
+  link(rel="stylesheet", href="/css/login-modal.css")
 
 prepend content
   h1= header
 append content
+  include ../partials/_login_modal
   #viewer
     p
       a.btn(href=`/rooms/${room_id}/blocks/new`) Create a Block

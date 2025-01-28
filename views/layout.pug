@@ -15,7 +15,7 @@ html(lang=lang || 'en')
         link(rel='stylesheet' href='/css/rooms.css')
       link(rel='shortcut icon' href='/assets/img/favicon.ico')
       include schema.pug
-  body
+  body(data-is-logged-in=user ? "true" : "false")
     -
       var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                         'July', 'August', 'September', 'October', 'November', 'December']
