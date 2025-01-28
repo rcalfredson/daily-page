@@ -32,7 +32,50 @@ export async function getBlocksByRoom(roomId, options = {}) {
   return await Block.find(query).sort({ [sortBy]: -1 });
 }
 
+export async function getBlocksByRoomWithUserVotes(roomId, userId, options) {
+  const blocks = await getBlocksByRoom(roomId, options);
 
+  return blocks.map((block) => {
+    const userVote = block.votes.find((vote) => vote.userId === userId)?.type || null;
+    return { ...block.toObject(), userVote };
+  });
+}
+
+export const saveVote = async (blockId, userId, action) => {
+  const increment = action === 'upvote' ? 1 : -1;
+
+  try {
+    const block = await Block.findById(blockId);
+
+    if (!block) {
+      throw new Error('Block not found');
+    }
+
+    // Find existing vote by this user
+    const existingVoteIndex = block.votes.findIndex((vote) => vote.userId === userId);
+
+    if (existingVoteIndex >= 0) {
+      const existingVote = block.votes[existingVoteIndex];
+      
+      if (existingVote.type === action) {
+        throw new Error('User has already voted in this direction');
+      }
+
+      // Reverse vote direction
+      block.votes[existingVoteIndex].type = action;
+      block.voteCount += 2 * increment; // Adjust by +2 or -2 depending on the change
+    } else {
+      // Add new vote
+      block.votes.push({ userId, type: action });
+      block.voteCount += increment;
+    }
+
+    await block.save();
+    return block.voteCount;
+  } catch (error) {
+    throw new Error(`Error saving vote: ${error.message}`);
+  }
+};
 
 // Update a block by ID
 export async function updateBlock(blockId, updates) {

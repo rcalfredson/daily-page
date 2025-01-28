@@ -5,21 +5,42 @@ document.addEventListener("DOMContentLoaded", () => {
     const upvoteButton = control.querySelector(".vote-arrow.up");
     const downvoteButton = control.querySelector(".vote-arrow.down");
     const voteCountElement = control.querySelector(".vote-count");
+    const userVote = control.dataset.userVote;
 
-    upvoteButton.addEventListener("click", () => handleVote("upvote", voteCountElement));
-    downvoteButton.addEventListener("click", () => handleVote("downvote", voteCountElement));
+    if (userVote === 'upvote') {
+      upvoteButton.style.color = "#4194ed";
+    } else if (userVote === 'downvote') {
+      downvoteButton.style.color = "#4194ed";
+    }
+
+    upvoteButton.addEventListener("click", () => handleVote("upvote", voteCountElement, control.dataset.blockId));
+    downvoteButton.addEventListener("click", () => handleVote("downvote", voteCountElement, control.dataset.blockId));
   });
 
-  function handleVote(action, voteCountElement) {
+  async function handleVote(action, voteCountElement, blockId) {
     const isLoggedIn = checkLoginState();
     if (!isLoggedIn) {
       showLoginModal();
       return;
     }
-    // Update vote count
-    let voteCount = parseInt(voteCountElement.textContent);
-    voteCount = action === "upvote" ? voteCount + 1 : voteCount - 1;
-    voteCountElement.textContent = voteCount;
+    try {
+      const response = await fetch(`/api/v1/votes/${blockId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save vote');
+      }
+
+      const data = await response.json();
+      voteCountElement.textContent = data.voteCount;
+    } catch (error) {
+      console.error('Error submitting vote:', error);
+    }
   }
 
   function checkLoginState() {

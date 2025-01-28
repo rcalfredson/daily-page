@@ -20,12 +20,17 @@ const blockSchema = new Schema({
     type: String,
     enum: ['in-progress', 'locked', 'archived'],
     default: 'in-progress',
-    index: true
-  },
+    index: true },
   votes: {
-    up: { type: Number, default: 0 },
-    down: { type: Number, default: 0 },
+    type: [
+      {
+        userId: { type: String, required: true },
+        type: { type: String, enum: ['upvote', 'downvote'], required: true },
+      },
+    ],
+    default: [],
   },
+  voteCount: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now, index: true },
   updatedAt: { type: Date, default: Date.now },
   lockedAt: { type: Date },

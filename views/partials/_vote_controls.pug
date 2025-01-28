@@ -1,11 +1,11 @@
-div.vote-controls(data-block-id=block._id)
+div.vote-controls(data-block-id=block._id data-user-vote=block.userVote || "")
   button.vote-arrow.up(
     title='Upvote'
     aria-label='Upvote'
     data-action='upvote'
   )
     span.icon.arrow-up
-  span.vote-count= voteCount || 0
+  span.vote-count= block.voteCount || 0
   button.vote-arrow.down(
     title='Downvote'
     aria-label='Downvote'
