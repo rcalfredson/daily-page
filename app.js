@@ -17,6 +17,7 @@ import useBlockAPI from './server/api/v1/blocks.js';
 import useRoomAPI from './server/api/v1/rooms.js';
 import useUserAPI from './server/api/v1/users.js';
 import useAuthAPI from './server/api/v1/auth.js';
+import useVoteAPI from './server/api/v1/votes.js';
 
 import { getFeaturedContent } from './server/services/featuredContent.js'; // Services
 
@@ -33,7 +34,7 @@ import * as google from './server/services/google.js';
 import * as viewHelper from './server/utils/view.js'; // Utils
 
 import { initMongooseConnection } from './server/db/mongoose.js';
-import { getBlocksByRoom } from './server/db/blockService.js';
+import { getBlocksByRoomWithUserVotes } from './server/db/blockService.js';
 import {
   pagesByDate,
   getPageDatesByYearAndMonth,
@@ -53,7 +54,6 @@ const app = express();
 const port = config.port || 3000;
 const audioHost = 'https://ipod.dailypage.org';
 const backendBaseUrl = `${(config.backendUrl || `http://localhost:${port}`)}`;
-const backendApiUrl = `${backendBaseUrl}/api/v1`;
 const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
 (async () => {
@@ -106,6 +106,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     useRoomAPI(app);
     useUserAPI(app);
     useAuthAPI(app);
+    useVoteAPI(app);
     app.use('/', roomRoute);
     app.use('/', usersRoute);
     app.use('/', loginRoute);
@@ -422,7 +423,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       try {
         const { room_id } = req.params;
         const roomMetadata = await getRoomMetadata(room_id);
-        const blocks = await getBlocksByRoom(room_id);
+        const blocks = await getBlocksByRoomWithUserVotes(room_id, req.user.id);
         const date = DateHelper.currentDate('long');
         const title = `Daily Page - ${roomMetadata.name}`
         const header = `${date} - ${roomMetadata.name} Room`;
