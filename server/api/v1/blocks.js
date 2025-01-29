@@ -29,6 +29,8 @@ const useBlockAPI = (app) => {
       return res.status(400).json({ error: 'Title is required and must be at least 3 characters long.' });
     }
 
+    const existingTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
+
     const blockData = {
       title,
       description,
@@ -39,9 +41,11 @@ const useBlockAPI = (app) => {
       editToken: uuidv4()
     };
 
+    existingTokens.push(blockData.editToken);
+
     try {
       const newBlock = await createBlock(blockData);
-      res.cookie('edit_token', blockData.editToken, {
+      res.cookie('edit_tokens', JSON.stringify(existingTokens), {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000 // 1 day
       });

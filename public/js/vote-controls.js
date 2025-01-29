@@ -26,18 +26,33 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch(`/api/v1/votes/${blockId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to save vote');
       }
-
+  
       const data = await response.json();
       voteCountElement.textContent = data.voteCount;
+  
+      // Get the parent vote controls
+      const control = voteCountElement.closest(".vote-controls");
+      const upvoteButton = control.querySelector(".vote-arrow.up");
+      const downvoteButton = control.querySelector(".vote-arrow.down");
+  
+      // Reset styles first
+      upvoteButton.style.color = "";
+      downvoteButton.style.color = "";
+  
+      // Apply color to the selected vote
+      if (action === "upvote") {
+        upvoteButton.style.color = "#4194ed";
+      } else if (action === "downvote") {
+        downvoteButton.style.color = "#4194ed";
+      }
+  
     } catch (error) {
       console.error('Error submitting vote:', error);
     }
