@@ -23,7 +23,7 @@ const useBlockAPI = (app) => {
 
   router.post('/', optionalAuth, async (req, res) => {
     const { room_id } = req.params;
-    const { title, description, tags, type } = req.body;
+    const { title, description, tags, visibility } = req.body;
 
     if (!title || title.length < 3) {
       return res.status(400).json({ error: 'Title is required and must be at least 3 characters long.' });
@@ -33,7 +33,7 @@ const useBlockAPI = (app) => {
       title,
       description,
       tags,
-      type: req.user ? type : 'public', // Default to 'public' for unauthenticated users
+      visibility: req.user ? visibility : 'public', // Default to 'public' for unauthenticated users
       creator: req.user?.username || 'anonymous',
       roomId: room_id,
       editToken: uuidv4()

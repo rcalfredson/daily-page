@@ -15,7 +15,7 @@ const blockSchema = new Schema({
   creator: { type: String, required: true },
   editToken: { type: String, required: false },
   collaborators: { type: [String], default: [] },
-  type: { type: String, enum: ['public', 'private'], default: 'public' },
+  visibility: { type: String, enum: ['public', 'private'], default: 'public' },
   status: {
     type: String,
     enum: ['in-progress', 'locked', 'archived'],
