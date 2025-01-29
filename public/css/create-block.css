@@ -1,0 +1,69 @@
+/* Styles for the "Create New Block" form */
+
+#block-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  float: unset;
+  padding: unset;
+  border: unset;
+  border-radius: unset;
+  margin: unset;
+  font-size: unset;
+  line-height: unset;
+  color: unset;
+  background-color: unset;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+textarea {
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.visibility-options {
+  display: flex;
+  gap: 15px;
+}
+
+.disabled {
+  color: gray;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  float: unset;
+  margin: unset;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+

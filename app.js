@@ -24,6 +24,7 @@ import { getFeaturedContent } from './server/services/featuredContent.js'; // Se
 import roomRoute from './server/routes/rooms.js'; // Routes
 import usersRoute from './server/routes/users.js';
 import loginRoute from './server/routes/login.js';
+import blocksRoute from './server/routes/blocks.js';
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
@@ -34,7 +35,9 @@ import * as google from './server/services/google.js';
 import * as viewHelper from './server/utils/view.js'; // Utils
 
 import { initMongooseConnection } from './server/db/mongoose.js';
-import { getBlocksByRoomWithUserVotes } from './server/db/blockService.js';
+import {
+  getBlocksByRoom, getBlocksByRoomWithUserVotes
+} from './server/db/blockService.js';
 import {
   pagesByDate,
   getPageDatesByYearAndMonth,
@@ -110,6 +113,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.use('/', roomRoute);
     app.use('/', usersRoute);
     app.use('/', loginRoute);
+    app.use('/', blocksRoute);
 
     const server = createServer(app)
 
@@ -423,7 +427,9 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       try {
         const { room_id } = req.params;
         const roomMetadata = await getRoomMetadata(room_id);
-        const blocks = await getBlocksByRoomWithUserVotes(room_id, req.user.id);
+        const blocks = req.user
+          ? await getBlocksByRoomWithUserVotes(room_id, req.user.id)
+          : await getBlocksByRoom(room_id);
         const date = DateHelper.currentDate('long');
         const title = `Daily Page - ${roomMetadata.name}`
         const header = `${date} - ${roomMetadata.name} Room`;
