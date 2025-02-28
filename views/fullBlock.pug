@@ -1,12 +1,15 @@
 extends layout
+
 block nav
   include navLinks
+
 block content
   #viewer
-    h1 Sorry; the #{room} Room is now 
+    h1 Sorry; the block "#{block_title}" is now 
       span(style="color: #e53449") fully occupied.
     h2
       | Please 
-      a(href="/") try a different room
+      a(href="/rooms/#{room_id}") try a different block
       |  or come back another time.
+
     include consolation

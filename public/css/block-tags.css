@@ -1,0 +1,80 @@
+:root {
+  --primary-bg: #ffffff;
+  --secondary-bg: #f9f9f9;
+  --text-color: #333;
+  --highlight-color: #007bff;
+  --border-color: #ddd;
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.tag-pill {
+  background-color: transparent;
+  color: #333;
+  border: 1px solid #bbb;
+  border-radius: 20px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.tag-pill :hover {
+  background-color: #f2f2f2;
+  border-color: #aaa;
+}
+
+.tag-pill button.tag-remove {
+  background: none;
+  border: none;
+  padding: unset;
+  margin: unset;
+  line-height: unset;
+  margin-left: 5px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.tag-pill button.tag-remove:hover {
+  color: #d9534f;
+}
+
+.tag-add {
+  display: flex;
+  align-items: center;
+}
+
+.tag-add input#new-tag {
+  border: 1px solid #bbb;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease;
+}
+
+.tag-add input#new-tag:focus {
+  outline: none;
+  border-color: #333;
+}
+
+.tag-add button#add-tag-btn {
+  margin: unset;
+  margin-left: 5px;
+  background-color: var(--highlight-color);
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  line-height: unset;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}

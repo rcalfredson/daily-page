@@ -1,14 +1,31 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { getBlockById, getBlocksByRoom, createBlock, deleteBlock } from '../../db/blockService.js';
+import {
+  getBlockById,
+  getBlocksByRoom,
+  getBlocksByDate,
+  getBlockDatesByYearMonth,
+  getAllBlockYearMonthCombos,
+  createBlock,
+  updateBlock,
+  deleteBlock
+} from '../../db/blockService.js';
 import optionalAuth from '../../middleware/optionalAuth.js';
 
-const router = Router({ mergeParams: true });
+const roomScopedRouter = Router({ mergeParams: true });
+const globalRouter = Router();
 
 const useBlockAPI = (app) => {
-  app.use('/api/v1/rooms/:room_id/blocks', router);
+  // 🏠 Room-specific block routes
+  app.use('/api/v1/rooms/:room_id/blocks', roomScopedRouter);
 
-  router.get('/', async (req, res) => {
+  // 🌍 Global block routes
+  app.use('/api/v1/blocks', globalRouter);
+
+  /** 🏠 Room-Specific Endpoints **/
+
+  // 📌 Get all blocks for a specific room
+  roomScopedRouter.get('/', async (req, res) => {
     const { room_id } = req.params;
     const { status, startDate, endDate } = req.query;
 
@@ -21,7 +38,8 @@ const useBlockAPI = (app) => {
     }
   });
 
-  router.post('/', optionalAuth, async (req, res) => {
+  // 📌 Create a new block (within a specific room)
+  roomScopedRouter.post('/', optionalAuth, async (req, res) => {
     const { room_id } = req.params;
     const { title, description, tags, visibility } = req.body;
 
@@ -35,10 +53,10 @@ const useBlockAPI = (app) => {
       title,
       description,
       tags,
-      visibility: req.user ? visibility : 'public', // Default to 'public' for unauthenticated users
+      visibility: req.user ? visibility : 'public',
       creator: req.user?.username || 'anonymous',
       roomId: room_id,
-      editToken: uuidv4()
+      editToken: uuidv4(),
     };
 
     existingTokens.push(blockData.editToken);
@@ -47,7 +65,7 @@ const useBlockAPI = (app) => {
       const newBlock = await createBlock(blockData);
       res.cookie('edit_tokens', JSON.stringify(existingTokens), {
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000 // 1 day
+        maxAge: 24 * 60 * 60 * 1000,
       });
       res.status(201).json(newBlock);
     } catch (error) {
@@ -56,7 +74,10 @@ const useBlockAPI = (app) => {
     }
   });
 
-  router.delete('/:block_id', optionalAuth, async (req, res) => {
+  /** 🌍 Global Block Endpoints **/
+
+  // 📌 Get a single block by ID within a specific room
+  globalRouter.get('/:block_id', async (req, res) => {
     const { block_id } = req.params;
 
     try {
@@ -66,14 +87,123 @@ const useBlockAPI = (app) => {
         return res.status(404).json({ error: 'Block not found.' });
       }
 
-      const tokenFromRequest = req.cookies.edit_token || req.query.edit_token;
+      res.status(200).json(block);
+    } catch (error) {
+      console.error('Error fetching block:', error.message);
+      res.status(500).json({ error: 'Failed to fetch block.' });
+    }
+  });
 
-      // Check if the user is authorized to delete
-      if (block.creator !== req.user?.id && block.editToken !== tokenFromRequest) {
+  // 📌 Get all blocks created on a specific date
+  globalRouter.get('/by-date/:date', async (req, res) => {
+    const { date } = req.params;
+
+    try {
+      const blocks = await getBlocksByDate(date);
+      res.status(200).json(blocks);
+    } catch (error) {
+      console.error('Error fetching blocks by date:', error.message);
+      res.status(500).json({ error: 'Failed to fetch blocks by date.' });
+    }
+  });
+
+  // 📌 Get blocks created in a given year/month
+  globalRouter.get('/dates/:year/:month', async (req, res) => {
+    const { year, month } = req.params;
+
+    try {
+      const dates = await getBlockDatesByYearMonth(year, month);
+      res.status(200).json(dates);
+    } catch (error) {
+      console.error('Error fetching block dates:', error.message);
+      res.status(500).json({ error: 'Failed to fetch block dates.' });
+    }
+  });
+
+  // 📌 Get all year/month combinations with blocks
+  globalRouter.get('/dates', async (_, res) => {
+    try {
+      const dateCombos = await getAllBlockYearMonthCombos();
+      res.status(200).json(dateCombos);
+    } catch (error) {
+      console.error('Error fetching block year/month combos:', error.message);
+      res.status(500).json({ error: 'Failed to fetch block year/month combos.' });
+    }
+  });
+
+  /** 🌍 Single Block Endpoints (Now inside Global Router) **/
+
+  // 📌 Update the **content** of a block (Anyone can do this!)
+  globalRouter.post('/:block_id/content', async (req, res) => {
+    const { block_id } = req.params;
+    const { content } = req.body;
+
+    try {
+      const block = await getBlockById(block_id);
+      if (!block) {
+        return res.status(404).json({ error: 'Block not found.' });
+      }
+
+      await updateBlock(block_id, { content });
+      res.status(200).json({ message: 'Block content updated successfully.' });
+    } catch (error) {
+      console.error('Error updating block content:', error.message);
+      res.status(500).json({ error: 'Failed to update block content.' });
+    }
+  });
+
+  // 📌 Update the **metadata** of a block (Title, Description, Tags) → Requires Authentication or Edit Token
+  globalRouter.post('/:block_id/metadata', optionalAuth, async (req, res) => {
+    const { block_id } = req.params;
+    const { title, description, tags, status } = req.body;
+
+    try {
+      const block = await getBlockById(block_id);
+      if (!block) {
+        return res.status(404).json({ error: 'Block not found.' });
+      }
+
+      // Check ownership before allowing edits
+      const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
+      const isCreator = block.creator === req.user?.username;
+      const hasEditToken = editTokens.includes(block.editToken);
+
+      if (!isCreator && !hasEditToken) {
+        return res.status(403).json({ error: 'You are not authorized to update this block.' });
+      }
+
+      const updates = {};
+      if (title !== undefined) updates.title = title;
+      if (description !== undefined) updates.description = description;
+      if (tags !== undefined) updates.tags = tags;
+      if (status !== undefined) updates.status = status;
+
+      await updateBlock(block_id, updates);
+      res.status(200).json({ message: 'Block metadata updated successfully.' });
+    } catch (error) {
+      console.error('Error updating block metadata:', error.message);
+      res.status(500).json({ error: 'Failed to update block metadata.' });
+    }
+  });
+
+  // 📌 Delete a block (Requires Authentication or Edit Token)
+  globalRouter.delete('/:block_id', optionalAuth, async (req, res) => {
+    const { block_id } = req.params;
+
+    try {
+      const block = await getBlockById(block_id);
+      if (!block) {
+        return res.status(404).json({ error: 'Block not found.' });
+      }
+
+      const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
+      const isCreator = block.creator === req.user?.username;
+      const hasEditToken = editTokens.includes(block.editToken);
+
+      if (!isCreator && !hasEditToken) {
         return res.status(403).json({ error: 'You are not authorized to delete this block.' });
       }
 
-      // Delete the block
       await deleteBlock(block_id);
       res.status(200).json({ message: 'Block deleted successfully.' });
     } catch (error) {

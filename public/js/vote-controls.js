@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function checkLoginState() {
-    console.log('doc body dataset?', document.body.dataset);
     return document.body.dataset.isLoggedIn === "true";
   }
 

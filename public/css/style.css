@@ -157,7 +157,6 @@ NavBar
   align-items: center;
   justify-content: space-between;
   flex-wrap: nowrap;
-  padding: 10px 20px;
   border-radius: 10px;
   margin-bottom: 15px;
 }
@@ -177,6 +176,10 @@ NavBar
 
 .logo {
   transition: all 0.3s ease-in-out 0s;
+}
+
+a:has(.logo) {
+  text-decoration: none;
 }
 
 .logo:hover {
@@ -424,7 +427,10 @@ Editor
 
 .header {
   display: flex;
-  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0;
 }
 
 .text-wrapper {
@@ -772,7 +778,23 @@ ToolTip
 ***************/
 
 .sharing-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.sharing-link a.link {
+  /* si quieres un subrayado dotted, etc. */
+  text-decoration: none;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.sharing-link .copy-container {
+  cursor: pointer;
+  /* etc. */
 }
 
 [data-tooltip] {
@@ -805,7 +827,7 @@ ToolTip
   font-size: 14px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
-  z-index: 10;
+  z-index: 99;
   visibility: hidden;
   opacity: 0;
 }
@@ -824,7 +846,16 @@ ToolTip
 
 .copy-status {
   opacity: 0;
-  vertical-align: 5px;
+  transition: opacity 0.3s ease-in-out;
+  margin-left: 8px;
+  font-weight: bold;
+  color: #28a745;
+  position: relative;
+  top: 0;
+}
+
+.copy-status.show {
+  opacity: 1;
 }
 
 .copy-status.copied {

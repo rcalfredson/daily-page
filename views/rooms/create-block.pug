@@ -5,35 +5,54 @@ block nav
 
 block append head
   link(rel='stylesheet' href='/css/create-block.css')
+  //- link(rel="stylesheet", href="/css/editor.css")
+  link(rel="stylesheet", href="/css/block-tags.css")
+  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
 
 block append scripts
   script(src="/js/create-block.js")
+  script(src="/js/create-block-tags.js")
 
 block content
   h1 Create a New Block
+  - let descriptionText = 'Room information not available.'
+  if roomMetadata
+    h2#room-name
+      | Room: 
+      a(href=`/rooms/${roomMetadata._id}`)= roomMetadata.name
+    - descriptionText = roomMetadata.description || 'No description available.'
+  
+  p#room-description= descriptionText
 
   form#block-form(action=`/api/v1/rooms/${room_id}/blocks` method="POST")
     .form-group
       label(for="title") Title:
       input#title(type="text" name="title" required minlength="3" maxlength="100" 
         placeholder="e.g. 'My Masterpiece', 'The Best Idea Ever', 'Clickbait for Nerds'")
-
     .form-group
       label(for="description") Description (optional):
       textarea#description(name="description" placeholder="Explain your brilliance... or just wing it.")
-
     .form-group
-      label(for="tags") Tags (comma-separated):
-      input#tags(type="text" name="tags" placeholder="e.g. creativity, technology")
-
+      include ../partials/_tag_section
+      input#hidden-tags(type="hidden" name="tags")
+      +tagSection([], true)
     .form-group
       label Visibility:
       .visibility-options
-        label(title="Public blocks appear in the room dashboard while still open for editing.")
-          input(type="radio" name="visibility" value="public" checked)
-          | Public (anyone can join)
-        label(class= !user ? "disabled" : "", title="Private blocks don't appear in the room dashboard until locked. You can invite collaborators via a share link.")
-          input(type="radio" name="visibility" value="private" disabled= !user)
-          | Private (only invited users)
-
+        .option
+          label(for="public-option" title="Editable by anyone in real-time. No login needed.")
+            input#public-option(type="radio" name="visibility" value="public" checked)
+            | Public 
+            i.fas.fa-eye
+          // Inline description for mobile (hidden on desktop)
+          span.visibility-description.hidden-on-desktop Editable by anyone in real-time. No login needed.
+        .option
+          label(for="private-option" title="Only for logged-in users. Visible after editing is complete." class= !user ? "disabled" : "")
+            input#private-option(type="radio" name="visibility" value="private" disabled= !user)
+            | Private 
+            i.fas.fa-lock
+            // New info icon with a larger tap target
+            i.far.fa-question-circle.info-icon(onclick="toggleTooltip(event, 'private')")
+          // Inline description for mobile (hidden on desktop)
+          span.visibility-description.hidden-on-desktop Only for logged-in users. Visible after editing is complete.
     button.btn.btn-primary(type="submit") Create Block

@@ -33,6 +33,8 @@ p {
   border: unset;
   margin: unset;
   float: unset;
+  padding: unset;
+  background-color: unset;
 }
 
 .signup-form input {

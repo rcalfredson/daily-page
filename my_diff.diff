@@ -1,0 +1,3356 @@
+diff --git a/app.js b/app.js
+index 63a7266..67c4c51 100644
+--- a/app.js
++++ b/app.js
+@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
+ import cookieParser from 'cookie-parser';
+ import cors from 'cors';
+ import { createServer } from 'http';
++import MarkdownIt from 'markdown-it';
+ import { ExpressPeerServer } from 'peer';
+ import axios from 'axios';
+ import DateHelper from './lib/dateHelper.js';
+@@ -12,11 +13,11 @@ import * as encodeHelper from './lib/encodeHelper.js';
+ import { config } from './config/config.js';
+ 
+ 
+-import useAPIV1 from './server/api/v1/index.js';
++import useAuthAPI from './server/api/v1/auth.js';
+ import useBlockAPI from './server/api/v1/blocks.js';
++import usePeersAPI from './server/api/v1/peers.js';
+ import useRoomAPI from './server/api/v1/rooms.js';
+ import useUserAPI from './server/api/v1/users.js';
+-import useAuthAPI from './server/api/v1/auth.js';
+ import useVoteAPI from './server/api/v1/votes.js';
+ 
+ import { getFeaturedContent } from './server/services/featuredContent.js'; // Services
+@@ -25,6 +26,7 @@ import roomRoute from './server/routes/rooms.js'; // Routes
+ import usersRoute from './server/routes/users.js';
+ import loginRoute from './server/routes/login.js';
+ import blocksRoute from './server/routes/blocks.js';
++import blockViewRoute from './server/routes/blockView.js';
+ 
+ import { handleRoomRequest } from './server/services/roomRequests.js';
+ import * as cache from './server/services/cache.js';
+@@ -32,6 +34,7 @@ import localizationMiddleware from './server/services/localization.js';
+ import { startJobs } from './server/services/cron.js';
+ import * as google from './server/services/google.js';
+ 
++import { renderMarkdownContent } from './server/utils/markdownHelper.js';
+ import * as viewHelper from './server/utils/view.js'; // Utils
+ 
+ import { initMongooseConnection } from './server/db/mongoose.js';
+@@ -48,7 +51,6 @@ import {
+   getAllRooms, getRoomMetadata
+ 
+ } from './server/db/roomService.js'
+-import { getPeerIDs } from './server/db/sessionService.js';
+ import optionalAuth from './server/middleware/optionalAuth.js';
+ 
+ startJobs();
+@@ -56,8 +58,8 @@ startJobs();
+ const app = express();
+ const port = config.port || 3000;
+ const audioHost = 'https://ipod.dailypage.org';
+-const backendBaseUrl = `${(config.backendUrl || `http://localhost:${port}`)}`;
+ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
++const md = MarkdownIt();
+ 
+ (async () => {
+   const dateParam = ':date([0-9]{4}-[0-9]{2}-[0-9]{2})';
+@@ -104,16 +106,17 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
+     app.set('views', './views');
+     app.set('view engine', 'pug');
+ 
+-    useAPIV1(app);
++    useAuthAPI(app);
+     useBlockAPI(app);
+     useRoomAPI(app);
++    usePeersAPI(app);
+     useUserAPI(app);
+-    useAuthAPI(app);
+     useVoteAPI(app);
+     app.use('/', roomRoute);
+     app.use('/', usersRoute);
+     app.use('/', loginRoute);
+     app.use('/', blocksRoute);
++    app.use('/', blockViewRoute);
+ 
+     const server = createServer(app)
+ 
+@@ -427,21 +430,50 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
+       try {
+         const { room_id } = req.params;
+         const roomMetadata = await getRoomMetadata(room_id);
+-        const blocks = req.user
+-          ? await getBlocksByRoomWithUserVotes(room_id, req.user.id)
+-          : await getBlocksByRoom(room_id);
++
++        // Compute the start of the current UTC day.
++        const now = new Date();
++        const utcStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
++
++        // Options for filtering, now sorted by voteCount (highest to lowest)
++        const lockedOptions = { status: 'locked', startDate: utcStart, sortBy: 'voteCount' };
++        const inProgressOptions = { status: 'in-progress', startDate: utcStart, sortBy: 'voteCount' };
++
++        let lockedBlocks, inProgressBlocks;
++        if (req.user) {
++          lockedBlocks = await getBlocksByRoomWithUserVotes(room_id, req.user.id, lockedOptions);
++          inProgressBlocks = await getBlocksByRoomWithUserVotes(room_id, req.user.id, inProgressOptions);
++        } else {
++          lockedBlocks = await getBlocksByRoom(room_id, lockedOptions);
++          inProgressBlocks = await getBlocksByRoom(room_id, inProgressOptions);
++        }
++
++        // Render markdown for both arrays.
++        lockedBlocks = lockedBlocks.map(block => {
++          block.contentHTML = renderMarkdownContent(block.content)
++
++          return block;
++        });
++
++        inProgressBlocks = inProgressBlocks.map(block => {
++          block.contentHTML = renderMarkdownContent(block.content)
++
++          return block;
++        });
++
+         const date = DateHelper.currentDate('long');
+-        const title = `Daily Page - ${roomMetadata.name}`
++        const title = `Daily Page - ${roomMetadata.name}`;
+         const header = `${date} - ${roomMetadata.name} Room`;
+-        res.render('rooms/blocks-dashboard',
+-          {
+-            room_id,
+-            title,
+-            header,
+-            blocks,
+-            user: req.user
+-          }
+-        );
++
++        res.render('rooms/blocks-dashboard', {
++          room_id,
++          title,
++          header,
++          lockedBlocks,
++          inProgressBlocks,
++          user: req.user,
++          roomMetadata
++        });
+       } catch (error) {
+         res.status(500).send('Error loading room dashboard.');
+       }
+diff --git a/lib/backendHelper.js b/lib/backendHelper.js
+index 163a28e..8f3f16b 100644
+--- a/lib/backendHelper.js
++++ b/lib/backendHelper.js
+@@ -1,102 +1,117 @@
+ /* eslint-disable no-console */
+ class BackendHelper {
+-  static getPage(date = null, options = null) {
+-    return BackendHelper.getInfo('page', date, options);
++  /**
++   * Fetch the full block details (metadata + content).
++   * @param {string} blockId - The block ID.
++   * @returns {Promise<Object>} - The block data.
++   */
++  static async getBlock(blockId) {
++    return BackendHelper._fetchJSON(`api/v1/blocks/${blockId}`);
+   }
+ 
+-  static getPageDatesByYearAndMonth(year, month) {
+-    return BackendHelper.getInfo('pageDates', `${year}/${month}`);
++  /**
++   * Updates the block **content**.
++   * @param {string} blockId - The block ID.
++   * @param {string} content - The updated block content.
++   * @returns {Promise<void>}
++   */
++  static async syncBlockContent(blockId, content) {
++    return BackendHelper._sendJSON(`api/v1/blocks/${blockId}/content`, 'POST', { content });
+   }
+ 
+-  static getPageMonthYearCombos() {
+-    return BackendHelper.getInfo('pageDates');
++  /**
++   * Updates the block **metadata** (title, description, tags).
++   * Requires authentication or an edit token.
++   * @param {string} blockId - The block ID.
++   * @param {Object} metadata - Object containing title, description, and/or tags.
++   * @returns {Promise<void>}
++   */
++  static async updateBlockMetadata(blockId, metadata) {
++    return BackendHelper._sendJSON(`api/v1/blocks/${blockId}/metadata`, 'POST', metadata);
+   }
+ 
+-  static syncPage(content) {
+-    return new Promise((resolve, reject) => {
+-      const request = new XMLHttpRequest();
+-      const url = `${backendURL}/page/${room}`;
+-      request.open('POST', url);
+-      request.setRequestHeader('Content-Type', 'application/json');
+-      BackendHelper.setHandlersForPromise(request, resolve, reject);
+-      request.send(JSON.stringify({ content }));
+-    });
++  /**
++   * Deletes a block (requires authentication or edit token).
++   * @param {string} blockId - The block ID.
++   * @returns {Promise<void>}
++   */
++  static async deleteBlock(blockId) {
++    return BackendHelper._sendJSON(`api/v1/blocks/${blockId}`, 'DELETE');
+   }
+ 
+-  static addPeer(id) {
+-    BackendHelper.modifyPeer(id, 'POST');
++  /**
++   * Fetches all active peer IDs for a block.
++   * @param {string} blockId - The block ID.
++   * @returns {Promise<string[]>} - An array of peer IDs.
++   */
++  static async getPeers(blockId) {
++    console.log('getting peers')
++    return BackendHelper._fetchJSON(`api/v1/blocks/${blockId}/peers`);
+   }
+ 
+-  static getPeers() {
+-    return BackendHelper.getInfo('peers', null, {
+-      room,
+-    }, true);
+-  }
+-
+-  static getInfo(type, param, options = null, optionsOnly = false) {
+-    return new Promise((resolve, reject) => {
+-      const request = new XMLHttpRequest();
+-      let url = `${backendURL}/${type}`;
+-      if (!optionsOnly) {
+-        url += `${room ? `/${room}` : ''}${param ? `/${param}` : ''}`;
+-      }
+-      url += BackendHelper.serialize(options);
+-      request.open('GET', url);
+-      BackendHelper.setHandlersForPromise(request, resolve, reject);
+-      request.send();
+-    });
+-  }
+-
+-  static removePeer(id) {
+-    BackendHelper.modifyPeer(id, 'DELETE');
+-  }
+-
+-  static modifyPeer(id, method) {
+-    const request = new XMLHttpRequest();
+-    const url = `${backendURL}/peers/${room}/${id}`;
+-    request.open(method, url);
+-    BackendHelper.setHandlers(request);
+-    request.send();
++  /**
++   * Adds a peer to a block.
++   * @param {string} blockId - The block ID.
++   * @param {string} peerId - The peer's unique identifier.
++   * @param {string} roomId - The room ID (required in request body).
++   * @returns {Promise<void>}
++   */
++  static async addPeer(blockId, peerId, roomId) {
++    if (!roomId) {
++      console.warn(`addPeer called without a roomId (block: ${blockId}, peer: ${peerId})`);
++      return; // Exit early if roomId is missing
++    }
++    console.log('trying to add a peer');
++    return BackendHelper._sendJSON(`api/v1/blocks/${blockId}/peers/${peerId}`, 'POST', { room_id: roomId });
+   }
+ 
+-  static setHandlers(request, successHandler = BackendHelper.handleSuccess,
+-    failHandler = BackendHelper.handleError) {
+-    request.onload = () => BackendHelper.handleLoadedRequest(request,
+-      () => successHandler(request), () => failHandler(request));
+-    request.onerror = () => BackendHelper.handleError(request);
++  /**
++   * Removes a peer from a block.
++   * @param {string} blockId - The block ID.
++   * @param {string} peerId - The peer's unique identifier.
++   * @returns {Promise<void>}
++   */
++  static async removePeer(blockId, peerId) {
++    return BackendHelper._sendJSON(`api/v1/blocks/${blockId}/peers/${peerId}`, 'DELETE');
+   }
+ 
+-  static setHandlersForPromise(request, resolve, reject) {
+-    BackendHelper.setHandlers(request, () => resolve(JSON.parse(request.response)),
+-      () => reject(new Error(request.response)));
+-  }
++  /** 🌍 Helper Methods **/
+ 
+-  static serialize(obj) {
+-    if (!obj) {
+-      return '';
++  /**
++   * Fetch helper to GET JSON from API.
++   * @param {string} endpoint - API endpoint.
++   * @returns {Promise<any>}
++   */
++  static async _fetchJSON(endpoint) {
++    try {
++      const response = await fetch(`${backendURL}/${endpoint}`);
++      if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
++      return response.status === 204 ? null : response.json(); // Handle empty response
++    } catch (error) {
++      console.error(`❌ BackendHelper Error: ${error.message}`);
++      throw error;
+     }
+-    const str = [];
+-    Object.keys(obj).forEach((key) => {
+-      str.push(`${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`);
+-    });
+-    return `?${str.join('&')}`;
+-  }
+-
+-  static handleSuccess(request) {
+-    console.log(request.statusText);
+-  }
+-
+-  static handleError(request) {
+-    console.error(request.statusText);
+   }
+ 
+-  static handleLoadedRequest(request, successHandler, failHandler) {
+-    if (request.readyState === 4) {
+-      if (request.status === 200) {
+-        successHandler(request);
+-      } else {
+-        failHandler(request);
+-      }
++  /**
++   * Send helper to POST/DELETE JSON to API.
++   * @param {string} endpoint - API endpoint.
++   * @param {string} method - HTTP method ('POST' or 'DELETE').
++   * @param {Object} [body] - Request body (optional for DELETE).
++   * @returns {Promise<void>}
++   */
++  static async _sendJSON(endpoint, method, body = null) {
++    try {
++      const options = {
++        method,
++        headers: { 'Content-Type': 'application/json' },
++        body: body ? JSON.stringify(body) : null
++      };
++      const response = await fetch(`${backendURL}/${endpoint}`, options);
++      if (!response.ok) throw new Error(`Failed to ${method} ${endpoint}`);
++    } catch (error) {
++      console.error(`❌ BackendHelper Error: ${error.message}`);
++      throw error;
+     }
+   }
+ }
+diff --git a/lib/broadcast.js b/lib/broadcast.js
+index 0377cb1..ce16e76 100644
+--- a/lib/broadcast.js
++++ b/lib/broadcast.js
+@@ -29,9 +29,8 @@ class Broadcast {
+ 
+   processOutgoingBuffer(peerId) {
+     const connection = this.outConns.find(conn => conn.peer === peerId);
+-    this.outgoingBuffer.forEach(op => {
+-      connection.send(op);
+-    });
++    if (!connection) return; // Prevent errors if connection doesn't exist
++    this.outgoingBuffer.forEach(op => connection.send(op));
+   }
+ 
+   bindServerEvents(targetPeerId, peer) {
+@@ -43,20 +42,20 @@ class Broadcast {
+   startPeerHeartBeat(peer) {
+     let timeoutId = 0;
+     const heartbeat = () => {
+-      timeoutId = setTimeout( heartbeat, 20000 );
+-      if ( peer.socket._wsOpen() ) {
+-          peer.socket.send( {type:'HEARTBEAT'} );
++      timeoutId = setTimeout(heartbeat, 20000);
++      if (peer.socket._wsOpen()) {
++        peer.socket.send({ type: 'HEARTBEAT' });
+       }
+     };
+ 
+     heartbeat();
+ 
+     return {
+-      start : function () {
+-        if ( timeoutId === 0 ) { heartbeat(); }
++      start: function () {
++        if (timeoutId === 0) { heartbeat(); }
+       },
+-      stop : function () {
+-        clearTimeout( timeoutId );
++      stop: function () {
++        clearTimeout(timeoutId);
+         timeoutId = 0;
+       }
+     };
+@@ -64,7 +63,7 @@ class Broadcast {
+ 
+   onOpen(targetPeerId) {
+     this.peer.on('open', id => {
+-      this.controller.updateShareLink(id);
++      this.controller.addPeer(id);
+       this.onPeerConnection();
+       this.onError();
+       this.onDisconnect();
+@@ -78,9 +77,13 @@ class Broadcast {
+ 
+   onError() {
+     this.peer.on("error", err => {
+-      const pid = String(err).replace("Error: Could not connect to peer ", "");
+-      this.removeFromConnections(pid);
+-      BackendHelper.removePeer(pid);
++      const match = String(err).match(/Error: Could not connect to peer (\S+)/);
++      const pid = match ? match[1] : null;
++      // Check if the peer exists before removing
++      if (pid && (this.inConns.some(conn => conn.peer === pid) || this.outConns.some(conn => conn.peer === pid))) {
++        this.removeFromConnections(pid);
++        BackendHelper.removePeer(this.controller.blockId, pid);
++      }
+       if (!this.controller.network.map(obj => obj.peerId).includes(this.controller.myPeerId())) {
+         this.controller.addToNetwork(this.controller.myPeerId(), this.controller.siteId);
+       }
+@@ -266,7 +269,7 @@ class Broadcast {
+     connection.on('data', data => {
+       const dataObj = JSON.parse(data);
+ 
+-      switch(dataObj.type) {
++      switch (dataObj.type) {
+         case 'connRequest':
+           this.evaluateRequest(dataObj.peerId, dataObj.siteId);
+           break;
+@@ -306,7 +309,7 @@ class Broadcast {
+       this.removeFromConnections(connection.peer);
+       if (connection.peer == this.controller.targetPeerId) {
+         const id = this.randomId();
+-        if (id) { this.controller.updatePageURL(id); }
++        if (id) { this.controller.setTargetPeerId(id); }
+       }
+       if (!this.hasReachedMax()) {
+         this.controller.findNewTarget();
+diff --git a/lib/controller.js b/lib/controller.js
+index 40f773f..aefdb0f 100644
+--- a/lib/controller.js
++++ b/lib/controller.js
+@@ -11,7 +11,7 @@ import CSS_COLORS from './cssColors';
+ import { ANIMALS } from './cursorNames';
+ 
+ class Controller {
+-  constructor(targetPeerId, roomId, host, peer, broadcast, editor, doc = document, win = window) {
++  constructor(targetPeerId, roomId, blockId, host, peer, broadcast, editor, doc = document, win = window) {
+     this.siteId = v4();
+     this.host = host;
+     this.buffer = [];
+@@ -19,6 +19,7 @@ class Controller {
+     this.network = [];
+     this.targetPeerId = targetPeerId;
+     this.roomId = roomId;
++    this.blockId = blockId;
+     this.lastLocalInsertTime = new Date().getTime();
+     this.makeOwnName(doc);
+     this.setTimedActions();
+@@ -55,15 +56,21 @@ class Controller {
+   }
+ 
+   bindCopyEvent(doc = document) {
+-    doc.querySelector('.copy-container').onclick = () => {
+-      this.copyToClipboard(doc.querySelector('#myLinkInput'));
++    const copyBtn = document.querySelector('.copy-container');
++    const copyStatus = document.querySelector('.copy-status');
++    if (!copyBtn) return;
++
++    copyBtn.onclick = () => {
++      const linkSpan = doc.getElementById('myLinkInput');
++      if (!linkSpan) return;
++      this.copyToClipboard(linkSpan.textContent.trim());
+     };
+   }
+ 
+-  copyToClipboard(element) {
++  copyToClipboard(text) {
+     const temp = document.createElement("input");
+-    document.querySelector("body").appendChild(temp);
+-    temp.value = element.textContent;
++    document.body.appendChild(temp);
++    temp.value = text;
+     temp.select();
+     document.execCommand("copy");
+     temp.remove();
+@@ -93,7 +100,9 @@ class Controller {
+       modal.style.left = (e.clientX - xPos) + 'px';
+     };
+ 
++    doc.querySelector('.video-modal')?.removeEventListener('mousedown', dragModal);
+     doc.querySelector('.video-modal').addEventListener('mousedown', dragModal, false);
++    win.removeEventListener('mouseup', setModal);
+     win.addEventListener('mouseup', setModal, false);
+ 
+     this.bindCopyEvent(doc);
+@@ -103,26 +112,17 @@ class Controller {
+     console.log('disconnected');
+   }
+ 
+-  updateShareLink(id, doc = document) {
+-    const shareLink = this.host + '?' + id;
+-    const aTag = doc.querySelector('#myLink');
+-    const pTag = doc.querySelector('#myLinkInput');
+-
+-    pTag.textContent = shareLink;
+-    aTag.setAttribute('href', shareLink);
+-    BackendHelper.addPeer(id);
++  addPeer(id) {
++    BackendHelper.addPeer(this.blockId, id, this.roomId);
+   }
+ 
+-  updatePageURL(id, win = window) {
++  setTargetPeerId(id) {
+     this.targetPeerId = id;
+-
+-    const newURL = `${this.host}/rooms/${room}?id=${id}`;
+-    win.history.pushState({}, '', newURL);
+   }
+ 
+-  updateRootUrl(id, win = window) {
++  updateRootUrl(id) {
+     if (this.targetPeerId == 0) {
+-      this.updatePageURL(id, win);
++      this.setTargetPeerId(id);
+     }
+   }
+ 
+@@ -140,7 +140,8 @@ class Controller {
+           controller.disableEditor();
+           (function updateCountdown(secondsRemaining = 3) {
+             if (secondsRemaining === 0) {
+-              window.location.href = `/rooms/overview/${currentDate}`;
++              // TODO: Update to the block URL when that view is implemented
++              window.location.href = `/rooms/${controller.roomId}`;
+             }
+             document.getElementById('countdown').innerText = secondsRemaining;
+             secondsRemaining--;
+@@ -166,15 +167,20 @@ class Controller {
+ 
+       // 1. Handle tab suspension or non-focus (original 60 seconds for production)
+       if (currentTime > lastTime + 60000) {
+-        window.location.href = `/rooms${room}/${currentDate}`;
++        // TODO: Update to the block URL when that view is implemented
++        window.location.href = `/rooms/${this.roomId}`;
+       }
+ 
+       // 2. Handle user inactivity (original 5–5.5 minutes for production)
+       if (timeDiff > 300000 && timeDiff < 330000) {
+-        document.getElementById('inactive-warning').style.visibility = 'visible';
+-        document.addEventListener('keyup', dismissWithKeyPress, false);
++        const warningElem = document.getElementById('inactive-warning');
++        if (warningElem) {
++          warningElem.style.visibility = 'visible';
++          document.addEventListener('keyup', dismissWithKeyPress, false);
++        }
+       } else if (timeDiff >= 330000) {
+-        window.location.href = `/rooms/${room}/${currentDate}`;
++        // TODO: Update to the block URL when that view is implemented
++        window.location.href = `/rooms/${this.roomId}`;
+       }
+ 
+       // Update the lastTime variable to reflect current execution time
+@@ -193,20 +199,24 @@ class Controller {
+ 
+ 
+   disableEditor(doc = document) {
+-    doc.getElementById('daily-page').classList.add('disabled');
++    doc.getElementById('block-page').classList.add('disabled');
+   }
+ 
+   enableEditor(doc = document) {
+-    doc.getElementById('daily-page').classList.remove('hide');
++    doc.getElementById('block-page').classList.remove('hide');
+   }
+ 
+   hideEditor(doc = document) {
+-    doc.getElementById('daily-page').classList.add('hide')
++    doc.getElementById('block-page').classList.add('hide')
+   }
+ 
+   updateSaveStatus(doc = document) {
+-    BackendHelper.getPage(DateHelper.currentDate(), { lastUpdate: true }).then((result) => {
+-      doc.getElementById('sync-infobox').innerText = `Last backup: ${DateHelper.localDateWithTime(result.lastUpdate)}`;
++    BackendHelper.getBlock(this.blockId).then((result) => {
++      if (result && result.updatedAt) {
++        doc.getElementById('sync-infobox').innerText = `Last backup: ${DateHelper.localDateWithTime(result.updatedAt)}`;
++      } else {
++        doc.getElementById('sync-infobox').innerText = "Last backup: Unknown";
++      }
+     });
+   }
+ 
+@@ -223,15 +233,46 @@ class Controller {
+     this.editor.replaceText(this.crdt.toText());
+   }
+ 
+-  backupChanges() {
+-    if (this.firstPeerId() !== this.myPeerId()) {
++  async checkBlockStatus() {
++    try {
++      const res = await fetch(`/api/v1/blocks/${this.blockId}`);
++      if (!res.ok) {
++        throw new Error('Could not fetch block info');
++      }
++
++      const block = await res.json();
++
++      if (block.status === 'locked') {
++        showToast("This block has been locked!", "success");
++        setTimeout(() => {
++          window.location.href = `/rooms/${this.roomId}/blocks/${this.blockId}`;
++        }, 1500);
++        return true; // Locked 🔒
++      }
++
++      return false; // Libre como el viento 🌬️
++    } catch (err) {
++      console.error("Error checking block status:", err);
++      return false; // fallback porque ni modo 🤷‍♂️
++    }
++  }
++
++  async backupChanges() {
++    const isLocked = await this.checkBlockStatus();
++    if (isLocked) {
++      // si está locked, no seguimos
++      return;
++    }
++    if (this.firstPeerId() && this.firstPeerId() !== this.myPeerId()) {
+       return;
+     }
+ 
+-    BackendHelper.syncPage(this.editor.currentContents()).then().catch((error) => {
+-      console.log('Error occurred during attempt to save doc.');
+-      console.log(error);
+-    });
++    BackendHelper.syncBlockContent(this.blockId, this.editor.currentContents())
++      .then()
++      .catch((error) => {
++        console.log('Error occurred during attempt to save doc.');
++        console.log(error);
++      });
+   }
+ 
+   populateVersionVector(initialVersions) {
+@@ -257,7 +298,8 @@ class Controller {
+   }
+ 
+   firstPeerId() {
+-    return this.network.sort((a, b) => {
++    if (this.network.length === 0) return null;
++    return this.network.slice().sort((a, b) => {
+       const idA = a.peerId.toUpperCase();
+       const idB = b.peerId.toUpperCase();
+       return (idA < idB) ? -1 : (idA > idB) ? 1 : 0;
+@@ -265,7 +307,7 @@ class Controller {
+   }
+ 
+   myPeerId(doc = document) {
+-    return doc.querySelector('#myLinkInput').textContent.split('?')[1];
++    return this.broadcast.peer.id;
+   }
+ 
+   removeFromNetwork(peerId, doc = document) {
+@@ -276,8 +318,8 @@ class Controller {
+       this.removeFromListOfPeers(peerId, doc);
+       this.editor.removeCursor(deletedObj.siteId);
+       this.broadcast.removeFromNetwork(peerId);
+-      if (this.firstPeerId() == this.myPeerId()) {
+-        BackendHelper.removePeer(peerId);
++      if (this.firstPeerId() && this.firstPeerId() == this.myPeerId()) {
++        BackendHelper.removePeer(this.blockId, peerId);
+       }
+     }
+   }
+@@ -411,10 +453,12 @@ class Controller {
+     const peerLi = this.getPeerElemById(peerId, doc);
+ 
+     modal.classList.add('hide');
+-    peerLi.classList.remove('answered', 'calling', 'beingCalled');
+-    this.calling = this.calling.filter(id => id !== peerId);
++    if (peerLi) {
++      peerLi.classList.remove('answered', 'calling', 'beingCalled');
++      this.attachVideoEvent(peerId, peerLi);
++    }
+ 
+-    this.attachVideoEvent(peerId, peerLi);
++    this.calling = this.calling.filter(id => id !== peerId);
+   }
+ 
+   attachVideoEvent(peerId, node) {
+@@ -431,17 +475,18 @@ class Controller {
+   }
+ 
+   removeFromListOfPeers(peerId, doc = document) {
+-    doc.getElementById(peerId).remove();
++    const peerElement = doc.getElementById(peerId);
++    if (peerElement) peerElement.remove();
+   }
+ 
+   findNewTarget() {
+-    BackendHelper.getPeers().then(result => {
++    BackendHelper.getPeers(this.blockId).then(result => {
+       const possibleTargets = result.filter(id => id !== this.myPeerId());
+ 
+       if (possibleTargets.length === 0) {
+         this.enableEditor();
+         this.useBackupContent();
+-        this.broadcast.peer.on('connection', conn => this.updatePageURL(conn.peer));
++        this.broadcast.peer.on('connection', conn => this.setTargetPeerId(conn.peer));
+       } else {
+         const randomIdx = Math.floor(Math.random() * possibleTargets.length);
+         const newTarget = possibleTargets[randomIdx];
+@@ -453,7 +498,7 @@ class Controller {
+   }
+ 
+   handleSync(syncObj, doc = document, win = window) {
+-    if (syncObj.peerId != this.targetPeerId) { this.updatePageURL(syncObj.peerId, win); }
++    if (syncObj.peerId != this.targetPeerId) { this.setTargetPeerId(syncObj.peerId); }
+ 
+     syncObj.network.forEach(obj => this.addToNetwork(obj.peerId, obj.siteId, doc));
+ 
+@@ -474,7 +519,7 @@ class Controller {
+ 
+     let connection = this.broadcast.outConns.find(conn => conn.peer === peerId);
+ 
+-    if (connection) {
++    if (connection && connection.open) {
+       connection.send(completedMessage);
+     } else {
+       connection = this.broadcast.peer.connect(peerId);
+@@ -520,6 +565,10 @@ class Controller {
+   }
+ 
+   applyOperation(operation) {
++    if (!operation.char) {
++      console.error("Invalid operation received:", operation);
++      return;
++    }
+     const char = operation.char;
+     const identifiers = char.position.map(pos => new Identifier(pos.digit, pos.siteId));
+     const newChar = new Char(char.value, char.counter, char.siteId, identifiers);
+@@ -538,6 +587,7 @@ class Controller {
+   }
+ 
+   localInsert(chars, startPos) {
++    if (!chars || chars.length === 0) return;
+     for (let i = 0; i < chars.length; i++) {
+       let char = chars[i];
+ 
+@@ -559,7 +609,7 @@ class Controller {
+       return;
+     }
+     this.hideEditor();
+-    BackendHelper.getPage().then(result => {
++    BackendHelper.getBlock(this.blockId).then(result => {
+       if (this.crdt.isEmpty()) {
+         this.localInsert(result.content, { line: 0, ch: 0 });
+         this.editor.replaceText(this.crdt.toText());
+@@ -569,6 +619,10 @@ class Controller {
+   }
+ 
+   broadcastInsertion(char) {
++    if (!char || typeof char !== 'object') {
++      console.error("Invalid char broadcast attempt:", char);
++      return;
++    }
+     const operation = {
+       type: 'insert',
+       char: char,
+@@ -579,6 +633,11 @@ class Controller {
+   }
+ 
+   broadcastDeletion(char, version) {
++    if (!char || typeof char !== 'object' || !version) {
++      console.error("Invalid deletion broadcast attempt:", char, version);
++      return;
++    }
++
+     const operation = {
+       type: 'delete',
+       char: char,
+@@ -589,6 +648,10 @@ class Controller {
+   }
+ 
+   insertIntoEditor(value, pos, siteId) {
++    if (typeof value !== 'string' || value.length === 0) {
++      console.error("Invalid insertion value:", value);
++      return;
++    }
+     const positions = {
+       from: {
+         line: pos.line,
+@@ -604,6 +667,10 @@ class Controller {
+   }
+ 
+   deleteFromEditor(value, pos, siteId) {
++    if (typeof value !== 'string' || value.length === 0) {
++      console.error("Invalid deletion value:", value);
++      return;
++    }
+     let positions;
+ 
+     if (value === "\n") {
+diff --git a/lib/editor.js b/lib/editor.js
+index 4b7b5a8..1bc9e6d 100644
+--- a/lib/editor.js
++++ b/lib/editor.js
+@@ -1,4 +1,5 @@
+ import DateHelper from './dateHelper';
++import RequestHelper from './requestHelper';
+ import RemoteCursor from './remoteCursor';
+ 
+ class Editor {
+@@ -6,7 +7,9 @@ class Editor {
+     this.controller = null;
+     this.mde = mde;
+     this.remoteCursors = {};
++    this.imageMarks = [];
+     this.customTabBehavior();
++    this.markImages = RequestHelper.throttle(this.markImages.bind(this), 250)
+     // this.trackRemainingTime();
+   }
+ 
+@@ -18,6 +21,63 @@ class Editor {
+     });
+   }
+ 
++  toggleTooltip = () => {
++    const imgTooltip = document.getElementById('insert-img-tooltip');
++    imgTooltip.classList.toggle('hidden');
++  };
++
++  simulateTyping(snippet, pos, callback) {
++    const cm = this.mde.codemirror;
++    let index = 0;
++    const typeNext = () => {
++      if (index < snippet.length) {
++        // Insert one character at a time using '+input'
++        cm.replaceRange(snippet.charAt(index), pos, pos, '+input');
++        pos = cm.getCursor(); // update the cursor position
++        index++;
++        setTimeout(typeNext, 50); // tiny pause between keystrokes
++      } else {
++        if (callback) callback();
++      }
++    };
++    typeNext();
++  }
++
++  insertImage = () => {
++    const imgTooltip = document.getElementById('insert-img-tooltip');
++    const imgUrlInput = document.getElementById('img-url');
++    const imgAltInput = document.getElementById('img-alt');
++    const cm = this.mde.codemirror;
++
++    const url = imgUrlInput.value.trim();
++    const alt = imgAltInput.value.trim();
++    if (!url) {
++      alert('Please enter an image URL.');
++      return;
++    }
++
++    const snippet = `![${alt}](${url})`;
++    const pos = cm.getCursor();
++    // Simulate typing to insert the snippet so the CRDT sees each change
++    this.simulateTyping(snippet, pos, () => {
++      this.markImages();
++    });
++
++    imgTooltip.classList.add('hidden');
++    imgUrlInput.value = '';
++    imgAltInput.value = '';
++  };
++
++  cancelInsertion = () => {
++    const imgTooltip = document.getElementById('insert-img-tooltip');
++    const imgUrlInput = document.getElementById('img-url');
++    const imgAltInput = document.getElementById('img-alt');
++
++    imgTooltip.classList.add('hidden');
++    imgUrlInput.value = '';
++    imgAltInput.value = '';
++  };
++
+   bindButtons() {
+     const openInsertImgBtn = document.getElementById('open-insert-img-btn');
+     const imgTooltip = document.getElementById('insert-img-tooltip');
+@@ -26,39 +86,33 @@ class Editor {
+     const imgUrlInput = document.getElementById('img-url');
+     const imgAltInput = document.getElementById('img-alt');
+ 
+-    // Toggle Tooltip Visibility
+-    openInsertImgBtn.addEventListener('click', () => {
+-      imgTooltip.classList.toggle('hidden');
+-    });
++    if (!openInsertImgBtn ||
++      !imgTooltip ||
++      !insertImgConfirm ||
++      !insertImgCancel ||
++      !imgUrlInput ||
++      !imgAltInput) {
++      console.warn("Warning: Some image insertion UI elements are missing. Skipping bindButtons.");
++      return;
++    }
+ 
+-    // Insert Image
+-    insertImgConfirm.addEventListener('click', () => {
+-      const url = imgUrlInput.value.trim();
+-      const alt = imgAltInput.value.trim();
+-      if (!url) {
+-        alert('Please enter an image URL.');
+-        return;
+-      }
+-      const snippet = `![${alt}](${url})`;
+-      const cm = this.mde.codemirror;
+-      const pos = cm.getCursor();
+-      cm.replaceRange(snippet, pos, pos, 'insertText');
+-      imgTooltip.classList.add('hidden');
+-      imgUrlInput.value = '';
+-      imgAltInput.value = '';
+-      this.markImages();
+-    });
++    // Ensure no duplicate listeners
++    openInsertImgBtn.removeEventListener('click', this.toggleTooltip);
++    openInsertImgBtn.addEventListener('click', this.toggleTooltip);
+ 
+-    // Cancel Insertion
+-    insertImgCancel.addEventListener('click', () => {
+-      imgTooltip.classList.add('hidden');
+-      imgUrlInput.value = '';
+-      imgAltInput.value = '';
+-    });
++    insertImgConfirm.removeEventListener('click', this.insertImage);
++    insertImgConfirm.addEventListener('click', this.insertImage);
++
++    insertImgCancel.removeEventListener('click', this.cancelInsertion);
++    insertImgCancel.addEventListener('click', this.cancelInsertion);
+   }
+ 
+   bindDownloadButton() {
+     const dlButton = document.querySelector('#download');
++    if (!dlButton) {
++      console.warn("Warning: Download button is missing. Skipping bindDownloadButton.");
++      return;
++    }
+ 
+     dlButton.onclick = () => {
+       const textToSave = this.mde.value();
+@@ -79,14 +133,19 @@ class Editor {
+   }
+ 
+   afterDownload(e, doc = document) {
+-    doc.body.removeChild(e.target);
++    if (e.target && e.target.parentNode) {
++      doc.body.removeChild(e.target);
++    }
+   }
+ 
+   bindChangeEvent() {
+     this.mde.codemirror.on("change", (_, changeObj) => {
+       if (changeObj.origin === "setValue") return;
+       if (changeObj.origin === "insertText") return;
+-      if (changeObj.origin === "deleteText") return;
++      if (changeObj.origin === "deleteText") {
++        setTimeout(() => this.markImages(), 50);
++        return;
++      }
+ 
+       switch (changeObj.origin) {
+         case 'redo':
+@@ -95,7 +154,6 @@ class Editor {
+           break;
+         case '*compose':
+         case '+input':
+-        //          this.processInsert(changeObj);    // uncomment this line for palindromes!
+         case 'paste':
+           this.processInsert(changeObj);
+           break;
+@@ -111,35 +169,53 @@ class Editor {
+     });
+   }
+ 
++  clearImagePreviews() {
++    // Clear stored markers rather than querying the DOM
++    this.imageMarks.forEach(marker => marker.clear());
++    this.imageMarks = [];
++  }
++
+   markImages() {
+-    // 1. Remover viejos marcadores (si quieres refrescar)
+     const cm = this.mde.codemirror;
+-    cm.getAllMarks().forEach(mark => mark.clear());
++    // Clear previous markers/widgets
++    this.clearImagePreviews();
+ 
+-    // 2. Iterar líneas
+     const lineCount = cm.lineCount();
+     const regex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+ 
+     for (let i = 0; i < lineCount; i++) {
+-      let lineText = cm.getLine(i);
++      const lineText = cm.getLine(i);
+       let match;
+       while ((match = regex.exec(lineText)) !== null) {
+         const altText = match[1];
+-        const imgUrl = match[2];
++        const imgUrl = match[2].trim();
++
++        if (!/^https?:\/\//.test(imgUrl)) continue;
+ 
+-        // crear widget
+-        const imgNode = document.createElement('img');
++        // Define the start and end positions of the markdown tag
++        const startPos = { line: i, ch: match.index };
++        const endPos = { line: i, ch: match.index + match[0].length };
++
++        // Create an image node that will replace the text visually
++        const imgNode = document.createElement("img");
+         imgNode.src = imgUrl;
+         imgNode.alt = altText;
+-        // controla ancho:
+-        imgNode.classList.add('markdown-img-preview');
++        imgNode.style.maxWidth = "200px";
++        imgNode.style.verticalAlign = "middle"; // Adjust alignment if needed
++        imgNode.style.pointerEvents = "none";
++
++        imgNode.onload = () => {
++          cm.refresh();
++        };        
+ 
+-        // 3. Reemplazar el texto con un widget
+-        const fromPos = { line: i, ch: match.index };
+-        const toPos = { line: i, ch: match.index + match[0].length };
+-        cm.markText(fromPos, toPos, {
++        // Use markText with replacedWith so the widget is inline
++        const marker = cm.markText(startPos, endPos, {
+           replacedWith: imgNode,
++          clearOnEnter: true // widget is cleared on edit in that area
+         });
++
++        // Store the marker so we can clear it later
++        this.imageMarks.push(marker);
+       }
+     }
+   }
+@@ -176,14 +252,16 @@ class Editor {
+           }
+ 
+           // Por si hubiera otros casos con nodos extraños
+-          return node.textContent || '';
++          return node.textContent || node.outerHTML || '';
+         }).join('');
+       })
+       .join('\n');
+   }
+ 
+   processInsert(changeObj) {
+-    this.processDelete(changeObj);
++    if (!this.isEmpty(changeObj.removed)) {
++      this.processDelete(changeObj);
++    }
+     const chars = this.extractChars(changeObj.text);
+     const startPos = changeObj.from;
+ 
+@@ -192,7 +270,7 @@ class Editor {
+   }
+ 
+   isEmpty(textArr) {
+-    return textArr.length === 1 && textArr[0].length === 0;
++    return textArr.length === 0 || (textArr.length === 1 && textArr[0] === '');
+   }
+ 
+   processDelete(changeObj) {
+@@ -206,7 +284,7 @@ class Editor {
+   }
+ 
+   processUndoRedo(changeObj) {
+-    if (changeObj.removed[0].length > 0) {
++    if (changeObj.removed.length > 0 && !this.isEmpty(changeObj.removed)) {
+       this.processDelete(changeObj);
+     } else {
+       this.processInsert(changeObj);
+@@ -214,49 +292,43 @@ class Editor {
+   }
+ 
+   extractChars(text) {
+-    if (text[0] === '' && text[1] === '' && text.length === 2) {
+-      return '\n';
+-    } else {
+-      return text.join("\n");
+-    }
++    return text.length === 1 && text[0] === '' ? '\n' : text.join("\n");
+   }
+ 
+   replaceText(text) {
+-    const cursor = this.mde.codemirror.getCursor();
+-    this.mde.value(text);
+-    this.mde.codemirror.setCursor(cursor);
++    const cm = this.mde.codemirror;
++    cm.operation(() => {
++      cm.setValue(text);
++    });
+     this.markImages();
+   }
+ 
+   insertText(value, positions, siteId) {
+-    const localCursor = this.mde.codemirror.getCursor();
++    const cm = this.mde.codemirror;
++    const localCursor = cm.getCursor();
+     const delta = this.generateDeltaFromChars(value);
+ 
+-    this.mde.codemirror.replaceRange(value, positions.from, positions.to, 'insertText');
++    cm.replaceRange(value, positions.from, positions.to, 'insertText');
+     this.updateRemoteCursorsInsert(positions.to, siteId);
+     this.updateRemoteCursor(positions.to, siteId, 'insert', value);
+ 
+     if (localCursor.line > positions.to.line) {
+-      localCursor.line += delta.line
++      localCursor.line += delta.line;
+     } else if (localCursor.line === positions.to.line && localCursor.ch > positions.to.ch) {
+       if (delta.line > 0) {
+-        localCursor.line += delta.line
++        localCursor.line += delta.line;
+         localCursor.ch -= positions.to.ch;
+       }
+-
+       localCursor.ch += delta.ch;
+     }
+ 
+-    this.mde.codemirror.setCursor(localCursor);
++    cm.setCursor(localCursor);
+     this.markImages();
+   }
+ 
+   removeCursor(siteId) {
+-    const remoteCursor = this.remoteCursors[siteId];
+-
+-    if (remoteCursor) {
+-      remoteCursor.detach();
+-
++    if (this.remoteCursors[siteId]) {
++      this.remoteCursors[siteId].detach();
+       delete this.remoteCursors[siteId];
+     }
+   }
+@@ -266,8 +338,9 @@ class Editor {
+ 
+     for (const cursorSiteId in this.remoteCursors) {
+       if (cursorSiteId === siteId) continue;
++
+       const remoteCursor = this.remoteCursors[cursorSiteId];
+-      const newPosition = Object.assign({}, remoteCursor.lastPosition);
++      const newPosition = { ...remoteCursor.lastPosition };
+ 
+       if (newPosition.line > position.line) {
+         newPosition.line += positionDelta.line;
+@@ -276,11 +349,10 @@ class Editor {
+           newPosition.line += positionDelta.line;
+           newPosition.ch -= position.ch;
+         }
+-
+         newPosition.ch += positionDelta.ch;
+       }
+ 
+-      remoteCursor.set(newPosition)
++      remoteCursor.set(newPosition);
+     }
+   }
+ 
+@@ -290,36 +362,35 @@ class Editor {
+     for (const cursorSiteId in this.remoteCursors) {
+       if (cursorSiteId === siteId) continue;
+       const remoteCursor = this.remoteCursors[cursorSiteId];
+-      const newPosition = Object.assign({}, remoteCursor.lastPosition);
++      const newPosition = { ...remoteCursor.lastPosition };
+ 
+       if (newPosition.line > to.line) {
+         newPosition.line -= positionDelta.line;
+       } else if (newPosition.line === to.line && newPosition.ch > to.ch) {
+         if (positionDelta.line > 0) {
+           newPosition.line -= positionDelta.line;
+-          newPosition.ch += from.ch;
++          newPosition.ch = from.ch;
+         }
+-
+         newPosition.ch -= positionDelta.ch;
+       }
+ 
+-      remoteCursor.set(newPosition)
++      remoteCursor.set(newPosition);
+     }
+   }
+ 
+   updateRemoteCursor(position, siteId, opType, value) {
+     const remoteCursor = this.remoteCursors[siteId];
+-    const clonedPosition = Object.assign({}, position);
++    const clonedPosition = { ...position };
+ 
+     if (opType === 'insert') {
+       if (value === '\n') {
+         clonedPosition.line++;
+-        clonedPosition.ch = 0
++        clonedPosition.ch = 0;
+       } else {
+         clonedPosition.ch++;
+       }
+     } else {
+-      clonedPosition.ch--;
++      clonedPosition.ch = Math.max(0, clonedPosition.ch - 1);
+     }
+ 
+     if (remoteCursor) {
+@@ -330,32 +401,31 @@ class Editor {
+   }
+ 
+   deleteText(value, positions, siteId) {
+-    const localCursor = this.mde.codemirror.getCursor();
++    const cm = this.mde.codemirror;
++    const localCursor = cm.getCursor();
+     const delta = this.generateDeltaFromChars(value);
+ 
+-    this.mde.codemirror.replaceRange("", positions.from, positions.to, 'deleteText');
+-    this.updateRemoteCursorsDelete(positions.to, siteId);
+-    this.updateRemoteCursor(positions.to, siteId, 'delete');
++    cm.operation(() => {
++      cm.replaceRange("", positions.from, positions.to, 'deleteText');
++      this.updateRemoteCursorsDelete(value, positions.to, positions.from, siteId);
++      this.updateRemoteCursor(positions.to, siteId, 'delete');
+ 
+-    if (localCursor.line > positions.to.line) {
+-      localCursor.line -= delta.line;
+-    } else if (localCursor.line === positions.to.line && localCursor.ch > positions.to.ch) {
+-      if (delta.line > 0) {
++      if (localCursor.line > positions.to.line) {
++        localCursor.line -= delta.line;
++      } else if (localCursor.line === positions.to.line && localCursor.ch > positions.to.ch) {
+         localCursor.line -= delta.line;
+-        localCursor.ch += positions.from.ch;
++        localCursor.ch = delta.line > 0 ? positions.from.ch : localCursor.ch - delta.ch;
+       }
+ 
+-      localCursor.ch -= delta.ch;
+-    }
+-
+-    this.mde.codemirror.setCursor(localCursor);
++      cm.setCursor(localCursor);
++    });
+   }
+ 
+   findLinearIdx(lineIdx, chIdx) {
+-    const linesOfText = this.controller.crdt.text.split("\n");
++    const linesOfText = (this.controller.crdt.text || '').split("\n");
+ 
+-    let index = 0
+-    for (let i = 0; i < lineIdx; i++) {
++    let index = 0;
++    for (let i = 0; i < Math.min(lineIdx, linesOfText.length); i++) {
+       index += linesOfText[i].length + 1;
+     }
+ 
+@@ -381,13 +451,20 @@ class Editor {
+   }
+ 
+   trackRemainingTime() {
++    let lastTimeLeft = null;
++
+     setInterval(() => {
+-      const now = new Date().getTime();
++      const now = Date.now();
++      const timeLeft = DateHelper.closingTime() - now;
+       const timeLeftElement = document.getElementById('time-left');
+       const closingSoonInfoBox = document.getElementById('closing-soon-infobox');
+-      const displayed = (DateHelper.closingTime() - now) <= 10 * 60 * 1000;
++      const displayed = timeLeft <= 10 * 60 * 1000;
++
++      if (lastTimeLeft !== timeLeft) {
++        timeLeftElement.innerText = DateHelper.roundedDuration(timeLeft);
++        lastTimeLeft = timeLeft;
++      }
+ 
+-      timeLeftElement.innerText = DateHelper.roundedDuration(DateHelper.closingTime() - now);
+       closingSoonInfoBox.style.visibility = displayed ? 'visible' : 'hidden';
+     }, 1000);
+   }
+diff --git a/lib/main.js b/lib/main.js
+index df8fa6c..06575a6 100644
+--- a/lib/main.js
++++ b/lib/main.js
+@@ -11,7 +11,8 @@ if (!peerId) {
+ 
+ new Controller(
+   peerId,
+-  room,
++  room_id,
++  block_id,
+   location.origin,
+   new Peer({
+     host: location.hostname,
+@@ -27,12 +28,12 @@ new Controller(
+           //   username: 'ask@dailypage.org'
+           // },
+           {
+-            urls: "turn:openrelay.metered.ca:80?transport=tcp",
++            url: "turn:openrelay.metered.ca:80?transport=tcp",
+             username: "openrelayproject",
+             credential: "openrelayproject",
+           },
+           {
+-            urls: "turn:openrelay.metered.ca:443?transport=tcp",
++            url: "turn:openrelay.metered.ca:443?transport=tcp",
+             username: "openrelayproject",
+             credential: "openrelayproject",
+           }
+@@ -42,6 +43,7 @@ new Controller(
+   }),
+   new Broadcast(),
+   new Editor(new EasyMDE({
++    element: document.getElementById('editor-content'),
+     placeholder: "The blank page awaits; write away!",
+     spellChecker: false,
+     toolbar: false,
+diff --git a/package-lock.json b/package-lock.json
+index 1ae3cb2..4433455 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -37,6 +37,7 @@
+         "jquery": "^3.5.1",
+         "jsdom": "^20.0.0",
+         "jsonwebtoken": "^9.0.1",
++        "markdown-it": "^14.1.0",
+         "memory-cache": "^0.2.0",
+         "moment-timezone": "^0.5.31",
+         "mongodb": "^6",
+@@ -9661,6 +9662,15 @@
+         "node": ">= 0.8.0"
+       }
+     },
++    "node_modules/linkify-it": {
++      "version": "5.0.0",
++      "resolved": "https://registry.npmjs.org/linkify-it/-/linkify-it-5.0.0.tgz",
++      "integrity": "sha512-5aHCbzQRADcdP+ATqnDuhhJ/MRIqDkZX5pyjFHRRysS8vZ5AbqGEoFIb6pYHPZ+L/OC2Lc+xT8uHVVR5CAK/wQ==",
++      "license": "MIT",
++      "dependencies": {
++        "uc.micro": "^2.0.0"
++      }
++    },
+     "node_modules/locate-path": {
+       "version": "3.0.0",
+       "resolved": "https://registry.npmjs.org/locate-path/-/locate-path-3.0.0.tgz",
+@@ -9782,6 +9792,29 @@
+         "semver": "bin/semver"
+       }
+     },
++    "node_modules/markdown-it": {
++      "version": "14.1.0",
++      "resolved": "https://registry.npmjs.org/markdown-it/-/markdown-it-14.1.0.tgz",
++      "integrity": "sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==",
++      "license": "MIT",
++      "dependencies": {
++        "argparse": "^2.0.1",
++        "entities": "^4.4.0",
++        "linkify-it": "^5.0.0",
++        "mdurl": "^2.0.0",
++        "punycode.js": "^2.3.1",
++        "uc.micro": "^2.1.0"
++      },
++      "bin": {
++        "markdown-it": "bin/markdown-it.mjs"
++      }
++    },
++    "node_modules/markdown-it/node_modules/argparse": {
++      "version": "2.0.1",
++      "resolved": "https://registry.npmjs.org/argparse/-/argparse-2.0.1.tgz",
++      "integrity": "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==",
++      "license": "Python-2.0"
++    },
+     "node_modules/marked": {
+       "version": "4.3.0",
+       "resolved": "https://registry.npmjs.org/marked/-/marked-4.3.0.tgz",
+@@ -9814,6 +9847,12 @@
+         "safe-buffer": "^5.1.2"
+       }
+     },
++    "node_modules/mdurl": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmjs.org/mdurl/-/mdurl-2.0.0.tgz",
++      "integrity": "sha512-Lf+9+2r+Tdp5wXDXC4PcIBjTDtq4UKjCPMQhKIuzpJNW0b96kVqSwW0bT7FhRSfmAiFYgP+SCRvdrDozfh0U5w==",
++      "license": "MIT"
++    },
+     "node_modules/media-typer": {
+       "version": "0.3.0",
+       "resolved": "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz",
+@@ -11136,6 +11175,15 @@
+       "integrity": "sha512-jmYNElW7yvO7TV33CjSmvSiE2yco3bV2czu/OzDKdMNVZQWfxCblURLhf+47syQRBntjfLdd/H0egrzIG+oaFQ==",
+       "license": "MIT"
+     },
++    "node_modules/punycode.js": {
++      "version": "2.3.1",
++      "resolved": "https://registry.npmjs.org/punycode.js/-/punycode.js-2.3.1.tgz",
++      "integrity": "sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=6"
++      }
++    },
+     "node_modules/qs": {
+       "version": "6.13.0",
+       "resolved": "https://registry.npmjs.org/qs/-/qs-6.13.0.tgz",
+@@ -12897,6 +12945,12 @@
+       "integrity": "sha512-F45vFWdGX8xahIk/sOp79z2NJs8ETMYsmMChm9D5Hlx3+9j7VnCyQyvij5MOCrNY3NNe8noSyokRjQRfq+Bc7A==",
+       "license": "BSD-3-Clause"
+     },
++    "node_modules/uc.micro": {
++      "version": "2.1.0",
++      "resolved": "https://registry.npmjs.org/uc.micro/-/uc.micro-2.1.0.tgz",
++      "integrity": "sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==",
++      "license": "MIT"
++    },
+     "node_modules/umd": {
+       "version": "3.0.3",
+       "resolved": "https://registry.npmjs.org/umd/-/umd-3.0.3.tgz",
+diff --git a/package.json b/package.json
+index 7e438a5..b20c9d8 100644
+--- a/package.json
++++ b/package.json
+@@ -56,6 +56,7 @@
+     "jquery": "^3.5.1",
+     "jsdom": "^20.0.0",
+     "jsonwebtoken": "^9.0.1",
++    "markdown-it": "^14.1.0",
+     "memory-cache": "^0.2.0",
+     "moment-timezone": "^0.5.31",
+     "mongodb": "^6",
+diff --git a/public/css/blocks-dashboard.css b/public/css/blocks-dashboard.css
+index 696f980..1dcc702 100644
+--- a/public/css/blocks-dashboard.css
++++ b/public/css/blocks-dashboard.css
+@@ -28,6 +28,11 @@ ul {
+   color: #555;
+ }
+ 
++.content-preview {
++  max-height: 200px; /* adjust as needed */
++  overflow: hidden;
++}
++
+ .block-preview:hover {
+   background-color: #f1f1f1;
+ }
+@@ -43,6 +48,12 @@ ul {
+   text-decoration: underline;
+ }
+ 
++#room-description {
++  margin-left: 10px;
++  font-size: 1rem;
++  color: #555;
++}
++
+ #viewer a.btn {
+   padding: 10px 20px;
+   background-color: #007bff;
+diff --git a/public/css/create-block.css b/public/css/create-block.css
+index 5fbe904..165d57f 100644
+--- a/public/css/create-block.css
++++ b/public/css/create-block.css
+@@ -1,5 +1,11 @@
+ /* Styles for the "Create New Block" form */
+ 
++a {
++  text-decoration-style: dotted;
++  text-decoration-line: underline;
++  text-decoration-color: rgb(116, 137, 163);
++}
++
+ #block-form {
+   max-width: 600px;
+   margin: 0 auto;
+@@ -67,3 +73,63 @@ textarea {
+   background-color: #0056b3;
+ }
+ 
++#room-name, #room-description {
++  margin-left: 10px;
++}
++
++@media (max-width: 480px) {
++  input#title {
++    max-width: 100%;
++    text-overflow: ellipsis;
++    white-space: nowrap;
++    overflow: hidden;
++  }
++
++  .visibility-description {
++    display: block;
++    font-size: 12px;
++    color: #555;
++    margin-top: 5px;
++  }
++}
++
++@media (min-width: 481px) {
++  .visibility-description {
++    display: none;
++  }
++}
++
++.tooltip {
++  position: absolute;
++  background-color: #f0f0f0;
++  color: #333;
++  padding: 10px;
++  border-radius: 5px;
++  font-size: 14px;
++  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
++  z-index: 1000;
++  max-width: 300px;
++  /* Prevents it from being too wide */
++}
++
++.info-icon {
++  margin-left: 5px;
++  cursor: pointer;
++  font-size: 1.2em;
++}
++
++.visibility-options .option label {
++  display: inline-flex;
++  align-items: center;
++}
++
++.visibility-options .option label input[type="radio"] {
++  margin-right: 5px;
++}
++
++.visibility-options .option label i {
++  margin-left: 5px;
++  font-size: 1.2em;
++  line-height: 1;
++  vertical-align: middle;
++}
+\ No newline at end of file
+diff --git a/public/css/editor.css b/public/css/editor.css
+index 4cf48d4..2af535b 100644
+--- a/public/css/editor.css
++++ b/public/css/editor.css
+@@ -28,10 +28,28 @@
+ }
+ 
+ .room-description.collapsible.visible {
+-  max-height: 200px; /* Adjust as needed */
++  max-height: 200px;
++  /* Adjust as needed */
+   opacity: 1;
+ }
+ 
++.room-info {
++  font-size: 1rem;
++  margin-bottom: 0.5rem;
++  color: var(--highlight-color);
++}
++
++.room-link {
++  text-decoration: none;
++  color: var(--highlight-color);
++  font-weight: bold;
++  transition: color 0.2s ease;
++}
++
++.room-link:hover {
++  color: #0056b3;
++}
++
+ /* Header for editor */
+ #date h2 {
+   font-size: 1.5rem;
+@@ -133,7 +151,8 @@ button#open-insert-img-btn i {
+ 
+ /* Tooltip Input Fields */
+ #insert-img-tooltip input[type="text"] {
+-  width: calc(100% - 16px);;
++  width: calc(100% - 16px);
++  ;
+   padding: 10px;
+   border: 1px solid var(--border-color);
+   border-radius: 8px;
+@@ -188,3 +207,285 @@ button#open-insert-img-btn i {
+ #insert-img-tooltip button#insert-img-cancel:hover {
+   background-color: #5a6268;
+ }
++
++#block-title-container {
++  display: flex;
++  align-items: center;
++  gap: 8px;
++  font-size: 1.5rem;
++  font-weight: bold;
++  color: var(--text-color);
++  cursor: pointer;
++  transition: border 0.3s ease-in-out;
++}
++
++#edit-title-btn {
++  background: none;
++  border: none;
++  cursor: pointer;
++  display: flex;
++  align-items: center;
++  padding: 0;
++  margin: 0;
++}
++
++#edit-title-btn i {
++  width: 20px;
++  height: 20px;
++  color: var(--highlight-color);
++}
++
++#lock-block-btn {
++  margin-left: 30px;
++  margin-bottom: 0;
++}
++
++#block-title-input {
++  display: inline-block;
++  width: auto;
++  min-width: 50px;
++  max-width: 300px;
++  font-size: 1.5rem;
++  font-family: 'Rubik-Regular';
++  color: var(--text-color);
++  border: 1px solid var(--border-color);
++  padding: 4px 8px;
++  border-radius: 5px;
++  box-shadow: var(--box-shadow);
++}
++
++#block-title-input.hidden, #block-title.hidden {
++  display: none;
++}
++
++#block-title, #block-title-input {
++  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
++}
++
++.fade-out {
++  opacity: 0;
++  pointer-events: none;
++  transform: scale(0.98);
++  position: absolute;
++}
++
++.fade-in {
++  opacity: 1;
++  pointer-events: auto;
++  transform: scale(1);
++}
++
++/* Remove hard border and shadow from the card */
++.block-description-card {
++  background-color: #fff;
++  border: none;
++  box-shadow: none;
++  padding-top: 1rem;
++  position: relative;
++  margin: 1rem 0;
++}
++
++/* Edit button styling in the upper right */
++.description-edit-button {
++  position: absolute;
++  top: 10px;
++  right: 10px;
++  background: none;
++  border: none;
++  cursor: pointer;
++}
++
++/* Ensure the textarea doesn't overlap the edit button */
++#description-edit {
++  font-family: 'Rubik-Light', sans-serif;
++  /* New typeface for the textarea */
++  margin-top: 15px;
++}
++
++.description-body {
++  width: 95%;
++}
++
++.description-label {
++  position: absolute;
++  top: 10px;
++  left: 0px;
++  font-size: 0.75rem;
++  color: #aaa;
++  /* Light grey */
++  text-transform: uppercase;
++  pointer-events: none;
++  /* So it doesn't interfere with clicks */
++}
++
++/* Description body styling with fade-out */
++.description-body.collapsed {
++  max-height: 150px;
++  /* Adjust as needed */
++  overflow: hidden;
++  position: relative;
++}
++
++/* Fade-out gradient effect */
++.description-body.collapsed::after {
++  content: '';
++  position: absolute;
++  bottom: 0;
++  left: 0;
++  width: 95%;
++  height: 30px;
++  /* Height of the fade effect */
++  background: linear-gradient(transparent, var(--primary-bg));
++  pointer-events: none;
++}
++
++/* Expand toggle styling */
++.expand-toggle {
++  text-align: center;
++  cursor: pointer;
++  color: var(--highlight-color);
++  padding: 0.5rem 0;
++  font-weight: bold;
++}
++
++/* Style and position Save/Cancel buttons */
++.edit-buttons {
++  text-align: right;
++  margin-top: 8px;
++}
++
++.edit-buttons button {
++  padding: 6px 12px;
++  border-radius: 4px;
++  margin-left: 8px;
++  border: none;
++  font-size: 0.9rem;
++  cursor: pointer;
++  transition: background-color 0.2s;
++}
++
++#save-description-btn {
++  background-color: var(--highlight-color);
++  color: #fff;
++}
++
++#save-description-btn:hover {
++  background-color: #0056b3;
++}
++
++#cancel-description-btn {
++  background-color: #ddd;
++  color: var(--text-color);
++}
++
++#cancel-description-btn:hover {
++  background-color: #bbb;
++}
++
++
++/* ======= Simple Modal Overlay ======= */
++.modal {
++  position: fixed;
++  top: 0;
++  left: 0;
++  width: 100%;
++  height: 100%;
++  background-color: rgba(0, 0, 0, 0.5);
++  /* semi-transparent overlay */
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  z-index: 9999;
++}
++
++/* Hide elements with the .hidden class */
++.hidden {
++  display: none;
++}
++
++
++/* ======= Modal Inner Box ======= */
++.modal-content {
++  background-color: #fff;
++  padding: 20px;
++  border-radius: 8px;
++  box-shadow: var(--box-shadow);
++  max-width: 400px;
++  width: 80%;
++  text-align: center;
++}
++
++.modal-message {
++  margin-bottom: 1rem;
++  color: var(--text-color);
++  font-size: 1rem;
++  line-height: 1.4;
++}
++
++.modal-buttons {
++  display: flex;
++  justify-content: center;
++  gap: 10px;
++}
++
++/* ======= Buttons ======= */
++#lock-confirm-btn {
++  background-color: #dc3545;
++  /* Danger color or your brand color */
++  color: #fff;
++  border: none;
++  padding: 0.5rem 1rem;
++  border-radius: 4px;
++  cursor: pointer;
++  font-weight: bold;
++}
++
++#lock-confirm-btn:hover {
++  background-color: #b52b3a;
++}
++
++#lock-cancel-btn {
++  background-color: #ddd;
++  color: #333;
++  border: none;
++  padding: 0.5rem 1rem;
++  border-radius: 4px;
++  cursor: pointer;
++}
++
++#lock-cancel-btn:hover {
++  background-color: #bbb;
++}
++
++#toast-container {
++  position: fixed;
++  bottom: 20px;
++  right: 20px;
++  z-index: 10000;
++}
++
++.toast {
++  background-color: #333;
++  color: #fff;
++  padding: 10px 15px;
++  margin-top: 8px;
++  border-radius: 5px;
++  opacity: 0;
++  transform: translateY(20px);
++  transition: opacity 0.3s, transform 0.3s;
++}
++
++.toast.success {
++  background-color: #28a745;
++  /* Greenish */
++}
++
++.toast.error {
++  background-color: #dc3545;
++  /* Reddish */
++}
++
++.toast.show {
++  opacity: 1;
++  transform: translateY(0);
++}
+\ No newline at end of file
+diff --git a/public/css/login.css b/public/css/login.css
+index 76e32bc..a472857 100644
+--- a/public/css/login.css
++++ b/public/css/login.css
+@@ -3,6 +3,7 @@ p {
+ }
+ 
+ .login-form-container {
++  box-sizing: border-box;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+@@ -33,6 +34,8 @@ p {
+   border: unset;
+   margin: unset;
+   float: unset;
++  background-color: unset;
++  padding: unset;
+ }
+ 
+ .login-form input {
+diff --git a/public/css/signup.css b/public/css/signup.css
+index a522231..0c2bc2a 100644
+--- a/public/css/signup.css
++++ b/public/css/signup.css
+@@ -33,6 +33,8 @@ p {
+   border: unset;
+   margin: unset;
+   float: unset;
++  padding: unset;
++  background-color: unset;
+ }
+ 
+ .signup-form input {
+diff --git a/public/css/style.css b/public/css/style.css
+index 02e072a..ea35aac 100644
+--- a/public/css/style.css
++++ b/public/css/style.css
+@@ -157,7 +157,6 @@ NavBar
+   align-items: center;
+   justify-content: space-between;
+   flex-wrap: nowrap;
+-  padding: 10px 20px;
+   border-radius: 10px;
+   margin-bottom: 15px;
+ }
+@@ -179,6 +178,10 @@ NavBar
+   transition: all 0.3s ease-in-out 0s;
+ }
+ 
++a:has(.logo) {
++  text-decoration: none;
++}
++
+ .logo:hover {
+   color: #2626F0;
+ }
+@@ -424,7 +427,10 @@ Editor
+ 
+ .header {
+   display: flex;
+-  width: 100%;
++  flex-wrap: wrap;
++  justify-content: space-between;
++  align-items: center;
++  gap: 0;
+ }
+ 
+ .text-wrapper {
+@@ -772,7 +778,23 @@ ToolTip
+ ***************/
+ 
+ .sharing-link {
+-  display: inline-block;
++  display: inline-flex;
++  align-items: center;
++  position: relative;
++  cursor: pointer;
++  margin-left: 8px;
++}
++
++.sharing-link a.link {
++  /* si quieres un subrayado dotted, etc. */
++  text-decoration: none;
++  font-weight: bold;
++  color: #007bff;
++}
++
++.sharing-link .copy-container {
++  cursor: pointer;
++  /* etc. */
+ }
+ 
+ [data-tooltip] {
+@@ -805,7 +827,7 @@ ToolTip
+   font-size: 14px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   white-space: nowrap;
+-  z-index: 10;
++  z-index: 99;
+   visibility: hidden;
+   opacity: 0;
+ }
+@@ -824,7 +846,16 @@ ToolTip
+ 
+ .copy-status {
+   opacity: 0;
+-  vertical-align: 5px;
++  transition: opacity 0.3s ease-in-out;
++  margin-left: 8px;
++  font-weight: bold;
++  color: #28a745;
++  position: relative;
++  top: 0;
++}
++
++.copy-status.show {
++  opacity: 1;
+ }
+ 
+ .copy-status.copied {
+diff --git a/public/js/create-block.js b/public/js/create-block.js
+index 6e2c28e..aac39e9 100644
+--- a/public/js/create-block.js
++++ b/public/js/create-block.js
+@@ -1,4 +1,26 @@
++// Global variables to store the current tooltip anchor and option
++let currentTooltipAnchor = null;
++let currentTooltipOption = null;
++let outsideClickListener = null; // We'll store a reference to the outside click listener
++
+ document.addEventListener("DOMContentLoaded", () => {
++  // Dynamic placeholder adjustment for responsive design
++  const titleInput = document.getElementById("title");
++  const fullPlaceholder = "e.g. 'My Masterpiece', 'The Best Idea Ever', 'Clickbait for Nerds'";
++  const shortPlaceholder = "e.g. 'My Masterpiece'";
++
++  const updatePlaceholder = () => {
++    if (window.innerWidth < 600) {
++      titleInput.placeholder = shortPlaceholder;
++    } else {
++      titleInput.placeholder = fullPlaceholder;
++    }
++  };
++
++  updatePlaceholder();
++  window.addEventListener("resize", updatePlaceholder);
++
++  // Existing form submission code
+   const form = document.getElementById("block-form");
+ 
+   form.addEventListener("submit", async (event) => {
+@@ -7,7 +29,17 @@ document.addEventListener("DOMContentLoaded", () => {
+     const formData = new FormData(form);
+     const data = Object.fromEntries(formData.entries());
+ 
+-    data.tags = data.tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0); // Convert tags to an array
++    // Extraer los tags desde el partial
++    const tagContainer = document.getElementById('tag-container');
++    let tagsArray = [];
++    if (tagContainer) {
++      const tagPills = tagContainer.querySelectorAll('.tag-pill');
++      tagPills.forEach(pill => {
++        // Asumimos que el contenido de la pill es el tag (sin el " x")
++        tagsArray.push(pill.firstChild.textContent.trim());
++      });
++    }
++    data.tags = tagsArray;
+ 
+     try {
+       const response = await fetch(form.action, {
+@@ -19,10 +51,101 @@ document.addEventListener("DOMContentLoaded", () => {
+       if (!response.ok) throw new Error("Failed to create block");
+ 
+       const block = await response.json();
+-      window.location.href = `/rooms/${block.roomId}/blocks/${block._id}`; // Redirect to block editor
++      window.location.href = `/rooms/${block.roomId}/blocks/${block._id}/edit`; // Redirect to block editor
+     } catch (error) {
+       console.error("Error:", error);
+       alert("Something went wrong. Please try again.");
+     }
+   });
+ });
++
++// Called when the user clicks the help icon
++function toggleTooltip(event, option) {
++  event.stopPropagation(); // Prevent immediate document click from closing the tooltip
++
++  currentTooltipAnchor = event.target;  // The icon
++  currentTooltipOption = option;
++
++  let tooltip = document.getElementById(`${option}-tooltip`);
++
++  // If the tooltip doesn't exist, create it
++  if (!tooltip) {
++    tooltip = document.createElement("div");
++    tooltip.id = `${option}-tooltip`;
++    tooltip.className = "tooltip";
++    tooltip.textContent = "Private blocks are for logged-in users only. They remain hidden until editing is complete and come with a shareable link for invitations.";
++    document.body.appendChild(tooltip);
++  }
++
++  // If it's currently hidden (or not set), show it; otherwise hide it
++  if (tooltip.style.display !== "block") {
++    showTooltip(tooltip);
++  } else {
++    hideTooltip(tooltip);
++  }
++}
++
++// Show the tooltip and attach an outside-click listener
++function showTooltip(tooltip) {
++  tooltip.style.display = "block";
++  positionTooltip(currentTooltipAnchor, tooltip);
++
++  // Attach an outside-click listener to close the tooltip when clicking anywhere else
++  outsideClickListener = function (e) {
++    if (!tooltip.contains(e.target) && !currentTooltipAnchor.contains(e.target)) {
++      hideTooltip(tooltip);
++    }
++  };
++  // Use a small delay to avoid immediate hide
++  setTimeout(() => document.addEventListener("click", outsideClickListener), 0);
++}
++
++// Hide the tooltip and remove the outside-click listener
++function hideTooltip(tooltip) {
++  tooltip.style.display = "none";
++  if (outsideClickListener) {
++    document.removeEventListener("click", outsideClickListener);
++    outsideClickListener = null;
++  }
++}
++
++// Position the tooltip relative to its anchor element
++function positionTooltip(anchor, tooltip) {
++  // Make sure tooltip is visible so we can measure its size
++  tooltip.style.display = "block";
++  
++  // Get bounding rectangles
++  const anchorRect = anchor.getBoundingClientRect();
++  const tooltipRect = tooltip.getBoundingClientRect();
++
++  // We’ll position the tooltip slightly below the icon
++  const offsetY = 4; // You can tweak this
++  let top = anchorRect.bottom + window.scrollY + offsetY;
++  
++  // Center it horizontally relative to the anchor
++  let left = anchorRect.left + window.scrollX + (anchorRect.width / 2) - (tooltipRect.width / 2);
++
++  // Prevent overflowing off the right side
++  if (left + tooltipRect.width > window.innerWidth - 10) {
++    left = window.innerWidth - tooltipRect.width - 10;
++  }
++  // Prevent overflowing off the left side
++  if (left < 10) {
++    left = 10;
++  }
++
++  // Apply the final position
++  tooltip.style.top = `${top}px`;
++  tooltip.style.left = `${left}px`;
++  tooltip.style.maxWidth = "280px";
++}
++
++// Reposition tooltip on window resize if it's visible
++window.addEventListener("resize", () => {
++  if (currentTooltipOption) {
++    const tooltip = document.getElementById(`${currentTooltipOption}-tooltip`);
++    if (tooltip && tooltip.style.display === "block") {
++      positionTooltip(currentTooltipAnchor, tooltip);
++    }
++  }
++});
+diff --git a/public/js/editor.js b/public/js/editor.js
+index b5d1e37..10ef944 100644
+--- a/public/js/editor.js
++++ b/public/js/editor.js
+@@ -51,4 +51,63 @@ document.addEventListener('DOMContentLoaded', () => {
+       description.classList.toggle('visible', !isVisible);
+     });
+   }
++
++  const titleText = document.getElementById('block-title');
++  const titleInput = document.getElementById('block-title-input');
++  const editButton = document.getElementById('edit-title-btn');
++
++  if (editButton) {
++    editButton.addEventListener('click', () => startEditingTitle());
++    titleText.addEventListener('click', () => startEditingTitle());
++  }
++
++  function startEditingTitle() {
++    titleText.classList.remove('fade-in');
++    titleText.classList.add('fade-out');
++
++    titleInput.style.width = titleText.offsetWidth + 'px';
++
++    titleInput.classList.remove('fade-out');
++    titleInput.classList.add('fade-in');
++
++    titleInput.focus();
++    titleInput.setSelectionRange(0, titleInput.value.length);
++  }
++
++  function finishEditingTitle() {
++    titleInput.classList.remove('fade-in');
++    titleInput.classList.add('fade-out');
++
++    const newTitle = titleInput.value.trim();
++    if (newTitle && newTitle !== titleText.innerText) {
++      titleText.innerText = newTitle;
++      document.title = `Edit Block - ${newTitle}`;
++      updateTitleBackend(newTitle);
++    }
++    titleText.classList.remove('fade-out');
++    titleText.classList.add('fade-in');
++  }
++
++  function updateTitleBackend(newTitle) {
++    fetch(`/api/v1/blocks/${block_id}/metadata`, {
++      method: 'POST',
++      headers: { 'Content-Type': 'application/json' },
++      body: JSON.stringify({ title: newTitle })
++    })
++      .then(response => response.status)
++      .then(status => {
++        if (status !== 200) {
++          alert('Error updating title.');
++        }
++      })
++      .catch(err => console.error('Failed to update title:', err));
++  }
++
++  if (canManageBlock) {
++    titleInput.addEventListener('keydown', (e) => {
++      if (e.key === 'Enter') finishEditingTitle();
++    });
++
++    titleInput.addEventListener('blur', () => finishEditingTitle());
++  }
+ });
+diff --git a/public/js/vote-controls.js b/public/js/vote-controls.js
+index 789e7ab..2b01b96 100644
+--- a/public/js/vote-controls.js
++++ b/public/js/vote-controls.js
+@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
+   }
+ 
+   function checkLoginState() {
+-    console.log('doc body dataset?', document.body.dataset);
+     return document.body.dataset.isLoggedIn === "true";
+   }
+ 
+diff --git a/server/api/v1/blocks.js b/server/api/v1/blocks.js
+index 28af171..1ca1610 100644
+--- a/server/api/v1/blocks.js
++++ b/server/api/v1/blocks.js
+@@ -1,14 +1,31 @@
+ import { Router } from 'express';
+ import { v4 as uuidv4 } from 'uuid';
+-import { getBlockById, getBlocksByRoom, createBlock, deleteBlock } from '../../db/blockService.js';
++import {
++  getBlockById,
++  getBlocksByRoom,
++  getBlocksByDate,
++  getBlockDatesByYearMonth,
++  getAllBlockYearMonthCombos,
++  createBlock,
++  updateBlock,
++  deleteBlock
++} from '../../db/blockService.js';
+ import optionalAuth from '../../middleware/optionalAuth.js';
+ 
+-const router = Router({ mergeParams: true });
++const roomScopedRouter = Router({ mergeParams: true });
++const globalRouter = Router();
+ 
+ const useBlockAPI = (app) => {
+-  app.use('/api/v1/rooms/:room_id/blocks', router);
++  // 🏠 Room-specific block routes
++  app.use('/api/v1/rooms/:room_id/blocks', roomScopedRouter);
+ 
+-  router.get('/', async (req, res) => {
++  // 🌍 Global block routes
++  app.use('/api/v1/blocks', globalRouter);
++
++  /** 🏠 Room-Specific Endpoints **/
++
++  // 📌 Get all blocks for a specific room
++  roomScopedRouter.get('/', async (req, res) => {
+     const { room_id } = req.params;
+     const { status, startDate, endDate } = req.query;
+ 
+@@ -21,7 +38,8 @@ const useBlockAPI = (app) => {
+     }
+   });
+ 
+-  router.post('/', optionalAuth, async (req, res) => {
++  // 📌 Create a new block (within a specific room)
++  roomScopedRouter.post('/', optionalAuth, async (req, res) => {
+     const { room_id } = req.params;
+     const { title, description, tags, visibility } = req.body;
+ 
+@@ -35,10 +53,10 @@ const useBlockAPI = (app) => {
+       title,
+       description,
+       tags,
+-      visibility: req.user ? visibility : 'public', // Default to 'public' for unauthenticated users
++      visibility: req.user ? visibility : 'public',
+       creator: req.user?.username || 'anonymous',
+       roomId: room_id,
+-      editToken: uuidv4()
++      editToken: uuidv4(),
+     };
+ 
+     existingTokens.push(blockData.editToken);
+@@ -47,7 +65,7 @@ const useBlockAPI = (app) => {
+       const newBlock = await createBlock(blockData);
+       res.cookie('edit_tokens', JSON.stringify(existingTokens), {
+         httpOnly: true,
+-        maxAge: 24 * 60 * 60 * 1000 // 1 day
++        maxAge: 24 * 60 * 60 * 1000,
+       });
+       res.status(201).json(newBlock);
+     } catch (error) {
+@@ -56,24 +74,136 @@ const useBlockAPI = (app) => {
+     }
+   });
+ 
+-  router.delete('/:block_id', optionalAuth, async (req, res) => {
++  /** 🌍 Global Block Endpoints **/
++
++  // 📌 Get a single block by ID within a specific room
++  globalRouter.get('/:block_id', async (req, res) => {
++    const { block_id } = req.params;
++
++    try {
++      const block = await getBlockById(block_id);
++
++      if (!block) {
++        return res.status(404).json({ error: 'Block not found.' });
++      }
++
++      res.status(200).json(block);
++    } catch (error) {
++      console.error('Error fetching block:', error.message);
++      res.status(500).json({ error: 'Failed to fetch block.' });
++    }
++  });
++
++  // 📌 Get all blocks created on a specific date
++  globalRouter.get('/by-date/:date', async (req, res) => {
++    const { date } = req.params;
++
++    try {
++      const blocks = await getBlocksByDate(date);
++      res.status(200).json(blocks);
++    } catch (error) {
++      console.error('Error fetching blocks by date:', error.message);
++      res.status(500).json({ error: 'Failed to fetch blocks by date.' });
++    }
++  });
++
++  // 📌 Get blocks created in a given year/month
++  globalRouter.get('/dates/:year/:month', async (req, res) => {
++    const { year, month } = req.params;
++
++    try {
++      const dates = await getBlockDatesByYearMonth(year, month);
++      res.status(200).json(dates);
++    } catch (error) {
++      console.error('Error fetching block dates:', error.message);
++      res.status(500).json({ error: 'Failed to fetch block dates.' });
++    }
++  });
++
++  // 📌 Get all year/month combinations with blocks
++  globalRouter.get('/dates', async (_, res) => {
++    try {
++      const dateCombos = await getAllBlockYearMonthCombos();
++      res.status(200).json(dateCombos);
++    } catch (error) {
++      console.error('Error fetching block year/month combos:', error.message);
++      res.status(500).json({ error: 'Failed to fetch block year/month combos.' });
++    }
++  });
++
++  /** 🌍 Single Block Endpoints (Now inside Global Router) **/
++
++  // 📌 Update the **content** of a block (Anyone can do this!)
++  globalRouter.post('/:block_id/content', async (req, res) => {
+     const { block_id } = req.params;
++    const { content } = req.body;
+ 
+     try {
+       const block = await getBlockById(block_id);
++      if (!block) {
++        return res.status(404).json({ error: 'Block not found.' });
++      }
++
++      await updateBlock(block_id, { content });
++      res.status(200).json({ message: 'Block content updated successfully.' });
++    } catch (error) {
++      console.error('Error updating block content:', error.message);
++      res.status(500).json({ error: 'Failed to update block content.' });
++    }
++  });
++
++  // 📌 Update the **metadata** of a block (Title, Description, Tags) → Requires Authentication or Edit Token
++  globalRouter.post('/:block_id/metadata', optionalAuth, async (req, res) => {
++    const { block_id } = req.params;
++    const { title, description, tags, status } = req.body;
+ 
++    try {
++      const block = await getBlockById(block_id);
++      if (!block) {
++        return res.status(404).json({ error: 'Block not found.' });
++      }
++
++      // Check ownership before allowing edits
++      const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
++      const isCreator = block.creator === req.user?.username;
++      const hasEditToken = editTokens.includes(block.editToken);
++
++      if (!isCreator && !hasEditToken) {
++        return res.status(403).json({ error: 'You are not authorized to update this block.' });
++      }
++
++      const updates = {};
++      if (title !== undefined) updates.title = title;
++      if (description !== undefined) updates.description = description;
++      if (tags !== undefined) updates.tags = tags;
++      if (status !== undefined) updates.status = status;
++
++      await updateBlock(block_id, updates);
++      res.status(200).json({ message: 'Block metadata updated successfully.' });
++    } catch (error) {
++      console.error('Error updating block metadata:', error.message);
++      res.status(500).json({ error: 'Failed to update block metadata.' });
++    }
++  });
++
++  // 📌 Delete a block (Requires Authentication or Edit Token)
++  globalRouter.delete('/:block_id', optionalAuth, async (req, res) => {
++    const { block_id } = req.params;
++
++    try {
++      const block = await getBlockById(block_id);
+       if (!block) {
+         return res.status(404).json({ error: 'Block not found.' });
+       }
+ 
+-      const tokenFromRequest = req.cookies.edit_token || req.query.edit_token;
++      const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
++      const isCreator = block.creator === req.user?.username;
++      const hasEditToken = editTokens.includes(block.editToken);
+ 
+-      // Check if the user is authorized to delete
+-      if (block.creator !== req.user?.id && block.editToken !== tokenFromRequest) {
++      if (!isCreator && !hasEditToken) {
+         return res.status(403).json({ error: 'You are not authorized to delete this block.' });
+       }
+ 
+-      // Delete the block
+       await deleteBlock(block_id);
+       res.status(200).json({ message: 'Block deleted successfully.' });
+     } catch (error) {
+diff --git a/server/api/v1/helpers.js b/server/api/v1/helpers.js
+deleted file mode 100644
+index d0a7e1b..0000000
+--- a/server/api/v1/helpers.js
++++ /dev/null
+@@ -1,90 +0,0 @@
+-import {
+-  getPage,
+-  getPageDatesByYearAndMonth,
+-  getPageMonthYearCombos,
+-  updatePage
+-} from '../../db/pageService.js';
+-import {
+-  addPeer, getPeerIDs, removePeer
+-} from '../../db/sessionService.js';
+-import * as cache from '../../services/cache.js';
+-
+-
+-export async function addPeerToRoom(req, res) {
+-  try {
+-    await addPeer(req.params.id, req.params.room);
+-    res.sendStatus(200);
+-  } catch (error) {
+-    res.status(500).send({ error: error.message });
+-  }
+-}
+-
+-export async function allYearMonthCombos(_, res) {
+-  try {
+-    res.send(JSON.stringify(
+-      await cache.get('monthYearCombos', getPageMonthYearCombos))
+-    );
+-  } catch (error) {
+-    res.status(500).send({ error: error.message });
+-  }
+-}
+-
+-export function joinWithHyphens(params, keysToCheck) {
+-  let output = '';
+-  keysToCheck.forEach((k, i) => {
+-    let suffix = '';
+-    if (i + i < keysToCheck.length) {
+-      suffix = '-';
+-    }
+-    output += `${params[k] ? `${params[k]}${suffix}` : ''}`;
+-  });
+-  return output;
+-}
+-
+-export async function sendPage(req, res) {
+-  try {
+-    res.send(JSON.stringify(await cache.get(
+-      joinWithHyphens(req.params, ['date', 'room']), getPage,
+-      [req.params.date, req.params.room, req.query],
+-    )));
+-  } catch (error) {
+-    res.status(500).send({ error: error.message });
+-  }
+-}
+-
+-export async function pageDatesForYearMonthCombo(req, res) {
+-  const { year, month } = req.params;
+-
+-  try {
+-    res.send(JSON.stringify(await cache.get(`${year}-${month}`, getPageDatesByYearAndMonth,
+-      [year, month])));
+-  } catch (error) {
+-    res.status(500).send({ error: error.message });
+-  }
+-}
+-
+-export async function peersForRoom(req, res) {
+-  try {
+-    res.send(JSON.stringify(await getPeerIDs(req.query.room)));
+-  } catch (error) {
+-    res.status(500).send({ error: error.message });
+-  }
+-}
+-
+-export async function removePeerFromRoom(req, res) {
+-  try {
+-    await removePeer(req.params.id, req.params.room);
+-    res.sendStatus(200);
+-  } catch (error) {
+-    res.status(500).send({ error: error.message });
+-  }
+-}
+-
+-export async function updatePageForRoom(req, res) {
+-  try {
+-    await updatePage(req.body.content, req.params.room);
+-    res.json({ updated: new Date().getTime() });
+-  } catch (error) {
+-    res.status(500).send({ error: error.message });
+-  }
+-}
+diff --git a/server/api/v1/index.js b/server/api/v1/index.js
+deleted file mode 100644
+index 650908e..0000000
+--- a/server/api/v1/index.js
++++ /dev/null
+@@ -1,22 +0,0 @@
+-import { Router } from 'express';
+-import * as helpers from './helpers.js';
+-
+-const router = Router();
+-
+-const useAPIV1 = (app) => {
+-  app.use('/api/v1', router);
+-
+-  // Public Endpoints (no authentication required)
+-  router.get('/page/:date([0-9]{4}-[0-9]{2}-[0-9]{2})', helpers.sendPage); // View content by date
+-  router.get('/page/:room/:date*?', helpers.sendPage); // View room content by date
+-  router.get('/pageDates/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', helpers.pageDatesForYearMonthCombo); // View available content dates
+-  router.get('/pageDates', helpers.allYearMonthCombos); // View all content dates
+-  router.get('/peers*?', helpers.peersForRoom); // View peers in a room
+-
+-  // Protected Endpoints (requires logged-in user)
+-  router.post('/page/:room', helpers.updatePageForRoom); // Update content
+-  router.delete('/peers/:room/:id', helpers.removePeerFromRoom); // Remove peer
+-  router.post('/peers/:room/:id', helpers.addPeerToRoom); // Add peer
+-};
+-
+-export default useAPIV1;
+diff --git a/server/db/blockService.js b/server/db/blockService.js
+index d211f83..aa816ba 100644
+--- a/server/db/blockService.js
++++ b/server/db/blockService.js
+@@ -1,4 +1,7 @@
+ import Block from './models/Block.js';
++import * as cache from '../services/cache.js';
++
++const CACHE_TTL = 5000; // Cache for 5 seconds (adjust as needed)
+ 
+ // Create a new block
+ export async function createBlock(data) {
+@@ -11,6 +14,73 @@ export async function getBlockById(blockId) {
+   return await Block.findById(blockId);
+ }
+ 
++// Get all blocks created on a specific date (with caching)
++export async function getBlocksByDate(date) {
++  return await cache.get(
++    `blocks-by-date-${date}`,
++    async () => {
++      const blocks = await Block.find({ createdAt: { $gte: new Date(date), $lt: new Date(date + 'T23:59:59.999Z') } })
++        .sort({ createdAt: 1 }) // Sort oldest to newest
++        .lean(); // Convert Mongoose objects to plain JSON
++
++      return blocks;
++    },
++    [],
++    CACHE_TTL
++  );
++}
++
++// Get all unique dates that have blocks in a given year/month (with caching)
++export async function getBlockDatesByYearMonth(year, month) {
++  return await cache.get(
++    `block-dates-${year}-${month}`,
++    async () => {
++      const blocks = await Block.find(
++        {
++          createdAt: {
++            $gte: new Date(`${year}-${month}-01T00:00:00.000Z`),
++            $lt: new Date(`${year}-${month}-31T23:59:59.999Z`)
++          }
++        },
++        { createdAt: 1 } // Only return the createdAt field
++      ).sort({ createdAt: -1 }).lean();
++
++      // Extract unique YYYY-MM-DD dates
++      const uniqueDates = [...new Set(blocks.map(block => block.createdAt.toISOString().split('T')[0]))];
++
++      return uniqueDates;
++    },
++    [],
++    CACHE_TTL
++  );
++}
++
++// Get all year/month combinations with blocks (cached)
++export async function getAllBlockYearMonthCombos() {
++  return await cache.get(
++    'block-year-month-combos', // Cache key
++    async () => {
++      const pipeline = [
++        {
++          $project: {
++            year: { $year: '$createdAt' },
++            month: { $month: '$createdAt' },
++          },
++        },
++        { $group: { _id: { year: '$year', month: '$month' } } },
++        { $sort: { '_id.year': -1, '_id.month': -1 } }, // Sort latest first
++      ];
++
++      const aggDocs = await Block.aggregate(pipeline).exec();
++
++      // Convert into simple { year, month } objects
++      return aggDocs.map(doc => ({ year: doc._id.year, month: doc._id.month }));
++    },
++    [],
++    CACHE_TTL
++  );
++}
++
+ // Get blocks by roomId
+ export async function getBlocksByRoom(roomId, options = {}) {
+   const { status, startDate, endDate, sortBy = 'createdAt' } = options;
+@@ -56,7 +126,7 @@ export const saveVote = async (blockId, userId, action) => {
+ 
+     if (existingVoteIndex >= 0) {
+       const existingVote = block.votes[existingVoteIndex];
+-      
++
+       if (existingVote.type === action) {
+         throw new Error('User has already voted in this direction');
+       }
+diff --git a/server/db/models/Block.js b/server/db/models/Block.js
+index cf0c405..356bec6 100644
+--- a/server/db/models/Block.js
++++ b/server/db/models/Block.js
+@@ -1,6 +1,6 @@
+ import mongoose from 'mongoose';
+ import blockSchema from '../schemas/BlockSchema.js';
+ 
+-const User = mongoose.model('Block', blockSchema,);
++const Block = mongoose.model('Block', blockSchema,);
+ 
+-export default User;
++export default Block;
+diff --git a/server/db/schemas/BlockSchema.js b/server/db/schemas/BlockSchema.js
+index 5e15f53..870aef2 100644
+--- a/server/db/schemas/BlockSchema.js
++++ b/server/db/schemas/BlockSchema.js
+@@ -18,9 +18,10 @@ const blockSchema = new Schema({
+   visibility: { type: String, enum: ['public', 'private'], default: 'public' },
+   status: {
+     type: String,
+-    enum: ['in-progress', 'locked', 'archived'],
++    enum: ['in-progress', 'locked'],
+     default: 'in-progress',
+-    index: true },
++    index: true
++  },
+   votes: {
+     type: [
+       {
+@@ -31,11 +32,10 @@ const blockSchema = new Schema({
+     default: [],
+   },
+   voteCount: { type: Number, default: 0 },
+-  createdAt: { type: Date, default: Date.now, index: true },
+-  updatedAt: { type: Date, default: Date.now },
+   lockedAt: { type: Date },
+ }, {
+   strict: true,
++  timestamps: true,
+   toObject: { transform: (doc, ret) => { delete ret.__v; } },
+   toJSON: { transform: (doc, ret) => { delete ret.__v; } },
+ });
+diff --git a/server/db/sessionService.js b/server/db/sessionService.js
+index a0de177..caba6a0 100644
+--- a/server/db/sessionService.js
++++ b/server/db/sessionService.js
+@@ -5,122 +5,146 @@ let recentlyActiveCache = null;
+ let recentlyActiveCacheExpiration = 0;
+ 
+ /**
+- * Return the peer IDs for a given room (or for all rooms).
+- * @param {string|null} room 
+- * @param {boolean} withTime 
+- * @returns {Object} either an object of { [roomId]: peersOrTimestamps } or just the peers
++ * Return the peer IDs for a given block (or all blocks).
++ * @param {string|null} blockId - If provided, fetch peers for a single block.
++ * @param {boolean} withTime - If true, return peers with timestamps.
++ * @returns {Object} - { [blockId]: peers } or a peer list for a specific block.
+  */
+-export async function getPeerIDs(room = null, withTime = false) {
+-  if (room) {
+-    let doc = await Session.findOne({ _id: room });
+-    if (!doc) return {};
+-    doc = doc.toObject();
+-
+-    return withTime ? doc.peers : Object.keys(doc.peers || {});
++export async function getPeerIDs(blockId = null, withTime = false) {
++  if (blockId) {
++    let session = await Session.findOne({ _id: blockId });
++    if (!session) return {};
++    return withTime ? session.peers : Object.keys(session.peers || {});
+   }
+ 
+-  // If no room is specified, gather them all
+-  const sessions = (await Session.find(
+-    {}, { peers: 1, _id: 1 })).map(doc => doc.toObject());
+-
++  // Fetch all sessions (blocks) if no specific block is requested
++  const sessions = await Session.find({}, { peers: 1, _id: 1 }).lean();
+   const result = {};
+-  for (const doc of sessions) {
+-    result[doc._id] = withTime
+-      ? doc.peers
+-      : Object.keys(doc.peers || {});
++
++  for (const session of sessions) {
++    result[session._id] = withTime ? session.peers : Object.keys(session.peers || {});
+   }
+   return result;
+ }
+ 
+ /**
+- * Removes peers older than 24 hours
++ * Removes expired peers and deletes sessions for blocks older than 24 hours.
+  */
+-export async function cleanUpOldPeerIds() {
++export async function cleanUpExpiredSessions() {
+   const maxPeerAge = 24 * 60 * 60 * 1000; // 24 hours
+   const now = new Date();
+ 
+-  // Grab all session docs so we can prune them in one go
+-  const sessions = (await Session.find({})).map(doc => doc.toObject());
++  // Grab all session docs
++  const sessions = await Session.find({}).lean();
+   const bulkOps = [];
++  const sessionsToDelete = [];
+ 
+-  for (const doc of sessions) {
++  for (const session of sessions) {
+     const updatedPeers = {};
+-    for (const [peer, timestamp] of Object.entries(doc.peers || {})) {
++
++    for (const [peer, timestamp] of Object.entries(session.peers || {})) {
+       if (now - new Date(timestamp) <= maxPeerAge) {
+         updatedPeers[peer] = timestamp;
+       }
+     }
+-    bulkOps.push({
+-      updateOne: {
+-        filter: { _id: doc._id },
+-        update: { $set: { peers: updatedPeers } }
+-      }
+-    });
++
++    if (Object.keys(updatedPeers).length > 0) {
++      // Session still has active peers, so update it
++      bulkOps.push({
++        updateOne: {
++          filter: { _id: session._id },
++          update: { $set: { peers: updatedPeers } }
++        }
++      });
++    } else {
++      // No active peers left → Schedule session for deletion
++      sessionsToDelete.push(session._id);
++    }
+   }
+ 
+-  if (bulkOps.length) {
+-    // Mongoose supports accessing the raw collection object:
+-    await Session.collection.bulkWrite(bulkOps);
++  // Perform updates
++  if (bulkOps.length > 0) {
++    await Session.bulkWrite(bulkOps);
+   }
++
++  // Delete expired sessions
++  if (sessionsToDelete.length > 0) {
++    await Session.deleteMany({ _id: { $in: sessionsToDelete } });
++  }
++
++  console.log(`✅ Cleaned up expired sessions: Deleted ${sessionsToDelete.length} and updated ${bulkOps.length}.`);
+ }
+ 
+ /**
+- * Add a peer to a session
++ * Add a peer to a block session and associate it with a room.
++ * @param {string} peerId - ID of the peer.
++ * @param {string} blockId - ID of the block.
++ * @param {string} roomId - ID of the room.
+  */
+-export async function addPeer(id, room) {
+-  // Upsert means create new doc if it doesn't exist
+-  return Session.updateOne(
+-    { _id: room },
+-    { $set: { [`peers.${id}`]: new Date() } },
++export async function addPeer(peerId, blockId, roomId) {
++  return await Session.updateOne(
++    { _id: blockId },
++    { 
++      $set: { 
++        [`peers.${peerId}`]: new Date(),
++        roomId: roomId  // Ensure the session is linked to the correct room
++      }
++    },
+     { upsert: true }
+   );
+ }
+ 
+ /**
+- * Remove a peer from a session
++ * Remove a peer from a block session.
++ * @param {string} peerId - ID of the peer.
++ * @param {string} blockId - ID of the block.
+  */
+-export async function removePeer(id, room) {
+-  return Session.updateOne(
+-    { _id: room },
+-    { $unset: { [`peers.${id}`]: '' } }
++export async function removePeer(peerId, blockId) {
++  return await Session.updateOne(
++    { _id: blockId },
++    { $unset: { [`peers.${peerId}`]: '' } }
+   );
+ }
+ 
+ /**
+- * Gets X number of "recently active" rooms, meaning rooms with the most peers.
++ * Gets X number of "recently active" rooms, meaning rooms with the most peers across their blocks.
+  */
+ export async function getRecentlyActiveRooms(limit = 5) {
+   const now = Date.now();
+-  // If we have a valid cache, return it
++  
+   if (recentlyActiveCache && now < recentlyActiveCacheExpiration) {
+     return recentlyActiveCache;
+   }
+ 
+   try {
+-    // Get all sessions, focusing on peers
+-    const sessions = (await Session.find(
+-      {}, { peers: 1, _id: 1 })).map(doc => doc.toObject());
+-    const activityData = [];
+-
+-    for (const doc of sessions) {
+-      const activeUsers = Object.keys(doc.peers || {}).length;
+-      if (activeUsers > 0) {
+-        activityData.push({ roomId: doc._id, activeUsers });
++    // Get all active block sessions (blocks with peers)
++    const sessions = await Session.find({ peers: { $exists: true, $ne: {} } }).lean();
++
++    // Group by room
++    const roomActivity = {};
++    for (const session of sessions) {
++      if (!session.roomId) continue; // Skip if no room ID is recorded
++      
++      if (!roomActivity[session.roomId]) {
++        roomActivity[session.roomId] = new Set();
+       }
++
++      Object.keys(session.peers).forEach(peer => roomActivity[session.roomId].add(peer));
+     }
+ 
+-    // Sort descending by activeUsers
+-    activityData.sort((a, b) => b.activeUsers - a.activeUsers);
+-    const topRooms = activityData.slice(0, limit);
++    // Convert to array and sort by most active users
++    const sortedRooms = Object.entries(roomActivity)
++      .map(([roomId, peers]) => ({ roomId, activeUsers: peers.size }))
++      .sort((a, b) => b.activeUsers - a.activeUsers)
++      .slice(0, limit);
+ 
+-    // For each top room, fetch the Room info
+-    const promises = topRooms.map(async ({ roomId, activeUsers }) => {
+-      const room = (await Room.findOne({ _id: roomId })).toObject();
++    // Fetch room info for the top rooms
++    const promises = sortedRooms.map(async ({ roomId, activeUsers }) => {
++      const room = await Room.findOne({ _id: roomId }).lean();
+       return room ? { ...room, activeUsers } : null;
+     });
+-    const results = await Promise.all(promises);
+ 
+-    // Filter out null
++    const results = await Promise.all(promises);
+     const final = results.filter(Boolean);
+ 
+     // Cache the final data for 60 seconds
+@@ -135,15 +159,19 @@ export async function getRecentlyActiveRooms(limit = 5) {
+ }
+ 
+ /**
+- * Gets the number of active users in a given room
++ * Gets the number of active users in a given room.
++ * Now aggregates across all blocks in the room.
+  */
+ export async function getActiveUsers(roomId) {
+-  // TODO: Update this logic to reflect new "active users" tracking 
+-  // when rooms switch to block-level editing.
+   try {
+-    const doc = await Session.findOne({ _id: roomId }, { peers: 1 });
+-    const peers = doc?.toObject()?.peers || {};
+-    return Object.keys(peers).length; // Safely handle empty/null peers
++    const sessions = await Session.find({ roomId }).lean();
++    
++    const uniqueUsers = new Set();
++    sessions.forEach(session => {
++      Object.keys(session.peers || {}).forEach(peer => uniqueUsers.add(peer));
++    });
++
++    return uniqueUsers.size;
+   } catch (error) {
+     console.error(`Error fetching active users for room ${roomId}:`, error.message);
+     throw error;
+diff --git a/server/routes/blocks.js b/server/routes/blocks.js
+index a902190..9f2cfd9 100644
+--- a/server/routes/blocks.js
++++ b/server/routes/blocks.js
+@@ -1,17 +1,83 @@
+ import express from 'express';
++
++import { config } from '../../config/config.js';
+ import optionalAuth from '../middleware/optionalAuth.js';
++import { getBlockById } from '../db/blockService.js';
++import { getRoomMetadata } from '../db/roomService.js';
++import { getPeerIDs } from '../db/sessionService.js';
++
++const port = config.port || 3000;
++
++const backendBaseUrl = `${(config.backendUrl || `http://localhost:${port}`)}`;
+ 
+ const router = express.Router();
+ 
+ // Render "Create New Block" page
+ router.get('/rooms/:room_id/blocks/new', optionalAuth, async (req, res) => {
+   const { room_id } = req.params;
++  const roomMetadata = await getRoomMetadata(room_id);
+ 
+   res.render('rooms/create-block', {
+     title: 'Create a New Block',
+     room_id,
++    roomMetadata,
+     user: req.user,
+   });
+ });
+ 
++// Render Block Editor Page
++router.get('/rooms/:room_id/blocks/:block_id/edit', optionalAuth, async (req, res) => {
++  const { room_id, block_id } = req.params;
++  const user = req.user;
++  const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
++
++  try {
++    // Fetch block metadata
++    const block = await getBlockById(block_id);
++    if (!block || block.roomId !== room_id) {
++      return res.status(404).render('error', { message: 'Block not found or does not belong to this room.' });
++    }
++
++    // Determine if the user has editing privileges
++    const isCreator = user && user.username === block.creator;
++    const hasEditToken = editTokens.includes(block.editToken);
++    const canManageBlock = isCreator || hasEditToken;
++
++    // Fetch active peers for this block
++    const peerIDs = await getPeerIDs(block_id);
++
++    // If the block is full, redirect to a "Full Block" page
++    if (peerIDs.length >= 6) {
++      return res.render('fullBlock', {
++        block_title: block.title,
++        room_id,
++      });
++    }
++
++    // Pick one peer randomly to set as initialTargetPeerId
++    const initialTargetPeerId = peerIDs.length > 0
++      ? peerIDs[Math.floor(Math.random() * peerIDs.length)]
++      : '0';
++
++    const roomMetadata = await getRoomMetadata(room_id);
++
++    // Render the block editor page
++    res.render('rooms/block-editor', {
++      title: `Edit Block - ${block.title}`,
++      block,
++      room_id,
++      roomName: roomMetadata.name,
++      block_id,
++      user,
++      peerIDs,
++      initialTargetPeerId,
++      canManageBlock, // Determines if user can edit metadata/delete
++      backendURL: backendBaseUrl, // Adjust based on your env vars
++    });
++  } catch (error) {
++    console.error('Error loading block editor:', error.message);
++    res.status(500).render('error', { message: 'An error occurred while loading the block editor.' });
++  }
++});
++
+ export default router;
+diff --git a/server/services/cron.js b/server/services/cron.js
+index 63bc314..889751e 100644
+--- a/server/services/cron.js
++++ b/server/services/cron.js
+@@ -1,10 +1,11 @@
+ import { CronJob } from 'cron';
+-import { cleanUpOldPeerIds } from '../db/sessionService.js';
++import { cleanUpExpiredSessions } from '../db/sessionService.js';
+ import { getFeaturedContent } from './featuredContent.js';
++import { startBlockJobs } from './blockService.js';
+ 
+ const jobs = [
+   new CronJob('3 * * * *', async () => {
+-    await cleanUpOldPeerIds();
++    await cleanUpExpiredSessions();
+   }, null),
+   new CronJob('0 * * * *', async () => {
+     await getFeaturedContent();
+@@ -15,4 +16,5 @@ export function startJobs() {
+   jobs.forEach((job) => {
+     job.start();
+   });
++  startBlockJobs();
+ }
+diff --git a/views/consolation.pug b/views/consolation.pug
+index 75d5724..24643a6 100644
+--- a/views/consolation.pug
++++ b/views/consolation.pug
+@@ -1,6 +1,5 @@
+ h2
+   | While you wait, feel free to read 
+-  a(href="/today") today's page in its current revision
++  a(href="/today") today's top blocks
+   |  or to browse 
+   a(href="/archive") the archive.
+-  
+\ No newline at end of file
+diff --git a/views/envImport.pug b/views/envImport.pug
+index 4de1654..c97f88e 100644
+--- a/views/envImport.pug
++++ b/views/envImport.pug
+@@ -1,4 +1,6 @@
+ script.
+   backendURL = "#{backendURL}"
+-  room = "#{room}"
+-  initialTargetPeerId = "#{targetPeerId}"
+\ No newline at end of file
++  room_id = "#{room_id}"
++  block_id = "#{block_id}"
++  initialTargetPeerId = "#{initialTargetPeerId}"
++  canManageBlock = #{canManageBlock}
+diff --git a/views/fullCapacity.pug b/views/fullCapacity.pug
+deleted file mode 100644
+index e3cba5c..0000000
+--- a/views/fullCapacity.pug
++++ /dev/null
+@@ -1,12 +0,0 @@
+-extends layout
+-block nav
+-  include navLinks
+-block content
+-  #viewer
+-    h1 Sorry; all editing rooms are currently 
+-      span(style="color: #e53449") occupied.
+-    h2
+-      | Please 
+-      a(href="/") try again right now
+-      |  or come back another time.
+-    include consolation
+diff --git a/views/fullRoom.pug b/views/fullRoom.pug
+deleted file mode 100644
+index 1a704b7..0000000
+--- a/views/fullRoom.pug
++++ /dev/null
+@@ -1,12 +0,0 @@
+-extends layout
+-block nav
+-  include navLinks
+-block content
+-  #viewer
+-    h1 Sorry; the #{room} Room is now 
+-      span(style="color: #e53449") fully occupied.
+-    h2
+-      | Please 
+-      a(href="/") try a different room
+-      |  or come back another time.
+-    include consolation
+diff --git a/views/index.pug b/views/index.pug
+deleted file mode 100644
+index 61410b0..0000000
+--- a/views/index.pug
++++ /dev/null
+@@ -1,55 +0,0 @@
+-extends layout
+-
+-block nav
+-  include navLinks
+-
+-block append head
+-  link(rel='stylesheet' href='/css/editor.css')
+-
+-block content
+-  #daily-page.hide
+-    .text-wrapper
+-      .editor
+-        #date
+-          h2= header
+-          p.room-description-header Click to expand room details
+-          p.room-description.collapsible.hidden= description
+-        .header
+-          p.sharing-link(style="display: none")
+-            a.link(id='myLink' target="_blank") Sharing Link
+-            span(id="myLinkInput" class="aside disappear")
+-            span(class="copy-container" data-tooltip="Copy to Clipboard")
+-              i(data-feather="copy" class="copy-link" color="rgb(17, 87, 170)")
+-            span(class="copy-status") Copied!
+-          #sync-infobox
+-        .toolbar.sticky
+-          button#open-insert-img-btn(data-tooltip="Insert Image")
+-            i(data-feather="image")
+-          div#insert-img-tooltip.hidden
+-            form
+-              input#img-url(type="text" placeholder="Enter image URL")
+-              input#img-alt(type="text" placeholder="Alt text (optional)")
+-              div
+-                button#insert-img-confirm(type="button") Confirm
+-                button#insert-img-cancel(type="button") Cancel
+-        textarea
+-      p#peerId Peers:
+-    .video-modal.hide
+-      .video-bar
+-          i(data-feather="minus" class="minimize")
+-          i(data-feather='x' class="exit")
+-      video
+-  include loading
+-  include closedPage
+-  include inactiveWarning
+-  script(src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js")
+-  script.
+-    feather.replace({ 'stroke-width': 3 });
+-
+-block scripts
+-  include envImport
+-  script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+-  script(src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js")
+-  script(src='/js/bundle.js')
+-  script(src='/js/clearSelection.js')
+-  script(src='/js/editor.js')
+diff --git a/views/rooms.pug b/views/rooms.pug
+index 344c3b0..c5a471e 100644
+--- a/views/rooms.pug
++++ b/views/rooms.pug
+@@ -53,5 +53,5 @@ block content
+       h2.modal-title
+       p.modal-description
+       p.modal-active-users
+-      a.modal-link(href='#', target='_blank') Visit Room
++      a.modal-link(href='#', target='_self') Visit Room
+ 
+diff --git a/views/rooms/blocks-dashboard.pug b/views/rooms/blocks-dashboard.pug
+index ae983bc..45a7961 100644
+--- a/views/rooms/blocks-dashboard.pug
++++ b/views/rooms/blocks-dashboard.pug
+@@ -5,27 +5,60 @@ block nav
+ 
+ block append scripts
+   script(src="/js/vote-controls.js")
++  script(src="/js/block-tabs.js")
+ 
+ block append head
+   link(rel='stylesheet' href='/css/blocks-dashboard.css')
++  link(rel="stylesheet" href="/css/blocks-tabs.css")
+   link(rel="stylesheet" href="/css/vote-controls.css")
+   link(rel="stylesheet", href="/css/login-modal.css")
+ 
+ prepend content
+   h1= header
++  if roomMetadata && roomMetadata.description
++    p#room-description= roomMetadata.description
++  else
++    p#room-description No description available.
++
+ append content
+   include ../partials/_login_modal
+   #viewer
+     p
+       a.btn(href=`/rooms/${room_id}/blocks/new`) Create a Block
+-    if blocks.length
+-      ul
+-        each block in blocks
+-          li.block-preview
+-            include ../partials/_vote_controls
+-            div.content
+-              a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
+-              p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+-              p= block.content ? block.content.substring(0, 100) + '...' : '(No content yet)'
+-    else
+-      p No blocks yet! Why not create the first one?
++
++    //- Tab links
++    .tabs
++      ul.tab-links
++        li(class="active")
++          a(href="#locked-tab") Locked Blocks
++        li
++          a(href="#inprogress-tab") In-Progress Blocks
++
++      //- Tab content for Locked Blocks
++      .tab-content
++        #locked-tab(class="active")
++          if lockedBlocks.length
++            ul
++              each block in lockedBlocks
++                li.block-preview
++                  include ../partials/_vote_controls
++                  div.content
++                    a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
++                    p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
++                    div.content-preview!= block.contentHTML
++          else
++            p No locked blocks yet! Create one or wait for the cron magic.
++
++        //- Tab content for In-Progress Blocks
++        #inprogress-tab
++          if inProgressBlocks.length
++            ul
++              each block in inProgressBlocks
++                li.block-preview
++                  include ../partials/_vote_controls
++                  div.content
++                    a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
++                    p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
++                    div.content-preview!= block.contentHTML
++          else
++            p No in-progress blocks yet! ¡Manos a la obra!
+diff --git a/views/rooms/create-block.pug b/views/rooms/create-block.pug
+index 596bd0b..d125097 100644
+--- a/views/rooms/create-block.pug
++++ b/views/rooms/create-block.pug
+@@ -5,35 +5,54 @@ block nav
+ 
+ block append head
+   link(rel='stylesheet' href='/css/create-block.css')
++  //- link(rel="stylesheet", href="/css/editor.css")
++  link(rel="stylesheet", href="/css/block-tags.css")
++  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
+ 
+ block append scripts
+   script(src="/js/create-block.js")
++  script(src="/js/create-block-tags.js")
+ 
+ block content
+   h1 Create a New Block
++  - let descriptionText = 'Room information not available.'
++  if roomMetadata
++    h2#room-name
++      | Room: 
++      a(href=`/rooms/${roomMetadata._id}`)= roomMetadata.name
++    - descriptionText = roomMetadata.description || 'No description available.'
++  
++  p#room-description= descriptionText
+ 
+   form#block-form(action=`/api/v1/rooms/${room_id}/blocks` method="POST")
+     .form-group
+       label(for="title") Title:
+       input#title(type="text" name="title" required minlength="3" maxlength="100" 
+         placeholder="e.g. 'My Masterpiece', 'The Best Idea Ever', 'Clickbait for Nerds'")
+-
+     .form-group
+       label(for="description") Description (optional):
+       textarea#description(name="description" placeholder="Explain your brilliance... or just wing it.")
+-
+     .form-group
+-      label(for="tags") Tags (comma-separated):
+-      input#tags(type="text" name="tags" placeholder="e.g. creativity, technology")
+-
++      include ../partials/_tag_section
++      input#hidden-tags(type="hidden" name="tags")
++      +tagSection([], true)
+     .form-group
+       label Visibility:
+       .visibility-options
+-        label(title="Public blocks appear in the room dashboard while still open for editing.")
+-          input(type="radio" name="visibility" value="public" checked)
+-          | Public (anyone can join)
+-        label(class= !user ? "disabled" : "", title="Private blocks don't appear in the room dashboard until locked. You can invite collaborators via a share link.")
+-          input(type="radio" name="visibility" value="private" disabled= !user)
+-          | Private (only invited users)
+-
++        .option
++          label(for="public-option" title="Editable by anyone in real-time. No login needed.")
++            input#public-option(type="radio" name="visibility" value="public" checked)
++            | Public 
++            i.fas.fa-eye
++          // Inline description for mobile (hidden on desktop)
++          span.visibility-description.hidden-on-desktop Editable by anyone in real-time. No login needed.
++        .option
++          label(for="private-option" title="Only for logged-in users. Visible after editing is complete." class= !user ? "disabled" : "")
++            input#private-option(type="radio" name="visibility" value="private" disabled= !user)
++            | Private 
++            i.fas.fa-lock
++            // New info icon with a larger tap target
++            i.far.fa-question-circle.info-icon(onclick="toggleTooltip(event, 'private')")
++          // Inline description for mobile (hidden on desktop)
++          span.visibility-description.hidden-on-desktop Only for logged-in users. Visible after editing is complete.
+     button.btn.btn-primary(type="submit") Create Block
+diff --git a/views/signup.pug b/views/signup.pug
+index 236b142..2b4fd8b 100644
+--- a/views/signup.pug
++++ b/views/signup.pug
+@@ -16,12 +16,12 @@ block content
+     form.signup-form(id="signupForm")
+       .form-group
+         label(for="email") Email
+-        input#email(type="email" name="email" required)
++        input#email(type="email" name="email" required placeholder="Enter your email")
+       .form-group
+         label(for="username") Username
+-        input#username(type="text" name="username" required)
++        input#username(type="text" name="username" required placeholder="Enter your username")
+       .form-group
+         label(for="password") Password
+-        input#password(type="password" name="password" required)
++        input#password(type="password" name="password" required placeholder="Enter a password")
+       button.signup-button(type="submit") Sign Up
+     .form-feedback(style="display:none;") Form submission successful!
