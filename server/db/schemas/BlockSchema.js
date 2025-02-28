@@ -18,9 +18,10 @@ const blockSchema = new Schema({
   visibility: { type: String, enum: ['public', 'private'], default: 'public' },
   status: {
     type: String,
-    enum: ['in-progress', 'locked', 'archived'],
+    enum: ['in-progress', 'locked'],
     default: 'in-progress',
-    index: true },
+    index: true
+  },
   votes: {
     type: [
       {
@@ -31,11 +32,10 @@ const blockSchema = new Schema({
     default: [],
   },
   voteCount: { type: Number, default: 0 },
-  createdAt: { type: Date, default: Date.now, index: true },
-  updatedAt: { type: Date, default: Date.now },
   lockedAt: { type: Date },
 }, {
   strict: true,
+  timestamps: true,
   toObject: { transform: (doc, ret) => { delete ret.__v; } },
   toJSON: { transform: (doc, ret) => { delete ret.__v; } },
 });

@@ -16,12 +16,12 @@ block content
     form.signup-form(id="signupForm")
       .form-group
         label(for="email") Email
-        input#email(type="email" name="email" required)
+        input#email(type="email" name="email" required placeholder="Enter your email")
       .form-group
         label(for="username") Username
-        input#username(type="text" name="username" required)
+        input#username(type="text" name="username" required placeholder="Enter your username")
       .form-group
         label(for="password") Password
-        input#password(type="password" name="password" required)
+        input#password(type="password" name="password" required placeholder="Enter a password")
       button.signup-button(type="submit") Sign Up
     .form-feedback(style="display:none;") Form submission successful!

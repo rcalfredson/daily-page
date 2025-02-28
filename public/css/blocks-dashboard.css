@@ -28,6 +28,11 @@ ul {
   color: #555;
 }
 
+.content-preview {
+  max-height: 200px; /* adjust as needed */
+  overflow: hidden;
+}
+
 .block-preview:hover {
   background-color: #f1f1f1;
 }
@@ -41,6 +46,12 @@ ul {
 
 .block-title:hover {
   text-decoration: underline;
+}
+
+#room-description {
+  margin-left: 10px;
+  font-size: 1rem;
+  color: #555;
 }
 
 #viewer a.btn {

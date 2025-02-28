@@ -1,4 +1,7 @@
 import Block from './models/Block.js';
+import * as cache from '../services/cache.js';
+
+const CACHE_TTL = 5000; // Cache for 5 seconds (adjust as needed)
 
 // Create a new block
 export async function createBlock(data) {
@@ -9,6 +12,73 @@ export async function createBlock(data) {
 // Get a block by ID
 export async function getBlockById(blockId) {
   return await Block.findById(blockId);
+}
+
+// Get all blocks created on a specific date (with caching)
+export async function getBlocksByDate(date) {
+  return await cache.get(
+    `blocks-by-date-${date}`,
+    async () => {
+      const blocks = await Block.find({ createdAt: { $gte: new Date(date), $lt: new Date(date + 'T23:59:59.999Z') } })
+        .sort({ createdAt: 1 }) // Sort oldest to newest
+        .lean(); // Convert Mongoose objects to plain JSON
+
+      return blocks;
+    },
+    [],
+    CACHE_TTL
+  );
+}
+
+// Get all unique dates that have blocks in a given year/month (with caching)
+export async function getBlockDatesByYearMonth(year, month) {
+  return await cache.get(
+    `block-dates-${year}-${month}`,
+    async () => {
+      const blocks = await Block.find(
+        {
+          createdAt: {
+            $gte: new Date(`${year}-${month}-01T00:00:00.000Z`),
+            $lt: new Date(`${year}-${month}-31T23:59:59.999Z`)
+          }
+        },
+        { createdAt: 1 } // Only return the createdAt field
+      ).sort({ createdAt: -1 }).lean();
+
+      // Extract unique YYYY-MM-DD dates
+      const uniqueDates = [...new Set(blocks.map(block => block.createdAt.toISOString().split('T')[0]))];
+
+      return uniqueDates;
+    },
+    [],
+    CACHE_TTL
+  );
+}
+
+// Get all year/month combinations with blocks (cached)
+export async function getAllBlockYearMonthCombos() {
+  return await cache.get(
+    'block-year-month-combos', // Cache key
+    async () => {
+      const pipeline = [
+        {
+          $project: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' },
+          },
+        },
+        { $group: { _id: { year: '$year', month: '$month' } } },
+        { $sort: { '_id.year': -1, '_id.month': -1 } }, // Sort latest first
+      ];
+
+      const aggDocs = await Block.aggregate(pipeline).exec();
+
+      // Convert into simple { year, month } objects
+      return aggDocs.map(doc => ({ year: doc._id.year, month: doc._id.month }));
+    },
+    [],
+    CACHE_TTL
+  );
 }
 
 // Get blocks by roomId
@@ -56,7 +126,7 @@ export const saveVote = async (blockId, userId, action) => {
 
     if (existingVoteIndex >= 0) {
       const existingVote = block.votes[existingVoteIndex];
-      
+
       if (existingVote.type === action) {
         throw new Error('User has already voted in this direction');
       }

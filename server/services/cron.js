@@ -1,10 +1,11 @@
 import { CronJob } from 'cron';
-import { cleanUpOldPeerIds } from '../db/sessionService.js';
+import { cleanUpExpiredSessions } from '../db/sessionService.js';
 import { getFeaturedContent } from './featuredContent.js';
+import { startBlockJobs } from './blockService.js';
 
 const jobs = [
   new CronJob('3 * * * *', async () => {
-    await cleanUpOldPeerIds();
+    await cleanUpExpiredSessions();
   }, null),
   new CronJob('0 * * * *', async () => {
     await getFeaturedContent();
@@ -15,4 +16,5 @@ export function startJobs() {
   jobs.forEach((job) => {
     job.start();
   });
+  startBlockJobs();
 }

@@ -3,6 +3,7 @@ p {
 }
 
 .login-form-container {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,6 +34,8 @@ p {
   border: unset;
   margin: unset;
   float: unset;
+  background-color: unset;
+  padding: unset;
 }
 
 .login-form input {

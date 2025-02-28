@@ -5,27 +5,60 @@ block nav
 
 block append scripts
   script(src="/js/vote-controls.js")
+  script(src="/js/block-tabs.js")
 
 block append head
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
+  link(rel="stylesheet" href="/css/blocks-tabs.css")
   link(rel="stylesheet" href="/css/vote-controls.css")
   link(rel="stylesheet", href="/css/login-modal.css")
 
 prepend content
   h1= header
+  if roomMetadata && roomMetadata.description
+    p#room-description= roomMetadata.description
+  else
+    p#room-description No description available.
+
 append content
   include ../partials/_login_modal
   #viewer
     p
       a.btn(href=`/rooms/${room_id}/blocks/new`) Create a Block
-    if blocks.length
-      ul
-        each block in blocks
-          li.block-preview
-            include ../partials/_vote_controls
-            div.content
-              a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
-              p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
-              p= block.content ? block.content.substring(0, 100) + '...' : '(No content yet)'
-    else
-      p No blocks yet! Why not create the first one?
+
+    //- Tab links
+    .tabs
+      ul.tab-links
+        li(class="active")
+          a(href="#locked-tab") Locked Blocks
+        li
+          a(href="#inprogress-tab") In-Progress Blocks
+
+      //- Tab content for Locked Blocks
+      .tab-content
+        #locked-tab(class="active")
+          if lockedBlocks.length
+            ul
+              each block in lockedBlocks
+                li.block-preview
+                  include ../partials/_vote_controls
+                  div.content
+                    a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
+                    p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                    div.content-preview!= block.contentHTML
+          else
+            p No locked blocks yet! Create one or wait for the cron magic.
+
+        //- Tab content for In-Progress Blocks
+        #inprogress-tab
+          if inProgressBlocks.length
+            ul
+              each block in inProgressBlocks
+                li.block-preview
+                  include ../partials/_vote_controls
+                  div.content
+                    a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
+                    p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                    div.content-preview!= block.contentHTML
+          else
+            p No in-progress blocks yet! ¡Manos a la obra!

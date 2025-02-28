@@ -51,4 +51,63 @@ document.addEventListener('DOMContentLoaded', () => {
       description.classList.toggle('visible', !isVisible);
     });
   }
+
+  const titleText = document.getElementById('block-title');
+  const titleInput = document.getElementById('block-title-input');
+  const editButton = document.getElementById('edit-title-btn');
+
+  if (editButton) {
+    editButton.addEventListener('click', () => startEditingTitle());
+    titleText.addEventListener('click', () => startEditingTitle());
+  }
+
+  function startEditingTitle() {
+    titleText.classList.remove('fade-in');
+    titleText.classList.add('fade-out');
+
+    titleInput.style.width = titleText.offsetWidth + 'px';
+
+    titleInput.classList.remove('fade-out');
+    titleInput.classList.add('fade-in');
+
+    titleInput.focus();
+    titleInput.setSelectionRange(0, titleInput.value.length);
+  }
+
+  function finishEditingTitle() {
+    titleInput.classList.remove('fade-in');
+    titleInput.classList.add('fade-out');
+
+    const newTitle = titleInput.value.trim();
+    if (newTitle && newTitle !== titleText.innerText) {
+      titleText.innerText = newTitle;
+      document.title = `Edit Block - ${newTitle}`;
+      updateTitleBackend(newTitle);
+    }
+    titleText.classList.remove('fade-out');
+    titleText.classList.add('fade-in');
+  }
+
+  function updateTitleBackend(newTitle) {
+    fetch(`/api/v1/blocks/${block_id}/metadata`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: newTitle })
+    })
+      .then(response => response.status)
+      .then(status => {
+        if (status !== 200) {
+          alert('Error updating title.');
+        }
+      })
+      .catch(err => console.error('Failed to update title:', err));
+  }
+
+  if (canManageBlock) {
+    titleInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') finishEditingTitle();
+    });
+
+    titleInput.addEventListener('blur', () => finishEditingTitle());
+  }
 });

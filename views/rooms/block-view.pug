@@ -1,0 +1,49 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/block-view.css')
+  link(rel='stylesheet' href='/css/block-tags.css')
+  link(rel='stylesheet' href='/css/vote-controls.css')
+  link(rel='stylesheet' href='/css/login-modal.css')
+
+block append scripts
+  // Vote controls script if you have voting on the viewer
+  script(src='/js/vote-controls.js')
+  // Collapsible description logic for the viewer
+  script(src="/js/view-block-description.js")
+
+block content
+  include ../partials/_tag_section
+  #block-page
+    .block-header
+      // Link back to the room
+      .room-info
+        | Room: 
+        a.room-link(href=`/rooms/${room_id}`)= roomName
+      .title-section
+        .vote-section
+          include ../partials/_vote_controls
+        h1.block-title= block.title
+        // Only show edit link if the block is in-progress
+        if block.status === 'in-progress'
+          a.block-edit-btn(href=`/rooms/${room_id}/blocks/${block._id}/edit`) Edit
+
+    // Description block, read-only style
+    .block-description-card
+      span.description-label Description
+      .description-body.collapsed
+        p#description-view!= block.description || 'No description provided...'
+      .expand-toggle
+        span Expand
+
+    // The main content, already rendered to HTML on the server
+    .block-content
+      != block.contentHTML
+
+    +tagSection(block.tags, false)
+
+  // Reuse your login modal partial if needed
+  include ../partials/_login_modal

@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { createServer } from 'http';
+import MarkdownIt from 'markdown-it';
 import { ExpressPeerServer } from 'peer';
 import axios from 'axios';
 import DateHelper from './lib/dateHelper.js';
@@ -12,11 +13,11 @@ import * as encodeHelper from './lib/encodeHelper.js';
 import { config } from './config/config.js';
 
 
-import useAPIV1 from './server/api/v1/index.js';
+import useAuthAPI from './server/api/v1/auth.js';
 import useBlockAPI from './server/api/v1/blocks.js';
+import usePeersAPI from './server/api/v1/peers.js';
 import useRoomAPI from './server/api/v1/rooms.js';
 import useUserAPI from './server/api/v1/users.js';
-import useAuthAPI from './server/api/v1/auth.js';
 import useVoteAPI from './server/api/v1/votes.js';
 
 import { getFeaturedContent } from './server/services/featuredContent.js'; // Services
@@ -25,6 +26,7 @@ import roomRoute from './server/routes/rooms.js'; // Routes
 import usersRoute from './server/routes/users.js';
 import loginRoute from './server/routes/login.js';
 import blocksRoute from './server/routes/blocks.js';
+import blockViewRoute from './server/routes/blockView.js';
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
@@ -32,6 +34,7 @@ import localizationMiddleware from './server/services/localization.js';
 import { startJobs } from './server/services/cron.js';
 import * as google from './server/services/google.js';
 
+import { renderMarkdownContent } from './server/utils/markdownHelper.js';
 import * as viewHelper from './server/utils/view.js'; // Utils
 
 import { initMongooseConnection } from './server/db/mongoose.js';
@@ -48,7 +51,6 @@ import {
   getAllRooms, getRoomMetadata
 
 } from './server/db/roomService.js'
-import { getPeerIDs } from './server/db/sessionService.js';
 import optionalAuth from './server/middleware/optionalAuth.js';
 
 startJobs();
@@ -56,8 +58,8 @@ startJobs();
 const app = express();
 const port = config.port || 3000;
 const audioHost = 'https://ipod.dailypage.org';
-const backendBaseUrl = `${(config.backendUrl || `http://localhost:${port}`)}`;
 const ROOM_BASED_CUTOFF = new Date('2024-12-31');
+const md = MarkdownIt();
 
 (async () => {
   const dateParam = ':date([0-9]{4}-[0-9]{2}-[0-9]{2})';
@@ -104,16 +106,17 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.set('views', './views');
     app.set('view engine', 'pug');
 
-    useAPIV1(app);
+    useAuthAPI(app);
     useBlockAPI(app);
     useRoomAPI(app);
+    usePeersAPI(app);
     useUserAPI(app);
-    useAuthAPI(app);
     useVoteAPI(app);
     app.use('/', roomRoute);
     app.use('/', usersRoute);
     app.use('/', loginRoute);
     app.use('/', blocksRoute);
+    app.use('/', blockViewRoute);
 
     const server = createServer(app)
 
@@ -427,21 +430,50 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       try {
         const { room_id } = req.params;
         const roomMetadata = await getRoomMetadata(room_id);
-        const blocks = req.user
-          ? await getBlocksByRoomWithUserVotes(room_id, req.user.id)
-          : await getBlocksByRoom(room_id);
+
+        // Compute the start of the current UTC day.
+        const now = new Date();
+        const utcStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
+        // Options for filtering, now sorted by voteCount (highest to lowest)
+        const lockedOptions = { status: 'locked', startDate: utcStart, sortBy: 'voteCount' };
+        const inProgressOptions = { status: 'in-progress', startDate: utcStart, sortBy: 'voteCount' };
+
+        let lockedBlocks, inProgressBlocks;
+        if (req.user) {
+          lockedBlocks = await getBlocksByRoomWithUserVotes(room_id, req.user.id, lockedOptions);
+          inProgressBlocks = await getBlocksByRoomWithUserVotes(room_id, req.user.id, inProgressOptions);
+        } else {
+          lockedBlocks = await getBlocksByRoom(room_id, lockedOptions);
+          inProgressBlocks = await getBlocksByRoom(room_id, inProgressOptions);
+        }
+
+        // Render markdown for both arrays.
+        lockedBlocks = lockedBlocks.map(block => {
+          block.contentHTML = renderMarkdownContent(block.content)
+
+          return block;
+        });
+
+        inProgressBlocks = inProgressBlocks.map(block => {
+          block.contentHTML = renderMarkdownContent(block.content)
+
+          return block;
+        });
+
         const date = DateHelper.currentDate('long');
-        const title = `Daily Page - ${roomMetadata.name}`
+        const title = `Daily Page - ${roomMetadata.name}`;
         const header = `${date} - ${roomMetadata.name} Room`;
-        res.render('rooms/blocks-dashboard',
-          {
-            room_id,
-            title,
-            header,
-            blocks,
-            user: req.user
-          }
-        );
+
+        res.render('rooms/blocks-dashboard', {
+          room_id,
+          title,
+          header,
+          lockedBlocks,
+          inProgressBlocks,
+          user: req.user,
+          roomMetadata
+        });
       } catch (error) {
         res.status(500).send('Error loading room dashboard.');
       }

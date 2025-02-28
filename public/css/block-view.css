@@ -1,0 +1,113 @@
+:root {
+  --primary-bg: #ffffff;
+  --secondary-bg: #f9f9f9;
+  --text-color: #333;
+  --highlight-color: #007bff;
+  --border-color: #ddd;
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.block-header {
+  /* Change to 'center' so arrows and title align nicely */
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Title + optional edit button in a row */
+.title-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1; /* So the title can expand */
+}
+
+.room-info {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--highlight-color);
+}
+
+.room-link {
+  text-decoration: none;
+  color: var(--highlight-color);
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.room-link:hover {
+  color: #0056b3;
+}
+
+.block-title {
+  padding-bottom: 5px;
+}
+
+/* Make that edit button look fancy */
+.block-edit-btn {
+  margin-left: auto;
+  background-color: var(--highlight-color);
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.block-edit-btn:hover {
+  background-color: #0056b3; /* slightly darker */
+}
+
+/* ===== Description Card Styles (same as before) ===== */
+.block-description-card {
+  background-color: #fff;
+  border: none;
+  box-shadow: none;
+  padding: 1rem;
+  position: relative;
+  margin: 1rem 0;
+}
+
+.description-label {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 0.75rem;
+  color: #aaa;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.description-body {
+  width: 95%;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
+  max-height: 9999px; /* Start large so we can 'collapse' it in JS */
+  opacity: 1;
+}
+
+.description-body.collapsed {
+  max-height: 150px;
+  position: relative;
+}
+
+/* Fade-out gradient effect when collapsed */
+.description-body.collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 95%;
+  height: 30px;
+  background: linear-gradient(transparent, var(--primary-bg));
+  pointer-events: none;
+}
+
+.expand-toggle {
+  text-align: center;
+  cursor: pointer;
+  color: var(--highlight-color);
+  padding: 0.5rem 0;
+  font-weight: bold;
+}
