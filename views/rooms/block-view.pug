@@ -14,6 +14,7 @@ block append scripts
   script(src='/js/vote-controls.js')
   // Collapsible description logic for the viewer
   script(src="/js/view-block-description.js")
+  script(src="/js/share-block.js")
 
 block content
   include ../partials/_tag_section
@@ -29,7 +30,9 @@ block content
         h1.block-title= block.title
         // Only show edit link if the block is in-progress
         if block.status === 'in-progress'
-          a.block-edit-btn(href=`/rooms/${room_id}/blocks/${block._id}/edit`) Edit
+          .interact-section
+            a.block-edit-btn(href=`/rooms/${room_id}/blocks/${block._id}/edit`) Edit
+            button#share-btn.share-btn Share ✨
 
     // Description block, read-only style
     .block-description-card
@@ -47,3 +50,25 @@ block content
 
   // Reuse your login modal partial if needed
   include ../partials/_login_modal
+  div#share-modal.share-modal.hidden
+    div.share-modal-content
+      span.share-close-btn &times;
+      h2 Share this Block
+      p Share on:
+      ul.share-links
+        li
+          a(href="#", id="share-facebook", target="_blank")
+            img.share-icon(src="https://cdn.simpleicons.org/facebook/1877F2" alt="Facebook logo")
+            | Facebook
+        li
+          a(href="#", id="share-reddit", target="_blank")
+            img.share-icon(src="https://cdn.simpleicons.org/reddit/FF4500" alt="Reddit logo")
+            | Reddit
+        li
+          a(href="#", id="share-whatsapp", target="_blank")
+            img.share-icon(src="https://cdn.simpleicons.org/whatsapp/25D366" alt="WhatsApp logo")
+            | WhatsApp
+        li
+          a(href="#", id="share-twitter", target="_blank")
+            img.share-icon(src="https://cdn.simpleicons.org/x/000000" alt="Twitter logo")
+            | Twitter
