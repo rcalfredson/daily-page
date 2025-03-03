@@ -1,0 +1,61 @@
+extends layout
+
+block nav
+  include navLinks
+
+block append scripts
+  script(src="/js/vote-controls.js")
+
+block append head
+  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
+  link(rel='stylesheet' href='/css/blocks-dashboard.css')
+  link(rel='stylesheet' href='/css/vote-controls.css')
+  link(rel='stylesheet' href='/css/login-modal.css')
+  link(rel='stylesheet' href='/css/home.css')
+
+block content
+
+  // Encabezado principal de la página
+  .homepage-header
+    h1 Welcome to Daily Page!
+    p.subtitle Explore the most popular blocks from the last 24 hours. 
+      |Feeling inspired? 
+      a(href="/rooms").join-room Join a room
+      |  and create your own block!
+  
+  // Sección de Trending Tags
+  .trending-section
+    h2 Trending Tags
+    if trendingTags && trendingTags.length
+      .trending-tags-widget
+        ul.trending-tags
+          each tagObj in trendingTags
+            li.tag-chip
+              i.tag-icon.fas.fa-tag
+              a(href=`/tags/${encodeURIComponent(tagObj._id)}`)= tagObj._id
+              span.tag-badge (#{tagObj.totalBlocks} blocks, #{tagObj.totalVotes} votes)
+    else
+      p No trending tags yet. ¡Sé el primero en etiquetar algo cool!
+
+  // Divider opcional
+  .divider
+
+  // Sección de Trending Blocks
+  .trending-section
+    h2 Trending Blocks
+    if topBlocks.length
+      ul.block-list
+        each block in topBlocks
+          li.block-preview
+            include partials/_vote_controls
+            div.content
+              a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
+              p
+                | Created by: #{block.creator} in 
+                a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : "Unknown Room"
+                |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+              div.content-preview!= block.contentHTML
+    else
+      p No blocks yet in the last 24 hours. ¡Check back soon, compa!
+
+  include partials/_login_modal

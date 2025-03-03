@@ -14,6 +14,61 @@ export async function getBlockById(blockId) {
   return await Block.findById(blockId);
 }
 
+// Get top blocks from the last 24 hours, optionally filtering for locked blocks only.
+export async function getTopBlocksLast24Hours(options = {}) {
+  const { lockedOnly = false, limit = 20 } = options;
+  const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const query = { createdAt: { $gte: twentyFourHoursAgo } };
+  if (lockedOnly) {
+    query.status = 'locked'; // Asumiendo que 'locked' indica bloques completados.
+  }
+  return await cache.get(
+    `top-blocks-last-24h-${lockedOnly}-${limit}`,
+    async () => {
+      const blocks = await Block.find(query)
+        .sort({ voteCount: -1 })
+        .limit(limit)
+        .lean();
+      return blocks;
+    },
+    [],
+    CACHE_TTL
+  );
+}
+
+export async function getTrendingTagsLast24Hours(options = {}) {
+  const { limit = 10, sortBy = 'totalVotes' } = options;
+  const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+  return await cache.get(
+    `trending-tags-last-24h-${limit}-${sortBy}`,
+    async () => {
+      const pipeline = [
+        // Solo consideramos bloques de las últimas 24 horas
+        { $match: { createdAt: { $gte: twentyFourHoursAgo } } },
+        // Separa el array de tags para contarlos individualmente
+        { $unwind: '$tags' },
+        // Agrupa por el nombre del tag
+        {
+          $group: {
+            _id: '$tags',
+            totalBlocks: { $sum: 1 }, // Cuántos bloques usan este tag
+            totalVotes: { $sum: '$voteCount' }, // Suma de los votos
+          },
+        },
+        // Ordena, por defecto, según totalBlocks (o totalVotes, si lo prefieres)
+        { $sort: { [sortBy]: -1 } },
+        // Limita cuántos tags se muestran
+        { $limit: limit },
+      ];
+
+      return await Block.aggregate(pipeline).exec();
+    },
+    [],
+    CACHE_TTL
+  );
+}
+
 // Get all blocks created on a specific date (with caching)
 export async function getBlocksByDate(date) {
   return await cache.get(

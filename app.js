@@ -20,7 +20,6 @@ import useRoomAPI from './server/api/v1/rooms.js';
 import useUserAPI from './server/api/v1/users.js';
 import useVoteAPI from './server/api/v1/votes.js';
 
-import { getFeaturedContent } from './server/services/featuredContent.js'; // Services
 
 import roomRoute from './server/routes/rooms.js'; // Routes
 import usersRoute from './server/routes/users.js';
@@ -39,7 +38,8 @@ import * as viewHelper from './server/utils/view.js'; // Utils
 
 import { initMongooseConnection } from './server/db/mongoose.js';
 import {
-  getBlocksByRoom, getBlocksByRoomWithUserVotes
+  getBlocksByRoom, getBlocksByRoomWithUserVotes,
+  getTopBlocksLast24Hours, getTrendingTagsLast24Hours
 } from './server/db/blockService.js';
 import {
   pagesByDate,
@@ -479,14 +479,28 @@ const md = MarkdownIt();
       }
     });
 
-    app.get('/', async (req, res) => {
-      const featuredContent = await getFeaturedContent();
-      res.render('about', {
-        title: res.locals.translations.title,
-        translations: res.locals.translations,
-        lang: res.locals.lang,
-        featuredContent,
-      });
+    app.get('/', optionalAuth, async (req, res) => {
+      try {
+        let topBlocks = await getTopBlocksLast24Hours({ lockedOnly: false, limit: 20 });
+        topBlocks = topBlocks.map(block => {
+          block.contentHTML = renderMarkdownContent(block.content);
+          return block;
+        });
+
+        const trendingTags = await getTrendingTagsLast24Hours({ limit: 10, sortBy: 'totalBlocks' });
+
+        res.render('home', {
+          title: 'Top Blocks in the Last 24 Hours',
+          topBlocks,
+          trendingTags,
+          user: req.user,
+          translations: res.locals.translations,
+          lang: res.locals.lang,
+        });
+      } catch (err) {
+        console.error('Error fetching homepage data:', err);
+        res.status(500).send('Server Error');
+      }
     });
 
     app.get('*', (req, res) => {
