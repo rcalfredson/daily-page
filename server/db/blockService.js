@@ -14,6 +14,37 @@ export async function getBlockById(blockId) {
   return await Block.findById(blockId);
 }
 
+export async function getFeaturedBlock() {
+  return await cache.get(
+    `featured-block`,
+    async () => {
+      const [topBlock] = await getTopBlocksLast24Hours({ lockedOnly: false, limit: 1 });
+      return topBlock || null;
+    },
+    [],
+    CACHE_TTL
+  );
+}
+
+export async function getFeaturedRoomLast24Hours() {
+  return await cache.get(
+    `featured-room-last-24h`,
+    async () => {
+      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const pipeline = [
+        { $match: { createdAt: { $gte: twentyFourHoursAgo } } },
+        { $group: { _id: '$roomId', totalRoomVotes: { $sum: '$voteCount' }, blockCount: { $sum: 1 } } },
+        { $sort: { totalRoomVotes: -1 } },
+        { $limit: 1 },
+      ];
+      const [result] = await Block.aggregate(pipeline).exec();
+      return result || null;
+    },
+    [],
+    CACHE_TTL
+  );
+}
+
 // Get top blocks from the last 24 hours, optionally filtering for locked blocks only.
 export async function getTopBlocksLast24Hours(options = {}) {
   const { lockedOnly = false, limit = 20 } = options;

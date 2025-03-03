@@ -22,6 +22,33 @@ block content
       |Feeling inspired? 
       a(href="/rooms").join-room Join a room
       |  and create your own block!
+
+  if featuredRoom
+    .featured-section
+      .featured-card
+        .featured-ribbon ★ Featured Room
+        p.card-info
+          | #{featuredRoom.name} has #{featuredRoomData.totalRoomVotes} votes across #{featuredRoomData.blockCount} blocks in the last 24 hours!
+        a.btn(href=`/rooms/${featuredRoom._id}`) Check it out
+
+  if featuredBlock
+    .featured-section
+      .featured-card
+        .featured-ribbon ★ Featured Block
+        // Título del block
+        h2.card-title= featuredBlock.title
+        // Votos
+        p.card-info #{featuredBlock.voteCount} votes
+
+        // Preview del contenido (ya convertido a HTML)
+        if featuredBlock.contentHTML
+          div.featured-content-preview!= featuredBlock.contentHTML
+        else
+          p.card-info (No content provided...)
+
+        // Botón para ver más
+        a.btn(href=`/rooms/${featuredBlock.roomId}/blocks/${featuredBlock._id}`) View Block
+
   
   // Sección de Trending Tags
   .trending-section

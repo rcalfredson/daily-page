@@ -39,7 +39,8 @@ import * as viewHelper from './server/utils/view.js'; // Utils
 import { initMongooseConnection } from './server/db/mongoose.js';
 import {
   getBlocksByRoom, getBlocksByRoomWithUserVotes,
-  getTopBlocksLast24Hours, getTrendingTagsLast24Hours
+  getTopBlocksLast24Hours, getTrendingTagsLast24Hours,
+  getFeaturedBlock, getFeaturedRoomLast24Hours
 } from './server/db/blockService.js';
 import {
   pagesByDate,
@@ -481,6 +482,16 @@ const md = MarkdownIt();
 
     app.get('/', optionalAuth, async (req, res) => {
       try {
+        const featuredBlock = await getFeaturedBlock();
+        if (featuredBlock) {
+          featuredBlock.contentHTML = renderMarkdownContent(featuredBlock.content);
+        }
+        const featuredRoomData = await getFeaturedRoomLast24Hours();
+        let featuredRoom = null;
+        if (featuredRoomData) {
+          featuredRoom = await getRoomMetadata(featuredRoomData._id);
+        }
+
         let topBlocks = await getTopBlocksLast24Hours({ lockedOnly: false, limit: 20 });
         topBlocks = topBlocks.map(block => {
           block.contentHTML = renderMarkdownContent(block.content);
@@ -492,6 +503,9 @@ const md = MarkdownIt();
         res.render('home', {
           title: 'Top Blocks in the Last 24 Hours',
           topBlocks,
+          featuredBlock,
+          featuredRoom,
+          featuredRoomData,
           trendingTags,
           user: req.user,
           translations: res.locals.translations,
