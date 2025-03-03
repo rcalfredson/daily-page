@@ -22,43 +22,43 @@ prepend content
 
 append content
   include ../partials/_login_modal
-  #viewer
-    p
-      a.btn(href=`/rooms/${room_id}/blocks/new`) Create a Block
+  
+  p
+    a.btn(href=`/rooms/${room_id}/blocks/new`) Create a Block
 
-    //- Tab links
-    .tabs
-      ul.tab-links
-        li(class="active")
-          a(href="#locked-tab") Locked Blocks
-        li
-          a(href="#inprogress-tab") In-Progress Blocks
+  //- Tab links
+  .tabs
+    ul.tab-links
+      li(class="active")
+        a(href="#locked-tab") Locked Blocks
+      li
+        a(href="#inprogress-tab") In-Progress Blocks
 
-      //- Tab content for Locked Blocks
-      .tab-content
-        #locked-tab(class="active")
-          if lockedBlocks.length
-            ul
-              each block in lockedBlocks
-                li.block-preview
-                  include ../partials/_vote_controls
-                  div.content
-                    a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
-                    p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
-                    div.content-preview!= block.contentHTML
-          else
-            p No locked blocks yet! Create one or wait for the cron magic.
+    //- Tab content for Locked Blocks
+    .tab-content
+      #locked-tab(class="active")
+        if lockedBlocks.length
+          ul
+            each block in lockedBlocks
+              li.block-preview
+                include ../partials/_vote_controls
+                div.content
+                  a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
+                  p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                  div.content-preview!= block.contentHTML
+        else
+          p No locked blocks yet! Create one or wait for the cron magic.
 
-        //- Tab content for In-Progress Blocks
-        #inprogress-tab
-          if inProgressBlocks.length
-            ul
-              each block in inProgressBlocks
-                li.block-preview
-                  include ../partials/_vote_controls
-                  div.content
-                    a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
-                    p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
-                    div.content-preview!= block.contentHTML
-          else
-            p No in-progress blocks yet! ¡Manos a la obra!
+      //- Tab content for In-Progress Blocks
+      #inprogress-tab
+        if inProgressBlocks.length
+          ul
+            each block in inProgressBlocks
+              li.block-preview
+                include ../partials/_vote_controls
+                div.content
+                  a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
+                  p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                  div.content-preview!= block.contentHTML
+        else
+          p No in-progress blocks yet! ¡Manos a la obra!

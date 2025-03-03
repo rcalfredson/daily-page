@@ -1,0 +1,132 @@
+.join-room {
+  font-weight: bold;
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* Contenedor tipo “widget” */
+.trending-tags-widget {
+  background-color: #f8f8f8;
+  padding: 1rem 1.5rem;
+  margin: 2rem 0;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.trending-tags-widget h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Lista horizontal con “chips” */
+.trending-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Cada tag es un “chip” */
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.9rem;
+  color: #555;
+  transition: background-color 0.2s;
+}
+
+.tag-chip:hover {
+  background-color: #e9e9e9;
+}
+
+/* Ícono del tag (Font Awesome) */
+.tag-icon {
+  margin-right: 0.3rem;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+/* El link del tag */
+.tag-chip a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.tag-chip a:hover {
+  text-decoration: underline;
+}
+
+/* El “badge” con info extra (blocks, votes) */
+.tag-badge {
+  background-color: #f1f1f1;
+  color: #333;
+  border-radius: 12px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.homepage-header {
+  margin-bottom: 2rem;
+}
+
+.homepage-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.homepage-header .subtitle {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Sección de “Trending Tags” y “Trending Blocks” */
+.trending-section {
+  margin-bottom: 2rem;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: #ddd;
+  margin: 2rem 0;
+}
+
+/* Para la lista de blocks, le puedes dar un margin, etc. */
+.block-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+  .homepage-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .trending-tags {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tag-chip {
+    margin-bottom: 0.5rem;
+  }
+
+  .block-preview {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
