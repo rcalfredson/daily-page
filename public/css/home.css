@@ -124,11 +124,6 @@
   .tag-chip {
     margin-bottom: 0.5rem;
   }
-
-  .block-preview {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }
 
 .featured-content-preview {

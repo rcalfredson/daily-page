@@ -29,8 +29,14 @@ ul {
 }
 
 .content-preview {
-  max-height: 200px; /* adjust as needed */
+  max-height: 200px;
   overflow: hidden;
+}
+
+.content-preview img, .featured-content-preview img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 .block-preview:hover {
