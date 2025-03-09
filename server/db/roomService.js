@@ -27,6 +27,10 @@ export async function getAllRooms() {
   }
 }
 
+export async function getTotalRooms() {
+  return await Room.countDocuments({});
+}
+
 /**
  * Fetches & groups rooms by their topic, caching the result 
  * for 10 minutes.

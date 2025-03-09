@@ -23,6 +23,20 @@ block content
       a(href="/rooms").join-room Join a room
       |  and create your own block!
 
+  .global-stats
+    .stat-item
+      i.fas.fa-layer-group
+      span.stat-number= globalStats.totalBlocks
+      span.stat-label Blocks
+    .stat-item
+      i.fas.fa-door-open
+      span.stat-number= globalStats.totalRooms
+      span.stat-label Rooms
+    .stat-item
+      i.fas.fa-users
+      span.stat-number= globalStats.collaborationsToday
+      span.stat-label Collaborations Today
+
   if featuredRoom
     .featured-section
       .featured-card

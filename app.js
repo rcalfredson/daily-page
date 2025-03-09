@@ -40,7 +40,8 @@ import { initMongooseConnection } from './server/db/mongoose.js';
 import {
   getBlocksByRoom, getBlocksByRoomWithUserVotes,
   getTopBlocksLast24Hours, getTrendingTagsLast24Hours,
-  getFeaturedBlock, getFeaturedRoomLast24Hours
+  getFeaturedBlock, getFeaturedRoomLast24Hours,
+  getGlobalBlockStats
 } from './server/db/blockService.js';
 import {
   pagesByDate,
@@ -49,7 +50,8 @@ import {
   getPage
 } from './server/db/pageService.js';
 import {
-  getAllRooms, getRoomMetadata
+  getAllRooms, getRoomMetadata,
+  getTotalRooms
 
 } from './server/db/roomService.js'
 import optionalAuth from './server/middleware/optionalAuth.js';
@@ -500,12 +502,22 @@ const md = MarkdownIt();
 
         const trendingTags = await getTrendingTagsLast24Hours({ limit: 10, sortBy: 'totalBlocks' });
 
+        const blockStats = await getGlobalBlockStats();
+        const totalRooms = await getTotalRooms();
+
+        const globalStats = {
+          totalBlocks: blockStats.totalBlocks,
+          totalRooms,
+          collaborationsToday: blockStats.collaborationsToday
+        };
+
         res.render('home', {
           title: 'Top Blocks in the Last 24 Hours',
           topBlocks,
           featuredBlock,
           featuredRoom,
           featuredRoomData,
+          globalStats,
           trendingTags,
           user: req.user,
           translations: res.locals.translations,

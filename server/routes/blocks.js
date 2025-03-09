@@ -5,6 +5,7 @@ import optionalAuth from '../middleware/optionalAuth.js';
 import { getBlockById } from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { getPeerIDs } from '../db/sessionService.js';
+import { generateAnonymousId } from '../utils/anonymousId.js';
 
 const port = config.port || 3000;
 
@@ -36,6 +37,16 @@ router.get('/rooms/:room_id/blocks/:block_id/edit', optionalAuth, async (req, re
     const block = await getBlockById(block_id);
     if (!block || block.roomId !== room_id) {
       return res.status(404).render('error', { message: 'Block not found or does not belong to this room.' });
+    }
+
+    const collaboratorId = user ? user.username : req.cookies.anonymousId || generateAnonymousId();
+    if (!block.collaborators.includes(collaboratorId)) {
+      block.collaborators.push(collaboratorId);
+      await block.save();
+      // Si el usuario anónimo, asegúrate de guardarlo en una cookie
+      if (!user && !req.cookies.anonymousId) {
+        res.cookie('anonymousId', collaboratorId, { maxAge: 24 * 60 * 60 * 1000 });
+      }
     }
 
     // Determine if the user has editing privileges
