@@ -14,6 +14,35 @@ export async function getBlockById(blockId) {
   return await Block.findById(blockId);
 }
 
+export async function getGlobalBlockStats() {
+  return await cache.get(
+    `global-block-stats`,
+    async () => {
+      // Total blocks globales
+      const totalBlocks = await Block.countDocuments({});
+
+      // Collaborations today:
+      const now = new Date();
+      const startOfDayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
+      const blocksToday = await Block.find({ createdAt: { $gte: startOfDayUTC } })
+        .select('collaborators')
+        .lean();
+
+      let collaborationsToday = 0;
+      blocksToday.forEach(block => {
+        if (Array.isArray(block.collaborators)) {
+          collaborationsToday += block.collaborators.length;
+        }
+      });
+
+      return { totalBlocks, collaborationsToday };
+    },
+    [],
+    CACHE_TTL
+  );
+}
+
 export async function getFeaturedBlock() {
   return await cache.get(
     `featured-block`,
