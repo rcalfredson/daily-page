@@ -21,22 +21,21 @@ export async function getGlobalBlockStats() {
       // Total blocks globales
       const totalBlocks = await Block.countDocuments({});
 
-      // Collaborations today:
-      const now = new Date();
-      const startOfDayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+      // Colaboraciones en las últimas 24 horas (en lugar del día UTC)
+      const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-      const blocksToday = await Block.find({ createdAt: { $gte: startOfDayUTC } })
+      const blocksLast24Hours = await Block.find({ createdAt: { $gte: last24Hours } })
         .select('collaborators')
         .lean();
 
-      let collaborationsToday = 0;
-      blocksToday.forEach(block => {
+      let collaborationsLast24Hours = 0;
+      blocksLast24Hours.forEach(block => {
         if (Array.isArray(block.collaborators)) {
-          collaborationsToday += block.collaborators.length;
+          collaborationsLast24Hours += block.collaborators.length;
         }
       });
 
-      return { totalBlocks, collaborationsToday };
+      return { totalBlocks, collaborationsToday: collaborationsLast24Hours };
     },
     [],
     CACHE_TTL
@@ -50,27 +49,34 @@ export async function getFeaturedBlockWithFallback(options = {}) {
 }
 
 export async function getFeaturedRoomWithFallback() {
-  const intervals = [1, 7, 30]; // en días
-  let result = null;
-  let usedInterval = 1;
+  return await cache.get(
+    `featured-room-with-fallback`,
+    async () => {
+      const intervals = [1, 7, 30]; // en días
+      let result = null;
+      let usedInterval = 1;
 
-  for (let days of intervals) {
-    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-    const pipeline = [
-      { $match: { createdAt: { $gte: cutoff } } },
-      { $group: { _id: '$roomId', totalRoomVotes: { $sum: '$voteCount' }, blockCount: { $sum: 1 } } },
-      { $sort: { totalRoomVotes: -1 } },
-      { $limit: 1 },
-    ];
-    const [res] = await Block.aggregate(pipeline).exec();
-    if (res) {
-      result = res;
-      usedInterval = days;
-      break;
-    }
-  }
+      for (let days of intervals) {
+        const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+        const pipeline = [
+          { $match: { createdAt: { $gte: cutoff } } },
+          { $group: { _id: '$roomId', totalRoomVotes: { $sum: '$voteCount' }, blockCount: { $sum: 1 } } },
+          { $sort: { totalRoomVotes: -1 } },
+          { $limit: 1 },
+        ];
+        const [res] = await Block.aggregate(pipeline).exec();
+        if (res) {
+          result = res;
+          usedInterval = days;
+          break;
+        }
+      }
 
-  return { featuredRoomData: result, period: usedInterval };
+      return { featuredRoomData: result, period: usedInterval };
+    },
+    [],
+    CACHE_TTL
+  );
 }
 
 // Fallback para obtener bloques con actividad
