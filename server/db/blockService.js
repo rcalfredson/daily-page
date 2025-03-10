@@ -43,90 +43,110 @@ export async function getGlobalBlockStats() {
   );
 }
 
-export async function getFeaturedBlock() {
-  return await cache.get(
-    `featured-block`,
-    async () => {
-      const [topBlock] = await getTopBlocksLast24Hours({ lockedOnly: false, limit: 1 });
-      return topBlock || null;
-    },
-    [],
-    CACHE_TTL
-  );
+export async function getFeaturedBlockWithFallback(options = {}) {
+  const { lockedOnly = false, limit = 1 } = options;
+  const { blocks, period } = await getTopBlocksWithFallback({ lockedOnly, limit });
+  return { featuredBlock: blocks[0] || null, period };
 }
 
-export async function getFeaturedRoomLast24Hours() {
-  return await cache.get(
-    `featured-room-last-24h`,
-    async () => {
-      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-      const pipeline = [
-        { $match: { createdAt: { $gte: twentyFourHoursAgo } } },
-        { $group: { _id: '$roomId', totalRoomVotes: { $sum: '$voteCount' }, blockCount: { $sum: 1 } } },
-        { $sort: { totalRoomVotes: -1 } },
-        { $limit: 1 },
-      ];
-      const [result] = await Block.aggregate(pipeline).exec();
-      return result || null;
-    },
-    [],
-    CACHE_TTL
-  );
-}
+export async function getFeaturedRoomWithFallback() {
+  const intervals = [1, 7, 30]; // en días
+  let result = null;
+  let usedInterval = 1;
 
-// Get top blocks from the last 24 hours, optionally filtering for locked blocks only.
-export async function getTopBlocksLast24Hours(options = {}) {
-  const { lockedOnly = false, limit = 20 } = options;
-  const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  const query = { createdAt: { $gte: twentyFourHoursAgo } };
-  if (lockedOnly) {
-    query.status = 'locked'; // Asumiendo que 'locked' indica bloques completados.
+  for (let days of intervals) {
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const pipeline = [
+      { $match: { createdAt: { $gte: cutoff } } },
+      { $group: { _id: '$roomId', totalRoomVotes: { $sum: '$voteCount' }, blockCount: { $sum: 1 } } },
+      { $sort: { totalRoomVotes: -1 } },
+      { $limit: 1 },
+    ];
+    const [res] = await Block.aggregate(pipeline).exec();
+    if (res) {
+      result = res;
+      usedInterval = days;
+      break;
+    }
   }
-  return await cache.get(
-    `top-blocks-last-24h-${lockedOnly}-${limit}`,
-    async () => {
-      const blocks = await Block.find(query)
-        .sort({ voteCount: -1 })
-        .limit(limit)
-        .lean();
-      return blocks;
-    },
-    [],
-    CACHE_TTL
-  );
+
+  return { featuredRoomData: result, period: usedInterval };
 }
 
-export async function getTrendingTagsLast24Hours(options = {}) {
+// Fallback para obtener bloques con actividad
+export async function getTopBlocksWithFallback(options = {}) {
+  const { lockedOnly = false, limit = 20 } = options;
+  const intervals = [1, 7, 30]; // días de retroceso
+  let blocks = [];
+  let usedInterval = 1;
+
+  for (let days of intervals) {
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const query = { createdAt: { $gte: cutoff } };
+    if (lockedOnly) query.status = 'locked';
+
+    // Usa caching con una clave basada en el intervalo
+    blocks = await cache.get(
+      `top-blocks-last-${days}d-${lockedOnly}-${limit}`,
+      async () => {
+        const result = await Block.find(query)
+          .sort({ voteCount: -1 })
+          .limit(limit)
+          .lean();
+        return result;
+      },
+      [],
+      CACHE_TTL
+    );
+
+    if (blocks.length > 0) {
+      usedInterval = days;
+      break;
+    }
+  }
+
+  return { blocks, period: usedInterval };
+}
+
+// Fallback para obtener trending tags con actividad
+export async function getTrendingTagsWithFallback(options = {}) {
   const { limit = 10, sortBy = 'totalVotes' } = options;
-  const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const intervals = [1, 7, 30]; // días
+  let tags = [];
+  let usedInterval = 1;
 
-  return await cache.get(
-    `trending-tags-last-24h-${limit}-${sortBy}`,
-    async () => {
-      const pipeline = [
-        // Solo consideramos bloques de las últimas 24 horas
-        { $match: { createdAt: { $gte: twentyFourHoursAgo } } },
-        // Separa el array de tags para contarlos individualmente
-        { $unwind: '$tags' },
-        // Agrupa por el nombre del tag
-        {
-          $group: {
-            _id: '$tags',
-            totalBlocks: { $sum: 1 }, // Cuántos bloques usan este tag
-            totalVotes: { $sum: '$voteCount' }, // Suma de los votos
-          },
+  for (let days of intervals) {
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const pipeline = [
+      { $match: { createdAt: { $gte: cutoff } } },
+      { $unwind: '$tags' },
+      {
+        $group: {
+          _id: '$tags',
+          totalBlocks: { $sum: 1 },
+          totalVotes: { $sum: '$voteCount' },
         },
-        // Ordena, por defecto, según totalBlocks (o totalVotes, si lo prefieres)
-        { $sort: { [sortBy]: -1 } },
-        // Limita cuántos tags se muestran
-        { $limit: limit },
-      ];
+      },
+      { $sort: { [sortBy]: -1 } },
+      { $limit: limit },
+    ];
 
-      return await Block.aggregate(pipeline).exec();
-    },
-    [],
-    CACHE_TTL
-  );
+    tags = await cache.get(
+      `trending-tags-last-${days}d-${limit}-${sortBy}`,
+      async () => {
+        return await Block.aggregate(pipeline).exec();
+      },
+      [],
+      CACHE_TTL
+    );
+
+    if (tags.length > 0) {
+      usedInterval = days;
+      break;
+    }
+  }
+
+  return { tags, period: usedInterval };
 }
 
 // Get all blocks created on a specific date (with caching)
