@@ -41,8 +41,13 @@ block content
     .featured-section
       .featured-card
         .featured-ribbon ★ Featured Room
-        p.card-info
-          | #{featuredRoom.name} has #{featuredRoomData.totalRoomVotes} votes across #{featuredRoomData.blockCount} blocks in the last 24 hours!
+        h2.card-title= featuredRoom.name
+        if featuredRoomPeriod > 1
+          p.card-info
+            | Activity over the past #{featuredRoomPeriod} days: #{featuredRoomData.blockCount} blocks, #{featuredRoomData.totalRoomVotes} votes.
+        else
+          p.card-info
+            | Activity over the last 24 hours: #{featuredRoomData.blockCount} blocks, #{featuredRoomData.totalRoomVotes} votes.
         a.btn(href=`/rooms/${featuredRoom._id}`) Check it out
 
   if featuredBlock
@@ -66,7 +71,10 @@ block content
   
   // Sección de Trending Tags
   .trending-section
-    h2 Trending Tags
+    h2
+      | Trending Tags
+      if tagsPeriod > 1
+        | (last #{tagsPeriod} days)
     if trendingTags && trendingTags.length
       .trending-tags-widget
         ul.trending-tags
@@ -83,7 +91,10 @@ block content
 
   // Sección de Trending Blocks
   .trending-section
-    h2 Trending Blocks
+    h2
+      | Trending Blocks
+      if blocksPeriod > 1
+        | (last #{blocksPeriod} days)
     if topBlocks.length
       ul.block-list
         each block in topBlocks

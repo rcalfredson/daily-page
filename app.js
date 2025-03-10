@@ -39,8 +39,8 @@ import * as viewHelper from './server/utils/view.js'; // Utils
 import { initMongooseConnection } from './server/db/mongoose.js';
 import {
   getBlocksByRoom, getBlocksByRoomWithUserVotes,
-  getTopBlocksLast24Hours, getTrendingTagsLast24Hours,
-  getFeaturedBlock, getFeaturedRoomLast24Hours,
+  getTopBlocksWithFallback, getTrendingTagsWithFallback,
+  getFeaturedBlockWithFallback, getFeaturedRoomWithFallback,
   getGlobalBlockStats
 } from './server/db/blockService.js';
 import {
@@ -484,23 +484,23 @@ const md = MarkdownIt();
 
     app.get('/', optionalAuth, async (req, res) => {
       try {
-        const featuredBlock = await getFeaturedBlock();
+        const { featuredBlock, period: featuredBlockPeriod } = await getFeaturedBlockWithFallback();
         if (featuredBlock) {
           featuredBlock.contentHTML = renderMarkdownContent(featuredBlock.content);
         }
-        const featuredRoomData = await getFeaturedRoomLast24Hours();
+        const { featuredRoomData, period: featuredRoomPeriod } = await getFeaturedRoomWithFallback();
         let featuredRoom = null;
         if (featuredRoomData) {
           featuredRoom = await getRoomMetadata(featuredRoomData._id);
         }
 
-        let topBlocks = await getTopBlocksLast24Hours({ lockedOnly: false, limit: 20 });
+        let { blocks: topBlocks, period: blocksPeriod } = await getTopBlocksWithFallback({ lockedOnly: false, limit: 20 });
         topBlocks = topBlocks.map(block => {
           block.contentHTML = renderMarkdownContent(block.content);
           return block;
         });
 
-        const trendingTags = await getTrendingTagsLast24Hours({ limit: 10, sortBy: 'totalBlocks' });
+        const { tags: trendingTags, period: tagsPeriod } = await getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' });
 
         const blockStats = await getGlobalBlockStats();
         const totalRooms = await getTotalRooms();
@@ -514,11 +514,15 @@ const md = MarkdownIt();
         res.render('home', {
           title: 'Top Blocks in the Last 24 Hours',
           topBlocks,
+          blocksPeriod,
           featuredBlock,
+          featuredBlockPeriod,
           featuredRoom,
           featuredRoomData,
+          featuredRoomPeriod,
           globalStats,
           trendingTags,
+          tagsPeriod,
           user: req.user,
           translations: res.locals.translations,
           lang: res.locals.lang,
