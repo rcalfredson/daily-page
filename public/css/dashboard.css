@@ -155,3 +155,47 @@
 .btn:hover {
   background-color: #0056b3;
 }
+
+/* Spacing for the activity section itself */
+.activity-section {
+  margin-bottom: 2rem; /* separates it from the streak section below */
+}
+
+/* Heading styling */
+.activity-section h3 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+/* List styling for activity items */
+.activity-list {
+  margin: 0;
+  padding: 0;
+}
+
+/* Each activity item has extra spacing below */
+.activity-item {
+  margin-bottom: 1.5rem; 
+}
+
+/* Make the block title stand out */
+.activity-item a {
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 4px;
+  text-decoration: none;
+}
+
+.activity-item a:hover {
+  text-decoration: underline;
+}
+
+/* The date/time can be smaller and more subtle */
+.activity-item p {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+}
