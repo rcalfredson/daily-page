@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Elements for handling file uploads
   const profilePicInput = document.getElementById('profilePicInput');
   const profilePicImage = document.querySelector('.profile-pic');
-  const userId = document.querySelector('.container').dataset.userId;
+  const userId = document.querySelector('.dashboard-container').dataset.userId;
 
   // Handle profile picture upload
   profilePicInput.addEventListener('change', async (event) => {

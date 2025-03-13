@@ -1,5 +1,5 @@
 /* Dashboard-specific styling */
-.container {
+.dashboard-container {
   margin: 20px auto;
   max-width: 800px;
   padding: 20px;
@@ -8,32 +8,32 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.container h1 {
+.dashboard-container h1 {
   font-family: 'Rubik-Medium';
   color: #333;
   margin-bottom: 15px;
 }
 
-.container p {
+.dashboard-container p {
   font-size: 16px;
   color: #555;
 }
 
-.container p a {
+.dashboard-container p a {
   vertical-align: unset;
 }
 
-.container ul {
+.dashboard-container ul {
   list-style: none;
   padding: 0;
 }
 
-.container ul li {
+.dashboard-container ul li {
   margin: 10px 0;
   font-size: 14px;
 }
 
-.container ul li a {
+.dashboard-container ul li a {
   color: rgb(26, 167, 214);
   text-decoration: underline;
   vertical-align: unset;
@@ -73,7 +73,8 @@
 }
 
 .profile-pic-label .edit-icon {
-  display: none; /* Default state for non-touch devices */
+  display: none;
+  /* Default state for non-touch devices */
 }
 
 .edit-icon {
@@ -89,9 +90,68 @@
 }
 
 .profile-section.touchscreen .edit-icon {
-  display: block; /* Always visible for touchscreens */
+  display: block;
+  /* Always visible for touchscreens */
 }
 
 .profile-pic-label:hover .edit-icon {
   display: block;
+}
+
+.bio-container {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.bio-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.bio-text {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+#bio-input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.5rem;
+}
+
+#edit-bio-btn {
+  margin-top: 1rem;
+}
+
+.bio-edit-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.btn {
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
 }
