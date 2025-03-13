@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Asignar la URL al span oculto
   if (linkInput) {
-    console.log('setting text content of link input to', linkInput);
     linkInput.textContent = shareLink;
   }
 });

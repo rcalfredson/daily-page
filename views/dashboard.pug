@@ -38,7 +38,15 @@ block content
     .dashboard-main
       .activity-section
         h3 Recent Activity
-        p Coming soon: Your recent blocks and edits will appear here.
+        if recentActivity.length
+          ul.activity-list
+            each activity in recentActivity
+              li.activity-item
+                a(href=`/rooms/${activity.roomId}/blocks/${activity._id}`)= activity.title
+                p
+                  | Updated on #{new Date(activity.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+        else
+          p No recent activity.
       .streak-section
         h3 Writing Streak
         p #{streakDays || 0} days in a row! Keep going!

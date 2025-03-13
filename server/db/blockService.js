@@ -79,6 +79,32 @@ export async function getFeaturedRoomWithFallback() {
   );
 }
 
+export async function getRecentActivityByUser(username, options = {}) {
+  const days = options.days || 7;
+  const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+  const query = {
+    updatedAt: { $gte: cutoff },
+    $or: [
+      { creator: username },
+      { collaborators: username }
+    ]
+  };
+
+  return await cache.get(
+    `recent-activity-${username}-${days}d-${options.limit || 10}`,
+    async () => {
+      const activities = await Block.find(query)
+        .sort({ updatedAt: -1 })
+        .limit(options.limit || 10)
+        .lean();
+      return activities;
+    },
+    [],
+    CACHE_TTL
+  );
+}
+
 // Fallback para obtener bloques con actividad
 export async function getTopBlocksWithFallback(options = {}) {
   const { lockedOnly = false, limit = 20 } = options;
