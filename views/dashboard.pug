@@ -5,22 +5,53 @@ block nav
 
 block append head
   link(rel='stylesheet' href='/css/dashboard.css')
+  link(rel='stylesheet' href='/css/login-modal.css')
 
-block scripts
+block append scripts
   script(src='/js/dashboard.js')
+  script(src='/js/edit-user-bio.js')
 
 block content
-  div.container(data-user-id=user.id)
-    h1 Welcome Back, #{user.username}!
-    div.profile-section
+  .dashboard-container(data-user-id=user.id)
+    // Profile Section
+    .profile-section
       label.profile-pic-label(for="profilePicInput")
         img.profile-pic(src=user.profilePic || '/assets/img/default-pic.png', alt='Profile Picture')
         i.fa.fa-pencil.edit-icon
       input#profilePicInput(type="file", accept="image/*", hidden)
-    div.activity-section
-      h3 Recent Activity
-    div.streak-section
-      h3 Writing Streak
-      p #{streakDays} days in a row! Keep going!
-    div.starred-rooms-placeholder
-      p You haven’t starred any rooms yet. Start exploring to find your favorites!
+      h2 #{user.username}
+      // Bio Section with inline editing
+      .bio-container
+        .bio-row
+          if user.bio
+            p.bio-text #{user.bio}
+          else
+            p.bio-text No bio yet. Click "Edit" to add one!
+          button#edit-bio-btn.btn Edit Bio
+        // Hidden textarea for editing the bio
+        textarea#bio-input.hidden(placeholder="Enter your bio here") #{user.bio}
+        .bio-edit-buttons.hidden
+          button#save-bio-btn.btn Save
+          button#cancel-bio-btn.btn Cancel
+
+    // Main Dashboard Content, etc.
+    .dashboard-main
+      .activity-section
+        h3 Recent Activity
+        p Coming soon: Your recent blocks and edits will appear here.
+      .streak-section
+        h3 Writing Streak
+        p #{streakDays || 0} days in a row! Keep going!
+    
+    .dashboard-sidebar
+      .starred-rooms
+        h3 Starred Rooms
+        p You haven't starred any rooms yet. Start exploring to find your favorites!
+
+    .account-stats
+      h3 Your Stats
+      ul.stats-list
+        li Total Blocks: #{user.totalBlocks || 'N/A'}
+        li Total Activity: #{user.totalActivity || 'N/A'}
+  
+  include partials/_login_modal

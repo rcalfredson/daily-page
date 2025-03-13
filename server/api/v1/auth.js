@@ -34,7 +34,8 @@ const useAuthAPI = (app) => {
       const token = generateJWT({
         id: user._id,
         username: user.username,
-        profilePic: user.profilePic
+        profilePic: user.profilePic,
+        bio: user.bio
       });
 
       res.cookie('auth_token', token, {

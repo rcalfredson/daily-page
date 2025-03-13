@@ -74,7 +74,7 @@ block content
     h2
       | Trending Tags
       if tagsPeriod > 1
-        | (last #{tagsPeriod} days)
+        |  (last #{tagsPeriod} days)
     if trendingTags && trendingTags.length
       .trending-tags-widget
         ul.trending-tags
@@ -94,7 +94,7 @@ block content
     h2
       | Trending Blocks
       if blocksPeriod > 1
-        | (last #{blocksPeriod} days)
+        |  (last #{blocksPeriod} days)
     if topBlocks.length
       ul.block-list
         each block in topBlocks

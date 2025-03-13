@@ -6,6 +6,7 @@ import {
   createUser, findUserByEmail, findUserById, findUserByUsername, updateUserProfile
 } from '../../db/userService.js';
 import { uploadProfilePic } from '../../services/uploadProfilePic.js';
+import { generateJWT } from '../../services/jwt.js';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -70,16 +71,31 @@ const useUserAPI = (app) => {
     }
   });
 
-  // Update user profile
   router.put('/:userId', async (req, res) => {
     const { userId } = req.params;
     const updates = req.body;
 
     try {
-      const result = await updateUserProfile(userId, updates);
-      if (result.matchedCount === 0) {
+      const updatedUser = await updateUserProfile(userId, updates);
+      if (!updatedUser) {
         return res.status(404).json({ error: 'User not found' });
       }
+
+      // Genera el nuevo JWT incluyendo el bio
+      const newToken = generateJWT({
+        id: updatedUser._id,
+        username: updatedUser.username,
+        profilePic: updatedUser.profilePic,
+        bio: updatedUser.bio,
+      });
+
+      // Setear la cookie con el nuevo token
+      res.cookie('auth_token', newToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Strict',
+        maxAge: 24 * 60 * 60 * 1000,
+      });
 
       res.status(200).json({ message: 'Profile updated successfully' });
     } catch (error) {

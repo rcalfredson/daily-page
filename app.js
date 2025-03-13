@@ -512,7 +512,7 @@ const md = MarkdownIt();
         };
 
         res.render('home', {
-          title: 'Top Blocks in the Last 24 Hours',
+          title: 'Daily Page - Top Blocks in the last 24 Hours',
           topBlocks,
           blocksPeriod,
           featuredBlock,
