@@ -40,3 +40,37 @@ export async function updateUserProfile(userId, updates) {
 
   return updatedUser.toObject();
 }
+
+export async function updateUserStreak(userId) {
+  const user = await User.findById(userId);
+  if (!user) throw new Error('User not found');
+
+  const nowUTC = new Date();
+  // Round down to “date only” if needed
+  const today = Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate());
+
+  if (!user.streakLastUpdatedAt) {
+    // No streak yet; start one
+    user.streakLength = 1;
+    user.streakLastUpdatedAt = nowUTC;
+  } else {
+    const last = new Date(user.streakLastUpdatedAt);
+    const lastUTC = Date.UTC(last.getUTCFullYear(), last.getUTCMonth(), last.getUTCDate());
+    const diffDays = (today - lastUTC) / (1000 * 60 * 60 * 24);
+
+    if (diffDays === 0) {
+      // Already updated today, do nothing
+    } else if (diffDays === 1) {
+      // Consecutive day, increment
+      user.streakLength += 1;
+      user.streakLastUpdatedAt = nowUTC;
+    } else {
+      // Missed at least one day, reset
+      user.streakLength = 1;
+      user.streakLastUpdatedAt = nowUTC;
+    }
+  }
+
+  await user.save();
+  return user.toObject();
+}

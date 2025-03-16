@@ -1,7 +1,7 @@
 import sharp from 'sharp';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { findUserById, updateUserProfile } from '../db/userService.js';
-import { generateJWT } from './jwt.js';
+import { makeUserJWT } from '../utils/jwtHelper.js';
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -48,10 +48,12 @@ export const uploadProfilePic = async (req, userId) => {
   await updateUserProfile(userId, { profilePic: imageUrl });
 
   const updatedUser = await findUserById(userId);
-  const newToken = generateJWT({
+  const newToken = makeUserJWT({
     id: updatedUser._id,
     username: updatedUser.username,
     profilePic: updatedUser.profilePic,
+    bio: updatedUser.bio,
+    streakLength: updatedUser.streakLength
   });
 
   return { imageUrl, newToken };
