@@ -95,7 +95,6 @@ const useUserAPI = (app) => {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      // Genera el nuevo JWT incluyendo el bio
       const newToken = makeUserJWT({
         id: updatedUser._id,
         username: updatedUser.username,
@@ -123,6 +122,21 @@ const useUserAPI = (app) => {
     const userId = req.user.id;
     try {
       const updatedUser = await updateUserStreak(userId);
+      const newToken = makeUserJWT({
+        id: updatedUser._id,
+        username: updatedUser.username,
+        profilePic: updatedUser.profilePic,
+        bio: updatedUser.bio,
+        streakLength: updatedUser.streakLength
+      });
+
+      res.cookie('auth_token', newToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Strict',
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+
       res.status(200).json({ streakLength: updatedUser.streakLength });
     } catch (error) {
       console.error('Error updating streak:', error);
