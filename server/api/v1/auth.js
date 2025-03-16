@@ -3,7 +3,8 @@ import bcrypt from 'bcrypt';
 import {
   findUserByEmail, findUserById, findUserByUsername
 } from '../../db/userService.js';
-import { generateJWT, verifyJWT } from '../../services/jwt.js';
+import { verifyJWT } from '../../services/jwt.js';
+import { makeUserJWT } from '../../utils/jwtHelper.js';
 
 const router = Router();
 
@@ -31,11 +32,12 @@ const useAuthAPI = (app) => {
         return res.status(400).json({ error: 'Invalid password.' });
       }
 
-      const token = generateJWT({
+      const token = makeUserJWT({
         id: user._id,
         username: user.username,
         profilePic: user.profilePic,
-        bio: user.bio
+        bio: user.bio,
+        streakLength: user.streakLength
       });
 
       res.cookie('auth_token', token, {

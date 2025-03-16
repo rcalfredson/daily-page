@@ -20,7 +20,7 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
       title: 'Dashboard',
       user: req.user,
       recentActivity,
-      // streakDays: /* calculate or fetch the streak days */,
+      streakLength: req.user.streakLength,
       // Include any other data you want to pass
     });
   } catch (error) {

@@ -6,6 +6,8 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   profilePic: { type: String, default: '/assets/img/default-pic.png' },
   bio: { type: String, default: '' },
+  streakLength: {type: Number, default: 0},
+  streakLastUpdatedAt: {type: Date, default: null},
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 }, {

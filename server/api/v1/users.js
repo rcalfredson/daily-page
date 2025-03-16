@@ -3,13 +3,29 @@ import bcrypt from 'bcrypt';
 import multer from 'multer';
 
 import {
-  createUser, findUserByEmail, findUserById, findUserByUsername, updateUserProfile
+  createUser, findUserByEmail, findUserById, findUserByUsername, updateUserProfile,
+  updateUserStreak
 } from '../../db/userService.js';
+import isAuthenticated from '../../middleware/auth.js'
 import { uploadProfilePic } from '../../services/uploadProfilePic.js';
-import { generateJWT } from '../../services/jwt.js';
+import { makeUserJWT } from '../../utils/jwtHelper.js';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
+
+function mustMatchLoggedInUser(req, res, next) {
+  const { userId } = req.params;
+  // If for some reason req.user isn't set, you'll want a check or a chain
+  if (!req.user) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+  console.log('req user:', req.user);
+  console.log('user ID:', userId);
+  if (req.user.username !== userId) {
+    return res.status(403).json({ error: 'You are not authorized to update this user.' });
+  }
+  next();
+}
 
 const useUserAPI = (app) => {
   app.use('/api/v1/users', router);
@@ -71,7 +87,7 @@ const useUserAPI = (app) => {
     }
   });
 
-  router.put('/:userId', async (req, res) => {
+  router.put('/:userId', isAuthenticated, mustMatchLoggedInUser, async (req, res) => {
     const { userId } = req.params;
     const updates = req.body;
 
@@ -82,11 +98,12 @@ const useUserAPI = (app) => {
       }
 
       // Genera el nuevo JWT incluyendo el bio
-      const newToken = generateJWT({
+      const newToken = makeUserJWT({
         id: updatedUser._id,
         username: updatedUser.username,
         profilePic: updatedUser.profilePic,
         bio: updatedUser.bio,
+        streakLength: updatedUser.streakLength
       });
 
       // Setear la cookie con el nuevo token
@@ -104,7 +121,18 @@ const useUserAPI = (app) => {
     }
   });
 
-  router.post('/:userId/uploadProfilePic', upload.single('profilePic'),
+  router.post('/:userId/streakPing', isAuthenticated, mustMatchLoggedInUser, async (req, res) => {
+    const userId = req.user.id;
+    try {
+      const updatedUser = await updateUserStreak(userId);
+      res.status(200).json({ streakLength: updatedUser.streakLength });
+    } catch (error) {
+      console.error('Error updating streak:', error);
+      res.status(500).json({ error: 'Failed to update streak' });
+    }
+  });
+
+  router.post('/:userId/uploadProfilePic',isAuthenticated, mustMatchLoggedInUser, upload.single('profilePic'),
     async (req, res) => {
       const { userId } = req.params;
 
