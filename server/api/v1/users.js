@@ -19,9 +19,7 @@ function mustMatchLoggedInUser(req, res, next) {
   if (!req.user) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
-  console.log('req user:', req.user);
-  console.log('user ID:', userId);
-  if (req.user.username !== userId) {
+  if (req.user.id !== userId) {
     return res.status(403).json({ error: 'You are not authorized to update this user.' });
   }
   next();

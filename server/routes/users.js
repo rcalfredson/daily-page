@@ -15,13 +15,11 @@ router.get('/signup', (req, res) => {
 router.get('/dashboard', isAuthenticated, async (req, res) => {
   try {
     const recentActivity = await getRecentActivityByUser(req.user.username, { days: 7, limit: 10 });
-    // Also calculate streakDays if needed
     res.render('dashboard', {
       title: 'Dashboard',
       user: req.user,
       recentActivity,
       streakLength: req.user.streakLength,
-      // Include any other data you want to pass
     });
   } catch (error) {
     console.error('Error loading dashboard:', error.message);
