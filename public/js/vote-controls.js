@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function handleVote(action, voteCountElement, blockId) {
     const isLoggedIn = checkLoginState();
     if (!isLoggedIn) {
-      showLoginModal();
+      showLoginModal("vote on a block");
       return;
     }
     try {
@@ -29,30 +29,30 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to save vote');
       }
-  
+
       const data = await response.json();
       voteCountElement.textContent = data.voteCount;
-  
+
       // Get the parent vote controls
       const control = voteCountElement.closest(".vote-controls");
       const upvoteButton = control.querySelector(".vote-arrow.up");
       const downvoteButton = control.querySelector(".vote-arrow.down");
-  
+
       // Reset styles first
       upvoteButton.style.color = "";
       downvoteButton.style.color = "";
-  
+
       // Apply color to the selected vote
       if (action === "upvote") {
         upvoteButton.style.color = "#4194ed";
       } else if (action === "downvote") {
         downvoteButton.style.color = "#4194ed";
       }
-  
+
     } catch (error) {
       console.error('Error submitting vote:', error);
     }
@@ -62,12 +62,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return document.body.dataset.isLoggedIn === "true";
   }
 
-  function showLoginModal() {
+  function showLoginModal(actionType) {
     const modal = document.getElementById("login-modal");
-    const closeBtn = modal.querySelector(".modal-close");
+    const modalMessage = document.getElementById("login-modal-message");
+    modalMessage.textContent = `You need to be logged in to ${actionType}.`;
 
     modal.style.display = "block";
 
+    const closeBtn = modal.querySelector(".modal-close");
     closeBtn.addEventListener("click", () => {
       modal.style.display = "none";
     });
@@ -78,4 +80,5 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  window.showLoginModal = showLoginModal;
 });

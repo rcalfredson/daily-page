@@ -6,15 +6,38 @@ block nav
 block append scripts
   script(src="/js/vote-controls.js")
   script(src="/js/block-tabs.js")
+  script(src="/js/star-room.js")
 
 block append head
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel="stylesheet" href="/css/blocks-tabs.css")
   link(rel="stylesheet" href="/css/vote-controls.css")
-  link(rel="stylesheet", href="/css/login-modal.css")
+  link(rel="stylesheet" href="/css/login-modal.css")
+  link(rel="stylesheet" href="/css/star-room.css")
 
 prepend content
-  h1= header
+  // Instead of storing date in 'header', let's pass it as 'todayLabel' or something
+  .room-header
+    .title-line
+      button.star-btn(
+        data-room-id=room_id
+        data-logged-in=user ? "true" : "false"
+        class=isStarred ? "starred" : ""
+        title=isStarred ? "Unstar this room" : "Star this room"
+      )
+        if isStarred
+          // For Font Awesome 4, star is .fa .fa-star when starred
+          i.fa.fa-star
+        else
+          // Outline star is .fa .fa-star-o
+          i.fa.fa-star-o
+
+      h1.room-name= roomMetadata.name
+
+    // Smaller date text below
+    if date
+      p.room-date= date
+
   if roomMetadata && roomMetadata.description
     p#room-description= roomMetadata.description
   else

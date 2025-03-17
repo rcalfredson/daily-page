@@ -1,7 +1,7 @@
 script.
   backendURL = "#{backendURL}"
   room_id = "#{room_id}"
-  userId = "#{user.id}"
+  userId = "#{user ? user.id : null}"
   block_id = "#{block_id}"
   initialTargetPeerId = "#{initialTargetPeerId}"
   canManageBlock = #{canManageBlock}

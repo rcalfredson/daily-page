@@ -41,6 +41,24 @@ export async function updateUserProfile(userId, updates) {
   return updatedUser.toObject();
 }
 
+export async function starRoom(userId, roomId) {
+  const user = await User.findById(userId);
+  if (!user) throw new Error('User not found');
+  if (!user.starredRooms.includes(roomId)) {
+    user.starredRooms.push(roomId);
+  }
+  await user.save();
+  return user.toObject();
+}
+
+export async function unstarRoom(userId, roomId) {
+  const user = await User.findById(userId);
+  if (!user) throw new Error('User not found');
+  user.starredRooms = user.starredRooms.filter(r => r !== roomId);
+  await user.save();
+  return user.toObject();
+}
+
 export async function updateUserStreak(userId) {
   const user = await User.findById(userId);
   if (!user) throw new Error('User not found');
