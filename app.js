@@ -55,6 +55,7 @@ import {
 
 } from './server/db/roomService.js'
 import optionalAuth from './server/middleware/optionalAuth.js';
+import { findUserById } from './server/db/userService.js';
 
 startJobs();
 
@@ -434,6 +435,12 @@ const md = MarkdownIt();
         const { room_id } = req.params;
         const roomMetadata = await getRoomMetadata(room_id);
 
+        let isStarred = false;
+        if (req.user) {
+          const dbUser = await findUserById(req.user.id);
+          isStarred = dbUser?.starredRooms?.includes(room_id);
+        }
+
         // Compute the start of the current UTC day.
         const now = new Date();
         const utcStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
@@ -470,12 +477,13 @@ const md = MarkdownIt();
 
         res.render('rooms/blocks-dashboard', {
           room_id,
-          title,
-          header,
+          title: `Daily Page - ${roomMetadata.name}`,
           lockedBlocks,
           inProgressBlocks,
           user: req.user,
-          roomMetadata
+          roomMetadata,
+          isStarred,
+          date
         });
       } catch (error) {
         res.status(500).send('Error loading room dashboard.');

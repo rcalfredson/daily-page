@@ -3,12 +3,13 @@ import bcrypt from 'bcrypt';
 import multer from 'multer';
 
 import {
-  createUser, findUserByEmail, findUserById, findUserByUsername, updateUserProfile,
+  createUser, findUserByEmail, findUserById, findUserByUsername, starRoom, unstarRoom, updateUserProfile,
   updateUserStreak
 } from '../../db/userService.js';
 import isAuthenticated from '../../middleware/auth.js'
 import { uploadProfilePic } from '../../services/uploadProfilePic.js';
 import { makeUserJWT } from '../../utils/jwtHelper.js';
+import User from '../../db/models/User.js';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -144,7 +145,28 @@ const useUserAPI = (app) => {
     }
   });
 
-  router.post('/:userId/uploadProfilePic',isAuthenticated, mustMatchLoggedInUser, upload.single('profilePic'),
+  router.patch('/:userId/starredRooms', isAuthenticated, mustMatchLoggedInUser, async (req, res) => {
+    const { userId } = req.params;
+    const { roomId, action } = req.body; // e.g. "star" or "unstar"
+
+    try {
+      let updatedUser;
+      if (action === 'star') {
+        updatedUser = await starRoom(userId, roomId);
+      } else if (action === 'unstar') {
+        updatedUser = await unstarRoom(userId, roomId);
+      } else {
+        return res.status(400).json({ error: 'Invalid action. Must be "star" or "unstar".' });
+      }
+
+      res.status(200).json({ starredRooms: updatedUser.starredRooms });
+    } catch (error) {
+      console.error('Error starring or unstarring room:', error);
+      res.status(500).json({ error: 'Failed to update starred rooms' });
+    }
+  });
+
+  router.post('/:userId/uploadProfilePic', isAuthenticated, mustMatchLoggedInUser, upload.single('profilePic'),
     async (req, res) => {
       const { userId } = req.params;
 
