@@ -54,7 +54,15 @@ block content
     .dashboard-sidebar
       .starred-rooms
         h3 Starred Rooms
-        p You haven't starred any rooms yet. Start exploring to find your favorites!
+        if starredRooms.length
+          ul.starred-room-list
+            each room in starredRooms
+              li.starred-room-item
+                a(href=`/rooms/${room.id}`)= room.name
+          if totalStarredRooms > starredRooms.length
+            a(href="/dashboard/starred-rooms") View All Starred Rooms
+        else
+          p You haven't starred any rooms yet. Start exploring to find your favorites!
 
     .account-stats
       h3 Your Stats

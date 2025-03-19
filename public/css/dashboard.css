@@ -158,7 +158,8 @@
 
 /* Spacing for the activity section itself */
 .activity-section {
-  margin-bottom: 2rem; /* separates it from the streak section below */
+  margin-bottom: 2rem;
+  /* separates it from the streak section below */
 }
 
 /* Heading styling */
@@ -176,7 +177,7 @@
 
 /* Each activity item has extra spacing below */
 .activity-item {
-  margin-bottom: 1.5rem; 
+  margin-bottom: 1.5rem;
 }
 
 /* Make the block title stand out */
@@ -198,4 +199,35 @@
   font-size: 0.85rem;
   color: #666;
   margin: 0;
+}
+
+.starred-room-list {
+  padding: 0;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.starred-room-item {
+  margin-bottom: 0.75rem;
+}
+
+.starred-room-item a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.starred-room-item a:hover {
+  text-decoration: underline;
+}
+
+.starred-rooms a[href="/dashboard/starred-rooms"] {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: #666;
+  text-decoration: underline;
+}
+
+.starred-rooms a[href="/dashboard/starred-rooms"]:hover {
+  color: #333;
 }

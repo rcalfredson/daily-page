@@ -1,0 +1,20 @@
+extends layout
+
+block nav
+  include navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/starred-rooms.css')
+
+block content
+  .starred-rooms-container
+    h2 🌟 All Your Starred Rooms 🌟
+    if starredRooms.length
+      ul.starred-rooms-full-list
+        each room in starredRooms
+          li.starred-room-full-item
+            a.card-link(href=`/rooms/${room.id}`)
+              span.room-name= room.name
+              p.starred-room-description= room.description
+    else
+      p You haven't starred any rooms yet!
