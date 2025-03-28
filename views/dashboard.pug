@@ -36,23 +36,22 @@ block content
 
     // Main Dashboard Content, etc.
     .dashboard-main
-      .activity-section
+      .activity-section.dashboard-card
         h3 Recent Activity
         if recentActivity.length
           ul.activity-list
             each activity in recentActivity
               li.activity-item
                 a(href=`/rooms/${activity.roomId}/blocks/${activity._id}`)= activity.title
-                p
-                  | Updated on #{new Date(activity.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                p Updated on #{new Date(activity.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
         else
           p No recent activity.
-      .streak-section
+
+      .streak-section.dashboard-card
         h3 Writing Streak
-        p #{streakLength || 0} days in a row! Keep going!
-    
-    .dashboard-sidebar
-      .starred-rooms
+        p.streak-info #{streakLength || 0} days in a row! Keep going!
+
+      .starred-rooms.dashboard-card
         h3 Starred Rooms
         if starredRooms.length
           ul.starred-room-list
@@ -60,14 +59,26 @@ block content
               li.starred-room-item
                 a(href=`/rooms/${room.id}`)= room.name
           if totalStarredRooms > starredRooms.length
-            a(href="/dashboard/starred-rooms") View All Starred Rooms
+            a.view-more(href="/dashboard/starred-rooms") View All Starred Rooms
         else
           p You haven't starred any rooms yet. Start exploring to find your favorites!
 
     .account-stats
       h3 Your Stats
       ul.stats-list
-        li Total Blocks: #{user.totalBlocks || 'N/A'}
-        li Total Activity: #{user.totalActivity || 'N/A'}
+        li.stat-item
+          span.stat-label Total Blocks Created
+          span.stat-value #{userStats.totalBlocks}
+        li.stat-item
+          span.stat-label Collaborations
+          span.stat-value #{userStats.totalCollaborations}
+        li.stat-item
+          span.stat-label Votes Given
+          span.stat-value #{userStats.totalVotesGiven}
+        li.stat-item
+          span.stat-label Days Active
+          span.stat-value #{userStats.daysActive}
+
+      a(href="/dashboard/stats").btn.stats-btn View Detailed Stats 📊
   
   include partials/_login_modal
