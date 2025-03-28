@@ -1,0 +1,61 @@
+extends layout
+
+block nav
+  include navLinks
+
+block append head
+  link(rel='stylesheet', href='/css/detailed-stats.css')
+  script(src='https://cdn.jsdelivr.net/npm/chart.js') // Opcional, para gráficos bonitos!
+
+block content
+  a.btn(href="/dashboard") ← Back to Dashboard
+  .detailed-stats-container
+    h2 📊 Your Stats Overview 📊
+
+    .stats-grid
+      .stat-card
+        h4 Total Blocks Created 📝
+        p.stat-number #{stats.totalBlocks}
+
+      .stat-card
+        h4 Collaborations 🤝
+        p.stat-number #{stats.totalCollaborations}
+
+      .stat-card
+        h4 Votes Given 👍
+        p.stat-number #{stats.totalVotesGiven}
+
+      .stat-card
+        h4 Days Active 📆
+        p.stat-number #{stats.daysActive}
+
+    // Placeholder para gráficos interactivos
+    canvas#activityChart(width="400" height="150")
+
+  script.
+    const ctx = document.getElementById('activityChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Blocks Created', 'Collaborations', 'Votes Given', 'Days Active'],
+        datasets: [{
+          label: 'Your Stats',
+          data: [
+            #{stats.totalBlocks},
+            #{stats.totalCollaborations},
+            #{stats.totalVotesGiven},
+            #{stats.daysActive}
+          ],
+          backgroundColor: ['#69b3f2', '#70c9a9', '#ffd56b', '#ff9f40'],
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: { y: { beginAtZero: true } }
+      }
+    });

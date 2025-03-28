@@ -39,6 +39,40 @@
   vertical-align: unset;
 }
 
+.dashboard-card {
+  background-color: #ffffff;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-card h3 {
+  color: #444;
+  border-bottom: 2px solid #f0f4f8;
+  padding-bottom: 6px;
+  margin-bottom: 1rem;
+}
+
+.streak-info {
+  font-size: 1rem;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.view-more {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #17a2b8;
+}
+
+.view-more:hover {
+  color: #117a8b;
+  text-decoration: underline;
+}
+
 .profile-section {
   text-align: center;
   margin-bottom: 20px;
@@ -128,8 +162,18 @@
 }
 
 #edit-bio-btn {
+  background-color: #f0f4f8;
+  color: #555;
+  border: 1px solid #ccc;
+  font-size: 0.85rem;
+  padding: 5px 10px;
   margin-top: 1rem;
 }
+
+#edit-bio-btn:hover {
+  background-color: #e2e6ea;
+}
+
 
 .bio-edit-buttons {
   display: flex;
@@ -176,29 +220,23 @@
 }
 
 /* Each activity item has extra spacing below */
+/* Activity Items Enhancements */
 .activity-item {
-  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed #eaeaea;
 }
 
-/* Make the block title stand out */
+.activity-item:last-child {
+  border-bottom: none;
+}
+
 .activity-item a {
-  display: block;
-  font-size: 1rem;
-  font-weight: bold;
   color: #007bff;
-  margin-bottom: 4px;
-  text-decoration: none;
 }
 
-.activity-item a:hover {
-  text-decoration: underline;
-}
-
-/* The date/time can be smaller and more subtle */
 .activity-item p {
-  font-size: 0.85rem;
-  color: #666;
-  margin: 0;
+  font-size: 0.8rem;
+  color: #999;
 }
 
 .starred-room-list {
@@ -230,4 +268,79 @@
 
 .starred-rooms a[href="/dashboard/starred-rooms"]:hover {
   color: #333;
+}
+
+.account-stats {
+  background-color: #ffffff;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  margin-top: 1.5rem;
+}
+
+.account-stats h3 {
+  color: #555;
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.stats-list {
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed #ddd;
+  font-size: 0.95rem;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-label {
+  color: #777;
+}
+
+.stat-value {
+  font-weight: bold;
+  color: #333;
+}
+.btn.stats-btn {
+  background-color: #28a745; /* un verde amigable para estadísticas */
+  font-size: 0.85rem;
+  padding: 5px 12px;
+  margin-top: 10px;
+}
+
+.btn.stats-btn:hover {
+  background-color: #218838;
+}
+
+@media (max-width: 600px) {
+  .dashboard-card {
+    padding: 1rem;
+  }
+
+  .dashboard-container {
+    padding: 10px;
+  }
+
+  .profile-pic {
+    width: 90px;
+    height: 90px;
+  }
+
+  .activity-item a,
+  .starred-room-item a {
+    font-size: 0.9rem;
+  }
+
+  .streak-info {
+    font-size: 0.95rem;
+  }
 }

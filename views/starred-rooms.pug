@@ -7,6 +7,7 @@ block append head
   link(rel='stylesheet' href='/css/starred-rooms.css')
 
 block content
+  a.btn(href="/dashboard") ← Back to Dashboard
   .starred-rooms-container
     h2 🌟 All Your Starred Rooms 🌟
     if starredRooms.length
