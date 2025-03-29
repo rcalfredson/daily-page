@@ -1,0 +1,16 @@
+extends layout
+
+block nav
+  include navLinks
+
+block append head
+  link(rel='stylesheet', href='/css/error.css')
+
+block content
+  .error-container
+    h1 😵‍💫 Oops! Algo salió mal.
+    if message
+      p.error-message= message
+    else
+      p.error-message An unexpected error occurred. Please try again later.
+    a.btn(href="/") 🏠 Regresar al Inicio

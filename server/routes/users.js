@@ -1,7 +1,7 @@
 import express from 'express';
 
 import isAuthenticated from '../middleware/auth.js';
-import { findUserById } from "../db/userService.js";
+import { findUserById, findUserByUsername } from "../db/userService.js";
 import { getRecentActivityByUser } from '../db/blockService.js';
 import Block from '../db/models/Block.js';
 import { getRoomMetadata } from "../db/roomService.js";
@@ -13,6 +13,60 @@ router.get('/signup', (req, res) => {
     title: 'Create an Account',
     description: 'Sign up for Daily Page to access all features.',
   });
+});
+
+// View user profile (public)
+router.get('/users/:username', async (req, res) => {
+  try {
+    const profileUsername = req.params.username;
+
+    // Fetch user data
+    const profileUser = await findUserByUsername(profileUsername);
+    if (!profileUser) {
+      return res.status(404).render('error', { title: 'User not found', message: 'User not found' });
+    }
+
+    // Fetch recent activity
+    const recentActivity = await getRecentActivityByUser(profileUsername, { days: 7, limit: 10 });
+
+    // Fetch starred rooms (just a preview for the MVP)
+    const starredRoomsPreview = await Promise.all(
+      (profileUser.starredRooms || []).slice(0, 3).map(async (roomId) => {
+        const metadata = await getRoomMetadata(roomId);
+        return {
+          id: roomId,
+          name: metadata?.name || "Unnamed Room"
+        };
+      })
+    );
+
+    // User stats
+    const totalBlocks = await Block.countDocuments({ creator: profileUsername });
+    const totalCollaborations = await Block.countDocuments({ collaborators: profileUsername });
+    const daysActiveAgg = await Block.aggregate([
+      { $match: { $or: [{ creator: profileUsername }, { collaborators: profileUsername }] } },
+      { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } } } },
+      { $count: "activeDays" }
+    ]);
+
+    const daysActive = daysActiveAgg[0]?.activeDays || 0;
+
+    res.render('profile', {
+      title: `${profileUsername}'s Profile`,
+      profileUser,
+      recentActivity,
+      starredRooms: starredRoomsPreview,
+      userStats: {
+        totalBlocks,
+        totalCollaborations,
+        daysActive
+      },
+      isOwnProfile: req.user && (req.user.username === profileUsername)
+    });
+  } catch (error) {
+    console.error('Error loading profile:', error.message);
+    res.status(500).render('error', { message: 'Error loading user profile' });
+  }
 });
 
 router.get('/dashboard', isAuthenticated, async (req, res) => {

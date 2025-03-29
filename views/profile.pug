@@ -1,0 +1,52 @@
+extends layout
+
+block nav
+  include navLinks
+
+block append head
+  link(rel='stylesheet', href='/css/dashboard.css')
+
+block content
+  .dashboard-container
+    .profile-section
+      img.profile-pic(src=profileUser.profilePic || '/assets/img/default-pic.png', alt='Profile Picture')
+      h2 #{profileUser.username}
+      if profileUser.bio
+        p.bio-text #{profileUser.bio}
+      else
+        p.bio-text (No bio available.)
+
+    .dashboard-main
+      .activity-section.dashboard-card
+        h3 Recent Activity
+        if recentActivity.length
+          ul.activity-list
+            each activity in recentActivity
+              li.activity-item
+                a(href=`/rooms/${activity.roomId}/blocks/${activity._id}`)= activity.title
+                p Updated on #{new Date(activity.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+        else
+          p No recent activity.
+
+      .starred-rooms.dashboard-card
+        h3 Starred Rooms
+        if starredRooms.length
+          ul.starred-room-list
+            each room in starredRooms
+              li.starred-room-item
+                a(href=`/rooms/${room.id}`)= room.name
+        else
+          p No starred rooms yet.
+
+    .account-stats
+      h3 User Stats
+      ul.stats-list
+        li.stat-item
+          span.stat-label Total Blocks Created
+          span.stat-value #{userStats.totalBlocks}
+        li.stat-item
+          span.stat-label Collaborations
+          span.stat-value #{userStats.totalCollaborations}
+        li.stat-item
+          span.stat-label Days Active
+          span.stat-value #{userStats.daysActive}
