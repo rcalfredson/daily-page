@@ -1,3 +1,13 @@
+.user-profile-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.user-profile-link:hover {
+  text-decoration: underline dashed;
+}
+
 .join-room {
   font-weight: bold;
   color: #007bff;

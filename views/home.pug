@@ -103,7 +103,9 @@ block content
             div.content
               a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
               p
-                | Created by: #{block.creator} in 
+                | Created by: 
+                a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+                |  in 
                 a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : "Unknown Room"
                 |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
               div.content-preview!= block.contentHTML
