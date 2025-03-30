@@ -67,7 +67,10 @@ append content
                 include ../partials/_vote_controls
                 div.content
                   a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
-                  p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                  p
+                    | Created by: 
+                    a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+                    |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
                   div.content-preview!= block.contentHTML
         else
           p No locked blocks yet! Create one or wait for the cron magic.
@@ -81,7 +84,10 @@ append content
                 include ../partials/_vote_controls
                 div.content
                   a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
-                  p Created by: #{block.creator} on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                  p
+                    | Created by: 
+                    a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+                    |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
                   div.content-preview!= block.contentHTML
         else
           p No in-progress blocks yet! ¡Manos a la obra!
