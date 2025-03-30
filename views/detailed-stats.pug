@@ -30,7 +30,7 @@ block content
         p.stat-number #{stats.daysActive}
 
     // Placeholder para gráficos interactivos
-    canvas#activityChart(width="400" height="150")
+    canvas#activityChart(width="400" height="300")
 
   script.
     const ctx = document.getElementById('activityChart').getContext('2d');
@@ -56,6 +56,15 @@ block content
             display: false
           }
         },
-        scales: { y: { beginAtZero: true } }
+        scales: {
+          y: { beginAtZero: true },
+          x: {
+            ticks: {
+              maxRotation: 45,
+              minRotation: 45,
+              autoSkip: false
+            }
+          }
+        }
       }
     });
