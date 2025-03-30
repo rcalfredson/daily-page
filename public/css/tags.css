@@ -1,0 +1,21 @@
+.tag-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.tag-header h1 {
+  color: #333;
+  font-size: 1.8rem;
+}
+
+.tag-name {
+  color: #007bff;
+}
+
+.tag-stats {
+  font-size: 1rem;
+  color: #555;
+}
