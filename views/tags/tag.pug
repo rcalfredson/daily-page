@@ -1,0 +1,32 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet', href='/css/blocks-dashboard.css')
+  link(rel='stylesheet', href='/css/tags.css')
+  link(rel="stylesheet" href="/css/vote-controls.css")
+  link(rel="stylesheet" href="/css/login-modal.css")
+
+block content
+  .tag-header
+    h1 🏷️ Tag: #[span.tag-name #{tagName}]
+    p.tag-stats Total blocks with #[strong #{tagName}]: #[strong #{totalBlocks}]
+
+  if taggedBlocks.length
+    ul.block-list
+      each block in taggedBlocks
+        li.block-preview
+          include ../partials/_vote_controls
+          .content
+            a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
+            p
+              | Created by: 
+              a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+              |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+            .content-preview!= block.content
+  else
+    p No blocks found with this tag yet. ¿Qué tal si creas el primero, viejón? 🔥
+
+  include ../partials/_login_modal

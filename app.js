@@ -23,6 +23,7 @@ import useVoteAPI from './server/api/v1/votes.js';
 
 import roomRoute from './server/routes/rooms.js'; // Routes
 import usersRoute from './server/routes/users.js';
+import tagsRoute from './server/routes/tags.js';
 import loginRoute from './server/routes/login.js';
 import blocksRoute from './server/routes/blocks.js';
 import blockViewRoute from './server/routes/blockView.js';
@@ -118,6 +119,7 @@ const md = MarkdownIt();
     useVoteAPI(app);
     app.use('/', roomRoute);
     app.use('/', usersRoute);
+    app.use('/', tagsRoute);
     app.use('/', loginRoute);
     app.use('/', blocksRoute);
     app.use('/', blockViewRoute);
