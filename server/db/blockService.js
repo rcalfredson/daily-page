@@ -42,6 +42,37 @@ export async function getGlobalBlockStats() {
   );
 }
 
+export async function getTagTrendData(tagName, defaultDays = 30) {
+  // Obtener los primeros 20 bloques por fecha ascendente (los más antiguos primero)
+  const blocks = await Block.find({ tags: tagName })
+    .sort({ createdAt: 1 })
+    .limit(20)
+    .select('createdAt')
+    .lean();
+
+  let days = defaultDays; // valor por defecto de 30 días
+  if (blocks.length > 0) {
+    const firstDate = new Date(blocks[0].createdAt);
+    const lastDate = new Date(blocks[blocks.length - 1].createdAt);
+    const diffMs = lastDate - firstDate;
+    const diffDays = diffMs / (1000 * 60 * 60 * 24);
+    // Si el rango entre el bloque más antiguo y el más reciente es mayor a 30 días,
+    // usamos ese rango (redondeado hacia arriba) como nuestro período.
+    if (diffDays > 30) {
+      days = Math.ceil(diffDays);
+    }
+  }
+
+  const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const pipeline = [
+    { $match: { tags: tagName, createdAt: { $gte: cutoff } } },
+    { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, count: { $sum: 1 } } },
+    { $sort: { _id: 1 } }
+  ];
+  const trendData = await Block.aggregate(pipeline).exec();
+  return trendData;
+}
+
 export async function getFeaturedBlockWithFallback(options = {}) {
   const { lockedOnly = false, limit = 1 } = options;
   const { blocks, period } = await getTopBlocksWithFallback({ lockedOnly, limit });
