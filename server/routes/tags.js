@@ -7,10 +7,15 @@ const router = express.Router();
 router.get('/tags/:tagName', async (req, res) => {
   try {
     const { tagName } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
 
     // Obtener bloques asociados con la etiqueta especificada
     const taggedBlocks = await Block.find({ tags: tagName })
       .sort({ voteCount: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .lean();
 
     res.render('tags/tag', {
