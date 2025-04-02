@@ -19,3 +19,26 @@
   font-size: 1rem;
   color: #555;
 }
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  /* separa las tags */
+  justify-content: flex-start;
+  /* o center, si prefieres centrar */
+}
+
+.tag-chip {
+  display: inline-block;
+  text-decoration: none;
+  background-color: #f0f4f8;
+  color: #333;
+  padding: 0.4rem 0.8rem;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+}
+
+.tag-chip:hover {
+  background-color: #e2e6ea;
+}

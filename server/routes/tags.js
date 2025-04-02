@@ -1,9 +1,24 @@
 import express from 'express';
 import Block from '../db/models/Block.js';
-import { getTagTrendData } from '../db/blockService.js';
+import { getAllTagsWithCounts, getTagTrendData } from '../db/blockService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 
 const router = express.Router();
+
+router.get('/tags', async (req, res) => {
+  try {
+    const tags = await getAllTagsWithCounts();
+
+    res.render('tags/index', {
+      title: 'Tags Overview | Daily Page',
+      tags,
+      user: req.user || null
+    });
+  } catch (error) {
+    console.error('Error loading tags overview:', error);
+    res.status(500).render('error', { message: 'Error loading tags overview' });
+  }
+});
 
 // Página específica para mostrar bloques por etiqueta
 router.get('/tags/:tagName', async (req, res) => {
