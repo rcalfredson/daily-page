@@ -1,5 +1,7 @@
 import express from 'express';
 import Block from '../db/models/Block.js';
+import { getTagTrendData } from '../db/blockService.js';
+import { renderMarkdownContent } from '../utils/markdownHelper.js';
 
 const router = express.Router();
 
@@ -17,12 +19,19 @@ router.get('/tags/:tagName', async (req, res) => {
       .skip(skip)
       .limit(limit)
       .lean();
+    taggedBlocks.forEach(block => {
+      block.contentHTML = renderMarkdownContent(block.content);
+    });
+
+    const trendData = await getTagTrendData(tagName, 30);
+    console.log('trendData:', trendData);
 
     res.render('tags/tag', {
       title: `#${tagName} | Daily Page`,
       tagName,
       taggedBlocks,
       totalBlocks: taggedBlocks.length,
+      trendData,
       user: req.user || null,
     });
   } catch (error) {

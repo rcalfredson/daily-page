@@ -6,13 +6,18 @@ block nav
 block append head
   link(rel='stylesheet', href='/css/blocks-dashboard.css')
   link(rel='stylesheet', href='/css/tags.css')
-  link(rel="stylesheet" href="/css/vote-controls.css")
-  link(rel="stylesheet" href="/css/login-modal.css")
+  link(rel="stylesheet", href="/css/vote-controls.css")
+  link(rel="stylesheet", href="/css/login-modal.css")
+  script(src='https://cdn.jsdelivr.net/npm/chart.js')
 
 block content
   .tag-header
     h1 🏷️ Tag: #[span.tag-name #{tagName}]
     p.tag-stats Total blocks with #[strong #{tagName}]: #[strong #{totalBlocks}]
+
+  // Trend chart container
+  .chart-container
+    canvas#tagTrendChart(width="400" height="200")
 
   if taggedBlocks.length
     ul.block-list
@@ -25,8 +30,48 @@ block content
               | Created by: 
               a.user-profile-link(href=`/users/${block.creator}`)= block.creator
               |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
-            .content-preview!= block.content
+            .content-preview!= block.contentHTML
   else
     p No blocks found with this tag yet. ¿Qué tal si creas el primero, viejón? 🔥
 
   include ../partials/_login_modal
+
+  script.
+    // Convert trendData to JavaScript object
+    const trendData = !{JSON.stringify(trendData)};
+    const labels = trendData.map(entry => entry._id);
+    const dataCounts = trendData.map(entry => entry.count);
+
+    const ctxTrend = document.getElementById('tagTrendChart').getContext('2d');
+    new Chart(ctxTrend, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Blocks Created Over Time',
+          data: dataCounts,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          fill: true,
+          tension: 0.3,
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true },
+          x: {
+            ticks: {
+              maxRotation: 45,
+              minRotation: 45,
+              autoSkip: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
