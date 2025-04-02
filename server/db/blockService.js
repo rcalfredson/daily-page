@@ -42,6 +42,23 @@ export async function getGlobalBlockStats() {
   );
 }
 
+export async function getAllTagsWithCounts() {
+  return await cache.get(
+    'all-tags-with-counts', // cache key
+    async () => {
+      const pipeline = [
+        { $unwind: '$tags' },
+        { $group: { _id: '$tags', totalBlocks: { $sum: 1 } } },
+        { $sort: { totalBlocks: -1 } }
+      ];
+      return await Block.aggregate(pipeline).exec();
+    },
+    [],
+    CACHE_TTL // usa el TTL que prefieras
+  );
+}
+
+
 export async function getTagTrendData(tagName, defaultDays = 30) {
   // Obtener los primeros 20 bloques por fecha ascendente (los más antiguos primero)
   const blocks = await Block.find({ tags: tagName })

@@ -1,0 +1,18 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet', href='/css/tags.css')
+
+block content
+  .tags-overview-container
+    h1 Tags Overview
+    p Explore all tags used in Daily Page.
+    
+    // Tag Cloud
+    .tag-cloud
+      each tag in tags
+        a.tag-chip(href=`/tags/${encodeURIComponent(tag._id)}`, style=`font-size: ${Math.min(24, 12 + tag.totalBlocks)}px`)
+          | #{tag._id} (#{tag.totalBlocks})
