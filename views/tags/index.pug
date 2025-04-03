@@ -10,9 +10,22 @@ block content
   .tags-overview-container
     h1 Tags Overview
     p Explore all tags used in Daily Page.
-    
+
+    // 👇 Timeframe buttons
+    .timeframe-selector
+      each label, val in {'24h':'Last 24 Hours', '7d':'Last 7 Days', '30d':'Last 30 Days', 'all':'All Time'}
+        button.timeframe-btn(data-timeframe=val class=(timeframe === val ? 'active' : ''))= label
+
     // Tag Cloud
     .tag-cloud
       each tag in tags
         a.tag-chip(href=`/tags/${encodeURIComponent(tag._id)}`, style=`font-size: ${Math.min(24, 12 + tag.totalBlocks)}px`)
           | #{tag._id} (#{tag.totalBlocks})
+
+  script.
+    document.querySelectorAll('.timeframe-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const timeframe = this.getAttribute('data-timeframe');
+        window.location.href = `/tags?timeframe=${timeframe}`;
+      });
+    });

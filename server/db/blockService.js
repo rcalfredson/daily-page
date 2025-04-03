@@ -42,19 +42,42 @@ export async function getGlobalBlockStats() {
   );
 }
 
-export async function getAllTagsWithCounts() {
+export async function getAllTagsWithCounts(timeframe = 'all') {
   return await cache.get(
-    'all-tags-with-counts', // cache key
+    `all-tags-with-counts-${timeframe}`,
     async () => {
-      const pipeline = [
-        { $unwind: '$tags' },
+      const pipeline = [{ $unwind: '$tags' }];
+
+      if (timeframe !== 'all') {
+        const now = new Date();
+        let cutoff;
+        switch (timeframe) {
+          case '24h':
+            cutoff = new Date(now - 24 * 60 * 60 * 1000);
+            break;
+          case '7d':
+            cutoff = new Date(now - 7 * 24 * 60 * 60 * 1000);
+            break;
+          case '30d':
+            cutoff = new Date(now - 30 * 24 * 60 * 60 * 1000);
+            break;
+          default:
+            cutoff = null;
+        }
+        if (cutoff) {
+          pipeline.unshift({ $match: { createdAt: { $gte: cutoff } } });
+        }
+      }
+
+      pipeline.push(
         { $group: { _id: '$tags', totalBlocks: { $sum: 1 } } },
         { $sort: { totalBlocks: -1 } }
-      ];
+      );
+
       return await Block.aggregate(pipeline).exec();
     },
     [],
-    CACHE_TTL // usa el TTL que prefieras
+    CACHE_TTL
   );
 }
 
