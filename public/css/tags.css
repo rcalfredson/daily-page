@@ -42,3 +42,24 @@
 .tag-chip:hover {
   background-color: #e2e6ea;
 }
+
+.timeframe-selector {
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.timeframe-btn {
+  border: 1px solid #007bff;
+  background-color: transparent;
+  color: #007bff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.timeframe-btn:hover, .timeframe-btn.active {
+  background-color: #007bff;
+  color: white;
+}

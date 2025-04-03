@@ -7,11 +7,14 @@ const router = express.Router();
 
 router.get('/tags', async (req, res) => {
   try {
-    const tags = await getAllTagsWithCounts();
+    const timeframe = req.query.timeframe || '7d';
+
+    const tags = await getAllTagsWithCounts(timeframe);
 
     res.render('tags/index', {
       title: 'Tags Overview | Daily Page',
       tags,
+      timeframe,
       user: req.user || null
     });
   } catch (error) {
