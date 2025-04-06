@@ -1,0 +1,44 @@
+.archive-index-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.archive-index-container h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.year-month-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.year-month-item {
+  background: #f8f8f8;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.year-month-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.year-month-item a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.year-month-item a:hover {
+  text-decoration: underline;
+}

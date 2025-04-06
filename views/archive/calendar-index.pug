@@ -1,0 +1,21 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet', href='/css/archive-index.css')
+
+block content
+  .archive-index-container
+    h1 📅 Archive Index
+
+    if yearMonthCombos.length
+      ul.year-month-list
+        each combo in yearMonthCombos
+          - const monthPadded = String(combo.month).padStart(2, '0')
+          li.year-month-item
+            a(href=`/archive/${combo.year}/${monthPadded}`)
+              | #{combo.year} - #{monthName(combo.month)}
+    else
+      p No content available yet.

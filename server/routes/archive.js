@@ -1,9 +1,46 @@
 import express from 'express';
+import DateHelper from '../../lib/dateHelper.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import Block from '../db/models/Block.js';
-
+import { getAllBlockYearMonthCombos, getBlockDatesByYearMonth } from '../db/blockService.js';
 const router = express.Router();
+
+// GET /archive - Muestra todos los meses/años con contenido
+router.get('/archive', optionalAuth, async (req, res) => {
+  try {
+    const yearMonthCombos = await getAllBlockYearMonthCombos();
+
+    res.render('archive/calendar-index', {
+      title: 'Archive Index',
+      yearMonthCombos,
+      monthName: DateHelper.monthName,
+      user: req.user || null,
+    });
+  } catch (error) {
+    console.error('Error loading archive index:', error);
+    res.status(500).render('error', { message: 'Error loading archive index.' });
+  }
+});
+
+// GET /archive/:year/:month - Muestra calendario del mes
+router.get('/archive/:year/:month', optionalAuth, async (req, res) => {
+  try {
+    const { year, month } = req.params;
+    const datesWithContent = await getBlockDatesByYearMonth(year, month);
+
+    res.render('archive/calendar', {
+      title: `Archive for ${year}-${month}`,
+      year,
+      month,
+      datesWithContent,
+      user: req.user || null,
+    });
+  } catch (error) {
+    console.error(`Error loading calendar for ${req.params.year}-${req.params.month}:`, error);
+    res.status(500).render('error', { message: 'Error loading calendar.' });
+  }
+});
 
 // Render archive view for a specific date
 router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
