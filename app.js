@@ -26,6 +26,7 @@ import usersRoute from './server/routes/users.js';
 import tagsRoute from './server/routes/tags.js';
 import loginRoute from './server/routes/login.js';
 import blocksRoute from './server/routes/blocks.js';
+import archiveRoutes from './server/routes/archive.js';
 import blockViewRoute from './server/routes/blockView.js';
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
@@ -122,6 +123,7 @@ const md = MarkdownIt();
     app.use('/', tagsRoute);
     app.use('/', loginRoute);
     app.use('/', blocksRoute);
+    app.use('/', archiveRoutes);
     app.use('/', blockViewRoute);
 
     const server = createServer(app)
@@ -474,8 +476,6 @@ const md = MarkdownIt();
         });
 
         const date = DateHelper.currentDate('long');
-        const title = `Daily Page - ${roomMetadata.name}`;
-        const header = `${date} - ${roomMetadata.name} Room`;
 
         res.render('rooms/blocks-dashboard', {
           room_id,

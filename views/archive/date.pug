@@ -1,0 +1,49 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet', href='/css/archive.css')
+  link(rel='stylesheet', href='/css/vote-controls.css')
+  link(rel='stylesheet' href='/css/login-modal.css')
+
+block append scripts
+  script(src='/js/vote-controls.js')
+
+block content
+  .archive-container
+    h1 Archive for #{date}
+
+    if blocks.length
+      ul.block-list
+        each block in blocks
+          li.block-item
+            include ../partials/_vote_controls
+            div.block-main
+              a.block-link(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
+              .block-content!= block.contentHTML
+              .block-meta 
+                | Created by 
+                a(href=`/users/${block.creator}`)= block.creator
+                |  at #{new Date(block.createdAt).toLocaleTimeString()}
+    else
+      p No content found for this date.
+  if totalPages > 1
+    .pagination
+      if currentPage > 1
+        a.page-link(href=`?page=${currentPage - 1}`) Previous
+      else
+        span.page-link.disabled Previous
+
+      each num in Array(totalPages).fill().map((_, idx) => idx + 1)
+        if num === currentPage
+          span.page-link.active= num
+        else
+          a.page-link(href=`?page=${num}`)= num
+
+      if currentPage < totalPages
+        a.page-link(href=`?page=${currentPage + 1}`) Next
+      else
+        span.page-link.disabled Next
+  include ../partials/_login_modal
