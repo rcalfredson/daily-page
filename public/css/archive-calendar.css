@@ -1,0 +1,78 @@
+.calendar-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.calendar-container h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.calendar {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.calendar th, .calendar td {
+  height: 3rem; /* altura consistente 👈 */
+  padding: 0.5rem;
+  text-align: center;
+  border: 1px solid #eee;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.calendar th {
+  background-color: #f4f4f4;
+  color: #555;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.active-day a {
+  display: inline-flex; /* flex para centrar texto verticalmente 👈 */
+  justify-content: center; 
+  align-items: center;
+  width: 100%; /* ajustamos al ancho completo de la celda 👈 */
+  height: 100%; /* altura completa también 👈 */
+  text-decoration: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.active-day a:hover {
+  background-color: #0056b3;
+}
+
+.inactive-day {
+  color: #ccc;
+}
+
+.empty-cell {
+  background-color: #fafafa;
+  border: none;
+}
+
+/* Ajustes específicos para mobile */
+@media (max-width: 600px) {
+  .calendar th, .calendar td {
+    height: 2rem; /* altura consistente menor en móvil 👈 */
+    padding: 0.25rem;
+    font-size: 0.7rem;
+  }
+
+  .active-day a {
+    font-size: 0.75rem;
+    border-radius: 4px;
+  }
+}

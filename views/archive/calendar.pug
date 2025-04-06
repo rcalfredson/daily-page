@@ -1,0 +1,34 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet', href='/css/archive-calendar.css')
+
+block content
+  .calendar-container
+    h1 📆 Archive for #{monthName(month)} #{year}
+
+    table.calendar
+      thead
+        tr
+          each day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+            th= day
+      tbody
+        - const firstDay = new Date(year, month - 1, 1).getDay()
+        - const daysInMonth = new Date(year, month, 0).getDate()
+        - let dayCount = 1
+        while dayCount <= daysInMonth
+          tr
+            each dayOfWeek in Array(7).fill().map((_, idx) => idx)
+              if (dayCount === 1 && dayOfWeek < firstDay) || dayCount > daysInMonth
+                td.empty-cell
+              else
+                - const currentDate = `${year}-${String(month).padStart(2, '0')}-${String(dayCount).padStart(2, '0')}`
+                if datesWithContent.includes(currentDate)
+                  td.active-day
+                    a(href=`/archive/${year}/${String(month).padStart(2, '0')}/${String(dayCount).padStart(2, '0')}`)= dayCount
+                else
+                  td.inactive-day= dayCount
+                - dayCount++

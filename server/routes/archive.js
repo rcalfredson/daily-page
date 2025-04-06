@@ -34,6 +34,7 @@ router.get('/archive/:year/:month', optionalAuth, async (req, res) => {
       year,
       month,
       datesWithContent,
+      monthName: DateHelper.monthName,
       user: req.user || null,
     });
   } catch (error) {
