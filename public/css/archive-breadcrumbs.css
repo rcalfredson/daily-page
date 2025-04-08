@@ -1,0 +1,31 @@
+.archive-room-meta {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.archive-room-meta a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.archive-room-meta a:hover {
+  text-decoration: underline;
+}
+
+.back-to-room-link {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.back-to-room-link a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.back-to-room-link a:hover {
+  text-decoration: underline;
+}
