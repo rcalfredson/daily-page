@@ -269,23 +269,21 @@ export async function getBlocksByDate(date) {
 }
 
 // Get all unique dates that have blocks in a given year/month (with caching)
-export async function getBlockDatesByYearMonth(year, month) {
+export async function getBlockDatesByYearMonth(year, month, roomId = null) {
+  const query = {
+    createdAt: {
+      $gte: new Date(`${year}-${month}-01T00:00:00.000Z`),
+      $lt: new Date(`${year}-${month}-31T23:59:59.999Z`)
+    }
+  };
+  
+  if (roomId) query.roomId = roomId;
+
   return await cache.get(
-    `block-dates-${year}-${month}`,
+    `block-dates-${year}-${month}-${roomId || 'global'}`,
     async () => {
-      const blocks = await Block.find(
-        {
-          createdAt: {
-            $gte: new Date(`${year}-${month}-01T00:00:00.000Z`),
-            $lt: new Date(`${year}-${month}-31T23:59:59.999Z`)
-          }
-        },
-        { createdAt: 1 } // Only return the createdAt field
-      ).sort({ createdAt: -1 }).lean();
-
-      // Extract unique YYYY-MM-DD dates
+      const blocks = await Block.find(query, { createdAt: 1 }).sort({ createdAt: -1 }).lean();
       const uniqueDates = [...new Set(blocks.map(block => block.createdAt.toISOString().split('T')[0]))];
-
       return uniqueDates;
     },
     [],
@@ -294,24 +292,22 @@ export async function getBlockDatesByYearMonth(year, month) {
 }
 
 // Get all year/month combinations with blocks (cached)
-export async function getAllBlockYearMonthCombos() {
+export async function getAllBlockYearMonthCombos(roomId = null) {
+  const pipeline = [
+    { $project: { year: { $year: '$createdAt' }, month: { $month: '$createdAt' }, roomId: 1 } }
+  ];
+
+  if (roomId) pipeline.unshift({ $match: { roomId } });
+
+  pipeline.push(
+    { $group: { _id: { year: '$year', month: '$month' } } },
+    { $sort: { '_id.year': -1, '_id.month': -1 } }
+  );
+
   return await cache.get(
-    'block-year-month-combos', // Cache key
+    `block-year-month-combos-${roomId || 'global'}`,
     async () => {
-      const pipeline = [
-        {
-          $project: {
-            year: { $year: '$createdAt' },
-            month: { $month: '$createdAt' },
-          },
-        },
-        { $group: { _id: { year: '$year', month: '$month' } } },
-        { $sort: { '_id.year': -1, '_id.month': -1 } }, // Sort latest first
-      ];
-
       const aggDocs = await Block.aggregate(pipeline).exec();
-
-      // Convert into simple { year, month } objects
       return aggDocs.map(doc => ({ year: doc._id.year, month: doc._id.month }));
     },
     [],

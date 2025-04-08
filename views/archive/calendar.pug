@@ -4,9 +4,15 @@ block nav
   include ../navLinks
 
 block append head
-  link(rel='stylesheet', href='/css/archive-calendar.css')
+  link(rel='stylesheet' href='/css/archive-calendar.css')
+  link(rel='stylesheet', href='/css/archive-breadcrumbs.css')
 
 block content
+  if roomId
+    .archive-room-meta
+      p 
+        | Viewing archive for room 
+        a(href=`/rooms/${roomId}`)= `${roomName}`
   .calendar-container
     h1 📆 Archive for #{monthName(month)} #{year}
 
@@ -17,7 +23,7 @@ block content
             th= day
       tbody
         - const firstDay = new Date(year, month - 1, 1).getDay()
-        - const daysInMonth = new Date(year, month, 0).getDate()
+        - const daysInMonth = new Date(year, month, 0).getDate() 
         - let dayCount = 1
         while dayCount <= daysInMonth
           tr
@@ -25,10 +31,15 @@ block content
               if (dayCount === 1 && dayOfWeek < firstDay) || dayCount > daysInMonth
                 td.empty-cell
               else
-                - const currentDate = `${year}-${String(month).padStart(2, '0')}-${String(dayCount).padStart(2, '0')}`
+                - const monthPadded = String(month).padStart(2, '0');
+                - const dayPadded = String(dayCount).padStart(2, '0');
+                - const currentDate = `${year}-${monthPadded}-${dayPadded}`
                 if datesWithContent.includes(currentDate)
                   td.active-day
-                    a(href=`/archive/${year}/${String(month).padStart(2, '0')}/${String(dayCount).padStart(2, '0')}`)= dayCount
+                    a(href=roomId ? `/rooms/${roomId}/archive/${year}/${monthPadded}/${dayPadded}` : `/archive/${year}/${monthPadded}/${dayPadded}`)= dayCount
                 else
                   td.inactive-day= dayCount
                 - dayCount++
+  if roomId
+    .back-to-room-link
+      a(href=`/rooms/${roomId}`) ← Back to Room Dashboard
