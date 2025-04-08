@@ -58,6 +58,14 @@ ul {
   text-decoration: underline;
 }
 
+.room-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
 #room-description {
   margin-left: 10px;
   font-size: 1rem;
@@ -88,4 +96,19 @@ a.btn {
 
 .user-profile-link:hover {
   text-decoration: underline dashed;
+}
+
+.room-archive-link {
+  margin-top: 0.5rem;
+  margin-left: 10px;
+  font-size: 0.9rem;
+}
+
+.room-archive-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.room-archive-link a:hover {
+  text-decoration: underline;
 }
