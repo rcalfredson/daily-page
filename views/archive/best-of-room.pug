@@ -1,0 +1,51 @@
+extends ../layout
+
+block append head
+  link(rel='stylesheet' href='/css/blocks-dashboard.css')
+  link(rel='stylesheet' href='/css/vote-controls.css')
+  link(rel='stylesheet' href='/css/login-modal.css')
+  link(rel='stylesheet' href='/css/best-of.css')
+
+block append scripts
+  script(src="/js/vote-controls.js")
+  script(src="/js/best-of-tabs.js")
+
+block content
+  h1 🏆 Best of 
+    a#room-link(href=`/rooms/${roomMetadata._id}`)= roomMetadata.name
+
+  // Tab navigation
+  .tabs
+    ul.tab-links
+      li.active(data-tab="tab-24h") 🔥 24 Hours
+      li(data-tab="tab-7d") 🚀 7 Days
+      li(data-tab="tab-30d") 🌕 30 Days
+      li(data-tab="tab-all") 👑 All Time
+
+  // Tab content
+  .tab-content
+    #tab-24h.tab-pane.active
+      +renderBlockList(top24h)
+    #tab-7d.tab-pane
+      +renderBlockList(top7d)
+    #tab-30d.tab-pane
+      +renderBlockList(top30d)
+    #tab-all.tab-pane
+      +renderBlockList(topAll)
+  include ../partials/_login_modal
+
+mixin renderBlockList(blocks)
+  if blocks.length
+    ul.block-list
+      each block in blocks
+        li.block-preview
+          include ../partials/_vote_controls
+          div.content
+            a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
+            p
+              | Created by: 
+              a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+              |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+            div.content-preview!= block.contentHTML
+  else
+    p No blocks found.
