@@ -119,14 +119,18 @@ export async function getFeaturedBlockWithFallback(options = {}) {
   return { featuredBlock: blocks[0] || null, period };
 }
 
-export async function getTopBlocksByTimeframe(days = null, limit = 20) {
+export async function getTopBlocksByTimeframe(days = null, limit = 20, roomId = null) {
   return await cache.get(
-    `top-blocks-timeframe-${days || 'all'}-${limit}`,
+    `top-blocks-timeframe-${days || 'all'}-${limit}-${roomId || 'global'}`,
     async () => {
       const query = {};
       if (days) {
         const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
         query.createdAt = { $gte: cutoff };
+      }
+
+      if (roomId) {
+        query.roomId = roomId;
       }
 
       const blocks = await Block.find(query)

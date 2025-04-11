@@ -28,6 +28,40 @@ router.get('/archive', optionalAuth, async (req, res) => {
   }
 });
 
+router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
+  const { roomId } = req.params;
+  try {
+    const [top24h, top7d, top30d, topAll, roomMetadata] = await Promise.all([
+      getTopBlocksByTimeframe(1, 20, roomId),
+      getTopBlocksByTimeframe(7, 20, roomId),
+      getTopBlocksByTimeframe(30, 20, roomId),
+      getTopBlocksByTimeframe(null, 20, roomId),
+      getRoomMetadata(roomId)
+    ]);
+
+    const allBlocks = [top24h, top7d, top30d, topAll];
+
+    allBlocks.forEach(blockList => {
+      blockList.forEach(block => {
+        block.contentHTML = renderMarkdownContent(block.content);
+      });
+    });
+
+    res.render('archive/best-of-room', {
+      title: `Best of ${roomMetadata.name}`,
+      top24h,
+      top7d,
+      top30d,
+      topAll,
+      roomMetadata,
+      user: req.user || null,
+    });
+  } catch (error) {
+    console.error(`Error loading best-of archive for room ${roomId}:`, error);
+    res.status(500).render('error', { message: 'Error loading room-specific best-of archive.' });
+  }
+});
+
 router.get('/archive/best-of', optionalAuth, async (req, res) => {
   try {
     const [top24h, top7d, top30d, topAll] = await Promise.all([

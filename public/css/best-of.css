@@ -70,3 +70,8 @@
     max-height: 200px; /* Más alto solo para imágenes en desktop */
   }
 }
+
+#room-link {
+  text-decoration: underline dotted;
+  color: #004187;
+}
