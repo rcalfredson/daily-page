@@ -119,6 +119,28 @@ export async function getFeaturedBlockWithFallback(options = {}) {
   return { featuredBlock: blocks[0] || null, period };
 }
 
+export async function getTopBlocksByTimeframe(days = null, limit = 20) {
+  return await cache.get(
+    `top-blocks-timeframe-${days || 'all'}-${limit}`,
+    async () => {
+      const query = {};
+      if (days) {
+        const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+        query.createdAt = { $gte: cutoff };
+      }
+
+      const blocks = await Block.find(query)
+        .sort({ voteCount: -1 })
+        .limit(limit)
+        .lean();
+
+      return blocks;
+    },
+    [],
+    CACHE_TTL
+  );
+}
+
 export async function getFeaturedRoomWithFallback() {
   return await cache.get(
     `featured-room-with-fallback`,
@@ -276,7 +298,7 @@ export async function getBlockDatesByYearMonth(year, month, roomId = null) {
       $lt: new Date(`${year}-${month}-31T23:59:59.999Z`)
     }
   };
-  
+
   if (roomId) query.roomId = roomId;
 
   return await cache.get(

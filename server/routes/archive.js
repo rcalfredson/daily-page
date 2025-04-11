@@ -3,7 +3,11 @@ import DateHelper from '../../lib/dateHelper.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import Block from '../db/models/Block.js';
-import { getAllBlockYearMonthCombos, getBlockDatesByYearMonth } from '../db/blockService.js';
+import {
+  getAllBlockYearMonthCombos,
+  getBlockDatesByYearMonth,
+  getTopBlocksByTimeframe
+} from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js'
 const router = express.Router();
 
@@ -21,6 +25,37 @@ router.get('/archive', optionalAuth, async (req, res) => {
   } catch (error) {
     console.error('Error loading archive index:', error);
     res.status(500).render('error', { message: 'Error loading archive index.' });
+  }
+});
+
+router.get('/archive/best-of', optionalAuth, async (req, res) => {
+  try {
+    const [top24h, top7d, top30d, topAll] = await Promise.all([
+      getTopBlocksByTimeframe(1),
+      getTopBlocksByTimeframe(7),
+      getTopBlocksByTimeframe(30),
+      getTopBlocksByTimeframe(null)
+    ]);
+
+    const allBlocks = [top24h, top7d, top30d, topAll];
+
+    allBlocks.forEach(blockList => {
+      blockList.forEach(block => {
+        block.contentHTML = renderMarkdownContent(block.content);
+      });
+    });
+
+    res.render('archive/best-of', {
+      title: 'Best of Daily Page',
+      top24h,
+      top7d,
+      top30d,
+      topAll,
+      user: req.user || null,
+    });
+  } catch (error) {
+    console.error('Error loading best-of archive:', error);
+    res.status(500).render('error', { message: 'Error loading best-of archive.' });
   }
 });
 

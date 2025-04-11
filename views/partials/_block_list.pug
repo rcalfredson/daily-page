@@ -1,0 +1,9 @@
+mixin renderBlockList(blocks)
+  if blocks.length
+    ul.block-list
+      each block in blocks
+        li
+          a(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
+          span= ` (${block.voteCount} votes)`
+  else
+    p No blocks found.
