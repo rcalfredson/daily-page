@@ -15,6 +15,13 @@ router.get('/signup', (req, res) => {
   });
 });
 
+router.get('/verify-email', (req, res) => {
+  res.render('users/verify-email', {
+    title: 'Verify Email',
+    description: 'Verify your email address for Daily Page.',
+  });
+});
+
 // View user profile (public)
 router.get('/users/:username', async (req, res) => {
   try {

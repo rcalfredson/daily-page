@@ -1,0 +1,15 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet', href='/css/verify-email.css')
+
+block scripts
+  script(src='/js/verify-email.js')
+
+block content
+  .verify-email-container
+    h1 Verifying your email...
+    p#verification-status Checking token, please wait...

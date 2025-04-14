@@ -1,15 +1,17 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import multer from 'multer';
 
 import {
   createUser, findUserByEmail, findUserById, findUserByUsername, starRoom, unstarRoom, updateUserProfile,
   updateUserStreak
 } from '../../db/userService.js';
+import User from '../../db/models/User.js';
 import isAuthenticated from '../../middleware/auth.js'
 import { uploadProfilePic } from '../../services/uploadProfilePic.js';
 import { makeUserJWT } from '../../utils/jwtHelper.js';
-import User from '../../db/models/User.js';
+import { sendEmail } from '../../services/mailgunService.js';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -53,19 +55,69 @@ const useUserAPI = (app) => {
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10); // 10 is the "salt rounds"
 
+      const verificationToken = crypto.randomBytes(20).toString('hex');
+      const tokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // Expira en 24h
+
       // Create the new user
       const userId = await createUser({
         email,
         username,
         password: hashedPassword, // Save the hashed password
+        verified: false,
+        verificationToken,
+        verificationTokenExpires: tokenExpires,
         createdAt: new Date(),
         updatedAt: new Date(),
+      });
+
+      const verifyLink = `${process.env.BASE_URL || 'http://localhost:3000'}/verify-email?token=${verificationToken}`;
+      // Envía email de verificación
+      await sendEmail({
+        to: email,
+        subject: 'Verify your Daily Page account ✨',
+        html: `
+        <h1>Welcome to Daily Page, ${username}!</h1>
+        <p>Please verify your email by clicking below:</p>
+        <a href="${verifyLink}">Verify Email Address</a>
+        <p>This link expires in 24 hours.</p>
+      `
       });
 
       res.status(201).json({ userId, message: 'User created successfully!' });
     } catch (error) {
       console.error('Error creating user:', error.message);
       res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  // GET /api/v1/users/verify-email?token=abc123
+  router.get('/verify-email', async (req, res) => {
+    const { token } = req.query;
+
+    if (!token) {
+      return res.status(400).json({ error: 'Verification token is required.' });
+    }
+
+    try {
+      const user = await User.findOne({
+        verificationToken: token,
+        verificationTokenExpires: { $gt: new Date() },
+      });
+
+      if (!user) {
+        return res.status(400).json({ error: 'Invalid or expired verification token.' });
+      }
+
+      // Marcar usuario como verificado y limpiar el token
+      user.verified = true;
+      user.verificationToken = null;
+      user.verificationTokenExpires = null;
+      await user.save();
+
+      res.status(200).json({ message: 'Your account has been verified successfully!' });
+    } catch (error) {
+      console.error('Error verifying email:', error.message);
+      res.status(500).json({ error: 'Internal server error.' });
     }
   });
 
