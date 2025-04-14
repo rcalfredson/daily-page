@@ -24,9 +24,8 @@ export const config = {
   awsRegion: process.env.AWS_REGION,
   s3BucketName: process.env.S3_BUCKET_NAME,
 
-  // Email Config
-  emailUser: process.env.EMAIL_USER,
-  emailPass: process.env.EMAIL_PASS,
+  // Mailgun Config
+  mailgunApiKey: process.env.MAILGUN_API_KEY,
 
   // App Config
   port: process.env.PORT || 3000,

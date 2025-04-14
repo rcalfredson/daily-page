@@ -1,6 +1,4 @@
-import nodemailer from 'nodemailer';
-
-import { config } from '../../config/config.js';
+import { sendEmail } from './mailgunService.js';
 
 export async function handleRoomRequest(req, res) {
   const { roomName, roomTopic, roomDescription } = req.body;
@@ -10,27 +8,19 @@ export async function handleRoomRequest(req, res) {
   }
   
   try {
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      auth: {
-        user: config.emailUser,
-        pass: config.emailPass,
-      },
-    });
+    const emailBody = `
+        <ul>
+          <li>Room Name: ${roomName}</li>
+          <li>Topic: ${roomTopic || 'No topic provided'}</li>
+          <li>Description: ${roomDescription}</li>
+        </ul>
+      `
   
-    const mailOptions = {
-      from: config.emailUser,
+    await sendEmail({
       to: 'ask@dailypage.org',
       subject: `New Room Request: ${roomName}`,
-      text: `
-        Room Name: ${roomName}
-        Topic: ${roomTopic || 'No topic provided'}
-        Description: ${roomDescription}
-      `,
-    };
-  
-    await transporter.sendMail(mailOptions);
+      html: emailBody,
+    });
     res.status(200).send('Your room request has been submitted successfully!');
   } catch (error) {
     console.error('Error sending room request email:', error);
