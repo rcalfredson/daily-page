@@ -32,13 +32,14 @@
 
 .room-request-form label {
   font-size: 15px;
-  /* Slightly smaller font for labels */
   font-weight: 600;
   color: #444;
-  /* Subtle color for better readability */
+  background-color: unset;
   border: unset;
   margin: unset;
+  padding: unset;
   float: unset;
+  border-radius: unset;
 }
 
 .room-request-form input,
