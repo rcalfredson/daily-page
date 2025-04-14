@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (response.ok) {
         // Show success feedback
-        feedback.textContent = 'Account created successfully!';
+        feedback.textContent = 'Account created successfully! Please check your email to verify your account.';
         feedback.style.display = 'block';
         feedback.style.color = 'green';
         form.reset(); // Reset the form fields

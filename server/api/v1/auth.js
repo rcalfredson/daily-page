@@ -32,6 +32,10 @@ const useAuthAPI = (app) => {
         return res.status(400).json({ error: 'Invalid password.' });
       }
 
+      if (!user.verified) {
+        return res.status(401).json({ error: 'Please verify your email before logging in.' });
+      }
+
       const token = makeUserJWT({
         id: user._id,
         username: user.username,
