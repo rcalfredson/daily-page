@@ -22,6 +22,20 @@ router.get('/verify-email', (req, res) => {
   });
 });
 
+router.get('/forgot-password', (req, res) => {
+  res.render('users/forgot-password', {
+    title: 'Reset Password',
+    description: 'Request a reset link for your Daily Page account.'
+  });
+});
+
+router.get('/reset-password', (req, res) => {
+  res.render('users/reset-password', {
+    title: 'Reset Your Password',
+    description: 'Set a new password for your account.'
+  });
+});
+
 // View user profile (public)
 router.get('/users/:username', async (req, res) => {
   try {
