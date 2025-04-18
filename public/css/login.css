@@ -75,3 +75,18 @@ p {
   text-align: center;
   margin-top: 10px;
 }
+
+.forgot-link {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.forgot-link a {
+  font-size: 14px;
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.forgot-link a:hover {
+  color: #0056b3;
+}
