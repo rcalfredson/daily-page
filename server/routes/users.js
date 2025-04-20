@@ -36,6 +36,14 @@ router.get('/reset-password', (req, res) => {
   });
 });
 
+router.get('/privacy', (req, res) => {
+  res.render('privacy', {
+    title: 'Privacy Policy',
+    description: 'Privacy Policy for Daily Page.',
+    lastUpdated: 'April 19, 2025'
+  });
+});
+
 // View user profile (public)
 router.get('/users/:username', async (req, res) => {
   try {
