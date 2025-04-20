@@ -9,6 +9,7 @@ html(lang=lang || 'en')
       link(rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css")
       link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet")
       link(rel='stylesheet' href='/css/style.css')
+      link(rel='stylesheet' href='/css/footer.css')
       link(rel="stylesheet", href="/css/auth.css")
       script(src="/js/auth.js")
       if title === 'Room Directory'
@@ -40,4 +41,10 @@ html(lang=lang || 'en')
           tabindex="-1"
           aria-hidden="true" hidden)
     block content
+
+    footer.footer(role="contentinfo")
+      .footer-content
+        p © #{new Date().getFullYear()} Daily Page
+        a(href="/privacy") Privacy Policy
+
     block scripts
