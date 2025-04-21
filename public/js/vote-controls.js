@@ -63,22 +63,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showLoginModal(actionType) {
-    const modal = document.getElementById("login-modal");
+    const modal        = document.getElementById("login-modal");
     const modalMessage = document.getElementById("login-modal-message");
+  
     modalMessage.textContent = `You need to be logged in to ${actionType}.`;
-
-    modal.style.display = "block";
-
-    const closeBtn = modal.querySelector(".modal-close");
-    closeBtn.addEventListener("click", () => {
-      modal.style.display = "none";
-    });
-
-    window.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
-    });
+    modal.classList.remove('hidden');
   }
   window.showLoginModal = showLoginModal;
 });
