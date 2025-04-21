@@ -4,6 +4,7 @@ import { getRoomMetadata } from '../db/roomService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import MarkdownIt from 'markdown-it';
 import optionalAuth from '../middleware/optionalAuth.js';
+import { canManageBlock } from '../utils/block.js';
 
 const router = express.Router();
 const md = new MarkdownIt();
@@ -12,6 +13,7 @@ router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, async (req, res) =>
   try {
     const { room_id, block_id } = req.params;
     const block = await getBlockById(block_id);
+    const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
 
     // Check if block exists and matches the room
     if (!block || block.roomId !== room_id) {
@@ -37,6 +39,7 @@ router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, async (req, res) =>
       block,
       title,
       header,
+      canManageBlock: canManageBlock(req.user, block, editTokens),
       user: req.user
     });
 

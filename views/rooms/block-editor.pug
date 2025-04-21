@@ -6,6 +6,9 @@ block nav
 block append head
   link(rel='stylesheet' href='/css/editor.css')
   link(rel="stylesheet", href="/css/block-tags.css")
+  link(rel='stylesheet' href='/css/toast.css')
+  link(rel='stylesheet' href='/css/modal.css')
+  link(rel='stylesheet' href='/css/delete-block.css')
 
 block content
   include ../partials/_tag_section
@@ -28,6 +31,7 @@ block content
                   i(data-feather="edit")
                 if block.status === 'in-progress'
                   button#lock-block-btn Lock Block
+                button#delete-block-btn.delete-btn(data-tooltip="Delete Block") Delete Block
 
           .block-description-card
             // Subtle label for clarity
@@ -87,6 +91,7 @@ block content
   include ../loading
   include ../closedPage
   include ../inactiveWarning
+  include ../partials/_block_delete_confirm
   #lock-modal.modal.hidden
     .modal-content
       p.modal-message Are you sure you want to lock this block? 
@@ -107,6 +112,7 @@ block scripts
   script(src='/js/bundle.js')
   script(src='/js/clearSelection.js')
   script(src='/js/editor.js')
+  script(src='/js/modal.js')
   script(src='/js/edit-block-description.js')
   script(src='/js/lock-block.js')
   script(src='/js/set-share-link.js')

@@ -1,0 +1,86 @@
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex; /* Centralización vertical y horizontal */
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.hidden {
+  display: none; /* Oculto por defecto */
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%; /* responsivo por defecto */
+  max-width: 500px; /* ancho máximo elegante */
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+  color: #000;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.modal-buttons button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+a.btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.modal-buttons button.confirm {
+  background-color: #dc3545; /* rojo peligro */
+  color: white;
+}
+
+.modal-buttons button.cancel {
+  background-color: #ddd;
+  color: black;
+}
+
+.modal-buttons button.confirm:hover {
+  background-color: #b52b3a;
+}
+
+.modal-buttons button.cancel:hover {
+  background-color: #bbb;
+}

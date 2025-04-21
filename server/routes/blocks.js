@@ -6,6 +6,7 @@ import { getBlockById } from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { getPeerIDs } from '../db/sessionService.js';
 import { generateAnonymousId } from '../utils/anonymousId.js';
+import { canManageBlock } from '../utils/block.js';
 
 const port = config.port || 3000;
 
@@ -49,11 +50,6 @@ router.get('/rooms/:room_id/blocks/:block_id/edit', optionalAuth, async (req, re
       }
     }
 
-    // Determine if the user has editing privileges
-    const isCreator = user && user.username === block.creator;
-    const hasEditToken = editTokens.includes(block.editToken);
-    const canManageBlock = isCreator || hasEditToken;
-
     // Fetch active peers for this block
     const peerIDs = await getPeerIDs(block_id);
 
@@ -82,7 +78,7 @@ router.get('/rooms/:room_id/blocks/:block_id/edit', optionalAuth, async (req, re
       user,
       peerIDs,
       initialTargetPeerId,
-      canManageBlock, // Determines if user can edit metadata/delete
+      canManageBlock: canManageBlock(user, block, editTokens), // Determines if user can edit metadata/delete
       backendURL: backendBaseUrl, // Adjust based on your env vars
     });
   } catch (error) {

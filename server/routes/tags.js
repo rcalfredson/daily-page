@@ -42,7 +42,6 @@ router.get('/tags/:tagName', async (req, res) => {
     });
 
     const trendData = await getTagTrendData(tagName, 30);
-    console.log('trendData:', trendData);
 
     res.render('tags/tag', {
       title: `#${tagName} | Daily Page`,
