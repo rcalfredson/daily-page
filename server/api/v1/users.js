@@ -39,6 +39,11 @@ const useUserAPI = (app) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
+    const reservedUsernames = ['anonymous', 'admin', 'root', 'null'];
+    if (reservedUsernames.includes(username.trim().toLowerCase())) {
+      return res.status(400).json({ error: 'That username is reserved. Please choose another.' });
+    }
+
     try {
       // Check if email is already in use
       const existingUser = await findUserByEmail(email);
