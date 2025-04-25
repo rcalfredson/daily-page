@@ -54,7 +54,6 @@ hr {
 
 /* Make that edit button look fancy */
 .block-edit-btn {
-  margin-left: auto;
   background-color: var(--highlight-color);
   color: #fff;
   padding: 0.4rem 0.8rem;
@@ -129,11 +128,8 @@ hr {
   gap: 0.5rem;
 }
 
-@media (max-width: 480px) {
-  .interact-section {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.interact-section.left-align {
+  margin-left: unset;
 }
 
 .interact-section a.block-edit-btn,
@@ -215,4 +211,40 @@ hr {
 .share-icon {
   width: 20px;
   height: 20px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  align-content: flex-start;
+}
+
+.action-buttons.left-align {
+  justify-content: flex-start;
+}
+
+.action-buttons>* {
+  flex-shrink: 0;
+  /* Don't allow buttons to shrink */
+  min-width: max-content;
+  /* Makes them only as small as their content */
+}
+
+#flag-block-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+  margin-left: 0;
+  gap: 0.3rem;
+}
+
+#flag-block-btn:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }

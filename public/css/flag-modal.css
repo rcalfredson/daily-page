@@ -1,0 +1,38 @@
+label[for="flag-reason"], label[for="flag-description"] {
+  float: unset;
+  padding: unset;
+  border-radius: unset;
+  border: unset;
+  margin: unset;
+}
+
+#flag-form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+#flag-form .form-group label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--text-color);
+}
+
+#flag-form select,
+#flag-form textarea {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.4;
+  background-color: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#flag-form select:focus,
+#flag-form textarea:focus {
+  outline: none;
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}

@@ -10,14 +10,16 @@ block append head
   link(rel='stylesheet' href='/css/vote-controls.css')
   link(rel='stylesheet' href='/css/toast.css')
   link(rel='stylesheet' href='/css/modal.css')
+  link(rel='stylesheet' href='/css/flag-modal.css')
 
 block append scripts
   include ../envImport
   // Vote controls script if you have voting on the viewer
   script(src='/js/toast-utils.js')
+  script(src='/js/action-wrap-detect.js')
   script(src='/js/vote-controls.js')
   script(src='/js/modal.js')
-  // Collapsible description logic for the viewer
+  script(src='/js/flag-block.js')
   script(src="/js/view-block-description.js")
   script(src="/js/share-block.js")
 
@@ -35,11 +37,15 @@ block content
         h1.block-title= block.title
         // Only show edit link if the block is in-progress
         .interact-section
-          if block.status === 'in-progress'
-            a.block-edit-btn(href=`/rooms/${room_id}/blocks/${block._id}/edit`) Edit
-          if canManageBlock
-            button#delete-block-btn.delete-btn(data-tooltip="Delete Block") Delete Block
-          button#share-btn.share-btn Share ✨
+          .action-buttons
+            if block.status === 'in-progress'
+              a.block-edit-btn(href=`/rooms/${room_id}/blocks/${block._id}/edit`) Edit
+            if canManageBlock
+              button#delete-block-btn.delete-btn(data-tooltip="Delete Block") Delete Block
+            button#share-btn.share-btn Share ✨
+            button#flag-block-btn
+              i.fa.fa-flag(aria-hidden="true")
+              | Flag Content
 
     // Description block, read-only style
     .block-description-card
@@ -58,6 +64,7 @@ block content
   // Reuse your login modal partial if needed
   include ../partials/_login_modal
   include ../partials/_block_delete_confirm
+  include ../partials/_flag_modal
   #toast-container
   div#share-modal.share-modal.hidden
     div.share-modal-content

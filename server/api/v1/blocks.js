@@ -10,6 +10,10 @@ import {
   updateBlock,
   deleteBlock
 } from '../../db/blockService.js';
+import {
+  createFlag,
+  getFlagsByBlock
+} from '../../db/flagService.js';
 import optionalAuth from '../../middleware/optionalAuth.js';
 
 const roomScopedRouter = Router({ mergeParams: true });
@@ -211,6 +215,50 @@ const useBlockAPI = (app) => {
       res.status(500).json({ error: 'Failed to delete block.' });
     }
   });
+
+  // 📌 Report/Flag a block
+  globalRouter.post(
+    '/:block_id/flags',
+    optionalAuth,            // allows both anon and logged-in
+    async (req, res) => {
+      const { block_id } = req.params;
+      const { reason, description } = req.body;
+      const reporter = req.user?.username || null;
+
+      if (!reason) {
+        return res.status(400).json({ error: 'Reason is required.' });
+      }
+
+      try {
+        const flag = await createFlag({
+          blockId: block_id,
+          reason,
+          description,
+          reporter,
+        });
+        res.status(201).json(flag);
+      } catch (err) {
+        console.error('Error creating flag:', err);
+        res.status(500).json({ error: 'Failed to submit report.' });
+      }
+    }
+  );
+
+  // 📌 List flags for moderation
+  globalRouter.get(
+    '/:block_id/flags',
+    /* you might restrict this to admins */
+    async (req, res) => {
+      try {
+        const flags = await getFlagsByBlock(req.params.block_id);
+        res.status(200).json(flags);
+      } catch (err) {
+        console.error('Error fetching flags:', err);
+        res.status(500).json({ error: 'Failed to fetch flags.' });
+      }
+    }
+  );
+
 };
 
 export default useBlockAPI;

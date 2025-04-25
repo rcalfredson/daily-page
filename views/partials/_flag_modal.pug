@@ -1,0 +1,19 @@
+//- Modal for Flagging Content
+#flag-modal.modal.hidden
+  .modal-content
+    span.modal-close &times;
+    h2 Report Inappropriate Content
+    form#flag-form
+      .form-group
+        label(for="flag-reason") Reason
+        select#flag-reason
+          option(value="spam") Spam
+          option(value="offensive") Offensive (hateful language or slurs)
+          option(value="inappropriate") Inappropriate (nudity, graphic content, etc.)
+          option(value="other") Other
+      .form-group
+        label(for="flag-description") Details (optional)
+        textarea#flag-description(rows="3" placeholder="Describe what you saw…")
+      .modal-buttons
+        button#flag-confirm-btn.confirm(type="button") Submit Report
+        button#flag-cancel-btn.cancel(type="button") Cancel
