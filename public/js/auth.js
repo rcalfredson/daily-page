@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Update UI for logged-in state
       navLogin.style.display = 'none';
       navLogout.style.display = 'block';
-      welcomeMessage.textContent = `Welcome, ${user.username}!`;
+      welcomeMessage.innerHTML = `Welcome, <a href="/dashboard" style="color: rgb(26, 167, 214); text-decoration: underline dotted;">${user.username}</a>!`;
       welcomeMessage.style.display = 'block';
     } else {
       throw new Error('Not logged in');

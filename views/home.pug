@@ -25,11 +25,11 @@ block content
       |  and create your own block!
 
   .global-stats
-    .stat-item
+    a.stat-item(href='/archive')
       i.fas.fa-layer-group
       span.stat-number= globalStats.totalBlocks
       span.stat-label Blocks
-    .stat-item
+    a.stat-item(href='/rooms')
       i.fas.fa-door-open
       span.stat-number= globalStats.totalRooms
       span.stat-label Rooms
@@ -37,6 +37,7 @@ block content
       i.fas.fa-users
       span.stat-number= globalStats.collaborationsToday
       span.stat-label Collaborations Today
+
 
   if featuredRoom
     .featured-section
