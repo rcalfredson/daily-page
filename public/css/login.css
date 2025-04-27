@@ -90,3 +90,17 @@ p {
 .forgot-link a:hover {
   color: #0056b3;
 }
+.signup-link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.signup-link a {
+  font-size: 14px;
+  color: #28a745; /* un verde amigable */
+  text-decoration: underline;
+}
+
+.signup-link a:hover {
+  color: #218838;
+}
