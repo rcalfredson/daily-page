@@ -4,40 +4,57 @@ block nav
   include navLinks
 
 block append head
-  link(rel='stylesheet' href='/css/featured.css')
-
-block append head
-  link(rel="alternate" hreflang="en" href="https://dailypage.org/")
-  link(rel="alternate" hreflang="es" href="https://dailypage.org/?lang=es")
-  link(rel="alternate" hreflang="ru" href="https://dailypage.org/?lang=ru")
-  link(rel="alternate" hreflang="x-default" href="https://dailypage.org/")
+  link(rel="stylesheet", href="/css/about.css")
 
 block content
-  .info
-    h1= translations.headline
-    p= translations.paragraph1
-    h2= translations.essence
-    p= translations.paragraph2
-    if featuredContent
-      .featured-content
-        h2= translations.from_archives
-        p
-          | !{featuredContent.content}
-          br
-          small #{translations.published_in}&nbsp;
-          a(href=`/rooms/${featuredContent.room}`)= featuredContent.room
-        p
-          a.btn(href=`/rooms/${featuredContent.room}`)= translations.go_to_room
-          a.btn.btn-secondary(href=`/rooms/overview/${featuredContent.date}`)= translations.view_archive
-    h2= translations.role
-    p= translations.paragraph3
-    h2= translations.testament
-    p(style="color: #777;")= translations.paragraph4
-    .call-to-action
-      p
-        a.btn.btn-margin(href='/rooms')= translations.cta_join
-      p
-        a.btn(href='/archive')= translations.cta_archive
+  .about-container
+    h1.page-title About Daily Page
+    p.tagline “Feed your mind, not your feed.”
 
-    .info-subtitle
-      p(style="color: #777;")= translations.paragraph5
+    //–— Mission  
+    .about-section
+      h2.section-title Mission
+      p An indie writing lab—started in my living room, fueled by reader curiosity.
+      p It’s built not to rot your brain, but to nourish it: a place where you can write slowly, anonymously if you like, and never worry about impressing anyone.
+
+    //–— How it works  
+    .about-section.dark
+      h2.section-title How it Works
+      ul.features
+        li
+          b Rooms  
+          |  are topic-silos (think “subreddit, but friendlier”).  
+        li
+          b Blocks  
+          |  are collaborative posts—anyone (even “anonymous”) can create one,  
+          |  edit it until it’s locked, and vote on others.  
+        li
+          b Privacy & Sharing  
+          |  Public blocks live in the room’s feed.  
+          |  Private blocks hide until locked, but you get a share-link to invite friends.  
+        li
+          b Markdown & Media  
+          |  You write in markdown, embed images, and co-edit like in Google Docs.  
+        li
+          b Trends & Tags  
+          |  Tag your block, track tag trends, and discover top content (7 d / 30 d / all-time).  
+        li
+          b Streaks  
+          |  Keep your daily writing streak alive—your best incentive to show up each day.
+
+    //–— Origin story  
+    .about-section
+      h2.section-title How We Got Here
+      p In 2018, I built a date-based wiki for “today’s page” and watched a few introspective writers turn it into an outlet for their thoughts. It never got huge—but it planted a seed.  
+      p Fast-forward to now, and Daily Page is that seed grown into many rooms—a quiet social web for introverts, idealists, and anyone craving a slower pace.
+
+    //–— What’s next  
+    .about-section.dark
+      h2.section-title What’s Next
+      p We’re just getting started: richer embeds, deeper user stats, reputation leaderboards, and more ways to reward thoughtful creation.  
+      p Thank you for being part of this little indie experiment.  
+
+    //–— CTA  
+    .cta
+      a.btn.primary(href="/rooms") Explore Rooms
+      a.btn.secondary(href="/signup") Join the Community

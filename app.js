@@ -492,6 +492,16 @@ const md = MarkdownIt();
       }
     });
 
+    app.get('/about', optionalAuth, async (req, res) => {
+      res.render('about', {
+        title: 'Daily Page - About',
+        description:
+          'Daily Page is a minimalist, indie social writing lab—run from one guy’s living room, ' + 
+          'fuelled by reader curiosity. Learn how we build collaborative “blocks” in topic-based “rooms,” '+
+          'keep writing streaks alive, and keep the internet a little quieter and more thoughtful.'
+      })
+    })
+
     app.get('/', optionalAuth, async (req, res) => {
       try {
         const { featuredBlock, period: featuredBlockPeriod } = await getFeaturedBlockWithFallback();
