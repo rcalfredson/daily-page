@@ -1,0 +1,29 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet', href='/css/anonymous.css')
+
+block content
+  .anonymous-container
+    pre(aria-label="ASCII art of whimsical creature with quote").ascii-art.
+      .--.      .--.
+     : (\\ ". _...._" /
+      '.    `      .'
+       /'   _     _ \\
+      /     0}   {0  \\     "I'm nobody…"
+      |              |    —Emily Dickinson
+      \\  ,-.  .-.  , /
+       '._  `'  _.'_'
+          /`---'\\
+         /        \\
+
+    h1 The Anonymous
+    p You’ve stumbled into the void. There’s nothing to see here—  
+      just a wandering spirit without a story.
+
+    .btn-container
+      a.btn(href='/') ← Return home
+      a.btn(href='/signup') Create an identity

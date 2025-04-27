@@ -44,6 +44,13 @@ router.get('/privacy', (req, res) => {
   });
 });
 
+router.get('/users/anonymous', (req, res) => {
+  res.render('users/anonymous', {
+    title: 'The Anonymous Wanderer',
+    description: 'No profile. No past. Just vibes.',
+  });
+});
+
 // View user profile (public)
 router.get('/users/:username', async (req, res) => {
   try {
