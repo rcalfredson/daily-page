@@ -1,0 +1,114 @@
+/* About page styles */
+.about-container {
+  max-width: 800px;
+  margin: 4rem auto;
+  padding: 0 1rem;
+}
+
+.page-title {
+  font-family: 'Rubik-Medium', sans-serif;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 0.25em;
+}
+
+.tagline {
+  text-align: center;
+  color: #777;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.about-section {
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  background-color: #f9f9f9;
+}
+
+.about-section.dark {
+  background-color: #f0f4f8;
+}
+
+.section-title {
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  color: #1aa7d6;
+  font-family: 'Rubik-Medium', sans-serif;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.features b {
+  color: #333;
+}
+
+.cta {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.btn.primary {
+  background-color: #1aa7d6;
+  color: #fff;
+  margin-right: 1rem;
+}
+
+.btn.secondary {
+  background-color: transparent;
+  color: #1aa7d6;
+  border: 1px solid #1aa7d6;
+}
+
+.btn.primary::after {
+  content: " →";
+}
+
+.btn.primary:hover {
+  transform: translateY(-2px);
+}
+
+.btn.secondary::before {
+  content: "✦ ";
+}
+
+.btn.secondary:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+/* make them sit stacked (or flex-wrap) on small screens */
+@media (max-width: 600px) {
+  .cta {
+    display: flex;
+    flex-direction: column;
+    /* stack them */
+    gap: 1rem;
+  }
+
+  .cta a.btn {
+    text-align: center;
+  }
+}
+
+/* soften the look a bit */
+.btn {
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn.primary:hover,
+.btn.secondary:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
