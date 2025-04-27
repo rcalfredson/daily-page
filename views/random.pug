@@ -1,0 +1,22 @@
+extends layout
+
+block nav
+  include navLinks
+
+block append head
+  link(rel="stylesheet", href="/css/about.css")
+
+block content
+  .about-container
+    h1.page-title Other Projects
+    p.tagline A cozy corner for experiments and side quests.
+
+    .about-section
+      ul.features
+        li
+          a.link(href='/baseball') 📖 Baseball Journal
+        li
+          a.link(href='/random-writer') 🎲 Random Writer
+
+    .cta
+      a.btn.primary(href="/rooms") Back to Main Rooms

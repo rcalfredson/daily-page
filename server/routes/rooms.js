@@ -18,4 +18,11 @@ router.get('/rooms', async (req, res) => {
   }
 });
 
+router.get('/random', (req, res) => {
+  res.render('random', {
+    title: 'Other Projects - Daily Page',
+    description: 'Explore baseball journaling, random writing experiments, and more indie corners of Daily Page.'
+  });
+});
+
 export default router;
