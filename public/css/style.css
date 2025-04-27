@@ -339,7 +339,7 @@ article h2 {
   }
 }
 
-@media (min-width: 800px) {
+@media (min-width: 840px) {
   .menu-toggle, .main-menu .menu-close {
     display: none;
   }
@@ -351,6 +351,7 @@ article h2 {
     top: auto;
     height: auto;
     display: block;
+    overflow-x: hidden;
     overflow-y: hidden;
   }
 

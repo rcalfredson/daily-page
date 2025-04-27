@@ -27,6 +27,13 @@
 
 .stat-item {
   text-align: center;
+  display: block;
+}
+
+.stat-item:hover {
+  text-decoration: none;
+  background-color: #f0f8ff; /* como highlight suavecito */
+  border-radius: 8px;
 }
 
 .stat-item i {
