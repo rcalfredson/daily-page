@@ -1,20 +1,17 @@
 mixin tagSection(tags, canManageBlock)
-  // Si tenemos tags, los mostramos. Si no hay tags pero el usuario puede editarlos, mostramos un mensaje + input
   if tags && tags.length
     p.block-tags-header Tags:
     div#tag-container
       each tag in tags
         span.tag-pill
-          | #{tag}
+          a(href=`/tags/${encodeURIComponent(tag)}`) #{tag}
           if canManageBlock
             button.tag-remove(data-tag=tag) x
       if canManageBlock
-        // Sección para agregar tags
         span.tag-add
           input#new-tag(type='text' placeholder='New tag')
           button#add-tag-btn Add
   else
-    // No hay tags
     if canManageBlock
       p.block-tags-header No tags yet! Add some:
       div#tag-container
@@ -22,6 +19,4 @@ mixin tagSection(tags, canManageBlock)
           input#new-tag(type='text' placeholder='New tag')
           button#add-tag-btn Add
     else
-      // Si no puede editarlos, ni siquiera mostramos nada
-      // (O podrías mostrar un "No tags" en plan read-only, a tu gusto)
       p.block-tags-header

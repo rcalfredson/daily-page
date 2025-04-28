@@ -26,7 +26,16 @@
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.tag-pill :hover {
+.tag-pill a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.tag-pill a:hover {
+  text-decoration: underline;
+}
+
+.tag-pill:hover {
   background-color: #f2f2f2;
   border-color: #aaa;
 }
