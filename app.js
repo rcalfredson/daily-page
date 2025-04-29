@@ -147,7 +147,7 @@ const md = MarkdownIt();
       });
     });
 
-    app.get('/random', (_, res) => {
+    app.get('/random-writer', (_, res) => {
       res.render('randomWriter', { title: 'Random Writer' });
     });
 
