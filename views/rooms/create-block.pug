@@ -5,7 +5,6 @@ block nav
 
 block append head
   link(rel='stylesheet' href='/css/create-block.css')
-  //- link(rel="stylesheet", href="/css/editor.css")
   link(rel="stylesheet", href="/css/block-tags.css")
   link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
 
@@ -32,6 +31,10 @@ block content
     .form-group
       label(for="description") Description (optional):
       textarea#description(name="description" placeholder="Explain your brilliance... or just wing it.")
+    .form-group
+      label(for="initial-content") Initial Content (optional):
+      p.form-help Start writing here or press "Create" to continue on the full editor page, where you can embed images and collaborate in real time.
+      textarea#initial-content(name="content" placeholder="Start your block here, or continue editing after creation...")
     .form-group
       include ../partials/_tag_section
       input#hidden-tags(type="hidden" name="tags")

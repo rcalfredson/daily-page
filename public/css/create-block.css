@@ -133,3 +133,10 @@ textarea {
   line-height: 1;
   vertical-align: middle;
 }
+
+@media (max-width: 480px) {
+  .form-help {
+    font-size: 12px;
+    line-height: 1.3;
+  }
+}

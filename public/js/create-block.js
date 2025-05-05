@@ -41,6 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     data.tags = tagsArray;
 
+    if (!data.content) {
+      data.content = "";
+    }
+
     try {
       const response = await fetch(form.action, {
         method: "POST",
