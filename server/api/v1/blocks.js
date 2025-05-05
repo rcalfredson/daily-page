@@ -45,7 +45,7 @@ const useBlockAPI = (app) => {
   // 📌 Create a new block (within a specific room)
   roomScopedRouter.post('/', optionalAuth, async (req, res) => {
     const { room_id } = req.params;
-    const { title, description, tags, visibility } = req.body;
+    const { title, description, tags, content, visibility } = req.body;
 
     if (!title || title.length < 3) {
       return res.status(400).json({ error: 'Title is required and must be at least 3 characters long.' });
@@ -56,6 +56,7 @@ const useBlockAPI = (app) => {
     const blockData = {
       title,
       description,
+      content: content || '',
       tags,
       visibility: req.user ? visibility : 'public',
       creator: req.user?.username || 'anonymous',
