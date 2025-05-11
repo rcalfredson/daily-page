@@ -21,6 +21,27 @@
   gap: 0.75rem;
 }
 
+.year-month-link {
+  display: block;
+  border-radius: 6px;
+  background: #f8f8f8;
+  padding: 0.5rem 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.year-month-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  text-decoration: underline;
+}
+
+.year-month-link .year-month-item {
+  font-weight: bold;
+  color: #007bff;
+}
+
 .year-month-item {
   background: #f8f8f8;
   padding: 0.75rem 1rem;
@@ -28,17 +49,8 @@
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.year-month-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-}
-
 .year-month-item a {
   color: #007bff;
   text-decoration: none;
   font-weight: bold;
-}
-
-.year-month-item a:hover {
-  text-decoration: underline;
 }
