@@ -68,6 +68,12 @@ append content
     .tab-content
       #locked-tab(class="active")
         if lockedBlocks.length
+          .tab-period
+            | Locked blocks 
+            if lockedPeriod > 1
+              | in the last #{lockedPeriod} days
+            else
+              | in the last 24 hours
           ul
             each block in lockedBlocks
               li.block-preview
@@ -80,11 +86,17 @@ append content
                     |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
                   div.content-preview!= block.contentHTML
         else
-          p No locked blocks yet! Create one or wait for the cron magic.
+          p No locked blocks yet! Blocks auto-lock after 1 hour of inactivity.
 
       //- Tab content for In-Progress Blocks
       #inprogress-tab
         if inProgressBlocks.length
+          .tab-period
+            | In-progress blocks
+            if inProgressPeriod > 1
+              | in the last #{inProgressPeriod} days
+            else
+              | in the last 24 hours
           ul
             each block in inProgressBlocks
               li.block-preview

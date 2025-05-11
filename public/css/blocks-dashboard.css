@@ -112,3 +112,10 @@ a.btn {
 .room-archive-link a:hover {
   text-decoration: underline;
 }
+
+.tab-period {
+  font-size: 0.9rem;
+  color: #777;
+  font-style: italic;
+  margin-bottom: 1rem;
+}

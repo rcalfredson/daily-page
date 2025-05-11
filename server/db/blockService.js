@@ -237,6 +237,38 @@ export async function getTopBlocksWithFallback(options = {}) {
   return { blocks, period: usedInterval };
 }
 
+// Fallback para bloques por room (locked o in-progress)
+export async function getBlocksByRoomWithFallback({
+  roomId,
+  userId = null,
+  status = null,
+  limit = 20
+}) {
+  const intervals = [1, 7, 30]; // en días
+  for (let days of intervals) {
+    // Calcula la fecha de corte
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const options = {
+      status,
+      startDate: cutoff,
+      endDate: new Date(),
+      sortBy: 'voteCount',
+      limit
+    };
+
+    // Si hay userId, incluimos votos del usuario
+    const blocks = userId
+      ? await getBlocksByRoomWithUserVotes(roomId, userId, options)
+      : await getBlocksByRoom(roomId, options);
+
+    if (blocks.length > 0) {
+      return { blocks, period: days };
+    }
+  }
+  // Si no hay nada en ningún intervalo, devolvemos vacío con periodo 1
+  return { blocks: [], period: 1 };
+}
+
 // Fallback para obtener trending tags con actividad
 export async function getTrendingTagsWithFallback(options = {}) {
   const { limit = 10, sortBy = 'totalVotes' } = options;
