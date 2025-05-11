@@ -20,9 +20,12 @@ block content
       ul.year-month-list
         each combo in yearMonthCombos
           - const monthPadded = String(combo.month).padStart(2, '0')
-          li.year-month-item
-            a(href=roomId ? `/rooms/${roomId}/archive/${combo.year}/${monthPadded}` : `/archive/${combo.year}/${monthPadded}`)
+          a.year-month-link(
+            href=roomId ? `/rooms/${roomId}/archive/${combo.year}/${monthPadded}` : `/archive/${combo.year}/${monthPadded}`
+          )
+            li.year-month-item
               | #{combo.year} - #{monthName(combo.month)}
+
     else
       p No content available yet.
   if roomId
