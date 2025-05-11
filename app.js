@@ -40,7 +40,7 @@ import * as viewHelper from './server/utils/view.js'; // Utils
 
 import { initMongooseConnection } from './server/db/mongoose.js';
 import {
-  getBlocksByRoom, getBlocksByRoomWithUserVotes,
+  getBlocksByRoomWithFallback,
   getTopBlocksWithFallback, getTrendingTagsWithFallback,
   getFeaturedBlockWithFallback, getFeaturedRoomWithFallback,
   getGlobalBlockStats
@@ -449,31 +449,26 @@ const md = MarkdownIt();
         const now = new Date();
         const utcStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
-        // Options for filtering, now sorted by voteCount (highest to lowest)
-        const lockedOptions = { status: 'locked', startDate: utcStart, sortBy: 'voteCount' };
-        const inProgressOptions = { status: 'in-progress', startDate: utcStart, sortBy: 'voteCount' };
+        const userId = req.user?.id || null;
+        const { blocks: lockedBlocks, period: lockedPeriod } =
+          await getBlocksByRoomWithFallback({
+            roomId: room_id,
+            userId,
+            status: 'locked',
+            limit: 20
+          });
 
-        let lockedBlocks, inProgressBlocks;
-        if (req.user) {
-          lockedBlocks = await getBlocksByRoomWithUserVotes(room_id, req.user.id, lockedOptions);
-          inProgressBlocks = await getBlocksByRoomWithUserVotes(room_id, req.user.id, inProgressOptions);
-        } else {
-          lockedBlocks = await getBlocksByRoom(room_id, lockedOptions);
-          inProgressBlocks = await getBlocksByRoom(room_id, inProgressOptions);
-        }
+        const { blocks: inProgressBlocks, period: inProgressPeriod } =
+          await getBlocksByRoomWithFallback({
+            roomId: room_id,
+            userId,
+            status: 'in-progress',
+            limit: 20
+          });
 
-        // Render markdown for both arrays.
-        lockedBlocks = lockedBlocks.map(block => {
-          block.contentHTML = renderMarkdownContent(block.content)
-
-          return block;
-        });
-
-        inProgressBlocks = inProgressBlocks.map(block => {
-          block.contentHTML = renderMarkdownContent(block.content)
-
-          return block;
-        });
+        // Render markdown…
+        lockedBlocks.forEach(b => b.contentHTML = renderMarkdownContent(b.content));
+        inProgressBlocks.forEach(b => b.contentHTML = renderMarkdownContent(b.content));
 
         const date = DateHelper.currentDate('long');
 
@@ -482,6 +477,8 @@ const md = MarkdownIt();
           title: `Daily Page - ${roomMetadata.name}`,
           lockedBlocks,
           inProgressBlocks,
+          lockedPeriod,
+          inProgressPeriod,
           user: req.user,
           roomMetadata,
           isStarred,
@@ -496,8 +493,8 @@ const md = MarkdownIt();
       res.render('about', {
         title: 'Daily Page - About',
         description:
-          'Daily Page is a minimalist, indie social writing lab—run from one guy’s living room, ' + 
-          'fuelled by reader curiosity. Learn how we build collaborative “blocks” in topic-based “rooms,” '+
+          'Daily Page is a minimalist, indie social writing lab—run from one guy’s living room, ' +
+          'fuelled by reader curiosity. Learn how we build collaborative “blocks” in topic-based “rooms,” ' +
           'keep writing streaks alive, and keep the internet a little quieter and more thoughtful.'
       })
     })
