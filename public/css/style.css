@@ -130,7 +130,6 @@ a.link:hover:before, .selected a.link:before {
 
 strong {
   font-family: 'Rubik-Regular';
-  font-size: 18px;
 }
 
 .hide, .hide * {
