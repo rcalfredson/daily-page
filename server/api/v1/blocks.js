@@ -14,7 +14,9 @@ import {
   createFlag,
   getFlagsByBlock
 } from '../../db/flagService.js';
+import { updateUserStreak } from '../../db/userService.js';
 import optionalAuth from '../../middleware/optionalAuth.js';
+import { refreshAuthToken } from '../../utils/jwtHelper.js';
 
 const roomScopedRouter = Router({ mergeParams: true });
 const globalRouter = Router();
@@ -48,10 +50,14 @@ const useBlockAPI = (app) => {
     const { title, description, tags, content, visibility } = req.body;
 
     if (!title || title.length < 3) {
-      return res.status(400).json({ error: 'Title is required and must be at least 3 characters long.' });
+      return res
+        .status(400)
+        .json({ error: 'Title is required and must be at least 3 characters long.' });
     }
 
-    const existingTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
+    const existingTokens = req.cookies.edit_tokens
+      ? JSON.parse(req.cookies.edit_tokens)
+      : [];
 
     const blockData = {
       title,
@@ -68,10 +74,25 @@ const useBlockAPI = (app) => {
 
     try {
       const newBlock = await createBlock(blockData);
+
+      // 1️⃣ Guardar el token de edición
       res.cookie('edit_tokens', JSON.stringify(existingTokens), {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
+
+      // 2️⃣ Si hubo contenido inicial, actualizamos el streak
+      if (req.user && content && content.trim() !== '') {
+        try {
+          const updatedUser = await updateUserStreak(req.user.id);
+          // Re-generar el JWT con el nuevo streakLength
+          refreshAuthToken(res, updatedUser)
+        } catch (streakErr) {
+          console.error('Error updating streak on block create:', streakErr);
+        }
+      }
+
+      // 3️⃣ Responder al cliente
       res.status(201).json(newBlock);
     } catch (error) {
       console.error('Error creating block:', error.message);
