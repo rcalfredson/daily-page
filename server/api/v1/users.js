@@ -10,7 +10,7 @@ import {
 import User from '../../db/models/User.js';
 import isAuthenticated from '../../middleware/auth.js'
 import { uploadProfilePic } from '../../services/uploadProfilePic.js';
-import { makeUserJWT } from '../../utils/jwtHelper.js';
+import { makeUserJWT, refreshAuthToken } from '../../utils/jwtHelper.js';
 import { sendEmail } from '../../services/mailgunService.js';
 
 const router = Router();
@@ -180,20 +180,7 @@ const useUserAPI = (app) => {
     const userId = req.user.id;
     try {
       const updatedUser = await updateUserStreak(userId);
-      const newToken = makeUserJWT({
-        id: updatedUser._id,
-        username: updatedUser.username,
-        profilePic: updatedUser.profilePic,
-        bio: updatedUser.bio,
-        streakLength: updatedUser.streakLength
-      });
-
-      res.cookie('auth_token', newToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Strict',
-        maxAge: 24 * 60 * 60 * 1000,
-      });
+      refreshAuthToken(res, updatedUser);
 
       res.status(200).json({ streakLength: updatedUser.streakLength });
     } catch (error) {
