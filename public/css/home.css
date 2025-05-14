@@ -28,6 +28,7 @@
 .stat-item {
   text-align: center;
   display: block;
+  text-decoration: none;
 }
 
 .stat-item:hover {
