@@ -2,6 +2,8 @@
 
 Tool for creating a collaborative, textual record for each day. Derived from the [Conclave project](https://github.com/conclave-team/conclave).
 
+Reference implementation available at [dailypage.org](https://dailypage.org)
+
 Prerequisite: Mongo DB deployment and Node.js. Optional dependency: Google Cloud Platform account to enable a Google Drive-based CMS.
 
 ```
