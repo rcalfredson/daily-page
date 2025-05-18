@@ -44,9 +44,12 @@
 }
 
 .timeframe-selector {
-  margin-bottom: 1.5rem;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
 }
 
 .timeframe-btn {
@@ -54,9 +57,12 @@
   background-color: transparent;
   color: #007bff;
   padding: 0.4rem 0.8rem;
+  margin-left: 0;
+  flex-shrink: 0;
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .timeframe-btn:hover, .timeframe-btn.active {
