@@ -29,9 +29,10 @@ block content
                 )
                 button#edit-title-btn(data-tooltip="Edit Title")
                   i(data-feather="edit")
-                if block.status === 'in-progress'
-                  button#lock-block-btn Lock Block
-                button#delete-block-btn.delete-btn(data-tooltip="Delete Block") Delete Block
+                .block-action-buttons
+                  if block.status === 'in-progress'
+                    button#lock-block-btn Lock Block
+                  button#delete-block-btn.delete-btn(data-tooltip="Delete Block") Delete Block
 
           .block-description-card
             // Subtle label for clarity
