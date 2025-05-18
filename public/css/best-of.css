@@ -1,16 +1,74 @@
 .tabs {
   margin-top: 2rem;
+  position: relative;
 }
 
 .tab-links {
   display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-bottom: 2px solid #eee;
   list-style: none;
   padding: 0;
+  margin: 0;
+  gap: 0.5rem;
+  scrollbar-width: none;
+}
+
+.tab-links::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs::before,
+.tabs::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 30px;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+  opacity: 0; /* start hidden */
+}
+
+.tabs.fade-left::before {
+  left: 0;
+  background: linear-gradient(to right, white, transparent);
+  opacity: 1;
+}
+
+.tabs.fade-right::after {
+  right: 0;
+  background: linear-gradient(to left, white, transparent);
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tab-links {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.2) transparent;
+  }
+
+  .tab-links::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .tab-links::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+  }
+
+  .tab-links::-webkit-scrollbar-track {
+    background: transparent;
+  }
 }
 
 .tab-links li {
-  padding: 0.75rem 1.5rem;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 0.75rem 1.25rem;
   cursor: pointer;
   color: #555;
   transition: color 0.3s ease, border-bottom 0.3s ease;
@@ -67,7 +125,8 @@
 
 @media (min-width: 768px) {
   .content-preview.tall-preview {
-    max-height: 200px; /* Más alto solo para imágenes en desktop */
+    max-height: 200px;
+    /* Más alto solo para imágenes en desktop */
   }
 }
 

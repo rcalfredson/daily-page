@@ -45,4 +45,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // ✅ Initial run for default active pane
   const initialActivePane = document.querySelector('.tab-pane.active');
   if (initialActivePane) updateFadeEffect(initialActivePane);
+
+  const tabsContainer = document.querySelector('.tabs');
+  const scrollElement = tabsContainer.querySelector('.tab-links');
+
+  const updateFades = () => {
+    const scrollLeft = scrollElement.scrollLeft;
+    const maxScrollLeft = scrollElement.scrollWidth - scrollElement.clientWidth;
+
+    tabsContainer.classList.toggle('fade-left', scrollLeft > 2);
+    tabsContainer.classList.toggle('fade-right', scrollLeft < maxScrollLeft - 2);
+  };
+
+  if (scrollElement.scrollWidth > scrollElement.clientWidth) {
+    updateFades();
+    scrollElement.addEventListener('scroll', updateFades);
+    window.addEventListener('resize', updateFades); // handle resizes too
+  }
 });
