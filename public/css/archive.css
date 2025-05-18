@@ -47,6 +47,10 @@
   display: block;
 }
 
+.block-content p {
+  margin: 5px 0;
+}
+
 .pagination {
   display: flex;
   justify-content: center;
