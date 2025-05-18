@@ -235,9 +235,21 @@ button#open-insert-img-btn i {
   color: var(--highlight-color);
 }
 
+.block-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: 20px;
+}
+
+.block-action-buttons button {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 #lock-block-btn {
-  margin-left: 30px;
   margin-bottom: 0;
+  margin-left: 0;
 }
 
 #block-title-input {
