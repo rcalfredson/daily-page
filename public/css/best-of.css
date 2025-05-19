@@ -93,6 +93,8 @@
   max-height: 100px;
   overflow: hidden;
   position: relative;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .content-preview::after {
