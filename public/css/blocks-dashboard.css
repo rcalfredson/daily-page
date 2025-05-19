@@ -35,6 +35,8 @@ ul {
 .content-preview {
   max-height: 200px;
   overflow: hidden;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .content-preview img, .featured-content-preview img {
