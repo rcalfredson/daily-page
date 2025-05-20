@@ -493,9 +493,8 @@ const md = MarkdownIt();
       res.render('about', {
         title: 'Daily Page - About',
         description:
-          'Daily Page is a minimalist, indie social writing lab—run from one guy’s living room, ' +
-          'fuelled by reader curiosity. Learn how we build collaborative “blocks” in topic-based “rooms,” ' +
-          'keep writing streaks alive, and keep the internet a little quieter and more thoughtful.'
+          "Learn what powers Daily Page: a minimalist social writing site for thinkers, dreamers, " +
+          "and note-takers who post one block at a time."
       })
     })
 
@@ -528,8 +527,12 @@ const md = MarkdownIt();
           collaborationsToday: blockStats.collaborationsToday
         };
 
+        const description = "Daily Page is a minimalist, indie writing site where anyone can post creative thoughts, memories, "
+          + "or experiments—one block at a time. Explore new ideas, join rooms, and contribute your voice."
+
         res.render('home', {
           title: 'Daily Page - Top Blocks in the last 24 Hours',
+          description,
           topBlocks,
           blocksPeriod,
           featuredBlock,

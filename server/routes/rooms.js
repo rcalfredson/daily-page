@@ -10,6 +10,7 @@ router.get('/rooms', async (req, res) => {
     const recentlyActiveRooms = await getRecentlyActiveRooms(5);
     res.render('rooms', {
       title: 'Room Directory',
+      description: "Each room is a doorway to a different world. Step inside, share your story, and join others in building something beautiful.",
       topics,
       recentlyActiveRooms,
     });
