@@ -15,9 +15,13 @@ const router = express.Router();
 router.get('/archive', optionalAuth, async (req, res) => {
   try {
     const yearMonthCombos = await getAllBlockYearMonthCombos();
+    const description = "Explore Daily Page’s full archive of creative " +
+      "blocks—thoughts, stories, jokes, confessions, and everything in between. " +
+      "Jump to any month and see what was posted that day.";
 
     res.render('archive/calendar-index', {
       title: 'Archive Index',
+      description,
       yearMonthCombos,
       monthName: DateHelper.monthName,
       user: req.user || null,
@@ -47,8 +51,12 @@ router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
       });
     });
 
+    const description = `Discover standout posts from the ${roomMetadata.name} room—` +
+      `the ones readers loved most over the past 24 hours, 7 days, 30 days, and all time.`;
+
     res.render('archive/best-of-room', {
       title: `Best of ${roomMetadata.name}`,
+      description,
       top24h,
       top7d,
       top30d,
@@ -79,8 +87,12 @@ router.get('/archive/best-of', optionalAuth, async (req, res) => {
       });
     });
 
+    const description = "The most-loved blocks on Daily Page—funny, honest, poetic, or just plain weird. " +
+      "See what stood out over the past day, week, month, and beyond.";
+
     res.render('archive/best-of', {
       title: 'Best of Daily Page',
+      description,
       top24h,
       top7d,
       top30d,
@@ -99,8 +111,12 @@ router.get('/archive/:year/:month', optionalAuth, async (req, res) => {
     const { year, month } = req.params;
     const datesWithContent = await getBlockDatesByYearMonth(year, month);
 
+    const description = `View all creative blocks posted in ${DateHelper.monthName(month)} ${year}—from quick thoughts to deep reflections. ` +
+      `Click any date to explore what was shared.`;
+
     res.render('archive/calendar', {
       title: `Archive for ${year}-${month}`,
+      description,
       year,
       month,
       datesWithContent,
@@ -150,8 +166,12 @@ router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
       }
     });
 
+    const description = `Explore the posts written on ${year}-${month}-${day}—from quiet notes to wild confessions. ` +
+      `Every block is a moment frozen in time.`;
+
     res.render('archive/date', {
       title: `Archive for ${date}`,
+      description,
       date,
       blocks,
       currentPage: page,
@@ -171,8 +191,12 @@ router.get('/rooms/:roomId/archive', optionalAuth, async (req, res) => {
     const yearMonthCombos = await getAllBlockYearMonthCombos(roomId);
     const roomMetadata = await getRoomMetadata(roomId);
 
+    const description = `Explore past writing in the ${roomMetadata.name} room—month by month. ` +
+      `Jump to any date to see what others shared in this space over time.`;
+
     res.render('archive/calendar-index', {
       title: 'Browse Archives',
+      description,
       yearMonthCombos,
       monthName: DateHelper.monthName,
       roomId,
@@ -192,8 +216,12 @@ router.get('/rooms/:roomId/archive/:year/:month', optionalAuth, async (req, res)
     const datesWithContent = await getBlockDatesByYearMonth(year, month, roomId);
     const roomMetadata = await getRoomMetadata(roomId);
 
+    const description = `View the creative activity in ${roomMetadata.name} during ${DateHelper.monthName(month)} ${year}. ` +
+      `Pick a date to explore the blocks shared that day.`;
+
     res.render('archive/calendar', {
       title: `Archive for ${year}-${month}`,
+      description,
       year,
       month,
       datesWithContent,
@@ -248,8 +276,12 @@ router.get('/rooms/:roomId/archive/:year/:month/:day', optionalAuth, async (req,
       }
     });
 
+    const description = `On ${date}, writers in the ${roomMetadata.name} room left their mark. ` +
+      `Scroll through their reflections, ideas, and expressions shared that day.`;
+
     res.render('archive/date', {
       title: `Archive for ${date}`,
+      description,
       date,
       blocks,
       currentPage: page,
