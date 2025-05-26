@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const md = window.markdownit();
   const descCard = document.querySelector('.block-description-card');
   const descBody = descCard.querySelector('.description-body');
   const editBtn = descCard.querySelector('#edit-description-btn');
@@ -85,7 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
     saveBtn.addEventListener('click', () => {
       isEditing = false;
       const newDesc = editTextarea.value.trim();
-      viewParagraph.textContent = newDesc || 'No description provided...';
+      const rendered = md.render(newDesc || '');
+      viewParagraph.innerHTML = rendered || '<em>No description provided...</em>';
       editTextarea.classList.add('hidden');
       editButtons.classList.add('hidden');
       viewParagraph.classList.remove('hidden');

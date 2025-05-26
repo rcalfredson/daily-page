@@ -51,7 +51,7 @@ block content
     .block-description-card
       span.description-label Description
       .description-body.collapsed
-        p#description-view!= block.description || 'No description provided...'
+        div#description-view!= descriptionHTML || '<em>No description provided...</em>'
       .expand-toggle
         span Expand
 
