@@ -52,6 +52,12 @@ hr {
   padding-bottom: 5px;
 }
 
+.block-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* Make that edit button look fancy */
 .block-edit-btn {
   background-color: var(--highlight-color);
