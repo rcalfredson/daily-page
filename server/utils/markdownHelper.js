@@ -10,5 +10,5 @@ const md = new MarkdownIt();
  */
 export function renderMarkdownContent(content) {
   const cleanedContent = content ? content.replace(/\u200B/g, '').trim() : '';
-  return cleanedContent.length > 0 ? md.render(cleanedContent) : '<em>(No content yet)</em>';
+  return cleanedContent.length > 0 ? md.render(cleanedContent) : '<p><em>(No content yet)</em></p>';
 }
