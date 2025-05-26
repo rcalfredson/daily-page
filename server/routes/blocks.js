@@ -7,6 +7,7 @@ import { getRoomMetadata } from '../db/roomService.js';
 import { getPeerIDs } from '../db/sessionService.js';
 import { generateAnonymousId } from '../utils/anonymousId.js';
 import { canManageBlock } from '../utils/block.js';
+import { renderMarkdownContent } from '../utils/markdownHelper.js';
 
 const port = config.port || 3000;
 
@@ -40,6 +41,8 @@ router.get('/rooms/:room_id/blocks/:block_id/edit', optionalAuth, async (req, re
       return res.status(404).render('error', { message: 'Block not found or does not belong to this room.' });
     }
 
+    const descriptionHTML = renderMarkdownContent(block.description);
+
     const collaboratorId = user ? user.username : req.cookies.anonymousId || generateAnonymousId();
     if (!block.collaborators.includes(collaboratorId)) {
       block.collaborators.push(collaboratorId);
@@ -72,6 +75,7 @@ router.get('/rooms/:room_id/blocks/:block_id/edit', optionalAuth, async (req, re
     res.render('rooms/block-editor', {
       title: `Edit Block - ${block.title}`,
       block,
+      descriptionHTML,
       room_id,
       roomName: roomMetadata.name,
       block_id,

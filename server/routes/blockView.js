@@ -2,12 +2,10 @@ import express from 'express';
 import { getBlockById } from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
-import MarkdownIt from 'markdown-it';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { canManageBlock } from '../utils/block.js';
 
 const router = express.Router();
-const md = new MarkdownIt();
 
 router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, async (req, res) => {
   try {
@@ -21,6 +19,7 @@ router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, async (req, res) =>
     }
 
     block.contentHTML = renderMarkdownContent(block.content);
+    const descriptionHTML = renderMarkdownContent(block.description);
 
     // Attach user vote info if logged in
     if (req.user) {
@@ -37,6 +36,7 @@ router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, async (req, res) =>
       room_id,
       roomName: roomMetadata.name,
       block,
+      descriptionHTML,
       title,
       header,
       canManageBlock: canManageBlock(req.user, block, editTokens),
