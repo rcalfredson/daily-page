@@ -46,7 +46,7 @@ block content
             .description-body.collapsed
               if canManageBlock
                 // Read view: if empty, display a fallback text
-                div#description-view!= descriptionHTML || '<em>No description yet...</em>'
+                div#description-view!= descriptionHTML || '<p><em>No description yet...</em></p>'
                 // Editing textarea (initially hidden) with placeholder for empty descriptions
                 textarea#description-edit.hidden(placeholder="Enter description")= block.description
                 // Save/Cancel buttons for editing mode
@@ -54,7 +54,7 @@ block content
                   button#save-description-btn Save
                   button#cancel-description-btn Cancel
               else
-                div#description-view!= descriptionHTML || 'No description provided...'
+                div#description-view!= descriptionHTML || '<p><em>No description provided...</em></p>'
             
             // Expand/Collapse toggle at the bottom
             .expand-toggle
