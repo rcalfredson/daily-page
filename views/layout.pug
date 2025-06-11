@@ -16,6 +16,17 @@ html(lang=lang || 'en')
         link(rel='stylesheet' href='/css/rooms.css')
       link(rel='shortcut icon' href='/assets/img/favicon.ico')
       include schema.pug
+      script.
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          },
+          options: {
+            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+          }
+        };
+      script(src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js' defer)
   body(data-is-logged-in=user ? "true" : "false" data-user-id=user ? user.id : null)
     -
       var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
