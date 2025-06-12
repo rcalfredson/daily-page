@@ -441,10 +441,6 @@ Editor
   .text-wrapper {
     display: block;
   }
-
-  h2 {
-    font-size: 14px;
-  }
 }
 
 #inactive-warning {
