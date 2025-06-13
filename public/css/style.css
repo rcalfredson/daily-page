@@ -74,7 +74,6 @@ h2 {
 }
 
 p, ul *, ol * {
-  font-size: 14px;
   white-space: pre-wrap;
 }
 
@@ -397,6 +396,7 @@ article h2 {
     position: relative;
     margin-right: 28px;
     padding: 2px 0 0 0;
+    font-size: 14px;
   }
 
   a.link:before {
