@@ -18,15 +18,28 @@ html(lang=lang || 'en')
       include schema.pug
       script.
         window.MathJax = {
+          loader: {
+            load: ['input/tex']
+          },
           tex: {
             inlineMath: [['$', '$'], ['\\(', '\\)']],
-            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true
           },
           options: {
-            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+          },
+          output: {
+            displayOverflow: 'linebreak',
+            linebreaks: {
+              inline: true,
+              width: '100%',
+              lineleading: 0.2,
+              LinebreakVisitor: null
+            }
           }
         };
-      script(src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js' defer)
+      script(src='https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.7/tex-mml-chtml.js' async)
   body(data-is-logged-in=user ? "true" : "false" data-user-id=user ? user.id : null)
     -
       var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',

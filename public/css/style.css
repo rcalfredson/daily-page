@@ -122,11 +122,22 @@ a.link:hover:before, .selected a.link:before {
   display: inline-block;
 }
 
-table {
+.table-scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   width: 100%;
-  border-collapse: collapse;
-  margin: 1em 0;
+  max-width: 100%;
+  padding-bottom: 0.5rem; /* para que el scroll no se corte */
 }
+
+.table-scroll-wrapper table {
+  display: table;
+  min-width: max-content; /* 💡 esto es lo que activa el scroll */
+  width: auto;            /* importante: no uses width: 100% aquí */
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
 
 thead th {
   /* Línea más gruesa en el encabezado */
