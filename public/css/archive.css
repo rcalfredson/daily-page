@@ -11,12 +11,19 @@
 
 .block-item {
   display: flex;
+  overflow-x: hidden;
+  flex-direction: row;
   align-items: center;
   background-color: #fff;
   margin-bottom: 1rem;
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.block-main {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .block-item .vote-controls {
