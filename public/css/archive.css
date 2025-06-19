@@ -1,5 +1,5 @@
 .archive-container {
-  max-width: 800px;
+  max-width: 95%;
   padding: 1rem;
   padding-left: 0;
 }
@@ -83,6 +83,21 @@
 }
 
 .page-link.disabled {
+  color: #ccc;
+  pointer-events: none;
+}
+
+.archive-nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+.nav-link {
+  font-weight: 600;
+  text-decoration: none;
+  color: #007bff;
+}
+.nav-link.disabled {
   color: #ccc;
   pointer-events: none;
 }

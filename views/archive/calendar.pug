@@ -5,7 +5,17 @@ block nav
 
 block append head
   link(rel='stylesheet' href='/css/archive-calendar.css')
-  link(rel='stylesheet', href='/css/archive-breadcrumbs.css')
+  link(rel='stylesheet' href='/css/archive-breadcrumbs.css')
+  if prevMonth
+    link(rel="prev" href= roomId
+      ? `/rooms/${roomId}/archive/${prevMonth.year}/${prevMonth.month}`
+      : `/archive/${prevMonth.year}/${prevMonth.month}`
+    )
+  if nextMonth
+    link(rel="next" href= roomId
+            ? `/rooms/${roomId}/archive/${nextMonth.year}/${nextMonth.month}`
+            : `/archive/${nextMonth.year}/${nextMonth.month}`
+    )
 
 block content
   if roomId
@@ -14,6 +24,28 @@ block content
         | Viewing archive for room 
         a(href=`/rooms/${roomId}`)= `${roomName}`
   .calendar-container
+    include ../partials/_archiveNav
+    +archiveNav(
+      prevMonth
+        ? (roomId 
+            ? `/rooms/${roomId}/archive/${prevMonth.year}/${prevMonth.month}` 
+            : `/archive/${prevMonth.year}/${prevMonth.month}`
+          )
+        : null,
+      prevMonth 
+        ? `Archive for ${monthName(prevMonth.month)} ${prevMonth.year}` 
+        : '',
+      nextMonth
+        ? (roomId 
+            ? `/rooms/${roomId}/archive/${nextMonth.year}/${nextMonth.month}` 
+            : `/archive/${nextMonth.year}/${nextMonth.month}`
+          )
+        : null,
+      nextMonth 
+        ? `Archive for ${monthName(nextMonth.month)} ${nextMonth.year}` 
+        : '',
+      'block-nav'
+    )
     h1 📆 Archive for #{monthName(month)} #{year}
 
     table.calendar

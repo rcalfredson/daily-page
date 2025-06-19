@@ -1,0 +1,28 @@
+//- views/partials/_archiveNav.pug
+//- Reusable navigation bar for archives (month or date)
+//- Parameters:
+//-   prevUrl: URL for "previous" link (or falsey to disable)
+//-   prevLabel: Text label for the "previous" link
+//-   nextUrl: URL for "next" link (or falsey to disable)
+//-   nextLabel: Text label for the "next" link
+//-   cssClass: (optional) Container CSS class, defaults to "archive-nav"
+
+mixin archiveNav(prevUrl, prevLabel, nextUrl, nextLabel, cssClass = 'archive-nav')
+  div(class=cssClass)
+    if prevUrl
+      a.nav-link.prev(
+        rel="prev"
+        href=prevUrl
+        aria-label=prevLabel
+      ) ← #{prevLabel}
+    else
+      span.nav-link.disabled.prev ← Earlier
+
+    if nextUrl
+      a.nav-link.next(
+        rel="next"
+        href=nextUrl
+        aria-label=nextLabel
+      ) #{nextLabel} →
+    else
+      span.nav-link.disabled.next Later →

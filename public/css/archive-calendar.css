@@ -63,6 +63,21 @@
   border: none;
 }
 
+.block-nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+.nav-link {
+  font-weight: 600;
+  text-decoration: none;
+  color: #007bff;
+}
+.nav-link.disabled {
+  color: #ccc;
+  pointer-events: none;
+}
+
 /* Ajustes específicos para mobile */
 @media (max-width: 600px) {
   .calendar th, .calendar td {
