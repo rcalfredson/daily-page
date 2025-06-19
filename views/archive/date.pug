@@ -28,15 +28,15 @@ block content
     +archiveNav(
       prevDate
         ? (roomId 
-            ? `/rooms/${roomId}/archive/${prevDate}` 
-            : `/archive/${prevDate}`
+            ? `/rooms/${roomId}/archive/${prevDate.split('-').join('/')}` 
+            : `/archive/${prevDate.split('-').join('/')}`
           )
         : null,
       prevDate || '',
       nextDate
         ? (roomId 
-            ? `/rooms/${roomId}/archive/${nextDate}` 
-            : `/archive/${nextDate}`
+            ? `/rooms/${roomId}/archive/${nextDate.split('-').join('/')}` 
+            : `/archive/${nextDate.split('-').join('/')}`
           )
         : null,
       nextDate || '',
