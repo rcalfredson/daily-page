@@ -1,6 +1,7 @@
 import express from 'express';
 import DateHelper from '../../lib/dateHelper.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
+import { getMonthNav, getDateNav } from '../utils/archiveNav.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import Block from '../db/models/Block.js';
 import {
@@ -114,11 +115,15 @@ router.get('/archive/:year/:month', optionalAuth, async (req, res) => {
     const description = `View all creative blocks posted in ${DateHelper.monthName(month)} ${year}—from quick thoughts to deep reflections. ` +
       `Click any date to explore what was shared.`;
 
+    const { prevMonth, nextMonth } = await getMonthNav(null, year, month, { getAllBlockYearMonthCombos });
+
     res.render('archive/calendar', {
       title: `Archive for ${year}-${month}`,
       description,
       year,
       month,
+      prevMonth,
+      nextMonth,
       datesWithContent,
       monthName: DateHelper.monthName,
       user: req.user || null,
@@ -133,6 +138,7 @@ router.get('/archive/:year/:month', optionalAuth, async (req, res) => {
 router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
   try {
     const { year, month, day } = req.params;
+    const dateISO = `${year}-${month}-${day}`;
     const date = `${year}-${month}-${day}`;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
@@ -166,6 +172,8 @@ router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
       }
     });
 
+    const { prevDate, nextDate } = await getDateNav(null, dateISO, Block);
+
     const description = `Explore the posts written on ${year}-${month}-${day}—from quiet notes to wild confessions. ` +
       `Every block is a moment frozen in time.`;
 
@@ -175,6 +183,8 @@ router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
       date,
       blocks,
       currentPage: page,
+      prevDate,
+      nextDate,
       totalPages: Math.ceil(totalBlocks / limit),
       user: req.user || null,
     });
@@ -219,11 +229,15 @@ router.get('/rooms/:roomId/archive/:year/:month', optionalAuth, async (req, res)
     const description = `View the creative activity in ${roomMetadata.name} during ${DateHelper.monthName(month)} ${year}. ` +
       `Pick a date to explore the blocks shared that day.`;
 
+    const { prevMonth, nextMonth } = await getMonthNav(roomId, year, month, { getAllBlockYearMonthCombos });
+
     res.render('archive/calendar', {
       title: `Archive for ${year}-${month}`,
       description,
       year,
       month,
+      prevMonth,
+      nextMonth,
       datesWithContent,
       monthName: DateHelper.monthName,
       roomId,
@@ -240,6 +254,7 @@ router.get('/rooms/:roomId/archive/:year/:month', optionalAuth, async (req, res)
 router.get('/rooms/:roomId/archive/:year/:month/:day', optionalAuth, async (req, res) => {
   try {
     const { roomId, year, month, day } = req.params;
+    const dateISO = `${year}-${month}-${day}`;
     const roomMetadata = await getRoomMetadata(roomId);
     const date = `${year}-${month}-${day}`;
     const page = parseInt(req.query.page) || 1;
@@ -276,6 +291,8 @@ router.get('/rooms/:roomId/archive/:year/:month/:day', optionalAuth, async (req,
       }
     });
 
+    const { prevDate, nextDate } = await getDateNav(roomId, dateISO, Block);
+
     const description = `On ${date}, writers in the ${roomMetadata.name} room left their mark. ` +
       `Scroll through their reflections, ideas, and expressions shared that day.`;
 
@@ -285,6 +302,8 @@ router.get('/rooms/:roomId/archive/:year/:month/:day', optionalAuth, async (req,
       date,
       blocks,
       currentPage: page,
+      prevDate,
+      nextDate,
       totalPages: Math.ceil(totalBlocks / limit),
       roomId,
       roomName: roomMetadata.name,

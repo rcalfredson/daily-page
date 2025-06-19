@@ -4,9 +4,19 @@ block nav
   include ../navLinks
 
 block append head
-  link(rel='stylesheet', href='/css/archive.css')
-  link(rel='stylesheet', href='/css/vote-controls.css')
+  link(rel='stylesheet' href='/css/archive.css')
+  link(rel='stylesheet' href='/css/vote-controls.css')
   link(rel='stylesheet' href='/css/modal.css')
+  if prevDate
+    link(rel="prev" href= roomId
+      ? `/rooms/${roomId}/archive/${prevDate.split('-').join('/')}`
+      : `/archive/${prevDate.split('-').join('/')}`
+    )
+  if nextDate
+    link(rel="next" href= roomId
+      ? `/rooms/${roomId}/archive/${nextDate.split('-').join('/')}`
+      : `/archive/${nextDate.split('-').join('/')}`
+    )
 
 block append scripts
   script(src='/js/vote-controls.js')
@@ -14,6 +24,24 @@ block append scripts
 
 block content
   .archive-container
+    include ../partials/_archiveNav
+    +archiveNav(
+      prevDate
+        ? (roomId 
+            ? `/rooms/${roomId}/archive/${prevDate}` 
+            : `/archive/${prevDate}`
+          )
+        : null,
+      prevDate || '',
+      nextDate
+        ? (roomId 
+            ? `/rooms/${roomId}/archive/${nextDate}` 
+            : `/archive/${nextDate}`
+          )
+        : null,
+      nextDate || '',
+      'archive-nav'
+    )
     h1 Archive for #{date}
 
     if blocks.length
