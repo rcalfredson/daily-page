@@ -141,16 +141,25 @@ router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
     const dateISO = `${year}-${month}-${day}`;
     const date = `${year}-${month}-${day}`;
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
+    const limit = parseInt(req.query.limit) || 50;
     const skip = (page - 1) * limit;
+
+    // parse ints
+    const y = parseInt(year, 10);
+    const m = parseInt(month, 10) - 1;   // zero-based months in JS Date
+    const d = parseInt(day, 10);
+
+    // build start/end as UTC
+    const start = new Date(Date.UTC(y, m, d, 0, 0, 0));
+    const end = new Date(Date.UTC(y, m, d + 1, 0, 0, 0));
 
     const blocks = await Block.find({
       createdAt: {
-        $gte: new Date(`${date}T00:00:00.000Z`),
-        $lt: new Date(`${date}T23:59:59.999Z`)
+        $gte: start,
+        $lt: end
       }
     })
-      .sort({ voteCount: -1 })
+      .sort({ voteCount: -1, createdAt: 1 })
       .skip(skip)
       .limit(limit)
       .lean();
@@ -167,8 +176,8 @@ router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
 
     const totalBlocks = await Block.countDocuments({
       createdAt: {
-        $gte: new Date(`${date}T00:00:00.000Z`),
-        $lt: new Date(`${date}T23:59:59.999Z`)
+        $gte: start,
+        $lt: end
       }
     });
 
@@ -192,6 +201,39 @@ router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
     console.error(`Error loading archive:`, error);
     res.status(500).render('error', { message: 'Error loading archive page.' });
   }
+});
+
+// GET /rooms/:roomId/index?page=1&sort=createdAt&dir=desc
+router.get('/rooms/:roomId/index', optionalAuth, async (req, res) => {
+  const { roomId } = req.params;
+  const page = +req.query.page || 1;
+  const limit = 20;
+  const sortKey = ['title', 'createdAt', 'voteCount'].includes(req.query.sort)
+    ? req.query.sort : 'createdAt';
+    const dirStr = req.query.dir === 'asc' ? 'asc' : 'desc';
+  const sortDir = dirStr === 'asc' ? 1 : -1;
+
+  const roomMetadata = await getRoomMetadata(roomId);
+
+  const blocks = await Block.find({ roomId })
+    .select('title createdAt voteCount tags')
+    .sort({ [sortKey]: sortDir })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean();
+
+  const total = await Block.countDocuments({ roomId });
+
+  res.render('archive/index', {
+    blocks,
+    roomId,
+    roomName: roomMetadata.name,
+    title: `${roomMetadata.name} — All Blocks`,
+    currentPage: page,
+    totalPages: Math.ceil(total / limit),
+    sortKey,
+    dir: dirStr,
+  });
 });
 
 // Obtener todos los meses/años con contenido para una sala específica

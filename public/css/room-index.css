@@ -1,0 +1,107 @@
+/* public/css/room-index.css */
+.room-index-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.room-link {
+  text-decoration: underline dotted;
+  color: #004187;
+}
+
+.room-link:hover {
+  text-decoration: underline;
+}
+
+/* — Sort bar styling — */
+.sort-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.sort-bar select,
+.sort-bar button {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.sort-bar button {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  line-height: unset;
+  margin: unset;
+}
+
+.sort-bar button:hover {
+  background-color: #0056b3;
+}
+
+/* — Block list styling — */
+.block-toc {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.block-toc li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.block-toc li:last-child {
+  border-bottom: none;
+}
+
+.block-toc li a {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.block-toc li a:hover {
+  text-decoration: underline;
+}
+
+.block-toc .meta {
+  color: #888;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* — Pagination spacing tweak — */
+.pagination {
+  margin-top: 2rem;
+}
+
+/* — Mobile adjustments — */
+@media (max-width: 600px) {
+  .sort-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sort-bar select,
+  .sort-bar button {
+    width: 100%;
+  }
+
+  .block-toc li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}

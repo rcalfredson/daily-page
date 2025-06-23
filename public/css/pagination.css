@@ -1,0 +1,32 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 1rem 0.5rem;
+}
+
+.page-link {
+  padding: 0.3rem 0.7rem;
+  text-decoration: none;
+  color: #007bff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  flex: 0 0 auto;
+}
+
+.page-link:hover {
+  background-color: #f0f0f0;
+}
+
+.page-link.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.page-link.disabled {
+  color: #ccc;
+  pointer-events: none;
+}

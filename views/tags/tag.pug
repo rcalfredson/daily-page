@@ -5,6 +5,7 @@ block nav
 
 block append head
   link(rel='stylesheet', href='/css/blocks-dashboard.css')
+  link(rel='stylesheet' href='/css/pagination.css')
   link(rel='stylesheet', href='/css/tags.css')
   link(rel="stylesheet", href="/css/vote-controls.css")
   link(rel="stylesheet", href="/css/modal.css")
@@ -38,6 +39,12 @@ block content
   else
     p No blocks found with this tag yet. ¿Qué tal si creas el primero, viejón? 🔥
 
+  include ../partials/_pagination
+  +pagination(
+    currentPage,
+    totalPages,
+    `/tags/${encodeURIComponent(tagName)}`
+  )
   include ../partials/_login_modal
 
   script.
