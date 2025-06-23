@@ -41,13 +41,18 @@ router.get('/tags/:tagName', async (req, res) => {
       block.contentHTML = renderMarkdownContent(block.content);
     });
 
+    const totalBlocks = await Block.countDocuments({ tags: tagName });
+    const totalPages = Math.ceil(totalBlocks / limit);
+
     const trendData = await getTagTrendData(tagName, 30);
 
     res.render('tags/tag', {
       title: `#${tagName} | Daily Page`,
       tagName,
       taggedBlocks,
-      totalBlocks: taggedBlocks.length,
+      currentPage: page,
+      totalPages,
+      totalBlocks,
       trendData,
       user: req.user || null,
     });

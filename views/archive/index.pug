@@ -1,0 +1,35 @@
+extends ../layout
+block append head
+  link(rel='stylesheet' href='/css/room-index.css')
+  link(rel='stylesheet' href='/css/pagination.css')
+
+block nav
+  include ../navLinks
+
+block content
+  h1
+    a.room-link(href=`/rooms/${roomId}`)= roomName
+    |  — All Blocks
+  .room-index-container
+    form.sort-bar(method='get')
+      | Sort by 
+      select(name='sort')
+        option(value='createdAt' selected=sortKey=='createdAt') Date
+        option(value='title' selected=sortKey=='title') Title
+        option(value='voteCount' selected=sortKey=='voteCount') Votes
+      |  
+      select(name='dir')
+        option(value='desc' selected=dir=='desc') ↓
+        option(value='asc'  selected=dir=='asc') ↑
+      button(type='submit') Go
+    ul.block-toc
+      each b in blocks
+        li
+          a(href=`/rooms/${roomId}/blocks/${b._id}`)= b.title
+          span.meta (#{b.voteCount} ★ • #{b.createdAt.toLocaleDateString()})
+    include ../partials/_pagination
+    +pagination(
+      currentPage,
+      totalPages,
+      `/rooms/${roomId}/index?sort=${sortKey}&dir=${dir}`
+    )
