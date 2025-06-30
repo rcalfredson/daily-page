@@ -5,6 +5,7 @@ import { getMonthNav, getDateNav } from '../utils/archiveNav.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import Block from '../db/models/Block.js';
 import {
+  findByRoomWithLangPref,
   getAllBlockYearMonthCombos,
   getBlockDatesByYearMonth,
   getTopBlocksByTimeframe
