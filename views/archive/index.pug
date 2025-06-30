@@ -11,7 +11,7 @@ block content
     a.room-link(href=`/rooms/${roomId}`)= roomName
     |  — All Blocks
   .room-index-container
-    form.sort-bar(method='get')
+    form.sort-bar(method='get' action=`?sort=${sortKey}&dir=${dir}${langQuery}`)
       | Sort by 
       select(name='sort')
         option(value='createdAt' selected=sortKey=='createdAt') Date
@@ -31,5 +31,5 @@ block content
     +pagination(
       currentPage,
       totalPages,
-      `/rooms/${roomId}/index?sort=${sortKey}&dir=${dir}`
+      `/rooms/${roomId}/index?sort=${sortKey}&dir=${dir}${langQuery}`
     )

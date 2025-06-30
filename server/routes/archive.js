@@ -35,12 +35,15 @@ router.get('/archive', optionalAuth, async (req, res) => {
 
 router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
   const { roomId } = req.params;
+  const preferredLang = req.query.lang
+    || req.user?.preferredLang
+    || (req.acceptsLanguages()[0] || 'en').split('-')[0];
   try {
     const [top24h, top7d, top30d, topAll, roomMetadata] = await Promise.all([
-      getTopBlocksByTimeframe(1, 20, roomId),
-      getTopBlocksByTimeframe(7, 20, roomId),
-      getTopBlocksByTimeframe(30, 20, roomId),
-      getTopBlocksByTimeframe(null, 20, roomId),
+      getTopBlocksByTimeframe(1, 20, roomId, preferredLang),
+      getTopBlocksByTimeframe(7, 20, roomId, preferredLang),
+      getTopBlocksByTimeframe(30, 20, roomId, preferredLang),
+      getTopBlocksByTimeframe(null, 20, roomId, preferredLang),
       getRoomMetadata(roomId)
     ]);
 
@@ -73,11 +76,14 @@ router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
 
 router.get('/archive/best-of', optionalAuth, async (req, res) => {
   try {
+    const preferredLang = req.query.lang
+      || req.user?.preferredLang
+      || (req.acceptsLanguages()[0] || 'en').split('-')[0];
     const [top24h, top7d, top30d, topAll] = await Promise.all([
-      getTopBlocksByTimeframe(1),
-      getTopBlocksByTimeframe(7),
-      getTopBlocksByTimeframe(30),
-      getTopBlocksByTimeframe(null)
+      getTopBlocksByTimeframe(1, 20, null, preferredLang),
+      getTopBlocksByTimeframe(7, 20, null, preferredLang),
+      getTopBlocksByTimeframe(30, 20, null, preferredLang),
+      getTopBlocksByTimeframe(null, 20, null, preferredLang)
     ]);
 
     const allBlocks = [top24h, top7d, top30d, topAll];
@@ -206,23 +212,35 @@ router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
 // GET /rooms/:roomId/index?page=1&sort=createdAt&dir=desc
 router.get('/rooms/:roomId/index', optionalAuth, async (req, res) => {
   const { roomId } = req.params;
+  const preferredLang =
+    req.query.lang ||
+    req.user?.preferredLang ||
+    (req.acceptsLanguages()[0] || "en").split("-")[0];
+
   const page = +req.query.page || 1;
   const limit = 20;
   const sortKey = ['title', 'createdAt', 'voteCount'].includes(req.query.sort)
     ? req.query.sort : 'createdAt';
-    const dirStr = req.query.dir === 'asc' ? 'asc' : 'desc';
+  const dirStr = req.query.dir === 'asc' ? 'asc' : 'desc';
   const sortDir = dirStr === 'asc' ? 1 : -1;
+
+  const currentLang = preferredLang;                     // <- alias
+  const langQuery = currentLang ? `&lang=${currentLang}` : '';
 
   const roomMetadata = await getRoomMetadata(roomId);
 
-  const blocks = await Block.find({ roomId })
-    .select('title createdAt voteCount tags')
-    .sort({ [sortKey]: sortDir })
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .lean();
+  const blocks = await findByRoomWithLangPref({
+    roomId,
+    preferredLang,
+    sortBy: sortKey,
+    sortDir,
+    startDate: null,
+    endDate: null,
+    skip: (page - 1) * limit,
+    limit
+  });
 
-  const total = await Block.countDocuments({ roomId });
+  const total = await Block.distinct("groupId", { roomId }).then(arr => arr.length);
 
   res.render('archive/index', {
     blocks,
@@ -233,6 +251,8 @@ router.get('/rooms/:roomId/index', optionalAuth, async (req, res) => {
     totalPages: Math.ceil(total / limit),
     sortKey,
     dir: dirStr,
+    currentLang,
+    langQuery
   });
 });
 

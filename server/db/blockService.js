@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Block from './models/Block.js';
 import * as cache from '../services/cache.js';
 
@@ -5,6 +6,8 @@ const CACHE_TTL = 5000; // Cache for 5 seconds (adjust as needed)
 
 // Create a new block
 export async function createBlock(data) {
+  if (!data.groupId) data.groupId = new mongoose.Types.ObjectId().toString();
+  if (!data.lang) data.lang = 'en';
   const block = new Block(data);
   return await block.save();
 }
@@ -12,6 +15,10 @@ export async function createBlock(data) {
 // Get a block by ID
 export async function getBlockById(blockId) {
   return await Block.findById(blockId);
+}
+
+export async function getTranslations(groupId) {
+  return await Block.find({ groupId }).select('lang _id title');
 }
 
 export async function getGlobalBlockStats() {
@@ -114,31 +121,23 @@ export async function getTagTrendData(tagName, defaultDays = 30) {
 }
 
 export async function getFeaturedBlockWithFallback(options = {}) {
-  const { lockedOnly = false, limit = 1 } = options;
-  const { blocks, period } = await getTopBlocksWithFallback({ lockedOnly, limit });
+  const { lockedOnly = false, limit = 1, preferredLang = 'en' } = options;
+  const { blocks, period } = await getTopBlocksWithFallback({ lockedOnly, limit, preferredLang });
   return { featuredBlock: blocks[0] || null, period };
 }
 
-export async function getTopBlocksByTimeframe(days = null, limit = 20, roomId = null) {
+export async function getTopBlocksByTimeframe(days = null, limit = 20, roomId = null, preferredLang = 'en') {
   return await cache.get(
-    `top-blocks-timeframe-${days || 'all'}-${limit}-${roomId || 'global'}`,
+    `top-blocks-timeframe-${days || 'all'}-${limit}-${roomId || 'global'}-${preferredLang}`,
     async () => {
-      const query = {};
-      if (days) {
-        const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-        query.createdAt = { $gte: cutoff };
-      }
-
+      const start = days ? new Date(Date.now() - days * 24 * 60 * 60 * 1000) : new Date(0);
+      const end = new Date();
       if (roomId) {
-        query.roomId = roomId;
+        // Reuse room helper
+        return findByRoomWithLangPref({ roomId, preferredLang, startDate: start, endDate: end, sortBy: 'voteCount', limit });
       }
-
-      const blocks = await Block.find(query)
-        .sort({ voteCount: -1 })
-        .limit(limit)
-        .lean();
-
-      return blocks;
+      // Global best-of
+      return findTopGlobalWithLangPref({ preferredLang, lockedOnly: false, limit, startDate: start, endDate: end });
     },
     [],
     CACHE_TTL
@@ -204,7 +203,7 @@ export async function getRecentActivityByUser(username, options = {}) {
 
 // Fallback para obtener bloques con actividad
 export async function getTopBlocksWithFallback(options = {}) {
-  const { lockedOnly = false, limit = 20 } = options;
+  const { lockedOnly = false, limit = 20, preferredLang = "en" } = options;
   const intervals = [1, 7, 30]; // días de retroceso
   let blocks = [];
   let usedInterval = 1;
@@ -216,13 +215,17 @@ export async function getTopBlocksWithFallback(options = {}) {
 
     // Usa caching con una clave basada en el intervalo
     blocks = await cache.get(
-      `top-blocks-last-${days}d-${lockedOnly}-${limit}`,
+      `top-blocks-last-${days}d-${lockedOnly}-${limit}-${preferredLang}`,
       async () => {
-        const result = await Block.find(query)
-          .sort({ voteCount: -1 })
-          .limit(limit)
-          .lean();
-        return result;
+        return await findTopGlobalWithLangPref(
+          {
+            preferredLang,
+            lockedOnly,
+            limit,
+            startDate: cutoff,
+            endDate: new Date()
+          }
+        )
       },
       [],
       CACHE_TTL
@@ -242,7 +245,8 @@ export async function getBlocksByRoomWithFallback({
   roomId,
   userId = null,
   status = null,
-  limit = 20
+  limit = 20,
+  preferredLang = 'en'
 }) {
   const intervals = [1, 7, 30]; // en días
   for (let days of intervals) {
@@ -257,9 +261,15 @@ export async function getBlocksByRoomWithFallback({
     };
 
     // Si hay userId, incluimos votos del usuario
-    const blocks = userId
-      ? await getBlocksByRoomWithUserVotes(roomId, userId, options)
-      : await getBlocksByRoom(roomId, options);
+    const blocks = await findByRoomWithLangPref({
+      roomId,
+      preferredLang,
+      status,
+      startDate: cutoff,
+      endDate: new Date(),
+      sortBy: 'voteCount',
+      limit
+    });
 
     if (blocks.length > 0) {
       return { blocks, period: days };
@@ -373,12 +383,192 @@ export async function getAllBlockYearMonthCombos(roomId = null) {
   );
 }
 
+export async function findByRoomWithLangPref({
+  roomId,
+  preferredLang = 'en',
+  status,
+  startDate,
+  endDate,
+  sortBy = 'createdAt',
+  sortDir = -1,
+  skip = 0,
+  limit = 20
+}) {
+  const matchStage = { roomId };
+  if (status) matchStage.status = status;
+  if (startDate || endDate) matchStage.createdAt = {};
+  if (startDate) matchStage.createdAt.$gte = new Date(startDate);
+  if (endDate) matchStage.createdAt.$lt = new Date(endDate);
+
+  const pipeline = [
+    { $match: matchStage },
+    { $sort: { [sortBy]: sortDir, createdAt: -1 } },
+
+    // Agrupamos por groupId y metemos todos los docs en un array
+    {
+      $group: {
+        _id: '$groupId',
+        docs: { $push: '$$ROOT' }
+      }
+    },
+
+    // Elegimos “best fit”
+    {
+      $project: {
+        best: {
+          $let: {
+            vars: {
+              preferred: {
+                $filter: {
+                  input: '$docs',
+                  as: 'd',
+                  cond: { $eq: ['$$d.lang', preferredLang] }
+                }
+              }
+            },
+            in: {
+              $cond: [
+                { $gt: [{ $size: '$$preferred' }, 0] },
+                { $arrayElemAt: ['$$preferred', 0] },   // usamos la traducción
+                { $arrayElemAt: ['$docs', 0] }          // si no, la primera
+              ]
+            }
+          }
+        }
+      }
+    },
+
+    { $replaceRoot: { newRoot: '$best' } },
+    { $skip: skip},
+    { $limit: limit }
+  ];
+
+  return await Block.aggregate(pipeline).exec();
+}
+
+export async function findByDateWithLangPref({
+  date,               // 'YYYY-MM-DD'
+  preferredLang = 'en',
+  sortBy = 'voteCount',
+  limit = 50
+}) {
+  const start = new Date(`${date}T00:00:00.000Z`);
+  const end = new Date(`${date}T23:59:59.999Z`);
+
+  const pipeline = [
+    { $match: { createdAt: { $gte: start, $lt: end } } },
+    { $sort: { [sortBy]: -1, createdAt: -1 } },
+    { $group: { _id: '$groupId', docs: { $push: '$$ROOT' } } },
+    {
+      $project: {
+        best: {
+          $let: {
+            vars: {
+              preferred: {
+                $filter: {
+                  input: '$docs',
+                  as: 'd',
+                  cond: { $eq: ['$$d.lang', preferredLang] }
+                }
+              }
+            },
+            in: {
+              $cond: [
+                { $gt: [{ $size: '$$preferred' }, 0] },
+                { $arrayElemAt: ['$$preferred', 0] },
+                { $arrayElemAt: ['$docs', 0] }
+              ]
+            }
+          }
+        }
+      }
+    },
+    { $replaceRoot: { newRoot: '$best' } },
+    { $limit: limit }
+  ];
+
+  return Block.aggregate(pipeline).exec();
+}
+
+async function findTopGlobalWithLangPref({ preferredLang, lockedOnly, limit, startDate, endDate }) {
+  const match = { createdAt: { $gte: startDate, $lt: endDate } };
+  if (lockedOnly) match.status = 'locked';
+
+  return Block.aggregate([
+    { $match: match },
+    { $sort: { voteCount: -1, createdAt: -1 } },
+    { $group: { _id: '$groupId', docs: { $push: '$$ROOT' } } },
+    {
+      $project: {
+        best: {
+          $let: {
+            vars: {
+              preferred: {
+                $filter: {
+                  input: '$docs',
+                  as: 'd',
+                  cond: { $eq: ['$$d.lang', preferredLang] }
+                }
+              }
+            },
+            in: {
+              $cond: [
+                { $gt: [{ $size: '$$preferred' }, 0] },
+                { $arrayElemAt: ['$$preferred', 0] },
+                { $arrayElemAt: ['$docs', 0] }
+              ]
+            }
+          }
+        }
+      }
+    },
+    { $replaceRoot: { newRoot: '$best' } },
+    { $limit: limit }
+  ]).exec();
+}
+
+export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy = "voteCount", skip = 0, limit = 20 }) {
+  return Block.aggregate([
+    { $match: { tags: tag } },
+    { $sort: { [sortBy]: -1, createdAt: -1 } },
+    { $group: { _id: "$groupId", docs: { $push: "$$ROOT" } } },
+    {
+      $project: {
+        best: {
+          $let: {
+            vars: {
+              preferred: {
+                $filter: {
+                  input: "$docs",
+                  as: "d",
+                  cond: { $eq: ["$$d.lang", preferredLang] }
+                }
+              }
+            },
+            in: {
+              $cond: [
+                { $gt: [{ $size: "$$preferred" }, 0] },
+                { $arrayElemAt: ["$$preferred", 0] },
+                { $arrayElemAt: ["$docs", 0] }
+              ]
+            }
+          }
+        }
+      }
+    },
+    { $replaceRoot: { newRoot: "$best" } },
+    { $skip: skip },
+    { $limit: limit }
+  ]).exec();
+}
+
 // Get blocks by roomId
 export async function getBlocksByRoom(roomId, options = {}) {
-  const { status, startDate, endDate, sortBy = 'createdAt' } = options;
+  const { status, startDate, endDate, lang, sortBy = 'createdAt' } = options;
 
   const query = { roomId };
   if (status) query.status = status;
+  if (lang) query.lang = lang;
 
   // Handle date filtering logic
   if (startDate && !endDate) {

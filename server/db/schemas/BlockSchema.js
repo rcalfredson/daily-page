@@ -33,11 +33,24 @@ const blockSchema = new Schema({
   },
   voteCount: { type: Number, default: 0 },
   lockedAt: { type: Date },
+  groupId: {
+    type: String,
+    required: true,
+    index: true,
+  },
+  lang: {
+    type: String,       // ISO 639-1
+    required: true,
+    index: true,
+    minlength: 2,
+    maxlength: 5,
+  },
 }, {
   strict: true,
   timestamps: true,
   toObject: { transform: (doc, ret) => { delete ret.__v; } },
   toJSON: { transform: (doc, ret) => { delete ret.__v; } },
 });
+blockSchema.index({ groupId: 1, lang: 1 }, { unique: true });
 
 export default blockSchema;
