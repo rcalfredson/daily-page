@@ -77,6 +77,25 @@ textarea {
   margin-left: 10px;
 }
 
+#advanced-settings {
+  margin-bottom: 1.5rem;
+}
+
+#advanced-settings summary {
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid #ccc;
+}
+
+#advanced-settings summary:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#advanced-settings[open] summary {
+  color: #007bff;
+}
+
 @media (max-width: 480px) {
   input#title {
     max-width: 100%;

@@ -4,6 +4,16 @@ block nav
   include ../navLinks
 
 block append head
+  -
+    // Helpers
+    const base   = process.env.BASE_URL || 'https://dailypage.org';
+    const makeUrl = id => `${base}/rooms/${room_id}/blocks/${id}?lang=${currentLang}`;
+  link(rel='canonical' href=makeUrl(block._id))
+  each t in translations
+    if t.lang !== currentLang
+      link(rel='alternate' hreflang=t.lang href=`${base}/rooms/${room_id}/blocks/${t._id}?lang=${t.lang}`)
+  // fallback for “any/unknown” language
+  link(rel='alternate' hreflang='x-default' href=makeUrl(block._id))
   link(rel='stylesheet' href='/css/block-view.css')
   link(rel='stylesheet' href='/css/block-tags.css')
   link(rel='stylesheet' href='/css/delete-block.css')
@@ -11,6 +21,7 @@ block append head
   link(rel='stylesheet' href='/css/toast.css')
   link(rel='stylesheet' href='/css/modal.css')
   link(rel='stylesheet' href='/css/flag-modal.css')
+  link(rel='stylesheet' href='/css/lang-switcher.css')
 
 block append scripts
   include ../envImport
@@ -24,13 +35,30 @@ block append scripts
   script(src="/js/share-block.js")
 
 block content
+  - const flagEmoji = { en: '🇺🇸', es: '🇪🇸', fr: '🇫🇷', id: '🇮🇩', ru: '🇷🇺' };
   include ../partials/_tag_section
   #block-page
     .block-header
-      // Link back to the room
-      .room-info
-        | Room: 
-        a.room-link(href=`/rooms/${room_id}`)= roomName
+      .header-top(style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;")
+        .room-info
+          | Room: 
+          a.room-link(href=`/rooms/${room_id}`)= roomName
+
+        // only show when multiple translations exist
+        if translations.length > 1
+          details.lang-switcher
+            summary
+              span Lang: 
+              span.current-lang.pill
+                span.flag= flagEmoji[currentLang] || '🏳️'
+                | #{currentLang}
+            ul.lang-list
+              each t in translations
+                if t.lang !== currentLang
+                  li
+                    a.pill(href=`/rooms/${room_id}/blocks/${t._id}?lang=${t.lang}`)
+                      span.flag= flagEmoji[t.lang] || '🏳️'
+                      | #{t.lang}
       .title-section
         .vote-section
           include ../partials/_vote_controls
@@ -73,18 +101,18 @@ block content
       p Share on:
       ul.share-links
         li
-          a(href="#", id="share-facebook", target="_blank")
+          a(href="#" id="share-facebook" target="_blank")
             img.share-icon(src="https://cdn.simpleicons.org/facebook/1877F2" alt="Facebook logo")
             | Facebook
         li
-          a(href="#", id="share-reddit", target="_blank")
+          a(href="#" id="share-reddit" target="_blank")
             img.share-icon(src="https://cdn.simpleicons.org/reddit/FF4500" alt="Reddit logo")
             | Reddit
         li
-          a(href="#", id="share-whatsapp", target="_blank")
+          a(href="#" id="share-whatsapp" target="_blank")
             img.share-icon(src="https://cdn.simpleicons.org/whatsapp/25D366" alt="WhatsApp logo")
             | WhatsApp
         li
-          a(href="#", id="share-twitter", target="_blank")
+          a(href="#" id="share-twitter" target="_blank")
             img.share-icon(src="https://cdn.simpleicons.org/x/000000" alt="Twitter logo")
             | Twitter

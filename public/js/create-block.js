@@ -2,6 +2,9 @@
 let currentTooltipAnchor = null;
 let currentTooltipOption = null;
 let outsideClickListener = null; // We'll store a reference to the outside click listener
+let submitBtn = null;
+let existingLangs = [];
+let langSelect = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   // Dynamic placeholder adjustment for responsive design
@@ -25,6 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    if (existingLangs.includes(langSelect.value)) {
+      alert("A translation for that language already exists. Please pick another language.");
+      return;
+    }
 
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
@@ -52,16 +60,95 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(data),
       });
 
-      if (!response.ok) throw new Error("Failed to create block");
+      if (!response.ok) {
+        const errJson = await response.json().catch(() => ({}));
+        const message = errJson?.error || "Something went wrong. Please try again.";
+        throw new Error(message);
+      }
 
       const block = await response.json();
-      window.location.href = `/rooms/${block.roomId}/blocks/${block._id}/edit`; // Redirect to block editor
+      window.location.href = `/rooms/${block.roomId}/blocks/${block._id}/edit`;
     } catch (error) {
       console.error("Error:", error);
-      alert("Something went wrong. Please try again.");
+      alert(error.message);
     }
   });
+
+  /* -----------------------------------------------------
+ * Advanced panel helpers
+ * ---------------------------------------------------*/
+  langSelect = document.getElementById("lang");
+  const sourceInput = document.getElementById("source-block");
+  const groupIdField = document.getElementById("groupId");
+  submitBtn = document.querySelector('button[type="submit"]');
+
+  existingLangs = [];
+
+  // Default <select> to browser or user-pref
+  const guess = document.documentElement.lang || navigator.language || "en";
+  const short = guess.split("-")[0];
+  [...langSelect.options].forEach(o => {
+    if (o.value === short) o.selected = true;
+  });
+
+  // When user pastes a URL/ID, fetch its groupId
+  sourceInput.addEventListener("blur", async () => {
+    const raw = sourceInput.value.trim();
+    if (!raw) {
+      groupIdField.value = "";
+      langSelect.querySelectorAll("option").forEach(o => o.disabled = false);
+      existingLangs = [];
+      bumpIfDup();
+
+      return;
+    }
+
+    // Extract possible UUID from URL
+    const match = raw.match(/blocks\/([0-9a-fA-F]{24})/) || raw.match(/^([0-9a-fA-F]{24})$/);
+    if (!match) {
+      alert("That doesn’t look like a valid block URL or ID.");
+      groupIdField.value = "";
+      return;
+    }
+    const id = match[1];
+    try {
+      const res = await fetch(`/api/v1/blocks/${id}`);
+      if (!res.ok) throw new Error("Block not found");
+      const json = await res.json();
+      existingLangs = json.translations.map(t => t.lang);
+      groupIdField.value = json.block.groupId;
+
+      // ### choose a default that isn't taken ###
+      const allOpts = [...langSelect.options].map(o => o.value);
+      const firstFree = allOpts.find(l => !existingLangs.includes(l)) || 'en';
+      langSelect.value = firstFree;
+
+      existingLangs.forEach(lang => {
+        const option = langSelect.querySelector(`option[value="${lang}"]`);
+        if (option) option.disabled = true;
+      });
+
+      // Update UI state
+      bumpIfDup();
+    } catch (err) {
+      alert("Could not fetch block info: " + err.message);
+      groupIdField.value = "";
+    }
+  });
+  langSelect.addEventListener("change", bumpIfDup);
 });
+
+function bumpIfDup() {
+  if (!langSelect) return;
+  if (!submitBtn || !Array.isArray(existingLangs)) return;
+  if (existingLangs.includes(langSelect.value)) {
+    submitBtn.disabled = true;
+    submitBtn.title = "That translation already exists.";
+  } else {
+    submitBtn.disabled = false;
+    submitBtn.title = "";
+  }
+}
 
 // Called when the user clicks the help icon
 function toggleTooltip(event, option) {
@@ -117,7 +204,7 @@ function hideTooltip(tooltip) {
 function positionTooltip(anchor, tooltip) {
   // Make sure tooltip is visible so we can measure its size
   tooltip.style.display = "block";
-  
+
   // Get bounding rectangles
   const anchorRect = anchor.getBoundingClientRect();
   const tooltipRect = tooltip.getBoundingClientRect();
@@ -125,7 +212,7 @@ function positionTooltip(anchor, tooltip) {
   // We’ll position the tooltip slightly below the icon
   const offsetY = 4; // You can tweak this
   let top = anchorRect.bottom + window.scrollY + offsetY;
-  
+
   // Center it horizontally relative to the anchor
   let left = anchorRect.left + window.scrollX + (anchorRect.width / 2) - (tooltipRect.width / 2);
 

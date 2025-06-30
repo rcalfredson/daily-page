@@ -1,5 +1,7 @@
 import express from 'express';
-import { getBlockById } from '../db/blockService.js';
+import { getBlockById,
+  getTranslations
+ } from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
@@ -20,6 +22,9 @@ router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, async (req, res) =>
 
     block.contentHTML = renderMarkdownContent(block.content);
     const descriptionHTML = renderMarkdownContent(block.description);
+    const translations = await getTranslations(block.groupId);
+
+    
 
     // Attach user vote info if logged in
     if (req.user) {
@@ -39,8 +44,10 @@ router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, async (req, res) =>
       descriptionHTML,
       title,
       header,
+      translations,
       canManageBlock: canManageBlock(req.user, block, editTokens),
-      user: req.user
+      user: req.user,
+      currentLang: block.lang
     });
 
   } catch (error) {

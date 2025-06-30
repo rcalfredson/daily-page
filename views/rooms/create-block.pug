@@ -5,7 +5,7 @@ block nav
 
 block append head
   link(rel='stylesheet' href='/css/create-block.css')
-  link(rel="stylesheet", href="/css/block-tags.css")
+  link(rel="stylesheet" href="/css/block-tags.css")
   link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
 
 block append scripts
@@ -20,14 +20,15 @@ block content
       | Room: 
       a(href=`/rooms/${roomMetadata._id}`)= roomMetadata.name
     - descriptionText = roomMetadata.description || 'No description available.'
-  
+
   p#room-description= descriptionText
 
   form#block-form(action=`/api/v1/rooms/${room_id}/blocks` method="POST")
     .form-group
       label(for="title") Title:
       input#title(type="text" name="title" required minlength="3" maxlength="100" 
-        placeholder="e.g. 'My Masterpiece', 'The Best Idea Ever', 'Clickbait for Nerds'")
+        placeholder="e.g. 'My Masterpiece', 'The Best Idea Ever', 'Clickbait for Nerds'"
+      )
     .form-group
       label(for="description") Description (optional):
       textarea#description(name="description" placeholder="Explain your brilliance... or just wing it.")
@@ -58,4 +59,19 @@ block content
             i.far.fa-question-circle.info-icon(onclick="toggleTooltip(event, 'private')")
           // Inline description for mobile (hidden on desktop)
           span.visibility-description.hidden-on-desktop Only for logged-in users. Visible after editing is complete.
+    // Advanced options (collapsed by default)
+    details#advanced-settings(style="margin-top:1rem")
+      summary(style="cursor:pointer; font-weight:bold") Advanced options
+      .form-group
+        label(for="lang") Language:
+        select#lang(name="lang")
+          option(value="en" selected) en
+          option(value="es") es
+          option(value="fr") fr
+          // add more as you support them
+      .form-group
+        label(for="source-block") Translate existing block (URL or ID):
+        input#source-block(type="text" placeholder="Paste a block URL or ID (optional)")
+        // Hidden field populated via JS
+        input(type="hidden" name="groupId" id="groupId")
     button.btn.btn-primary(type="submit") Create Block

@@ -2,14 +2,16 @@ import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import {
   getBlockById,
-  getBlocksByRoom,
-  getBlocksByDate,
   getBlockDatesByYearMonth,
   getAllBlockYearMonthCombos,
   createBlock,
   updateBlock,
-  deleteBlock
+  deleteBlock,
+  getTranslations,
+  findByRoomWithLangPref,
+  findByDateWithLangPref
 } from '../../db/blockService.js';
+import Block from '../../db/models/Block.js';
 import {
   createFlag,
   getFlagsByBlock
@@ -33,10 +35,30 @@ const useBlockAPI = (app) => {
   // 📌 Get all blocks for a specific room
   roomScopedRouter.get('/', async (req, res) => {
     const { room_id } = req.params;
-    const { status, startDate, endDate } = req.query;
+    const { status, startDate, endDate, lang } = req.query;
+    // Deriva el idioma: prioridad a query → usuario → header → default 'en'
+    const preferredLang = lang
+      || req.user?.preferredLang
+      || (req.acceptsLanguages()[0] || 'en').split('-')[0]
+      || 'en';
 
     try {
-      const blocks = await getBlocksByRoom(room_id, { status, startDate, endDate });
+      // Intentamos primero en preferredLang
+      let blocks = await findByRoomWithLangPref({
+        roomId: room_id,
+        preferredLang,
+        status,
+        startDate,
+        endDate,
+        sortBy: 'voteCount',  // o el que quieras
+        limit: 20
+      }
+      )
+
+      if (!blocks.length) {
+        return res.status(200).json([]);
+      }
+
       res.status(200).json(blocks);
     } catch (error) {
       console.error('Error fetching blocks:', error.message);
@@ -47,13 +69,25 @@ const useBlockAPI = (app) => {
   // 📌 Create a new block (within a specific room)
   roomScopedRouter.post('/', optionalAuth, async (req, res) => {
     const { room_id } = req.params;
-    const { title, description, tags, content, visibility } = req.body;
+    const { title,
+      description,
+      tags,
+      content,
+      visibility,
+      lang,
+      groupId } = req.body;
 
     if (!title || title.length < 3) {
       return res
         .status(400)
         .json({ error: 'Title is required and must be at least 3 characters long.' });
     }
+
+    if (groupId) {
+      const exists = await Block.exists({ groupId });
+      if (!exists) return res.status(400).json({ error: 'Invalid groupId.' });
+    }
+
 
     const existingTokens = req.cookies.edit_tokens
       ? JSON.parse(req.cookies.edit_tokens)
@@ -68,6 +102,8 @@ const useBlockAPI = (app) => {
       creator: req.user?.username || 'anonymous',
       roomId: room_id,
       editToken: uuidv4(),
+      lang: lang || (req.user?.preferredLang ?? 'en'),
+      groupId: groupId || null //service rellenerá si null
     };
 
     existingTokens.push(blockData.editToken);
@@ -95,6 +131,12 @@ const useBlockAPI = (app) => {
       // 3️⃣ Responder al cliente
       res.status(201).json(newBlock);
     } catch (error) {
+      // Duplicate translation => friendly 409
+      if ([11000, 11001].includes(error.code)) {
+        return res
+          .status(409)
+          .json({ error: 'A translation for that language already exists.' });
+      }
       console.error('Error creating block:', error.message);
       res.status(500).json({ error: 'Failed to create block.' });
     }
@@ -102,34 +144,39 @@ const useBlockAPI = (app) => {
 
   /** 🌍 Global Block Endpoints **/
 
+  // 📌 Get all blocks created on a specific date
+  globalRouter.get('/by-date/:date', async (req, res) => {
+    const { date } = req.params;
+    const preferredLang = req.query.lang
+      || req.user?.preferredLang
+      || (req.acceptsLanguages()[0] || 'en').split('-')[0];
+
+    try {
+      const blocks = await findByDateWithLangPref({ date, preferredLang, sortBy: 'voteCount', limit: 50 });
+      if (!blocks.length) return res.status(200).json([]);
+      res.status(200).json(blocks);
+    } catch (error) {
+      console.error('Error fetching blocks by date:', error.message);
+      res.status(500).json({ error: 'Failed to fetch blocks by date.' });
+    }
+  });
+
   // 📌 Get a single block by ID within a specific room
   globalRouter.get('/:block_id', async (req, res) => {
     const { block_id } = req.params;
 
     try {
       const block = await getBlockById(block_id);
+      const translations = await getTranslations(block.groupId);
 
       if (!block) {
         return res.status(404).json({ error: 'Block not found.' });
       }
 
-      res.status(200).json(block);
+      res.status(200).json({ block, translations });
     } catch (error) {
       console.error('Error fetching block:', error.message);
       res.status(500).json({ error: 'Failed to fetch block.' });
-    }
-  });
-
-  // 📌 Get all blocks created on a specific date
-  globalRouter.get('/by-date/:date', async (req, res) => {
-    const { date } = req.params;
-
-    try {
-      const blocks = await getBlocksByDate(date);
-      res.status(200).json(blocks);
-    } catch (error) {
-      console.error('Error fetching blocks by date:', error.message);
-      res.status(500).json({ error: 'Failed to fetch blocks by date.' });
     }
   });
 
