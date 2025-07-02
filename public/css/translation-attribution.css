@@ -1,0 +1,6 @@
+.translation-attribution {
+  margin-top: 0.5rem;
+  font-style: italic;
+  color: var(--text-color-alt, #555);
+  font-size: 0.9rem;
+}

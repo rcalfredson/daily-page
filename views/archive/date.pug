@@ -1,5 +1,7 @@
 extends ../layout
 
+include ../partials/_translation_attribution
+
 block nav
   include ../navLinks
 
@@ -8,6 +10,7 @@ block append head
   link(rel='stylesheet' href='/css/pagination.css')
   link(rel='stylesheet' href='/css/vote-controls.css')
   link(rel='stylesheet' href='/css/modal.css')
+  link(rel='stylesheet' href='/css/translation-attribution.css')
   if prevDate
     link(rel="prev" href= roomId
       ? `/rooms/${roomId}/archive/${prevDate.split('-').join('/')}`
@@ -54,9 +57,10 @@ block content
               a.block-link(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
               .block-content!= block.contentHTML
               .block-meta 
-                | Created by 
-                a(href=`/users/${block.creator}`)= block.creator
-                |  at #{new Date(block.createdAt).toLocaleTimeString()}
+                | Created by: 
+                a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+                |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+              +translationAttribution(block)
     else
       p No content found for this date.
   include ../partials/_pagination

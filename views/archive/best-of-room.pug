@@ -1,10 +1,13 @@
 extends ../layout
 
+include ../partials/_translation_attribution
+
 block append head
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel='stylesheet' href='/css/vote-controls.css')
   link(rel='stylesheet' href='/css/modal.css')
   link(rel='stylesheet' href='/css/best-of.css')
+  link(rel='stylesheet' href='/css/translation-attribution.css')
 
 block nav
   include ../navLinks
@@ -50,6 +53,7 @@ mixin renderBlockList(blocks)
               | Created by: 
               a.user-profile-link(href=`/users/${block.creator}`)= block.creator
               |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+            +translationAttribution(block)
             div.content-preview!= block.contentHTML
   else
     p No blocks found.

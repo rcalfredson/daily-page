@@ -1,0 +1,7 @@
+mixin translationAttribution(item)
+  if item.originalAuthor
+    p.translation-attribution
+      | Translated from 
+      a.user-profile-link(href=`/users/${item.originalAuthor}`)= item.originalAuthor
+      |  (see 
+      a(href=`/rooms/${item.roomId}/blocks/${item.originalBlock}`) original block)
