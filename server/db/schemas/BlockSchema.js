@@ -33,6 +33,7 @@ const blockSchema = new Schema({
   },
   voteCount: { type: Number, default: 0 },
   lockedAt: { type: Date },
+
   groupId: {
     type: String,
     required: true,
@@ -45,12 +46,25 @@ const blockSchema = new Schema({
     minlength: 2,
     maxlength: 5,
   },
+
+  // 🌍 Translation attribution fields:
+  originalAuthor: {
+    type: String,  // user._id
+    required: false,
+  },
+  originalBlock: {
+    type: String,  // block._id
+    required: false,
+  },
+
 }, {
   strict: true,
   timestamps: true,
   toObject: { transform: (doc, ret) => { delete ret.__v; } },
   toJSON: { transform: (doc, ret) => { delete ret.__v; } },
 });
+
+// 🧠 Unique pair: one language per group
 blockSchema.index({ groupId: 1, lang: 1 }, { unique: true });
 
 export default blockSchema;

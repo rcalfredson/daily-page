@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   langSelect = document.getElementById("lang");
   const sourceInput = document.getElementById("source-block");
   const groupIdField = document.getElementById("groupId");
+  const originalBlockField = document.getElementById("originalBlock");
   submitBtn = document.querySelector('button[type="submit"]');
 
   existingLangs = [];
@@ -96,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const raw = sourceInput.value.trim();
     if (!raw) {
       groupIdField.value = "";
+      originalBlockField.value = "";
       langSelect.querySelectorAll("option").forEach(o => o.disabled = false);
       existingLangs = [];
       bumpIfDup();
@@ -108,6 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!match) {
       alert("That doesn’t look like a valid block URL or ID.");
       groupIdField.value = "";
+      originalBlockField.value = "";
       return;
     }
     const id = match[1];
@@ -117,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const json = await res.json();
       existingLangs = json.translations.map(t => t.lang);
       groupIdField.value = json.block.groupId;
+      originalBlockField.value = id;
 
       // ### choose a default that isn't taken ###
       const allOpts = [...langSelect.options].map(o => o.value);

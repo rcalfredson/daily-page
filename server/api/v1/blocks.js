@@ -69,13 +69,16 @@ const useBlockAPI = (app) => {
   // 📌 Create a new block (within a specific room)
   roomScopedRouter.post('/', optionalAuth, async (req, res) => {
     const { room_id } = req.params;
-    const { title,
+    const {
+      title,
       description,
       tags,
       content,
       visibility,
       lang,
-      groupId } = req.body;
+      groupId,
+      originalBlock
+    } = req.body;
 
     if (!title || title.length < 3) {
       return res
@@ -107,6 +110,16 @@ const useBlockAPI = (app) => {
     };
 
     existingTokens.push(blockData.editToken);
+
+    // if this is a translation, record its source & author
+    if (originalBlock) {
+      const source = await getBlockById(originalBlock);
+      if (!source) {
+        return res.status(400).json({ error: "Source block not found." });
+      }
+      blockData.originalBlock = originalBlock;
+      blockData.originalAuthor = source.creator;
+    }
 
     try {
       const newBlock = await createBlock(blockData);
