@@ -395,6 +395,10 @@ export async function findByRoomWithLangPref({
   limit = 20
 }) {
   const matchStage = { roomId };
+  const sortStage = { [sortBy]: sortDir };
+  if (sortBy !== 'createdAt') {
+    sortStage.createdAt = -1;
+  }
   if (status) matchStage.status = status;
   if (startDate || endDate) matchStage.createdAt = {};
   if (startDate) matchStage.createdAt.$gte = new Date(startDate);
@@ -402,7 +406,7 @@ export async function findByRoomWithLangPref({
 
   const pipeline = [
     { $match: matchStage },
-    { $sort: { [sortBy]: sortDir, createdAt: -1 } },
+    { $sort: sortStage },
 
     // Agrupamos por groupId y metemos todos los docs en un array
     {
@@ -439,7 +443,8 @@ export async function findByRoomWithLangPref({
     },
 
     { $replaceRoot: { newRoot: '$best' } },
-    { $skip: skip},
+    { $sort: sortStage },
+    { $skip: skip },
     { $limit: limit }
   ];
 
@@ -455,9 +460,14 @@ export async function findByDateWithLangPref({
   const start = new Date(`${date}T00:00:00.000Z`);
   const end = new Date(`${date}T23:59:59.999Z`);
 
+  const sortStage = { [sortBy]: -1 };
+  if (sortBy !== 'createdAt') {
+    sortStage.createdAt = -1;
+  }
+
   const pipeline = [
     { $match: { createdAt: { $gte: start, $lt: end } } },
-    { $sort: { [sortBy]: -1, createdAt: -1 } },
+    { $sort: sortStage },
     { $group: { _id: '$groupId', docs: { $push: '$$ROOT' } } },
     {
       $project: {
@@ -484,6 +494,7 @@ export async function findByDateWithLangPref({
       }
     },
     { $replaceRoot: { newRoot: '$best' } },
+    { $sort: sortStage },
     { $limit: limit }
   ];
 
@@ -523,14 +534,19 @@ async function findTopGlobalWithLangPref({ preferredLang, lockedOnly, limit, sta
       }
     },
     { $replaceRoot: { newRoot: '$best' } },
+    { $sort: { voteCount: -1, createdAt: -1 } },
     { $limit: limit }
   ]).exec();
 }
 
 export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy = "voteCount", skip = 0, limit = 20 }) {
+  const sortStage = { [sortBy]: -1 };
+  if (sortBy !== 'createdAt') {
+    sortStage.createdAt = -1;
+  }
   return Block.aggregate([
     { $match: { tags: tag } },
-    { $sort: { [sortBy]: -1, createdAt: -1 } },
+    { $sort: sortStage },
     { $group: { _id: "$groupId", docs: { $push: "$$ROOT" } } },
     {
       $project: {
@@ -557,6 +573,7 @@ export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy 
       }
     },
     { $replaceRoot: { newRoot: "$best" } },
+    { $sort: sortStage },
     { $skip: skip },
     { $limit: limit }
   ]).exec();
