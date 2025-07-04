@@ -1,5 +1,5 @@
 mixin translationAttribution(item)
-  if item.originalAuthor
+  if item.originalAuthor && item.originalAuthor !== item.creator
     p.translation-attribution
       | Translated from 
       a.user-profile-link(href=`/users/${item.originalAuthor}`)= item.originalAuthor
