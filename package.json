@@ -63,7 +63,7 @@
     "moment-timezone": "^0.5.31",
     "mongodb": "^6",
     "mongoose": "^8.9.5",
-    "multer": "^2.0.1",
+    "multer": "^2.0.2",
     "peer": "^1",
     "pug": "^3.0.1",
     "realtime-bpm-analyzer": "^4.0.2",
