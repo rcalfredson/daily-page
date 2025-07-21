@@ -19,10 +19,10 @@ export function renderMarkdownContent(content) {
   // Wrap <table> in .table-scroll-wrapper
   html = html.replace(
     /<table>/g,
-    '<div class="table-scroll-wrapper"><table>'
+    '<div class="table-scroll-container"><div class="table-scroll-wrapper"><table>'
   ).replace(
     /<\/table>/g,
-    '</table></div>'
+    '</table></div></div>'
   );
 
   return html;
