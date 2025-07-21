@@ -1,0 +1,50 @@
+/* Contenedor estático que “overlayea” las sombras */
+.table-scroll-container {
+  position: relative;
+  overflow: hidden; /* importante: el scroll lo hace el hijo */
+}
+
+/* Este es el que verdaderamente scrollea */
+.table-scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  padding-bottom: 0.5rem;
+  background: white;
+}
+
+.table-scroll-wrapper table {
+  display: table;
+  min-width: max-content; /* 💡 esto es lo que activa el scroll */
+  width: auto;            /* importante: no uses width: 100% aquí */
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+/* Fade izquierdo */
+.table-scroll-container::before {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 30px;
+  pointer-events: none;
+  background: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0));
+  opacity: 0; transition: opacity 0.3s;
+  z-index: 2;
+}
+
+/* Fade derecho */
+.table-scroll-container::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; right: 0;
+  width: 30px;
+  pointer-events: none;
+  background: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0));
+  opacity: 0; transition: opacity 0.3s;
+  z-index: 2;
+}
+
+/* Clases para togglear con JS */
+.table-scroll-container.fade-left::before  { opacity: 1; }
+.table-scroll-container.fade-right::after { opacity: 1; }
