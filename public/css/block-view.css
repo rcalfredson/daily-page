@@ -58,6 +58,10 @@ hr {
   display: block;
 }
 
+.block-content p {
+  white-space: unset;
+}
+
 /* Make that edit button look fancy */
 .block-edit-btn {
   background-color: var(--highlight-color);
