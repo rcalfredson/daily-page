@@ -58,7 +58,7 @@ hr {
   display: block;
 }
 
-.block-content p {
+.block-content p, .block-content ul *, .block-content ol * {
   white-space: unset;
 }
 
