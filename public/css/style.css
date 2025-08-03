@@ -60,6 +60,7 @@ body {
   margin: 0 auto;
   padding: 15px;
   background-color: #ffffff;
+  width: 85%;
 }
 
 h1 {
@@ -459,6 +460,9 @@ Editor
 }
 
 @media (max-width: 500px) {
+  body {
+    width: unset;
+  }
   .text-wrapper {
     display: block;
   }
