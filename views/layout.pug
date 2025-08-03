@@ -8,38 +8,18 @@ html(lang=lang || 'en')
       meta(name="viewport" content="width=device-width, initial-scale=1.0")
       link(rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css")
       link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet")
+      link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/monokai.min.css")
       link(rel='stylesheet' href='/css/style.css')
       link(rel='stylesheet' href='/css/footer.css')
-      link(rel="stylesheet", href="/css/auth.css")
+      link(rel="stylesheet" href="/css/auth.css")
+      link(rel="stylesheet" href="/css/copy-btn.css")
       script(src="/js/auth.js")
       if title === 'Room Directory'
         link(rel='stylesheet' href='/css/rooms.css')
       link(rel='shortcut icon' href='/assets/img/favicon.ico')
       include schema.pug
-      script.
-        window.MathJax = {
-          loader: {
-            load: ['input/tex']
-          },
-          tex: {
-            inlineMath: [['$', '$'], ['\\(', '\\)']],
-            displayMath: [['$$', '$$'], ['\\[', '\\]']],
-            processEscapes: true
-          },
-          options: {
-            skipHtmlTags: ['script','noscript','style','textarea','pre','code']
-          },
-          output: {
-            displayOverflow: 'linebreak',
-            linebreaks: {
-              inline: true,
-              width: '100%',
-              lineleading: 0.2,
-              LinebreakVisitor: null
-            }
-          }
-        };
-      script(src='https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.7/tex-mml-chtml.js' async)
+      script(defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js")
+      script(defer src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js")
   body(data-is-logged-in=user ? "true" : "false" data-user-id=user ? user.id : null)
     -
       var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -70,5 +50,7 @@ html(lang=lang || 'en')
       .footer-content
         p © #{new Date().getFullYear()} Daily Page
         a(href="/privacy") Privacy Policy
+
+    include partials/_common_scripts
 
     block scripts
