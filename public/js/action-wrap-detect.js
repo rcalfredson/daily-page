@@ -10,9 +10,6 @@ function detectActionWrap() {
 
   const wrapped = controlsTop > titleTop + 5;
 
-  console.log('title top:', titleTop);
-  console.log('controls top:', controlsTop);
-  console.log('wrapped?', wrapped);
 
   controls.classList.toggle('left-align', wrapped);
   buttons.classList.toggle('left-align', wrapped);

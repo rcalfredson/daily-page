@@ -1,0 +1,71 @@
+script.
+  window.MathJax = {
+    loader: {
+      load: ['input/tex']
+    },
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+    },
+    output: {
+      displayOverflow: 'linebreak',
+      linebreaks: {
+        inline: true,
+        width: '100%',
+        lineleading: 0.2,
+        LinebreakVisitor: null
+      }
+    }
+  };
+script(src='https://cdn.jsdelivr.net/npm/mathjax@4.0.0-beta.7/tex-mml-chtml.js' async)
+
+script.
+  window.addEventListener('load', () => {
+    if (window.hljs) {
+      hljs.highlightAll();
+    } else {
+      console.warn('highlight.js not loaded yet');
+    }
+  });
+script.
+  window.addEventListener('load', () => {
+    // Encuentra todos los contenedores <pre>
+    document.querySelectorAll('pre').forEach((pre, i) => {
+      // Asegúrate de que haya un <code> dentro
+      const code = pre.querySelector('code');
+      if (!code) return;
+
+      // Crea el botón
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.type = 'button';
+      btn.innerText = 'Copy';  // Puedes cambiarlo a "Copiar" si prefieres
+
+      // Prepara el texto para copiar
+      // Opción A: usar data-clipboard-target con un ID
+      const codeId = `code-snippet-${i}`;
+      code.id = codeId;
+      btn.setAttribute('data-clipboard-target', `#${codeId}`);
+
+      // Opción B: copiar el texto plano (sin classes/HTML)
+      // btn.setAttribute('data-clipboard-text', code.innerText);
+
+      // Inserta el botón en el pre
+      pre.style.position = 'relative';
+      btn.style.position = 'absolute';
+      btn.style.top = '0.5rem';
+      btn.style.right = '0.5rem';
+      pre.appendChild(btn);
+    });
+
+    // Inicializa clipboard.js
+    new ClipboardJS('.copy-btn').on('success', e => {
+      e.trigger.innerText = 'Copied!';      // feedback al usuario
+      setTimeout(() => e.trigger.innerText = 'Copy', 1500);
+      e.clearSelection();
+    });
+  });
