@@ -73,10 +73,6 @@ h2 {
   margin-top: 0;
 }
 
-p, ul *, ol * {
-  white-space: pre-wrap;
-}
-
 ul, ol {
   margin-top: 0;
 }
