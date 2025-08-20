@@ -8,7 +8,7 @@ import {
   updateUserStreak
 } from '../../db/userService.js';
 import User from '../../db/models/User.js';
-import isAuthenticated from '../../middleware/auth.js'
+import { isAuthenticated } from '../../middleware/auth.js'
 import { uploadProfilePic } from '../../services/uploadProfilePic.js';
 import { makeUserJWT, refreshAuthToken } from '../../utils/jwtHelper.js';
 import { sendEmail } from '../../services/mailgunService.js';

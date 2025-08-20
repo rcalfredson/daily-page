@@ -1,6 +1,6 @@
 import { verifyJWT } from '../services/jwt.js'; // Adjust path as needed
 
-function isAuthenticated(req, res, next) {
+export function isAuthenticated(req, res, next) {
   const token = req.cookies.auth_token;
 
   if (!token) {
@@ -17,4 +17,10 @@ function isAuthenticated(req, res, next) {
   }
 }
 
-export default isAuthenticated;
+// Middleware to prevent caching of auth endpoints
+export function noCache(req, res, next) {
+  res.set('Cache-Control', 'no-store');
+  res.set('Vary', 'Cookie');
+  next();
+}
+

@@ -3,40 +3,57 @@ document.addEventListener('DOMContentLoaded', async () => {
   const navLogout = document.querySelector('#nav-logout');
   const welcomeMessage = document.querySelector('#welcome-message');
 
-  try {
-    const response = await fetch('/api/v1/auth/me', { credentials: 'include' });
+  const setLoggedOutUI = () => {
+    if (navLogin) navLogin.style.display = 'block';
+    if (navLogout) navLogout.style.display = 'none';
+    if (welcomeMessage) welcomeMessage.style.display = 'none';
+  };
 
-    if (response.ok) {
-      const user = await response.json();
-
-      // Update UI for logged-in state
-      navLogin.style.display = 'none';
-      navLogout.style.display = 'block';
-      welcomeMessage.innerHTML = `Welcome, <a href="/dashboard" style="color: rgb(26, 167, 214); text-decoration: underline dotted;">${user.username}</a>!`;
+  const setLoggedInUI = (user) => {
+    if (navLogin) navLogin.style.display = 'none';
+    if (navLogout) navLogout.style.display = 'block';
+    if (welcomeMessage) {
+      welcomeMessage.textContent = 'Welcome, ';
+      const a = document.createElement('a');
+      a.href = '/dashboard';
+      a.style.color = 'rgb(26, 167, 214)';
+      a.style.textDecoration = 'underline dotted';
+      a.textContent = user.username ?? 'you';
+      welcomeMessage.appendChild(a);
+      welcomeMessage.appendChild(document.createTextNode('!'));
       welcomeMessage.style.display = 'block';
-    } else {
-      throw new Error('Not logged in');
     }
-  } catch (err) {
-    navLogin.style.display = 'block';
-    navLogout.style.display = 'none';
-    welcomeMessage.style.display = 'none';
+  };
+
+  try {
+    const res = await fetch('/api/v1/auth/me', { credentials: 'include' });
+
+    if (res.status === 401) {            // estado normal: no autenticado
+      setLoggedOutUI();
+      return;
+    }
+
+    if (!res.ok) {                       // errores reales (500, etc.)
+      console.warn('auth/me non-OK:', res.status);
+      setLoggedOutUI();
+      return;
+    }
+
+    const user = await res.json();
+    setLoggedInUI(user);
+  } catch (e) {
+    console.warn('auth/me network error:', e);  // solo log “suave”
+    setLoggedOutUI();
   }
 
-  if (navLogout) {
-    navLogout.addEventListener('click', async () => {
-      try {
-        const response = await fetch('/api/v1/auth/logout', { method: 'POST' });
-
-        if (response.ok) {
-          document.cookie = 'auth_token=; Max-Age=0; path=/;';
-          window.location.href = '/';
-        } else {
-          console.error('Failed to log out:', await response.text());
-        }
-      } catch (err) {
-        console.error('Logout error:', err);
-      }
-    });
-  }
+  navLogout?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/v1/auth/logout', { method: 'POST', credentials: 'include' });
+      // idealmente el server también borra la cookie HttpOnly
+      window.location.href = '/';
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  });
 });

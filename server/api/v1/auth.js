@@ -5,6 +5,7 @@ import {
   findUserByEmail, findUserById, findUserByUsername
 } from '../../db/userService.js';
 import User from '../../db/models/User.js';
+import { noCache } from '../../middleware/auth.js'
 import { verifyJWT } from '../../services/jwt.js';
 import { makeUserJWT } from '../../utils/jwtHelper.js';
 import { sendEmail } from '../../services/mailgunService.js';
@@ -62,8 +63,8 @@ const useAuthAPI = (app) => {
   });
 
   router.post('/logout', (req, res) => {
-    res.clearCookie('auth_token');
-    res.status(200).json({ message: 'Logged out successfully!' });
+    res.clearCookie('auth_token', { httpOnly: true, sameSite: 'Lax', secure: process.env.NODE_ENV === 'production', path: '/' });
+    return res.sendStatus(204);
   });
 
   router.post('/request-password-reset', async (req, res) => {
@@ -131,7 +132,7 @@ const useAuthAPI = (app) => {
     }
   });
 
-  router.get('/me', (req, res) => {
+  router.get('/me', noCache, (req, res) => {
     const token = req.cookies.auth_token;
     if (!token) {
       return res.status(401).json({ error: 'Not authenticated' });
@@ -142,7 +143,7 @@ const useAuthAPI = (app) => {
       findUserById(userData.id)
         .then((user) => {
           if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(401).json({ error: 'Invalid token' });
           }
           res.status(200).json({
             id: user._id,
