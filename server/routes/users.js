@@ -1,6 +1,6 @@
 import express from 'express';
 
-import isAuthenticated from '../middleware/auth.js';
+import { isAuthenticated } from '../middleware/auth.js';
 import { findUserById, findUserByUsername } from "../db/userService.js";
 import { getRecentActivityByUser } from '../db/blockService.js';
 import Block from '../db/models/Block.js';
