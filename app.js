@@ -58,6 +58,7 @@ import {
 } from './server/db/roomService.js'
 import optionalAuth from './server/middleware/optionalAuth.js';
 import { findUserById } from './server/db/userService.js';
+import { toBlockPreviewDTO } from './server/utils/block.js';
 
 startJobs();
 
@@ -65,7 +66,6 @@ const app = express();
 const port = config.port || 3000;
 const audioHost = 'https://ipod.dailypage.org';
 const ROOM_BASED_CUTOFF = new Date('2024-12-31');
-const md = MarkdownIt();
 
 (async () => {
   const dateParam = ':date([0-9]{4}-[0-9]{2}-[0-9]{2})';
@@ -463,12 +463,6 @@ const md = MarkdownIt();
             preferredLang
           });
 
-        if (userId) {
-          lockedBlocks.forEach(b => {
-            b.userVote = b.votes.find(v => v.userId === userId)?.type || null;
-          });
-        }
-
         const { blocks: inProgressBlocks, period: inProgressPeriod } =
           await getBlocksByRoomWithFallback({
             roomId: room_id,
@@ -478,23 +472,25 @@ const md = MarkdownIt();
             preferredLang
           });
 
-        if (userId) {
-          inProgressBlocks.forEach(b => {
-            b.userVote = b.votes.find(v => v.userId === userId)?.type || null;
-          });
-        }
-
         // Render markdown…
-        lockedBlocks.forEach(b => b.contentHTML = renderMarkdownContent(b.content));
-        inProgressBlocks.forEach(b => b.contentHTML = renderMarkdownContent(b.content));
+        const lightLocked = lockedBlocks.map(
+          b => toBlockPreviewDTO(b, {
+            userId
+          })
+        );
+        const lightInProg = inProgressBlocks.map(
+          b => toBlockPreviewDTO(b, {
+            userId
+          })
+        )
 
         const date = DateHelper.currentDate('long');
 
         res.render('rooms/blocks-dashboard', {
           room_id,
           title: `Daily Page - ${roomMetadata.name}`,
-          lockedBlocks,
-          inProgressBlocks,
+          lockedBlocks: lightLocked,
+          inProgressBlocks: lightInProg,
           lockedPeriod,
           inProgressPeriod,
           user: req.user,
