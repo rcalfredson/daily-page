@@ -91,6 +91,11 @@ append content
                     |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
                   +translationAttribution(block)
                   div.content-preview!= block.contentHTML
+                  if block.truncated
+                    a.more-link(
+                      href=`/rooms/${room_id}/blocks/${block._id}`
+                      aria-label=`Read full block: ${block.title}`
+                    ) More...
         else
           p No locked blocks yet! Blocks auto-lock after 1 hour of inactivity.
 

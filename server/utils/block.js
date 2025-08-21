@@ -17,11 +17,11 @@ export function toBlockPreviewDTO(block, {
     ? (block.votes?.find(v => v.userId === userId)?.type || null)
     : null;
 
-  const contentHTML = renderMarkdownPreview(block.content, {
+  const { html, truncated } = renderMarkdownPreview(block.content, {
     maxChars: previewChars,
     includeWholeTables: true,
     allowImages,
-    ellipsis: '…'
+    ellipsis: ''
   });
 
   return {
@@ -31,6 +31,7 @@ export function toBlockPreviewDTO(block, {
     createdAt: block.createdAt,
     userVote,
     ...(includeTranslation && block.translation ? { translation: block.translation } : {}),
-    contentHTML
+    truncated,
+    contentHTML: html
   };
 }
