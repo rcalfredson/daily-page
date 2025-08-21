@@ -42,18 +42,22 @@ function wrapTables(html) {
  */
 function renderCore(content, { mode = 'full', previewOpts = {} } = {}) {
   const cleaned = content ? content.replace(/\u200B/g, '').trim() : '';
-  if (!cleaned) return '<p><em>(No content yet)</em></p>';
 
   if (mode === 'full') {
-    let html = md.render(cleaned);
+    const html = cleaned
+      ? md.render(cleaned)
+      : '<p><em>(No content yet)</em></p>';
     return wrapTables(html);
   }
 
+  // mode === 'preview' → siempre objeto:
+  if (!cleaned) return { html: '<p><em>(No content yet)</em></p>', truncated: false };
+
   // mode === 'preview'
   const tokens = md.parse(cleaned, {});
-  let html = renderPreviewFromTokens(tokens, previewOpts, md);
+  let { html, truncated } = renderPreviewFromTokens(tokens, previewOpts, md);
   html = wrapTables(html);
-  return html;
+  return { html, truncated };
 }
 
 /** ---------- Preview "token-aware" ---------- */
@@ -184,10 +188,10 @@ function renderPreviewFromTokens(tokens, opts, mdInstance) {
   }
 
   let html = mdInstance.renderer.render(slice, mdInstance.options, {});
-  if (truncated) {
+  if (truncated && ellipsis) {
     html += `<p class="preview-ellipsis">${ellipsis}</p>`;
   }
-  return html;
+  return { html, truncated };
 }
 
 /** ---------- API Pública ---------- */
