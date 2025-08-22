@@ -4,7 +4,6 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { createServer } from 'http';
-import MarkdownIt from 'markdown-it';
 import { ExpressPeerServer } from 'peer';
 import axios from 'axios';
 import DateHelper from './lib/dateHelper.js';
@@ -449,10 +448,6 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           || req.user?.preferredLang
           || (req.acceptsLanguages()[0] || 'en').split('-')[0];
 
-        // Compute the start of the current UTC day.
-        const now = new Date();
-        const utcStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-
         const userId = req.user?.id || null;
         const { blocks: lockedBlocks, period: lockedPeriod } =
           await getBlocksByRoomWithFallback({
@@ -517,6 +512,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
         const preferredLang = req.query.lang
           || req.user?.preferredLang
           || (req.acceptsLanguages()[0] || 'en').split('-')[0];
+        const userId = req.user?.id || null;
         const { featuredBlock, period: featuredBlockPeriod } = await getFeaturedBlockWithFallback({
           preferredLang
         });
@@ -532,10 +528,9 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
         let { blocks: topBlocks, period: blocksPeriod } = await getTopBlocksWithFallback({
           lockedOnly: false, limit: 20, preferredLang
         });
-        topBlocks = topBlocks.map(block => {
-          block.contentHTML = renderMarkdownContent(block.content);
-          return block;
-        });
+        topBlocks = topBlocks.map(block => 
+          toBlockPreviewDTO(block, {userId})
+        );
 
         const { tags: trendingTags, period: tagsPeriod } = await getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' });
 

@@ -1,5 +1,6 @@
 extends ../layout
 
+include ../partials/_read_more
 include ../partials/_translation_attribution
 
 block append head
@@ -45,14 +46,18 @@ mixin renderBlockList(blocks)
     ul.block-list
       each block in blocks
         li.block-preview
-          include ../partials/_vote_controls
           div.content
             a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
             p
               | Created by: 
               a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+              |  in 
+              a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : 'Unknown Room'
               |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
             +translationAttribution(block)
-            div.content-preview!= block.contentHTML
+            div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
+          +readMoreIfTruncated(block, block.roomId)
+          footer.block-footer
+            include ../partials/_vote_controls
   else
     p No blocks found.

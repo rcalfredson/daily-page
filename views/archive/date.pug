@@ -1,11 +1,13 @@
 extends ../layout
 
+include ../partials/_read_more
 include ../partials/_translation_attribution
 
 block nav
   include ../navLinks
 
 block append head
+  link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel='stylesheet' href='/css/archive.css')
   link(rel='stylesheet' href='/css/pagination.css')
   link(rel='stylesheet' href='/css/vote-controls.css')
@@ -54,15 +56,19 @@ block content
       ul.block-list
         each block in blocks
           li.block-item
-            include ../partials/_vote_controls
             div.block-main
               a.block-link(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
-              .block-content!= block.contentHTML
               .block-meta 
                 | Created by: 
                 a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+                |  in 
+                a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : 'Unknown Room'
                 |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
               +translationAttribution(block)
+              div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
+            +readMoreIfTruncated(block, block.roomId)
+            footer.block-footer 
+              include ../partials/_vote_controls
     else
       p No content found for this date.
   include ../partials/_pagination

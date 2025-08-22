@@ -10,7 +10,7 @@
 }
 
 .block-item {
-  display: flex;
+  display: block;
   overflow-x: hidden;
   flex-direction: row;
   align-items: center;

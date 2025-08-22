@@ -90,27 +90,11 @@
 
 .content-preview {
   line-height: 1.4;
-  max-height: 100px;
+  max-height: 200px;
   overflow: hidden;
   position: relative;
   white-space: normal;
   word-break: break-word;
-}
-
-.content-preview::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 30px;
-  background: linear-gradient(transparent, #fff);
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.content-preview.no-fade::after {
-  display: none;
 }
 
 .block-preview {

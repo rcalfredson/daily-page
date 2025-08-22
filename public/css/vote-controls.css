@@ -1,40 +1,44 @@
 .vote-controls {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  width: 40px;
+  gap: 10px;
+  width: auto;
+  user-select: none;
 }
 
 .vote-arrow {
-  background: none;
-  border: none;
+  background: #f8fafc;
+  border: 1px solid #e3e7ee;
   cursor: pointer;
   padding: 0;
   outline: none;
-  display: flex;
-  margin: unset;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  width: 36px;
+  height: 32px;
+  border-radius: 8px;
+  transition: transform .06s ease, background .15s ease, border-color .15s ease;
 }
 
 .vote-arrow.up::before {
   content: '▲';
-  font-size: 1.25rem;
-  line-height: 1;
+  font-size: 1.1rem;
   text-align: center;
 }
 
 .vote-arrow.down::before {
   content: '▼';
-  font-size: 1.25rem;
-  line-height: 1;
+  font-size: 1.1rem;
   text-align: center;
 }
 
 .vote-arrow:hover {
   color: #4194ed;
+  background: #f1f5f9;
+  border-color: #d7dce6;
 }
 
 .vote-count {
