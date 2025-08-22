@@ -1,7 +1,7 @@
 import express from 'express';
 import Block from '../db/models/Block.js';
 import { findByTagWithLangPref, getAllTagsWithCounts, getTagTrendData } from '../db/blockService.js';
-import { renderMarkdownContent } from '../utils/markdownHelper.js';
+import { toBlockPreviewDTO } from '../utils/block.js';
 
 const router = express.Router();
 
@@ -35,17 +35,22 @@ router.get('/tags/:tagName', async (req, res) => {
     const limit = parseInt(req.query.limit) || 20;
     const skip = (page - 1) * limit;
 
+    const userId = req.user?.id || null;
+
     // Obtener bloques asociados con la etiqueta especificada
-    const taggedBlocks = await findByTagWithLangPref({
+    let taggedBlocks = await findByTagWithLangPref({
       tag: tagName,
       preferredLang,
       sortBy: "voteCount",
       skip,
       limit
-    })
-    taggedBlocks.forEach(block => {
-      block.contentHTML = renderMarkdownContent(block.content);
     });
+
+    taggedBlocks = taggedBlocks.map(
+      b => toBlockPreviewDTO(b, {
+        userId
+      })
+    );
 
     const totalBlocks = await Block.distinct("groupId", { tags: tagName }).then(arr => arr.length);
     const totalPages = Math.ceil(totalBlocks / limit);

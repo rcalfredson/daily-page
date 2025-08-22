@@ -1,0 +1,6 @@
+mixin readMoreIfTruncated(item, room_id)
+  if item.truncated
+    a.more-link(
+      href=`/rooms/${room_id}/blocks/${item._id}`
+      aria-label=`Read full block: ${item.title}`
+    ) More...

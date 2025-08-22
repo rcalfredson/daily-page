@@ -29,6 +29,7 @@ export function toBlockPreviewDTO(block, {
     title: block.title,
     creator: block.creator,
     createdAt: block.createdAt,
+    roomId: block.roomId,
     userVote,
     ...(includeTranslation && block.translation ? { translation: block.translation } : {}),
     truncated,

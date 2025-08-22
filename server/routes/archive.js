@@ -1,6 +1,6 @@
 import express from 'express';
 import DateHelper from '../../lib/dateHelper.js';
-import { renderMarkdownContent } from '../utils/markdownHelper.js';
+import { toBlockPreviewDTO } from '../utils/block.js'
 import { getMonthNav, getDateNav } from '../utils/archiveNav.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import Block from '../db/models/Block.js';
@@ -39,6 +39,7 @@ router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
   const preferredLang = req.query.lang
     || req.user?.preferredLang
     || (req.acceptsLanguages()[0] || 'en').split('-')[0];
+  const userId = req.user?.id || null;
   try {
     const [top24h, top7d, top30d, topAll, roomMetadata] = await Promise.all([
       getTopBlocksByTimeframe(1, 20, roomId, preferredLang),
@@ -48,13 +49,10 @@ router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
       getRoomMetadata(roomId)
     ]);
 
-    const allBlocks = [top24h, top7d, top30d, topAll];
-
-    allBlocks.forEach(blockList => {
-      blockList.forEach(block => {
-        block.contentHTML = renderMarkdownContent(block.content);
-      });
-    });
+    const top24hDTO = top24h.map(b => toBlockPreviewDTO(b, { userId }));
+    const top7dDTO = top7d.map(b => toBlockPreviewDTO(b, { userId }));
+    const top30dDTO = top30d.map(b => toBlockPreviewDTO(b, { userId }));
+    const topAllDTO = topAll.map(b => toBlockPreviewDTO(b, { userId }));
 
     const description = `Discover standout posts from the ${roomMetadata.name} room—` +
       `the ones readers loved most over the past 24 hours, 7 days, 30 days, and all time.`;
@@ -62,10 +60,10 @@ router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
     res.render('archive/best-of-room', {
       title: `Best of ${roomMetadata.name}`,
       description,
-      top24h,
-      top7d,
-      top30d,
-      topAll,
+      top24h: top24hDTO,
+      top7d: top7dDTO,
+      top30d: top30dDTO,
+      topAll: topAllDTO,
       roomMetadata,
       user: req.user || null,
     });
@@ -80,6 +78,7 @@ router.get('/archive/best-of', optionalAuth, async (req, res) => {
     const preferredLang = req.query.lang
       || req.user?.preferredLang
       || (req.acceptsLanguages()[0] || 'en').split('-')[0];
+    const userId = req.user?.id || null;
     const [top24h, top7d, top30d, topAll] = await Promise.all([
       getTopBlocksByTimeframe(1, 20, null, preferredLang),
       getTopBlocksByTimeframe(7, 20, null, preferredLang),
@@ -87,13 +86,10 @@ router.get('/archive/best-of', optionalAuth, async (req, res) => {
       getTopBlocksByTimeframe(null, 20, null, preferredLang)
     ]);
 
-    const allBlocks = [top24h, top7d, top30d, topAll];
-
-    allBlocks.forEach(blockList => {
-      blockList.forEach(block => {
-        block.contentHTML = renderMarkdownContent(block.content);
-      });
-    });
+    const top24hDTO = top24h.map(b => toBlockPreviewDTO(b, { userId }));
+    const top7dDTO = top7d.map(b => toBlockPreviewDTO(b, { userId }));
+    const top30dDTO = top30d.map(b => toBlockPreviewDTO(b, { userId }));
+    const topAllDTO = topAll.map(b => toBlockPreviewDTO(b, { userId }));
 
     const description = "The most-loved blocks on Daily Page—funny, honest, poetic, or just plain weird. " +
       "See what stood out over the past day, week, month, and beyond.";
@@ -101,10 +97,10 @@ router.get('/archive/best-of', optionalAuth, async (req, res) => {
     res.render('archive/best-of', {
       title: 'Best of Daily Page',
       description,
-      top24h,
-      top7d,
-      top30d,
-      topAll,
+      top24h: top24hDTO,
+      top7d: top7dDTO,
+      top30d: top30dDTO,
+      topAll: topAllDTO,
       user: req.user || null,
     });
   } catch (error) {
@@ -151,6 +147,8 @@ router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
     const limit = parseInt(req.query.limit) || 50;
     const skip = (page - 1) * limit;
 
+    const userId = req.user?.id || null;
+
     // parse ints
     const y = parseInt(year, 10);
     const m = parseInt(month, 10) - 1;   // zero-based months in JS Date
@@ -171,15 +169,11 @@ router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
       .limit(limit)
       .lean();
 
-    if (req.user) {
-      blocks.forEach(block => {
-        block.userVote = block.votes.find(vote => vote.userId === req.user.id)?.type || null;
-      });
-    }
-
-    blocks.forEach(block => {
-      block.contentHTML = renderMarkdownContent(block.content);
-    });
+    const lightBlocks = blocks.map(
+      b => toBlockPreviewDTO(b, {
+        userId
+      })
+    );
 
     const totalBlocks = await Block.countDocuments({
       createdAt: {
@@ -197,7 +191,7 @@ router.get('/archive/:year/:month/:day', optionalAuth, async (req, res) => {
       title: `Archive for ${date}`,
       description,
       date,
-      blocks,
+      blocks: lightBlocks,
       currentPage: page,
       prevDate,
       nextDate,
@@ -324,6 +318,8 @@ router.get('/rooms/:roomId/archive/:year/:month/:day', optionalAuth, async (req,
     const limit = parseInt(req.query.limit) || 20;
     const skip = (page - 1) * limit;
 
+    const userId = req.user?.id || null;
+
     const blocks = await Block.find({
       roomId,
       createdAt: {
@@ -336,15 +332,11 @@ router.get('/rooms/:roomId/archive/:year/:month/:day', optionalAuth, async (req,
       .limit(limit)
       .lean();
 
-    if (req.user) {
-      blocks.forEach(block => {
-        block.userVote = block.votes.find(vote => vote.userId === req.user.id)?.type || null;
-      });
-    }
-
-    blocks.forEach(block => {
-      block.contentHTML = renderMarkdownContent(block.content);
-    });
+    const lightBlocks = blocks.map(
+      b => toBlockPreviewDTO(b, {
+        userId
+      })
+    );
 
     const totalBlocks = await Block.countDocuments({
       roomId,
@@ -363,7 +355,7 @@ router.get('/rooms/:roomId/archive/:year/:month/:day', optionalAuth, async (req,
       title: `Archive for ${date}`,
       description,
       date,
-      blocks,
+      blocks: lightBlocks,
       currentPage: page,
       prevDate,
       nextDate,

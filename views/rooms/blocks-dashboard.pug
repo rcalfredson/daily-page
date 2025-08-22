@@ -1,5 +1,6 @@
 extends ../layout
 
+include ../partials/_read_more
 include ../partials/_translation_attribution
 
 block nav
@@ -82,7 +83,6 @@ append content
           ul
             each block in lockedBlocks
               li.block-preview
-                include ../partials/_vote_controls
                 div.content
                   a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
                   p
@@ -90,12 +90,10 @@ append content
                     a.user-profile-link(href=`/users/${block.creator}`)= block.creator
                     |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
                   +translationAttribution(block)
-                  div.content-preview!= block.contentHTML
-                  if block.truncated
-                    a.more-link(
-                      href=`/rooms/${room_id}/blocks/${block._id}`
-                      aria-label=`Read full block: ${block.title}`
-                    ) More...
+                  div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
+                  +readMoreIfTruncated(block, room_id)
+                  footer.block-footer
+                    include ../partials/_vote_controls
         else
           p No locked blocks yet! Blocks auto-lock after 1 hour of inactivity.
 
@@ -111,7 +109,6 @@ append content
           ul
             each block in inProgressBlocks
               li.block-preview
-                include ../partials/_vote_controls
                 div.content
                   a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
                   p
@@ -119,6 +116,9 @@ append content
                     a.user-profile-link(href=`/users/${block.creator}`)= block.creator
                     |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
                   +translationAttribution(block)
-                  div.content-preview!= block.contentHTML
+                  div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
+                  +readMoreIfTruncated(block, room_id)
+                  footer.block-footer
+                    include ../partials/_vote_controls
         else
           p No in-progress blocks yet! ¡Manos a la obra!
