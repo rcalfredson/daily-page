@@ -35,8 +35,8 @@ ul {
 }
 
 .content-preview ul {
-  list-style-type: unset;
-  padding-left: unset;
+  list-style-type: disc;
+  padding-left: 40px;
 }
 
 .content-preview.fade-footer::after {
