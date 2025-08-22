@@ -31,6 +31,7 @@ export function toBlockPreviewDTO(block, {
     createdAt: block.createdAt,
     roomId: block.roomId,
     userVote,
+    voteCount: block.voteCount,
     ...(includeTranslation && block.translation ? { translation: block.translation } : {}),
     truncated,
     contentHTML: html
