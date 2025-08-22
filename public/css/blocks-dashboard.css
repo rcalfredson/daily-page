@@ -34,6 +34,11 @@ ul {
   word-break: break-word;
 }
 
+.content-preview ul {
+  list-style-type: unset;
+  padding-left: unset;
+}
+
 .content-preview.fade-footer::after {
   content: "";
   position: absolute;
