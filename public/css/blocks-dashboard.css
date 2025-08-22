@@ -28,7 +28,6 @@ ul {
 
 .content-preview {
   line-height: 1.4;
-  max-height: 220px;
   overflow: hidden;
   position: relative;
   white-space: normal;

@@ -90,7 +90,6 @@
 
 .content-preview {
   line-height: 1.4;
-  max-height: 220px;
   overflow: hidden;
   position: relative;
   white-space: normal;
@@ -107,13 +106,6 @@
 
 .content-preview::after {
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9));
-}
-
-@media (min-width: 768px) {
-  .content-preview.tall-preview {
-    max-height: 200px;
-    /* Más alto solo para imágenes en desktop */
-  }
 }
 
 #room-link {
