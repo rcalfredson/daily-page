@@ -21,7 +21,7 @@ ul {
   flex-grow: 1;
 }
 
-.block-preview p {
+.block-preview p, .block-preview h2 {
   margin: 5px 0;
   color: #555;
 }
