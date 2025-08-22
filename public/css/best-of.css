@@ -88,14 +88,6 @@
   display: block;
 }
 
-.content-preview {
-  line-height: 1.4;
-  overflow: hidden;
-  position: relative;
-  white-space: normal;
-  word-break: break-word;
-}
-
 .block-preview {
   transition: background-color 0.3s ease;
 }
