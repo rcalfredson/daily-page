@@ -115,7 +115,7 @@ block content
                 |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
               +translationAttribution(block)
               div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
-            +readMoreIfTruncated(block, room_id)
+            +readMoreIfTruncated(block, block.roomId)
             footer.block-footer
               include partials/_vote_controls
     else
