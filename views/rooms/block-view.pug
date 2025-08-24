@@ -7,10 +7,10 @@ block append head
   -
     // Helpers
     const base   = process.env.BASE_URL || 'https://dailypage.org';
-    const makeUrl = id => `${base}/rooms/${room_id}/blocks/${id}?lang=${currentLang}`;
+    const makeUrl = id => `${base}/rooms/${room_id}/blocks/${id}?lang=${lang}`;
   link(rel='canonical' href=makeUrl(block._id))
   each t in translations
-    if t.lang !== currentLang
+    if t.lang !== lang
       link(rel='alternate' hreflang=t.lang href=`${base}/rooms/${room_id}/blocks/${t._id}?lang=${t.lang}`)
   // fallback for “any/unknown” language
   link(rel='alternate' hreflang='x-default' href=makeUrl(block._id))
@@ -52,11 +52,11 @@ block content
             summary
               span Lang: 
               span.current-lang.pill
-                span.flag= flagEmoji[currentLang] || '🏳️'
-                | #{currentLang}
+                span.flag= flagEmoji[lang] || '🏳️'
+                | #{lang}
             ul.lang-list
               each t in translations
-                if t.lang !== currentLang
+                if t.lang !== lang
                   li
                     a.pill(href=`/rooms/${room_id}/blocks/${t._id}?lang=${t.lang}`)
                       span.flag= flagEmoji[t.lang] || '🏳️'

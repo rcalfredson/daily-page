@@ -1,70 +1,65 @@
-import path from 'path';
-import { promises as fs } from 'fs';
-import { fileURLToPath } from 'url';
+// server/services/localization.js
+// ¡Versión simplificada y DRY!
 
-const supportedLanguages = ['en', 'es', 'ru'];
+const supportedLanguages = [
+  'en',
+  'es',
+  'fr',
+  'ru',
+  'id',
+  'de',
+  'it',
+  'pt',
+  'zh',
+  'ja',
+  'ko',
+  'ar',
+  'hi',
+  'tr',
+  'nl',
+  'sv',
+  'no',
+  'da',
+  'fi',
+  'pl',
+  'cs',
+  'el',
+  'he',
+  'th',
+  'vi',
+];
 const defaultLanguage = 'en';
 
-// Resolve directory paths
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+/**
+ * Puro y testeable: deduce el idioma preferido del request.
+ * Prioridad: ?lang= override > Accept-Language > default.
+ */
+export function getPreferredLang(req, {
+  supported = supportedLanguages,
+  fallback = defaultLanguage
+} = {}) {
+  // 1) Override via query param (útil p/ testing, enlaces, etc.)
+  const q = req.query?.lang;
+  if (q && supported.includes(q)) return q;
 
-const requiredKeys = [
-  "title",
-  "headline",
-  "paragraph1",
-  "essence",
-  "paragraph2",
-  "role",
-  "paragraph3",
-  "testament",
-  "paragraph4",
-  "cta_join",
-  "cta_archive",
-  "paragraph5"
-];
-
-const validateTranslations = (translations) => {
-  const missingKeys = requiredKeys.filter(key => !translations[key]);
-  if (missingKeys.length) {
-    console.warn(`Missing translation keys: ${missingKeys.join(", ")}`);
-    // Add default fallbacks here if necessary
-  }
-  return translations;
-};
+  // 2) Negociación con Accept-Language (Express usa negotiator)
+  const best = req.acceptsLanguages(supported);
+  return best || fallback;
+}
 
 /**
- * Localization middleware to handle translations for the home page.
+ * Middleware liviano que solo setea res.locals.lang (y req.lang).
+ * Úsalo globalmente: app.use(setLangMiddleware)
  */
-const localizationMiddleware = async (req, res, next) => {
-  const isHomePage = req.path === '/' || req.path === '/*?';
-  const page = isHomePage ? 'homepage' : null;
-
-  let lang = req.acceptsLanguages(supportedLanguages) || defaultLanguage;
-
-  // Allow query param override for testing
-  if (req.query.lang && supportedLanguages.includes(req.query.lang)) {
-    lang = req.query.lang;
-  }
-
-  if (isHomePage && page) {
-    try {
-      const translationsPath = path.join(__dirname, `../../translations/${page}-${lang}.json`);
-      const translations = JSON.parse(await fs.readFile(translationsPath, 'utf8'));
-      res.locals.lang = lang;
-      res.locals.translations = validateTranslations(translations);
-    } catch (error) {
-      console.error(`Missing translation file: ${page}-${lang}.json`);
-      const fallbackPath = path.join(__dirname, `../translations/${page}-${defaultLanguage}.json`);
-      const fallbackTranslations = JSON.parse(await fs.readFile(fallbackPath, 'utf8'));
-      res.locals.translations = validateTranslations(fallbackTranslations);
-    }
-  } else {
-    res.locals.lang = defaultLanguage;
-    res.locals.translations = {};
-  }
-
+export default function setLangMiddleware(req, res, next) {
+  const lang = getPreferredLang(req);
+  res.locals.lang = lang; // tu layout Pug ya lo usare en <html lang=...>
+  req.lang = lang;        // opcional: útil en rutas/controladores
   next();
-};
+}
 
-export default localizationMiddleware;
+/* 
+// (Más adelante) Carga de traducciones por página:
+// Mantén esto separado para no acoplar globalmente.
+// export async function loadTranslations(page, lang) { ... }
+*/

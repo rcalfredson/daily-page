@@ -246,7 +246,7 @@ router.get('/rooms/:roomId/index', optionalAuth, async (req, res) => {
     totalPages: Math.ceil(total / limit),
     sortKey,
     dir: dirStr,
-    currentLang,
+    lang: currentLang,
     langQuery
   });
 });

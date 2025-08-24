@@ -68,7 +68,7 @@ router.get('/tags/:tagName', async (req, res) => {
       totalBlocks,
       trendData,
       user: req.user || null,
-      currentLang,
+      lang: currentLang,
     });
   } catch (error) {
     console.error('Error loading tag page:', error);

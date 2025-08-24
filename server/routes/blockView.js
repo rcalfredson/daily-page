@@ -47,7 +47,7 @@ router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, async (req, res) =>
       translations,
       canManageBlock: canManageBlock(req.user, block, editTokens),
       user: req.user,
-      currentLang: block.lang
+      lang: block.lang
     });
 
   } catch (error) {
