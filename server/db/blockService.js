@@ -17,8 +17,13 @@ export async function getBlockById(blockId) {
   return await Block.findById(blockId);
 }
 
+export async function getTranslationByGroupAndLang(groupId, lang) {
+  if (!groupId || !lang) return null;
+  return await Block.findOne({ groupId, lang }).select('_id lang title roomId status');
+}
+
 export async function getTranslations(groupId) {
-  return await Block.find({ groupId }).select('lang _id title');
+  return await Block.find({ groupId }).select('lang _id title roomId');
 }
 
 export async function getGlobalBlockStats() {

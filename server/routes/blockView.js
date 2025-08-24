@@ -1,13 +1,19 @@
 import express from 'express';
-import { getBlockById,
-  getTranslations
- } from '../db/blockService.js';
+import {
+  getBlockById,
+  getTranslations,
+  getTranslationByGroupAndLang
+} from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { canManageBlock } from '../utils/block.js';
 
 const router = express.Router();
+
+function canonicalBlockPath(doc) {
+  return `/rooms/${doc.roomId}/blocks/${doc._id}`;
+}
 
 router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, async (req, res) => {
   try {
@@ -20,11 +26,24 @@ router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, async (req, res) =>
       return res.status(404).send('Block not found');
     }
 
+    const requestedLang = req.query?.lang;
+    if (requestedLang && requestedLang !== block.lang) {
+      const target = await getTranslationByGroupAndLang(block.groupId, requestedLang);
+
+      if (target) {
+        const targetUrl = canonicalBlockPath(target);
+
+        if (req.path !== targetUrl) {
+          return res.redirect(302, targetUrl);
+        }
+      }
+    }
+
     block.contentHTML = renderMarkdownContent(block.content);
     const descriptionHTML = renderMarkdownContent(block.description);
     const translations = await getTranslations(block.groupId);
 
-    
+
 
     // Attach user vote info if logged in
     if (req.user) {
