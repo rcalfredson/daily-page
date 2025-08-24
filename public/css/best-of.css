@@ -92,10 +92,6 @@
   transition: background-color 0.3s ease;
 }
 
-.block-preview:hover {
-  background-color: #fafafa;
-}
-
 .content-preview::after {
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9));
 }
