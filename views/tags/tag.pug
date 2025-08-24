@@ -50,7 +50,7 @@ block content
     p No blocks found with this tag yet. ¿Qué tal si creas el primero, viejón? 🔥
 
   - const baseUrl = `/tags/${encodeURIComponent(tagName)}`;
-  - const urlPrefix = currentLang ? `${baseUrl}?lang=${currentLang}` : baseUrl;
+  - const urlPrefix = lang ? `${baseUrl}?lang=${lang}` : baseUrl;
   include ../partials/_pagination
   +pagination(currentPage, totalPages, urlPrefix)
   include ../partials/_login_modal

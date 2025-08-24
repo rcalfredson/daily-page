@@ -30,7 +30,7 @@ import blockViewRoute from './server/routes/blockView.js';
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
-import localizationMiddleware from './server/services/localization.js';
+import setLangMiddleware from './server/services/localization.js';
 import { startJobs } from './server/services/cron.js';
 import * as google from './server/services/google.js';
 
@@ -85,7 +85,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     };
 
     app.use(cors(corsOptions));
-    app.use(localizationMiddleware);
+    app.use(setLangMiddleware);
     app.options('*', cors(corsOptions));
 
     if (process.env.NODE_ENV === 'production') {
