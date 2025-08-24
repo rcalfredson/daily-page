@@ -26,20 +26,20 @@ block content
   // Tab navigation
   .tabs
     ul.tab-links
-      li.active(data-tab="tab-24h") 🔥 24 Hours
-      li(data-tab="tab-7d") 🚀 7 Days
-      li(data-tab="tab-30d") 🌕 30 Days
-      li(data-tab="tab-all") 👑 All Time
+      li(class={active: activeTab==='24h'} data-tab="tab-24h") 🔥 24 Hours
+      li(class={active: activeTab==='7d'}  data-tab="tab-7d") 🚀 7 Days
+      li(class={active: activeTab==='30d'} data-tab="tab-30d") 🌕 30 Days
+      li(class={active: activeTab==='all'} data-tab="tab-all") 👑 All Time
 
   // Tab content
   .tab-content
-    #tab-24h.tab-pane.active
+    #tab-24h.tab-pane(class={active: activeTab==='24h'})
       +renderBlockList(top24h)
-    #tab-7d.tab-pane
+    #tab-7d.tab-pane(class={active: activeTab==='7d'})
       +renderBlockList(top7d)
-    #tab-30d.tab-pane
+    #tab-30d.tab-pane(class={active: activeTab==='30d'})
       +renderBlockList(top30d)
-    #tab-all.tab-pane
+    #tab-all.tab-pane(class={active: activeTab==='all'})
       +renderBlockList(topAll)
   include ../partials/_login_modal
 

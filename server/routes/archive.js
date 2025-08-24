@@ -1,5 +1,6 @@
 import express from 'express';
 import DateHelper from '../../lib/dateHelper.js';
+import { chooseActiveBestOfTab } from '../utils/bestOf.js'
 import { toBlockPreviewDTO } from '../utils/block.js'
 import { getMonthNav, getDateNav } from '../utils/archiveNav.js';
 import optionalAuth from '../middleware/optionalAuth.js';
@@ -53,6 +54,9 @@ router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
     const top7dDTO = top7d.map(b => toBlockPreviewDTO(b, { userId }));
     const top30dDTO = top30d.map(b => toBlockPreviewDTO(b, { userId }));
     const topAllDTO = topAll.map(b => toBlockPreviewDTO(b, { userId }));
+    const activeTab = chooseActiveBestOfTab({
+      top24h: top24hDTO, top7d: top7dDTO, top30d: top30dDTO, topAll: topAllDTO
+    });
 
     const description = `Discover standout posts from the ${roomMetadata.name} room—` +
       `the ones readers loved most over the past 24 hours, 7 days, 30 days, and all time.`;
@@ -64,6 +68,7 @@ router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
       top7d: top7dDTO,
       top30d: top30dDTO,
       topAll: topAllDTO,
+      activeTab,
       roomMetadata,
       user: req.user || null,
     });
@@ -90,6 +95,9 @@ router.get('/archive/best-of', optionalAuth, async (req, res) => {
     const top7dDTO = top7d.map(b => toBlockPreviewDTO(b, { userId }));
     const top30dDTO = top30d.map(b => toBlockPreviewDTO(b, { userId }));
     const topAllDTO = topAll.map(b => toBlockPreviewDTO(b, { userId }));
+    const activeTab = chooseActiveBestOfTab({
+      top24h: top24hDTO, top7d: top7dDTO, top30d: top30dDTO, topAll: topAllDTO
+    });
 
     const description = "The most-loved blocks on Daily Page—funny, honest, poetic, or just plain weird. " +
       "See what stood out over the past day, week, month, and beyond.";
@@ -101,6 +109,7 @@ router.get('/archive/best-of', optionalAuth, async (req, res) => {
       top7d: top7dDTO,
       top30d: top30dDTO,
       topAll: topAllDTO,
+      activeTab,
       user: req.user || null,
     });
   } catch (error) {
