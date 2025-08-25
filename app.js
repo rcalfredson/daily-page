@@ -481,6 +481,10 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
         const date = DateHelper.currentDate('long');
 
+        const showInProgressTab = (inProgressPeriod === 1 && inProgressBlocks.length > 0);
+        const showLockedTab = (lockedBlocks.length > 0);
+        const useTabs = (showLockedTab ? 1 : 0) + (showInProgressTab ? 1 : 0) >= 2;
+
         res.render('rooms/blocks-dashboard', {
           room_id,
           title: `Daily Page - ${roomMetadata.name}`,
@@ -488,6 +492,9 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           inProgressBlocks: lightInProg,
           lockedPeriod,
           inProgressPeriod,
+          showInProgressTab,
+          showLockedTab,
+          useTabs,
           user: req.user,
           roomMetadata,
           isStarred,
@@ -528,8 +535,8 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
         let { blocks: topBlocks, period: blocksPeriod } = await getTopBlocksWithFallback({
           lockedOnly: false, limit: 20, preferredLang
         });
-        topBlocks = topBlocks.map(block => 
-          toBlockPreviewDTO(block, {userId})
+        topBlocks = topBlocks.map(block =>
+          toBlockPreviewDTO(block, { userId })
         );
 
         const { tags: trendingTags, period: tagsPeriod } = await getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' });
