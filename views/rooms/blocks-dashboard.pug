@@ -1,7 +1,8 @@
 extends ../layout
 
-include ../partials/_read_more
 include ../partials/_translation_attribution
+include ../partials/_block_list
+include ../partials/_read_more
 
 block nav
   include ../navLinks
@@ -65,62 +66,39 @@ append content
     a.btn(href=`/rooms/${room_id}/blocks/new`) Create a Block
 
   //- Tab links
-  .tabs
-    ul.tab-links
-      li(class="active")
-        a(href="#locked-tab") Locked Blocks
-      li
-        a(href="#inprogress-tab") In-Progress Blocks
+  if useTabs
+    .tabs
+      ul.tab-links
+        li(class="active")
+          a(href="#locked-tab") Locked Blocks
+        li
+          a(href="#inprogress-tab") In-Progress Blocks
 
-    //- Tab content for Locked Blocks
-    .tab-content
-      #locked-tab(class="active")
-        if lockedBlocks.length
-          .tab-period
-            | Locked blocks 
-            if lockedPeriod > 1
-              | in the last #{lockedPeriod} days
-            else
-              | in the last 24 hours
-          ul
-            each block in lockedBlocks
-              li.block-preview
-                div.content
-                  a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
-                  p
-                    | Created by: 
-                    a.user-profile-link(href=`/users/${block.creator}`)= block.creator
-                    |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
-                  +translationAttribution(block)
-                  div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
-                  +readMoreIfTruncated(block, room_id)
-                  footer.block-footer
-                    include ../partials/_vote_controls
-        else
-          p No locked blocks yet! Blocks auto-lock after 1 hour of inactivity.
+      //- Tab content for Locked Blocks
+      .tab-content
+        #locked-tab(class="active")
+          if lockedBlocks.length
+            +blockList(lockedBlocks, lockedPeriod, "Locked blocks", room_id)
+          else
+            p No locked blocks yet! Blocks auto-lock after 1 hour of inactivity.
 
-      //- Tab content for In-Progress Blocks
-      #inprogress-tab
-        if inProgressBlocks.length
-          .tab-period
-            | In-progress blocks 
-            if inProgressPeriod > 1
-              | in the last #{inProgressPeriod} days
-            else
-              | in the last 24 hours
-          ul
-            each block in inProgressBlocks
-              li.block-preview
-                div.content
-                  a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
-                  p
-                    | Created by: 
-                    a.user-profile-link(href=`/users/${block.creator}`)= block.creator
-                    |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
-                  +translationAttribution(block)
-                  div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
-                  +readMoreIfTruncated(block, room_id)
-                  footer.block-footer
-                    include ../partials/_vote_controls
-        else
-          p No in-progress blocks yet! ¡Manos a la obra!
+        //- Tab content for In-Progress Blocks
+        #inprogress-tab
+          if inProgressBlocks.length
+            +blockList(inProgressBlocks, inProgressPeriod, "In-progress blocks", room_id)
+          else
+            p No in-progress blocks yet! ¡Manos a la obra!
+  else
+    if showLockedTab
+      // Título/periodo sin UI de tabs
+      .tab-content
+        #locked-tab.active
+          +blockList(lockedBlocks, lockedPeriod, "Locked blocks", room_id)
+
+    else if showInProgressTab
+      .tab-content
+        #inprogress-tab.active
+          +blockList(inProgressBlocks, inProgressPeriod, "In-progress blocks", room_id)
+
+    else
+      p No blocks yet! Crea el primero y deja huella. 😎

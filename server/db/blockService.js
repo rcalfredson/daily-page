@@ -253,35 +253,39 @@ export async function getBlocksByRoomWithFallback({
   limit = 20,
   preferredLang = 'en'
 }) {
-  const intervals = [1, 7, 30]; // en días
-  for (let days of intervals) {
-    // Calcula la fecha de corte
-    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-    const options = {
-      status,
-      startDate: cutoff,
-      endDate: new Date(),
-      sortBy: 'voteCount',
-      limit
-    };
+  const intervals = [1, 7, 30, 'all'];
 
-    // Si hay userId, incluimos votos del usuario
-    const blocks = await findByRoomWithLangPref({
-      roomId,
-      preferredLang,
-      status,
-      startDate: cutoff,
-      endDate: new Date(),
-      sortBy: 'voteCount',
-      limit
-    });
+  for (let win of intervals) {
+    let blocks = [];
+
+    if (win === 'all') {
+      // All time: sin filtro de fechas
+      blocks = await findByRoomWithLangPref({
+        roomId,
+        preferredLang,
+        status,
+        sortBy: 'voteCount',
+        limit
+      });
+    } else {
+      const cutoff = new Date(Date.now() - win * 24 * 60 * 60 * 1000);
+      blocks = await findByRoomWithLangPref({
+        roomId,
+        preferredLang,
+        status,
+        startDate: cutoff,
+        endDate: new Date(),
+        sortBy: 'voteCount',
+        limit
+      })
+    }
 
     if (blocks.length > 0) {
-      return { blocks, period: days };
+      return { blocks, period: win };
     }
   }
-  // Si no hay nada en ningún intervalo, devolvemos vacío con periodo 1
-  return { blocks: [], period: 1 };
+
+  return { blocks: [], period: 'all' }
 }
 
 // Fallback para obtener trending tags con actividad

@@ -1,9 +1,23 @@
-mixin renderBlockList(blocks)
-  if blocks.length
-    ul.block-list
-      each block in blocks
-        li
-          a(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
-          span= ` (${block.voteCount} votes)`
-  else
-    p No blocks found.
+mixin blockList(blocks, period, label, room_id)
+  .tab-period
+    | #{label} 
+    if period === 'all'
+      | · all time
+    else if period > 1
+      | in the last #{period} days
+    else
+      | in the last 24 hours
+  ul
+    each block in blocks
+      li.block-preview
+        div.content
+          a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
+          p
+            | Created by: 
+            a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+            |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+          +translationAttribution(block)
+          div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
+          +readMoreIfTruncated(block, room_id)
+          footer.block-footer
+            include ../partials/_vote_controls
