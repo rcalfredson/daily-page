@@ -21,7 +21,11 @@ ul {
   flex-grow: 1;
 }
 
-.block-preview p, .block-preview h2, .block-preview ul, .block-preview strong {
+.block-preview p,
+.block-preview h2,
+.block-preview ul,
+.block-preview ol,
+.block-preview strong {
   margin: 5px 0;
   color: #555;
 }
