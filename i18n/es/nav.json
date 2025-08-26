@@ -1,0 +1,12 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "rooms": "Salas",
+    "tags": "Etiquetas",
+    "archive": "Archivo",
+    "bestOf": "Lo mejor",
+    "about": "Acerca de",
+    "support": "Soporte",
+    "otherProjects": "Otros proyectos"
+  }
+}

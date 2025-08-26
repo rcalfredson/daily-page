@@ -1,0 +1,46 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Bloques destacados en las últimas 24 horas",
+      "description": "Daily Page es un sitio minimalista e independiente de escritura donde cualquiera puede publicar pensamientos creativos, recuerdos o experimentos—un bloque a la vez. Explora nuevas ideas, únete a salas y comparte tu voz."
+    },
+    "hero": {
+      "title": "¡Bienvenido a Daily Page!",
+      "subtitle": "Explora los bloques más populares de las últimas 24 horas.",
+      "ctaPrefix": "¿Te sientes inspirado?",
+      "cta": "Únete a una sala",
+      "ctaSuffix": "y crea tu propio bloque."
+    },
+    "stats": {
+      "blocks": "Bloques",
+      "rooms": "Salas",
+      "collabsToday": "Colaboraciones de hoy"
+    },
+    "featured": {
+      "roomRibbon": "★ Sala destacada",
+      "roomInfoDays": "Actividad en los últimos {days} días: {blocks} bloques, {votes} votos.",
+      "roomInfo24h": "Actividad en las últimas 24 horas: {blocks} bloques, {votes} votos.",
+      "checkItOut": "Échale un vistazo",
+      "blockRibbon": "★ Bloque destacado",
+      "votes": "{n} votos",
+      "noContent": "(Sin contenido proporcionado...)",
+      "viewBlock": "Ver bloque"
+    },
+    "trendingTags": {
+      "title": "Etiquetas en tendencia",
+      "suffixDays": "(últimos {days} días)",
+      "blocks": "{n} bloques",
+      "votes": "{n} votos",
+      "empty": "Todavía no hay etiquetas en tendencia. ¡Sé el primero en etiquetar algo cool!"
+    },
+    "trendingBlocks": {
+      "title": "Bloques en tendencia",
+      "suffixDays": "(últimos {days} días)",
+      "createdBy": "Creado por:",
+      "in": "en",
+      "on": "el",
+      "unknownRoom": "Sala desconocida",
+      "empty24h": "Todavía no hay bloques en las últimas 24 horas. ¡Vuelve pronto, compa!"
+    }
+  }
+}

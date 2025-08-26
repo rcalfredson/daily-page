@@ -1,0 +1,12 @@
+{
+  "nav": {
+    "home": "Home",
+    "rooms": "Rooms",
+    "tags": "Tags",
+    "archive": "Archive",
+    "bestOf": "Best Of",
+    "about": "About",
+    "support": "Support",
+    "otherProjects": "Other Projects"
+  }
+}

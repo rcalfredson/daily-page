@@ -1,31 +1,34 @@
-a(href="#main-menu-toggle"
+a(
+  href="#main-menu-toggle"
   id="main-menu-close"
   class="menu-close"
-  aria-label="Close main menu")
-  span(class="sr-only") Close main menu
+  aria-label=t('layout.closeMenu')
+)
+  span(class="sr-only")= t('layout.closeMenu')
   span(class="fa fa-close" aria-hidden="true")
+
 ul
   li
     .home
-      a.link(href='/') Home
+      a.link(href='/')= t('nav.home')
   li
     .app
-      a.link(href='/rooms') Rooms
+      a.link(href='/rooms')= t('nav.rooms')
   li
     .tags
-      a.link(href='/tags') Tags
+      a.link(href='/tags')= t('nav.tags')
   li
     .archive
-      a.link(href='/archive') Archive
+      a.link(href='/archive')= t('nav.archive')
   li
     .best-of
-      a.link(href='/archive/best-of') Best Of
+      a.link(href='/archive/best-of')= t('nav.bestOf')
   li
     .about
-      a.link(href='/about') About
+      a.link(href='/about')= t('nav.about')
   li
     .support
-      a.link(href='/support') Support
+      a.link(href='/support')= t('nav.support')
   li
     .random
-      a.link(href='/random') Other Projects
+      a.link(href='/random')= t('nav.otherProjects')

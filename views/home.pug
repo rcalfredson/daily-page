@@ -24,65 +24,79 @@ block content
 
   // Encabezado principal de la página
   .homepage-header
-    h1 Welcome to Daily Page!
-    p.subtitle Explore the most popular blocks from the last 24 hours. 
-      |Feeling inspired? 
-      a(href="/rooms").join-room Join a room
-      |  and create your own block!
+    h1= t('home.hero.title')
+    p.subtitle
+      = t('home.hero.subtitle') + ' '
+      | 
+      = t('home.hero.ctaPrefix') + ' '
+      a(href="/rooms").join-room= t('home.hero.cta')
+      |  #{' '}
+      = t('home.hero.ctaSuffix')
 
   .global-stats
     a.stat-item(href='/archive')
       i.fas.fa-layer-group
       span.stat-number= globalStats.totalBlocks
-      span.stat-label Blocks
+      span.stat-label= t('home.stats.blocks')
     a.stat-item(href='/rooms')
       i.fas.fa-door-open
       span.stat-number= globalStats.totalRooms
-      span.stat-label Rooms
+      span.stat-label= t('home.stats.rooms')
     .stat-item
       i.fas.fa-users
       span.stat-number= globalStats.collaborationsToday
-      span.stat-label Collaborations Today
+      span.stat-label= t('home.stats.collabsToday')
 
 
   if featuredRoom
     .featured-section
       .featured-card
-        .featured-ribbon ★ Featured Room
-        h2.card-title= featuredRoom.name
+        .featured-ribbon= t('home.featured.roomRibbon')
+        h2.card-title= (featuredRoom.displayName || featuredRoom.name)
         if featuredRoomPeriod > 1
           p.card-info
-            | Activity over the past #{featuredRoomPeriod} days: #{featuredRoomData.blockCount} blocks, #{featuredRoomData.totalRoomVotes} votes.
+            -
+              var roomInfo = t('home.featured.roomInfoDays', {
+                days: featuredRoomPeriod,
+                blocks: featuredRoomData.blockCount,
+                votes: featuredRoomData.totalRoomVotes
+              })
+            = roomInfo
         else
           p.card-info
-            | Activity over the last 24 hours: #{featuredRoomData.blockCount} blocks, #{featuredRoomData.totalRoomVotes} votes.
-        a.btn(href=`/rooms/${featuredRoom._id}`) Check it out
+            -
+              var roomInfo = t('home.featured.roomInfo24h', {
+                blocks: featuredRoomData.blockCount,
+                votes: featuredRoomData.totalRoomVotes
+              })
+            = roomInfo
+        a.btn(href=`/rooms/${featuredRoom._id}`)= t('home.featured.checkItOut')
 
   if featuredBlock
     .featured-section
       .featured-card
-        .featured-ribbon ★ Featured Block
+        .featured-ribbon= t('home.featured.blockRibbon')
         // Título del block
         h2.card-title= featuredBlock.title
         // Votos
-        p.card-info #{featuredBlock.voteCount} votes
+        p.card-info= t('home.featured.votes', {n: featuredBlock.voteCount})
 
         // Preview del contenido (ya convertido a HTML)
         if featuredBlock.contentHTML
           div.featured-content-preview!= featuredBlock.contentHTML
         else
-          p.card-info (No content provided...)
+          p.card-info= t('home.featured.noContent')
 
         // Botón para ver más
-        a.btn(href=`/rooms/${featuredBlock.roomId}/blocks/${featuredBlock._id}`) View Block
+        a.btn(href=`/rooms/${featuredBlock.roomId}/blocks/${featuredBlock._id}`)= t('home.featured.viewBlock')
 
   
   // Sección de Trending Tags
   .trending-section
     h2
-      | Trending Tags
+      = t('home.trendingTags.title')
       if tagsPeriod > 1
-        |  (last #{tagsPeriod} days)
+        |  #{t('home.trendingTags.suffixDays', {days: tagsPeriod})}
     if trendingTags && trendingTags.length
       .trending-tags-widget
         ul.trending-tags
@@ -90,9 +104,9 @@ block content
             li.tag-chip
               i.tag-icon.fas.fa-tag
               a(href=`/tags/${encodeURIComponent(tagObj._id)}`)= tagObj._id
-              span.tag-badge (#{tagObj.totalBlocks} blocks, #{tagObj.totalVotes} votes)
+              span.tag-badge (#{t('home.trendingTags.blocks', {n: tagObj.totalBlocks})}, #{t('home.trendingTags.votes', {n: tagObj.totalVotes})})
     else
-      p No trending tags yet. ¡Sé el primero en etiquetar algo cool!
+      p= t('home.trendingTags.empty')
 
   // Divider opcional
   .divider
@@ -100,9 +114,9 @@ block content
   // Sección de Trending Blocks
   .trending-section
     h2
-      | Trending Blocks
+      = t('home.trendingBlocks.title')
       if blocksPeriod > 1
-        |  (last #{blocksPeriod} days)
+        |  #{t('home.trendingBlocks.suffixDays', {days: blocksPeriod})}
     if topBlocks.length
       ul.block-list
         each block in topBlocks
@@ -110,17 +124,17 @@ block content
             div.content
               a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
               p
-                | Created by: 
+                | #{t('home.trendingBlocks.createdBy')} 
                 a.user-profile-link(href=`/users/${block.creator}`)= block.creator
-                |  in 
-                a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : "Unknown Room"
-                |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                |  #{t('home.trendingBlocks.in')} 
+                a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : t('home.trendingBlocks.unknownRoom')
+                |  #{t('home.trendingBlocks.on')} #{new Date(block.createdAt).toLocaleString(lang, { dateStyle: 'medium', timeStyle: 'short' })}
               +translationAttribution(block)
               div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
             +readMoreIfTruncated(block, block.roomId)
             footer.block-footer
               include partials/_vote_controls
     else
-      p No blocks yet in the last 24 hours. ¡Check back soon, compa!
+      p= t('home.trendingBlocks.empty24h')
 
   include partials/_login_modal
