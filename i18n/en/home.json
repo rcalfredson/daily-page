@@ -1,0 +1,46 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Top Blocks in the last 24 Hours",
+      "description": "Daily Page is a minimalist, indie writing site where anyone can post creative thoughts, memories, or experiments—one block at a time. Explore new ideas, join rooms, and contribute your voice."
+    },
+    "hero": {
+      "title": "Welcome to Daily Page!",
+      "subtitle": "Explore the most popular blocks from the last 24 hours.",
+      "ctaPrefix": "Feeling inspired?",
+      "cta": "Join a room",
+      "ctaSuffix": "and create your own block!"
+    },
+    "stats": {
+      "blocks": "Blocks",
+      "rooms": "Rooms",
+      "collabsToday": "Collaborations Today"
+    },
+    "featured": {
+      "roomRibbon": "★ Featured Room",
+      "roomInfoDays": "Activity over the past {days} days: {blocks} blocks, {votes} votes.",
+      "roomInfo24h": "Activity over the last 24 hours: {blocks} blocks, {votes} votes.",
+      "checkItOut": "Check it out",
+      "blockRibbon": "★ Featured Block",
+      "votes": "{n} votes",
+      "noContent": "(No content provided...)",
+      "viewBlock": "View Block"
+    },
+    "trendingTags": {
+      "title": "Trending Tags",
+      "suffixDays": "(last {days} days)",
+      "blocks": "{n} blocks",
+      "votes": "{n} votes",
+      "empty": "No trending tags yet. Be the first to tag something cool!"
+    },
+    "trendingBlocks": {
+      "title": "Trending Blocks",
+      "suffixDays": "(last {days} days)",
+      "createdBy": "Created by:",
+      "in": "in",
+      "on": "on",
+      "unknownRoom": "Unknown Room",
+      "empty24h": "No blocks yet in the last 24 hours. Check back soon, compa!"
+    }
+  }
+}

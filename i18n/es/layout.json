@@ -1,0 +1,12 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "¡Bienvenido, Usuario!",
+    "logout": "Cerrar sesión",
+    "login": "Iniciar sesión / Registrarse",
+    "openMenu": "Abrir menú principal",
+    "closeMenu": "Cerrar menú principal",
+    "privacy": "Política de privacidad",
+    "copyright": "© {year}"
+  }
+}

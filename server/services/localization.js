@@ -57,9 +57,3 @@ export default function setLangMiddleware(req, res, next) {
   req.lang = lang;        // opcional: útil en rutas/controladores
   next();
 }
-
-/* 
-// (Más adelante) Carga de traducciones por página:
-// Mantén esto separado para no acoplar globalmente.
-// export async function loadTranslations(page, lang) { ... }
-*/

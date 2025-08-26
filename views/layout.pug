@@ -21,24 +21,21 @@ html(lang=lang || 'en')
       script(defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js")
       script(defer src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js")
   body(data-is-logged-in=user ? "true" : "false" data-user-id=user ? user.id : null)
-    -
-      var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                        'July', 'August', 'September', 'October', 'November', 'December']
     div.auth-wrapper
-      p#welcome-message Welcome, User!
-      button#nav-logout(type="button" style="display:none;") Logout
-      a#nav-login(href="/login" style="display:none;") Login / Sign Up
+      p#welcome-message= t('layout.welcomeUser')
+      button#nav-logout(type="button" style="display:none;")= t('layout.logout')
+      a#nav-login(href="/login" style="display:none;")= t('layout.login')
     .navbar
       a(href='/')
-        h1.logo Daily Page
+        h1.logo= t('layout.siteName')
       header
         a(href="#main-menu"
           id="main-menu-toggle"
           class="menu-toggle"
-          aria-label="Open main menu")
-          span(class="sr-only") Open main menu
+          aria-label=t('layout.openMenu'))
+          span(class="sr-only")= t('layout.openMenu')
           span(class="fa fa-bars" aria-hidden="true")
-        nav(class="nav-items" id="main-menu" class="main-menu")
+        nav#main-menu.nav-items.main-menu
           block nav
         a(href="#main-menu-toggle"
           class="backdrop"
@@ -48,9 +45,8 @@ html(lang=lang || 'en')
 
     footer.footer(role="contentinfo")
       .footer-content
-        p © #{new Date().getFullYear()} Daily Page
-        a(href="/privacy") Privacy Policy
+        p #{t('layout.copyright', {year: new Date().getFullYear()})} #{t('layout.siteName')}
+        a(href="/privacy")= t('layout.privacy')
 
     include partials/_common_scripts
-
     block scripts

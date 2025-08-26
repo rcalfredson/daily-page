@@ -11,14 +11,12 @@ import * as encodeHelper from './lib/encodeHelper.js';
 
 import { config } from './config/config.js';
 
-
 import useAuthAPI from './server/api/v1/auth.js';
 import useBlockAPI from './server/api/v1/blocks.js';
 import usePeersAPI from './server/api/v1/peers.js';
 import useRoomAPI from './server/api/v1/rooms.js';
 import useUserAPI from './server/api/v1/users.js';
 import useVoteAPI from './server/api/v1/votes.js';
-
 
 import roomRoute from './server/routes/rooms.js'; // Routes
 import usersRoute from './server/routes/users.js';
@@ -31,6 +29,7 @@ import blockViewRoute from './server/routes/blockView.js';
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
 import setLangMiddleware from './server/services/localization.js';
+import { initI18n, addI18n } from './server/services/i18n.js'
 import { startJobs } from './server/services/cron.js';
 import * as google from './server/services/google.js';
 
@@ -86,6 +85,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     app.use(cors(corsOptions));
     app.use(setLangMiddleware);
+    app.use(initI18n(['layout', 'nav']))
     app.options('*', cors(corsOptions));
 
     if (process.env.NODE_ENV === 'production') {
@@ -135,15 +135,6 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     server.listen(port, () => {
       console.log(`Listening on port ${port}`);
-    });
-
-    app.get('/archive', async (_, res) => {
-      const combos = await cache.get('monthYearCombos', getPageMonthYearCombos);
-
-      res.render('archive', {
-        combos,
-        title: 'Archive',
-      });
     });
 
     app.get('/random-writer', (_, res) => {
@@ -514,12 +505,12 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       })
     })
 
-    app.get('/', optionalAuth, async (req, res) => {
+    app.get('/', optionalAuth, addI18n(['home']), async (req, res) => {
       try {
-        const preferredLang = req.query.lang
-          || req.user?.preferredLang
-          || (req.acceptsLanguages()[0] || 'en').split('-')[0];
+        const preferredLang = res.locals.lang; // ya decidido por middleware
         const userId = req.user?.id || null;
+        const { t } = res.locals;
+
         const { featuredBlock, period: featuredBlockPeriod } = await getFeaturedBlockWithFallback({
           preferredLang
         });
@@ -529,15 +520,13 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
         const { featuredRoomData, period: featuredRoomPeriod } = await getFeaturedRoomWithFallback();
         let featuredRoom = null;
         if (featuredRoomData) {
-          featuredRoom = await getRoomMetadata(featuredRoomData._id);
+          featuredRoom = await getRoomMetadata(featuredRoomData._id, preferredLang);
         }
 
         let { blocks: topBlocks, period: blocksPeriod } = await getTopBlocksWithFallback({
           lockedOnly: false, limit: 20, preferredLang
         });
-        topBlocks = topBlocks.map(block =>
-          toBlockPreviewDTO(block, { userId })
-        );
+        topBlocks = topBlocks.map(b => toBlockPreviewDTO(b, { userId }));
 
         const { tags: trendingTags, period: tagsPeriod } = await getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' });
 
@@ -550,12 +539,9 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           collaborationsToday: blockStats.collaborationsToday
         };
 
-        const description = "Daily Page is a minimalist, indie writing site where anyone can post creative thoughts, memories, "
-          + "or experiments—one block at a time. Explore new ideas, join rooms, and contribute your voice."
-
         res.render('home', {
-          title: 'Daily Page - Top Blocks in the last 24 Hours',
-          description,
+          title: t('home.meta.title'),
+          description: t('home.meta.description'),
           topBlocks,
           blocksPeriod,
           featuredBlock,
@@ -567,7 +553,6 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           trendingTags,
           tagsPeriod,
           user: req.user,
-          translations: res.locals.translations,
           lang: res.locals.lang,
         });
       } catch (err) {
