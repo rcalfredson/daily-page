@@ -1,0 +1,16 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Directorio de Salas",
+      "description": "Cada sala es una puerta a otro mundo. Entra, comparte tu historia y súmate a construir algo bonito."
+    },
+    "heading": "Directorio de Salas",
+    "empty": "No hay salas disponibles por ahora. ¡Vuelve pronto!",
+    "recentlyActive": "Recientemente activas",
+    "activeUsers": "Usuarios activos: {count}",
+    "visitRoom": "Visitar sala",
+    "close": "Cerrar",
+    "noTitle": "Sin título disponible",
+    "noDescription": "Sin descripción disponible"
+  }
+}

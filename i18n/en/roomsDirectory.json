@@ -1,0 +1,16 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Room Directory",
+      "description": "Each room is a doorway to a different world. Step inside, share your story, and join others in building something beautiful."
+    },
+    "heading": "Room Directory",
+    "empty": "No rooms are available at the moment. Check back later!",
+    "recentlyActive": "Recently Active",
+    "activeUsers": "Active Users: {count}",
+    "visitRoom": "Visit Room",
+    "close": "Close",
+    "noTitle": "No Title Available",
+    "noDescription": "No Description Available"
+  }
+}

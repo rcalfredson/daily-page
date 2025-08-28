@@ -1,8 +1,6 @@
 import Room from './models/Room.js';
 
-let cachedTopics = null;
-let cacheExpiration = 0;
-
+let cachedTopicsByLang = new Map();
 
 function resolveRoomField(room, field, lang) {
   const map = room?.[`${field}_i18n`];
@@ -29,7 +27,8 @@ export function toRoomI18nDTO(room, lang) {
   return {
     ...room,
     displayName: resolveRoomField(room, 'name', lang),
-    displayDescription: resolveRoomField(room, 'description', lang)
+    displayDescription: resolveRoomField(room, 'description', lang),
+    displayTopic: resolveRoomField(room, 'topic', lang)
   };
 }
 
@@ -69,37 +68,35 @@ export async function getTotalRooms() {
  * Fetches & groups rooms by their topic, caching the result 
  * for 10 minutes.
  */
-export async function fetchAndGroupRooms() {
+export async function fetchAndGroupRooms(lang = null) {
   const now = Date.now();
-  if (cachedTopics && now < cacheExpiration) {
-    return cachedTopics;
-  }
+  const hit = cachedTopicsByLang.get(lang || 'raw');
+  if (hit && now < hit.exp) return hit.topics;
 
   try {
-    // Grab rooms from the DB
-    const rooms = (await Room.find({})).map(doc => doc.toObject());
+    const docs = (await Room.find({})).map(d => d.toObject());
+    const rooms = lang ? docs.map(r => toRoomI18nDTO(r, lang)) : docs;
 
-    // Build grouped topics
     const topics = rooms.reduce((grouped, room) => {
-      const topicGroup = grouped.find(g => g.topic === room.topic);
-      if (topicGroup) {
-        topicGroup.rooms.push(room);
-      } else {
-        grouped.push({ topic: room.topic, rooms: [room] });
+      const topicLabel = lang ? (room.displayTopic || room.topic) : room.topic;
+      let topicGroup = grouped.find(g => g.topic === topicLabel);
+      if (!topicGroup) {
+        topicGroup = { topic: topicLabel, rooms: [] };
+        grouped.push(topicGroup);
       }
+      topicGroup.rooms.push(room);
       return grouped;
     }, []);
 
-    // Sort topics and rooms
-    topics.sort((a, b) => a.topic.localeCompare(b.topic));
-    topics.forEach(topic => {
-      topic.rooms.sort((a, b) => a.name.localeCompare(b.name));
-    });
+    // Sort “locale-aware”
+    const collator = new Intl.Collator(lang || 'en');
+    topics.sort((a, b) => collator.compare(a.topic, b.topic));
+    topics.forEach(t => t.rooms.sort((a, b) =>
+      collator.compare(a.displayName || a.name, b.displayName || b.name)
+    ));
 
-    // Cache the sorted topics for 10 mins
-    cachedTopics = topics;
-    cacheExpiration = now + 10 * 60 * 1000;
-
+    // Cache 10 min por lang
+    cachedTopicsByLang.set(lang || 'raw', { topics, exp: now + 10 * 60 * 1000 });
     return topics;
   } catch (error) {
     console.error('Error fetching and grouping rooms:', error.message);
