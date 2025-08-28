@@ -1,4 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // ---- i18n bootstrap ------------------------------------------------------
+  const parseJSON = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return null;
+    try { return JSON.parse(el.textContent || '{}'); } catch { return null; }
+  };
+  const I18N_NS = parseJSON('i18n-roomsDirectory') || {};
+  const CURRENT_LANG = parseJSON('i18n-lang') || 'en';
+
+  const deepGet = (obj, dotted) =>
+    dotted.split('.').reduce((o, k) => (o && k in o) ? o[k] : undefined, obj);
+
+  const interpolate = (str, params = {}) =>
+    String(str).replace(/\{(\w+)\}/g, (_, k) => (params[k] ?? `{${k}}`));
+
+  // Acepta 'roomsDirectory.key' o 'key' (azúcar)
+  const t = (key, params) => {
+    const path = key.startsWith('roomsDirectory.') ? key.slice('roomsDirectory.'.length) : key;
+    const val = deepGet(I18N_NS, path);
+    return (val == null) ? key : interpolate(val, params);
+  };
+  // --------------------------------------------------------------------------
+
   const headers = document.querySelectorAll('.topic-header');
   const modal = document.querySelector('.room-modal');
   const modalTitle = document.querySelector('.modal-title');
@@ -13,20 +36,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const fetchActiveUsers = async (roomId) => {
     try {
       const response = await fetch(`/api/v1/rooms/active-users/${roomId}`);
-      if (!response.ok) throw new Error('Failed to fetch active users.');
+      if (!response.ok) throw new Error('fetch failed');
       const data = await response.json();
       return data.activeUsers || 0;
-    } catch (error) {
-      console.error(`Error fetching active users for room ${roomId}:`, error.message);
+    } catch {
       return 0;
     }
   };
 
-  // Collapsible section behavior
+  // Collapsible behavior (sin depender del label traducido)
   headers.forEach(header => {
     const topicSection = header.nextElementSibling;
     const icon = header.querySelector('.expand-icon');
-    if (header.dataset.topic !== 'Recently Active') {
+    const isRecentlyActive = header.dataset.recentlyActive === 'true';
+
+    if (!isRecentlyActive) {
       topicSection.classList.add('collapsed');
       topicSection.style.maxHeight = 0;
       icon.classList.add('collapsed');
@@ -47,43 +71,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Dynamic hover behavior for non-recently-active tiles
+  // Dynamic hover (usa t('activeUsers'))
   document.querySelectorAll('.room-tile').forEach(tile => {
     const activeUsersBadge = tile.querySelector('.room-activity');
-    activeUsersBadge.style.display = 'none';
+    if (activeUsersBadge) activeUsersBadge.style.display = 'none';
 
     tile.addEventListener('mouseenter', async () => {
-      if (!isMobile() && !tile.classList.contains('recently-active')) {
+      if (!isMobile()) {
         const roomId = tile.getAttribute('data-room-link').split('/').pop();
         const activeUsers = await fetchActiveUsers(roomId);
-        activeUsersBadge.textContent = `Active Users: ${activeUsers}`;
-        activeUsersBadge.style.opacity = 1;
-        activeUsersBadge.style.display = 'unset';
+        if (activeUsersBadge) {
+          activeUsersBadge.textContent = t('roomsDirectory.activeUsers', { count: activeUsers });
+          activeUsersBadge.style.opacity = 1;
+          activeUsersBadge.style.display = 'unset';
+        }
       }
     });
 
     tile.addEventListener('mouseleave', () => {
-      if (!tile.classList.contains('recently-active')) {
+      if (activeUsersBadge) {
         activeUsersBadge.style.opacity = 0;
         activeUsersBadge.style.display = 'none';
       }
     });
 
-    // Modal behavior for mobile
+    // Modal (usa fallbacks traducidos)
     tile.addEventListener('click', async (e) => {
       if (isMobile()) {
-        e.preventDefault(); // Prevent link navigation on mobile
+        e.preventDefault();
         const title = tile.getAttribute('data-room-title');
         const description = tile.getAttribute('data-room-description');
         const href = tile.getAttribute('data-room-link');
         const roomId = href.split('/').pop();
         const activeUsers = await fetchActiveUsers(roomId);
 
-        const activeUsersText = `Active Users: ${activeUsers}`;
-
-        modalTitle.textContent = title || 'No Title Available';
-        modalDescription.textContent = description || 'No Description Available';
-        modalActiveUsers.textContent = activeUsersText;
+        modalTitle.textContent = title || t('roomsDirectory.noTitle');
+        modalDescription.textContent = description || t('roomsDirectory.noDescription');
+        modalActiveUsers.textContent = t('roomsDirectory.activeUsers', { count: activeUsers });
         modalLink.href = href || '#';
 
         modal.classList.add('visible');
@@ -92,13 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Close modal
-  modalClose.addEventListener('click', () => {
-    modal.classList.remove('visible');
-  });
-
+  modalClose.addEventListener('click', () => modal.classList.remove('visible'));
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.classList.remove('visible');
-    }
+    if (e.target === modal) modal.classList.remove('visible');
   });
 });

@@ -1,16 +1,24 @@
 import express from 'express';
 import { fetchAndGroupRooms } from '../db/roomService.js';
 import { getRecentlyActiveRooms } from '../db/sessionService.js';
+import { addI18n } from '../services/i18n.js';
 
 const router = express.Router();
 
-router.get('/rooms', async (req, res) => {
+router.get('/rooms', addI18n(['roomsDirectory']), async (req, res) => {
   try {
-    const topics = await fetchAndGroupRooms() || [];
-    const recentlyActiveRooms = await getRecentlyActiveRooms(5);
+    const lang = res.locals.lang;
+    const topics = await fetchAndGroupRooms(lang) || [];
+    const recentlyActiveRaw = await getRecentlyActiveRooms(5);
+    const recentlyActiveRooms = recentlyActiveRaw.map(r => ({
+      ...r,
+      displayName: r.name_i18n?.get?.(lang) || r.name_i18n?.[lang] || r.name,
+      displayDescription: r.description_i18n?.get?.(lang) || r.description_i18n?.[lang] || r.description
+    }))
+
     res.render('rooms', {
-      title: 'Room Directory',
-      description: "Each room is a doorway to a different world. Step inside, share your story, and join others in building something beautiful.",
+      title: res.locals.t('roomsDirectory.meta.title'),
+      description: res.locals.t('roomsDirectory.meta.description'),
       topics,
       recentlyActiveRooms,
     });

@@ -1,5 +1,14 @@
 extends layout
 
+block append head
+  link(rel='stylesheet' href='/css/rooms.css')
+  // Exporta el diccionario que el JS va a leer
+  script#i18n-roomsDirectory(type='application/json').
+    !{JSON.stringify(__i18n.roomsDirectory || {})}
+  // Exporta el idioma actual
+  script#i18n-lang(type='application/json').
+    !{JSON.stringify(lang || 'en')}
+
 block nav
   include navLinks
 
@@ -7,51 +16,51 @@ block scripts
   script(src='/js/room-directory.js')
 
 block content
-  h1 Room Directory
+  h1= t('roomsDirectory.heading')
   if topics.length === 0
-    p No rooms are available at the moment. Check back later!
+    p= t('roomsDirectory.empty')
   else
     if recentlyActiveRooms && recentlyActiveRooms.length > 0
-      .topic-section
-        h2.topic-header(data-topic='Recently Active')
-          span.topic-title Recently Active
+      .topic-section.recently-active
+        h2.topic-header(data-topic=t('roomsDirectory.recentlyActive') data-recently-active='true')
+          span.topic-title= t('roomsDirectory.recentlyActive')
           span.expand-icon
         .room-grid.collapsible
           each room in recentlyActiveRooms
-            .room-tile(
-              data-room-title=`${room.name}`
-              data-room-description=`${room.description}`
+            .room-tile.recently-active(
+              data-room-title=`${room.displayName || room.name}`
+              data-room-description=`${room.displayDescription || room.description}`
               data-room-link=`/rooms/${room._id}`
               data-room-active-users=`${room.activeUsers || 0}`
             )
-              a.room-link(href=`/rooms/${room._id}` title=room.name)
-                span.room-title= room.name
-                span.room-description= room.description
-                span.room-activity= `Active Users: ${room.activeUsers}`
+              a.room-link(href=`/rooms/${room._id}` title=(room.displayName || room.name))
+                span.room-title= room.displayName || room.name
+                span.room-description= room.displayDescription || room.description
+                span.room-activity= t('roomsDirectory.activeUsers', { count: room.activeUsers || 0 })
 
     each topicGroup in topics
       .topic-section
-        h2.topic-header(data-topic=`${topicGroup.topic}`)
+        h2.topic-header(data-topic=topicGroup.topic)
           span.topic-title= topicGroup.topic
           span.expand-icon.collapsed
         .room-grid.collapsible
           each room in topicGroup.rooms
             .room-tile(
-              data-room-title=`${room.name}`
-              data-room-description=`${room.description}`
+              data-room-title=`${room.displayName || room.name}`
+              data-room-description=`${room.displayDescription || room.description}`
               data-room-link=`/rooms/${room._id}`
               data-room-active-users=`${room.activeUsers || 0}`
             )
-              a.room-link(href=`/rooms/${room._id}` title=room.name)
-                span.room-title= room.name
-                span.room-description= room.description
+              a.room-link(href=`/rooms/${room._id}` title=(room.displayName || room.name))
+                span.room-title= room.displayName || room.name
+                span.room-description= room.displayDescription || room.description
                 span.room-activity
+
   // Modal overlay for room details
   .room-modal.hidden
     .room-modal-content
-      button.modal-close(type="button" aria-label="Close") ×
+      button.modal-close(type="button" aria-label=t('roomsDirectory.close')) ×
       h2.modal-title
       p.modal-description
       p.modal-active-users
-      a.modal-link(href='#', target='_self') Visit Room
-
+      a.modal-link(href='#', target='_self')= t('roomsDirectory.visitRoom')
