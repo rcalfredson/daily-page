@@ -7,11 +7,11 @@ block nav
   include ../navLinks
 
 block append head
-  link(rel='stylesheet', href='/css/blocks-dashboard.css')
+  link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel='stylesheet' href='/css/pagination.css')
-  link(rel='stylesheet', href='/css/tags.css')
-  link(rel="stylesheet", href="/css/vote-controls.css")
-  link(rel="stylesheet", href="/css/modal.css")
+  link(rel='stylesheet' href='/css/tags.css')
+  link(rel="stylesheet" href="/css/vote-controls.css")
+  link(rel="stylesheet" href="/css/modal.css")
   link(rel='stylesheet' href='/css/translation-attribution.css')
   script(src='https://cdn.jsdelivr.net/npm/chart.js')
 
@@ -25,8 +25,9 @@ block content
     p.tag-stats Total blocks with #[strong #{tagName}]: #[strong #{totalBlocks}]
 
   // Trend chart container
-  .chart-container
-    canvas#tagTrendChart(width="400" height="200")
+  if trendData.length >= 2
+    .chart-container
+      canvas#tagTrendChart
 
   if taggedBlocks.length
     ul.block-list
@@ -56,41 +57,43 @@ block content
   include ../partials/_login_modal
 
   script.
-    // Convert trendData to JavaScript object
-    const trendData = !{JSON.stringify(trendData)};
-    const labels = trendData.map(entry => entry._id);
-    const dataCounts = trendData.map(entry => entry.count);
+    (function () {
+      // Inyecta los datos del servidor a una constante con nombre distinto
+      const __trendData = !{JSON.stringify(trendData)};
 
-    const ctxTrend = document.getElementById('tagTrendChart').getContext('2d');
-    new Chart(ctxTrend, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Blocks Created Over Time',
-          data: dataCounts,
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          fill: true,
-          tension: 0.3,
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: { beginAtZero: true },
-          x: {
-            ticks: {
-              maxRotation: 45,
-              minRotation: 45,
-              autoSkip: false
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            display: false
-          }
-        }
+      if (!Array.isArray(__trendData) || __trendData.length <= 1) {
+        return;
       }
-    });
+
+      const canvas = document.getElementById('tagTrendChart');
+      if (!canvas) return;
+      const ctxTrend = canvas.getContext('2d');
+
+      const labels = __trendData.map(e => e._id);
+      const dataCounts = __trendData.map(e => e.count);
+
+      new Chart(ctxTrend, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Blocks Created Over Time',
+            data: dataCounts,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true },
+            x: {
+              ticks: { maxRotation: 45, minRotation: 45, autoSkip: false }
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    })();

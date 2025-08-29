@@ -20,6 +20,11 @@
   color: #555;
 }
 
+.chart-container {
+  width: 50%;
+  margin: 0 auto;
+}
+
 .tag-cloud {
   display: flex;
   flex-wrap: wrap;
