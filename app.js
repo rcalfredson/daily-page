@@ -1,3 +1,4 @@
+import compression from 'compression';
 import stream from 'stream';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -46,7 +47,6 @@ import {
 import {
   pagesByDate,
   getPageDatesByYearAndMonth,
-  getPageMonthYearCombos,
   getPage
 } from './server/db/pageService.js';
 import {
@@ -83,12 +83,9 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       },
     };
 
-    app.use(cors(corsOptions));
-    app.use(setLangMiddleware);
-    app.use(initI18n(['layout', 'nav']))
-    app.options('*', cors(corsOptions));
-
     if (process.env.NODE_ENV === 'production') {
+      app.set('view cache', true);
+      app.use(compression());
       app.use((req, res, next) => {
         if (req.headers['x-forwarded-proto'] !== 'https') {
           // res.redirect(`https://${req.headers.host}${req.path}`);
@@ -98,6 +95,11 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
         }
       });
     }
+
+    app.use(cors(corsOptions));
+    app.use(setLangMiddleware);
+    app.use(initI18n(['layout', 'nav']));
+    app.options('*', cors(corsOptions));
 
     app.use((req, res, next) => {
       res.locals.user = req.user || null;
@@ -511,32 +513,51 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
         const userId = req.user?.id || null;
         const { t } = res.locals;
 
-        const { featuredBlock, period: featuredBlockPeriod } = await getFeaturedBlockWithFallback({
-          preferredLang
-        });
-        if (featuredBlock) {
-          featuredBlock.contentHTML = renderMarkdownContent(featuredBlock.content);
-        }
-        const { featuredRoomData, period: featuredRoomPeriod } = await getFeaturedRoomWithFallback();
-        let featuredRoom = null;
-        if (featuredRoomData) {
-          featuredRoom = await getRoomMetadata(featuredRoomData._id, preferredLang);
-        }
+        // Dispara todo en paralelo
+        const [
+          fbRes,   // featured block
+          frRes,   // featured room (ids/raw)
+          topRes,  // top blocks
+          tagsRes, // trending tags
+          statsRes,// global block stats
+          roomsRes // total rooms
+        ] = await Promise.all([
+          getFeaturedBlockWithFallback({ preferredLang }),
+          getFeaturedRoomWithFallback(),
+          getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang }),
+          getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' }),
+          getGlobalBlockStats(),
+          getTotalRooms(),
+        ]);
 
-        let { blocks: topBlocks, period: blocksPeriod } = await getTopBlocksWithFallback({
-          lockedOnly: false, limit: 20, preferredLang
-        });
-        topBlocks = topBlocks.map(b => toBlockPreviewDTO(b, { userId }));
+        // Post-procesamiento mínimo (sin I/O extra)
+        const featuredBlock = fbRes?.featuredBlock?.content
+          ? { ...fbRes.featuredBlock, contentHTML: renderMarkdownContent(fbRes.featuredBlock.content) }
+          : fbRes?.featuredBlock || null;
 
-        const { tags: trendingTags, period: tagsPeriod } = await getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' });
+        const featuredBlockPeriod = fbRes?.period || null;
 
-        const blockStats = await getGlobalBlockStats();
-        const totalRooms = await getTotalRooms();
+        // Para el room necesitamos metadata en el idioma -> un pequeño paso secuencial
+        const featuredRoomData = frRes?.featuredRoomData || null;
+        const featuredRoomPeriod = frRes?.period || null;
+
+
+        const featuredRoom = (featuredRoomData?._id)
+          ? await getRoomMetadata(featuredRoomData._id, preferredLang)
+          : null;
+
+        // Mapear top blocks a DTO con userId
+        const blocksPeriod = topRes?.period || null;
+        const topBlocks = (topRes?.blocks || []).map(b => toBlockPreviewDTO(b, { userId }));
+
+        // Tags + period
+        const trendingTags = tagsRes?.tags || [];
+        const tagsPeriod = tagsRes?.period || null;
 
         const globalStats = {
-          totalBlocks: blockStats.totalBlocks,
-          totalRooms,
-          collaborationsToday: blockStats.collaborationsToday
+          totalBlocks: statsRes?.totalBlocks ?? 0,
+          totalRooms: roomsRes ?? 0,
+          collaborationsToday: statsRes?.collaborationsToday ?? 0,
         };
 
         res.render('home', {
@@ -553,7 +574,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           trendingTags,
           tagsPeriod,
           user: req.user,
-          lang: res.locals.lang,
+          lang: preferredLang,
         });
       } catch (err) {
         console.error('Error fetching homepage data:', err);
