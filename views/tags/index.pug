@@ -8,13 +8,17 @@ block append head
 
 block content
   .tags-overview-container
-    h1 Tags Overview
-    p Explore all tags used in Daily Page.
+    h1= t('tags.title')
+    p= t('tags.intro')
 
     // 👇 Timeframe buttons
     .timeframe-selector
-      each label, val in {'24h':'Last 24 Hours', '7d':'Last 7 Days', '30d':'Last 30 Days', 'all':'All Time'}
-        button.timeframe-btn(data-timeframe=val class=(timeframe === val ? 'active' : ''))= label
+      if timeframes && timeframes.length
+        each tf in timeframes
+          button.timeframe-btn(
+            data-timeframe=tf.key
+            class=(timeframe === tf.key ? 'active' : '')
+          )= tf.label
 
     // Tag Cloud
     .tag-cloud

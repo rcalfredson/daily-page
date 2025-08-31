@@ -1,25 +1,38 @@
 import express from 'express';
 import Block from '../db/models/Block.js';
 import { findByTagWithLangPref, getAllTagsWithCounts, getTagTrendData } from '../db/blockService.js';
+import { addI18n } from '../services/i18n.js'
 import { toBlockPreviewDTO } from '../utils/block.js';
 
 const router = express.Router();
 
-router.get('/tags', async (req, res) => {
+router.get('/tags', addI18n(['tags']), async (req, res) => {
   try {
     const timeframe = req.query.timeframe || '7d';
 
     const tags = await getAllTagsWithCounts(timeframe);
 
+    const { t, lang } = res.locals;
+
+    const timeframes = [
+      { key: '24h', label: t('tags.timeframe.last24h') },
+      { key: '7d', label: t('tags.timeframe.last7d') },
+      { key: '30d', label: t('tags.timeframe.last30d') },
+      { key: 'all', label: t('tags.timeframe.all') }
+    ];
+
     res.render('tags/index', {
-      title: 'Tags Overview | Daily Page',
+      title: t('tags.meta.title'),
+      description: t('tags.meta.description'),
       tags,
       timeframe,
+      timeframes,
       user: req.user || null
     });
   } catch (error) {
     console.error('Error loading tags overview:', error);
-    res.status(500).render('error', { message: 'Error loading tags overview' });
+    const { t } = res.locals;
+    res.status(500).render('error', { message: t('tags.error.loading') });
   }
 });
 

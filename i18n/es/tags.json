@@ -1,0 +1,20 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Vista de Etiquetas",
+      "description": "Explora todas las etiquetas de Daily Page, con filtros rápidos por tiempo."
+    },
+    "title": "Vista de Etiquetas",
+    "intro": "Explora todas las etiquetas usadas en Daily Page.",
+    "tagCloudTitle": "Nube de Etiquetas",
+    "timeframe": {
+      "last24h": "Últimas 24 horas",
+      "last7d": "Últimos 7 días",
+      "last30d": "Últimos 30 días",
+      "all": "Todo el tiempo"
+    },
+    "error": {
+      "loading": "Error al cargar la vista de etiquetas"
+    }
+  }
+}
