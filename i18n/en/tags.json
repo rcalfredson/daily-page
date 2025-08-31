@@ -1,0 +1,20 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Tags Overview",
+      "description": "Browse all tags used across Daily Page, with quick filters by time."
+    },
+    "title": "Tags Overview",
+    "intro": "Explore all tags used in Daily Page.",
+    "tagCloudTitle": "Tag Cloud",
+    "timeframe": {
+      "last24h": "Last 24 Hours",
+      "last7d": "Last 7 Days",
+      "last30d": "Last 30 Days",
+      "all": "All Time"
+    },
+    "error": {
+      "loading": "Error loading tags overview"
+    }
+  }
+}
