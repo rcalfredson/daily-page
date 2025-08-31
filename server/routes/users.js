@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { isAuthenticated } from '../middleware/auth.js';
+import { addI18n } from '../services/i18n.js';
 import { findUserById, findUserByUsername } from "../db/userService.js";
 import { getRecentActivityByUser } from '../db/blockService.js';
 import Block from '../db/models/Block.js';
@@ -36,11 +37,16 @@ router.get('/reset-password', (req, res) => {
   });
 });
 
-router.get('/privacy', (req, res) => {
+router.get('/privacy', addI18n(['privacy']), (req, res) => {
+  const { t, lang } = res.locals;
+  const lastUpdatedISO = '2025-08-30'; // ISO constante
+  const lastUpdated = new Intl.DateTimeFormat(lang || 'en', { dateStyle: 'long' })
+    .format(new Date(lastUpdatedISO));
+
   res.render('privacy', {
-    title: 'Privacy Policy',
-    description: 'Privacy Policy for Daily Page.',
-    lastUpdated: 'April 19, 2025'
+    title: t('privacy.meta.title'),
+    description: t('privacy.meta.description'),
+    lastUpdated
   });
 });
 

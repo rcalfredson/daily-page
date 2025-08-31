@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Política de Privacidad",
+      "description": "Cómo Daily Page recopila, usa y protege tus datos, explicado sin rollo."
+    },
+    "title": "Política de Privacidad",
+    "lastUpdated": "Última actualización: {date}",
+    "intro": {
+      "h2": "Introducción",
+      "p1": "Daily Page (\"nosotros\") opera el sitio web dailypage.org (en adelante, el \"Servicio\").",
+      "p2": "Esta página informa sobre nuestras políticas respecto a la recopilación, uso y divulgación de datos personales cuando usas nuestro Servicio."
+    },
+    "collection": {
+      "h2": "Recopilación y Uso de Información",
+      "p": "Recopilamos datos personales mínimos para mejorar y brindar el Servicio. Esto incluye direcciones de correo para gestión de cuentas y contenido enviado voluntariamente por usuarios."
+    },
+    "usage": {
+      "h2": "Uso de Datos",
+      "p": "Los datos recopilados se utilizan únicamente para autenticación de cuentas, moderación de contenido y mejora de la experiencia de usuario."
+    },
+    "storage": {
+      "h2": "Almacenamiento y Seguridad de Datos",
+      "p": "Tus datos se almacenan de forma segura y nunca se comparten ni venden a terceros sin consentimiento explícito, salvo cuando lo requiera la ley."
+    },
+    "cookies": {
+      "h2": "Cookies",
+      "p": "Usamos cookies solo para la gestión de sesión y mejora de la experiencia. Puedes deshabilitarlas en la configuración de tu navegador."
+    },
+    "rights": {
+      "h2": "Tus Derechos",
+      "p": "Puedes solicitar la eliminación o modificación de tus datos personales en cualquier momento contactándonos."
+    },
+    "changes": {
+      "h2": "Cambios a Esta Política de Privacidad",
+      "p": "Podemos actualizar esta Política periódicamente. Los cambios se publicarán en esta página."
+    },
+    "contact": {
+      "h2": "Contacto",
+      "p": "Para preguntas sobre esta Política de Privacidad, contáctanos en:",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}
