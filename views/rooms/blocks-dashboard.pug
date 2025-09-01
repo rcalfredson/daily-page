@@ -8,6 +8,8 @@ block nav
   include ../navLinks
 
 block append scripts
+  script#i18n-roomDashboard(type='application/json').
+    !{JSON.stringify(__i18n.roomDashboard || {})}
   script(src="/js/vote-controls.js")
   script(src='/js/modal.js')
   script(src="/js/block-tabs.js")
@@ -25,7 +27,6 @@ block append head
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
 
 prepend content
-  // Instead of storing date in 'header', let's pass it as 'todayLabel' or something
   .room-header
     .room-header-row
       .title-line
@@ -33,7 +34,8 @@ prepend content
           data-room-id=room_id
           data-logged-in=user ? "true" : "false"
           class=isStarred ? "starred" : ""
-          title=isStarred ? "Unstar this room" : "Star this room"
+          title=isStarred ? t('roomDashboard.actions.unstarTitle') : t('roomDashboard.actions.starTitle')
+          aria-label=isStarred ? t('roomDashboard.actions.unstarTitle') : t('roomDashboard.actions.starTitle')
         )
           if isStarred
             // For Font Awesome 4, star is .fa .fa-star when starred
@@ -42,63 +44,63 @@ prepend content
             // Outline star is .fa .fa-star-o
             i.fa.fa-star-o
 
-        h1.room-name= roomMetadata.name
+        h1.room-name= roomMetadata.displayName || roomMetadata.name
 
       // Smaller date text below
       if date
         p.room-date= date
 
-  if roomMetadata && roomMetadata.description
-    p#room-description= roomMetadata.description
+  if roomMetadata && (roomMetadata.displayDescription || roomMetadata.description)
+    p#room-description= roomMetadata.displayDescription || roomMetadata.description
   else
-    p#room-description No description available.
+    p#room-description= t('roomDashboard.empty.noDescription')
   p.room-archive-link
-    a(href=`/rooms/${room_id}/index`) 🗂️ All Blocks
+    a(href=`/rooms/${room_id}/index`)= t('roomDashboard.links.allBlocks')
   p.room-archive-link
-    a(href=`/rooms/${room_id}/archive`) 🗓️ Browse by Date
+    a(href=`/rooms/${room_id}/archive`)= t('roomDashboard.links.browseByDate')
   p.room-archive-link
-    a(href=`/rooms/${room_id}/archive/best-of`) 🏅 Best of this Room
+    a(href=`/rooms/${room_id}/archive/best-of`)= t('roomDashboard.links.bestOf')
 
 append content
   include ../partials/_login_modal
   
   p
-    a.btn(href=`/rooms/${room_id}/blocks/new`) Create a Block
+    a.btn(href=`/rooms/${room_id}/blocks/new`)= t('roomDashboard.actions.createBlock')
 
   //- Tab links
   if useTabs
     .tabs
       ul.tab-links
         li(class="active")
-          a(href="#locked-tab") Locked Blocks
+          a(href="#locked-tab")= t('roomDashboard.tabs.locked')
         li
-          a(href="#inprogress-tab") In-Progress Blocks
+          a(href="#inprogress-tab")= t('roomDashboard.tabs.inProgress')
 
       //- Tab content for Locked Blocks
       .tab-content
         #locked-tab(class="active")
           if lockedBlocks.length
-            +blockList(lockedBlocks, lockedPeriod, "Locked blocks", room_id)
+            +blockList(lockedBlocks, lockedPeriod, t('roomDashboard.sections.lockedHeader'), room_id)
           else
-            p No locked blocks yet! Blocks auto-lock after 1 hour of inactivity.
+            p= t('roomDashboard.empty.noLocked')
 
         //- Tab content for In-Progress Blocks
         #inprogress-tab
           if inProgressBlocks.length
-            +blockList(inProgressBlocks, inProgressPeriod, "In-progress blocks", room_id)
+            +blockList(inProgressBlocks, inProgressPeriod, t('roomDashboard.sections.inProgressHeader'), room_id)
           else
-            p No in-progress blocks yet! ¡Manos a la obra!
+            p= t('roomDashboard.empty.noInProgress')
   else
     if showLockedTab
       // Título/periodo sin UI de tabs
       .tab-content
         #locked-tab.active
-          +blockList(lockedBlocks, lockedPeriod, "Locked blocks", room_id)
+          +blockList(lockedBlocks, lockedPeriod, t('roomDashboard.sections.lockedHeader'), room_id)
 
     else if showInProgressTab
       .tab-content
         #inprogress-tab.active
-          +blockList(inProgressBlocks, inProgressPeriod, "In-progress blocks", room_id)
+          +blockList(inProgressBlocks, inProgressPeriod, t('roomDashboard.sections.inProgressHeader'), room_id)
 
     else
-      p No blocks yet! Crea el primero y deja huella. 😎
+      p= t('roomDashboard.empty.noBlocks')

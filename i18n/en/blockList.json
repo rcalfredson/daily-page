@@ -1,0 +1,11 @@
+{
+  "blockList": {
+    "period": {
+      "all": "all time",
+      "days": "in the last {n} days",
+      "day": "in the last 24 hours"
+    },
+    "createdBy": "Created by:",
+    "on": "on"
+  }
+}

@@ -5,9 +5,6 @@ block append head
   // Exporta el diccionario que el JS va a leer
   script#i18n-roomsDirectory(type='application/json').
     !{JSON.stringify(__i18n.roomsDirectory || {})}
-  // Exporta el idioma actual
-  script#i18n-lang(type='application/json').
-    !{JSON.stringify(lang || 'en')}
 
 block nav
   include navLinks

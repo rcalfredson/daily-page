@@ -98,7 +98,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     app.use(cors(corsOptions));
     app.use(setLangMiddleware);
-    app.use(initI18n(['layout', 'nav']));
+    app.use(initI18n(['layout', 'nav', 'modals']));
     app.options('*', cors(corsOptions));
 
     app.use((req, res, next) => {
@@ -426,10 +426,21 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     app.post('/request-room', handleRoomRequest);
 
-    app.get('/rooms/:room_id', optionalAuth, async (req, res) => {
+    app.get('/rooms/:room_id', optionalAuth,  addI18n(['roomDashboard','blockList','translation','readMore','modals']), async (req, res) => {
       try {
         const { room_id } = req.params;
-        const roomMetadata = await getRoomMetadata(room_id);
+
+        const lang = res.locals.lang;
+
+        const roomMetadataRaw = await getRoomMetadata(room_id, lang);
+
+        const roomMetadata = {
+          ...roomMetadataRaw,
+          displayName:
+            roomMetadataRaw?.name_i18n?.get?.(lang) || roomMetadataRaw?.name_i18n?.[lang] || roomMetadataRaw?.name,
+          displayDescription:
+            roomMetadataRaw?.description_i18n?.get?.(lang) || roomMetadataRaw?.description_i18n?.[lang] || roomMetadataRaw?.description
+        };
 
         let isStarred = false;
         if (req.user) {
@@ -442,6 +453,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           || (req.acceptsLanguages()[0] || 'en').split('-')[0];
 
         const userId = req.user?.id || null;
+
         const { blocks: lockedBlocks, period: lockedPeriod } =
           await getBlocksByRoomWithFallback({
             roomId: room_id,
@@ -472,7 +484,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           })
         )
 
-        const date = DateHelper.currentDate('long');
+        const date = DateHelper.currentDateI18n(res.locals.lang || 'en', 'Europe/London');
 
         const showInProgressTab = (inProgressPeriod === 1 && inProgressBlocks.length > 0);
         const showLockedTab = (lockedBlocks.length > 0);
@@ -480,7 +492,8 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
         res.render('rooms/blocks-dashboard', {
           room_id,
-          title: `Daily Page - ${roomMetadata.name}`,
+          title: res.locals.t('roomDashboard.meta.title', { roomName: roomMetadata.displayName || roomMetadata.name }),
+          description: res.locals.t('roomDashboard.meta.description', { roomName: roomMetadata.displayName || roomMetadata.name }),
           lockedBlocks: lightLocked,
           inProgressBlocks: lightInProg,
           lockedPeriod,

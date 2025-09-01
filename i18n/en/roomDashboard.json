@@ -1,0 +1,32 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "Explore recent and in-progress blocks in {roomName}."
+    },
+    "links": {
+      "allBlocks": "🗂️ All Blocks",
+      "browseByDate": "🗓️ Browse by Date",
+      "bestOf": "🏅 Best of this Room"
+    },
+    "actions": {
+      "createBlock": "Create a Block",
+      "starTitle": "Star this room",
+      "unstarTitle": "Unstar this room"
+    },
+    "tabs": {
+      "locked": "Locked Blocks",
+      "inProgress": "In-Progress Blocks"
+    },
+    "sections": {
+      "lockedHeader": "Locked blocks",
+      "inProgressHeader": "In-progress blocks"
+    },
+    "empty": {
+      "noDescription": "No description available.",
+      "noLocked": "No locked blocks yet! Blocks auto-lock after 1 hour of inactivity.",
+      "noInProgress": "No in-progress blocks yet! Time to start one.",
+      "noBlocks": "No blocks yet! Create the first and leave your mark. 😎"
+    }
+  }
+}
