@@ -1,0 +1,17 @@
+{
+  "modals": {
+    "login": {
+      "title": "Inicia sesión",
+      "message": "Necesitas iniciar sesión para continuar.",
+      "messageWithAction": "Necesitas iniciar sesión para {action}.",
+      "cta": "Entrar"
+    },
+    "actions": {
+      "voteOnBlock": "votar en un bloque",
+      "starRoom": "marcar esta sala como favorita"
+    },
+    "errors": {
+      "starToggleFail": "No se pudo actualizar el estado de favorito. Inténtalo de nuevo."
+    }
+  }
+}

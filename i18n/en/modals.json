@@ -1,0 +1,17 @@
+{
+  "modals": {
+    "login": {
+      "title": "Please Log In",
+      "message": "You need to be logged in to continue.",
+      "messageWithAction": "You need to be logged in to {action}.",
+      "cta": "Log In"
+    },
+    "actions": {
+      "voteOnBlock": "vote on a block",
+      "starRoom": "star this room"
+    },
+    "errors": {
+      "starToggleFail": "Failed to update star status. Please try again."
+    }
+  }
+}

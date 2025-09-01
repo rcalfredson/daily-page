@@ -1,11 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const tModals = (path, params) => I18n.t('modals', path, params);
+  const tRoom   = (path, params) => I18n.t('roomDashboard', path, params);
+
   const starButton = document.querySelector('.star-btn');
   if (!starButton) return;
 
   starButton.addEventListener('click', async () => {
     const isLoggedIn = document.body.dataset.isLoggedIn === "true";
     if (!isLoggedIn) {
-      window.showLoginModal("star this room");
+      window.showLoginModal("actions.starRoom");
       return;
     }
 
@@ -32,16 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (starButton.classList.contains('starred')) {
         iconElem.classList.remove('fa-star-o', 'far');
         iconElem.classList.add('fa-star', 'fas');
-        starButton.title = "Unstar this room"; 
+        starButton.title = tRoom('actions.unstarTitle');
+        starButton.setAttribute('aria-label', tRoom('actions.unstarTitle'));
       } else {
         iconElem.classList.remove('fa-star', 'fas');
         iconElem.classList.add('fa-star-o', 'far');
-        starButton.title = "Star this room"; 
+        starButton.title = tRoom('actions.starTitle');
+        starButton.setAttribute('aria-label', tRoom('actions.starTitle'));
       }
 
     } catch (err) {
       console.error('Error toggling star:', err);
-      alert('Failed to update star status. Please try again.');
+      alert(tModals('errors.starToggleFail'));
     }
   });
 });

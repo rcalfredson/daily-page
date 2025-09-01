@@ -2,6 +2,6 @@
 #login-modal.modal.hidden
   .modal-content
     span.modal-close &times;
-    h2 Please Log In
-    p#login-modal-message You need to be logged in to continue.
-    a.btn.btn-primary(href="/login") Log In
+    h2= t('modals.login.title')
+    p#login-modal-message= t('modals.login.message')
+    a.btn.btn-primary(href="/login")= t('modals.login.cta')

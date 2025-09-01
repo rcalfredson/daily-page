@@ -2,20 +2,21 @@ mixin blockList(blocks, period, label, room_id)
   .tab-period
     | #{label} 
     if period === 'all'
-      | · all time
+      |  · #{t('blockList.period.all')}
     else if period > 1
-      | in the last #{period} days
+      | #{t('blockList.period.days', { n: period })}
     else
-      | in the last 24 hours
+      | #{t('blockList.period.day')}
   ul
     each block in blocks
       li.block-preview
         div.content
           a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
           p
-            | Created by: 
+            | #{t('blockList.createdBy')} 
             a.user-profile-link(href=`/users/${block.creator}`)= block.creator
-            |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+            |  #{t('blockList.on')} 
+            = new Date(block.createdAt).toLocaleString(lang || 'en', { dateStyle: 'medium', timeStyle: 'short' })
           +translationAttribution(block)
           div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
           +readMoreIfTruncated(block, room_id)

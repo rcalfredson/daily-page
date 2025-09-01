@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const tModals = (path, params) => I18n.t('modals', path, params);
   const voteControls = document.querySelectorAll(".vote-controls");
 
   voteControls.forEach((control) => {
@@ -20,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function handleVote(action, voteCountElement, blockId) {
     const isLoggedIn = checkLoginState();
     if (!isLoggedIn) {
-      showLoginModal("vote on a block");
+      showLoginModal("actions.voteOnBlock");
       return;
     }
     try {
@@ -63,10 +64,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showLoginModal(actionType) {
-    const modal        = document.getElementById("login-modal");
+    const modal = document.getElementById("login-modal");
     const modalMessage = document.getElementById("login-modal-message");
-  
-    modalMessage.textContent = `You need to be logged in to ${actionType}.`;
+    if (!modal || !modalMessage) return;
+
+    // actionType es una key: "actions.voteOnBlock"
+    const actionText = tModals(actionType);
+    const msg = tModals("login.messageWithAction", { action: actionText });
+    modalMessage.textContent = msg;
     modal.classList.remove('hidden');
   }
   window.showLoginModal = showLoginModal;
