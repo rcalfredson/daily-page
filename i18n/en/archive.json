@@ -1,0 +1,16 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Archive",
+      "description": "Explore the full archive by month.",
+      "titleRoom": "Daily Page — Archive · {roomName}",
+      "descriptionRoom": "Explore past writing in the {roomName} room—month by month. Jump to any date to see what others shared in this space over time."
+    },
+    "title": "📚 Browse Archives",
+    "titleRoom": "📚 {roomName} — Archives",
+    "roomViewing": "Viewing archive for room {roomName}",
+    "viewRoomLink": "View room",
+    "noContent": "No content available yet.",
+    "backToRoom": "← Back to Room Dashboard"
+  }
+}

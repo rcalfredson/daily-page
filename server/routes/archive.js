@@ -1,5 +1,6 @@
 import express from 'express';
 import DateHelper from '../../lib/dateHelper.js';
+import { addI18n } from '../services/i18n.js';
 import { chooseActiveBestOfTab } from '../utils/bestOf.js'
 import { toBlockPreviewDTO } from '../utils/block.js'
 import { getMonthNav, getDateNav } from '../utils/archiveNav.js';
@@ -15,18 +16,17 @@ import { getRoomMetadata } from '../db/roomService.js'
 const router = express.Router();
 
 // GET /archive - Muestra todos los meses/años con contenido
-router.get('/archive', optionalAuth, async (req, res) => {
+router.get('/archive', optionalAuth, addI18n(['archive']), async (req, res) => {
   try {
     const yearMonthCombos = await getAllBlockYearMonthCombos();
-    const description = "Explore Daily Page’s full archive of creative " +
-      "blocks—thoughts, stories, jokes, confessions, and everything in between. " +
-      "Jump to any month and see what was posted that day.";
+    const { t, lang } = res.locals;
+    const description = t('archive.meta.description');
 
     res.render('archive/calendar-index', {
-      title: 'Archive Index',
+      title: t('archive.meta.title'),
       description,
       yearMonthCombos,
-      monthName: DateHelper.monthName,
+      monthName: (m) => DateHelper.monthName(m, lang || 'en'),
       user: req.user || null,
     });
   } catch (error) {
@@ -261,20 +261,20 @@ router.get('/rooms/:roomId/index', optionalAuth, async (req, res) => {
 });
 
 // Obtener todos los meses/años con contenido para una sala específica
-router.get('/rooms/:roomId/archive', optionalAuth, async (req, res) => {
+router.get('/rooms/:roomId/archive', optionalAuth, addI18n(['archive']), async (req, res) => {
   try {
     const { roomId } = req.params;
     const yearMonthCombos = await getAllBlockYearMonthCombos(roomId);
     const roomMetadata = await getRoomMetadata(roomId);
+    const { t, lang } = res.locals;
 
-    const description = `Explore past writing in the ${roomMetadata.name} room—month by month. ` +
-      `Jump to any date to see what others shared in this space over time.`;
+    const description = t('archive.meta.descriptionRoom', { roomName: roomMetadata.name });
 
     res.render('archive/calendar-index', {
-      title: 'Browse Archives',
+      title: t('archive.meta.titleRoom', { roomName: roomMetadata.name }),
       description,
       yearMonthCombos,
-      monthName: DateHelper.monthName,
+      monthName: (m) => DateHelper.monthName(m, lang || 'en'),
       roomId,
       roomName: roomMetadata.name,
       user: req.user || null,

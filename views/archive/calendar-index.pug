@@ -11,10 +11,14 @@ block content
   if roomId
     .archive-room-meta
       p 
-        | Viewing archive for room 
-        a(href=`/rooms/${roomId}`)= `${roomName}`
+        = t('archive.roomViewing', { roomName })
+        |  · 
+        a(href=`/rooms/${roomId}`)= t('archive.viewRoomLink')
   .archive-index-container
-    h1 📚 Browse Archives
+    if roomId
+      h1= t('archive.titleRoom', { roomName })
+    else
+      h1= t('archive.title')
 
     if yearMonthCombos.length
       ul.year-month-list
@@ -27,7 +31,7 @@ block content
               | #{combo.year} - #{monthName(combo.month)}
 
     else
-      p No content available yet.
+      p= t('archive.noContent')
   if roomId
     .back-to-room-link
-      a(href=`/rooms/${roomId}`) ← Back to Room Dashboard
+      a(href=`/rooms/${roomId}`)= t('archive.backToRoom')

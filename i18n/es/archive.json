@@ -1,0 +1,16 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Archivo",
+      "description": "Explora el archivo completo por mes.",
+      "titleRoom": "Daily Page — Archivo · {roomName}",
+      "descriptionRoom": "Explora los escritos pasados en la sala {roomName}, mes a mes. Salta a cualquier fecha para ver lo que otros compartieron con el tiempo."
+    },
+    "title": "📚 Explorar archivos",
+    "titleRoom": "📚 {roomName} — Archivos",
+    "roomViewing": "Viendo el archivo de la sala {roomName}",
+    "viewRoomLink": "Ver sala",
+    "noContent": "Todavía no hay contenido.",
+    "backToRoom": "← Volver al panel de la sala"
+  }
+}
