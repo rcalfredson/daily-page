@@ -21,8 +21,9 @@ block content
   if roomId
     .archive-room-meta
       p 
-        | Viewing archive for room 
-        a(href=`/rooms/${roomId}`)= `${roomName}`
+        = t('archive.roomViewing', { roomName })
+        |  · 
+        a(href=`/rooms/${roomId}`)= t('archive.viewRoomLink')
   .calendar-container
     include ../partials/_archiveNav
     +archiveNav(
@@ -33,7 +34,7 @@ block content
           )
         : null,
       prevMonth 
-        ? `Archive for ${monthName(prevMonth.month)} ${prevMonth.year}` 
+        ? t('archive.calendar.prevLabel', { month: monthName(prevMonth.month), year: prevMonth.year })
         : '',
       nextMonth
         ? (roomId 
@@ -42,16 +43,17 @@ block content
           )
         : null,
       nextMonth 
-        ? `Archive for ${monthName(nextMonth.month)} ${nextMonth.year}` 
+        ? t('archive.calendar.nextLabel', { month: monthName(nextMonth.month), year: nextMonth.year })
         : '',
       'block-nav'
     )
-    h1 📆 Archive for #{monthName(month)} #{year}
+    h1= t('archive.calendar.title', { month: monthName(month), year })
 
     table.calendar
       thead
         tr
-          each day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+          // Nota: weekdaysShort viene ya localizado desde la ruta
+          each day in weekdaysShort
             th= day
       tbody
         - const firstDay = new Date(year, month - 1, 1).getDay()
@@ -74,4 +76,4 @@ block content
                 - dayCount++
   if roomId
     .back-to-room-link
-      a(href=`/rooms/${roomId}`) ← Back to Room Dashboard
+      a(href=`/rooms/${roomId}`)= t('archive.backToRoom')
