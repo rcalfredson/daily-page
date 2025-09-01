@@ -14,15 +14,23 @@ mixin archiveNav(prevUrl, prevLabel, nextUrl, nextLabel, cssClass = 'archive-nav
         rel="prev"
         href=prevUrl
         aria-label=prevLabel
-      ) ← #{prevLabel}
+      )
+        span(aria-hidden="true") ←
+        |  #{prevLabel}
     else
-      span.nav-link.disabled.prev ← Earlier
+      span.nav-link.disabled.prev(aria-disabled="true")
+        span(aria-hidden="true") ←
+        |  #{t('archive.nav.prev')}
 
     if nextUrl
       a.nav-link.next(
         rel="next"
         href=nextUrl
         aria-label=nextLabel
-      ) #{nextLabel} →
+      )
+        | #{nextLabel} 
+        span(aria-hidden="true") →
     else
-      span.nav-link.disabled.next Later →
+      span.nav-link.disabled.next(aria-disabled="true")
+        | #{t('archive.nav.next')} 
+        span(aria-hidden="true") →

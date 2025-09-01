@@ -6,6 +6,19 @@
       "titleRoom": "Daily Page — Archivo · {roomName}",
       "descriptionRoom": "Explora los escritos pasados en la sala {roomName}, mes a mes. Salta a cualquier fecha para ver lo que otros compartieron con el tiempo."
     },
+    "nav": {
+      "prev": "Anterior",
+      "next": "Siguiente"
+    },
+    "calendar": {
+      "meta": {
+        "description": "Mira todos los bloques creativos publicados en {month} de {year}—desde ideas rápidas hasta reflexiones profundas. Haz clic en cualquier fecha para explorar lo compartido.",
+        "descriptionRoom": "Observa la actividad creativa en {roomName} durante {month} de {year}. Elige una fecha para ver los bloques compartidos ese día."
+      },
+      "title": "📆 Archivo de {month} de {year}",
+      "prevLabel": "Archivo de {month} de {year}",
+      "nextLabel": "Archivo de {month} de {year}"
+    },
     "title": "📚 Explorar archivos",
     "titleRoom": "📚 {roomName} — Archivos",
     "roomViewing": "Viendo el archivo de la sala {roomName}",

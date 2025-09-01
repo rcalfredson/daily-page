@@ -6,6 +6,19 @@
       "titleRoom": "Daily Page — Archive · {roomName}",
       "descriptionRoom": "Explore past writing in the {roomName} room—month by month. Jump to any date to see what others shared in this space over time."
     },
+    "nav": {
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "calendar": {
+      "meta": {
+        "description": "View all creative blocks posted in {month} {year}—from quick thoughts to deep reflections. Click any date to explore what was shared.",
+        "descriptionRoom": "View the creative activity in {roomName} during {month} {year}. Pick a date to explore the blocks shared that day."
+      },
+      "title": "📆 Archive for {month} {year}",
+      "prevLabel": "Archive for {month} {year}",
+      "nextLabel": "Archive for {month} {year}"
+    },
     "title": "📚 Browse Archives",
     "titleRoom": "📚 {roomName} — Archives",
     "roomViewing": "Viewing archive for room {roomName}",

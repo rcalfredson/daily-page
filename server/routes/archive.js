@@ -119,25 +119,27 @@ router.get('/archive/best-of', optionalAuth, async (req, res) => {
 });
 
 // GET /archive/:year/:month - Muestra calendario del mes
-router.get('/archive/:year/:month', optionalAuth, async (req, res) => {
+router.get('/archive/:year/:month', optionalAuth, addI18n(['archive']), async (req, res) => {
   try {
     const { year, month } = req.params;
     const datesWithContent = await getBlockDatesByYearMonth(year, month);
 
-    const description = `View all creative blocks posted in ${DateHelper.monthName(month)} ${year}—from quick thoughts to deep reflections. ` +
-      `Click any date to explore what was shared.`;
+    const { t, lang } = res.locals;
+    const monthStr = DateHelper.monthName(Number(month), lang || 'en');
+    const description = t('archive.calendar.meta.description', { month: monthStr, year });
 
     const { prevMonth, nextMonth } = await getMonthNav(null, year, month, { getAllBlockYearMonthCombos });
 
     res.render('archive/calendar', {
-      title: `Archive for ${year}-${month}`,
+      title: t('archive.calendar.title', { month: monthStr, year }),
       description,
       year,
       month,
       prevMonth,
       nextMonth,
       datesWithContent,
-      monthName: DateHelper.monthName,
+      monthName: (m) => DateHelper.monthName(m, lang || 'en'),
+      weekdaysShort: DateHelper.weekdayShortNames(lang || 'en'),
       user: req.user || null,
     });
   } catch (error) {
@@ -286,26 +288,30 @@ router.get('/rooms/:roomId/archive', optionalAuth, addI18n(['archive']), async (
 });
 
 // Calendario del mes específico en una sala
-router.get('/rooms/:roomId/archive/:year/:month', optionalAuth, async (req, res) => {
+router.get('/rooms/:roomId/archive/:year/:month', optionalAuth, addI18n(['archive']), async (req, res) => {
   try {
     const { roomId, year, month } = req.params;
     const datesWithContent = await getBlockDatesByYearMonth(year, month, roomId);
     const roomMetadata = await getRoomMetadata(roomId);
 
-    const description = `View the creative activity in ${roomMetadata.name} during ${DateHelper.monthName(month)} ${year}. ` +
-      `Pick a date to explore the blocks shared that day.`;
+    const { t, lang } = res.locals;
+    const monthStr = DateHelper.monthName(Number(month), lang || 'en');
+    const description = t('archive.calendar.meta.descriptionRoom', {
+      roomName: roomMetadata.name, month: monthStr, year
+    })
 
     const { prevMonth, nextMonth } = await getMonthNav(roomId, year, month, { getAllBlockYearMonthCombos });
 
     res.render('archive/calendar', {
-      title: `Archive for ${year}-${month}`,
+      title: t('archive.calendar.title', { month: monthStr, year }),
       description,
       year,
       month,
       prevMonth,
       nextMonth,
       datesWithContent,
-      monthName: DateHelper.monthName,
+      monthName: (m) => DateHelper.monthName(m, lang || 'en'),
+      weekdaysShort: DateHelper.weekdayShortNames(lang || 'en'),
       roomId,
       roomName: roomMetadata.name,
       user: req.user || null,
