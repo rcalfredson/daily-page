@@ -5,6 +5,7 @@ import optionalAuth from '../middleware/optionalAuth.js';
 import { getBlockById } from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { getPeerIDs } from '../db/sessionService.js';
+import { addI18n } from '../services/i18n.js';
 import { generateAnonymousId } from '../utils/anonymousId.js';
 import { canManageBlock } from '../utils/block.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
@@ -16,12 +17,14 @@ const backendBaseUrl = `${(config.backendUrl || `http://localhost:${port}`)}`;
 const router = express.Router();
 
 // Render "Create New Block" page
-router.get('/rooms/:room_id/blocks/new', optionalAuth, async (req, res) => {
+router.get('/rooms/:room_id/blocks/new', optionalAuth, addI18n(['createBlock', 'blockTags']), async (req, res) => {
   const { room_id } = req.params;
-  const roomMetadata = await getRoomMetadata(room_id);
+  const lang = res.locals.lang;
+  const roomMetadata = await getRoomMetadata(room_id, lang);
 
   res.render('rooms/create-block', {
-    title: 'Create a New Block',
+    title: res.locals.t('createBlock.meta.title'),
+    description: res.locals.t('createBlock.meta.description'),
     room_id,
     roomMetadata,
     user: req.user,
@@ -29,7 +32,7 @@ router.get('/rooms/:room_id/blocks/new', optionalAuth, async (req, res) => {
 });
 
 // Render Block Editor Page
-router.get('/rooms/:room_id/blocks/:block_id/edit', optionalAuth, async (req, res) => {
+router.get('/rooms/:room_id/blocks/:block_id/edit', optionalAuth, addI18n(['blockTags']), async (req, res) => {
   const { room_id, block_id } = req.params;
   const user = req.user;
   const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];

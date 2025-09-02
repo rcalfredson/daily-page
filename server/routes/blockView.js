@@ -7,6 +7,7 @@ import {
 import { getRoomMetadata } from '../db/roomService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
+import { addI18n } from '../services/i18n.js';
 import { canManageBlock } from '../utils/block.js';
 
 const router = express.Router();
@@ -15,7 +16,7 @@ function canonicalBlockPath(doc) {
   return `/rooms/${doc.roomId}/blocks/${doc._id}`;
 }
 
-router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, async (req, res) => {
+router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, addI18n(['blockTags']), async (req, res) => {
   try {
     const { room_id, block_id } = req.params;
     const block = await getBlockById(block_id);

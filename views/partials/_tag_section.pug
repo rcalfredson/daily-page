@@ -1,6 +1,6 @@
 mixin tagSection(tags, canManageBlock)
   if tags && tags.length
-    p.block-tags-header Tags:
+    p.block-tags-header= t('blockTags.header.withTags')
     div#tag-container
       each tag in tags
         span.tag-pill
@@ -9,14 +9,14 @@ mixin tagSection(tags, canManageBlock)
             button.tag-remove(data-tag=tag) x
       if canManageBlock
         span.tag-add
-          input#new-tag(type='text' placeholder='New tag')
-          button#add-tag-btn Add
+          input#new-tag(type='text' placeholder=t('blockTags.input.placeholder'))
+          button#add-tag-btn= t('blockTags.input.addButton')
   else
     if canManageBlock
-      p.block-tags-header No tags yet! Add some:
+      p.block-tags-header= t('blockTags.header.noTags')
       div#tag-container
         span.tag-add
-          input#new-tag(type='text' placeholder='New tag')
-          button#add-tag-btn Add
+          input#new-tag(type='text' placeholder=t('blockTags.input.placeholder'))
+          button#add-tag-btn= t('blockTags.input.addButton')
     else
       p.block-tags-header

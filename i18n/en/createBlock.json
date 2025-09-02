@@ -1,0 +1,63 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Create a New Block — Daily Page",
+      "description": "Start a fresh creative block with optional tags, language, and visibility."
+    },
+    "heading": "Create a New Block",
+    "roomInfo": {
+      "roomLabel": "Room:",
+      "unavailable": "Room information not available.",
+      "noDescription": "No description available."
+    },
+    "form": {
+      "title": {
+        "label": "Title:",
+        "placeholder": {
+          "full": "e.g. 'My Masterpiece', 'The Best Idea Ever', 'Clickbait for Nerds'",
+          "short": "e.g. 'My Masterpiece'"
+        }
+      },
+      "description": {
+        "label": "Description (optional):",
+        "placeholder": "Explain your brilliance… or just wing it."
+      },
+      "initialContent": {
+        "label": "Initial Content (optional):",
+        "help": "Start writing here or press “Create” to continue on the full editor page, where you can embed images and collaborate in real time.",
+        "placeholder": "Start your block here, or continue editing after creation…"
+      },
+      "visibility": {
+        "label": "Visibility:"
+      },
+      "submit": "Create Block"
+    },
+    "visibility": {
+      "public": {
+        "label": "Public",
+        "title": "Editable by anyone in real-time. No login needed.",
+        "inline": "Editable by anyone in real-time. No login needed."
+      },
+      "private": {
+        "label": "Private",
+        "title": "Only for logged-in users. Visible after editing is complete.",
+        "inline": "Only for logged-in users. Visible after editing is complete.",
+        "tooltip": "Private blocks are invite-only while you work, and become visible when you’re done."
+      }
+    },
+    "advanced": {
+      "summary": "Advanced options",
+      "lang": { "label": "Language:" },
+      "translate": {
+        "label": "Translate existing block (URL or ID):",
+        "placeholder": "Paste a block URL or ID (optional)",
+        "invalid": "That doesn’t look like a valid block URL or ID.",
+        "fetchError": "Could not fetch block info."
+      }
+    },
+    "messages": {
+      "langExists": "A translation for that language already exists. Please pick another language.",
+      "genericError": "Something went wrong. Please try again."
+    }
+  }
+}
