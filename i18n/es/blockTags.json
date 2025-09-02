@@ -1,0 +1,12 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "Etiquetas:",
+      "noTags": "Aún no hay etiquetas. ¡Añade algunas!"
+    },
+    "input": {
+      "placeholder": "Nueva etiqueta",
+      "addButton": "Añadir"
+    }
+  }
+}

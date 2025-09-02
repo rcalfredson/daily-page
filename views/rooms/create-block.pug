@@ -5,95 +5,104 @@ block nav
 
 block append head
   link(rel='stylesheet' href='/css/create-block.css')
-  link(rel="stylesheet" href="/css/block-tags.css")
-  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
+  link(rel='stylesheet' href='/css/block-tags.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css')
+
+  // Exporta diccionarios para JS
+  script#i18n-createBlock(type='application/json').
+    !{JSON.stringify(__i18n.createBlock || {})}
+  script#i18n-blockTags(type='application/json').
+    !{JSON.stringify(__i18n.blockTags || {})}
 
 block append scripts
-  script(src="/js/create-block.js")
-  script(src="/js/create-block-tags.js")
+  script(src='/js/create-block.js')
+  script(src='/js/create-block-tags.js')
 
 block content
-  h1 Create a New Block
-  - let descriptionText = 'Room information not available.'
+  h1= t('createBlock.heading')
+
+  - let descriptionFallback = t('createBlock.roomInfo.unavailable')
   if roomMetadata
     h2#room-name
-      | Room: 
-      a(href=`/rooms/${roomMetadata._id}`)= roomMetadata.name
-    - descriptionText = roomMetadata.description || 'No description available.'
+      | #{t('createBlock.roomInfo.roomLabel')} 
+      a(href=`/rooms/${roomMetadata._id}`)= (roomMetadata.displayName || roomMetadata.name)
+    - descriptionFallback = (roomMetadata.displayDescription || roomMetadata.description || t('createBlock.roomInfo.noDescription'))
 
-  p#room-description= descriptionText
+  p#room-description= descriptionFallback
 
-  form#block-form(action=`/api/v1/rooms/${room_id}/blocks` method="POST")
+  form#block-form(action=`/api/v1/rooms/${room_id}/blocks` method='POST')
     .form-group
-      label(for="title") Title:
-      input#title(type="text" name="title" required minlength="3" maxlength="100" 
-        placeholder="e.g. 'My Masterpiece', 'The Best Idea Ever', 'Clickbait for Nerds'"
+      label(for='title')= t('createBlock.form.title.label')
+      input#title(
+        type='text' name='title' required minlength='3' maxlength='100'
+        placeholder=t('createBlock.form.title.placeholder.full')
+        data-ph-full=t('createBlock.form.title.placeholder.full')
+        data-ph-short=t('createBlock.form.title.placeholder.short')
       )
     .form-group
-      label(for="description") Description (optional):
-      textarea#description(name="description" placeholder="Explain your brilliance... or just wing it.")
+      label(for='description')= t('createBlock.form.description.label')
+      textarea#description(name='description' placeholder=t('createBlock.form.description.placeholder'))
     .form-group
-      label(for="initial-content") Initial Content (optional):
-      p.form-help Start writing here or press "Create" to continue on the full editor page, where you can embed images and collaborate in real time.
-      textarea#initial-content(name="content" placeholder="Start your block here, or continue editing after creation...")
+      label(for='initial-content')= t('createBlock.form.initialContent.label')
+      p.form-help= t('createBlock.form.initialContent.help')
+      textarea#initial-content(name='content' placeholder=t('createBlock.form.initialContent.placeholder'))
     .form-group
       include ../partials/_tag_section
-      input#hidden-tags(type="hidden" name="tags")
+      input#hidden-tags(type='hidden' name='tags')
       +tagSection([], true)
     .form-group
-      label Visibility:
+      label= t('createBlock.form.visibility.label')
       .visibility-options
         .option
-          label(for="public-option" title="Editable by anyone in real-time. No login needed.")
-            input#public-option(type="radio" name="visibility" value="public" checked)
-            | Public 
+          label(for='public-option' title=t('createBlock.visibility.public.title'))
+            input#public-option(type='radio' name='visibility' value='public' checked)
+            | #{t('createBlock.visibility.public.label')} 
             i.fas.fa-eye
-          // Inline description for mobile (hidden on desktop)
-          span.visibility-description.hidden-on-desktop Editable by anyone in real-time. No login needed.
+          span.visibility-description.hidden-on-desktop= t('createBlock.visibility.public.inline')
         .option
-          label(for="private-option" title="Only for logged-in users. Visible after editing is complete." class= !user ? "disabled" : "")
-            input#private-option(type="radio" name="visibility" value="private" disabled= !user)
-            | Private 
+          - const disabledClass = !user ? 'disabled' : ''
+          label(for='private-option' title=t('createBlock.visibility.private.title') class=disabledClass)
+            input#private-option(type='radio' name='visibility' value='private' disabled=!user)
+            | #{t('createBlock.visibility.private.label')} 
             i.fas.fa-lock
-            // New info icon with a larger tap target
             i.far.fa-question-circle.info-icon(onclick="toggleTooltip(event, 'private')")
-          // Inline description for mobile (hidden on desktop)
-          span.visibility-description.hidden-on-desktop Only for logged-in users. Visible after editing is complete.
-    // Advanced options (collapsed by default)
-    details#advanced-settings(style="margin-top:1rem")
-      summary(style="cursor:pointer; font-weight:bold") Advanced options
+          span.visibility-description.hidden-on-desktop= t('createBlock.visibility.private.inline')
+
+    details#advanced-settings(style='margin-top:1rem')
+      summary(style='cursor:pointer; font-weight:bold')= t('createBlock.advanced.summary')
       .form-group
-        label(for="lang") Language:
-        select#lang(name="lang")
-          option(value="en" selected) English
-          option(value="es") Español
-          option(value="fr") Français
-          option(value="ru") Русский
-          option(value="id") Bahasa Indonesia
-          option(value="de") Deutsch
-          option(value="it") Italiano
-          option(value="pt") Português
-          option(value="zh") 中文
-          option(value="ja") 日本語
-          option(value="ko") 한국어
-          option(value="ar") العربية
-          option(value="hi") हिन्दी
-          option(value="tr") Türkçe
-          option(value="nl") Nederlands
-          option(value="sv") Svenska
-          option(value="no") Norsk
-          option(value="da") Dansk
-          option(value="fi") Suomi
-          option(value="pl") Polski
-          option(value="cs") Čeština
-          option(value="el") Ελληνικά
-          option(value="he") עברית
-          option(value="th") ไทย
-          option(value="vi") Tiếng Việt
+        label(for='lang')= t('createBlock.advanced.lang.label')
+        select#lang(name='lang')
+          //- mismo listado de opciones; las etiquetas pueden quedarse en su idioma nativo
+          option(value='en' selected) English
+          option(value='es') Español
+          option(value='fr') Français
+          option(value='ru') Русский
+          option(value='id') Bahasa Indonesia
+          option(value='de') Deutsch
+          option(value='it') Italiano
+          option(value='pt') Português
+          option(value='zh') 中文
+          option(value='ja') 日本語
+          option(value='ko') 한국어
+          option(value='ar') العربية
+          option(value='hi') हिन्दी
+          option(value='tr') Türkçe
+          option(value='nl') Nederlands
+          option(value='sv') Svenska
+          option(value='no') Norsk
+          option(value='da') Dansk
+          option(value='fi') Suomi
+          option(value='pl') Polski
+          option(value='cs') Čeština
+          option(value='el') Ελληνικά
+          option(value='he') עברית
+          option(value='th') ไทย
+          option(value='vi') Tiếng Việt
       .form-group
-        label(for="source-block") Translate existing block (URL or ID):
-        input#source-block(type="text" placeholder="Paste a block URL or ID (optional)")
-        // Hidden field populated via JS
-        input(type="hidden" name="groupId" id="groupId")
-        input(type="hidden" name="originalBlock" id="originalBlock")
-    button.btn.btn-primary(type="submit") Create Block
+        label(for='source-block')= t('createBlock.advanced.translate.label')
+        input#source-block(type='text' placeholder=t('createBlock.advanced.translate.placeholder'))
+        input(type='hidden' name='groupId' id='groupId')
+        input(type='hidden' name='originalBlock' id='originalBlock')
+
+    button.btn.btn-primary(type='submit')= t('createBlock.form.submit')

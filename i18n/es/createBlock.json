@@ -1,0 +1,61 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Crear Bloque Nuevo — Daily Page",
+      "description": "Empieza un bloque creativo con tags opcionales, idioma y visibilidad."
+    },
+    "heading": "Crear un Bloque Nuevo",
+    "roomInfo": {
+      "roomLabel": "Sala:",
+      "unavailable": "Info de la sala no disponible.",
+      "noDescription": "Sin descripción."
+    },
+    "form": {
+      "title": {
+        "label": "Título:",
+        "placeholder": {
+          "full": "p. ej. «Mi Obra Maestra», «La Mejor Idea», «Clickbait para Nerds»",
+          "short": "p. ej. «Mi Obra Maestra»"
+        }
+      },
+      "description": {
+        "label": "Descripción (opcional):",
+        "placeholder": "Explica tu genialidad… o improvísala."
+      },
+      "initialContent": {
+        "label": "Contenido Inicial (opcional):",
+        "help": "Escribe aquí o pulsa «Crear» para seguir en el editor completo, donde puedes incrustar imágenes y colaborar en tiempo real.",
+        "placeholder": "Empieza aquí o sigue editando tras la creación…"
+      },
+      "visibility": { "label": "Visibilidad:" },
+      "submit": "Crear Bloque"
+    },
+    "visibility": {
+      "public": {
+        "label": "Público",
+        "title": "Editable por cualquiera en tiempo real. No hace falta login.",
+        "inline": "Editable por cualquiera en tiempo real. No hace falta login."
+      },
+      "private": {
+        "label": "Privado",
+        "title": "Solo para usuarios con sesión iniciada. Visible al terminar la edición.",
+        "inline": "Solo para usuarios con sesión iniciada. Visible al terminar la edición.",
+        "tooltip": "Los bloques privados son solo con invitación mientras trabajas y se hacen visibles al terminar."
+      }
+    },
+    "advanced": {
+      "summary": "Opciones avanzadas",
+      "lang": { "label": "Idioma:" },
+      "translate": {
+        "label": "Traducir bloque existente (URL o ID):",
+        "placeholder": "Pega la URL o el ID del bloque (opcional)",
+        "invalid": "No parece una URL o ID de bloque válido.",
+        "fetchError": "No se pudo obtener la info del bloque."
+      }
+    },
+    "messages": {
+      "langExists": "Ya existe una traducción para ese idioma. Elige otro, porfa.",
+      "genericError": "Algo salió mal. Inténtalo de nuevo."
+    }
+  }
+}
