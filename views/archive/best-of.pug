@@ -10,6 +10,11 @@ block append head
   link(rel='stylesheet' href='/css/best-of.css')
   link(rel='stylesheet' href='/css/translation-attribution.css')
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
+  // Export i18n for this page + current lang
+  script#i18n-bestOf(type='application/json').
+    !{JSON.stringify(__i18n.bestOf || {})}
+  script#i18n-lang(type='application/json').
+    !{JSON.stringify(lang || 'en')}
 
 block append scripts
   script(src="/js/vote-controls.js")
@@ -21,15 +26,15 @@ block nav
   include ../navLinks
 
 block content
-  h1 🏆 Best of Daily Page
+  h1= t('bestOf.heading')
 
   // Tab navigation
   .tabs
     ul.tab-links
-      li(class={active: activeTab==='24h'} data-tab="tab-24h") 🔥 24 Hours
-      li(class={active: activeTab==='7d'}  data-tab="tab-7d") 🚀 7 Days
-      li(class={active: activeTab==='30d'} data-tab="tab-30d") 🌕 30 Days
-      li(class={active: activeTab==='all'} data-tab="tab-all") 👑 All Time
+      li(class={active: activeTab==='24h'} data-tab="tab-24h")= t('bestOf.tabs.24h')
+      li(class={active: activeTab==='7d'}  data-tab="tab-7d")= t('bestOf.tabs.7d')
+      li(class={active: activeTab==='30d'} data-tab="tab-30d")= t('bestOf.tabs.30d')
+      li(class={active: activeTab==='all'} data-tab="tab-all")= t('bestOf.tabs.all')
 
   // Tab content
   .tab-content
@@ -51,15 +56,20 @@ mixin renderBlockList(blocks)
           div.content
             a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
             p
-              | Created by: 
+              | #{t('bestOf.labels.createdBy')} 
               a.user-profile-link(href=`/users/${block.creator}`)= block.creator
-              |  in 
-              a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : 'Unknown Room'
-              |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+              |  #{t('bestOf.labels.inRoom')} 
+              if block.roomId
+                a.room-link(href=`/rooms/${block.roomId}`)= block.roomDisplayName || block.roomId
+              else
+                span.room-link= t('bestOf.labels.unknownRoom')
+              - const _lang = (typeof lang === 'string' ? lang : 'en');
+              - const _date = new Date(block.createdAt).toLocaleString(_lang, { dateStyle: 'medium', timeStyle: 'short' });
+              |  #{t('bestOf.labels.onDate', { date: _date })}
             +translationAttribution(block)
             div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
           +readMoreIfTruncated(block, block.roomId)
           footer.block-footer
             include ../partials/_vote_controls
   else
-    p No blocks found.
+    p= t('bestOf.labels.noBlocks')
