@@ -78,7 +78,7 @@ router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
   }
 });
 
-router.get('/archive/best-of', optionalAuth, async (req, res) => {
+router.get('/archive/best-of', optionalAuth, addI18n(['bestOf', 'translation', 'readMore']), async (req, res) => {
   try {
     const preferredLang = req.query.lang
       || req.user?.preferredLang
@@ -99,12 +99,9 @@ router.get('/archive/best-of', optionalAuth, async (req, res) => {
       top24h: top24hDTO, top7d: top7dDTO, top30d: top30dDTO, topAll: topAllDTO
     });
 
-    const description = "The most-loved blocks on Daily Page—funny, honest, poetic, or just plain weird. " +
-      "See what stood out over the past day, week, month, and beyond.";
-
     res.render('archive/best-of', {
-      title: 'Best of Daily Page',
-      description,
+      title: res.locals.t('bestOf.meta.title'),
+      description: res.locals.t('bestOf.meta.description'),
       top24h: top24hDTO,
       top7d: top7dDTO,
       top30d: top30dDTO,

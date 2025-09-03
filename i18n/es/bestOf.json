@@ -1,0 +1,22 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Lo mejor de Daily Page",
+      "description": "Los bloques más queridos de Daily Page—graciosos, honestos, poéticos o sencillamente raros. Mira qué destacó en el día, la semana, el mes y más allá."
+    },
+    "heading": "🏆 Lo mejor de Daily Page",
+    "tabs": {
+      "24h": "🔥 24 horas",
+      "7d": "🚀 7 días",
+      "30d": "🌕 30 días",
+      "all": "👑 Históricos"
+    },
+    "labels": {
+      "createdBy": "Creado por:",
+      "inRoom": "en",
+      "onDate": "el {date}",
+      "unknownRoom": "Sala desconocida",
+      "noBlocks": "No se encontraron bloques."
+    }
+  }
+}

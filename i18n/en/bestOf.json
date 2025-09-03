@@ -1,0 +1,22 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Best of Daily Page",
+      "description": "The most-loved blocks on Daily Page—funny, honest, poetic, or just plain weird. See what stood out over the past day, week, month, and beyond."
+    },
+    "heading": "🏆 Best of Daily Page",
+    "tabs": {
+      "24h": "🔥 24 Hours",
+      "7d": "🚀 7 Days",
+      "30d": "🌕 30 Days",
+      "all": "👑 All Time"
+    },
+    "labels": {
+      "createdBy": "Created by:",
+      "inRoom": "in",
+      "onDate": "on {date}",
+      "unknownRoom": "Unknown Room",
+      "noBlocks": "No blocks found."
+    }
+  }
+}
