@@ -35,7 +35,7 @@ router.get('/archive', optionalAuth, addI18n(['archive']), async (req, res) => {
   }
 });
 
-router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
+router.get('/rooms/:roomId/archive/best-of', optionalAuth, addI18n(['bestOf', 'translation', 'readMore']), async (req, res) => {
   const { roomId } = req.params;
   const preferredLang = req.query.lang
     || req.user?.preferredLang
@@ -58,18 +58,23 @@ router.get('/rooms/:roomId/archive/best-of', optionalAuth, async (req, res) => {
       top24h: top24hDTO, top7d: top7dDTO, top30d: top30dDTO, topAll: topAllDTO
     });
 
-    const description = `Discover standout posts from the ${roomMetadata.name} room—` +
-      `the ones readers loved most over the past 24 hours, 7 days, 30 days, and all time.`;
+    const roomName =
+      roomMetadata.displayName
+      || roomMetadata.name_i18n?.[preferredLang]
+      || roomMetadata.name;
+
+    const title = res.locals.t('bestOf.meta.titleRoom', { roomName });
+    const description = res.locals.t('bestOf.meta.descriptionRoom', { roomName });
 
     res.render('archive/best-of-room', {
-      title: `Best of ${roomMetadata.name}`,
+      title,
       description,
       top24h: top24hDTO,
       top7d: top7dDTO,
       top30d: top30dDTO,
       topAll: topAllDTO,
       activeTab,
-      roomMetadata,
+      roomMetadata: { ...roomMetadata, roomName },
       user: req.user || null,
     });
   } catch (error) {

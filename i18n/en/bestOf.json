@@ -2,9 +2,13 @@
   "bestOf": {
     "meta": {
       "title": "Best of Daily Page",
-      "description": "The most-loved blocks on Daily Page—funny, honest, poetic, or just plain weird. See what stood out over the past day, week, month, and beyond."
+      "description": "The most-loved blocks on Daily Page—funny, honest, poetic, or just plain weird. See what stood out over the past day, week, month, and beyond.",
+      "titleRoom": "Best of {roomName}",
+      "descriptionRoom": "Discover standout posts from the {roomName} room—the ones readers loved most over the past 24 hours, 7 days, 30 days, and all time."
     },
     "heading": "🏆 Best of Daily Page",
+    "headingRoomPrefix": "🏆 Best of ",
+    "headingRoomSuffix": "",
     "tabs": {
       "24h": "🔥 24 Hours",
       "7d": "🚀 7 Days",
@@ -16,7 +20,8 @@
       "inRoom": "in",
       "onDate": "on {date}",
       "unknownRoom": "Unknown Room",
-      "noBlocks": "No blocks found."
+      "noBlocks": "No blocks found.",
+      "viewRoom": "View room"
     }
   }
 }
