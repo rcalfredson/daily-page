@@ -37,7 +37,7 @@ router.get('/tags', addI18n(['tags']), async (req, res) => {
 });
 
 // Página específica para mostrar bloques por etiqueta
-router.get('/tags/:tagName', async (req, res) => {
+router.get('/tags/:tagName', addI18n(['translation', 'readMore']), async (req, res) => {
   try {
     const preferredLang =
       req.query.lang ||
