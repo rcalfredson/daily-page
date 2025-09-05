@@ -520,7 +520,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       })
     })
 
-    app.get('/', optionalAuth, addI18n(['home']), async (req, res) => {
+    app.get('/', optionalAuth, addI18n(['home', 'translation', 'readMore']), async (req, res) => {
       try {
         const preferredLang = res.locals.lang; // ya decidido por middleware
         const userId = req.user?.id || null;
