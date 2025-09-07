@@ -10,6 +10,12 @@
       "prev": "Previous",
       "next": "Next"
     },
+    "title": "📚 Browse Archives",
+    "titleRoom": "📚 {roomName} — Archives",
+    "roomViewing": "Viewing archive for room {roomName}",
+    "viewRoomLink": "View room",
+    "noContent": "No content available yet.",
+    "backToRoom": "← Back to Room Dashboard",
     "calendar": {
       "meta": {
         "description": "View all creative blocks posted in {month} {year}—from quick thoughts to deep reflections. Click any date to explore what was shared.",
@@ -19,11 +25,25 @@
       "prevLabel": "Archive for {month} {year}",
       "nextLabel": "Archive for {month} {year}"
     },
-    "title": "📚 Browse Archives",
-    "titleRoom": "📚 {roomName} — Archives",
-    "roomViewing": "Viewing archive for room {roomName}",
-    "viewRoomLink": "View room",
-    "noContent": "No content available yet.",
-    "backToRoom": "← Back to Room Dashboard"
+    "date": {
+      "meta": {
+        "titleSite": "Archive for {date}",
+        "titleRoom": "{roomName} — Archive for {date}",
+        "descriptionSite": "Explore the blocks written on {date}—from quiet notes to wild confessions.",
+        "descriptionRoom": "On {date}, writers in the {roomName} room left their mark—scroll through reflections, ideas, and expressions shared that day."
+      },
+      "heading": "Archive for {date}",
+      "empty": "No content found for this date.",
+      "labels": {
+        "createdBy": "Created by:",
+        "in": "in",
+        "on": "on {datetime}",
+        "unknownRoom": "Unknown Room"
+      },
+      "nav": {
+        "prevDay": "Previous day",
+        "nextDay": "Next day"
+      }
+    }
   }
 }

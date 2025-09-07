@@ -153,16 +153,10 @@ router.get('/archive/:year/:month', optionalAuth, addI18n(['archive']), async (r
 // Render archive view for a specific date
 router.get('/archive/:year/:month/:day',
   optionalAuth,
-  addI18n(['translation', 'readMore']), async (req, res) => {
+  addI18n(['archive', 'translation', 'readMore']), async (req, res) => {
     try {
       const { year, month, day } = req.params;
-      const dateISO = `${year}-${month}-${day}`;
-      const date = `${year}-${month}-${day}`;
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 50;
-      const skip = (page - 1) * limit;
-
-      const userId = req.user?.id || null;
+      const { lang, t } = res.locals;
 
       // parse ints
       const y = parseInt(year, 10);
@@ -172,6 +166,12 @@ router.get('/archive/:year/:month/:day',
       // build start/end as UTC
       const start = new Date(Date.UTC(y, m, d, 0, 0, 0));
       const end = new Date(Date.UTC(y, m, d + 1, 0, 0, 0));
+
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 50;
+      const skip = (page - 1) * limit;
+
+      const userId = req.user?.id || null;
 
       const blocks = await Block.find({
         createdAt: {
@@ -197,20 +197,27 @@ router.get('/archive/:year/:month/:day',
         }
       });
 
+      const dateISO = `${year}-${month}-${day}`;
       const { prevDate, nextDate } = await getDateNav(null, dateISO, Block);
 
-      const description = `Explore the posts written on ${year}-${month}-${day}—from quiet notes to wild confessions. ` +
-        `Every block is a moment frozen in time.`;
+      // Fecha “bonita” y datetime con hora local (para metadatos)
+      const fmtDate = new Intl.DateTimeFormat(lang || 'en', { dateStyle: 'full', timeZone: 'UTC' })
+        .format(new Date(Date.UTC(y, m, d)));
+      const fmtDateTime = (dt) =>
+        new Intl.DateTimeFormat(lang || 'en', { dateStyle: 'medium', timeStyle: 'short' })
+          .format(new Date(dt));
 
       res.render('archive/date', {
-        title: `Archive for ${date}`,
-        description,
-        date,
+        title: t('archive.date.meta.titleSite', { date: fmtDate }),
+        description: t('archive.date.meta.descriptionSite', { date: fmtDate }),
+        date: fmtDate,
+        dateISO,
         blocks: lightBlocks,
         currentPage: page,
         prevDate,
         nextDate,
         totalPages: Math.ceil(totalBlocks / limit),
+        formatDateTime: fmtDateTime,
         user: req.user || null,
       });
     } catch (error) {
@@ -329,66 +336,85 @@ router.get('/rooms/:roomId/archive/:year/:month', optionalAuth, addI18n(['archiv
 // Archivo de una fecha específica en una sala
 router.get('/rooms/:roomId/archive/:year/:month/:day',
   optionalAuth,
-  addI18n(['translation', 'readMore']), async (req, res) => {
-  try {
-    const { roomId, year, month, day } = req.params;
-    const dateISO = `${year}-${month}-${day}`;
-    const roomMetadata = await getRoomMetadata(roomId);
-    const date = `${year}-${month}-${day}`;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
+  addI18n(['archive', 'translation', 'readMore']), async (req, res) => {
+    try {
+      const { lang, t } = res.locals;
+      const preferredLang = lang || 'en';
+      const { roomId, year, month, day } = req.params;
+      const roomMetadata = await getRoomMetadata(roomId, preferredLang);
 
-    const userId = req.user?.id || null;
+      const roomDisplayName =
+        roomMetadata.displayName ||
+        roomMetadata.name_i18n?.[preferredLang] ||
+        roomMetadata.name;
 
-    const blocks = await Block.find({
-      roomId,
-      createdAt: {
-        $gte: new Date(`${date}T00:00:00.000Z`),
-        $lt: new Date(`${date}T23:59:59.999Z`)
-      }
-    })
-      .sort({ voteCount: -1 })
-      .skip(skip)
-      .limit(limit)
-      .lean();
+      const y = parseInt(year, 10);
+      const m = parseInt(month, 10) - 1;
+      const d = parseInt(day, 10);
 
-    const lightBlocks = blocks.map(
-      b => toBlockPreviewDTO(b, {
-        userId
+      const start = new Date(Date.UTC(y, m, d, 0, 0, 0));
+      const end = new Date(Date.UTC(y, m, d + 1, 0, 0, 0));
+
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 20;
+      const skip = (page - 1) * limit;
+
+      const userId = req.user?.id || null;
+
+      const blocks = await Block.find({
+        roomId,
+        createdAt: {
+          $gte: start,
+          $lt: end
+        }
       })
-    );
+        .sort({ voteCount: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean();
 
-    const totalBlocks = await Block.countDocuments({
-      roomId,
-      createdAt: {
-        $gte: new Date(`${date}T00:00:00.000Z`),
-        $lt: new Date(`${date}T23:59:59.999Z`)
-      }
-    });
+      const lightBlocks = blocks.map(
+        b => toBlockPreviewDTO(b, {
+          userId
+        })
+      );
 
-    const { prevDate, nextDate } = await getDateNav(roomId, dateISO, Block);
+      const totalBlocks = await Block.countDocuments({
+        roomId,
+        createdAt: {
+          $gte: start,
+          $lt: end
+        }
+      });
 
-    const description = `On ${date}, writers in the ${roomMetadata.name} room left their mark. ` +
-      `Scroll through their reflections, ideas, and expressions shared that day.`;
+      const dateISO = `${year}-${month}-${day}`;
+      const { prevDate, nextDate } = await getDateNav(roomId, dateISO, Block);
 
-    res.render('archive/date', {
-      title: `Archive for ${date}`,
-      description,
-      date,
-      blocks: lightBlocks,
-      currentPage: page,
-      prevDate,
-      nextDate,
-      totalPages: Math.ceil(totalBlocks / limit),
-      roomId,
-      roomName: roomMetadata.name,
-      user: req.user || null,
-    });
-  } catch (error) {
-    console.error(`Error loading archive for room ${req.params.roomId}:`, error);
-    res.status(500).render('error', { message: 'Error loading archive page for room.' });
-  }
-});
+      const fmtDate = new Intl.DateTimeFormat(lang || 'en', { dateStyle: 'full', timeZone: 'UTC' })
+        .format(new Date(Date.UTC(y, m, d)));
+      const fmtDateTime = (dt) =>
+        new Intl.DateTimeFormat(lang || 'en', { dateStyle: 'medium', timeStyle: 'short' })
+          .format(new Date(dt));
+
+      res.render('archive/date', {
+        title: t('archive.date.meta.titleRoom', { roomName: roomDisplayName, date: fmtDate }),
+        description: t('archive.date.meta.descriptionRoom', { roomName: roomDisplayName, date: fmtDate }),
+        date: fmtDate,
+        dateISO,
+        blocks: lightBlocks,
+        currentPage: page,
+        prevDate,
+        nextDate,
+        totalPages: Math.ceil(totalBlocks / limit),
+        roomId,
+        roomName: roomDisplayName,
+        formatDateTime: fmtDateTime,
+        user: req.user || null,
+      });
+    } catch (error) {
+      console.error(`Error loading archive for room ${req.params.roomId}:`, error);
+      res.status(500).render('error', { message: 'Error loading archive page for room.' });
+    }
+  });
 
 export default router;

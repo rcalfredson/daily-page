@@ -10,6 +10,12 @@
       "prev": "Anterior",
       "next": "Siguiente"
     },
+    "title": "📚 Explorar archivos",
+    "titleRoom": "📚 {roomName} — Archivos",
+    "roomViewing": "Viendo el archivo de la sala {roomName}",
+    "viewRoomLink": "Ver sala",
+    "noContent": "Todavía no hay contenido.",
+    "backToRoom": "← Volver al panel de la sala",
     "calendar": {
       "meta": {
         "description": "Mira todos los bloques creativos publicados en {month} de {year}—desde ideas rápidas hasta reflexiones profundas. Haz clic en cualquier fecha para explorar lo compartido.",
@@ -19,11 +25,25 @@
       "prevLabel": "Archivo de {month} de {year}",
       "nextLabel": "Archivo de {month} de {year}"
     },
-    "title": "📚 Explorar archivos",
-    "titleRoom": "📚 {roomName} — Archivos",
-    "roomViewing": "Viendo el archivo de la sala {roomName}",
-    "viewRoomLink": "Ver sala",
-    "noContent": "Todavía no hay contenido.",
-    "backToRoom": "← Volver al panel de la sala"
+    "date": {
+      "meta": {
+        "titleSite": "Archivo de {date}",
+        "titleRoom": "{roomName} — Archivo de {date}",
+        "descriptionSite": "Explora los bloques escritos el {date}—de notas tranquilas a confesiones salvajes.",
+        "descriptionRoom": "El {date}, en la sala {roomName}, la gente dejó su huella—recorre ideas, reflexiones y expresiones compartidas."
+      },
+      "heading": "Archivo de {date}",
+      "empty": "No se encontró contenido para esta fecha.",
+      "labels": {
+        "createdBy": "Creado por:",
+        "in": "en",
+        "on": "el {datetime}",
+        "unknownRoom": "Sala desconocida"
+      },
+      "nav": {
+        "prevDay": "Día anterior",
+        "nextDay": "Día siguiente"
+      }
+    }
   }
 }
