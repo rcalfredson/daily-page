@@ -58,6 +58,11 @@
   margin: 5px 0;
 }
 
+.room-link {
+  text-decoration: underline dotted;
+  color: #004187;
+}
+
 .archive-nav {
   display: flex;
   justify-content: space-between;

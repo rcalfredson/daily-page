@@ -14,6 +14,10 @@ block append head
   link(rel='stylesheet' href='/css/modal.css')
   link(rel='stylesheet' href='/css/translation-attribution.css')
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
+  script#i18n-archive(type='application/json').
+    !{JSON.stringify(__i18n.archive || {})}
+  script#i18n-lang(type='application/json').
+    !{JSON.stringify(lang || 'en')}
   if prevDate
     link(rel="prev" href= roomId
       ? `/rooms/${roomId}/archive/${prevDate.split('-').join('/')}`
@@ -35,8 +39,8 @@ block content
     include ../partials/_archiveNav
     +archiveNav(
       prevDate
-        ? (roomId 
-            ? `/rooms/${roomId}/archive/${prevDate.split('-').join('/')}` 
+        ? (roomId
+            ? `/rooms/${roomId}/archive/${prevDate.split('-').join('/')}`
             : `/archive/${prevDate.split('-').join('/')}`
           )
         : null,
@@ -50,7 +54,13 @@ block content
       nextDate || '',
       'archive-nav'
     )
-    h1 Archive for #{date}
+    if roomId
+      h1
+        a.room-link(href=`/rooms/${roomId}` title=roomName)= roomName
+        |  — 
+        = t('archive.date.heading', { date })
+    else
+      h1= t('archive.date.heading', { date })
 
     if blocks.length
       ul.block-list
@@ -58,26 +68,26 @@ block content
           li.block-item
             div.block-main
               a.block-link(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
-              .block-meta 
-                | Created by: 
+              .block-meta
+                | #{t('archive.date.labels.createdBy')} 
                 a.user-profile-link(href=`/users/${block.creator}`)= block.creator
-                |  in 
-                a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : 'Unknown Room'
-                |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                |  #{t('archive.date.labels.in')} 
+                a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : t('archive.date.labels.unknownRoom')
+                |  #{t('archive.date.labels.on', { datetime: formatDateTime(block.createdAt) })}
               +translationAttribution(block)
               div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
             +readMoreIfTruncated(block, block.roomId)
-            footer.block-footer 
+            footer.block-footer
               include ../partials/_vote_controls
     else
-      p No content found for this date.
+      p= t('archive.date.empty')
   include ../partials/_pagination
   +pagination(
     currentPage,
     totalPages,
     roomId
-      ? `/rooms/${roomId}/archive/${date.split('-').join('/')}`
-      : `/archive/${date.split('-').join('/')}`
+      ? `/rooms/${roomId}/archive/${dateISO.split('-').join('/')}`
+      : `/archive/${dateISO.split('-').join('/')}`
   )
 
   include ../partials/_login_modal
