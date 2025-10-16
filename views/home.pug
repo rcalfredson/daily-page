@@ -91,12 +91,14 @@ block content
         a.btn(href=`/rooms/${featuredBlock.roomId}/blocks/${featuredBlock._id}`)= t('home.featured.viewBlock')
 
   
-  // Sección de Trending Tags
+  //- Sección de Trending Tags
   .trending-section
     h2
       = t('home.trendingTags.title')
-      if tagsPeriod > 1
-        |  #{t('home.trendingTags.suffixDays', {days: tagsPeriod})}
+      if tagsPeriod && tagsPeriod.type === 'days' && tagsPeriod.value > 1
+        |  #{t('home.trendingTags.suffixDays', { days: tagsPeriod.value })}
+      else if tagsPeriod && tagsPeriod.type === 'all'
+        |  #{t('home.trendingTags.suffixAllTime')}
     if trendingTags && trendingTags.length
       .trending-tags-widget
         ul.trending-tags

@@ -29,6 +29,7 @@
     "trendingTags": {
       "title": "Etiquetas en tendencia",
       "suffixDays": "(últimos {days} días)",
+      "suffixAllTime": "(histórico)",
       "blocks": "{n} bloques",
       "votes": "{n} votos",
       "empty": "Todavía no hay etiquetas en tendencia. ¡Sé el primero en etiquetar algo cool!"
