@@ -209,40 +209,56 @@ export async function getRecentActivityByUser(username, options = {}) {
 // Fallback para obtener bloques con actividad
 export async function getTopBlocksWithFallback(options = {}) {
   const { lockedOnly = false, limit = 20, preferredLang = "en" } = options;
-  const intervals = [1, 7, 30]; // días de retroceso
-  let blocks = [];
-  let usedInterval = 1;
 
+  const intervals = [1, 7, 30]; // días
+  let blocks = [];
+  let period = { type: 'days', value: 1 }; // default
+
+  // 1, 7, 30 días
   for (let days of intervals) {
     const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-    const query = { createdAt: { $gte: cutoff } };
-    if (lockedOnly) query.status = 'locked';
 
-    // Usa caching con una clave basada en el intervalo
     blocks = await cache.get(
       `top-blocks-last-${days}d-${lockedOnly}-${limit}-${preferredLang}`,
       async () => {
-        return await findTopGlobalWithLangPref(
-          {
-            preferredLang,
-            lockedOnly,
-            limit,
-            startDate: cutoff,
-            endDate: new Date()
-          }
-        )
+        return await findTopGlobalWithLangPref({
+          preferredLang,
+          lockedOnly,
+          limit: Number(limit),
+          startDate: cutoff,
+          endDate: new Date(),
+        });
       },
       [],
       CACHE_TTL
     );
 
-    if (blocks.length > 0) {
-      usedInterval = days;
+    if (Array.isArray(blocks) && blocks.length > 0) {
+      period = { type: 'days', value: days };
       break;
     }
   }
 
-  return { blocks, period: usedInterval };
+  // All-time explícito con fechas amplias
+  if (!blocks || blocks.length === 0) {
+    blocks = await cache.get(
+      `top-blocks-all-time-${lockedOnly}-${limit}-${preferredLang}`,
+      async () => {
+        return await findTopGlobalWithLangPref({
+          preferredLang,
+          lockedOnly,
+          limit: Number(limit),
+          startDate: new Date(0),    // 👈 clave para all-time
+          endDate: new Date(),
+        });
+      },
+      [],
+      CACHE_TTL
+    );
+    period = { type: 'all' };
+  }
+
+  return { blocks, period };
 }
 
 // Fallback para bloques por room (locked o in-progress)
