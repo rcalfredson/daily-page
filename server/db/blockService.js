@@ -306,43 +306,67 @@ export async function getBlocksByRoomWithFallback({
 
 // Fallback para obtener trending tags con actividad
 export async function getTrendingTagsWithFallback(options = {}) {
-  const { limit = 10, sortBy = 'totalVotes' } = options;
+  const {
+    limit = 10,
+    sortBy = 'totalBlocks', // 'totalBlocks' o 'totalVotes'
+    minCount = 1,           // opcional: ignora etiquetas con < minCount bloques
+  } = options;
+
   const intervals = [1, 7, 30]; // días
   let tags = [];
-  let usedInterval = 1;
+  let period = { type: 'days', value: 1 };
 
-  for (let days of intervals) {
-    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-    const pipeline = [
-      { $match: { createdAt: { $gte: cutoff } } },
+  const makePipeline = (startDate, endDate) => {
+    const stageMatch = { createdAt: { $gte: startDate, $lte: endDate } };
+    const stageGroup = {
+      _id: '$tags',
+      totalBlocks: { $sum: 1 },
+      totalVotes: { $sum: '$voteCount' },
+    };
+    const stageAfterGroupMatch =
+      minCount > 1 ? [{ $match: { totalBlocks: { $gte: minCount } } }] : [];
+    const stageSort = { [sortBy]: -1, totalVotes: -1, totalBlocks: -1, _id: 1 };
+
+    return [
+      { $match: stageMatch },
       { $unwind: '$tags' },
-      {
-        $group: {
-          _id: '$tags',
-          totalBlocks: { $sum: 1 },
-          totalVotes: { $sum: '$voteCount' },
-        },
-      },
-      { $sort: { [sortBy]: -1 } },
-      { $limit: limit },
+      { $group: stageGroup },
+      ...stageAfterGroupMatch,
+      { $sort: stageSort },
+      { $limit: Number(limit) },
     ];
+  };
+
+  // 1, 7, 30 días
+  for (let days of intervals) {
+    const start = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const end = new Date();
 
     tags = await cache.get(
-      `trending-tags-last-${days}d-${limit}-${sortBy}`,
-      async () => {
-        return await Block.aggregate(pipeline).exec();
-      },
+      `trending-tags-last-${days}d-${limit}-${sortBy}-min${minCount}`,
+      async () => Block.aggregate(makePipeline(start, end)).exec(),
       [],
       CACHE_TTL
     );
 
-    if (tags.length > 0) {
-      usedInterval = days;
+    if (Array.isArray(tags) && tags.length > 0) {
+      period = { type: 'days', value: days };
       break;
     }
   }
 
-  return { tags, period: usedInterval };
+  // All-time
+  if (!tags || tags.length === 0) {
+    tags = await cache.get(
+      `trending-tags-all-${limit}-${sortBy}-min${minCount}`,
+      async () => Block.aggregate(makePipeline(new Date(0), new Date())).exec(),
+      [],
+      CACHE_TTL
+    );
+    period = { type: 'all' };
+  }
+
+  return { tags, period };
 }
 
 // Get all blocks created on a specific date (with caching)

@@ -29,6 +29,7 @@
     "trendingTags": {
       "title": "Trending Tags",
       "suffixDays": "(last {days} days)",
+      "suffixAllTime": "(all-time)",
       "blocks": "{n} blocks",
       "votes": "{n} votes",
       "empty": "No trending tags yet. Be the first to tag something cool!"
