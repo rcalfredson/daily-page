@@ -14,6 +14,7 @@
     "stats": {
       "blocks": "Bloques",
       "rooms": "Salas",
+      "tags": "Etiquetas",
       "collabsToday": "Colaboraciones de hoy"
     },
     "featured": {

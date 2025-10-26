@@ -42,7 +42,8 @@ import {
   getBlocksByRoomWithFallback,
   getTopBlocksWithFallback, getTrendingTagsWithFallback,
   getFeaturedBlockWithFallback, getFeaturedRoomWithFallback,
-  getGlobalBlockStats
+  getGlobalBlockStats,
+  getTotalTags
 } from './server/db/blockService.js';
 import {
   pagesByDate,
@@ -533,7 +534,8 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           topRes,  // top blocks
           tagsRes, // trending tags
           statsRes,// global block stats
-          roomsRes // total rooms
+          roomsRes, // total rooms
+          totalTagsRes // total tags
         ] = await Promise.all([
           getFeaturedBlockWithFallback({ preferredLang }),
           getFeaturedRoomWithFallback(),
@@ -541,6 +543,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' }),
           getGlobalBlockStats(),
           getTotalRooms(),
+          getTotalTags()
         ]);
 
         // Post-procesamiento mínimo (sin I/O extra)
@@ -570,6 +573,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
         const globalStats = {
           totalBlocks: statsRes?.totalBlocks ?? 0,
           totalRooms: roomsRes ?? 0,
+          totalTags: totalTagsRes ?? 0,
           collaborationsToday: statsRes?.collaborationsToday ?? 0,
         };
 
