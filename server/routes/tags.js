@@ -8,11 +8,34 @@ const router = express.Router();
 
 router.get('/tags', addI18n(['tags']), async (req, res) => {
   try {
-    const timeframe = req.query.timeframe || '7d';
+    const { t } = res.locals;
+    const requestedTimeframe = req.query.timeframe || null;
 
-    const tags = await getAllTagsWithCounts(timeframe);
+    const timeframesOrder = ['24h', '7d', '30d', 'all'];
 
-    const { t, lang } = res.locals;
+    let timeframe = requestedTimeframe;
+    let tags = [];
+
+    // If no explicit timeframe, auto-pick the first non-empty one
+    if (!requestedTimeframe) {
+      for (const tf of timeframesOrder) {
+        const candidateTags = await getAllTagsWithCounts(tf);
+        if (candidateTags && candidateTags.length > 0) {
+          tags = candidateTags;
+          timeframe = tf;
+          break;
+        }
+      }
+
+      // If still empty, default to 'all'
+      if (!tags.length) {
+        tags = await getAllTagsWithCounts('all');
+        timeframe = 'all';
+      }
+    } else {
+      tags = await getAllTagsWithCounts(requestedTimeframe);
+      timeframe = requestedTimeframe;
+    }
 
     const timeframes = [
       { key: '24h', label: t('tags.timeframe.last24h') },
@@ -29,6 +52,7 @@ router.get('/tags', addI18n(['tags']), async (req, res) => {
       timeframes,
       user: req.user || null
     });
+
   } catch (error) {
     console.error('Error loading tags overview:', error);
     const { t } = res.locals;
