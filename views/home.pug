@@ -42,6 +42,10 @@ block content
       i.fas.fa-door-open
       span.stat-number= globalStats.totalRooms
       span.stat-label= t('home.stats.rooms')
+    a.stat-item(href='/tags')
+      i.fas.fa-hashtag
+      span.stat-number= globalStats.totalTags
+      span.stat-label= t('home.stats.tags')
     .stat-item
       i.fas.fa-users
       span.stat-number= globalStats.collaborationsToday

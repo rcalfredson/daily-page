@@ -54,6 +54,17 @@ export async function getGlobalBlockStats() {
   );
 }
 
+export async function getTotalTags() {
+  return await cache.get('total-tags', async () => {
+    const result = await Block.aggregate([
+      { $unwind: '$tags' },
+      { $group: { _id: '$tags' } },
+      { $count: 'totalTags' }
+    ]);
+    return result?.[0]?.totalTags ?? 0;
+  }, [], CACHE_TTL);
+}
+
 export async function getAllTagsWithCounts(timeframe = 'all') {
   return await cache.get(
     `all-tags-with-counts-${timeframe}`,
