@@ -380,6 +380,60 @@ export async function getTrendingTagsWithFallback(options = {}) {
   return { tags, period };
 }
 
+export async function findByUserWithLangPref({
+  username,
+  preferredLang = 'en',
+  sortBy = 'createdAt',
+  sortDir = -1,
+  skip = 0,
+  limit = 20
+}) {
+  const matchStage = {
+    $or: [{ creator: username }, { collaborators: username }]
+  };
+
+  const sortStage = { [sortBy]: sortDir };
+  if (sortBy !== 'createdAt') {
+    sortStage.createdAt = -1;
+  }
+
+  const pipeline = [
+    { $match: matchStage },
+    { $sort: sortStage },
+    { $group: { _id: "$groupId", docs: { $push: "$$ROOT" } } },
+    {
+      $project: {
+        best: {
+          $let: {
+            vars: {
+              preferred: {
+                $filter: {
+                  input: "$docs",
+                  as: "d",
+                  cond: { $eq: ["$$d.lang", preferredLang] }
+                }
+              }
+            },
+            in: {
+              $cond: [
+                { $gt: [{ $size: "$$preferred" }, 0] },
+                { $arrayElemAt: ["$$preferred", 0] },
+                { $arrayElemAt: ["$docs", 0] }
+              ]
+            }
+          }
+        }
+      }
+    },
+    { $replaceRoot: { newRoot: "$best" } },
+    { $sort: sortStage },
+    { $skip: skip },
+    { $limit: limit }
+  ];
+
+  return await Block.aggregate(pipeline).exec();
+}
+
 // Get all blocks created on a specific date (with caching)
 export async function getBlocksByDate(date) {
   return await cache.get(

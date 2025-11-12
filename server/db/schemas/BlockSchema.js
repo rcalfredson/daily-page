@@ -67,4 +67,7 @@ const blockSchema = new Schema({
 // 🧠 Unique pair: one language per group
 blockSchema.index({ groupId: 1, lang: 1 }, { unique: true });
 
+blockSchema.index({ creator: 1, createdAt: -1 });
+blockSchema.index({ collaborators: 1, createdAt: -1 });
+
 export default blockSchema;

@@ -43,8 +43,10 @@ block content
               li.activity-item
                 a(href=`/rooms/${activity.roomId}/blocks/${activity._id}`)= activity.title
                 p Updated on #{new Date(activity.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+        
         else
           p No recent activity.
+        a(href="/dashboard/blocks").btn.stats-btn View All Blocks
 
       .streak-section.dashboard-card
         h3 Writing Streak

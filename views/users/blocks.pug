@@ -1,0 +1,47 @@
+extends ../layout
+block append head
+  link(rel='stylesheet' href='/css/room-index.css')
+  link(rel='stylesheet' href='/css/pagination.css')
+
+block nav
+  include ../navLinks
+
+block content
+  h1
+    if isOwnProfile
+      a.room-link(href='/dashboard') Your Dashboard
+      |  — All Blocks
+    else
+      - const encodedUser = encodeURIComponent(username)
+      a.room-link(href=`/users/${encodedUser}`)= `${username}'s Profile`
+      |  — All Blocks
+  .room-index-container
+    form.sort-bar(method='get' action=`?sort=${sortKey}&dir=${dir}${langQuery}`)
+      | Sort by 
+      select(name='sort')
+        option(value='createdAt' selected=sortKey=='createdAt') Date
+        option(value='title' selected=sortKey=='title') Title
+        option(value='voteCount' selected=sortKey=='voteCount') Votes
+      |  
+      select(name='dir')
+        option(value='desc' selected=dir=='desc') ↓
+        option(value='asc'  selected=dir=='asc') ↑
+      button(type='submit') Go
+
+    if blocks.length
+      ul.block-toc
+        each b in blocks
+          li
+            a(href=`/rooms/${b.roomId}/blocks/${b._id}`)= b.title
+            span.meta (#{b.voteCount} ★ • #{b.createdAt.toLocaleDateString()})
+    else
+      p No blocks yet.
+
+    include ../partials/_pagination
+    +pagination(
+      currentPage,
+      totalPages,
+      isOwnProfile
+        ? `/dashboard/blocks?sort=${sortKey}&dir=${dir}${langQuery}`
+        : `/users/${encodedUser}/blocks?sort=${sortKey}&dir=${dir}${langQuery}`
+    )

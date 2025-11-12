@@ -1,9 +1,10 @@
 import express from 'express';
 
 import { isAuthenticated } from '../middleware/auth.js';
+import optionalAuth from '../middleware/optionalAuth.js'
 import { addI18n } from '../services/i18n.js';
 import { findUserById, findUserByUsername } from "../db/userService.js";
-import { getRecentActivityByUser } from '../db/blockService.js';
+import { findByUserWithLangPref, getRecentActivityByUser } from '../db/blockService.js';
 import Block from '../db/models/Block.js';
 import { getRoomMetadata } from "../db/roomService.js";
 
@@ -222,6 +223,117 @@ router.get('/dashboard/starred-rooms', isAuthenticated, async (req, res) => {
   } catch (error) {
     console.error('Error loading starred rooms:', error.message);
     res.status(500).render('error', { message: 'Error loading starred rooms' });
+  }
+});
+
+// GET /dashboard/blocks?page=&sort=&dir=&lang=
+router.get('/dashboard/blocks', isAuthenticated, async (req, res) => {
+  try {
+    const username = req.user.username;
+    const preferredLang =
+      req.query.lang ||
+      req.user?.preferredLang ||
+      (req.acceptsLanguages()[0] || "en").split("-")[0];
+
+    const page = +req.query.page || 1;
+    const limit = 20;
+    const sortKey = ['title', 'createdAt', 'voteCount'].includes(req.query.sort)
+      ? req.query.sort : 'createdAt';
+    const dirStr = req.query.dir === 'asc' ? 'asc' : 'desc';
+    const sortDir = dirStr === 'asc' ? 1 : -1;
+
+    const currentLang = preferredLang;
+    const langQuery = currentLang ? `&lang=${currentLang}` : '';
+
+    const blocks = await findByUserWithLangPref({
+      username,
+      preferredLang,
+      sortBy: sortKey,
+      sortDir,
+      skip: (page - 1) * limit,
+      limit
+    });
+
+    const [{ total = 0 } = {}] = await Block.aggregate([
+      { $match: { $or: [{ creator: username }, { collaborators: username }] } },
+      { $group: { _id: "$groupId" } },
+      { $count: "total" }
+    ]);
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+
+    res.render('users/blocks', {
+      title: 'Your Blocks',
+      username,
+      blocks,
+      currentPage: page,
+      totalPages,
+      sortKey,
+      dir: dirStr,
+      lang: currentLang,
+      langQuery,
+      isOwnProfile: true
+    });
+  } catch (err) {
+    console.error('Error fetching user blocks:', err);
+    res.status(500).render('error', { message: 'Error fetching user blocks' });
+  }
+});
+
+// GET /users/:username/blocks?page=&sort=&dir=&lang=
+router.get('/users/:username/blocks', optionalAuth, async (req, res) => {
+  try {
+    const username = req.params.username;
+    const preferredLang =
+      req.query.lang ||
+      req.user?.preferredLang ||
+      (req.acceptsLanguages()[0] || "en").split("-")[0];
+
+    const page = +req.query.page || 1;
+    const limit = 20;
+    const sortKey = ['title', 'createdAt', 'voteCount'].includes(req.query.sort)
+      ? req.query.sort : 'createdAt';
+    const dirStr = req.query.dir === 'asc' ? 'asc' : 'desc';
+    const sortDir = dirStr === 'asc' ? 1 : -1;
+
+    const currentLang = preferredLang;
+    const langQuery = currentLang ? `&lang=${currentLang}` : '';
+
+    const userExists = await findUserByUsername(username);
+    if (!userExists) {
+      return res.status(404).render('error', { title: 'User not found', message: 'User not found' });
+    }
+
+    const blocks = await findByUserWithLangPref({
+      username,
+      preferredLang,
+      sortBy: sortKey,
+      sortDir,
+      skip: (page - 1) * limit,
+      limit
+    });
+
+    const [{ total = 0 } = {}] = await Block.aggregate([
+      { $match: { $or: [{ creator: username }, { collaborators: username }] } },
+      { $group: { _id: "$groupId" } },
+      { $count: "total" }
+    ]);
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+
+    res.render('users/blocks', {
+      title: `${username}'s Blocks`,
+      username,
+      blocks,
+      currentPage: page,
+      totalPages,
+      sortKey,
+      dir: dirStr,
+      lang: currentLang,
+      langQuery,
+      isOwnProfile: req.user && req.user.username === username
+    });
+  } catch (err) {
+    console.error('Error fetching user blocks:', err);
+    res.status(500).render('error', { message: 'Error fetching user blocks' });
   }
 });
 
