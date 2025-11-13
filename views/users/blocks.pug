@@ -7,12 +7,13 @@ block nav
   include ../navLinks
 
 block content
+  - const encodedUser = encodeURIComponent(username || '')
+  - const baseUrl = isOwnProfile ? '/dashboard/blocks' : `/users/${encodedUser}/blocks`
   h1
     if isOwnProfile
       a.room-link(href='/dashboard') Your Dashboard
       |  — All Blocks
     else
-      - const encodedUser = encodeURIComponent(username)
       a.room-link(href=`/users/${encodedUser}`)= `${username}'s Profile`
       |  — All Blocks
   .room-index-container
@@ -41,7 +42,5 @@ block content
     +pagination(
       currentPage,
       totalPages,
-      isOwnProfile
-        ? `/dashboard/blocks?sort=${sortKey}&dir=${dir}${langQuery}`
-        : `/users/${encodedUser}/blocks?sort=${sortKey}&dir=${dir}${langQuery}`
+      `${baseUrl}?sort=${sortKey}&dir=${dir}${langQuery}`
     )
