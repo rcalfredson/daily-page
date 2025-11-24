@@ -423,7 +423,14 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       });
     });
 
-    app.get('/support', (_, res) => res.render('support', { title: 'Daily Page - Support' }));
+    app.get('/support', addI18n(['support']), (_, res) => {
+      const { t } = res.locals;
+
+      res.render('support', {
+        title: t('support.meta.title'),
+        description: t('support.meta.description')
+      })
+    });
 
     app.post('/request-room', handleRoomRequest);
 
