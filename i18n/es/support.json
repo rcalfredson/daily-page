@@ -1,0 +1,41 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Soporte",
+      "description": "Cómo ponerte en contacto, informar problemas, pedir funciones o salas nuevas y apoyar económicamente a Daily Page."
+    },
+    "contact": {
+      "h1": "★ Quiero plantear una pregunta, informar de un problema o solicitar una nueva función.",
+      "p1": {
+        "before": "Si prefieres usar GitHub, por favor revisa",
+        "link": "los issues de este proyecto",
+        "after": "y añade tu voz. Las pull requests también son bienvenidas, por supuesto."
+      },
+      "p2": {
+        "before": "Como alternativa, puedes",
+        "link": "enviar un correo",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Quiero apoyar este proyecto con una contribución.",
+      "p1": {
+        "before": "Gracias de antemano por ayudar a financiar este proyecto. Por favor envía pagos de forma segura a través de",
+        "paypal": "PayPal",
+        "middle": "o, si lo prefieres, puedes",
+        "amazon": "pedir unas cuantas bolsas de los juguetes que vendo en Amazon",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Quiero solicitar una sala nueva.",
+      "form": {
+        "nameLabel": "Nombre de la sala",
+        "topicLabel": "Tema (opcional)",
+        "descriptionLabel": "Descripción",
+        "submit": "Enviar solicitud",
+        "success": "¡Solicitud enviada con éxito!"
+      }
+    }
+  }
+}

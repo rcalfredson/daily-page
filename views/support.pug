@@ -3,6 +3,7 @@ block nav
   include navLinks
 
 block append head
+  // (puedes dejarlo tal cual; cambio a /css si quieres más consistencia de rutas)
   link(rel='stylesheet' href='css/support.css')
 
 block scripts
@@ -10,34 +11,36 @@ block scripts
   
 block content
   .info
-    h1 ★ I would like to pose a question, report a problem, or request a feature.
-    p If you prefer to use GitHub, please check 
-      a(href="https://github.com/rcalfredson/daily-page/issues" target="_blank")
-        | this project's issues
-      |  and add your voice. Pull requests are also welcome, of course.
-    p Alternatively, 
-      a(href="mailto:ask@dailypage.org") send an email
-      | .
-    h1 ★ I would like to support this project through a contribution.
-    p Thank you in advance for funding this project. Please send payments securely through 
-      a(href="https://www.paypal.me/rcAlfredo" target="_blank") PayPal
-      |  or, if you prefer,
+    h1= t('support.contact.h1')
+    p
+      | #{t('support.contact.p1.before')} 
+      a(href="https://github.com/rcalfredson/daily-page/issues" target="_blank")= t('support.contact.p1.link')
+      |  #{t('support.contact.p1.after')}
+    p
+      | #{t('support.contact.p2.before')} 
+      a(href="mailto:ask@dailypage.org")= t('support.contact.p2.link')
+      | #{t('support.contact.p2.after')}
+
+    h1= t('support.contribute.h1')
+    p
+      | #{t('support.contribute.p1.before')} 
+      a(href="https://www.paypal.me/rcAlfredo" target="_blank")= t('support.contribute.p1.paypal')
+      |  #{t('support.contribute.p1.middle')} 
       s
-        a(href="https://www.amazon.com/dp/B07B4XHVBL" target="_blank")
-          |  order a few bags of the toys I am selling on Amazon
-        |
-      span .
-    h1 ★ I would like to request a new room.
+        a(href="https://www.amazon.com/dp/B07B4XHVBL" target="_blank")= t('support.contribute.p1.amazon')
+      | #{t('support.contribute.p1.after')}
+
+    h1= t('support.rooms.h1')
     .room-request-container
       form(id="roomRequestForm" class="room-request-form" enctype="application/x-www-form-urlencoded")
         .form-group
-          label(for="room-name") Room Name
+          label(for="room-name")= t('support.rooms.form.nameLabel')
           input#room-name(type="text" name="roomName" required)
         .form-group
-          label(for="room-topic") Topic (optional)
+          label(for="room-topic")= t('support.rooms.form.topicLabel')
           input#room-topic(type="text" name="roomTopic")
         .form-group
-          label(for="room-description") Description
+          label(for="room-description")= t('support.rooms.form.descriptionLabel')
           textarea#room-description(name="roomDescription" rows="4" required)
-        button(type="submit" class="submit-button") Submit Request
-      .form-feedback(style="display:none;") Request submitted successfully!
+        button(type="submit" class="submit-button")= t('support.rooms.form.submit')
+      .form-feedback(style="display:none;")= t('support.rooms.form.success')

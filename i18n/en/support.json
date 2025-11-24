@@ -1,0 +1,41 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Support",
+      "description": "How to get in touch, report issues, request features or rooms, and support Daily Page financially."
+    },
+    "contact": {
+      "h1": "★ I would like to pose a question, report a problem, or request a feature.",
+      "p1": {
+        "before": "If you prefer to use GitHub, please check",
+        "link": "this project's issues",
+        "after": "and add your voice. Pull requests are also welcome, of course."
+      },
+      "p2": {
+        "before": "Alternatively,",
+        "link": "send an email",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ I would like to support this project through a contribution.",
+      "p1": {
+        "before": "Thank you in advance for funding this project. Please send payments securely through",
+        "paypal": "PayPal",
+        "middle": "or, if you prefer,",
+        "amazon": "order a few bags of the toys I am selling on Amazon",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ I would like to request a new room.",
+      "form": {
+        "nameLabel": "Room Name",
+        "topicLabel": "Topic (optional)",
+        "descriptionLabel": "Description",
+        "submit": "Submit Request",
+        "success": "Request submitted successfully!"
+      }
+    }
+  }
+}
