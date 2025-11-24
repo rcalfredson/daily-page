@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — About",
+      "description": "What Daily Page is, how it works, and why it was built as a slower, kinder corner of the web."
+    },
+    "title": "About Daily Page",
+    "tagline": "Feed your mind, not your feed.",
+    "mission": {
+      "h2": "Mission",
+      "p1": "An indie writing lab—started in my living room, fueled by reader curiosity.",
+      "p2": "It’s built not to rot your brain, but to nourish it: a place where you can write slowly, anonymously if you like, and never worry about impressing anyone."
+    },
+    "how": {
+      "h2": "How it Works",
+      "features": {
+        "rooms": {
+          "label": "Rooms",
+          "text": "are topic-silos (think “subreddit, but friendlier”)."
+        },
+        "blocks": {
+          "label": "Blocks",
+          "text": "are collaborative posts—anyone (even “anonymous”) can create one, edit it until it’s locked, and vote on others."
+        },
+        "privacy": {
+          "label": "Privacy & Sharing",
+          "text": "Public blocks live in the room’s feed. Private blocks hide until locked, but you get a share-link to invite friends."
+        },
+        "markdown": {
+          "label": "Markdown & Media",
+          "text": "You write in markdown, embed images, and co-edit like in Google Docs."
+        },
+        "trends": {
+          "label": "Trends & Tags",
+          "text": "Tag your block, track tag trends, and discover top content (7 d / 30 d / all-time)."
+        },
+        "streaks": {
+          "label": "Streaks",
+          "text": "Keep your daily writing streak alive—your best incentive to show up each day."
+        }
+      }
+    },
+    "origin": {
+      "h2": "How We Got Here",
+      "p1": "In 2018, I built a date-based wiki for “today’s page” and watched a few introspective writers turn it into an outlet for their thoughts. It never got huge—but it planted a seed.",
+      "p2": "Fast-forward to now, and Daily Page is that seed grown into many rooms—a quiet social web for introverts, idealists, and anyone craving a slower pace."
+    },
+    "next": {
+      "h2": "What’s Next",
+      "p1": "We’re just getting started: richer embeds, deeper user stats, reputation leaderboards, and more ways to reward thoughtful creation.",
+      "p2": "Thank you for being part of this little indie experiment."
+    },
+    "cta": {
+      "rooms": "Explore Rooms",
+      "signup": "Join the Community"
+    }
+  }
+}

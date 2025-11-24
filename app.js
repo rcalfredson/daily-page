@@ -512,12 +512,12 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       }
     });
 
-    app.get('/about', optionalAuth, async (req, res) => {
+    app.get('/about', optionalAuth, addI18n(['about']), async (req, res) => {
+      const { t } = res.locals;
+
       res.render('about', {
-        title: 'Daily Page - About',
-        description:
-          "Learn what powers Daily Page: a minimalist social writing site for thinkers, dreamers, " +
-          "and note-takers who post one block at a time."
+        title: t('about.meta.title'),
+        description: t('about.meta.description')
       })
     })
 

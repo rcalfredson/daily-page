@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — Acerca de",
+      "description": "Qué es Daily Page, cómo funciona y por qué existe como un rincón más lento y amable de la web."
+    },
+    "title": "Acerca de Daily Page",
+    "tagline": "Alimenta tu mente, no tu feed.",
+    "mission": {
+      "h2": "Misión",
+      "p1": "Un laboratorio de escritura indie—nacido en mi sala, impulsado por la curiosidad de las personas lectoras.",
+      "p2": "Está pensado no para ablandarte el cerebro, sino para nutrirlo: un lugar donde puedes escribir despacio, de forma anónima si quieres, sin preocuparte por impresionar a nadie."
+    },
+    "how": {
+      "h2": "Cómo Funciona",
+      "features": {
+        "rooms": {
+          "label": "Salas",
+          "text": "son espacios temáticos (como un “subreddit”, pero más amable)."
+        },
+        "blocks": {
+          "label": "Bloques",
+          "text": "son publicaciones colaborativas: cualquiera (incluso “anónimo”) puede crear uno, editarlo hasta que se bloquee y votar en los demás."
+        },
+        "privacy": {
+          "label": "Privacidad y Compartir",
+          "text": "Los bloques públicos viven en el feed de la sala. Los bloques privados se esconden hasta que se bloquean, pero obtienes un enlace para compartir con amistades."
+        },
+        "markdown": {
+          "label": "Markdown y Medios",
+          "text": "Escribes en markdown, puedes incrustar imágenes y coeditar como en Google Docs."
+        },
+        "trends": {
+          "label": "Tendencias y Etiquetas",
+          "text": "Etiqueta tu bloque, sigue las tendencias de etiquetas y descubre el mejor contenido (7 días / 30 días / histórico)."
+        },
+        "streaks": {
+          "label": "Rachas",
+          "text": "Mantén viva tu racha diaria de escritura—tu mejor motivación para presentarte cada día."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Cómo Llegamos Hasta Aquí",
+      "p1": "En 2018, construí una wiki basada en fechas para la “página de hoy” y vi cómo unas cuantas personas introspectivas la convertían en un espacio para sus pensamientos. Nunca se hizo enorme, pero plantó una semilla.",
+      "p2": "Avanzando hasta hoy, Daily Page es esa semilla convertida en muchas salas: una web social tranquila para introvertidos, idealistas y cualquiera que busque un ritmo más lento."
+    },
+    "next": {
+      "h2": "Qué Sigue",
+      "p1": "Apenas estamos empezando: incrustaciones más ricas, estadísticas de usuario más profundas, tablas de reputación y más formas de recompensar la creación reflexiva.",
+      "p2": "Gracias por ser parte de este pequeño experimento indie."
+    },
+    "cta": {
+      "rooms": "Explorar salas",
+      "signup": "Unirte a la comunidad"
+    }
+  }
+}
