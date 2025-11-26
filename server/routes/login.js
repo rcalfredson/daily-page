@@ -1,11 +1,13 @@
 import express from 'express';
+import { addI18n } from '../services/i18n.js'
 
 const router = express.Router();
 
-router.get('/login', (req, res) => {
+router.get('/login', addI18n(['auth']), (req, res) => {
+  const { t } = res.locals;
   res.render('login', {
-    title: 'Log In',
-    description: 'Log in to your Daily Page account to continue your journey.',
+    title: t('auth.login.meta.title'),
+    description: t('auth.login.meta.description')
   });
 });
 
