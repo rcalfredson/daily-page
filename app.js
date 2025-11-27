@@ -140,8 +140,13 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       console.log(`Listening on port ${port}`);
     });
 
-    app.get('/random-writer', (_, res) => {
-      res.render('randomWriter', { title: 'Random Writer' });
+    app.get('/random-writer', addI18n(['randomWriter']), (_, res) => {
+      const { t } = res.locals;
+
+      res.render('randomWriter', {
+        title: t('randomWriter.meta.title'),
+        description: t('randomWriter.meta.description')
+      });
     });
 
     app.get('/baseball', async (_, res) => {
