@@ -9,15 +9,15 @@ block append head
 
 block content
   .about-container
-    h1.page-title Other Projects
-    p.tagline A cozy corner for experiments and side quests.
+    h1.page-title= t('random.title')
+    p.tagline= t('random.tagline')
 
     .about-section
       ul.features
         li
-          a.link(href='/baseball') 📖 Baseball Journal
+          a.link(href='/baseball')= t('random.links.baseball')
         li
-          a.link(href='/random-writer') 🎲 Random Writer
+          a.link(href='/random-writer')= t('random.links.randomWriter')
 
     .cta
-      a.btn.primary(href="/rooms") Back to Main Rooms
+      a.btn.primary(href="/rooms")= t('random.cta.backToRooms')
