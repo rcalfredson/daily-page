@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — Escritor aleatorio",
+      "description": "Genera un flujo infinito de texto seudorandom para jugar, inspirarte o abrazar el caos."
+    },
+    "title": "Escritor aleatorio",
+    "buttons": {
+      "clear": "Borrar",
+      "stop": "Detener escritura",
+      "start": "Empezar a escribir"
+    }
+  }
+}

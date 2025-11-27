@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — Random Writer",
+      "description": "Generate an infinite stream of random pseudo-text for fun, inspiration, or chaos."
+    },
+    "title": "Random Writer",
+    "buttons": {
+      "clear": "Clear",
+      "stop": "Stop writing",
+      "start": "Start writing"
+    }
+  }
+}

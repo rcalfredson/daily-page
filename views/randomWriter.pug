@@ -1,8 +1,11 @@
 extends viewer
+
 append head
-  meta(name="description" content="Generate an infinite stream of random text.")
+  meta(name="description" content=description)
+
 prepend content
-  h1 Random Writer
+  h1= t('randomWriter.title')
+
 append content
   #viewer
     script.
@@ -54,8 +57,14 @@ append content
     span.text#random
     br
     br
-    a.hover-effect-link.tall-button(onclick="document.getElementById('random').innerText = ''") Clear
-    a.hover-effect-link.tall-button#stop(onclick="clearInterval(stringMaker); stringMaker = false; document.getElementById('restart').style.display = 'inline-block'; document.getElementById('stop').style.display = 'none';") Stop writing
-    a.hover-effect-link.tall-button#restart(onclick="stringMaker = setInterval(runGenerator, 130); document.getElementById('stop').style.display = 'inline-block'; document.getElementById('restart').style.display = 'none';") Start writing
+    a.hover-effect-link.tall-button(
+      onclick="document.getElementById('random').innerText = ''"
+    )= t('randomWriter.buttons.clear')
+    a.hover-effect-link.tall-button#stop(
+      onclick="clearInterval(stringMaker); stringMaker = false; document.getElementById('restart').style.display = 'inline-block'; document.getElementById('stop').style.display = 'none';"
+    )= t('randomWriter.buttons.stop')
+    a.hover-effect-link.tall-button#restart(
+      onclick="stringMaker = setInterval(runGenerator, 130); document.getElementById('stop').style.display = 'inline-block'; document.getElementById('restart').style.display = 'none';"
+    )= t('randomWriter.buttons.start')
     script.
       document.getElementById('restart').style.display = 'none';
