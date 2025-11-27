@@ -27,10 +27,12 @@ router.get('/rooms', addI18n(['roomsDirectory']), async (req, res) => {
   }
 });
 
-router.get('/random', (req, res) => {
+router.get('/random', addI18n(['random']), (req, res) => {
+  const { t } = res.locals;
+
   res.render('random', {
-    title: 'Other Projects - Daily Page',
-    description: 'Explore baseball journaling, random writing experiments, and more indie corners of Daily Page.'
+    title: t('random.meta.title'),
+    description: t('random.meta.description')
   });
 });
 

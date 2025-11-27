@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Other Projects",
+      "description": "Explore baseball journaling, random writing experiments, and other side projects from Daily Page."
+    },
+    "title": "Other Projects",
+    "tagline": "A cozy corner for experiments and side quests.",
+    "links": {
+      "baseball": "📖 Baseball Journal",
+      "randomWriter": "🎲 Random Writer"
+    },
+    "cta": {
+      "backToRooms": "Back to Main Rooms"
+    }
+  }
+}
