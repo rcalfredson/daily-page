@@ -21,8 +21,12 @@ block append scripts
 
 block content
   .tag-header
-    h1 🏷️ Tag: #[span.tag-name #{tagName}]
-    p.tag-stats Total blocks with #[strong #{tagName}]: #[strong #{totalBlocks}]
+    h1 #{t('tags.detail.header.icon')} #{t('tags.detail.header.label')} #[span.tag-name #{tagName}]
+    p.tag-stats
+      | #{t('tags.detail.stats.totalBlocks')} 
+      strong #{tagName}
+      | #{t('tags.detail.stats.totalBlocksTagSeparator')} 
+      strong #{totalBlocks}
 
   // Trend chart container
   if trendData.length >= 2
@@ -36,11 +40,12 @@ block content
           .content
             a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
             p
-              | Created by: 
+              | #{t('tags.detail.blockInfo.createdBy')} 
               a.user-profile-link(href=`/users/${block.creator}`)= block.creator
-              |  in 
-              a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : "Unknown Room"
-              |  on #{new Date(block.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+              |  #{t('tags.detail.blockInfo.inRoom')} 
+              a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : t('tags.detail.blockInfo.unknownRoom')
+              |  #{t('tags.detail.blockInfo.onDate')} 
+              = new Date(block.createdAt).toLocaleString(lang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
             +translationAttribution(block)
             div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
           +readMoreIfTruncated(block, block.roomId)
@@ -48,7 +53,7 @@ block content
             include ../partials/_vote_controls
 
   else
-    p No blocks found with this tag yet. ¿Qué tal si creas el primero, viejón? 🔥
+    p= t('tags.detail.empty.message')
 
   - const baseUrl = `/tags/${encodeURIComponent(tagName)}`;
   - const urlPrefix = lang ? `${baseUrl}?lang=${lang}` : baseUrl;
@@ -77,7 +82,7 @@ block content
         data: {
           labels,
           datasets: [{
-            label: 'Blocks Created Over Time',
+            label: '#{t("tags.detail.chart.label")}',
             data: dataCounts,
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
             borderColor: 'rgba(54, 162, 235, 1)',
