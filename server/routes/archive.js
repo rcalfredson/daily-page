@@ -278,8 +278,8 @@ router.get('/rooms/:roomId/archive', optionalAuth, addI18n(['archive']), async (
   try {
     const { roomId } = req.params;
     const yearMonthCombos = await getAllBlockYearMonthCombos(roomId);
-    const roomMetadata = await getRoomMetadata(roomId);
     const { t, lang } = res.locals;
+    const roomMetadata = await getRoomMetadata(roomId, lang);
 
     const description = t('archive.meta.descriptionRoom', { roomName: roomMetadata.name });
 
@@ -303,9 +303,8 @@ router.get('/rooms/:roomId/archive/:year/:month', optionalAuth, addI18n(['archiv
   try {
     const { roomId, year, month } = req.params;
     const datesWithContent = await getBlockDatesByYearMonth(year, month, roomId);
-    const roomMetadata = await getRoomMetadata(roomId);
-
     const { t, lang } = res.locals;
+    const roomMetadata = await getRoomMetadata(roomId, lang);
     const monthStr = DateHelper.monthName(Number(month), lang || 'en');
     const description = t('archive.calendar.meta.descriptionRoom', {
       roomName: roomMetadata.name, month: monthStr, year
