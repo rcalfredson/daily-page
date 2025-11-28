@@ -61,56 +61,70 @@ router.get('/tags', addI18n(['tags']), async (req, res) => {
 });
 
 // Página específica para mostrar bloques por etiqueta
-router.get('/tags/:tagName', addI18n(['translation', 'readMore']), async (req, res) => {
-  try {
-    const preferredLang =
-      req.query.lang ||
-      req.user?.preferredLang ||
-      (req.acceptsLanguages()[0] || "en").split("-")[0];
-    const { tagName } = req.params;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
+router.get('/tags/:tagName',
+  addI18n(['tags', 'translation', 'readMore']),
+  async (req, res) => {
+    try {
+      const { t } = res.locals;
 
-    const userId = req.user?.id || null;
+      const preferredLang =
+        req.query.lang ||
+        req.user?.preferredLang ||
+        (req.acceptsLanguages()[0] || "en").split("-")[0];
 
-    // Obtener bloques asociados con la etiqueta especificada
-    let taggedBlocks = await findByTagWithLangPref({
-      tag: tagName,
-      preferredLang,
-      sortBy: "voteCount",
-      skip,
-      limit
-    });
+      const { tagName } = req.params;
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 20;
+      const skip = (page - 1) * limit;
 
-    taggedBlocks = taggedBlocks.map(
-      b => toBlockPreviewDTO(b, {
-        userId
-      })
-    );
+      const userId = req.user?.id || null;
 
-    const totalBlocks = await Block.distinct("groupId", { tags: tagName }).then(arr => arr.length);
-    const totalPages = Math.ceil(totalBlocks / limit);
+      // Obtener bloques asociados con la etiqueta especificada
+      let taggedBlocks = await findByTagWithLangPref({
+        tag: tagName,
+        preferredLang,
+        sortBy: "voteCount",
+        skip,
+        limit
+      });
 
-    const trendData = await getTagTrendData(tagName, 30);
+      taggedBlocks = taggedBlocks.map(b =>
+        toBlockPreviewDTO(b, { userId })
+      );
 
-    const currentLang = preferredLang;
+      const totalBlocks = await Block
+        .distinct("groupId", { tags: tagName })
+        .then(arr => arr.length);
 
-    res.render('tags/tag', {
-      title: `#${tagName} | Daily Page`,
-      tagName,
-      taggedBlocks,
-      currentPage: page,
-      totalPages,
-      totalBlocks,
-      trendData,
-      user: req.user || null,
-      lang: currentLang,
-    });
-  } catch (error) {
-    console.error('Error loading tag page:', error);
-    res.status(500).render('error', { message: 'Error loading tag page' });
+      const totalPages = Math.ceil(totalBlocks / limit);
+
+      const trendData = await getTagTrendData(tagName, 30);
+
+      const currentLang = preferredLang;
+
+      // Title bits come from i18n, tagName stays dynamic
+      const titlePrefix = t('tags.detail.meta.titlePrefix') || '#';
+      const titleSuffix = t('tags.detail.meta.titleSuffix') || ' | Daily Page';
+
+      res.render('tags/tag', {
+        title: `${titlePrefix}${tagName}${titleSuffix}`,
+        tagName,
+        taggedBlocks,
+        currentPage: page,
+        totalPages,
+        totalBlocks,
+        trendData,
+        user: req.user || null,
+        lang: currentLang,
+      });
+    } catch (error) {
+      const { t } = res.locals;
+      console.error('Error loading tag page:', error);
+      res
+        .status(500)
+        .render('error', { message: t('tags.detail.error.loadingTagPage') });
+    }
   }
-});
+);
 
 export default router;

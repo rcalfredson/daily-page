@@ -15,6 +15,36 @@
     },
     "error": {
       "loading": "Error al cargar la vista de etiquetas"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "Bloques con la etiqueta"
+      },
+      "header": {
+        "label": "Etiqueta:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Bloques totales con",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Creado por:",
+        "inRoom": "en",
+        "unknownRoom": "Sala desconocida",
+        "onDate": "el"
+      },
+      "chart": {
+        "label": "Bloques creados a lo largo del tiempo"
+      },
+      "empty": {
+        "message": "Todavía no hay bloques con esta etiqueta. ¿Por qué no creas el primero, viejón? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Error al cargar la página de etiqueta"
+      }
     }
   }
 }

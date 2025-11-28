@@ -15,6 +15,36 @@
     },
     "error": {
       "loading": "Error loading tags overview"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "Blocks tagged with"
+      },
+      "header": {
+        "label": "Tag:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Total blocks with",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Created by:",
+        "inRoom": "in",
+        "unknownRoom": "Unknown Room",
+        "onDate": "on"
+      },
+      "chart": {
+        "label": "Blocks Created Over Time"
+      },
+      "empty": {
+        "message": "No blocks found with this tag yet. Maybe you should create the first one? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Error loading tag page"
+      }
     }
   }
 }
