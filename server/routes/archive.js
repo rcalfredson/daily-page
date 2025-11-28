@@ -227,51 +227,63 @@ router.get('/archive/:year/:month/:day',
   });
 
 // GET /rooms/:roomId/index?page=1&sort=createdAt&dir=desc
-router.get('/rooms/:roomId/index', optionalAuth, async (req, res) => {
-  const { roomId } = req.params;
-  const preferredLang =
-    req.query.lang ||
-    req.user?.preferredLang ||
-    (req.acceptsLanguages()[0] || "en").split("-")[0];
+router.get(
+  '/rooms/:roomId/index',
+  optionalAuth,
+  addI18n(['archive']),
+  async (req, res) => {
+    const { t, lang } = res.locals;
+    const { roomId } = req.params;
 
-  const page = +req.query.page || 1;
-  const limit = 20;
-  const sortKey = ['title', 'createdAt', 'voteCount'].includes(req.query.sort)
-    ? req.query.sort : 'createdAt';
-  const dirStr = req.query.dir === 'asc' ? 'asc' : 'desc';
-  const sortDir = dirStr === 'asc' ? 1 : -1;
+    const page = +req.query.page || 1;
+    const limit = 20;
 
-  const currentLang = preferredLang;                     // <- alias
-  const langQuery = currentLang ? `&lang=${currentLang}` : '';
+    const sortKey = ['title', 'createdAt', 'voteCount'].includes(req.query.sort)
+      ? req.query.sort
+      : 'createdAt';
 
-  const roomMetadata = await getRoomMetadata(roomId);
+    const dirStr = req.query.dir === 'asc' ? 'asc' : 'desc';
+    const sortDir = dirStr === 'asc' ? 1 : -1;
 
-  const blocks = await findByRoomWithLangPref({
-    roomId,
-    preferredLang,
-    sortBy: sortKey,
-    sortDir,
-    startDate: null,
-    endDate: null,
-    skip: (page - 1) * limit,
-    limit
-  });
+    // i18n language wiring
+    const currentLang = lang || 'en';
+    const langQuery = currentLang ? `&lang=${currentLang}` : '';
 
-  const total = await Block.distinct("groupId", { roomId }).then(arr => arr.length);
+    // Room metadata localized
+    const roomMetadata = await getRoomMetadata(roomId, currentLang);
+    const roomDisplayName = roomMetadata.displayName || roomMetadata.name;
 
-  res.render('archive/index', {
-    blocks,
-    roomId,
-    roomName: roomMetadata.name,
-    title: `${roomMetadata.name} — All Blocks`,
-    currentPage: page,
-    totalPages: Math.ceil(total / limit),
-    sortKey,
-    dir: dirStr,
-    lang: currentLang,
-    langQuery
-  });
-});
+    const blocks = await findByRoomWithLangPref({
+      roomId,
+      preferredLang: currentLang,
+      sortBy: sortKey,
+      sortDir,
+      startDate: null,
+      endDate: null,
+      skip: (page - 1) * limit,
+      limit
+    });
+
+    const total = await Block
+      .distinct("groupId", { roomId })
+      .then(arr => arr.length);
+
+    const pageTitle = t('archive.index.meta.titleRoom', { roomName: roomDisplayName });
+
+    res.render('archive/index', {
+      blocks,
+      roomId,
+      roomName: roomDisplayName,
+      title: pageTitle,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      sortKey,
+      dir: dirStr,
+      lang: currentLang,
+      langQuery
+    });
+  }
+);
 
 // Obtener todos los meses/años con contenido para una sala específica
 router.get('/rooms/:roomId/archive', optionalAuth, addI18n(['archive']), async (req, res) => {

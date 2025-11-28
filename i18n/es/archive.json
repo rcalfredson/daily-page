@@ -44,6 +44,24 @@
         "prevDay": "Día anterior",
         "nextDay": "Día siguiente"
       }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — Todos los bloques",
+        "descriptionRoom": "Explora todos los bloques publicados en la sala {roomName}. Ordena por fecha, título o votos para recorrer su historia."
+      },
+      "header": {
+        "allBlocks": "— Todos los bloques"
+      },
+      "sort": {
+        "label": "Ordenar por",
+        "options": {
+          "date": "Fecha",
+          "title": "Título",
+          "votes": "Votos"
+        },
+        "submit": "Aplicar"
+      }
     }
   }
 }

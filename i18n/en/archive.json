@@ -44,6 +44,24 @@
         "prevDay": "Previous day",
         "nextDay": "Next day"
       }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — All Blocks",
+        "descriptionRoom": "Browse every block ever posted in the {roomName} room. Sort by date, title, or votes to explore its history."
+      },
+      "header": {
+        "allBlocks": "— All Blocks"
+      },
+      "sort": {
+        "label": "Sort by",
+        "options": {
+          "date": "Date",
+          "title": "Title",
+          "votes": "Votes"
+        },
+        "submit": "Go"
+      }
     }
   }
 }
