@@ -9,24 +9,24 @@ block nav
 block content
   h1
     a.room-link(href=`/rooms/${roomId}`)= roomName
-    |  — All Blocks
+    |  #{t('archive.index.header.allBlocks')}
   .room-index-container
     form.sort-bar(method='get' action=`?sort=${sortKey}&dir=${dir}${langQuery}`)
-      | Sort by 
+      | #{t('archive.index.sort.label')} 
       select(name='sort')
-        option(value='createdAt' selected=sortKey=='createdAt') Date
-        option(value='title' selected=sortKey=='title') Title
-        option(value='voteCount' selected=sortKey=='voteCount') Votes
+        option(value='createdAt' selected=sortKey=='createdAt')= t('archive.index.sort.options.date')
+        option(value='title' selected=sortKey=='title')= t('archive.index.sort.options.title')
+        option(value='voteCount' selected=sortKey=='voteCount')= t('archive.index.sort.options.votes')
       |  
       select(name='dir')
         option(value='desc' selected=dir=='desc') ↓
         option(value='asc'  selected=dir=='asc') ↑
-      button(type='submit') Go
+      button(type='submit')= t('archive.index.sort.submit')
     ul.block-toc
       each b in blocks
         li
           a(href=`/rooms/${roomId}/blocks/${b._id}`)= b.title
-          span.meta (#{b.voteCount} ★ • #{b.createdAt.toLocaleDateString()})
+          span.meta (#{b.voteCount} ★ • #{b.createdAt.toLocaleDateString(lang || undefined)})
     include ../partials/_pagination
     +pagination(
       currentPage,
