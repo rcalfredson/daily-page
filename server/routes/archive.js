@@ -35,53 +35,65 @@ router.get('/archive', optionalAuth, addI18n(['archive']), async (req, res) => {
   }
 });
 
-router.get('/rooms/:roomId/archive/best-of', optionalAuth, addI18n(['bestOf', 'translation', 'readMore']), async (req, res) => {
-  const { roomId } = req.params;
-  const preferredLang = req.query.lang
-    || req.user?.preferredLang
-    || (req.acceptsLanguages()[0] || 'en').split('-')[0];
-  const userId = req.user?.id || null;
-  try {
-    const [top24h, top7d, top30d, topAll, roomMetadata] = await Promise.all([
-      getTopBlocksByTimeframe(1, 20, roomId, preferredLang),
-      getTopBlocksByTimeframe(7, 20, roomId, preferredLang),
-      getTopBlocksByTimeframe(30, 20, roomId, preferredLang),
-      getTopBlocksByTimeframe(null, 20, roomId, preferredLang),
-      getRoomMetadata(roomId)
-    ]);
+router.get(
+  '/rooms/:roomId/archive/best-of',
+  optionalAuth,
+  addI18n(['bestOf', 'translation', 'readMore']),
+  async (req, res) => {
+    const { roomId } = req.params;
+    const { t, lang } = res.locals;
+    const preferredLang = lang || 'en';
+    const userId = req.user?.id || null;
 
-    const top24hDTO = top24h.map(b => toBlockPreviewDTO(b, { userId }));
-    const top7dDTO = top7d.map(b => toBlockPreviewDTO(b, { userId }));
-    const top30dDTO = top30d.map(b => toBlockPreviewDTO(b, { userId }));
-    const topAllDTO = topAll.map(b => toBlockPreviewDTO(b, { userId }));
-    const activeTab = chooseActiveBestOfTab({
-      top24h: top24hDTO, top7d: top7dDTO, top30d: top30dDTO, topAll: topAllDTO
-    });
+    try {
+      const [top24h, top7d, top30d, topAll, roomMetadata] = await Promise.all([
+        getTopBlocksByTimeframe(1, 20, roomId, preferredLang),
+        getTopBlocksByTimeframe(7, 20, roomId, preferredLang),
+        getTopBlocksByTimeframe(30, 20, roomId, preferredLang),
+        getTopBlocksByTimeframe(null, 20, roomId, preferredLang),
+        getRoomMetadata(roomId, preferredLang)
+      ]);
 
-    const roomName =
-      roomMetadata.displayName
-      || roomMetadata.name_i18n?.[preferredLang]
-      || roomMetadata.name;
+      const top24hDTO = top24h.map(b => toBlockPreviewDTO(b, { userId }));
+      const top7dDTO = top7d.map(b => toBlockPreviewDTO(b, { userId }));
+      const top30dDTO = top30d.map(b => toBlockPreviewDTO(b, { userId }));
+      const topAllDTO = topAll.map(b => toBlockPreviewDTO(b, { userId }));
 
-    const title = res.locals.t('bestOf.meta.titleRoom', { roomName });
-    const description = res.locals.t('bestOf.meta.descriptionRoom', { roomName });
+      const activeTab = chooseActiveBestOfTab({
+        top24h: top24hDTO,
+        top7d: top7dDTO,
+        top30d: top30dDTO,
+        topAll: topAllDTO
+      });
 
-    res.render('archive/best-of-room', {
-      title,
-      description,
-      top24h: top24hDTO,
-      top7d: top7dDTO,
-      top30d: top30dDTO,
-      topAll: topAllDTO,
-      activeTab,
-      roomMetadata: { ...roomMetadata, roomName },
-      user: req.user || null,
-    });
-  } catch (error) {
-    console.error(`Error loading best-of archive for room ${roomId}:`, error);
-    res.status(500).render('error', { message: 'Error loading room-specific best-of archive.' });
+      // Ahora confiamos en que getRoomMetadata ya respeta lang
+      const roomName =
+        roomMetadata.displayName
+        || roomMetadata.name;
+
+      const title = t('bestOf.meta.titleRoom', { roomName });
+      const description = t('bestOf.meta.descriptionRoom', { roomName });
+
+      res.render('archive/best-of-room', {
+        title,
+        description,
+        top24h: top24hDTO,
+        top7d: top7dDTO,
+        top30d: top30dDTO,
+        topAll: topAllDTO,
+        activeTab,
+        roomMetadata: { ...roomMetadata, roomName },
+        lang: preferredLang,
+        user: req.user || null,
+      });
+    } catch (error) {
+      console.error(`Error loading best-of archive for room ${roomId}:`, error);
+      res.status(500).render('error', {
+        message: 'Error loading room-specific best-of archive.'
+      });
+    }
   }
-});
+);
 
 router.get('/archive/best-of', optionalAuth, addI18n(['bestOf', 'translation', 'readMore']), async (req, res) => {
   try {
