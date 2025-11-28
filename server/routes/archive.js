@@ -289,7 +289,7 @@ router.get('/rooms/:roomId/archive', optionalAuth, addI18n(['archive']), async (
       yearMonthCombos,
       monthName: (m) => DateHelper.monthName(m, lang || 'en'),
       roomId,
-      roomName: roomMetadata.name,
+      roomName: roomMetadata.displayName,
       user: req.user || null,
     });
   } catch (error) {
@@ -324,7 +324,7 @@ router.get('/rooms/:roomId/archive/:year/:month', optionalAuth, addI18n(['archiv
       monthName: (m) => DateHelper.monthName(m, lang || 'en'),
       weekdaysShort: DateHelper.weekdayShortNames(lang || 'en'),
       roomId,
-      roomName: roomMetadata.name,
+      roomName: roomMetadata.displayName,
       user: req.user || null,
     });
   } catch (error) {
