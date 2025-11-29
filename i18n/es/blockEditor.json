@@ -29,6 +29,9 @@
       "collapse": "Contraer",
       "updateError": "Error al actualizar la descripción."
     },
+    "editor": {
+      "placeholder": "La página en blanco te espera; escribe sin miedo."
+    },
     "sharing": {
       "label": "Enlace para compartir",
       "copyTooltip": "Copiar al portapapeles",

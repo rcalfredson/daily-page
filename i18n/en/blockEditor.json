@@ -29,6 +29,9 @@
       "collapse": "Collapse",
       "updateError": "Error updating description."
     },
+    "editor": {
+      "placeholder": "The blank page is waiting for your voice; write fearlessly."
+    },
     "sharing": {
       "label": "Sharing Link",
       "copyTooltip": "Copy to Clipboard",
