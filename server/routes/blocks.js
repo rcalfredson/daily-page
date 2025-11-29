@@ -32,66 +32,96 @@ router.get('/rooms/:room_id/blocks/new', optionalAuth, addI18n(['createBlock', '
 });
 
 // Render Block Editor Page
-router.get('/rooms/:room_id/blocks/:block_id/edit', optionalAuth, addI18n(['blockTags']), async (req, res) => {
-  const { room_id, block_id } = req.params;
-  const user = req.user;
-  const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
+router.get(
+  '/rooms/:room_id/blocks/:block_id/edit',
+  optionalAuth,
+  addI18n(['blockEditor', 'blockTags']),
+  async (req, res) => {
+    const { room_id, block_id } = req.params;
+    const { t, lang } = res.locals;
+    const user = req.user;
+    const editTokens = req.cookies.edit_tokens
+      ? JSON.parse(req.cookies.edit_tokens)
+      : [];
 
-  try {
-    // Fetch block metadata
-    const block = await getBlockById(block_id);
-    if (!block || block.roomId !== room_id) {
-      return res.status(404).render('error', { message: 'Block not found or does not belong to this room.' });
-    }
-
-    const descriptionHTML = renderMarkdownContent(block.description);
-
-    const collaboratorId = user ? user.username : req.cookies.anonymousId || generateAnonymousId();
-    if (!block.collaborators.includes(collaboratorId)) {
-      block.collaborators.push(collaboratorId);
-      await block.save();
-      // Si el usuario anónimo, asegúrate de guardarlo en una cookie
-      if (!user && !req.cookies.anonymousId) {
-        res.cookie('anonymousId', collaboratorId, { maxAge: 24 * 60 * 60 * 1000 });
+    try {
+      // Fetch block metadata
+      const block = await getBlockById(block_id);
+      if (!block || block.roomId !== room_id) {
+        return res
+          .status(404)
+          .render('error', {
+            message: t('blockEditor.errors.notFound')
+          });
       }
-    }
 
-    // Fetch active peers for this block
-    const peerIDs = await getPeerIDs(block_id);
+      const descriptionHTML = renderMarkdownContent(block.description);
 
-    // If the block is full, redirect to a "Full Block" page
-    if (peerIDs.length >= 6) {
-      return res.render('fullBlock', {
-        block_title: block.title,
+      const collaboratorId =
+        user
+          ? user.username
+          : (req.cookies.anonymousId || generateAnonymousId());
+
+      if (!block.collaborators.includes(collaboratorId)) {
+        block.collaborators.push(collaboratorId);
+        await block.save();
+        // Si el usuario es anónimo, guardamos el id en cookie
+        if (!user && !req.cookies.anonymousId) {
+          res.cookie('anonymousId', collaboratorId, {
+            maxAge: 24 * 60 * 60 * 1000
+          });
+        }
+      }
+
+      // Fetch active peers for this block
+      const peerIDs = await getPeerIDs(block_id);
+
+      // If the block is full, redirect to a "Full Block" page
+      if (peerIDs.length >= 6) {
+        return res.render('fullBlock', {
+          block_title: block.title,
+          room_id,
+        });
+      }
+
+      // Pick one peer randomly to set as initialTargetPeerId
+      const initialTargetPeerId = peerIDs.length > 0
+        ? peerIDs[Math.floor(Math.random() * peerIDs.length)]
+        : '0';
+
+      // Room metadata localizado
+      const roomMetadata = await getRoomMetadata(room_id, lang || 'en');
+      const roomName = roomMetadata.displayName || roomMetadata.name;
+
+      // Título i18n
+      const pageTitle =
+        t('blockEditor.meta.title', { blockTitle: block.title })
+        || `${t('blockEditor.meta.titleFallback')} - ${block.title}`;
+
+      // Render the block editor page
+      res.render('rooms/block-editor', {
+        title: pageTitle,
+        block,
+        descriptionHTML,
         room_id,
+        roomName,
+        block_id,
+        user,
+        peerIDs,
+        initialTargetPeerId,
+        canManageBlock: canManageBlock(user, block, editTokens),
+        backendURL: backendBaseUrl,
+        lang: lang || 'en',
       });
+    } catch (error) {
+      console.error('Error loading block editor:', error.message);
+      res
+        .status(500)
+        .render('error', {
+          message: t('blockEditor.errors.loadFailed')
+        });
     }
-
-    // Pick one peer randomly to set as initialTargetPeerId
-    const initialTargetPeerId = peerIDs.length > 0
-      ? peerIDs[Math.floor(Math.random() * peerIDs.length)]
-      : '0';
-
-    const roomMetadata = await getRoomMetadata(room_id);
-
-    // Render the block editor page
-    res.render('rooms/block-editor', {
-      title: `Edit Block - ${block.title}`,
-      block,
-      descriptionHTML,
-      room_id,
-      roomName: roomMetadata.name,
-      block_id,
-      user,
-      peerIDs,
-      initialTargetPeerId,
-      canManageBlock: canManageBlock(user, block, editTokens), // Determines if user can edit metadata/delete
-      backendURL: backendBaseUrl, // Adjust based on your env vars
-    });
-  } catch (error) {
-    console.error('Error loading block editor:', error.message);
-    res.status(500).render('error', { message: 'An error occurred while loading the block editor.' });
   }
-});
+);
 
 export default router;

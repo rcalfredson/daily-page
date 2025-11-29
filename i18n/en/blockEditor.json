@@ -1,0 +1,58 @@
+{
+  "blockEditor": {
+    "meta": {
+      "title": "Edit Block - {blockTitle}",
+      "titleFallback": "Edit Block"
+    },
+    "errors": {
+      "notFound": "Block not found or does not belong to this room.",
+      "loadFailed": "An error occurred while loading the block editor."
+    },
+    "roomInfo": {
+      "label": "Room:"
+    },
+    "title": {
+      "placeholder": "Enter block title",
+      "editTooltip": "Edit Title",
+      "lock": "Lock Block",
+      "delete": "Delete Block"
+    },
+    "description": {
+      "label": "Description",
+      "editTooltip": "Edit Description",
+      "placeholder": "Enter description",
+      "noDescriptionOwner": "No description yet...",
+      "noDescriptionViewer": "No description provided...",
+      "save": "Save",
+      "cancel": "Cancel",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "updateError": "Error updating description."
+    },
+    "sharing": {
+      "label": "Sharing Link",
+      "copyTooltip": "Copy to Clipboard",
+      "copied": "Copied!"
+    },
+    "toolbar": {
+      "insertImage": "Insert Image",
+      "insertImageUrlPlaceholder": "Enter image URL",
+      "insertImageAltPlaceholder": "Alt text (optional)",
+      "insertImageConfirm": "Confirm",
+      "insertImageCancel": "Cancel"
+    },
+    "lockModal": {
+      "messageLine1": "Are you sure you want to lock this block?",
+      "messageLine2": "This will finalize it and prevent further editing.",
+      "confirm": "Lock",
+      "cancel": "Cancel",
+      "successToast": "Block locked successfully.",
+      "errorToast": "Error locking block."
+    },
+    "tags": {
+      "headerWithTags": "Tags:",
+      "headerNoTags": "No tags yet! Add some:",
+      "updateError": "Error updating tags."
+    }
+  }
+}

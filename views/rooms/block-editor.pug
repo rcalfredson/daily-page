@@ -9,6 +9,9 @@ block append head
   link(rel='stylesheet' href='/css/toast.css')
   link(rel='stylesheet' href='/css/modal.css')
   link(rel='stylesheet' href='/css/delete-block.css')
+  // i18n namespace para el editor en el cliente
+  script#i18n-blockEditor(type='application/json').
+    !{JSON.stringify(__i18n.blockEditor || {})}
 
 block content
   include ../partials/_tag_section
@@ -17,69 +20,78 @@ block content
       .editor
         #block-meta
           p.room-info
-            | Room: 
+            | #{t('blockEditor.roomInfo.label')} 
             a.room-link(href=`/rooms/${room_id}`)= roomName
-            h2#block-title-container
-              span#block-title= block.title
-              if canManageBlock
-                input#block-title-input.fade-out(
-                  type='text',
-                  value=block.title,
-                  placeholder='Enter block title'
-                )
-                button#edit-title-btn(data-tooltip="Edit Title")
-                  i(data-feather="edit")
-                .block-action-buttons
-                  if block.status === 'in-progress'
-                    button#lock-block-btn Lock Block
-                  button#delete-block-btn.delete-btn(data-tooltip="Delete Block") Delete Block
+          h2#block-title-container
+            span#block-title= block.title
+            if canManageBlock
+              input#block-title-input.fade-out(
+                type='text',
+                value=block.title,
+                placeholder=t('blockEditor.title.placeholder')
+              )
+              button#edit-title-btn(data-tooltip=t('blockEditor.title.editTooltip'))
+                i(data-feather="edit")
+              .block-action-buttons
+                if block.status === 'in-progress'
+                  button#lock-block-btn= t('blockEditor.title.lock')
+                button#delete-block-btn.delete-btn= t('blockEditor.title.delete')
 
           .block-description-card
             // Subtle label for clarity
-            span.description-label Description
+            span.description-label= t('blockEditor.description.label')
             // Edit button with tooltip; always accessible even if collapsed
             if canManageBlock
-              button#edit-description-btn.icon-button.description-edit-button(data-tooltip="Edit Description")
+              button#edit-description-btn.icon-button.description-edit-button(
+                data-tooltip=t('blockEditor.description.editTooltip')
+              )
                 i(data-feather="edit")
             
             // The description content with fade-out effect if collapsed
             .description-body.collapsed
               if canManageBlock
                 // Read view: if empty, display a fallback text
-                div#description-view!= descriptionHTML || '<p><em>No description yet...</em></p>'
+                div#description-view!= descriptionHTML || `<p><em>${t('blockEditor.description.noDescriptionOwner')}</em></p>`
                 // Editing textarea (initially hidden) with placeholder for empty descriptions
-                textarea#description-edit.hidden(placeholder="Enter description")= block.description
+                textarea#description-edit.hidden(
+                  placeholder=t('blockEditor.description.placeholder')
+                )= block.description
                 // Save/Cancel buttons for editing mode
                 .edit-buttons.hidden
-                  button#save-description-btn Save
-                  button#cancel-description-btn Cancel
+                  button#save-description-btn= t('blockEditor.description.save')
+                  button#cancel-description-btn= t('blockEditor.description.cancel')
               else
-                div#description-view!= descriptionHTML || '<p><em>No description provided...</em></p>'
+                div#description-view!= descriptionHTML || `<p><em>${t('blockEditor.description.noDescriptionViewer')}</em></p>`
             
             // Expand/Collapse toggle at the bottom
             .expand-toggle
-              span Expand
+              span= t('blockEditor.description.expand')
 
           +tagSection(block.tags, canManageBlock)
         .header
           p.sharing-link
-            a.link#myLink(target="_blank") Sharing Link
+            a.link#myLink(target="_blank")= t('blockEditor.sharing.label')
             span#myLinkInput.hidden
-            span.copy-container(data-tooltip="Copy to Clipboard")
-              // Tu ícono inline (o un <i> data-feather="copy">)
+            span.copy-container(data-tooltip=t('blockEditor.sharing.copyTooltip'))
               i(data-feather="copy" class="copy-link" color="rgb(17, 117, 232)")
-            span.copy-status Copied!
+            span.copy-status= t('blockEditor.sharing.copied')
           #sync-infobox
         .toolbar.sticky
-          button#open-insert-img-btn(data-tooltip="Insert Image")
+          button#open-insert-img-btn(data-tooltip=t('blockEditor.toolbar.insertImage'))
             i(data-feather="image")
           div#insert-img-tooltip.hidden
             form
-              input#img-url(type="text" placeholder="Enter image URL")
-              input#img-alt(type="text" placeholder="Alt text (optional)")
+              input#img-url(
+                type="text"
+                placeholder=t('blockEditor.toolbar.insertImageUrlPlaceholder')
+              )
+              input#img-alt(
+                type="text"
+                placeholder=t('blockEditor.toolbar.insertImageAltPlaceholder')
+              )
               div
-                button#insert-img-confirm(type="button") Confirm
-                button#insert-img-cancel(type="button") Cancel
+                button#insert-img-confirm(type="button")= t('blockEditor.toolbar.insertImageConfirm')
+                button#insert-img-cancel(type="button")= t('blockEditor.toolbar.insertImageCancel')
         textarea#editor-content= block.content
       p#peerId Peers:
     .video-modal.hide
@@ -87,19 +99,22 @@ block content
         i(data-feather="minus" class="minimize")
         i(data-feather='x' class="exit")
       video
-  // Modal for Lock Confirmation
 
   include ../loading
   include ../closedPage
   include ../inactiveWarning
   include ../partials/_block_delete_confirm
+
   #lock-modal.modal.hidden
     .modal-content
-      p.modal-message Are you sure you want to lock this block? 
-        | This will finalize it and prevent further editing.
+      p.modal-message
+        | #{t('blockEditor.lockModal.messageLine1')} 
+        br
+        | #{t('blockEditor.lockModal.messageLine2')}
       .modal-buttons
-        button#lock-confirm-btn Lock
-        button#lock-cancel-btn Cancel
+        button#lock-confirm-btn= t('blockEditor.lockModal.confirm')
+        button#lock-cancel-btn= t('blockEditor.lockModal.cancel')
+
   #toast-container
   script(src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js")
   script.

@@ -1,0 +1,58 @@
+{
+  "blockEditor": {
+    "meta": {
+      "title": "Editar bloque - {blockTitle}",
+      "titleFallback": "Editar bloque"
+    },
+    "errors": {
+      "notFound": "No se encontró el bloque o no pertenece a esta sala.",
+      "loadFailed": "Ocurrió un error al cargar el editor del bloque."
+    },
+    "roomInfo": {
+      "label": "Sala:"
+    },
+    "title": {
+      "placeholder": "Escribe el título del bloque",
+      "editTooltip": "Editar título",
+      "lock": "Bloquear bloque",
+      "delete": "Eliminar bloque"
+    },
+    "description": {
+      "label": "Descripción",
+      "editTooltip": "Editar descripción",
+      "placeholder": "Escribe una descripción",
+      "noDescriptionOwner": "Todavía no hay descripción...",
+      "noDescriptionViewer": "No se proporcionó descripción...",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "expand": "Expandir",
+      "collapse": "Contraer",
+      "updateError": "Error al actualizar la descripción."
+    },
+    "sharing": {
+      "label": "Enlace para compartir",
+      "copyTooltip": "Copiar al portapapeles",
+      "copied": "¡Copiado!"
+    },
+    "toolbar": {
+      "insertImage": "Insertar imagen",
+      "insertImageUrlPlaceholder": "Escribe la URL de la imagen",
+      "insertImageAltPlaceholder": "Texto alternativo (opcional)",
+      "insertImageConfirm": "Confirmar",
+      "insertImageCancel": "Cancelar"
+    },
+    "lockModal": {
+      "messageLine1": "¿Seguro que quieres bloquear este bloque?",
+      "messageLine2": "Esto lo finalizará y evitará más ediciones.",
+      "confirm": "Bloquear",
+      "cancel": "Cancelar",
+      "successToast": "Bloque bloqueado correctamente.",
+      "errorToast": "Error al bloquear el bloque."
+    },
+    "tags": {
+      "headerWithTags": "Etiquetas:",
+      "headerNoTags": "Todavía no hay etiquetas. Añade algunas:",
+      "updateError": "Error al actualizar las etiquetas."
+    }
+  }
+}
