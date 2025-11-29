@@ -1,5 +1,8 @@
 {
   "blockEditor": {
+    "labels": {
+      "you": "(You)"
+    },
     "meta": {
       "title": "Edit Block - {blockTitle}",
       "titleFallback": "Edit Block"
@@ -28,6 +31,13 @@
       "expand": "Expand",
       "collapse": "Collapse",
       "updateError": "Error updating description."
+    },
+    "status": {
+      "lastBackup": "Last backup: {datetime}",
+      "lastBackupUnknown": "Last backup: Unknown"
+    },
+    "toasts": {
+      "blockLocked": "This block has been locked!"
     },
     "editor": {
       "placeholder": "The blank page is waiting for your voice; write fearlessly."
