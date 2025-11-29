@@ -1,5 +1,8 @@
 {
   "blockEditor": {
+    "labels": {
+      "you": "(Tú)"
+    },
     "meta": {
       "title": "Editar bloque - {blockTitle}",
       "titleFallback": "Editar bloque"
@@ -28,6 +31,13 @@
       "expand": "Expandir",
       "collapse": "Contraer",
       "updateError": "Error al actualizar la descripción."
+    },
+    "status": {
+      "lastBackup": "Última copia de seguridad: {datetime}",
+      "lastBackupUnknown": "Última copia de seguridad: Desconocida"
+    },
+    "toasts": {
+      "blockLocked": "¡Este bloque ha sido bloqueado!"
     },
     "editor": {
       "placeholder": "La página en blanco te espera; escribe sin miedo."
