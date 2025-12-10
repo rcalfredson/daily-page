@@ -128,14 +128,14 @@ describe("Controller", () => {
     });
   });
 
-  describe('enableEditor', () => {
+  describe('unhideEditor', () => {
     const mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
     const mockDoc = mockWin.document;
     const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockWin.document, mockWin);
 
     it('removes the hide class from the editor element', () => {
       mockDoc.getElementById('conclave').classList.add('hide');
-      controller.enableEditor(mockDoc);
+      controller.unhideEditor(mockDoc);
       expect(mockDoc.getElementById('conclave').classList.length).toEqual(0);
     });
   });
