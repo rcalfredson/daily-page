@@ -8,6 +8,7 @@
       "titleFallback": "Edit Block"
     },
     "errors": {
+      "imageUrlRequired": "Please enter an image URL.",
       "notFound": "Block not found or does not belong to this room.",
       "loadFailed": "An error occurred while loading the block editor."
     },
@@ -53,6 +54,9 @@
       "insertImageAltPlaceholder": "Alt text (optional)",
       "insertImageConfirm": "Confirm",
       "insertImageCancel": "Cancel"
+    },
+    "buttons": {
+      "downloadFile": "Download file"
     },
     "lockModal": {
       "messageLine1": "Are you sure you want to lock this block?",

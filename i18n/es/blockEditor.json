@@ -8,6 +8,7 @@
       "titleFallback": "Editar bloque"
     },
     "errors": {
+      "imageUrlRequired": "Por favor, ingresa una URL de imagen.",
       "notFound": "No se encontró el bloque o no pertenece a esta sala.",
       "loadFailed": "Ocurrió un error al cargar el editor del bloque."
     },
@@ -53,6 +54,9 @@
       "insertImageAltPlaceholder": "Texto alternativo (opcional)",
       "insertImageConfirm": "Confirmar",
       "insertImageCancel": "Cancelar"
+    },
+    "buttons": {
+      "downloadFile": "Descargar archivo"
     },
     "lockModal": {
       "messageLine1": "¿Seguro que quieres bloquear este bloque?",
