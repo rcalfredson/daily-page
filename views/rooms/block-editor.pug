@@ -93,7 +93,7 @@ block content
                 button#insert-img-confirm(type="button")= t('blockEditor.toolbar.insertImageConfirm')
                 button#insert-img-cancel(type="button")= t('blockEditor.toolbar.insertImageCancel')
         textarea#editor-content= block.content
-      p#peerId Peers:
+      p#peerId= t('blockEditor.peers.label')
     .video-modal.hide
       .video-bar
         i(data-feather="minus" class="minimize")

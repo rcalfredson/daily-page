@@ -37,6 +37,9 @@
       "lastBackup": "Last backup: {datetime}",
       "lastBackupUnknown": "Last backup: Unknown"
     },
+    "peers": {
+      "label": "Peers:"
+    },
     "toasts": {
       "blockLocked": "This block has been locked!"
     },
