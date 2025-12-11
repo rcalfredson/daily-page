@@ -37,6 +37,9 @@
       "lastBackup": "Última copia de seguridad: {datetime}",
       "lastBackupUnknown": "Última copia de seguridad: Desconocida"
     },
+    "peers": {
+      "label": "Participantes:"
+    },
     "toasts": {
       "blockLocked": "¡Este bloque ha sido bloqueado!"
     },
