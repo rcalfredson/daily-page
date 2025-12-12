@@ -50,6 +50,10 @@
       "label": "Cargando",
       "quote": "Deja que el mundo arda a través de ti. Lanza la luz prismática, blanca y ardiente, sobre el papel.<br>—Ray Bradbury"
     },
+    "inactiveWarning": {
+      "message": "No has escrito nada durante 5 minutos. Haz clic en OK para continuar la sesión; de lo contrario, serás redirigido al archivo.",
+      "confirm": "OK"
+    },
     "sharing": {
       "label": "Enlace para compartir",
       "copyTooltip": "Copiar al portapapeles",

@@ -50,6 +50,10 @@
       "label": "Loading",
       "quote": "Let the world burn through you. Throw the prism light, white hot, on paper.<br>—Ray Bradbury"
     },
+    "inactiveWarning": {
+      "message": "You have not written anything for 5 minutes. Click OK to continue the session; otherwise, you will be redirected to the archive.",
+      "confirm": "OK"
+    },
     "sharing": {
       "label": "Sharing Link",
       "copyTooltip": "Copy to Clipboard",
