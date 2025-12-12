@@ -46,6 +46,10 @@
     "editor": {
       "placeholder": "The blank page is waiting for your voice; write fearlessly."
     },
+    "loading": {
+      "label": "Loading",
+      "quote": "Let the world burn through you. Throw the prism light, white hot, on paper.<br>—Ray Bradbury"
+    },
     "sharing": {
       "label": "Sharing Link",
       "copyTooltip": "Copy to Clipboard",
