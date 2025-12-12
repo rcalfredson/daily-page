@@ -46,6 +46,10 @@
     "editor": {
       "placeholder": "La página en blanco te espera; escribe sin miedo."
     },
+    "loading": {
+      "label": "Cargando",
+      "quote": "Deja que el mundo arda a través de ti. Lanza la luz prismática, blanca y ardiente, sobre el papel.<br>—Ray Bradbury"
+    },
     "sharing": {
       "label": "Enlace para compartir",
       "copyTooltip": "Copiar al portapapeles",

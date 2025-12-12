@@ -1,5 +1,5 @@
 .loading
-  p Loading
+  p= t('blockEditor.loading.label')
   .sk-fading-circle
     .sk-circle1.sk-circle
     .sk-circle2.sk-circle
@@ -13,4 +13,4 @@
     .sk-circle10.sk-circle
     .sk-circle11.sk-circle
     .sk-circle12.sk-circle
-  p Let the world burn through you. Throw the prism light, white hot, on paper.</br>—Ray Bradbury
+  p!= t('blockEditor.loading.quote')
