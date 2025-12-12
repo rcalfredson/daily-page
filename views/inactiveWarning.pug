@@ -1,7 +1,5 @@
 #inactive-warning(style="visibility: hidden;")
-  strong
-    | You have not written anything for 5 minutes. Click OK to continue session;
-    | otherwise, you will be redirected to the archive.
+  strong!= t('blockEditor.inactiveWarning.message')
   .inactive-dismiss#box
     button.inactive-dismiss
-      span.inactive-dismiss OK
+      span.inactive-dismiss= t('blockEditor.inactiveWarning.confirm')
