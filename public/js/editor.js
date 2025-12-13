@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const t = (key, params) => {
+    if (typeof window !== 'undefined' && window.I18n) {
+      const maybe = window.I18n.t('blockEditor', key, params);
+      if (maybe && maybe !== key) return maybe;
+    }
+    return null;
+  }
   const toolbar = document.querySelector('.toolbar.sticky');
   const editor = document.querySelector('.EasyMDEContainer');
   const buttonsWithTooltips = document.querySelectorAll('[data-tooltip]'); // Botones con tooltips
@@ -56,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const titleInput = document.getElementById('block-title-input');
   const editButton = document.getElementById('edit-title-btn');
 
-  if (editButton) {
+  if (editButton && titleText && titleInput) {
     editButton.addEventListener('click', () => startEditingTitle());
     titleText.addEventListener('click', () => startEditingTitle());
   }
@@ -81,7 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const newTitle = titleInput.value.trim();
     if (newTitle && newTitle !== titleText.innerText) {
       titleText.innerText = newTitle;
-      document.title = `Edit Block - ${newTitle}`;
+      document.title =
+        t('meta.title', { blockTitle: newTitle }) || `Edit Block - ${newTitle}`;
       updateTitleBackend(newTitle);
     }
     titleText.classList.remove('fade-out');
@@ -97,13 +105,15 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(response => response.status)
       .then(status => {
         if (status !== 200) {
-          alert('Error updating title.');
+          const msg =
+            t('errors.updateTitleFailed') || 'Error updating title.';
+          alert(msg);
         }
       })
       .catch(err => console.error('Failed to update title:', err));
   }
 
-  if (canManageBlock) {
+  if (canManageBlock && titleInput) {
     titleInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') finishEditingTitle();
     });

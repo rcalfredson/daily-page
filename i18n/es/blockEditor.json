@@ -10,7 +10,8 @@
     "errors": {
       "imageUrlRequired": "Por favor, ingresa una URL de imagen.",
       "notFound": "No se encontró el bloque o no pertenece a esta sala.",
-      "loadFailed": "Ocurrió un error al cargar el editor del bloque."
+      "loadFailed": "Ocurrió un error al cargar el editor del bloque.",
+      "updateTitleFailed": "Error al actualizar el título."
     },
     "roomInfo": {
       "label": "Sala:"
