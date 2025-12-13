@@ -1,0 +1,9 @@
+{
+  "deleteModal": {
+    "title": "Delete Block?",
+    "message": "This action cannot be undone.",
+    "confirm": "Delete",
+    "cancel": "Cancel",
+    "closeAriaLabel": "Close"
+  }
+}
