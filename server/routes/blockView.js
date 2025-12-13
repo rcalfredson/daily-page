@@ -16,7 +16,7 @@ function canonicalBlockPath(doc) {
   return `/rooms/${doc.roomId}/blocks/${doc._id}`;
 }
 
-router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, addI18n(['blockTags']), async (req, res) => {
+router.get('/rooms/:room_id/blocks/:block_id', optionalAuth, addI18n(['blockTags', 'blockCommon']), async (req, res) => {
   try {
     const { room_id, block_id } = req.params;
     const block = await getBlockById(block_id);

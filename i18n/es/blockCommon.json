@@ -1,0 +1,9 @@
+{
+  "deleteModal": {
+    "title": "¿Eliminar bloque?",
+    "message": "Esta acción no se puede deshacer.",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar",
+    "closeAriaLabel": "Cerrar"
+  }
+}

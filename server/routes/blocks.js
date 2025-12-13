@@ -35,7 +35,7 @@ router.get('/rooms/:room_id/blocks/new', optionalAuth, addI18n(['createBlock', '
 router.get(
   '/rooms/:room_id/blocks/:block_id/edit',
   optionalAuth,
-  addI18n(['blockEditor', 'blockTags']),
+  addI18n(['blockEditor', 'blockTags', 'blockCommon']),
   async (req, res) => {
     const { room_id, block_id } = req.params;
     const { t, lang } = res.locals;

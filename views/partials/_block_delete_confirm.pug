@@ -1,9 +1,8 @@
-// Modal for Delete Confirmation
 #delete-modal.modal.hidden
   .modal-content
-    span.modal-close &times;
-    h2 Delete Block?
-    p.modal-message This action cannot be undone.
+    span.modal-close(aria-label=t('blockCommon.deleteModal.closeAriaLabel')) &times;
+    h2= t('blockCommon.deleteModal.title')
+    p.modal-message= t('blockCommon.deleteModal.message')
     .modal-buttons
-      button#delete-confirm-btn.confirm Delete
-      button#delete-cancel-btn.cancel Cancel
+      button#delete-confirm-btn.confirm= t('blockCommon.deleteModal.confirm')
+      button#delete-cancel-btn.cancel= t('blockCommon.deleteModal.cancel')
