@@ -1,6 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
   const md = window.markdownit();
+
+  // Local i18n helper (matches the approach used elsewhere)
+  function t(key, vars = {}) {
+    try {
+      if (!window.I18n || typeof window.I18n.t !== 'function') return key;
+      return window.I18n.t(key, vars);
+    } catch (e) {
+      return key;
+    }
+  }
+
   const descCard = document.querySelector('.block-description-card');
+  if (!descCard) return;
+
   const descBody = descCard.querySelector('.description-body');
   const editBtn = descCard.querySelector('#edit-description-btn');
   const viewParagraph = descCard.querySelector('#description-view');
@@ -10,9 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const cancelBtn = descCard.querySelector('#cancel-description-btn');
   const expandToggle = descCard.querySelector('.expand-toggle span');
 
+  if (!descBody || !viewParagraph || !editTextarea || !editButtons || !expandToggle) return;
+
   let isCollapsed = true;
   let isEditing = false;
-  let originalDesc = editTextarea ? editTextarea.value : '';
+  let originalDesc = editTextarea.value || '';
 
   // Función para evaluar si el contenido es lo suficientemente largo como para necesitar expand/collapse.
   function updateToggleAvailability() {
@@ -30,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!isEditing) {
         isCollapsed = true;
         descBody.classList.add('collapsed');
-        expandToggle.textContent = 'Expand';
+        expandToggle.textContent = t('blockEditor.description.expand');
       }
     }
   }
@@ -39,22 +54,20 @@ document.addEventListener('DOMContentLoaded', () => {
   updateToggleAvailability();
 
   // Toggle expand/collapse; se desactiva si estamos editando.
-  if (expandToggle) {
-    expandToggle.addEventListener('click', () => {
-      if (isEditing) return; // No permite toggle en modo edición.
-      toggleCollapse();
-    });
-  }
+  expandToggle.addEventListener('click', () => {
+    if (isEditing) return; // No permite toggle en modo edición.
+    toggleCollapse();
+  });
 
   // Función para alternar el estado de expandir/colapsar.
   function toggleCollapse() {
     isCollapsed = !isCollapsed;
     if (isCollapsed) {
       descBody.classList.add('collapsed');
-      expandToggle.textContent = 'Expand';
+      expandToggle.textContent = t('blockEditor.description.expand');
     } else {
       descBody.classList.remove('collapsed');
-      expandToggle.textContent = 'Collapse';
+      expandToggle.textContent = t('blockEditor.description.collapse');
     }
   }
 
@@ -87,11 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
       isEditing = false;
       const newDesc = editTextarea.value.trim();
       const rendered = md.render(newDesc || '');
-      viewParagraph.innerHTML = rendered || '<em>No description provided...</em>';
+
+      const noDescHtml = `<em>${t('blockEditor.description.noDescriptionViewer')}</em>`;
+      viewParagraph.innerHTML = rendered || noDescHtml;
+
       editTextarea.classList.add('hidden');
       editButtons.classList.add('hidden');
       viewParagraph.classList.remove('hidden');
-      editBtn.classList.remove('hidden'); // Muestra el botón de editar nuevamente.
+      editBtn && editBtn.classList.remove('hidden'); // Muestra el botón de editar nuevamente.
 
       updateDescriptionBackend(newDesc);
       // Restaura el toggle según corresponda.
@@ -105,8 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
       editTextarea.classList.add('hidden');
       editButtons.classList.add('hidden');
       viewParagraph.classList.remove('hidden');
-      editBtn.classList.remove('hidden'); // Muestra el botón de editar nuevamente.
-      
+      editBtn && editBtn.classList.remove('hidden'); // Muestra el botón de editar nuevamente.
+
       // Restaura el toggle según corresponda.
       updateToggleAvailability();
     });
@@ -121,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
       .then(response => {
         if (!response.ok) {
-          alert('Error updating description.');
+          alert(t('blockEditor.description.updateError'));
         }
       })
       .catch(err => console.error('Failed to update description:', err));
