@@ -35,7 +35,9 @@ block content
               .block-action-buttons
                 if block.status === 'in-progress'
                   button#lock-block-btn= t('blockEditor.title.lock')
-                button#delete-block-btn.delete-btn= t('blockEditor.title.delete')
+                button#delete-block-btn.delete-btn(
+                  data-block-id=block._id
+                )= t('blockEditor.title.delete')
 
           .block-description-card
             // Subtle label for clarity

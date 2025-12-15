@@ -1,5 +1,9 @@
 // Shared delete modal (blockCommon)
-#delete-modal.modal.hidden
+#delete-modal.modal.hidden(
+  data-toast-success=t('blockCommon.toasts.deleteSuccess')
+  data-toast-failed=t('blockCommon.toasts.deleteFailed')
+  data-redirect-url='/'
+)
   .modal-content
     span.modal-close(aria-label=t('blockCommon.deleteModal.closeAriaLabel')) &times;
     h2= t('blockCommon.deleteModal.title')
