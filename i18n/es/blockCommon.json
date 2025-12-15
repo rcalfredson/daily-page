@@ -5,5 +5,9 @@
     "confirm": "Eliminar",
     "cancel": "Cancelar",
     "closeAriaLabel": "Cerrar"
+  },
+  "toasts": {
+    "deleteSuccess": "¡Bloque eliminado con éxito!",
+    "deleteFailed": "No se pudo eliminar el bloque."
   }
 }

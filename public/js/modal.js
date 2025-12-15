@@ -23,18 +23,27 @@ window.setupModal = setupModal;
 
 document.addEventListener('DOMContentLoaded', () => {
   // DELETE‑BLOCK modal
-  const pathParts = window.location.pathname.split('/');
-  const blockIdIndex = pathParts.indexOf('blocks') + 1;
-  const blockId = pathParts[blockIdIndex];
-  setupModal('delete-modal', 'delete-block-btn', async () => {
-    const res = await fetch(`/api/v1/blocks/${blockId}`, { method: 'DELETE' });
-    if (res.ok) {
-      showToast('Block deleted successfully!', 'success');
-      setTimeout(() => window.location.href = '/', 1000);
-    } else {
-      showToast('Failed to delete block.', 'error');
+  const deleteModal = document.getElementById('delete-modal');
+  const deleteBtn = document.getElementById('delete-block-btn');
+
+  if (deleteModal && deleteBtn) {
+    const blockId = deleteBtn.dataset.blockId;
+    const toastSuccess = deleteModal.dataset.toastSuccess || 'Block deleted successfully!';
+    const toastFailed = deleteModal.dataset.toastFailed || 'Failed to delete block.';
+    const redirectUrl = deleteModal.dataset.redirectUrl || '/';
+
+    if (blockId) {
+      setupModal('delete-modal', 'delete-block-btn', async () => {
+        const res = await fetch(`/api/v1/blocks/${blockId}`, { method: 'DELETE' });
+        if (res.ok) {
+          showToast(toastSuccess, 'success');
+          setTimeout(() => window.location.href = redirectUrl, 1000);
+        } else {
+          showToast(toastFailed, 'error');
+        }
+      });
     }
-  });
+  }
 
   // LOGIN modal: solo configuro el cierre
   setupModal('login-modal');
