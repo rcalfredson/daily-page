@@ -8,12 +8,6 @@ block append head
   link(rel='stylesheet' href='/css/block-tags.css')
   link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css')
 
-  // Exporta diccionarios para JS
-  script#i18n-createBlock(type='application/json').
-    !{JSON.stringify(__i18n.createBlock || {})}
-  script#i18n-blockTags(type='application/json').
-    !{JSON.stringify(__i18n.blockTags || {})}
-
 block append scripts
   script(src='/js/create-block.js')
   script(src='/js/create-block-tags.js')

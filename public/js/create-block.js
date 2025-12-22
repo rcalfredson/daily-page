@@ -7,28 +7,37 @@ let existingLangs = [];
 let langSelect = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-  const ns = I18n.get('createBlock', {}); // <-- diccionario
-  const t = (path, params) => I18n.t(ns, path, params);
+  // Ensure global i18n helper exists
+  const t = (typeof window.i18nT === 'function')
+    ? window.i18nT
+    : (k) => k;
 
   // Placeholder responsive
   const titleInput = document.getElementById('title');
-  const fullPlaceholder = titleInput?.dataset?.phFull || t('form.title.placeholder.full');
-  const shortPlaceholder = titleInput?.dataset?.phShort || t('form.title.placeholder.short');
+  const fullPlaceholder =
+    titleInput?.dataset?.phFull
+    || t('createBlock.form.title.placeholder.full');
+  const shortPlaceholder =
+    titleInput?.dataset?.phShort
+    || t('createBlock.form.title.placeholder.short');
 
   const updatePlaceholder = () => {
     if (!titleInput) return;
-    titleInput.placeholder = (window.innerWidth < 600) ? shortPlaceholder : fullPlaceholder;
+    titleInput.placeholder =
+      (window.innerWidth < 600) ? shortPlaceholder : fullPlaceholder;
   };
   updatePlaceholder();
   window.addEventListener('resize', updatePlaceholder);
 
   // Form
   const form = document.getElementById('block-form');
+  if (!form) return;
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     if (existingLangs.includes(langSelect.value)) {
-      alert(t('messages.langExists'));
+      alert(t('createBlock.messages.langExists'));
       return;
     }
 
@@ -40,7 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let tagsArray = [];
     if (tagContainer) {
       const tagPills = tagContainer.querySelectorAll('.tag-pill');
-      tagPills.forEach(pill => tagsArray.push(pill.firstChild.textContent.trim()));
+      tagPills.forEach(pill =>
+        tagsArray.push(pill.firstChild.textContent.trim())
+      );
     }
     data.tags = tagsArray;
     if (!data.content) data.content = '';
@@ -54,7 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!response.ok) {
         const errJson = await response.json().catch(() => ({}));
-        const message = errJson?.error || t('messages.genericError');
+        const message =
+          errJson?.error || t('createBlock.messages.genericError');
         throw new Error(message);
       }
 
@@ -62,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = `/rooms/${block.roomId}/blocks/${block._id}/edit`;
     } catch (error) {
       console.error('Error:', error);
-      alert(error.message || t('messages.genericError'));
+      alert(error.message || t('createBlock.messages.genericError'));
     }
   });
 
@@ -76,9 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
   existingLangs = [];
 
   // Default lang
-  const guess = document.documentElement.lang || I18n.lang() || navigator.language || 'en';
+  const guess =
+    document.documentElement.lang
+    || (window.I18n && typeof window.I18n.lang === 'function' && window.I18n.lang())
+    || navigator.language
+    || 'en';
+
   const short = String(guess).split('-')[0];
-  [...langSelect.options].forEach(o => { if (o.value === short) o.selected = true; });
+  [...langSelect.options].forEach(o => {
+    if (o.value === short) o.selected = true;
+  });
 
   // Fetch info del bloque origen
   sourceInput.addEventListener('blur', async () => {
@@ -86,19 +105,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!raw) {
       groupIdField.value = '';
       originalBlockField.value = '';
-      langSelect.querySelectorAll('option').forEach(o => o.disabled = false);
+      langSelect.querySelectorAll('option').forEach(o => (o.disabled = false));
       existingLangs = [];
       bumpIfDup();
       return;
     }
 
-    const match = raw.match(/blocks\/([0-9a-fA-F]{24})/) || raw.match(/^([0-9a-fA-F]{24})$/);
+    const match =
+      raw.match(/blocks\/([0-9a-fA-F]{24})/)
+      || raw.match(/^([0-9a-fA-F]{24})$/);
     if (!match) {
-      alert(t('advanced.translate.invalid'));
+      alert(t('createBlock.advanced.translate.invalid'));
       groupIdField.value = '';
       originalBlockField.value = '';
       return;
     }
+
     const id = match[1];
     try {
       const res = await fetch(`/api/v1/blocks/${id}`);
@@ -120,17 +142,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
       bumpIfDup();
     } catch (err) {
-      alert(t('advanced.translate.fetchError'));
+      alert(t('createBlock.advanced.translate.fetchError'));
       groupIdField.value = '';
     }
   });
+
   langSelect.addEventListener('change', bumpIfDup);
 
   function bumpIfDup() {
     if (!langSelect || !submitBtn || !Array.isArray(existingLangs)) return;
     if (existingLangs.includes(langSelect.value)) {
       submitBtn.disabled = true;
-      submitBtn.title = t('messages.langExists');
+      submitBtn.title = t('createBlock.messages.langExists');
     } else {
       submitBtn.disabled = false;
       submitBtn.title = '';
@@ -144,14 +167,16 @@ document.addEventListener('DOMContentLoaded', () => {
     currentTooltipOption = option;
 
     let tooltip = document.getElementById(`${option}-tooltip`);
+    const key = `createBlock.visibility.${option}.tooltip`;
+
     if (!tooltip) {
       tooltip = document.createElement('div');
       tooltip.id = `${option}-tooltip`;
       tooltip.className = 'tooltip';
-      tooltip.textContent = t(`visibility.${option}.tooltip`);
+      tooltip.textContent = t(key);
       document.body.appendChild(tooltip);
     } else {
-      tooltip.textContent = t(`visibility.${option}.tooltip`);
+      tooltip.textContent = t(key);
     }
 
     if (tooltip.style.display !== 'block') {
@@ -165,7 +190,11 @@ document.addEventListener('DOMContentLoaded', () => {
     tooltip.style.display = 'block';
     positionTooltip(currentTooltipAnchor, tooltip);
     outsideClickListener = function (e) {
-      if (!tooltip.contains(e.target) && !currentTooltipAnchor.contains(e.target)) {
+      if (
+        !tooltip.contains(e.target) &&
+        currentTooltipAnchor &&
+        !currentTooltipAnchor.contains(e.target)
+      ) {
         hideTooltip(tooltip);
       }
     };
@@ -181,14 +210,23 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function positionTooltip(anchor, tooltip) {
+    if (!anchor) return;
     tooltip.style.display = 'block';
     const anchorRect = anchor.getBoundingClientRect();
     const tooltipRect = tooltip.getBoundingClientRect();
     const offsetY = 4;
     let top = anchorRect.bottom + window.scrollY + offsetY;
-    let left = anchorRect.left + window.scrollX + (anchorRect.width / 2) - (tooltipRect.width / 2);
-    if (left + tooltipRect.width > window.innerWidth - 10) left = window.innerWidth - tooltipRect.width - 10;
+    let left =
+      anchorRect.left +
+      window.scrollX +
+      (anchorRect.width / 2) -
+      (tooltipRect.width / 2);
+
+    if (left + tooltipRect.width > window.innerWidth - 10) {
+      left = window.innerWidth - tooltipRect.width - 10;
+    }
     if (left < 10) left = 10;
+
     tooltip.style.top = `${top}px`;
     tooltip.style.left = `${left}px`;
     tooltip.style.maxWidth = '280px';
