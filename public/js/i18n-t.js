@@ -10,7 +10,12 @@
 
       const ns = str.slice(0, i);
       const path = str.slice(i + 1);
-      return window.I18n.t(ns, path, vars);
+      const raw = window.I18n.t(ns, path, vars);
+
+      // Si el backend i18n devuelve el path como fallback, normalízalo
+      if (raw === path) return str;
+
+      return raw;
     } catch {
       return String(key);
     }
