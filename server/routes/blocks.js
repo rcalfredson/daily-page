@@ -94,9 +94,12 @@ router.get(
       const roomName = roomMetadata.displayName || roomMetadata.name;
 
       // Título i18n
+      const key = 'blockEditor.meta.title';
+      const raw = t(key, { blockTitle: block.title });
       const pageTitle =
-        t('blockEditor.meta.title', { blockTitle: block.title })
-        || `${t('blockEditor.meta.titleFallback')} - ${block.title}`;
+        raw && raw !== key
+          ? raw
+          : `${t('blockEditor.meta.titleFallback')} - ${block.title}`;
 
       // Render the block editor page
       res.render('rooms/block-editor', {
