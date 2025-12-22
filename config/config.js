@@ -10,6 +10,10 @@ export const config = {
   mongoDbAddr: process.env.MONGO_DB_ADDR,
   mongoDbPw: process.env.MONGO_DB_PW,
 
+  // TURN / WebRTC
+  turnUsername: process.env.METERED_TURN_USERNAME,
+  turnCredential: process.env.METERED_TURN_CREDENTIAL,
+
   // Google Drive API
   baseballFolderId: process.env.BASEBALL_FOLDER_ID,
   musicFolderId: process.env.MUSIC_FOLDER_ID,
