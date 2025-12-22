@@ -123,6 +123,11 @@ block content
 
 block scripts
   include ../envImport
+  script.
+    window.TURN_CONFIG = {
+      username: !{JSON.stringify(turnUsername || '')},
+      credential: !{JSON.stringify(turnCredential || '')}
+    };
   script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
   script(src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js")
   script(src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js")

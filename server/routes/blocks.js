@@ -107,6 +107,8 @@ router.get(
         roomName,
         block_id,
         user,
+        turnUsername: config.turnUsername,
+        turnCredential: config.turnCredential,
         peerIDs,
         initialTargetPeerId,
         canManageBlock: canManageBlock(user, block, editTokens),
