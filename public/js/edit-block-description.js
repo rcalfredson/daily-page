@@ -1,15 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
   const md = window.markdownit();
 
-  // Local i18n helper (matches the approach used elsewhere)
-  function t(key, vars = {}) {
-    try {
-      if (!window.I18n || typeof window.I18n.t !== 'function') return key;
-      return window.I18n.t(key, vars);
-    } catch (e) {
-      return key;
-    }
-  }
+  // Local helper: use global i18nT if present, else fall back to the key
+  const t =
+    typeof window.i18nT === 'function'
+      ? window.i18nT
+      : (key /*, vars */) => key;
 
   const descCard = document.querySelector('.block-description-card');
   if (!descCard) return;
@@ -29,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isEditing = false;
   let originalDesc = editTextarea.value || '';
 
-  // Función para evaluar si el contenido es lo suficientemente largo como para necesitar expand/collapse.
+  // Evalúa si el contenido necesita expand/collapse
   function updateToggleAvailability() {
     // Si el scrollHeight del párrafo es menor o igual a 150px, no hay overflow.
     if (viewParagraph.scrollHeight <= 150) {
@@ -59,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleCollapse();
   });
 
-  // Función para alternar el estado de expandir/colapsar.
+  // Alternar expandir/colapsar.
   function toggleCollapse() {
     isCollapsed = !isCollapsed;
     if (isCollapsed) {

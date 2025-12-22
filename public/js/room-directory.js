@@ -1,26 +1,8 @@
+// public/js/room-directory.js
 document.addEventListener('DOMContentLoaded', () => {
-  // ---- i18n bootstrap ------------------------------------------------------
-  const parseJSON = (id) => {
-    const el = document.getElementById(id);
-    if (!el) return null;
-    try { return JSON.parse(el.textContent || '{}'); } catch { return null; }
-  };
-  const I18N_NS = parseJSON('i18n-roomsDirectory') || {};
-  const CURRENT_LANG = parseJSON('i18n-lang') || 'en';
-
-  const deepGet = (obj, dotted) =>
-    dotted.split('.').reduce((o, k) => (o && k in o) ? o[k] : undefined, obj);
-
-  const interpolate = (str, params = {}) =>
-    String(str).replace(/\{(\w+)\}/g, (_, k) => (params[k] ?? `{${k}}`));
-
-  // Acepta 'roomsDirectory.key' o 'key' (azúcar)
-  const t = (key, params) => {
-    const path = key.startsWith('roomsDirectory.') ? key.slice('roomsDirectory.'.length) : key;
-    const val = deepGet(I18N_NS, path);
-    return (val == null) ? key : interpolate(val, params);
-  };
-  // --------------------------------------------------------------------------
+  if (typeof window.i18nT !== 'function') {
+    console.warn('i18nT not available in room-directory.js');
+  }
 
   const headers = document.querySelectorAll('.topic-header');
   const modal = document.querySelector('.room-modal');
@@ -44,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Collapsible behavior (sin depender del label traducido)
+  // Collapsible behavior
   headers.forEach(header => {
     const topicSection = header.nextElementSibling;
     const icon = header.querySelector('.expand-icon');
@@ -71,45 +53,64 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Dynamic hover (usa t('activeUsers'))
+  // Dynamic hover: active users
   document.querySelectorAll('.room-tile').forEach(tile => {
-    const activeUsersBadge = tile.querySelector('.room-activity');
-    if (activeUsersBadge) activeUsersBadge.style.display = 'none';
+    const badge = tile.querySelector('.room-activity');
+    if (badge) badge.style.display = 'none';
 
     tile.addEventListener('mouseenter', async () => {
       if (!isMobile()) {
         const roomId = tile.getAttribute('data-room-link').split('/').pop();
         const activeUsers = await fetchActiveUsers(roomId);
-        if (activeUsersBadge) {
-          activeUsersBadge.textContent = t('roomsDirectory.activeUsers', { count: activeUsers });
-          activeUsersBadge.style.opacity = 1;
-          activeUsersBadge.style.display = 'unset';
+
+        if (badge) {
+          const msg = (typeof window.i18nT === 'function')
+            ? i18nT('roomsDirectory.activeUsers', { count: activeUsers })
+            : `Active users: ${activeUsers}`;
+
+          badge.textContent = msg;
+          badge.style.opacity = 1;
+          badge.style.display = 'unset';
         }
       }
     });
 
     tile.addEventListener('mouseleave', () => {
-      if (activeUsersBadge) {
-        activeUsersBadge.style.opacity = 0;
-        activeUsersBadge.style.display = 'none';
+      if (badge) {
+        badge.style.opacity = 0;
+        badge.style.display = 'none';
       }
     });
 
-    // Modal (usa fallbacks traducidos)
+    // Mobile modal
     tile.addEventListener('click', async (e) => {
       if (isMobile()) {
         e.preventDefault();
+
         const title = tile.getAttribute('data-room-title');
-        const description = tile.getAttribute('data-room-description');
+        const desc = tile.getAttribute('data-room-description');
         const href = tile.getAttribute('data-room-link');
         const roomId = href.split('/').pop();
         const activeUsers = await fetchActiveUsers(roomId);
 
-        modalTitle.textContent = title || t('roomsDirectory.noTitle');
-        modalDescription.textContent = description || t('roomsDirectory.noDescription');
-        modalActiveUsers.textContent = t('roomsDirectory.activeUsers', { count: activeUsers });
-        modalLink.href = href || '#';
+        modalTitle.textContent =
+          title ||
+          (typeof window.i18nT === 'function'
+            ? i18nT('roomsDirectory.noTitle')
+            : 'No title');
 
+        modalDescription.textContent =
+          desc ||
+          (typeof window.i18nT === 'function'
+            ? i18nT('roomsDirectory.noDescription')
+            : 'No description');
+
+        modalActiveUsers.textContent =
+          (typeof window.i18nT === 'function')
+            ? i18nT('roomsDirectory.activeUsers', { count: activeUsers })
+            : `Active users: ${activeUsers}`;
+
+        modalLink.href = href || '#';
         modal.classList.add('visible');
       }
     });

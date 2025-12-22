@@ -1,0 +1,8 @@
+// Generic client-side i18n export
+if __i18n
+  each val, key in __i18n
+    script(
+      id=`i18n-${key}`
+      type='application/json'
+    ).
+      !{JSON.stringify(val || {})}

@@ -20,8 +20,7 @@ html(lang=lang || 'en')
       script(defer src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js")
       script#i18n-lang(type='application/json').
         !{JSON.stringify(lang || 'en')}
-      script#i18n-modals(type='application/json').
-        !{JSON.stringify(__i18n.modals || {})}
+      include partials/_i18n_exports
   body(data-is-logged-in=user ? "true" : "false" data-user-id=user ? user.id : null)
     div.auth-wrapper
       p#welcome-message= t('layout.welcomeUser')

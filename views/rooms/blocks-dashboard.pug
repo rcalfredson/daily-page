@@ -8,8 +8,6 @@ block nav
   include ../navLinks
 
 block append scripts
-  script#i18n-roomDashboard(type='application/json').
-    !{JSON.stringify(__i18n.roomDashboard || {})}
   script(src="/js/vote-controls.js")
   script(src='/js/modal.js')
   script(src="/js/block-tabs.js")

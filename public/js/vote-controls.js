@@ -1,5 +1,5 @@
+// public/js/vote-controls.js
 document.addEventListener("DOMContentLoaded", () => {
-  const tModals = (path, params) => I18n.t('modals', path, params);
   const voteControls = document.querySelectorAll(".vote-controls");
 
   voteControls.forEach((control) => {
@@ -14,8 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
       downvoteButton.style.color = "#4194ed";
     }
 
-    upvoteButton.addEventListener("click", () => handleVote("upvote", voteCountElement, control.dataset.blockId));
-    downvoteButton.addEventListener("click", () => handleVote("downvote", voteCountElement, control.dataset.blockId));
+    upvoteButton.addEventListener("click", () =>
+      handleVote("upvote", voteCountElement, control.dataset.blockId)
+    );
+    downvoteButton.addEventListener("click", () =>
+      handleVote("downvote", voteCountElement, control.dataset.blockId)
+    );
   });
 
   async function handleVote(action, voteCountElement, blockId) {
@@ -24,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showLoginModal("actions.voteOnBlock");
       return;
     }
+
     try {
       const response = await fetch(`/api/v1/votes/${blockId}`, {
         method: 'POST',
@@ -68,11 +73,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalMessage = document.getElementById("login-modal-message");
     if (!modal || !modalMessage) return;
 
-    // actionType es una key: "actions.voteOnBlock"
-    const actionText = tModals(actionType);
-    const msg = tModals("login.messageWithAction", { action: actionText });
+    let msg = 'Please log in to perform this action.';
+
+    if (typeof window.i18nT === 'function') {
+      // actionType es algo como "actions.voteOnBlock" o "actions.starRoom"
+      const actionKey = `modals.${actionType}`;
+      let actionText = i18nT(actionKey);
+
+      if (!actionText || actionText === actionKey) {
+        // Fallback genérico si falta la traducción específica de la acción
+        actionText = 'this action';
+      }
+
+      const msgKey = 'modals.login.messageWithAction';
+      const maybeMsg = i18nT(msgKey, { action: actionText });
+
+      if (maybeMsg && maybeMsg !== msgKey) {
+        msg = maybeMsg;
+      } else {
+        msg = `Please log in to ${actionText}.`;
+      }
+    }
+
     modalMessage.textContent = msg;
     modal.classList.remove('hidden');
   }
+
   window.showLoginModal = showLoginModal;
 });

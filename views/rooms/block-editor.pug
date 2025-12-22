@@ -9,9 +9,6 @@ block append head
   link(rel='stylesheet' href='/css/toast.css')
   link(rel='stylesheet' href='/css/modal.css')
   link(rel='stylesheet' href='/css/delete-block.css')
-  // i18n namespace para el editor en el cliente
-  script#i18n-blockEditor(type='application/json').
-    !{JSON.stringify(__i18n.blockEditor || {})}
 
 block content
   include ../partials/_tag_section

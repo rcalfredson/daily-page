@@ -4,12 +4,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const tagContainer = document.getElementById('tag-container');
   if (!hiddenTagsInput || !tagContainer) return;
 
-  const nsTags = I18n.get('blockTags', {});
-  const tTags = (path, params) => I18n.t(nsTags, path, params);
+  // Local helper: use i18nT if available, otherwise fall back gracefully
+  const t = (typeof window.i18nT === 'function')
+    ? window.i18nT
+    : (k) => {
+      // fallback simple
+      if (k === 'blockTags.buttons.removeTag') return 'x';
+      return k;
+    };
 
   function updateHiddenTags() {
     const pills = tagContainer.querySelectorAll('.tag-pill');
-    const tags = Array.from(pills).map(pill => pill.firstChild.textContent.trim());
+    const tags = Array.from(pills).map(pill =>
+      pill.firstChild.textContent.trim()
+    );
     hiddenTagsInput.value = tags.join(',');
     updateTagHeader();
   }
@@ -18,9 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const tagHeader = document.querySelector('.block-tags-header');
     const pills = tagContainer.querySelectorAll('.tag-pill');
     if (tagHeader) {
-      tagHeader.textContent = (pills.length > 0)
-        ? tTags('header.withTags')     // "Tags:"
-        : tTags('header.noTags');      // "No tags yet! Add some:"
+      tagHeader.textContent =
+        pills.length > 0
+          ? t('blockTags.header.withTags')   // "Tags:"
+          : t('blockTags.header.noTags');    // "No tags yet! Add some:"
     }
   }
 
@@ -48,7 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const removeBtn = document.createElement('button');
       removeBtn.classList.add('tag-remove');
       removeBtn.setAttribute('data-tag', newTag);
-      removeBtn.textContent = ' x';
+      // Leading space preserved as before
+      removeBtn.textContent = ' ' + t('blockTags.buttons.removeTag');
       newPill.appendChild(removeBtn);
 
       const tagAdd = document.querySelector('.tag-add');
@@ -57,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         tagContainer.appendChild(newPill);
       }
+
       newTagInput.value = '';
       updateHiddenTags();
     });

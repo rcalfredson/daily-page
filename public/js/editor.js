@@ -1,14 +1,12 @@
+// public/js/editor.js
 document.addEventListener('DOMContentLoaded', () => {
-  const t = (key, params) => {
-    if (typeof window !== 'undefined' && window.I18n) {
-      const maybe = window.I18n.t('blockEditor', key, params);
-      if (maybe && maybe !== key) return maybe;
-    }
-    return null;
+  if (typeof window.i18nT !== 'function') {
+    console.warn('i18nT not available in editor.js');
   }
+
   const toolbar = document.querySelector('.toolbar.sticky');
   const editor = document.querySelector('.EasyMDEContainer');
-  const buttonsWithTooltips = document.querySelectorAll('[data-tooltip]'); // Botones con tooltips
+  const buttonsWithTooltips = document.querySelectorAll('[data-tooltip]');
   const descriptionHeader = document.querySelector('.room-description-header');
   const description = document.querySelector('.room-description');
 
@@ -47,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     editor.addEventListener('focus', updateToolbarPosition);
     editor.addEventListener('blur', () => {
       toolbar.style.position = ''; // Restablecer a predeterminado
-      toolbar.style.top = ''; // Restablecer a predeterminado
+      toolbar.style.top = '';      // Restablecer a predeterminado
     });
   }
 
@@ -88,8 +86,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const newTitle = titleInput.value.trim();
     if (newTitle && newTitle !== titleText.innerText) {
       titleText.innerText = newTitle;
-      document.title =
-        t('meta.title', { blockTitle: newTitle }) || `Edit Block - ${newTitle}`;
+
+      // i18n-aware document.title con fallback
+      let translatedTitle = null;
+      if (typeof window.i18nT === 'function') {
+        translatedTitle = i18nT('blockEditor.meta.title', { blockTitle: newTitle });
+      }
+
+      if (translatedTitle && translatedTitle !== 'blockEditor.meta.title') {
+        document.title = translatedTitle;
+      } else {
+        document.title = `Edit Block - ${newTitle}`;
+      }
+
       updateTitleBackend(newTitle);
     }
     titleText.classList.remove('fade-out');
@@ -105,15 +114,20 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(response => response.status)
       .then(status => {
         if (status !== 200) {
-          const msg =
-            t('errors.updateTitleFailed') || 'Error updating title.';
+          let msg = 'Error updating title.';
+          if (typeof window.i18nT === 'function') {
+            const maybe = i18nT('blockEditor.errors.updateTitleFailed');
+            if (maybe && maybe !== 'blockEditor.errors.updateTitleFailed') {
+              msg = maybe;
+            }
+          }
           alert(msg);
         }
       })
       .catch(err => console.error('Failed to update title:', err));
   }
 
-  if (canManageBlock && titleInput) {
+  if (typeof canManageBlock !== 'undefined' && canManageBlock && titleInput) {
     titleInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') finishEditingTitle();
     });

@@ -10,11 +10,6 @@ block append head
   link(rel='stylesheet' href='/css/best-of.css')
   link(rel='stylesheet' href='/css/translation-attribution.css')
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
-  // Export i18n for this page + current lang
-  script#i18n-bestOf(type='application/json').
-    !{JSON.stringify(__i18n.bestOf || {})}
-  script#i18n-lang(type='application/json').
-    !{JSON.stringify(lang || 'en')}
 
 block nav
   include ../navLinks

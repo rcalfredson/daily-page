@@ -7,6 +7,9 @@
     "input": {
       "placeholder": "Nueva etiqueta",
       "addButton": "Añadir"
+    },
+    "buttons": {
+      "removeTag": "x"
     }
   }
 }
