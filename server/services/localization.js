@@ -1,5 +1,4 @@
 // server/services/localization.js
-// ¡Versión simplificada y DRY!
 
 const supportedLanguages = [
   'en',
@@ -30,32 +29,52 @@ const supportedLanguages = [
 ];
 const defaultLanguage = 'en';
 
-/**
- * Puro y testeable: deduce el idioma preferido del request.
- * Prioridad: ?lang= override > Accept-Language > default.
- */
-export function getPreferredLang(req, {
+function isBlockContentRoute(req) {
+  // only the canonical view route
+  return /^\/rooms\/[^/]+\/blocks\/[^/]+\/?$/.test(req.path);
+}
+
+function isSupported(lang) {
+  return !!lang && supportedLanguages.includes(lang);
+}
+
+export function getPreferredUiLang(req, {
   supported = supportedLanguages,
   fallback = defaultLanguage
 } = {}) {
   const ui = req.query?.ui;
   if (ui && supported.includes(ui)) return ui;
 
-  // Back-compat: old behavior
+  // Cookie preference (if previously set)
+  const cookieUi = req.cookies?.ui;
+  if (cookieUi && supported.includes(cookieUi)) return cookieUi;
+  
+  // Back-compat: old behavior (?lang= used to mean UI) ONLY off block routes
   const legacy = req.query?.lang;
-  if (legacy && supported.includes(legacy)) return legacy;
+  if (!isBlockContentRoute(req) && legacy && supported.includes(legacy)) return legacy;
 
   const best = req.acceptsLanguages(supported);
   return best || fallback;
 }
 
-/**
- * Middleware liviano que solo setea res.locals.lang (y req.lang).
- * Úsalo globalmente: app.use(setLangMiddleware)
- */
 export default function setLangMiddleware(req, res, next) {
-  const lang = getPreferredLang(req);
-  res.locals.lang = lang; // tu layout Pug ya lo usare en <html lang=...>
-  req.lang = lang;        // opcional: útil en rutas/controladores
+  const uiLang = getPreferredUiLang(req);
+  res.locals.uiLang = uiLang;
+  req.uiLang = uiLang;
+
+  // Transitional alias so your existing initI18n/layout don't explode:
+  res.locals.lang = uiLang;
+  req.lang = uiLang;
+
+  // If user explicitly set UI via query param, persist it.
+  const uiParam = req.query?.ui;
+  if (isSupported(uiParam) && uiParam !== req.cookies?.ui) {
+    res.cookie('ui', uiParam, {
+      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
+  }
+
   next();
 }

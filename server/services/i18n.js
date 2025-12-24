@@ -48,42 +48,31 @@ async function loadBundles(lang, namespaces, defaultLang = DEFAULT_LANG) {
   return bundles.reduce((acc, cur) => deepMerge(acc, cur), {});
 }
 
-/**
- * Inicializa i18n para TODAS las rutas (p.ej., layout + nav).
- * Siempre expone res.locals.t y res.locals.__i18n (diccionario acumulado).
- */
 export function initI18n(baseNamespaces = [], { defaultLang = DEFAULT_LANG } = {}) {
   return async (req, res, next) => {
-    const lang = res.locals.lang || defaultLang;
+    const lang = res.locals.uiLang || res.locals.lang || defaultLang;
     const base = await loadBundles(lang, baseNamespaces, defaultLang);
-
-    // Diccionario acumulado por request
     res.locals.__i18n = base;
 
     res.locals.t = (key, params) => {
       const val = deepGet(res.locals.__i18n, key, null);
-      if (val == null) {
-        return process.env.NODE_ENV === 'production' ? '' : key;
-      }
+      if (val == null) return process.env.NODE_ENV === 'production' ? '' : key;
       return interpolate(val, params);
     };
 
-    // helper para inspección/debug si hace falta
+    // keep exposing both for now
+    res.locals.uiLang = lang;
     res.locals.lang = lang;
+
     next();
   };
 }
 
-/**
- * Agrega namespaces extra para rutas específicas (home, rooms, etc.),
- * SIN perder lo ya cargado por initI18n.
- */
 export function addI18n(extraNamespaces = [], { defaultLang = DEFAULT_LANG } = {}) {
   return async (req, res, next) => {
-    const lang = res.locals.lang || defaultLang;
+    const lang = res.locals.uiLang || res.locals.lang || defaultLang;
     const extra = await loadBundles(lang, extraNamespaces, defaultLang);
     res.locals.__i18n = deepMerge(res.locals.__i18n, extra);
-    // res.locals.t ya usa __i18n, así que no hay que redefinirlo
     next();
   };
 }

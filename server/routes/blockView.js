@@ -35,9 +35,10 @@ router.get(
         });
       }
 
-      const { lang: uiLang } = res.locals;
+      const uiLang = res.locals.uiLang || 'en';
 
       const contentLang = req.query?.lang;
+
       if (contentLang && contentLang !== block.lang) {
         const target = await getTranslationByGroupAndLang(block.groupId, contentLang);
         if (target) {
