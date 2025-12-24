@@ -1,13 +1,15 @@
 {
-  "deleteModal": {
-    "title": "¿Eliminar bloque?",
-    "message": "Esta acción no se puede deshacer.",
-    "confirm": "Eliminar",
-    "cancel": "Cancelar",
-    "closeAriaLabel": "Cerrar"
-  },
-  "toasts": {
-    "deleteSuccess": "¡Bloque eliminado con éxito!",
-    "deleteFailed": "No se pudo eliminar el bloque."
+  "blockCommon": {
+    "deleteModal": {
+      "title": "Borrar bloque?",
+      "message": "Esta acción no se puede deshacer.",
+      "confirm": "Borrar",
+      "cancel": "Cancelar",
+      "closeAriaLabel": "Cerrar"
+    },
+    "toasts": {
+      "deleteSuccess": "¡Bloque borrado con éxito!",
+      "deleteFailed": "No se pudo borrar el bloque."
+    }
   }
 }

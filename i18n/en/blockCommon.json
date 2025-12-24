@@ -1,13 +1,15 @@
 {
-  "deleteModal": {
-    "title": "Delete Block?",
-    "message": "This action cannot be undone.",
-    "confirm": "Delete",
-    "cancel": "Cancel",
-    "closeAriaLabel": "Close"
-  },
-  "toasts": {
-    "deleteSuccess": "Block deleted successfully!",
-    "deleteFailed": "Failed to delete block."
+  "blockCommon": {
+    "deleteModal": {
+      "title": "Delete Block?",
+      "message": "This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel",
+      "closeAriaLabel": "Close"
+    },
+    "toasts": {
+      "deleteSuccess": "Block deleted successfully!",
+      "deleteFailed": "Failed to delete block."
+    }
   }
 }
