@@ -87,7 +87,10 @@ block content
         - const noDesc = `<p><em>${t('blockView.description.none')}</em></p>`;
         div#description-view!= descriptionHTML || noDesc
       .expand-toggle
-        span= t('blockView.description.expand')
+        span(
+          data-expand-label=t('blockView.description.expand')
+          data-collapse-label=t('blockView.description.collapse')
+        )= t('blockView.description.expand')
 
     // The main content, already rendered to HTML on the server
     .block-content

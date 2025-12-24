@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!viewParagraph || !expandToggle) return;
 
+  const expandLabel = expandToggle.dataset.expandLabel || 'Expand';
+  const collapseLabel = expandToggle.dataset.collapseLabel || 'Collapse';
+
   // Check if the description text is tall enough to need collapse/expand
   function updateToggleAvailability() {
     // If paragraph is <= 150px in height, hide toggle and keep fully expanded
@@ -19,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // If taller than 150px, show toggle and default to collapsed
       expandToggleContainer.style.display = 'block';
       descBody.classList.add('collapsed');
-      expandToggle.textContent = 'Expand';
+      expandToggle.textContent = expandLabel;
     }
   }
 
@@ -30,6 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
   expandToggle.addEventListener('click', () => {
     const isCollapsed = descBody.classList.contains('collapsed');
     descBody.classList.toggle('collapsed', !isCollapsed);
-    expandToggle.textContent = isCollapsed ? 'Collapse' : 'Expand';
+    expandToggle.textContent = isCollapsed ? collapseLabel : expandLabel;
   });
 });

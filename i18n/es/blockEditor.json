@@ -20,7 +20,7 @@
       "placeholder": "Escribe el título del bloque",
       "editTooltip": "Editar título",
       "lock": "Bloquear bloque",
-      "delete": "Eliminar bloque"
+      "delete": "Borrar bloque"
     },
     "description": {
       "label": "Descripción",

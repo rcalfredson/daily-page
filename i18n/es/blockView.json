@@ -17,7 +17,8 @@
     "description": {
       "label": "Descripción",
       "none": "No se proporcionó ninguna descripción...",
-      "expand": "Expandir"
+      "expand": "Ver más",
+      "collapse": "Ver menos"
     },
     "share": {
       "title": "Comparte este bloque",
