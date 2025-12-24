@@ -1,0 +1,37 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Bloque - {blockTitle}",
+      "titleFallback": "Bloque"
+    },
+    "labels": {
+      "room": "Sala: ",
+      "lang": "Idioma: "
+    },
+    "buttons": {
+      "edit": "Editar",
+      "deleteBlock": "Borrar bloque",
+      "share": "Compartir",
+      "flagContent": "Reportar contenido"
+    },
+    "description": {
+      "label": "Descripción",
+      "none": "No se proporcionó ninguna descripción...",
+      "expand": "Expandir"
+    },
+    "share": {
+      "title": "Comparte este bloque",
+      "shareOn": "Compartir en:",
+      "alt": {
+        "facebook": "Logo de Facebook",
+        "reddit": "Logo de Reddit",
+        "whatsapp": "Logo de WhatsApp",
+        "twitter": "Logo de Twitter"
+      }
+    },
+    "errors": {
+      "notFound": "Bloque no encontrado o no pertenece a esta sala.",
+      "loadFailed": "Error al cargar la vista del bloque."
+    }
+  }
+}
