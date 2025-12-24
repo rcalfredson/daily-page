@@ -1,0 +1,37 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Block - {blockTitle}",
+      "titleFallback": "Block"
+    },
+    "labels": {
+      "room": "Room: ",
+      "lang": "Lang: "
+    },
+    "buttons": {
+      "edit": "Edit",
+      "deleteBlock": "Delete Block",
+      "share": "Share",
+      "flagContent": "Flag Content"
+    },
+    "description": {
+      "label": "Description",
+      "none": "No description provided...",
+      "expand": "Expand"
+    },
+    "share": {
+      "title": "Share this Block",
+      "shareOn": "Share on:",
+      "alt": {
+        "facebook": "Facebook logo",
+        "reddit": "Reddit logo",
+        "whatsapp": "WhatsApp logo",
+        "twitter": "Twitter logo"
+      }
+    },
+    "errors": {
+      "notFound": "Block not found or does not belong to this room.",
+      "loadFailed": "Error loading block view."
+    }
+  }
+}

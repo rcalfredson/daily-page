@@ -43,24 +43,25 @@ block content
     .block-header
       .header-top(style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;")
         .room-info
-          | Room: 
+          | #{t('blockView.labels.room')}
           a.room-link(href=`/rooms/${room_id}`)= roomName
 
         // only show when multiple translations exist
         if translations.length > 1
           details.lang-switcher
             summary
-              span Lang: 
+              span #{t('blockView.labels.lang')}
               span.current-lang.pill
                 span.flag= flagEmoji[lang] || '🏳️'
                 | #{lang}
             ul.lang-list
-              each t in translations
-                if t.lang !== lang
+              - const uiQS = uiLang ? `&ui=${uiLang}` : '';
+              each tr in translations
+                if tr.lang !== lang
                   li
-                    a.pill(href=`/rooms/${room_id}/blocks/${t._id}?lang=${t.lang}`)
-                      span.flag= flagEmoji[t.lang] || '🏳️'
-                      | #{t.lang}
+                    a.pill(href=`/rooms/${room_id}/blocks/${tr._id}?lang=${tr.lang}${uiQS}`)
+                      span.flag= flagEmoji[tr.lang] || '🏳️'
+                      | #{tr.lang}
       .title-section
         .vote-section
           include ../partials/_vote_controls
@@ -69,23 +70,24 @@ block content
         .interact-section
           .action-buttons
             if block.status === 'in-progress'
-              a.block-edit-btn(href=`/rooms/${room_id}/blocks/${block._id}/edit`) Edit
+              a.block-edit-btn(href=`/rooms/${room_id}/blocks/${block._id}/edit`)= t('blockView.buttons.edit')
             if canManageBlock
               button#delete-block-btn.delete-btn(
                 data-block-id=block._id
-              ) Delete Block
-            button#share-btn.share-btn Share ✨
+              )= t('blockView.buttons.deleteBlock')
+            button#share-btn.share-btn #{t('blockView.buttons.share')} ✨
             button#flag-block-btn
               i.fa.fa-flag(aria-hidden="true")
-              | Flag Content
+              | #{t('blockView.buttons.flagContent')}
 
     // Description block, read-only style
     .block-description-card
-      span.description-label Description
+      span.description-label= t('blockView.description.label')
       .description-body.collapsed
-        div#description-view!= descriptionHTML || '<p><em>No description provided...</em></p>'
+        - const noDesc = `<p><em>${t('blockView.description.none')}</em></p>`;
+        div#description-view!= descriptionHTML || noDesc
       .expand-toggle
-        span Expand
+        span= t('blockView.description.expand')
 
     // The main content, already rendered to HTML on the server
     .block-content
@@ -101,22 +103,22 @@ block content
   div#share-modal.share-modal.hidden
     div.share-modal-content
       span.share-close-btn &times;
-      h2 Share this Block
-      p Share on:
+      h2= t('blockView.share.title')
+      p= t('blockView.share.shareOn')
       ul.share-links
         li
           a(href="#" id="share-facebook" target="_blank")
-            img.share-icon(src="https://cdn.simpleicons.org/facebook/1877F2" alt="Facebook logo")
+            img.share-icon(src="https://cdn.simpleicons.org/facebook/1877F2" alt=t('blockView.share.alt.facebook'))
             | Facebook
         li
           a(href="#" id="share-reddit" target="_blank")
-            img.share-icon(src="https://cdn.simpleicons.org/reddit/FF4500" alt="Reddit logo")
+            img.share-icon(src="https://cdn.simpleicons.org/reddit/FF4500" alt=t('blockView.share.alt.reddit'))
             | Reddit
         li
           a(href="#" id="share-whatsapp" target="_blank")
-            img.share-icon(src="https://cdn.simpleicons.org/whatsapp/25D366" alt="WhatsApp logo")
+            img.share-icon(src="https://cdn.simpleicons.org/whatsapp/25D366" alt=t('blockView.share.alt.whatsapp'))
             | WhatsApp
         li
           a(href="#" id="share-twitter" target="_blank")
-            img.share-icon(src="https://cdn.simpleicons.org/x/000000" alt="Twitter logo")
+            img.share-icon(src="https://cdn.simpleicons.org/x/000000" alt=t('blockView.share.alt.twitter'))
             | Twitter

@@ -38,11 +38,13 @@ export function getPreferredLang(req, {
   supported = supportedLanguages,
   fallback = defaultLanguage
 } = {}) {
-  // 1) Override via query param (útil p/ testing, enlaces, etc.)
-  const q = req.query?.lang;
-  if (q && supported.includes(q)) return q;
+  const ui = req.query?.ui;
+  if (ui && supported.includes(ui)) return ui;
 
-  // 2) Negociación con Accept-Language (Express usa negotiator)
+  // Back-compat: old behavior
+  const legacy = req.query?.lang;
+  if (legacy && supported.includes(legacy)) return legacy;
+
   const best = req.acceptsLanguages(supported);
   return best || fallback;
 }
