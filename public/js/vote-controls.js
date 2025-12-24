@@ -15,15 +15,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     upvoteButton.addEventListener("click", () =>
-      handleVote("upvote", voteCountElement, control.dataset.blockId)
+      handleVote("upvote", voteCountElement, control.dataset.blockId, control)
     );
     downvoteButton.addEventListener("click", () =>
-      handleVote("downvote", voteCountElement, control.dataset.blockId)
+      handleVote("downvote", voteCountElement, control.dataset.blockId, control)
     );
   });
 
-  async function handleVote(action, voteCountElement, blockId) {
+  async function handleVote(action, voteCountElement, blockId, control) {
     const isLoggedIn = checkLoginState();
+    const failMsg = control?.dataset.voteFailed || 'Failed to save your vote.';
     if (!isLoggedIn) {
       showLoginModal("actions.voteOnBlock");
       return;
@@ -37,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save vote');
+        throw new Error('Failed to save your vote');
       }
 
       const data = await response.json();
@@ -61,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (error) {
       console.error('Error submitting vote:', error);
+      showToast?.(failMsg, 'error');
     }
   }
 

@@ -1,14 +1,18 @@
-div.vote-controls(data-block-id=block._id data-user-vote=block.userVote || "")
+div.vote-controls(
+  data-block-id=block._id
+  data-user-vote=block.userVote || ""
+  data-vote-failed=t('voteControls.errors.failed')
+)
   button.vote-arrow.up(
-    title='Upvote'
-    aria-label='Upvote'
+    title=t('voteControls.upvote')
+    aria-label=t('voteControls.upvote')
     data-action='upvote'
   )
     span.icon.arrow-up
   span.vote-count= block.voteCount || 0
   button.vote-arrow.down(
-    title='Downvote'
-    aria-label='Downvote'
+    title=t('voteControls.downvote')
+    aria-label=t('voteControls.downvote')
     data-action='downvote'
   )
     span.icon.arrow-down

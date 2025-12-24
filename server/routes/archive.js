@@ -38,7 +38,7 @@ router.get('/archive', optionalAuth, addI18n(['archive']), async (req, res) => {
 router.get(
   '/rooms/:roomId/archive/best-of',
   optionalAuth,
-  addI18n(['bestOf', 'translation', 'readMore']),
+  addI18n(['bestOf', 'translation', 'readMore', 'voteControls']),
   async (req, res) => {
     const { roomId } = req.params;
     const { t, lang } = res.locals;
@@ -95,7 +95,9 @@ router.get(
   }
 );
 
-router.get('/archive/best-of', optionalAuth, addI18n(['bestOf', 'translation', 'readMore']), async (req, res) => {
+router.get('/archive/best-of', optionalAuth, addI18n(
+  ['bestOf', 'translation', 'readMore', 'voteControls']),
+async (req, res) => {
   try {
     const preferredLang = req.query.lang
       || req.user?.preferredLang
@@ -165,7 +167,7 @@ router.get('/archive/:year/:month', optionalAuth, addI18n(['archive']), async (r
 // Render archive view for a specific date
 router.get('/archive/:year/:month/:day',
   optionalAuth,
-  addI18n(['archive', 'translation', 'readMore']), async (req, res) => {
+  addI18n(['archive', 'translation', 'readMore', 'voteControls']), async (req, res) => {
     try {
       const { year, month, day } = req.params;
       const { lang, t } = res.locals;
@@ -359,7 +361,7 @@ router.get('/rooms/:roomId/archive/:year/:month', optionalAuth, addI18n(['archiv
 // Archivo de una fecha específica en una sala
 router.get('/rooms/:roomId/archive/:year/:month/:day',
   optionalAuth,
-  addI18n(['archive', 'translation', 'readMore']), async (req, res) => {
+  addI18n(['archive', 'translation', 'readMore', 'voteControls']), async (req, res) => {
     try {
       const { lang, t } = res.locals;
       const preferredLang = lang || 'en';

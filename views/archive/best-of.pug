@@ -6,12 +6,14 @@ include ../partials/_translation_attribution
 block append head
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel='stylesheet' href='/css/vote-controls.css')
+  link(rel='stylesheet' href='/css/toast.css')
   link(rel='stylesheet' href='/css/modal.css')
   link(rel='stylesheet' href='/css/best-of.css')
   link(rel='stylesheet' href='/css/translation-attribution.css')
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
 
 block append scripts
+  script(src='/js/toast-utils.js')
   script(src="/js/vote-controls.js")
   script(src='/js/modal.js')
   script(src="/js/best-of-tabs.js")
@@ -42,6 +44,7 @@ block content
     #tab-all.tab-pane(class={active: activeTab==='all'})
       +renderBlockList(topAll)
   include ../partials/_login_modal
+  #toast-container
 
 mixin renderBlockList(blocks)
   if blocks.length

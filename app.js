@@ -439,90 +439,91 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     app.post('/request-room', handleRoomRequest);
 
-    app.get('/rooms/:room_id', optionalAuth, addI18n(['roomDashboard', 'blockList', 'translation', 'readMore', 'modals']), async (req, res) => {
-      try {
-        const { room_id } = req.params;
+    app.get('/rooms/:room_id', optionalAuth,
+      addI18n(['roomDashboard', 'blockList', 'translation', 'readMore', 'voteControls']), async (req, res) => {
+        try {
+          const { room_id } = req.params;
 
-        const lang = res.locals.lang;
+          const lang = res.locals.lang;
 
-        const roomMetadataRaw = await getRoomMetadata(room_id, lang);
+          const roomMetadataRaw = await getRoomMetadata(room_id, lang);
 
-        const roomMetadata = {
-          ...roomMetadataRaw,
-          displayName:
-            roomMetadataRaw?.name_i18n?.get?.(lang) || roomMetadataRaw?.name_i18n?.[lang] || roomMetadataRaw?.name,
-          displayDescription:
-            roomMetadataRaw?.description_i18n?.get?.(lang) || roomMetadataRaw?.description_i18n?.[lang] || roomMetadataRaw?.description
-        };
+          const roomMetadata = {
+            ...roomMetadataRaw,
+            displayName:
+              roomMetadataRaw?.name_i18n?.get?.(lang) || roomMetadataRaw?.name_i18n?.[lang] || roomMetadataRaw?.name,
+            displayDescription:
+              roomMetadataRaw?.description_i18n?.get?.(lang) || roomMetadataRaw?.description_i18n?.[lang] || roomMetadataRaw?.description
+          };
 
-        let isStarred = false;
-        if (req.user) {
-          const dbUser = await findUserById(req.user.id);
-          isStarred = dbUser?.starredRooms?.includes(room_id);
+          let isStarred = false;
+          if (req.user) {
+            const dbUser = await findUserById(req.user.id);
+            isStarred = dbUser?.starredRooms?.includes(room_id);
+          }
+
+          const preferredLang = req.query.lang
+            || req.user?.preferredLang
+            || (req.acceptsLanguages()[0] || 'en').split('-')[0];
+
+          const userId = req.user?.id || null;
+
+          const { blocks: lockedBlocks, period: lockedPeriod } =
+            await getBlocksByRoomWithFallback({
+              roomId: room_id,
+              userId,
+              status: 'locked',
+              limit: 20,
+              preferredLang
+            });
+
+          const { blocks: inProgressBlocks, period: inProgressPeriod } =
+            await getBlocksByRoomWithFallback({
+              roomId: room_id,
+              userId,
+              status: 'in-progress',
+              limit: 20,
+              preferredLang
+            });
+
+          // Render markdown…
+          const lightLocked = lockedBlocks.map(
+            b => toBlockPreviewDTO(b, {
+              userId
+            })
+          );
+          const lightInProg = inProgressBlocks.map(
+            b => toBlockPreviewDTO(b, {
+              userId
+            })
+          )
+
+          const date = DateHelper.currentDateI18n(res.locals.lang || 'en', 'Europe/London');
+
+          const showInProgressTab = (inProgressPeriod === 1 && inProgressBlocks.length > 0);
+          const showLockedTab = (lockedBlocks.length > 0);
+          const useTabs = (showLockedTab ? 1 : 0) + (showInProgressTab ? 1 : 0) >= 2;
+
+          res.render('rooms/blocks-dashboard', {
+            room_id,
+            title: res.locals.t('roomDashboard.meta.title', { roomName: roomMetadata.displayName || roomMetadata.name }),
+            description: res.locals.t('roomDashboard.meta.description', { roomName: roomMetadata.displayName || roomMetadata.name }),
+            lockedBlocks: lightLocked,
+            inProgressBlocks: lightInProg,
+            lockedPeriod,
+            inProgressPeriod,
+            showInProgressTab,
+            showLockedTab,
+            useTabs,
+            user: req.user,
+            roomMetadata,
+            isStarred,
+            date
+          });
+        } catch (error) {
+          res.status(500).send('Error loading room dashboard.');
         }
-
-        const preferredLang = req.query.lang
-          || req.user?.preferredLang
-          || (req.acceptsLanguages()[0] || 'en').split('-')[0];
-
-        const userId = req.user?.id || null;
-
-        const { blocks: lockedBlocks, period: lockedPeriod } =
-          await getBlocksByRoomWithFallback({
-            roomId: room_id,
-            userId,
-            status: 'locked',
-            limit: 20,
-            preferredLang
-          });
-
-        const { blocks: inProgressBlocks, period: inProgressPeriod } =
-          await getBlocksByRoomWithFallback({
-            roomId: room_id,
-            userId,
-            status: 'in-progress',
-            limit: 20,
-            preferredLang
-          });
-
-        // Render markdown…
-        const lightLocked = lockedBlocks.map(
-          b => toBlockPreviewDTO(b, {
-            userId
-          })
-        );
-        const lightInProg = inProgressBlocks.map(
-          b => toBlockPreviewDTO(b, {
-            userId
-          })
-        )
-
-        const date = DateHelper.currentDateI18n(res.locals.lang || 'en', 'Europe/London');
-
-        const showInProgressTab = (inProgressPeriod === 1 && inProgressBlocks.length > 0);
-        const showLockedTab = (lockedBlocks.length > 0);
-        const useTabs = (showLockedTab ? 1 : 0) + (showInProgressTab ? 1 : 0) >= 2;
-
-        res.render('rooms/blocks-dashboard', {
-          room_id,
-          title: res.locals.t('roomDashboard.meta.title', { roomName: roomMetadata.displayName || roomMetadata.name }),
-          description: res.locals.t('roomDashboard.meta.description', { roomName: roomMetadata.displayName || roomMetadata.name }),
-          lockedBlocks: lightLocked,
-          inProgressBlocks: lightInProg,
-          lockedPeriod,
-          inProgressPeriod,
-          showInProgressTab,
-          showLockedTab,
-          useTabs,
-          user: req.user,
-          roomMetadata,
-          isStarred,
-          date
-        });
-      } catch (error) {
-        res.status(500).send('Error loading room dashboard.');
-      }
-    });
+      });
 
     app.get('/about', optionalAuth, addI18n(['about']), async (req, res) => {
       const { t } = res.locals;
@@ -533,7 +534,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       })
     })
 
-    app.get('/', optionalAuth, addI18n(['home', 'translation', 'readMore']), async (req, res) => {
+    app.get('/', optionalAuth, addI18n(['home', 'translation', 'readMore', 'voteControls']), async (req, res) => {
       try {
         const preferredLang = res.locals.lang; // ya decidido por middleware
         const userId = req.user?.id || null;
