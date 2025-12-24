@@ -23,6 +23,7 @@
     "share": {
       "title": "Comparte este bloque",
       "shareOn": "Compartir en:",
+      "nativeText": "Mira este bloque: {title}",
       "alt": {
         "facebook": "Logo de Facebook",
         "reddit": "Logo de Reddit",
