@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Reportar contenido inapropiado",
+    "fields": {
+      "reason": {
+        "label": "Motivo",
+        "options": {
+          "spam": "Spam",
+          "offensive": "Ofensivo (lenguaje de odio o insultos)",
+          "inappropriate": "Inapropiado (desnudez, contenido gráfico, etc.)",
+          "other": "Otro"
+        }
+      },
+      "details": {
+        "label": "Detalles (opcional)",
+        "placeholder": "Describe lo que viste…"
+      }
+    },
+    "buttons": {
+      "submit": "Enviar reporte",
+      "cancel": "Cancelar"
+    },
+    "toasts": {
+      "success": "¡Reporte enviado, gracias!",
+      "failed": "No se pudo enviar el reporte."
+    }
+  }
+}

@@ -20,7 +20,7 @@ function canonicalBlockPath(doc) {
 router.get(
   '/rooms/:room_id/blocks/:block_id',
   optionalAuth,
-  addI18n(['blockView', 'blockTags', 'blockCommon']),
+  addI18n(['blockView', 'blockTags', 'blockCommon', 'flagModal']),
   async (req, res) => {
     try {
       const { room_id, block_id } = req.params;

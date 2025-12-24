@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Report Inappropriate Content",
+    "fields": {
+      "reason": {
+        "label": "Reason",
+        "options": {
+          "spam": "Spam",
+          "offensive": "Offensive (hateful language or slurs)",
+          "inappropriate": "Inappropriate (nudity, graphic content, etc.)",
+          "other": "Other"
+        }
+      },
+      "details": {
+        "label": "Details (optional)",
+        "placeholder": "Describe what you saw…"
+      }
+    },
+    "buttons": {
+      "submit": "Submit Report",
+      "cancel": "Cancel"
+    },
+    "toasts": {
+      "success": "Report submitted—thank you!",
+      "failed": "Failed to submit report."
+    }
+  }
+}
