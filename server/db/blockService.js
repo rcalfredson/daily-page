@@ -741,7 +741,7 @@ export const saveVote = async (blockId, userId, action) => {
       const existingVote = block.votes[existingVoteIndex];
 
       if (existingVote.type === action) {
-        throw new Error('User has already voted in this direction');
+        return block.voteCount; // no-op; user already voted in this direction.
       }
 
       // Reverse vote direction

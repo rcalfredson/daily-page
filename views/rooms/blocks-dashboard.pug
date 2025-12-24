@@ -8,6 +8,7 @@ block nav
   include ../navLinks
 
 block append scripts
+  script(src='/js/toast-utils.js')
   script(src="/js/vote-controls.js")
   script(src='/js/modal.js')
   script(src="/js/block-tabs.js")
@@ -19,6 +20,7 @@ block append head
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel="stylesheet" href="/css/blocks-tabs.css")
   link(rel="stylesheet" href="/css/vote-controls.css")
+  link(rel='stylesheet' href='/css/toast.css')
   link(rel="stylesheet" href="/css/modal.css")
   link(rel="stylesheet" href="/css/star-room.css")
   link(rel='stylesheet' href='/css/translation-attribution.css')
@@ -102,3 +104,4 @@ append content
 
     else
       p= t('roomDashboard.empty.noBlocks')
+  #toast-container

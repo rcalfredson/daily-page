@@ -1,7 +1,8 @@
 import express from 'express';
 import Block from '../db/models/Block.js';
 import { findByTagWithLangPref, getAllTagsWithCounts, getTagTrendData } from '../db/blockService.js';
-import { addI18n } from '../services/i18n.js'
+import optionalAuth from '../middleware/optionalAuth.js';
+import { addI18n } from '../services/i18n.js';
 import { toBlockPreviewDTO } from '../utils/block.js';
 
 const router = express.Router();
@@ -61,8 +62,8 @@ router.get('/tags', addI18n(['tags']), async (req, res) => {
 });
 
 // Página específica para mostrar bloques por etiqueta
-router.get('/tags/:tagName',
-  addI18n(['tags', 'translation', 'readMore']),
+router.get('/tags/:tagName', optionalAuth,
+  addI18n(['tags', 'translation', 'readMore', 'voteControls']),
   async (req, res) => {
     try {
       const { t } = res.locals;
