@@ -75,7 +75,9 @@ block content
               button#delete-block-btn.delete-btn(
                 data-block-id=block._id
               )= t('blockView.buttons.deleteBlock')
-            button#share-btn.share-btn #{t('blockView.buttons.share')} ✨
+            button#share-btn.share-btn(
+              data-native-text=t('blockView.share.nativeText', { title: block.title })
+            )= t('blockView.buttons.share') + ' ✨'
             button#flag-block-btn
               i.fa.fa-flag(aria-hidden="true")
               | #{t('blockView.buttons.flagContent')}
@@ -103,7 +105,9 @@ block content
   include ../partials/_block_delete_confirm
   include ../partials/_flag_modal
   #toast-container
-  div#share-modal.share-modal.hidden
+  div#share-modal.share-modal.hidden(
+    data-native-text=t('blockView.share.nativeText', { title: block.title })
+  )
     div.share-modal-content
       span.share-close-btn &times;
       h2= t('blockView.share.title')

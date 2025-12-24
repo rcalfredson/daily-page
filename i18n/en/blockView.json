@@ -23,6 +23,7 @@
     "share": {
       "title": "Share this Block",
       "shareOn": "Share on:",
+      "nativeText": "Check out this block: {title}",
       "alt": {
         "facebook": "Facebook logo",
         "reddit": "Reddit logo",
