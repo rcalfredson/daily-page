@@ -1,19 +1,25 @@
 //- Modal for Flagging Content
-#flag-modal.modal.hidden
+#flag-modal.modal.hidden(
+  data-toast-success=t('flagModal.toasts.success')
+  data-toast-failed=t('flagModal.toasts.failed')
+)
   .modal-content
     span.modal-close &times;
-    h2 Report Inappropriate Content
+    h2= t('flagModal.title')
     form#flag-form
       .form-group
-        label(for="flag-reason") Reason
+        label(for="flag-reason")= t('flagModal.fields.reason.label')
         select#flag-reason
-          option(value="spam") Spam
-          option(value="offensive") Offensive (hateful language or slurs)
-          option(value="inappropriate") Inappropriate (nudity, graphic content, etc.)
-          option(value="other") Other
+          option(value="spam")= t('flagModal.fields.reason.options.spam')
+          option(value="offensive")= t('flagModal.fields.reason.options.offensive')
+          option(value="inappropriate")= t('flagModal.fields.reason.options.inappropriate')
+          option(value="other")= t('flagModal.fields.reason.options.other')
       .form-group
-        label(for="flag-description") Details (optional)
-        textarea#flag-description(rows="3" placeholder="Describe what you saw…")
+        label(for="flag-description")= t('flagModal.fields.details.label')
+        textarea#flag-description(
+          rows="3"
+          placeholder=t('flagModal.fields.details.placeholder')
+        )
       .modal-buttons
-        button#flag-confirm-btn.confirm(type="button") Submit Report
-        button#flag-cancel-btn.cancel(type="button") Cancel
+        button#flag-confirm-btn.confirm(type="button")= t('flagModal.buttons.submit')
+        button#flag-cancel-btn.cancel(type="button")= t('flagModal.buttons.cancel')
