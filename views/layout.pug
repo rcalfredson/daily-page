@@ -1,5 +1,6 @@
 doctype html
-html(lang=lang || 'en')
+- const htmlLang = uiLang || lang || 'en';
+html(lang=htmlLang)
   head
     block head
       title= title
@@ -19,7 +20,7 @@ html(lang=lang || 'en')
       script(defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js")
       script(defer src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js")
       script#i18n-lang(type='application/json').
-        !{JSON.stringify(lang || 'en')}
+        !{JSON.stringify(htmlLang)}
       include partials/_i18n_exports
   body(data-is-logged-in=user ? "true" : "false" data-user-id=user ? user.id : null)
     div.auth-wrapper
