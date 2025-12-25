@@ -8,6 +8,7 @@ import { getRoomMetadata } from '../db/roomService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { addI18n } from '../services/i18n.js';
+import { getPreferredUiLang } from '../services/localization.js';
 import { canManageBlock } from '../utils/block.js';
 import { withQuery } from '../utils/urls.js';
 
@@ -44,11 +45,12 @@ router.get(
         if (target) {
           const targetPath = canonicalBlockPath(target);
 
-          const ui = req.query?.ui || uiLang;
+          const ui = getPreferredUiLang(req);
 
           if (req.path !== targetPath) {
-            const redirectQuery = { ...req.query, ui };
+            const redirectQuery = { ...req.query };
             delete redirectQuery.lang;
+            redirectQuery.ui = ui;
             return res.redirect(302, withQuery(targetPath, redirectQuery));
           }
         }

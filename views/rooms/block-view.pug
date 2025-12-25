@@ -55,11 +55,10 @@ block content
                 span.flag= flagEmoji[lang] || '🏳️'
                 | #{lang}
             ul.lang-list
-              - const uiQS = uiLang ? `&ui=${uiLang}` : '';
               each tr in translations
                 if tr.lang !== lang
                   li
-                    a.pill(href=`/rooms/${room_id}/blocks/${tr._id}?lang=${tr.lang}${uiQS}`)
+                    a.pill(href=`/rooms/${room_id}/blocks/${tr._id}`)
                       span.flag= flagEmoji[tr.lang] || '🏳️'
                       | #{tr.lang}
       .title-section
