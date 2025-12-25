@@ -34,12 +34,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (blockId) {
       setupModal('delete-modal', 'delete-block-btn', async () => {
-        const res = await fetch(`/api/v1/blocks/${blockId}`, { method: 'DELETE' });
-        if (res.ok) {
-          showToast(toastSuccess, 'success');
-          setTimeout(() => window.location.href = redirectUrl, 1000);
-        } else {
-          showToast(toastFailed, 'error');
+        try {
+          const res = await fetch(`/api/v1/blocks/${blockId}`, { method: 'DELETE' });
+          if (res.ok) {
+            window.showToast?.(toastSuccess, 'success');
+            deleteModal.classList.add('hidden');
+            setTimeout(() => window.location.href = redirectUrl, 1000);
+          } else {
+            window.showToast?.(toastFailed, 'error');
+            deleteModal.classList.add('hidden');
+          }
+        } catch (err) {
+          console.error('Delete failed', err);
+          window.showToast?.(toastFailed, 'error');
+          deleteModal.classList.add('hidden');
         }
       });
     }
