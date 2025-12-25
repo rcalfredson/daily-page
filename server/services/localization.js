@@ -29,29 +29,37 @@ const supportedLanguages = [
 ];
 const defaultLanguage = 'en';
 
-function isBlockContentRoute(req) {
+function isLangContentOnlyRoute(req) {
   // only the canonical view route
   return /^\/rooms\/[^/]+\/blocks\/[^/]+\/?$/.test(req.path);
 }
 
-function isSupported(lang) {
-  return !!lang && supportedLanguages.includes(lang);
+function pickSupportedLang(raw, supported) {
+  if (!raw) return null;
+
+  // If array (e.g. ?ui=en&ui=es), pick the first supported
+  if (Array.isArray(raw)) {
+    return raw.find((v) => supported.includes(v)) || null;
+  }
+
+  // If string, trim and accept if supported
+  if (typeof raw === 'string') {
+    const v = raw.trim();
+    return supported.includes(v) ? v : null;
+  }
+
+  return null;
 }
 
-export function getPreferredUiLang(req, {
-  supported = supportedLanguages,
-  fallback = defaultLanguage
-} = {}) {
-  const ui = req.query?.ui;
-  if (ui && supported.includes(ui)) return ui;
+export function getPreferredUiLang(req, { supported = supportedLanguages, fallback = defaultLanguage } = {}) {
+  const ui = pickSupportedLang(req.query?.ui, supported);
+  if (ui) return ui;
 
-  // Cookie preference (if previously set)
-  const cookieUi = req.cookies?.ui;
-  if (cookieUi && supported.includes(cookieUi)) return cookieUi;
-  
-  // Back-compat: old behavior (?lang= used to mean UI) ONLY off block routes
-  const legacy = req.query?.lang;
-  if (!isBlockContentRoute(req) && legacy && supported.includes(legacy)) return legacy;
+  const cookieUi = pickSupportedLang(req.cookies?.ui, supported);
+  if (cookieUi) return cookieUi;
+
+  const legacy = pickSupportedLang(req.query?.lang, supported);
+  if (!isLangContentOnlyRoute(req) && legacy) return legacy;
 
   const best = req.acceptsLanguages(supported);
   return best || fallback;
@@ -62,15 +70,13 @@ export default function setLangMiddleware(req, res, next) {
   res.locals.uiLang = uiLang;
   req.uiLang = uiLang;
 
-  // Transitional alias so your existing initI18n/layout don't explode:
   res.locals.lang = uiLang;
   req.lang = uiLang;
 
-  // If user explicitly set UI via query param, persist it.
-  const uiParam = req.query?.ui;
-  if (isSupported(uiParam) && uiParam !== req.cookies?.ui) {
+  const uiParam = pickSupportedLang(req.query?.ui, supportedLanguages);
+  if (uiParam && uiParam !== req.cookies?.ui) {
     res.cookie('ui', uiParam, {
-      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+      maxAge: 1000 * 60 * 60 * 24 * 365,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
     });
