@@ -38,16 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save your vote');
+        throw new Error(failMsg);
       }
 
       const data = await response.json();
       voteCountElement.textContent = data.voteCount;
 
       // Get the parent vote controls
-      const control = voteCountElement.closest(".vote-controls");
-      const upvoteButton = control.querySelector(".vote-arrow.up");
-      const downvoteButton = control.querySelector(".vote-arrow.down");
+      const container = voteCountElement.closest(".vote-controls");
+      const upvoteButton = container.querySelector(".vote-arrow.up");
+      const downvoteButton = container.querySelector(".vote-arrow.down");
 
       // Reset styles first
       upvoteButton.style.color = "";
