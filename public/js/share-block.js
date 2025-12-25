@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const blockTitleEl = document.querySelector('h1.block-title');
   const blockTitle = (blockTitleEl?.innerText || document.title).trim();
-  const currentURL = window.location.href;
+  const canonicalHref = document.querySelector('link[rel="canonical"]')?.href;
+  const currentURL = canonicalHref || (window.location.origin + window.location.pathname);
 
   const facebookLink = document.getElementById('share-facebook');
   const redditLink = document.getElementById('share-reddit');
