@@ -37,6 +37,7 @@ block append scripts
   script(src='/js/table-scroll-fade.js')
 
 block content
+  - const isRtl = ['ar','he','fa','ur'].includes(lang);
   - const flagEmoji = { en:'🇺🇸', es:'🇪🇸', fr:'🇫🇷', ru:'🇷🇺', id:'🇮🇩', de:'🇩🇪', it:'🇮🇹', pt:'🇵🇹', zh:'🇨🇳', ja:'🇯🇵', ko:'🇰🇷', ar:'🇸🇦', hi:'🇮🇳', tr:'🇹🇷', nl:'🇳🇱', sv:'🇸🇪', no:'🇳🇴', da:'🇩🇰', fi:'🇫🇮', pl:'🇵🇱', cs:'🇨🇿', el:'🇬🇷', he:'🇮🇱', th:'🇹🇭', vi:'🇻🇳' };
   include ../partials/_tag_section
   #block-page
@@ -82,7 +83,7 @@ block content
               | #{t('blockView.buttons.flagContent')}
 
     // Description block, read-only style
-    .block-description-card
+    .block-description-card(lang=lang dir=(isRtl ? 'rtl' : null))
       span.description-label= t('blockView.description.label')
       .description-body.collapsed
         - const noDesc = `<p><em>${t('blockView.description.none')}</em></p>`;
@@ -94,7 +95,7 @@ block content
         )= t('blockView.description.expand')
 
     // The main content, already rendered to HTML on the server
-    .block-content
+    .block-content(lang=lang dir=(isRtl ? 'rtl' : null))
       != block.contentHTML
     hr
     +tagSection(block.tags, false)
