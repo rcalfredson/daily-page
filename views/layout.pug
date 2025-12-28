@@ -4,6 +4,7 @@ html(lang=htmlLang)
   head
     block head
       title= title
+      meta(property='og:site_name' content=t('layout.siteName'))
       if description
         meta(name="description" content=description)
       if canonicalUrl
