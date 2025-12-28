@@ -2,13 +2,16 @@ import express from 'express';
 
 import { config } from '../../config/config.js';
 import optionalAuth from '../middleware/optionalAuth.js';
-import { getBlockById } from '../db/blockService.js';
+import { getBlockById, getTranslationByGroupAndLang } from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { getPeerIDs } from '../db/sessionService.js';
 import { addI18n } from '../services/i18n.js';
+import { getUiQueryLang } from '../services/localization.js';
 import { generateAnonymousId } from '../utils/anonymousId.js';
 import { canManageBlock } from '../utils/block.js';
+import { canonicalBlockEditPath } from '../utils/canonical.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
+import { withQuery } from '../utils/urls.js';
 
 const port = config.port || 3000;
 
@@ -38,34 +41,68 @@ router.get(
   addI18n(['blockEditor', 'blockTags', 'blockCommon']),
   async (req, res) => {
     const { room_id, block_id } = req.params;
-    const { t, lang } = res.locals;
+    const { t } = res.locals;
     const user = req.user;
+
     const editTokens = req.cookies.edit_tokens
       ? JSON.parse(req.cookies.edit_tokens)
       : [];
 
     try {
-      // Fetch block metadata
       const block = await getBlockById(block_id);
       if (!block || block.roomId !== room_id) {
-        return res
-          .status(404)
-          .render('error', {
-            message: t('blockEditor.errors.notFound')
-          });
+        return res.status(404).render('error', {
+          message: t('blockEditor.errors.notFound')
+        });
       }
+
+      // Translation selector (legacy): ?lang=
+      const requestedLang = req.query?.lang;
+
+      // If ?lang= is present, we never keep it on canonical URLs.
+      if (requestedLang) {
+        let target = null;
+
+        // Only try to resolve translation if requestedLang differs
+        if (requestedLang !== block.lang) {
+          target = await getTranslationByGroupAndLang(block.groupId, requestedLang);
+        }
+
+        const redirectQuery = { ...req.query };
+        delete redirectQuery.lang;
+
+        const uiFromQuery = getUiQueryLang(req);
+        if (uiFromQuery) redirectQuery.ui = uiFromQuery;
+        else delete redirectQuery.ui;
+
+        if (target) {
+          const targetPath = canonicalBlockEditPath(target);
+          if (req.path !== targetPath) {
+            return res.redirect(302, withQuery(targetPath, redirectQuery));
+          }
+        } else {
+          // requestedLang missing/invalid OR equals block.lang:
+          // Redirect to same canonical edit URL but without ?lang=
+          const selfPath = canonicalBlockEditPath(block);
+          if (req.path !== selfPath || 'lang' in req.query) {
+            return res.redirect(302, withQuery(selfPath, redirectQuery));
+          }
+        }
+      }
+
+      // UI language (chrome)
+      const uiLang = res.locals.uiLang || res.locals.lang || 'en';
 
       const descriptionHTML = renderMarkdownContent(block.description);
 
-      const collaboratorId =
-        user
-          ? user.username
-          : (req.cookies.anonymousId || generateAnonymousId());
+      const collaboratorId = user
+        ? user.username
+        : (req.cookies.anonymousId || generateAnonymousId());
 
       if (!block.collaborators.includes(collaboratorId)) {
         block.collaborators.push(collaboratorId);
         await block.save();
-        // Si el usuario es anónimo, guardamos el id en cookie
+
         if (!user && !req.cookies.anonymousId) {
           res.cookie('anonymousId', collaboratorId, {
             maxAge: 24 * 60 * 60 * 1000
@@ -73,27 +110,25 @@ router.get(
         }
       }
 
-      // Fetch active peers for this block
       const peerIDs = await getPeerIDs(block_id);
 
-      // If the block is full, redirect to a "Full Block" page
       if (peerIDs.length >= 6) {
         return res.render('fullBlock', {
           block_title: block.title,
-          room_id,
+          room_id
         });
       }
 
-      // Pick one peer randomly to set as initialTargetPeerId
-      const initialTargetPeerId = peerIDs.length > 0
-        ? peerIDs[Math.floor(Math.random() * peerIDs.length)]
-        : '0';
+      const initialTargetPeerId =
+        peerIDs.length > 0
+          ? peerIDs[Math.floor(Math.random() * peerIDs.length)]
+          : '0';
 
-      // Room metadata localizado
-      const roomMetadata = await getRoomMetadata(room_id, lang || 'en');
+      // Room metadata localized to UI lang (chrome)
+      const roomMetadata = await getRoomMetadata(room_id, uiLang);
       const roomName = roomMetadata.displayName || roomMetadata.name;
 
-      // Título i18n
+      // Page title i18n
       const key = 'blockEditor.meta.title';
       const raw = t(key, { blockTitle: block.title });
       const pageTitle =
@@ -116,17 +151,19 @@ router.get(
         initialTargetPeerId,
         canManageBlock: canManageBlock(user, block, editTokens),
         backendURL: backendBaseUrl,
-        lang: lang || 'en',
+
+        // Make the split explicit:
+        uiLang,              // UI chrome language
+        lang: block.lang     // content language used by template wrappers (if you follow your block-view convention)
       });
     } catch (error) {
       console.error('Error loading block editor:', error.message);
-      res
-        .status(500)
-        .render('error', {
-          message: t('blockEditor.errors.loadFailed')
-        });
+      return res.status(500).render('error', {
+        message: t('blockEditor.errors.loadFailed')
+      });
     }
   }
 );
+
 
 export default router;

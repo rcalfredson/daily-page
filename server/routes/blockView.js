@@ -8,15 +8,12 @@ import { getRoomMetadata } from '../db/roomService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { addI18n } from '../services/i18n.js';
-import { getPreferredUiLang } from '../services/localization.js';
+import { getUiQueryLang } from '../services/localization.js';
 import { canManageBlock } from '../utils/block.js';
+import { canonicalBlockPath } from '../utils/canonical.js';
 import { withQuery } from '../utils/urls.js';
 
 const router = express.Router();
-
-function canonicalBlockPath(doc) {
-  return `/rooms/${doc.roomId}/blocks/${doc._id}`;
-}
 
 router.get(
   '/rooms/:room_id/blocks/:block_id',
@@ -45,12 +42,13 @@ router.get(
         if (target) {
           const targetPath = canonicalBlockPath(target);
 
-          const ui = getPreferredUiLang(req);
-
           if (req.path !== targetPath) {
             const redirectQuery = { ...req.query };
             delete redirectQuery.lang;
-            redirectQuery.ui = ui;
+
+            const uiFromQuery = getUiQueryLang(req);
+            if (uiFromQuery) redirectQuery.ui = uiFromQuery;
+            else delete redirectQuery.ui;
             return res.redirect(302, withQuery(targetPath, redirectQuery));
           }
         }

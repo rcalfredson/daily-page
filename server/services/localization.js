@@ -51,6 +51,10 @@ function pickSupportedLang(raw, supported) {
   return null;
 }
 
+export function getUiQueryLang(req, { supported = supportedLanguages } = {}) {
+  return pickSupportedLang(req.query?.ui, supported);
+}
+
 export function getPreferredUiLang(req, { supported = supportedLanguages, fallback = defaultLanguage } = {}) {
   const ui = pickSupportedLang(req.query?.ui, supported);
   if (ui) return ui;
