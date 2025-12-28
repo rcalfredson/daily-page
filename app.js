@@ -56,6 +56,7 @@ import {
 
 } from './server/db/roomService.js'
 import optionalAuth from './server/middleware/optionalAuth.js';
+import { addSeoLocals } from './server/middleware/seo.js';
 import { findUserById } from './server/db/userService.js';
 import { toBlockPreviewDTO } from './server/utils/block.js';
 
@@ -84,21 +85,22 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       },
     };
 
+    app.set('trust proxy', true);
+
     if (process.env.NODE_ENV === 'production') {
       app.set('view cache', true);
       app.use(compression());
       app.use((req, res, next) => {
-        if (req.headers['x-forwarded-proto'] !== 'https') {
-          // res.redirect(`https://${req.headers.host}${req.path}`);
-          next();
-        } else {
-          next();
+        if (!req.secure) {
+          // return res.redirect(301, `https://${req.get('host')}${req.originalUrl}`);
         }
+        next();
       });
     }
 
     app.use(cors(corsOptions));
     app.use(setLangMiddleware);
+    app.use(addSeoLocals);
     app.use(initI18n(['layout', 'nav', 'modals']));
     app.options('*', cors(corsOptions));
 
