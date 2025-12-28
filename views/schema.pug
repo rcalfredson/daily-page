@@ -2,6 +2,25 @@ script(type='application/ld+json').
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": "https://dailypage.org/#website",
     "name": "Daily Page",
-    "url": "https://dailypage.org/"
+    "alternateName": ["dailypage.org", "DailyPage"],
+    "url": "https://dailypage.org/",
+    "publisher": {
+      "@id": "https://dailypage.org/#organization"
+    }
+  }
+script(type='application/ld+json').
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://dailypage.org/#organization",
+    "name": "Daily Page",
+    "url": "https://dailypage.org/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://dailypage.org/assets/img/logo-512.png",
+      "width": 512,
+      "height": 512
+    }
   }
