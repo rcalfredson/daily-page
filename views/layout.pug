@@ -6,6 +6,8 @@ html(lang=htmlLang)
       title= title
       if description
         meta(name="description" content=description)
+      if canonicalUrl
+        link(rel="canonical" href=canonicalUrl)
       meta(name="viewport" content="width=device-width, initial-scale=1.0")
       link(rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css")
       link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet")
