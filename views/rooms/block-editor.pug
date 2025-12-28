@@ -13,86 +13,93 @@ block append head
 block content
   include ../partials/_tag_section
   #block-page.hide
-    .text-wrapper
-      .editor
-        #block-meta
-          p.room-info
-            | #{t('blockEditor.roomInfo.label')} 
-            a.room-link(href=`/rooms/${room_id}`)= roomName
-          h2#block-title-container
-            span#block-title= block.title
-            if canManageBlock
-              input#block-title-input.fade-out(
-                type='text',
-                value=block.title,
-                placeholder=t('blockEditor.title.placeholder')
-              )
-              button#edit-title-btn(data-tooltip=t('blockEditor.title.editTooltip'))
-                i(data-feather="edit")
-              .block-action-buttons
-                if block.status === 'in-progress'
-                  button#lock-block-btn= t('blockEditor.title.lock')
-                button#delete-block-btn.delete-btn(
-                  data-block-id=block._id
-                )= t('blockEditor.title.delete')
-
-          .block-description-card
-            // Subtle label for clarity
-            span.description-label= t('blockEditor.description.label')
-            // Edit button with tooltip; always accessible even if collapsed
-            if canManageBlock
-              button#edit-description-btn.icon-button.description-edit-button(
-                data-tooltip=t('blockEditor.description.editTooltip')
-              )
-                i(data-feather="edit")
-            
-            // The description content with fade-out effect if collapsed
-            .description-body.collapsed
+    - const contentLang = (block && block.lang) || 'en'
+    - const isRtl = ['ar','he','fa','ur'].includes(contentLang)
+    .editor-surface(lang=contentLang dir=(isRtl ? 'rtl' : null) data-content-lang=contentLang)
+      .text-wrapper
+        .editor
+          #block-meta
+            p.room-info
+              | #{t('blockEditor.roomInfo.label')} 
+              a.room-link(href=`/rooms/${room_id}`)= roomName
+            h2#block-title-container
+              span#block-title= block.title
               if canManageBlock
-                // Read view: if empty, display a fallback text
-                div#description-view!= descriptionHTML || `<p><em>${t('blockEditor.description.noDescriptionOwner')}</em></p>`
-                // Editing textarea (initially hidden) with placeholder for empty descriptions
-                textarea#description-edit.hidden(
-                  placeholder=t('blockEditor.description.placeholder')
-                )= block.description
-                // Save/Cancel buttons for editing mode
-                .edit-buttons.hidden
-                  button#save-description-btn= t('blockEditor.description.save')
-                  button#cancel-description-btn= t('blockEditor.description.cancel')
-              else
-                div#description-view!= descriptionHTML || `<p><em>${t('blockEditor.description.noDescriptionViewer')}</em></p>`
-            
-            // Expand/Collapse toggle at the bottom
-            .expand-toggle
-              span= t('blockEditor.description.expand')
+                input#block-title-input.fade-out(
+                  type='text',
+                  value=block.title,
+                  placeholder=t('blockEditor.title.placeholder'),
+                  lang=contentLang,
+                  dir=(isRtl ? 'rtl' : null)
+                )
+                button#edit-title-btn(data-tooltip=t('blockEditor.title.editTooltip'))
+                  i(data-feather="edit")
+                .block-action-buttons
+                  if block.status === 'in-progress'
+                    button#lock-block-btn= t('blockEditor.title.lock')
+                  button#delete-block-btn.delete-btn(
+                    data-block-id=block._id
+                  )= t('blockEditor.title.delete')
 
-          +tagSection(block.tags, canManageBlock)
-        .header
-          p.sharing-link
-            a.link#myLink(target="_blank")= t('blockEditor.sharing.label')
-            span#myLinkInput.hidden
-            span.copy-container(data-tooltip=t('blockEditor.sharing.copyTooltip'))
-              i(data-feather="copy" class="copy-link" color="rgb(17, 117, 232)")
-            span.copy-status= t('blockEditor.sharing.copied')
-          #sync-infobox
-        .toolbar.sticky
-          button#open-insert-img-btn(data-tooltip=t('blockEditor.toolbar.insertImage'))
-            i(data-feather="image")
-          div#insert-img-tooltip.hidden
-            form
-              input#img-url(
-                type="text"
-                placeholder=t('blockEditor.toolbar.insertImageUrlPlaceholder')
-              )
-              input#img-alt(
-                type="text"
-                placeholder=t('blockEditor.toolbar.insertImageAltPlaceholder')
-              )
-              div
-                button#insert-img-confirm(type="button")= t('blockEditor.toolbar.insertImageConfirm')
-                button#insert-img-cancel(type="button")= t('blockEditor.toolbar.insertImageCancel')
-        textarea#editor-content= block.content
-      p#peerId= t('blockEditor.peers.label')
+            .block-description-card
+              // Subtle label for clarity
+              span.description-label= t('blockEditor.description.label')
+              // Edit button with tooltip; always accessible even if collapsed
+              if canManageBlock
+                button#edit-description-btn.icon-button.description-edit-button(
+                  data-tooltip=t('blockEditor.description.editTooltip')
+                )
+                  i(data-feather="edit")
+              
+              // The description content with fade-out effect if collapsed
+              .description-body.collapsed
+                if canManageBlock
+                  // Read view: if empty, display a fallback text
+                  div#description-view!= descriptionHTML || `<p><em>${t('blockEditor.description.noDescriptionOwner')}</em></p>`
+                  // Editing textarea (initially hidden) with placeholder for empty descriptions
+                  textarea#description-edit.hidden(
+                    placeholder=t('blockEditor.description.placeholder')
+                    lang=contentLang
+                    dir=(isRtl ? 'rtl' : null)
+                  )= block.description
+                  // Save/Cancel buttons for editing mode
+                  .edit-buttons.hidden
+                    button#save-description-btn= t('blockEditor.description.save')
+                    button#cancel-description-btn= t('blockEditor.description.cancel')
+                else
+                  div#description-view!= descriptionHTML || `<p><em>${t('blockEditor.description.noDescriptionViewer')}</em></p>`
+              
+              // Expand/Collapse toggle at the bottom
+              .expand-toggle
+                span= t('blockEditor.description.expand')
+
+            +tagSection(block.tags, canManageBlock)
+          .header
+            p.sharing-link
+              a.link#myLink(target="_blank")= t('blockEditor.sharing.label')
+              span#myLinkInput.hidden
+              span.copy-container(data-tooltip=t('blockEditor.sharing.copyTooltip'))
+                i(data-feather="copy" class="copy-link" color="rgb(17, 117, 232)")
+              span.copy-status= t('blockEditor.sharing.copied')
+            #sync-infobox
+          .toolbar.sticky
+            button#open-insert-img-btn(data-tooltip=t('blockEditor.toolbar.insertImage'))
+              i(data-feather="image")
+            div#insert-img-tooltip.hidden
+              form
+                input#img-url(
+                  type="text"
+                  placeholder=t('blockEditor.toolbar.insertImageUrlPlaceholder')
+                )
+                input#img-alt(
+                  type="text"
+                  placeholder=t('blockEditor.toolbar.insertImageAltPlaceholder')
+                )
+                div
+                  button#insert-img-confirm(type="button")= t('blockEditor.toolbar.insertImageConfirm')
+                  button#insert-img-cancel(type="button")= t('blockEditor.toolbar.insertImageCancel')
+          textarea#editor-content(lang=contentLang dir=(isRtl ? 'rtl' : null))= block.content
+        p#peerId= t('blockEditor.peers.label')
     .video-modal.hide
       .video-bar
         i(data-feather="minus" class="minimize")
@@ -125,6 +132,8 @@ block scripts
       username: !{JSON.stringify(turnUsername || '')},
       credential: !{JSON.stringify(turnCredential || '')}
     };
+  script#content-lang(type='application/json').
+    !{JSON.stringify(contentLang)}
   script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
   script(src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js")
   script(src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js")
