@@ -55,7 +55,7 @@ router.get(
       }
 
       block.contentHTML = renderMarkdownContent(block.content);
-      const descriptionHTML = renderMarkdownContent(block.description);
+      const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
       const translations = await getTranslations(block.groupId);
 
       if (req.user) {
