@@ -40,18 +40,19 @@ function wrapTables(html) {
  * @param {{ mode?: 'full'|'preview', previewOpts?: PreviewOptions }} [opts]
  * @returns {string}
  */
-function renderCore(content, { mode = 'full', previewOpts = {} } = {}) {
+function renderCore(content, { mode = 'full', previewOpts = {}, emptyHtml } = {}) {
   const cleaned = content ? content.replace(/\u200B/g, '').trim() : '';
 
+  const defaultEmptyHtml = '<p><em>(No content yet)</em></p>';
+  const empty = (emptyHtml != null) ? emptyHtml : defaultEmptyHtml;
+
   if (mode === 'full') {
-    const html = cleaned
-      ? md.render(cleaned)
-      : '<p><em>(No content yet)</em></p>';
+    const html = cleaned ? md.render(cleaned) : empty;
     return wrapTables(html);
   }
 
   // mode === 'preview' → siempre objeto:
-  if (!cleaned) return { html: '<p><em>(No content yet)</em></p>', truncated: false };
+  if (!cleaned) return { html: empty, truncated: false };
 
   // mode === 'preview'
   const tokens = md.parse(cleaned, {});
@@ -201,8 +202,9 @@ function renderPreviewFromTokens(tokens, opts, mdInstance) {
  * @param {string} content
  * @returns {string}
  */
-export function renderMarkdownFull(content) {
-  return renderCore(content, { mode: 'full' });
+export function renderMarkdownFull(content, opts = {}) {
+  const { emptyHtml } = opts;
+  return renderCore(content, { mode: 'full', emptyHtml });
 }
 
 /**
@@ -221,6 +223,6 @@ export function renderMarkdownPreview(content, opts) {
  * @param {string} content
  * @returns {string}
  */
-export function renderMarkdownContent(content) {
-  return renderMarkdownFull(content);
+export function renderMarkdownContent(content, opts) {
+  return renderMarkdownFull(content, opts);
 }

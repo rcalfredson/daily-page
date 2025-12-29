@@ -93,7 +93,7 @@ router.get(
       // UI language (chrome)
       const uiLang = res.locals.uiLang || res.locals.lang || 'en';
 
-      const descriptionHTML = renderMarkdownContent(block.description);
+      const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
 
       const collaboratorId = user
         ? user.username
