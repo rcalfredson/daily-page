@@ -1,28 +1,43 @@
 const setupModal = (modalId, openBtnId, confirmCallback) => {
   const modal = document.getElementById(modalId);
   if (!modal) return;
+
   const openBtn = openBtnId && document.getElementById(openBtnId);
   const closeBtn = modal.querySelector('.modal-close');
   const cancelBtn = modal.querySelector('.cancel');
   const confirmBtn = confirmCallback && modal.querySelector('.confirm');
+
   const hide = () => modal.classList.add('hidden');
   const show = () => modal.classList.remove('hidden');
 
   openBtn?.addEventListener('click', show);
   closeBtn?.addEventListener('click', hide);
   cancelBtn?.addEventListener('click', hide);
-  confirmBtn && confirmBtn.addEventListener('click', confirmCallback);
 
-  // click fuera del contenido cierra el modal
+  if (confirmBtn && confirmCallback) {
+    confirmBtn.addEventListener('click', async () => {
+      // Guard against double submit
+      confirmBtn.disabled = true;
+      confirmBtn.setAttribute('aria-busy', 'true');
+      try {
+        await confirmCallback();
+      } finally {
+        confirmBtn.disabled = false;
+        confirmBtn.removeAttribute('aria-busy');
+      }
+    });
+  }
+
   modal.addEventListener('click', (e) => {
     if (e.target === modal) hide();
   });
+
+  return { show, hide };
 };
 
 window.setupModal = setupModal;
 
 document.addEventListener('DOMContentLoaded', () => {
-  // DELETE‑BLOCK modal
   const deleteModal = document.getElementById('delete-modal');
   const deleteBtn = document.getElementById('delete-block-btn');
 
@@ -38,21 +53,19 @@ document.addEventListener('DOMContentLoaded', () => {
           const res = await fetch(`/api/v1/blocks/${blockId}`, { method: 'DELETE' });
           if (res.ok) {
             window.showToast?.(toastSuccess, 'success');
-            deleteModal.classList.add('hidden');
-            setTimeout(() => window.location.href = redirectUrl, 1000);
+            setTimeout(() => (window.location.href = redirectUrl), 1000);
           } else {
             window.showToast?.(toastFailed, 'error');
-            deleteModal.classList.add('hidden');
           }
         } catch (err) {
           console.error('Delete failed', err);
           window.showToast?.(toastFailed, 'error');
+        } finally {
           deleteModal.classList.add('hidden');
         }
       });
     }
   }
 
-  // LOGIN modal: solo configuro el cierre
   setupModal('login-modal');
 });
