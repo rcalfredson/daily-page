@@ -4,6 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
     console.warn('i18nT not available in editor.js');
   }
 
+  function getContentLang() {
+    const el = document.getElementById('content-lang');
+    if (!el) return null;
+    try { return JSON.parse(el.textContent); } catch { return null; }
+  }
+
+  const contentLang = getContentLang() || document.documentElement.lang || 'en';
+
   const toolbar = document.querySelector('.toolbar.sticky');
   const editor = document.querySelector('.EasyMDEContainer');
   const buttonsWithTooltips = document.querySelectorAll('[data-tooltip]');
@@ -28,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const editorTop = editor.getBoundingClientRect().top + scrollTop;
 
       // Aplicar posición absoluta si el editor está fuera de vista y enfocado
-      if (scrollTop > editorTop && document.activeElement === editor) {
+      const isEditorFocused = editor && editor.contains(document.activeElement);
+      if (scrollTop > editorTop && isEditorFocused) {
         toolbar.style.position = 'absolute';
         toolbar.style.top = `${scrollTop}px`;
       } else {
@@ -42,8 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', updateToolbarPosition);
 
     // Manejar focus/blur del editor
-    editor.addEventListener('focus', updateToolbarPosition);
-    editor.addEventListener('blur', () => {
+    editor.addEventListener('focusin', updateToolbarPosition);
+    editor.addEventListener('focusout', () => {
       toolbar.style.position = ''; // Restablecer a predeterminado
       toolbar.style.top = '';      // Restablecer a predeterminado
     });
@@ -96,7 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (translatedTitle && translatedTitle !== 'blockEditor.meta.title') {
         document.title = translatedTitle;
       } else {
-        document.title = `Edit Block - ${newTitle}`;
+        const fallback = (typeof window.i18nT === 'function')
+          ? i18nT('blockEditor.meta.titleFallback')
+          : null;
+
+        document.title = (fallback && fallback !== 'blockEditor.meta.titleFallback')
+          ? `${fallback} - ${newTitle}`
+          : `Edit Block - ${newTitle}`;
       }
 
       updateTitleBackend(newTitle);
@@ -106,6 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateTitleBackend(newTitle) {
+    if (typeof block_id === 'undefined') {
+      console.warn('block_id not defined; title updates will fail.');
+      return;
+    }
+
     fetch(`/api/v1/blocks/${block_id}/metadata`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -121,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
               msg = maybe;
             }
           }
-          alert(msg);
+          showToast(msg);
         }
       })
       .catch(err => console.error('Failed to update title:', err));
