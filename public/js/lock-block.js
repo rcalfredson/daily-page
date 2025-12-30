@@ -5,8 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const lockConfirmBtn = document.getElementById('lock-confirm-btn');
   const lockCancelBtn = document.getElementById('lock-cancel-btn');
 
-  if (typeof window.i18nT !== 'function') {
-    console.warn('i18nT not available in lock-block.js');
+  const t =
+    typeof window.i18nT === 'function'
+      ? window.i18nT
+      : (key) => key;
+
+  function toast(kind, key, fallback) {
+    const msg = t(key);
+    const finalMsg = (msg && msg !== key) ? msg : (fallback || key);
+    if (typeof window.showToast === 'function') window.showToast(finalMsg, kind);
+    else alert(finalMsg);
   }
 
   if (lockBlockBtn && lockModal) {
@@ -24,56 +32,37 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (lockConfirmBtn && lockModal) {
-    // Confirmar el lock y llamar a la API
-    lockConfirmBtn.addEventListener('click', () => {
-      fetch(`/api/v1/blocks/${block_id}/metadata`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'locked' })
-      })
-        .then(response => {
-          lockModal.classList.add('hidden'); // Oculta el modal primero
+    lockConfirmBtn.addEventListener('click', async () => {
+      lockModal.classList.add('hidden');
 
-          // Success / error messages con i18n + fallback
-          let successMsg = 'Block locked successfully.';
-          let errorMsg = 'Error locking block.';
+      if (typeof block_id === 'undefined') {
+        console.warn('block_id not defined; lock will fail.');
+        toast('error', 'blockEditor.lockModal.errorToast', 'Error locking block.');
+        return;
+      }
 
-          if (typeof window.i18nT === 'function') {
-            const maybeSuccess = i18nT('blockEditor.lockModal.successToast');
-            const maybeError = i18nT('blockEditor.lockModal.errorToast');
+      try {
+        const res = await fetch(`/api/v1/blocks/${block_id}/metadata`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'locked' })
+        });
 
-            if (maybeSuccess && maybeSuccess !== 'blockEditor.lockModal.successToast') {
-              successMsg = maybeSuccess;
-            }
-            if (maybeError && maybeError !== 'blockEditor.lockModal.errorToast') {
-              errorMsg = maybeError;
-            }
-          }
+        if (res.ok) {
+          toast('success', 'blockEditor.lockModal.successToast', 'Block locked successfully.');
 
-          if (response.ok) {
-            showToast(successMsg, 'success');
-            // Recarga o redirige
+          if (typeof room_id !== 'undefined') {
             setTimeout(() => {
               window.location.href = `/rooms/${room_id}/blocks/${block_id}`;
             }, 1500);
-          } else {
-            showToast(errorMsg, 'error');
           }
-        })
-        .catch(err => {
-          console.error('Error locking block:', err);
-          lockModal.classList.add('hidden');
-
-          let errorMsg = 'Error locking block.';
-          if (typeof window.i18nT === 'function') {
-            const maybeError = i18nT('blockEditor.lockModal.errorToast');
-            if (maybeError && maybeError !== 'blockEditor.lockModal.errorToast') {
-              errorMsg = maybeError;
-            }
-          }
-
-          showToast(errorMsg, 'error');
-        });
+        } else {
+          toast('error', 'blockEditor.lockModal.errorToast', 'Error locking block.');
+        }
+      } catch (err) {
+        console.error('Error locking block:', err);
+        toast('error', 'blockEditor.lockModal.errorToast', 'Error locking block.');
+      }
     });
   }
 });
