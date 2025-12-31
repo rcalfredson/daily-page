@@ -30,8 +30,8 @@ const supportedLanguages = [
 const defaultLanguage = 'en';
 
 function isLangContentOnlyRoute(req) {
-  // only the canonical view route
-  return /^\/rooms\/[^/]+\/blocks\/[^/]+\/?$/.test(req.path);
+  // canonical block routes where ?lang= is content-language, not UI
+  return /^\/rooms\/[^/]+\/blocks\/[^/]+(\/edit)?\/?$/.test(req.path);
 }
 
 function pickSupportedLang(raw, supported) {
