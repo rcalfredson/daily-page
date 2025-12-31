@@ -29,11 +29,6 @@ const supportedLanguages = [
 ];
 const defaultLanguage = 'en';
 
-function isLangContentOnlyRoute(req) {
-  // canonical block routes where ?lang= is content-language, not UI
-  return /^\/rooms\/[^/]+\/blocks\/[^/]+(\/edit)?\/?$/.test(req.path);
-}
-
 function pickSupportedLang(raw, supported) {
   if (!raw) return null;
 
@@ -61,9 +56,6 @@ export function getPreferredUiLang(req, { supported = supportedLanguages, fallba
 
   const cookieUi = pickSupportedLang(req.cookies?.ui, supported);
   if (cookieUi) return cookieUi;
-
-  const legacy = pickSupportedLang(req.query?.lang, supported);
-  if (!isLangContentOnlyRoute(req) && legacy) return legacy;
 
   const best = req.acceptsLanguages(supported);
   return best || fallback;
