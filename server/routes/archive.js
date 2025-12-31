@@ -19,14 +19,21 @@ const router = express.Router();
 router.get('/archive', optionalAuth, addI18n(['archive']), async (req, res) => {
   try {
     const yearMonthCombos = await getAllBlockYearMonthCombos();
-    const { t, lang } = res.locals;
+
+    const { t } = res.locals;
+    const uiLang = res.locals.uiLang || res.locals.lang || 'en';
+
     const description = t('archive.meta.description');
 
     res.render('archive/calendar-index', {
       title: t('archive.meta.title'),
       description,
       yearMonthCombos,
-      monthName: (m) => DateHelper.monthName(m, lang || 'en'),
+
+      // Month names should follow UI chrome language
+      monthName: (m) => DateHelper.monthName(m, uiLang),
+
+      uiLang,
       user: req.user || null,
     });
   } catch (error) {
