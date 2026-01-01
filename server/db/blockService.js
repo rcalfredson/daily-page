@@ -142,23 +142,51 @@ export async function getFeaturedBlockWithFallback(options = {}) {
   return { featuredBlock: blocks[0] || null, period };
 }
 
-export async function getTopBlocksByTimeframe(days = null, limit = 20, roomId = null, preferredLang = 'en') {
+export async function getTopBlocksByTimeframe(
+  days = null,
+  limit = 20,
+  roomId = null,
+  preferredLangOrOpts = 'en'
+) {
+  const preferredContentLang =
+    typeof preferredLangOrOpts === 'string'
+      ? preferredLangOrOpts
+      : (preferredLangOrOpts?.preferredContentLang
+        || preferredLangOrOpts?.preferredLang
+        || 'en');
+
   return await cache.get(
-    `top-blocks-timeframe-${days || 'all'}-${limit}-${roomId || 'global'}-${preferredLang}`,
+    `top-blocks-timeframe-${days || 'all'}-${limit}-${roomId || 'global'}-${preferredContentLang}`,
     async () => {
       const start = days ? new Date(Date.now() - days * 24 * 60 * 60 * 1000) : new Date(0);
       const end = new Date();
+
       if (roomId) {
-        // Reuse room helper
-        return findByRoomWithLangPref({ roomId, preferredLang, startDate: start, endDate: end, sortBy: 'voteCount', limit });
+        return findByRoomWithLangPref({
+          roomId,
+          // preferredLang here means preferred *content* language
+          // for choosing a translation variant in lists.
+          preferredLang: preferredContentLang,
+          startDate: start,
+          endDate: end,
+          sortBy: 'voteCount',
+          limit
+        });
       }
-      // Global best-of
-      return findTopGlobalWithLangPref({ preferredLang, lockedOnly: false, limit, startDate: start, endDate: end });
+
+      return findTopGlobalWithLangPref({
+        preferredLang: preferredContentLang,
+        lockedOnly: false,
+        limit,
+        startDate: start,
+        endDate: end
+      });
     },
     [],
     CACHE_TTL
   );
 }
+
 
 export async function getFeaturedRoomWithFallback() {
   return await cache.get(
