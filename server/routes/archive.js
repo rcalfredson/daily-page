@@ -54,7 +54,6 @@ router.get(
     const uiLang = res.locals.uiLang || res.locals.lang || 'en';
     // For list selection, default content preference to UI language for now.
     const preferredContentLang = uiLang;
-    const uiFromQuery = getUiQueryLang(req);
 
     const userId = req.user?.id || null;
 
@@ -97,7 +96,6 @@ router.get(
         roomMetadata: { ...roomMetadata, roomName },
         uiLang,
         preferredContentLang,
-        uiFromQuery,
         user: req.user || null,
       });
     } catch (error) {
