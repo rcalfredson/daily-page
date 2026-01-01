@@ -1,6 +1,7 @@
 import express from 'express';
 import DateHelper from '../../lib/dateHelper.js';
 import { addI18n } from '../services/i18n.js';
+import { getUiQueryLang } from '../services/localization.js';
 import { chooseActiveBestOfTab } from '../utils/bestOf.js'
 import { toBlockPreviewDTO } from '../utils/block.js'
 import { getMonthNav, getDateNav } from '../utils/archiveNav.js';
@@ -53,6 +54,7 @@ router.get(
     const uiLang = res.locals.uiLang || res.locals.lang || 'en';
     // For list selection, default content preference to UI language for now.
     const preferredContentLang = uiLang;
+    const uiFromQuery = getUiQueryLang(req);
 
     const userId = req.user?.id || null;
 
@@ -68,7 +70,7 @@ router.get(
       ]);
 
       const top24hDTO = top24h.map(b => toBlockPreviewDTO(b, { userId }));
-      const top7dDTO  = top7d.map(b => toBlockPreviewDTO(b, { userId }));
+      const top7dDTO = top7d.map(b => toBlockPreviewDTO(b, { userId }));
       const top30dDTO = top30d.map(b => toBlockPreviewDTO(b, { userId }));
       const topAllDTO = topAll.map(b => toBlockPreviewDTO(b, { userId }));
 
@@ -95,7 +97,7 @@ router.get(
         roomMetadata: { ...roomMetadata, roomName },
         uiLang,
         preferredContentLang,
-
+        uiFromQuery,
         user: req.user || null,
       });
     } catch (error) {
