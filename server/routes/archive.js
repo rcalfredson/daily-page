@@ -1,7 +1,6 @@
 import express from 'express';
 import DateHelper from '../../lib/dateHelper.js';
 import { addI18n } from '../services/i18n.js';
-import { getUiQueryLang } from '../services/localization.js';
 import { chooseActiveBestOfTab } from '../utils/bestOf.js'
 import { toBlockPreviewDTO } from '../utils/block.js'
 import { getMonthNav, getDateNav } from '../utils/archiveNav.js';
