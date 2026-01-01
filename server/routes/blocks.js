@@ -3,10 +3,12 @@ import express from 'express';
 import { config } from '../../config/config.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
+import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
 import { getBlockById, getTranslationByGroupAndLang } from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { getPeerIDs } from '../db/sessionService.js';
 import { addI18n } from '../services/i18n.js';
+import { getUiLang } from '../services/localeContext.js';
 import { generateAnonymousId } from '../utils/anonymousId.js';
 import { canManageBlock } from '../utils/block.js';
 import { canonicalBlockEditPath } from '../utils/canonical.js';
@@ -19,19 +21,33 @@ const backendBaseUrl = `${(config.backendUrl || `http://localhost:${port}`)}`;
 const router = express.Router();
 
 // Render "Create New Block" page
-router.get('/rooms/:room_id/blocks/new', optionalAuth, addI18n(['createBlock', 'blockTags']), async (req, res) => {
-  const { room_id } = req.params;
-  const lang = res.locals.lang;
-  const roomMetadata = await getRoomMetadata(room_id, lang);
+router.get(
+  '/rooms/:room_id/blocks/new',
+  optionalAuth,
+  addI18n(['createBlock', 'blockTags']),
+  stripLegacyLang({ canonicalPath: (req) => `/rooms/${req.params.room_id}/blocks/new` }),
+  async (req, res) => {
+    try {
+      const { room_id } = req.params;
+      const { t } = res.locals;
 
-  res.render('rooms/create-block', {
-    title: res.locals.t('createBlock.meta.title'),
-    description: res.locals.t('createBlock.meta.description'),
-    room_id,
-    roomMetadata,
-    user: req.user,
-  });
-});
+      const uiLang = getUiLang(res);
+      const roomMetadata = await getRoomMetadata(room_id, uiLang);
+
+      res.render('rooms/create-block', {
+        title: t('createBlock.meta.title'),
+        description: t('createBlock.meta.description'),
+        room_id,
+        roomMetadata,
+        user: req.user || null,
+        uiLang,
+      });
+    } catch (error) {
+      console.error('Error loading create-block page:', error);
+      return res.status(500).render('error', { message: 'Error loading create-block page.' });
+    }
+  }
+);
 
 // Render Block Editor Page
 router.get(
