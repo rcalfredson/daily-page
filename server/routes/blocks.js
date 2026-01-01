@@ -2,16 +2,15 @@ import express from 'express';
 
 import { config } from '../../config/config.js';
 import optionalAuth from '../middleware/optionalAuth.js';
+import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
 import { getBlockById, getTranslationByGroupAndLang } from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { getPeerIDs } from '../db/sessionService.js';
 import { addI18n } from '../services/i18n.js';
-import { getUiQueryLang } from '../services/localization.js';
 import { generateAnonymousId } from '../utils/anonymousId.js';
 import { canManageBlock } from '../utils/block.js';
 import { canonicalBlockEditPath } from '../utils/canonical.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
-import { withQuery } from '../utils/urls.js';
 
 const port = config.port || 3000;
 
@@ -39,6 +38,15 @@ router.get(
   '/rooms/:room_id/blocks/:block_id/edit',
   optionalAuth,
   addI18n(['blockEditor', 'blockTags', 'blockCommon']),
+  resolveBlockLangParam({
+    loadBlock: async (req) => {
+      const block = await getBlockById(req.params.block_id);
+      if (!block || block.roomId !== req.params.room_id) return null;
+      return block;
+    },
+    getTranslation: getTranslationByGroupAndLang,
+    canonicalPathForBlock: canonicalBlockEditPath,
+  }),
   async (req, res) => {
     const { room_id, block_id } = req.params;
     const { t } = res.locals;
@@ -54,40 +62,6 @@ router.get(
         return res.status(404).render('error', {
           message: t('blockEditor.errors.notFound')
         });
-      }
-
-      // Translation selector (legacy): ?lang=
-      const requestedLang = req.query?.lang;
-
-      // If ?lang= is present, we never keep it on canonical URLs.
-      if (requestedLang) {
-        let target = null;
-
-        // Only try to resolve translation if requestedLang differs
-        if (requestedLang !== block.lang) {
-          target = await getTranslationByGroupAndLang(block.groupId, requestedLang);
-        }
-
-        const redirectQuery = { ...req.query };
-        delete redirectQuery.lang;
-
-        const uiFromQuery = getUiQueryLang(req);
-        if (uiFromQuery) redirectQuery.ui = uiFromQuery;
-        else delete redirectQuery.ui;
-
-        if (target) {
-          const targetPath = canonicalBlockEditPath(target);
-          if (req.path !== targetPath) {
-            return res.redirect(302, withQuery(targetPath, redirectQuery));
-          }
-        } else {
-          // requestedLang missing/invalid OR equals block.lang:
-          // Redirect to same canonical edit URL but without ?lang=
-          const selfPath = canonicalBlockEditPath(block);
-          if (req.path !== selfPath || 'lang' in req.query) {
-            return res.redirect(302, withQuery(selfPath, redirectQuery));
-          }
-        }
       }
 
       // UI language (chrome)
