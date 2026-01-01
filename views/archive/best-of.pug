@@ -50,10 +50,10 @@ mixin renderBlockList(blocks)
   if blocks.length
     ul.block-list
       each block in blocks
-        li.block-preview
+        li.block-preview(lang=(block.lang || 'en'))
           div.content
             a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
-            p
+            p(lang=(uiLang || 'en'))
               | #{t('bestOf.labels.createdBy')} 
               a.user-profile-link(href=`/users/${block.creator}`)= block.creator
               |  #{t('bestOf.labels.inRoom')} 
@@ -61,11 +61,11 @@ mixin renderBlockList(blocks)
                 a.room-link(href=`/rooms/${block.roomId}`)= block.roomDisplayName || block.roomId
               else
                 span.room-link= t('bestOf.labels.unknownRoom')
-              - const _lang = (typeof lang === 'string' ? lang : 'en');
-              - const _date = new Date(block.createdAt).toLocaleString(_lang, { dateStyle: 'medium', timeStyle: 'short' });
+              - const _ui = (typeof uiLang === 'string' ? uiLang : 'en');
+              - const _date = new Date(block.createdAt).toLocaleString(_ui, { dateStyle: 'medium', timeStyle: 'short' });
               |  #{t('bestOf.labels.onDate', { date: _date })}
             +translationAttribution(block)
-            div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
+            div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
           +readMoreIfTruncated(block, block.roomId)
           footer.block-footer
             include ../partials/_vote_controls

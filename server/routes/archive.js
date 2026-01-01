@@ -1,10 +1,4 @@
 import express from 'express';
-import DateHelper from '../../lib/dateHelper.js';
-import { addI18n } from '../services/i18n.js';
-import { chooseActiveBestOfTab } from '../utils/bestOf.js'
-import { toBlockPreviewDTO } from '../utils/block.js'
-import { getMonthNav, getDateNav } from '../utils/archiveNav.js';
-import optionalAuth from '../middleware/optionalAuth.js';
 import Block from '../db/models/Block.js';
 import {
   findByRoomWithLangPref,
@@ -12,7 +6,15 @@ import {
   getBlockDatesByYearMonth,
   getTopBlocksByTimeframe
 } from '../db/blockService.js';
-import { getRoomMetadata } from '../db/roomService.js'
+import { getRoomMetadata } from '../db/roomService.js';
+import DateHelper from '../../lib/dateHelper.js';
+import { addI18n } from '../services/i18n.js';
+import { getUiQueryLang } from '../services/localization.js';
+import { getMonthNav, getDateNav } from '../utils/archiveNav.js';
+import { chooseActiveBestOfTab } from '../utils/bestOf.js';
+import { toBlockPreviewDTO } from '../utils/block.js';
+import { withQuery } from '../utils/urls.js';
+import optionalAuth from '../middleware/optionalAuth.js';
 const router = express.Router();
 
 // GET /archive - Muestra todos los meses/años con contenido
@@ -106,44 +108,70 @@ router.get(
   }
 );
 
-router.get('/archive/best-of', optionalAuth, addI18n(
-  ['bestOf', 'translation', 'readMore', 'voteControls']),
-async (req, res) => {
-  try {
-    const preferredLang = req.query.lang
-      || req.user?.preferredLang
-      || (req.acceptsLanguages()[0] || 'en').split('-')[0];
-    const userId = req.user?.id || null;
-    const [top24h, top7d, top30d, topAll] = await Promise.all([
-      getTopBlocksByTimeframe(1, 20, null, preferredLang),
-      getTopBlocksByTimeframe(7, 20, null, preferredLang),
-      getTopBlocksByTimeframe(30, 20, null, preferredLang),
-      getTopBlocksByTimeframe(null, 20, null, preferredLang)
-    ]);
+router.get(
+  '/archive/best-of',
+  optionalAuth,
+  addI18n(['bestOf', 'translation', 'readMore', 'voteControls']),
+  async (req, res) => {
+    try {
+      const { t } = res.locals;
+      const uiLang = res.locals.uiLang || res.locals.lang || 'en';
+      // For list selection, default content preference to UI language for now.
+      const preferredContentLang = uiLang;
 
-    const top24hDTO = top24h.map(b => toBlockPreviewDTO(b, { userId }));
-    const top7dDTO = top7d.map(b => toBlockPreviewDTO(b, { userId }));
-    const top30dDTO = top30d.map(b => toBlockPreviewDTO(b, { userId }));
-    const topAllDTO = topAll.map(b => toBlockPreviewDTO(b, { userId }));
-    const activeTab = chooseActiveBestOfTab({
-      top24h: top24hDTO, top7d: top7dDTO, top30d: top30dDTO, topAll: topAllDTO
-    });
+      // Legacy selector: ?lang= should never live on canonical URLs.
+      // For this global list page, we don't have a per-lang canonical resource,
+      // so we simply strip it and rely on ui-driven steady state going forward.
+      if (req.query?.lang) {
+        const redirectQuery = { ...req.query };
+        delete redirectQuery.lang;
 
-    res.render('archive/best-of', {
-      title: res.locals.t('bestOf.meta.title'),
-      description: res.locals.t('bestOf.meta.description'),
-      top24h: top24hDTO,
-      top7d: top7dDTO,
-      top30d: top30dDTO,
-      topAll: topAllDTO,
-      activeTab,
-      user: req.user || null,
-    });
-  } catch (error) {
-    console.error('Error loading best-of archive:', error);
-    res.status(500).render('error', { message: 'Error loading best-of archive.' });
+        const uiFromQuery = getUiQueryLang(req);
+        if (uiFromQuery) redirectQuery.ui = uiFromQuery;
+        else delete redirectQuery.ui;
+
+        return res.redirect(302, withQuery('/archive/best-of', redirectQuery));
+      }
+
+      const userId = req.user?.id || null;
+
+      const [top24h, top7d, top30d, topAll] = await Promise.all([
+        getTopBlocksByTimeframe(1, 20, null, { preferredContentLang }),
+        getTopBlocksByTimeframe(7, 20, null, { preferredContentLang }),
+        getTopBlocksByTimeframe(30, 20, null, { preferredContentLang }),
+        getTopBlocksByTimeframe(null, 20, null, { preferredContentLang })
+      ]);
+
+      const top24hDTO = top24h.map(b => toBlockPreviewDTO(b, { userId }));
+      const top7dDTO = top7d.map(b => toBlockPreviewDTO(b, { userId }));
+      const top30dDTO = top30d.map(b => toBlockPreviewDTO(b, { userId }));
+      const topAllDTO = topAll.map(b => toBlockPreviewDTO(b, { userId }));
+
+      const activeTab = chooseActiveBestOfTab({
+        top24h: top24hDTO,
+        top7d: top7dDTO,
+        top30d: top30dDTO,
+        topAll: topAllDTO
+      });
+
+      res.render('archive/best-of', {
+        title: t('bestOf.meta.title'),
+        description: t('bestOf.meta.description'),
+        top24h: top24hDTO,
+        top7d: top7dDTO,
+        top30d: top30dDTO,
+        topAll: topAllDTO,
+        activeTab,
+        uiLang,
+        preferredContentLang,
+        user: req.user || null,
+      });
+    } catch (error) {
+      console.error('Error loading best-of archive:', error);
+      res.status(500).render('error', { message: 'Error loading best-of archive.' });
+    }
   }
-});
+);
 
 // GET /archive/:year/:month - Muestra calendario del mes
 router.get('/archive/:year/:month', optionalAuth, addI18n(['archive']), async (req, res) => {
