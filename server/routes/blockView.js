@@ -7,11 +7,10 @@ import {
 import { getRoomMetadata } from '../db/roomService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
+import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
 import { addI18n } from '../services/i18n.js';
-import { getUiQueryLang } from '../services/localization.js';
 import { canManageBlock } from '../utils/block.js';
 import { canonicalBlockPath } from '../utils/canonical.js';
-import { withQuery } from '../utils/urls.js';
 
 const router = express.Router();
 
@@ -19,6 +18,15 @@ router.get(
   '/rooms/:room_id/blocks/:block_id',
   optionalAuth,
   addI18n(['blockView', 'blockTags', 'blockCommon', 'flagModal', 'voteControls']),
+  resolveBlockLangParam({
+    loadBlock: async (req) => {
+      const block = await getBlockById(req.params.block_id);
+      if (!block || block.roomId !== req.params.room_id) return null;
+      return block;
+    },
+    getTranslation: getTranslationByGroupAndLang,
+    canonicalPathForBlock: canonicalBlockPath,
+  }),
   async (req, res) => {
     try {
       const { room_id, block_id } = req.params;
@@ -33,26 +41,7 @@ router.get(
         });
       }
 
-      const uiLang = res.locals.uiLang || 'en';
-
-      const contentLang = req.query?.lang;
-
-      if (contentLang && contentLang !== block.lang) {
-        const target = await getTranslationByGroupAndLang(block.groupId, contentLang);
-        if (target) {
-          const targetPath = canonicalBlockPath(target);
-
-          if (req.path !== targetPath) {
-            const redirectQuery = { ...req.query };
-            delete redirectQuery.lang;
-
-            const uiFromQuery = getUiQueryLang(req);
-            if (uiFromQuery) redirectQuery.ui = uiFromQuery;
-            else delete redirectQuery.ui;
-            return res.redirect(302, withQuery(targetPath, redirectQuery));
-          }
-        }
-      }
+      const uiLang = res.locals.uiLang || res.locals.lang || 'en';
 
       block.contentHTML = renderMarkdownContent(block.content);
       const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
