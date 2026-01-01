@@ -46,7 +46,7 @@
   }
 
   function lang() {
-    // Typically provided by the server into #i18n-lang
+    // Provided by the server into #i18n-lang (UI chrome language)
     return _readJsonScript('i18n-lang', 'en');
   }
 
