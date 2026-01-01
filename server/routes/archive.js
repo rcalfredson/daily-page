@@ -9,45 +9,52 @@ import {
 import { getRoomMetadata } from '../db/roomService.js';
 import DateHelper from '../../lib/dateHelper.js';
 import { addI18n } from '../services/i18n.js';
-import { getUiQueryLang } from '../services/localization.js';
 import { getMonthNav, getDateNav } from '../utils/archiveNav.js';
 import { chooseActiveBestOfTab } from '../utils/bestOf.js';
 import { toBlockPreviewDTO } from '../utils/block.js';
-import { withQuery } from '../utils/urls.js';
 import optionalAuth from '../middleware/optionalAuth.js';
+import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
 const router = express.Router();
 
 // GET /archive - Muestra todos los meses/años con contenido
-router.get('/archive', optionalAuth, addI18n(['archive']), async (req, res) => {
-  try {
-    const yearMonthCombos = await getAllBlockYearMonthCombos();
+router.get(
+  '/archive',
+  optionalAuth,
+  addI18n(['archive']),
+  stripLegacyLang({ canonicalPath: '/archive' }),
+  async (req, res) => {
+    try {
+      const yearMonthCombos = await getAllBlockYearMonthCombos();
 
-    const { t } = res.locals;
-    const uiLang = res.locals.uiLang || res.locals.lang || 'en';
+      const { t } = res.locals;
+      const uiLang = res.locals.uiLang || res.locals.lang || 'en';
 
-    const description = t('archive.meta.description');
+      const description = t('archive.meta.description');
 
-    res.render('archive/calendar-index', {
-      title: t('archive.meta.title'),
-      description,
-      yearMonthCombos,
+      res.render('archive/calendar-index', {
+        title: t('archive.meta.title'),
+        description,
+        yearMonthCombos,
 
-      // Month names should follow UI chrome language
-      monthName: (m) => DateHelper.monthName(m, uiLang),
+        // Month names should follow UI chrome language
+        monthName: (m) => DateHelper.monthName(m, uiLang),
 
-      uiLang,
-      user: req.user || null,
-    });
-  } catch (error) {
-    console.error('Error loading archive index:', error);
-    res.status(500).render('error', { message: 'Error loading archive index.' });
-  }
-});
+        uiLang,
+        user: req.user || null,
+      });
+    } catch (error) {
+      console.error('Error loading archive index:', error);
+      res.status(500).render('error', { message: 'Error loading archive index.' });
+    }
+  });
 
 router.get(
   '/rooms/:roomId/archive/best-of',
   optionalAuth,
   addI18n(['bestOf', 'translation', 'readMore', 'voteControls']),
+  stripLegacyLang(
+    { canonicalPath: (req) => `/rooms/${req.params.roomId}/archive/best-of` }
+  ),
   async (req, res) => {
     const { roomId } = req.params;
     const { t } = res.locals;
@@ -112,26 +119,13 @@ router.get(
   '/archive/best-of',
   optionalAuth,
   addI18n(['bestOf', 'translation', 'readMore', 'voteControls']),
+  stripLegacyLang({ canonicalPath: '/archive/best-of' }),
   async (req, res) => {
     try {
       const { t } = res.locals;
       const uiLang = res.locals.uiLang || res.locals.lang || 'en';
       // For list selection, default content preference to UI language for now.
       const preferredContentLang = uiLang;
-
-      // Legacy selector: ?lang= should never live on canonical URLs.
-      // For this global list page, we don't have a per-lang canonical resource,
-      // so we simply strip it and rely on ui-driven steady state going forward.
-      if (req.query?.lang) {
-        const redirectQuery = { ...req.query };
-        delete redirectQuery.lang;
-
-        const uiFromQuery = getUiQueryLang(req);
-        if (uiFromQuery) redirectQuery.ui = uiFromQuery;
-        else delete redirectQuery.ui;
-
-        return res.redirect(302, withQuery('/archive/best-of', redirectQuery));
-      }
 
       const userId = req.user?.id || null;
 
@@ -178,29 +172,17 @@ router.get(
   '/archive/:year/:month',
   optionalAuth,
   addI18n(['archive']),
+  stripLegacyLang(
+    { canonicalPath: (req) => `/archive/${req.params.year}/${req.params.month}` }
+  ),
   async (req, res) => {
     try {
       const { year, month } = req.params;
 
-      // Non-block route rule: strip ?lang= from canonical URLs
-      const requestedLang = req.query?.lang;
-      if (requestedLang) {
-        const redirectQuery = { ...req.query };
-        delete redirectQuery.lang;
-
-        // Preserve ?ui= only if explicitly present on inbound request
-        const uiFromQuery = getUiQueryLang(req);
-        if (uiFromQuery) redirectQuery.ui = uiFromQuery;
-        else delete redirectQuery.ui;
-
-        const selfPath = `/archive/${year}/${month}`;
-        return res.redirect(302, withQuery(selfPath, redirectQuery));
-      }
-
       const datesWithContent = await getBlockDatesByYearMonth(year, month);
 
       const { t } = res.locals;
-      const uiLang = res.locals.uiLang || 'en';
+      const uiLang = res.locals.uiLang || res.locals.lang || 'en';
 
       const monthNum = Number(month);
       const monthStr = DateHelper.monthName(monthNum, uiLang);
