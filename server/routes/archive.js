@@ -218,60 +218,56 @@ router.get(
 );
 
 // Render archive view for a specific date
-router.get('/archive/:year/:month/:day',
+router.get(
+  '/archive/:year/:month/:day',
   optionalAuth,
-  addI18n(['archive', 'translation', 'readMore', 'voteControls']), async (req, res) => {
+  addI18n(['archive', 'translation', 'readMore', 'voteControls']),
+  stripLegacyLang({
+    canonicalPath: (req) => `/archive/${req.params.year}/${req.params.month}/${req.params.day}`,
+  }),
+  async (req, res) => {
     try {
       const { year, month, day } = req.params;
-      const { lang, t } = res.locals;
+      const { t } = res.locals;
 
-      // parse ints
+      const uiLang = getUiLang(res);
+      const preferredContentLang = getPreferredContentLang(res);
+
       const y = parseInt(year, 10);
-      const m = parseInt(month, 10) - 1;   // zero-based months in JS Date
+      const m = parseInt(month, 10) - 1;
       const d = parseInt(day, 10);
 
-      // build start/end as UTC
       const start = new Date(Date.UTC(y, m, d, 0, 0, 0));
       const end = new Date(Date.UTC(y, m, d + 1, 0, 0, 0));
 
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 50;
+      const page = parseInt(req.query.page, 10) || 1;
+      const limit = parseInt(req.query.limit, 10) || 50;
       const skip = (page - 1) * limit;
 
       const userId = req.user?.id || null;
 
       const blocks = await Block.find({
-        createdAt: {
-          $gte: start,
-          $lt: end
-        }
+        createdAt: { $gte: start, $lt: end }
       })
         .sort({ voteCount: -1, createdAt: 1 })
         .skip(skip)
         .limit(limit)
         .lean();
 
-      const lightBlocks = blocks.map(
-        b => toBlockPreviewDTO(b, {
-          userId
-        })
-      );
+      const lightBlocks = blocks.map(b => toBlockPreviewDTO(b, { userId }));
 
       const totalBlocks = await Block.countDocuments({
-        createdAt: {
-          $gte: start,
-          $lt: end
-        }
+        createdAt: { $gte: start, $lt: end }
       });
 
       const dateISO = `${year}-${month}-${day}`;
       const { prevDate, nextDate } = await getDateNav(null, dateISO, Block);
 
-      // Fecha “bonita” y datetime con hora local (para metadatos)
-      const fmtDate = new Intl.DateTimeFormat(lang || 'en', { dateStyle: 'full', timeZone: 'UTC' })
+      const fmtDate = new Intl.DateTimeFormat(uiLang, { dateStyle: 'full', timeZone: 'UTC' })
         .format(new Date(Date.UTC(y, m, d)));
+
       const fmtDateTime = (dt) =>
-        new Intl.DateTimeFormat(lang || 'en', { dateStyle: 'medium', timeStyle: 'short' })
+        new Intl.DateTimeFormat(uiLang, { dateStyle: 'medium', timeStyle: 'short' })
           .format(new Date(dt));
 
       res.render('archive/date', {
@@ -286,21 +282,28 @@ router.get('/archive/:year/:month/:day',
         totalPages: Math.ceil(totalBlocks / limit),
         formatDateTime: fmtDateTime,
         user: req.user || null,
+        uiLang,
+        preferredContentLang,
       });
     } catch (error) {
-      console.error(`Error loading archive:`, error);
+      console.error('Error loading archive:', error);
       res.status(500).render('error', { message: 'Error loading archive page.' });
     }
-  });
+  }
+);
 
 // GET /rooms/:roomId/index?page=1&sort=createdAt&dir=desc
 router.get(
   '/rooms/:roomId/index',
   optionalAuth,
   addI18n(['archive']),
+  stripLegacyLang({ canonicalPath: (req) => `/rooms/${req.params.roomId}/index` }),
   async (req, res) => {
-    const { t, lang } = res.locals;
+    const { t } = res.locals;
     const { roomId } = req.params;
+
+    const uiLang = getUiLang(res);
+    const preferredContentLang = getPreferredContentLang(res);
 
     const page = +req.query.page || 1;
     const limit = 20;
@@ -312,17 +315,12 @@ router.get(
     const dirStr = req.query.dir === 'asc' ? 'asc' : 'desc';
     const sortDir = dirStr === 'asc' ? 1 : -1;
 
-    // i18n language wiring
-    const currentLang = lang || 'en';
-    const langQuery = currentLang ? `&lang=${currentLang}` : '';
-
-    // Room metadata localized
-    const roomMetadata = await getRoomMetadata(roomId, currentLang);
+    const roomMetadata = await getRoomMetadata(roomId, uiLang);
     const roomDisplayName = roomMetadata.displayName || roomMetadata.name;
 
     const blocks = await findByRoomWithLangPref({
       roomId,
-      preferredLang: currentLang,
+      preferredLang: preferredContentLang,
       sortBy: sortKey,
       sortDir,
       startDate: null,
@@ -332,7 +330,7 @@ router.get(
     });
 
     const total = await Block
-      .distinct("groupId", { roomId })
+      .distinct('groupId', { roomId })
       .then(arr => arr.length);
 
     const pageTitle = t('archive.index.meta.titleRoom', { roomName: roomDisplayName });
@@ -346,84 +344,121 @@ router.get(
       totalPages: Math.ceil(total / limit),
       sortKey,
       dir: dirStr,
-      lang: currentLang,
-      langQuery
+      user: req.user || null,
+      uiLang,
+      preferredContentLang,
     });
   }
 );
 
 // Obtener todos los meses/años con contenido para una sala específica
-router.get('/rooms/:roomId/archive', optionalAuth, addI18n(['archive']), async (req, res) => {
-  try {
-    const { roomId } = req.params;
-    const yearMonthCombos = await getAllBlockYearMonthCombos(roomId);
-    const { t, lang } = res.locals;
-    const roomMetadata = await getRoomMetadata(roomId, lang);
+router.get(
+  '/rooms/:roomId/archive',
+  optionalAuth,
+  addI18n(['archive']),
+  stripLegacyLang({ canonicalPath: (req) => `/rooms/${req.params.roomId}/archive` }),
+  async (req, res) => {
+    try {
+      const { roomId } = req.params;
+      const { t } = res.locals;
 
-    const description = t('archive.meta.descriptionRoom', { roomName: roomMetadata.name });
+      const uiLang = getUiLang(res);
 
-    res.render('archive/calendar-index', {
-      title: t('archive.meta.titleRoom', { roomName: roomMetadata.name }),
-      description,
-      yearMonthCombos,
-      monthName: (m) => DateHelper.monthName(m, lang || 'en'),
-      roomId,
-      roomName: roomMetadata.displayName,
-      user: req.user || null,
-    });
-  } catch (error) {
-    console.error(`Error loading archive index for room ${req.params.roomId}:`, error);
-    res.status(500).render('error', { message: 'Error loading archive index for room.' });
+      const yearMonthCombos = await getAllBlockYearMonthCombos(roomId);
+      const roomMetadata = await getRoomMetadata(roomId, uiLang);
+
+      const roomName = roomMetadata.displayName || roomMetadata.name;
+      const description = t('archive.meta.descriptionRoom', { roomName });
+
+      res.render('archive/calendar-index', {
+        title: t('archive.meta.titleRoom', { roomName }),
+        description,
+        yearMonthCombos,
+        monthName: (m) => DateHelper.monthName(m, uiLang),
+        roomId,
+        roomName,
+        user: req.user || null,
+        uiLang,
+      });
+    } catch (error) {
+      console.error(`Error loading archive index for room ${req.params.roomId}:`, error);
+      res.status(500).render('error', { message: 'Error loading archive index for room.' });
+    }
   }
-});
+);
 
 // Calendario del mes específico en una sala
-router.get('/rooms/:roomId/archive/:year/:month', optionalAuth, addI18n(['archive']), async (req, res) => {
-  try {
-    const { roomId, year, month } = req.params;
-    const datesWithContent = await getBlockDatesByYearMonth(year, month, roomId);
-    const { t, lang } = res.locals;
-    const roomMetadata = await getRoomMetadata(roomId, lang);
-    const monthStr = DateHelper.monthName(Number(month), lang || 'en');
-    const description = t('archive.calendar.meta.descriptionRoom', {
-      roomName: roomMetadata.name, month: monthStr, year
-    })
+router.get(
+  '/rooms/:roomId/archive/:year/:month',
+  optionalAuth,
+  addI18n(['archive']),
+  stripLegacyLang({
+    canonicalPath: (req) => `/rooms/${req.params.roomId}/archive/${req.params.year}/${req.params.month}`
+  }),
+  async (req, res) => {
+    try {
+      const { roomId, year, month } = req.params;
+      const { t } = res.locals;
 
-    const { prevMonth, nextMonth } = await getMonthNav(roomId, year, month, { getAllBlockYearMonthCombos });
+      const uiLang = getUiLang(res);
 
-    res.render('archive/calendar', {
-      title: t('archive.calendar.title', { month: monthStr, year }),
-      description,
-      year,
-      month,
-      prevMonth,
-      nextMonth,
-      datesWithContent,
-      monthName: (m) => DateHelper.monthName(m, lang || 'en'),
-      weekdaysShort: DateHelper.weekdayShortNames(lang || 'en'),
-      roomId,
-      roomName: roomMetadata.displayName,
-      user: req.user || null,
-    });
-  } catch (error) {
-    console.error(`Error loading calendar for room ${req.params.roomId}, ${req.params.year}-${req.params.month}:`, error);
-    res.status(500).render('error', { message: 'Error loading calendar for room.' });
+      const datesWithContent = await getBlockDatesByYearMonth(year, month, roomId);
+      const roomMetadata = await getRoomMetadata(roomId, uiLang);
+
+      const roomName = roomMetadata.displayName || roomMetadata.name;
+      const monthStr = DateHelper.monthName(Number(month), uiLang);
+
+      const description = t('archive.calendar.meta.descriptionRoom', {
+        roomName, month: monthStr, year
+      });
+
+      const { prevMonth, nextMonth } = await getMonthNav(
+        roomId, year, month, { getAllBlockYearMonthCombos }
+      );
+
+      res.render('archive/calendar', {
+        title: t('archive.calendar.title', { month: monthStr, year }),
+        description,
+        year,
+        month,
+        prevMonth,
+        nextMonth,
+        datesWithContent,
+        monthName: (m) => DateHelper.monthName(m, uiLang),
+        weekdaysShort: DateHelper.weekdayShortNames(uiLang),
+        roomId,
+        roomName,
+        user: req.user || null,
+        uiLang,
+      });
+    } catch (error) {
+      console.error(`Error loading calendar for room ${req.params.roomId}, ${req.params.year}-${req.params.month}:`, error);
+      res.status(500).render('error', { message: 'Error loading calendar for room.' });
+    }
   }
-});
+);
 
 // Archivo de una fecha específica en una sala
-router.get('/rooms/:roomId/archive/:year/:month/:day',
+router.get(
+  '/rooms/:roomId/archive/:year/:month/:day',
   optionalAuth,
-  addI18n(['archive', 'translation', 'readMore', 'voteControls']), async (req, res) => {
+  addI18n(['archive', 'translation', 'readMore', 'voteControls']),
+  stripLegacyLang({
+    canonicalPath: (req) => `/rooms/${req.params.roomId}/archive/${req.params.year}/${req.params.month}/${req.params.day}`
+  }),
+  async (req, res) => {
     try {
-      const { lang, t } = res.locals;
-      const preferredLang = lang || 'en';
-      const { roomId, year, month, day } = req.params;
-      const roomMetadata = await getRoomMetadata(roomId, preferredLang);
+      const { t } = res.locals;
 
-      const roomDisplayName =
+      const uiLang = getUiLang(res);
+      const preferredContentLang = getPreferredContentLang(res);
+
+      const { roomId, year, month, day } = req.params;
+      const roomMetadata = await getRoomMetadata(roomId, uiLang);
+
+      const roomName =
         roomMetadata.displayName ||
-        roomMetadata.name_i18n?.[preferredLang] ||
+        roomMetadata.name_i18n?.[uiLang] ||
         roomMetadata.name;
 
       const y = parseInt(year, 10);
@@ -433,50 +468,41 @@ router.get('/rooms/:roomId/archive/:year/:month/:day',
       const start = new Date(Date.UTC(y, m, d, 0, 0, 0));
       const end = new Date(Date.UTC(y, m, d + 1, 0, 0, 0));
 
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 20;
+      const page = parseInt(req.query.page, 10) || 1;
+      const limit = parseInt(req.query.limit, 10) || 20;
       const skip = (page - 1) * limit;
 
       const userId = req.user?.id || null;
 
       const blocks = await Block.find({
         roomId,
-        createdAt: {
-          $gte: start,
-          $lt: end
-        }
+        createdAt: { $gte: start, $lt: end }
       })
         .sort({ voteCount: -1 })
         .skip(skip)
         .limit(limit)
         .lean();
 
-      const lightBlocks = blocks.map(
-        b => toBlockPreviewDTO(b, {
-          userId
-        })
-      );
+      const lightBlocks = blocks.map(b => toBlockPreviewDTO(b, { userId }));
 
       const totalBlocks = await Block.countDocuments({
         roomId,
-        createdAt: {
-          $gte: start,
-          $lt: end
-        }
+        createdAt: { $gte: start, $lt: end }
       });
 
       const dateISO = `${year}-${month}-${day}`;
       const { prevDate, nextDate } = await getDateNav(roomId, dateISO, Block);
 
-      const fmtDate = new Intl.DateTimeFormat(lang || 'en', { dateStyle: 'full', timeZone: 'UTC' })
+      const fmtDate = new Intl.DateTimeFormat(uiLang, { dateStyle: 'full', timeZone: 'UTC' })
         .format(new Date(Date.UTC(y, m, d)));
+
       const fmtDateTime = (dt) =>
-        new Intl.DateTimeFormat(lang || 'en', { dateStyle: 'medium', timeStyle: 'short' })
+        new Intl.DateTimeFormat(uiLang, { dateStyle: 'medium', timeStyle: 'short' })
           .format(new Date(dt));
 
       res.render('archive/date', {
-        title: t('archive.date.meta.titleRoom', { roomName: roomDisplayName, date: fmtDate }),
-        description: t('archive.date.meta.descriptionRoom', { roomName: roomDisplayName, date: fmtDate }),
+        title: t('archive.date.meta.titleRoom', { roomName, date: fmtDate }),
+        description: t('archive.date.meta.descriptionRoom', { roomName, date: fmtDate }),
         date: fmtDate,
         dateISO,
         blocks: lightBlocks,
@@ -485,14 +511,17 @@ router.get('/rooms/:roomId/archive/:year/:month/:day',
         nextDate,
         totalPages: Math.ceil(totalBlocks / limit),
         roomId,
-        roomName: roomDisplayName,
+        roomName,
         formatDateTime: fmtDateTime,
         user: req.user || null,
+        uiLang,
+        preferredContentLang,
       });
     } catch (error) {
       console.error(`Error loading archive for room ${req.params.roomId}:`, error);
       res.status(500).render('error', { message: 'Error loading archive page for room.' });
     }
-  });
+  }
+);
 
 export default router;
