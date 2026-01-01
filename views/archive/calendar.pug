@@ -56,8 +56,8 @@ block content
           each day in weekdaysShort
             th= day
       tbody
-        - const firstDay = new Date(year, month - 1, 1).getDay()
-        - const daysInMonth = new Date(year, month, 0).getDate() 
+        - const firstDay = new Date(Date.UTC(year, month - 1, 1)).getUTCDay()
+        - const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate()
         - let dayCount = 1
         while dayCount <= daysInMonth
           tr
