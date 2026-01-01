@@ -63,17 +63,17 @@ block content
     if blocks.length
       ul.block-list
         each block in blocks
-          li.block-item
+          li.block-item(lang=(block.lang || 'en'))
             div.block-main
-              a.block-link(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
-              .block-meta
+              a.block-link(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
+              .block-meta(lang=(uiLang || 'en'))
                 | #{t('archive.date.labels.createdBy')} 
                 a.user-profile-link(href=`/users/${block.creator}`)= block.creator
                 |  #{t('archive.date.labels.in')} 
-                a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : t('archive.date.labels.unknownRoom')
+                a.room-link(href=`/rooms/${block.roomId}`)= block.roomDisplayName || block.roomId || t('archive.date.labels.unknownRoom')
                 |  #{t('archive.date.labels.on', { datetime: formatDateTime(block.createdAt) })}
               +translationAttribution(block)
-              div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
+              div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
             +readMoreIfTruncated(block, block.roomId)
             footer.block-footer
               include ../partials/_vote_controls
