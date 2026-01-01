@@ -48,21 +48,27 @@ router.get(
   addI18n(['bestOf', 'translation', 'readMore', 'voteControls']),
   async (req, res) => {
     const { roomId } = req.params;
-    const { t, lang } = res.locals;
-    const preferredLang = lang || 'en';
+    const { t } = res.locals;
+
+    const uiLang = res.locals.uiLang || res.locals.lang || 'en';
+    // For list selection, default content preference to UI language for now.
+    const preferredContentLang = uiLang;
+
     const userId = req.user?.id || null;
 
     try {
       const [top24h, top7d, top30d, topAll, roomMetadata] = await Promise.all([
-        getTopBlocksByTimeframe(1, 20, roomId, preferredLang),
-        getTopBlocksByTimeframe(7, 20, roomId, preferredLang),
-        getTopBlocksByTimeframe(30, 20, roomId, preferredLang),
-        getTopBlocksByTimeframe(null, 20, roomId, preferredLang),
-        getRoomMetadata(roomId, preferredLang)
+        getTopBlocksByTimeframe(1, 20, roomId, { preferredContentLang }),
+        getTopBlocksByTimeframe(7, 20, roomId, { preferredContentLang }),
+        getTopBlocksByTimeframe(30, 20, roomId, { preferredContentLang }),
+        getTopBlocksByTimeframe(null, 20, roomId, { preferredContentLang }),
+
+        // Room chrome metadata should follow UI language
+        getRoomMetadata(roomId, uiLang)
       ]);
 
       const top24hDTO = top24h.map(b => toBlockPreviewDTO(b, { userId }));
-      const top7dDTO = top7d.map(b => toBlockPreviewDTO(b, { userId }));
+      const top7dDTO  = top7d.map(b => toBlockPreviewDTO(b, { userId }));
       const top30dDTO = top30d.map(b => toBlockPreviewDTO(b, { userId }));
       const topAllDTO = topAll.map(b => toBlockPreviewDTO(b, { userId }));
 
@@ -73,10 +79,7 @@ router.get(
         topAll: topAllDTO
       });
 
-      // Ahora confiamos en que getRoomMetadata ya respeta lang
-      const roomName =
-        roomMetadata.displayName
-        || roomMetadata.name;
+      const roomName = roomMetadata.displayName || roomMetadata.name;
 
       const title = t('bestOf.meta.titleRoom', { roomName });
       const description = t('bestOf.meta.descriptionRoom', { roomName });
@@ -90,7 +93,9 @@ router.get(
         topAll: topAllDTO,
         activeTab,
         roomMetadata: { ...roomMetadata, roomName },
-        lang: preferredLang,
+        uiLang,
+        preferredContentLang,
+
         user: req.user || null,
       });
     } catch (error) {
