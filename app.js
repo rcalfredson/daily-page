@@ -98,6 +98,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       });
     }
 
+    app.use(cookieParser());
     app.use(cors(corsOptions));
     app.use(setLangMiddleware);
     app.use(addSeoLocals);
@@ -112,7 +113,6 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.use(express.static('public'));
     app.use(express.urlencoded({ extended: true }));
     app.use(bodyParser.json());
-    app.use(cookieParser());
     app.set('views', './views');
     app.set('view engine', 'pug');
 

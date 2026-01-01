@@ -174,34 +174,67 @@ router.get(
 );
 
 // GET /archive/:year/:month - Muestra calendario del mes
-router.get('/archive/:year/:month', optionalAuth, addI18n(['archive']), async (req, res) => {
-  try {
-    const { year, month } = req.params;
-    const datesWithContent = await getBlockDatesByYearMonth(year, month);
+router.get(
+  '/archive/:year/:month',
+  optionalAuth,
+  addI18n(['archive']),
+  async (req, res) => {
+    try {
+      const { year, month } = req.params;
 
-    const { t, lang } = res.locals;
-    const monthStr = DateHelper.monthName(Number(month), lang || 'en');
-    const description = t('archive.calendar.meta.description', { month: monthStr, year });
+      // Non-block route rule: strip ?lang= from canonical URLs
+      const requestedLang = req.query?.lang;
+      if (requestedLang) {
+        const redirectQuery = { ...req.query };
+        delete redirectQuery.lang;
 
-    const { prevMonth, nextMonth } = await getMonthNav(null, year, month, { getAllBlockYearMonthCombos });
+        // Preserve ?ui= only if explicitly present on inbound request
+        const uiFromQuery = getUiQueryLang(req);
+        if (uiFromQuery) redirectQuery.ui = uiFromQuery;
+        else delete redirectQuery.ui;
 
-    res.render('archive/calendar', {
-      title: t('archive.calendar.title', { month: monthStr, year }),
-      description,
-      year,
-      month,
-      prevMonth,
-      nextMonth,
-      datesWithContent,
-      monthName: (m) => DateHelper.monthName(m, lang || 'en'),
-      weekdaysShort: DateHelper.weekdayShortNames(lang || 'en'),
-      user: req.user || null,
-    });
-  } catch (error) {
-    console.error(`Error loading calendar for ${req.params.year}-${req.params.month}:`, error);
-    res.status(500).render('error', { message: 'Error loading calendar.' });
+        const selfPath = `/archive/${year}/${month}`;
+        return res.redirect(302, withQuery(selfPath, redirectQuery));
+      }
+
+      const datesWithContent = await getBlockDatesByYearMonth(year, month);
+
+      const { t } = res.locals;
+      const uiLang = res.locals.uiLang || 'en';
+
+      const monthNum = Number(month);
+      const monthStr = DateHelper.monthName(monthNum, uiLang);
+      const description = t('archive.calendar.meta.description', { month: monthStr, year });
+
+      const { prevMonth, nextMonth } = await getMonthNav(
+        null,
+        year,
+        month,
+        { getAllBlockYearMonthCombos }
+      );
+
+      res.render('archive/calendar', {
+        title: t('archive.calendar.title', { month: monthStr, year }),
+        description,
+        year,
+        month,
+        prevMonth,
+        nextMonth,
+        datesWithContent,
+
+        // UI-localized helpers
+        monthName: (m) => DateHelper.monthName(Number(m), uiLang),
+        weekdaysShort: DateHelper.weekdayShortNames(uiLang),
+
+        user: req.user || null,
+        uiLang,
+      });
+    } catch (error) {
+      console.error(`Error loading calendar for ${req.params.year}-${req.params.month}:`, error);
+      res.status(500).render('error', { message: 'Error loading calendar.' });
+    }
   }
-});
+);
 
 // Render archive view for a specific date
 router.get('/archive/:year/:month/:day',
