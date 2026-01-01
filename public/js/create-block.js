@@ -95,9 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     || 'en';
 
   const short = String(guess).split('-')[0];
-  [...langSelect.options].forEach(o => {
-    if (o.value === short) o.selected = true;
-  });
+  langSelect.value = short;
 
   // Fetch info del bloque origen
   sourceInput.addEventListener('blur', async () => {
