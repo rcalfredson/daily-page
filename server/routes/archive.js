@@ -9,6 +9,7 @@ import {
 import { getRoomMetadata } from '../db/roomService.js';
 import DateHelper from '../../lib/dateHelper.js';
 import { addI18n } from '../services/i18n.js';
+import { getUiLang, getPreferredContentLang } from '../services/localeContext.js';
 import { getMonthNav, getDateNav } from '../utils/archiveNav.js';
 import { chooseActiveBestOfTab } from '../utils/bestOf.js';
 import { toBlockPreviewDTO } from '../utils/block.js';
@@ -27,7 +28,7 @@ router.get(
       const yearMonthCombos = await getAllBlockYearMonthCombos();
 
       const { t } = res.locals;
-      const uiLang = res.locals.uiLang || res.locals.lang || 'en';
+      const uiLang = getUiLang(res);
 
       const description = t('archive.meta.description');
 
@@ -59,9 +60,8 @@ router.get(
     const { roomId } = req.params;
     const { t } = res.locals;
 
-    const uiLang = res.locals.uiLang || res.locals.lang || 'en';
-    // For list selection, default content preference to UI language for now.
-    const preferredContentLang = uiLang;
+    const uiLang = getUiLang(res);
+    const preferredContentLang = getPreferredContentLang(res);
 
     const userId = req.user?.id || null;
 
@@ -123,9 +123,8 @@ router.get(
   async (req, res) => {
     try {
       const { t } = res.locals;
-      const uiLang = res.locals.uiLang || res.locals.lang || 'en';
-      // For list selection, default content preference to UI language for now.
-      const preferredContentLang = uiLang;
+      const uiLang = getUiLang(res);
+      const preferredContentLang = getPreferredContentLang(res);
 
       const userId = req.user?.id || null;
 
@@ -182,7 +181,7 @@ router.get(
       const datesWithContent = await getBlockDatesByYearMonth(year, month);
 
       const { t } = res.locals;
-      const uiLang = res.locals.uiLang || res.locals.lang || 'en';
+      const uiLang = getUiLang(res);
 
       const monthNum = Number(month);
       const monthStr = DateHelper.monthName(monthNum, uiLang);
