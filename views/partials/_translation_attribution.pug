@@ -1,8 +1,11 @@
-mixin translationAttribution(item)
+mixin translationAttribution(item, opts = {})
+  -
+    const ui = opts.uiFromQuery || null;
+    const q = ui ? `?ui=${encodeURIComponent(ui)}` : '';
   if item.originalAuthor && item.originalAuthor !== item.creator
     p.translation-attribution
       | #{t('translation.prefix')} 
       a.user-profile-link(href=`/users/${item.originalAuthor}`)= item.originalAuthor
       |  (#{t('translation.see')} 
-      a(href=`/rooms/${item.roomId}/blocks/${item.originalBlock}`)= t('translation.originalBlock')
+      a(href=`/rooms/${item.roomId}/blocks/${item.originalBlock}${q}`)= t('translation.originalBlock')
       |)

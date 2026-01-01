@@ -71,7 +71,7 @@ mixin renderBlockList(blocks)
               - const _ui = (typeof uiLang === 'string' ? uiLang : 'en');
               - const _date = new Date(block.createdAt).toLocaleString(_ui, { dateStyle: 'medium', timeStyle: 'short' });
               |  #{t('bestOf.labels.onDate', { date: _date })}
-            +translationAttribution(block)
+            +translationAttribution(block, { uiFromQuery })
             div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
           +readMoreIfTruncated(block, block.roomId)
           footer.block-footer
