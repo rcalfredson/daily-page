@@ -105,7 +105,8 @@ export async function getAllTagsWithCounts(timeframe = 'all') {
 }
 
 
-export async function getTagTrendData(tagName, defaultDays = 30) {
+export async function getTagTrendData(tagName, defaultDays = 30, opts = {}) {
+  const { dedupeGroups = true } = opts;
   // Obtener los primeros 20 bloques por fecha ascendente (los más antiguos primero)
   const blocks = await Block.find({ tags: tagName })
     .sort({ createdAt: 1 })
@@ -127,13 +128,27 @@ export async function getTagTrendData(tagName, defaultDays = 30) {
   }
 
   const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-  const pipeline = [
-    { $match: { tags: tagName, createdAt: { $gte: cutoff } } },
-    { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, count: { $sum: 1 } } },
-    { $sort: { _id: 1 } }
-  ];
-  const trendData = await Block.aggregate(pipeline).exec();
-  return trendData;
+  const pipeline = dedupeGroups
+    ? [
+      { $match: { tags: tagName, createdAt: { $gte: cutoff } } },
+      {
+        $project: {
+          day: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'UTC' } },
+          groupId: 1,
+        }
+      },
+      // one count per (day, groupId)
+      { $group: { _id: { day: '$day', groupId: '$groupId' } } },
+      // then count unique groups per day
+      { $group: { _id: '$_id.day', count: { $sum: 1 } } },
+      { $sort: { _id: 1 } },
+    ]
+    : [
+      { $match: { tags: tagName, createdAt: { $gte: cutoff } } },
+      { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'UTC' } }, count: { $sum: 1 } } },
+      { $sort: { _id: 1 } },
+    ];
+  return Block.aggregate(pipeline).exec();
 }
 
 export async function getFeaturedBlockWithFallback(options = {}) {
