@@ -6,7 +6,7 @@ block append head
 block nav
   include navLinks
 
-block scripts
+block append scripts
   script(src='/js/room-directory.js')
 
 block content
@@ -22,10 +22,10 @@ block content
         .room-grid.collapsible
           each room in recentlyActiveRooms
             .room-tile.recently-active(
-              data-room-title=`${room.displayName || room.name}`
-              data-room-description=`${room.displayDescription || room.description}`
+              data-room-title=(room.displayName || room.name)
+              data-room-description=(room.displayDescription || room.description)
               data-room-link=`/rooms/${room._id}`
-              data-room-active-users=`${room.activeUsers || 0}`
+              data-room-active-users=(room.activeUsers || 0)
             )
               a.room-link(href=`/rooms/${room._id}` title=(room.displayName || room.name))
                 span.room-title= room.displayName || room.name
@@ -40,10 +40,10 @@ block content
         .room-grid.collapsible
           each room in topicGroup.rooms
             .room-tile(
-              data-room-title=`${room.displayName || room.name}`
-              data-room-description=`${room.displayDescription || room.description}`
+              data-room-title=(room.displayName || room.name)
+              data-room-description=(room.displayDescription || room.description)
               data-room-link=`/rooms/${room._id}`
-              data-room-active-users=`${room.activeUsers || 0}`
+              data-room-active-users=(room.activeUsers || 0)
             )
               a.room-link(href=`/rooms/${room._id}` title=(room.displayName || room.name))
                 span.room-title= room.displayName || room.name
