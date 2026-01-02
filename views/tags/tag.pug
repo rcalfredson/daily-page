@@ -38,18 +38,18 @@ block content
   if taggedBlocks.length
     ul.block-list
       each block in taggedBlocks
-        li.block-preview
+        li.block-preview(lang=(block.lang || 'en'))
           .content
-            a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
-            p
+            a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
+            p(lang=(uiLang || 'en'))
               | #{t('tags.detail.blockInfo.createdBy')} 
               a.user-profile-link(href=`/users/${block.creator}`)= block.creator
               |  #{t('tags.detail.blockInfo.inRoom')} 
-              a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : t('tags.detail.blockInfo.unknownRoom')
+              a.room-link(href=`/rooms/${block.roomId}`)= block.roomDisplayName || block.roomId || t('tags.detail.blockInfo.unknownRoom')
               |  #{t('tags.detail.blockInfo.onDate')} 
-              = new Date(block.createdAt).toLocaleString(lang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
+              = new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
             +translationAttribution(block)
-            div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
+            div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
           +readMoreIfTruncated(block, block.roomId)
           footer.block-footer
             include ../partials/_vote_controls
@@ -58,9 +58,8 @@ block content
     p= t('tags.detail.empty.message')
 
   - const baseUrl = `/tags/${encodeURIComponent(tagName)}`;
-  - const urlPrefix = lang ? `${baseUrl}?lang=${lang}` : baseUrl;
   include ../partials/_pagination
-  +pagination(currentPage, totalPages, urlPrefix)
+  +pagination(currentPage, totalPages, baseUrl)
   include ../partials/_login_modal
   #toast-container
 
