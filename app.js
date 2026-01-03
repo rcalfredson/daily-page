@@ -29,6 +29,7 @@ import blockViewRoute from './server/routes/blockView.js';
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
+import { getUiLang, getPreferredContentLang } from './server/services/localeContext.js';
 import setLangMiddleware from './server/services/localization.js';
 import { initI18n, addI18n } from './server/services/i18n.js'
 import { startJobs } from './server/services/cron.js';
@@ -57,6 +58,7 @@ import {
 } from './server/db/roomService.js'
 import optionalAuth from './server/middleware/optionalAuth.js';
 import { addSeoLocals } from './server/middleware/seo.js';
+import { stripLegacyLang } from './server/middleware/stripLegacyLang.js';
 import { findUserById } from './server/db/userService.js';
 import { toBlockPreviewDTO } from './server/utils/block.js';
 
@@ -104,11 +106,6 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.use(addSeoLocals);
     app.use(initI18n(['layout', 'nav', 'modals']));
     app.options('*', cors(corsOptions));
-
-    app.use((req, res, next) => {
-      res.locals.user = req.user || null;
-      next();
-    });
 
     app.use(express.static('public'));
     app.use(express.urlencoded({ extended: true }));
@@ -441,22 +438,32 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     app.post('/request-room', handleRoomRequest);
 
-    app.get('/rooms/:room_id', optionalAuth,
-      addI18n(['roomDashboard', 'blockList', 'translation', 'readMore', 'voteControls']), async (req, res) => {
+    app.get(
+      '/rooms/:room_id',
+      optionalAuth,
+      addI18n(['roomDashboard', 'blockList', 'translation', 'readMore', 'voteControls']),
+      stripLegacyLang({ canonicalPath: (req) => `/rooms/${encodeURIComponent(req.params.room_id)}` }),
+      async (req, res) => {
         try {
           const { room_id } = req.params;
 
-          const lang = res.locals.lang;
+          const uiLang = getUiLang(res);
+          const preferredContentLang = getPreferredContentLang(res);
+          const userId = req.user?.id || null;
 
-          const roomMetadataRaw = await getRoomMetadata(room_id, lang);
+          const roomMetadataRaw = await getRoomMetadata(room_id, uiLang);
 
-          const roomMetadata = {
+          const roomMetadata = roomMetadataRaw ? {
             ...roomMetadataRaw,
             displayName:
-              roomMetadataRaw?.name_i18n?.get?.(lang) || roomMetadataRaw?.name_i18n?.[lang] || roomMetadataRaw?.name,
+              roomMetadataRaw?.name_i18n?.get?.(uiLang)
+              || roomMetadataRaw?.name_i18n?.[uiLang]
+              || roomMetadataRaw?.name,
             displayDescription:
-              roomMetadataRaw?.description_i18n?.get?.(lang) || roomMetadataRaw?.description_i18n?.[lang] || roomMetadataRaw?.description
-          };
+              roomMetadataRaw?.description_i18n?.get?.(uiLang)
+              || roomMetadataRaw?.description_i18n?.[uiLang]
+              || roomMetadataRaw?.description
+          } : null;
 
           let isStarred = false;
           if (req.user) {
@@ -464,19 +471,13 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
             isStarred = dbUser?.starredRooms?.includes(room_id);
           }
 
-          const preferredLang = req.query.lang
-            || req.user?.preferredLang
-            || (req.acceptsLanguages()[0] || 'en').split('-')[0];
-
-          const userId = req.user?.id || null;
-
           const { blocks: lockedBlocks, period: lockedPeriod } =
             await getBlocksByRoomWithFallback({
               roomId: room_id,
               userId,
               status: 'locked',
               limit: 20,
-              preferredLang
+              preferredLang: preferredContentLang,
             });
 
           const { blocks: inProgressBlocks, period: inProgressPeriod } =
@@ -485,7 +486,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
               userId,
               status: 'in-progress',
               limit: 20,
-              preferredLang
+              preferredLang: preferredContentLang
             });
 
           // Render markdown…
@@ -500,16 +501,19 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
             })
           )
 
-          const date = DateHelper.currentDateI18n(res.locals.lang || 'en', 'Europe/London');
+          const date = DateHelper.currentDateI18n(uiLang || 'en', 'Europe/London');
 
           const showInProgressTab = (inProgressPeriod === 1 && inProgressBlocks.length > 0);
           const showLockedTab = (lockedBlocks.length > 0);
           const useTabs = (showLockedTab ? 1 : 0) + (showInProgressTab ? 1 : 0) >= 2;
 
+          const roomName = roomMetadata?.displayName || roomMetadata?.name || '';
+
           res.render('rooms/blocks-dashboard', {
             room_id,
-            title: res.locals.t('roomDashboard.meta.title', { roomName: roomMetadata.displayName || roomMetadata.name }),
-            description: res.locals.t('roomDashboard.meta.description', { roomName: roomMetadata.displayName || roomMetadata.name }),
+            title: res.locals.t('roomDashboard.meta.title', { roomName }),
+            description: res.locals.t('roomDashboard.meta.description', { roomName }),
+
             lockedBlocks: lightLocked,
             inProgressBlocks: lightInProg,
             lockedPeriod,
@@ -517,12 +521,17 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
             showInProgressTab,
             showLockedTab,
             useTabs,
-            user: req.user,
+
+            user: req.user || null,
             roomMetadata,
             isStarred,
-            date
+            date,
+
+            uiLang,
+            preferredContentLang,
           });
         } catch (error) {
+          console.error('Error loading room dashboard:', error);
           res.status(500).send('Error loading room dashboard.');
         }
       });
@@ -536,83 +545,92 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       })
     })
 
-    app.get('/', optionalAuth, addI18n(['home', 'translation', 'readMore', 'voteControls']), async (req, res) => {
-      try {
-        const preferredLang = res.locals.lang; // ya decidido por middleware
-        const userId = req.user?.id || null;
-        const { t } = res.locals;
+    app.get(
+      '/',
+      optionalAuth,
+      addI18n(['home', 'translation', 'readMore', 'voteControls']),
+      stripLegacyLang({ canonicalPath: '/' }),
+      async (req, res) => {
+        try {
+          const { t } = res.locals;
+          const uiLang = getUiLang(res);
+          const preferredContentLang = getPreferredContentLang(res);
+          const userId = req.user?.id || null;
 
-        // Dispara todo en paralelo
-        const [
-          fbRes,   // featured block
-          frRes,   // featured room (ids/raw)
-          topRes,  // top blocks
-          tagsRes, // trending tags
-          statsRes,// global block stats
-          roomsRes, // total rooms
-          totalTagsRes // total tags
-        ] = await Promise.all([
-          getFeaturedBlockWithFallback({ preferredLang }),
-          getFeaturedRoomWithFallback(),
-          getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang }),
-          getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' }),
-          getGlobalBlockStats(),
-          getTotalRooms(),
-          getTotalTags()
-        ]);
+          // Dispara todo en paralelo
+          const [
+            fbRes,   // featured block
+            frRes,   // featured room (ids/raw)
+            topRes,  // top blocks
+            tagsRes, // trending tags
+            statsRes,// global block stats
+            roomsRes, // total rooms
+            totalTagsRes // total tags
+          ] = await Promise.all([
+            getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }),
+            getFeaturedRoomWithFallback(),
+            getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang }),
+            getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' }),
+            getGlobalBlockStats(),
+            getTotalRooms(),
+            getTotalTags()
+          ]);
 
-        // Post-procesamiento mínimo (sin I/O extra)
-        const featuredBlock = fbRes?.featuredBlock?.content
-          ? { ...fbRes.featuredBlock, contentHTML: renderMarkdownContent(fbRes.featuredBlock.content) }
-          : fbRes?.featuredBlock || null;
+          // Post-procesamiento mínimo (sin I/O extra)
+          const featuredBlock = fbRes?.featuredBlock?.content
+            ? { ...fbRes.featuredBlock, contentHTML: renderMarkdownContent(fbRes.featuredBlock.content) }
+            : fbRes?.featuredBlock || null;
 
-        const featuredBlockPeriod = fbRes?.period || null;
+          const featuredBlockPeriod = fbRes?.period || null;
 
-        // Para el room necesitamos metadata en el idioma -> un pequeño paso secuencial
-        const featuredRoomData = frRes?.featuredRoomData || null;
-        const featuredRoomPeriod = frRes?.period || null;
+          // Para el room necesitamos metadata en el idioma -> un pequeño paso secuencial
+          const featuredRoomData = frRes?.featuredRoomData || null;
+          const featuredRoomPeriod = frRes?.period || null;
 
 
-        const featuredRoom = (featuredRoomData?._id)
-          ? await getRoomMetadata(featuredRoomData._id, preferredLang)
-          : null;
+          const featuredRoom = (featuredRoomData?._id)
+            ? await getRoomMetadata(featuredRoomData._id, uiLang)
+            : null;
 
-        // Mapear top blocks a DTO con userId
-        const blocksPeriod = topRes?.period || null;
-        const topBlocks = (topRes?.blocks || []).map(b => toBlockPreviewDTO(b, { userId }));
+          // Mapear top blocks a DTO con userId
+          const blocksPeriod = topRes?.period || null;
+          const topBlocks = (topRes?.blocks || []).map(b => toBlockPreviewDTO(b, { userId }));
 
-        // Tags + period
-        const trendingTags = tagsRes?.tags || [];
-        const tagsPeriod = tagsRes?.period || null;
+          // Tags + period
+          const trendingTags = tagsRes?.tags || [];
+          const tagsPeriod = tagsRes?.period || null;
 
-        const globalStats = {
-          totalBlocks: statsRes?.totalBlocks ?? 0,
-          totalRooms: roomsRes ?? 0,
-          totalTags: totalTagsRes ?? 0,
-          collaborationsToday: statsRes?.collaborationsToday ?? 0,
-        };
+          const globalStats = {
+            totalBlocks: statsRes?.totalBlocks ?? 0,
+            totalRooms: roomsRes ?? 0,
+            totalTags: totalTagsRes ?? 0,
+            collaborationsToday: statsRes?.collaborationsToday ?? 0,
+          };
 
-        res.render('home', {
-          title: t('home.meta.title'),
-          description: t('home.meta.description'),
-          topBlocks,
-          blocksPeriod,
-          featuredBlock,
-          featuredBlockPeriod,
-          featuredRoom,
-          featuredRoomData,
-          featuredRoomPeriod,
-          globalStats,
-          trendingTags,
-          tagsPeriod,
-          user: req.user,
-          lang: preferredLang,
-        });
-      } catch (err) {
-        console.error('Error fetching homepage data:', err);
-        res.status(500).send('Server Error');
-      }
-    });
+          res.render('home', {
+            title: t('home.meta.title'),
+            description: t('home.meta.description'),
+
+            topBlocks,
+            blocksPeriod,
+            featuredBlock,
+            featuredBlockPeriod,
+            featuredRoom,
+            featuredRoomData,
+            featuredRoomPeriod,
+            globalStats,
+            trendingTags,
+            tagsPeriod,
+
+            user: req.user || null,
+            uiLang,
+            preferredContentLang,
+          });
+        } catch (err) {
+          console.error('Error fetching homepage data:', err);
+          res.status(500).send('Server Error');
+        }
+      });
 
     app.get('*', (req, res) => {
       res.status(404).render('404', {

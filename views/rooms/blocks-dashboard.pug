@@ -27,6 +27,8 @@ block append head
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
 
 prepend content
+  -
+    const roomName = (roomMetadata && (roomMetadata.displayName || roomMetadata.name)) || room_id;
   .room-header
     .room-header-row
       .title-line
@@ -44,16 +46,16 @@ prepend content
             // Outline star is .fa .fa-star-o
             i.fa.fa-star-o
 
-        h1.room-name= roomMetadata.displayName || roomMetadata.name
+        h1.room-name(lang=(uiLang || 'en'))= roomName
 
       // Smaller date text below
       if date
         p.room-date= date
 
   if roomMetadata && (roomMetadata.displayDescription || roomMetadata.description)
-    p#room-description= roomMetadata.displayDescription || roomMetadata.description
+    p#room-description(lang=(uiLang || 'en'))= roomMetadata.displayDescription || roomMetadata.description
   else
-    p#room-description= t('roomDashboard.empty.noDescription')
+    p#room-description(lang=(uiLang || 'en'))= t('roomDashboard.empty.noDescription')
   p.room-archive-link
     a(href=`/rooms/${room_id}/index`)= t('roomDashboard.links.allBlocks')
   p.room-archive-link

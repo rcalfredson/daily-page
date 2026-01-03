@@ -128,17 +128,17 @@ block content
     if topBlocks.length
       ul.block-list
         each block in topBlocks
-          li.block-preview
+          li.block-preview(lang=(block.lang || 'en'))
             div.content
-              a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
-              p
+              a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
+              p(lang=(uiLang || 'en'))
                 | #{t('home.trendingBlocks.createdBy')} 
                 a.user-profile-link(href=`/users/${block.creator}`)= block.creator
                 |  #{t('home.trendingBlocks.in')} 
-                a.room-link(href=`/rooms/${block.roomId}`)= block.roomId ? block.roomId : t('home.trendingBlocks.unknownRoom')
-                |  #{t('home.trendingBlocks.on')} #{new Date(block.createdAt).toLocaleString(lang, { dateStyle: 'medium', timeStyle: 'short' })}
+                a.room-link(href=`/rooms/${block.roomId}`)= block.roomDisplayName || block.roomId || t('home.trendingBlocks.unknownRoom')
+                |  #{t('home.trendingBlocks.on')} #{new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })}
               +translationAttribution(block)
-              div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
+              div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
             +readMoreIfTruncated(block, block.roomId)
             footer.block-footer
               include partials/_vote_controls
