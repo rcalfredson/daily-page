@@ -1,5 +1,5 @@
 mixin blockList(blocks, period, label, room_id)
-  .tab-period
+  .tab-period(lang=(uiLang || 'en'))
     | #{label} 
     if period === 'all'
       |  · #{t('blockList.period.all')}
@@ -7,18 +7,27 @@ mixin blockList(blocks, period, label, room_id)
       | #{t('blockList.period.days', { n: period })}
     else
       | #{t('blockList.period.day')}
+
   ul
     each block in blocks
-      li.block-preview
+      li.block-preview(lang=(block.lang || 'en'))
         div.content
-          a.block-title(href=`/rooms/${room_id}/blocks/${block._id}`)= block.title
-          p
+          a.block-title(
+            href=`/rooms/${room_id}/blocks/${block._id}`
+            lang=(block.lang || 'en')
+          )= block.title
+
+          p(lang=(uiLang || 'en'))
             | #{t('blockList.createdBy')} 
             a.user-profile-link(href=`/users/${block.creator}`)= block.creator
             |  #{t('blockList.on')} 
-            = new Date(block.createdAt).toLocaleString(lang || 'en', { dateStyle: 'medium', timeStyle: 'short' })
+            = new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
+
           +translationAttribution(block)
-          div(class=['content-preview', {'fade-footer': block.truncated}])!= block.contentHTML
+
+          div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
+
           +readMoreIfTruncated(block, room_id)
+
           footer.block-footer
             include ../partials/_vote_controls
