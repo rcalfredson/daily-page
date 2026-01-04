@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Crear una cuenta",
+      "description": "Regístrate en Daily Page para acceder a todas las funciones."
+    },
+    "header": {
+      "title": "Crea tu cuenta",
+      "subtitle": "Únete a Daily Page para crear y compartir tu escritura diaria."
+    },
+    "form": {
+      "email": {
+        "label": "Correo",
+        "placeholder": "Ingresa tu correo"
+      },
+      "username": {
+        "label": "Usuario",
+        "placeholder": "Elige tu nombre de usuario"
+      },
+      "password": {
+        "label": "Contraseña",
+        "placeholder": "Crea una contraseña"
+      },
+      "submit": "Registrarse",
+      "feedback": {
+        "success": "¡Formulario enviado con éxito!",
+        "successCreatedVerify": "¡Cuenta creada con éxito! Revisa tu correo para verificar tu cuenta.",
+        "genericError": "No se pudo crear la cuenta. Inténtalo de nuevo.",
+        "unexpectedError": "Ocurrió un error inesperado. Inténtalo de nuevo."
+      }
+    }
+  }
+}

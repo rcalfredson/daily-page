@@ -2,7 +2,9 @@ import express from 'express';
 
 import { isAuthenticated } from '../middleware/auth.js';
 import optionalAuth from '../middleware/optionalAuth.js'
+import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
 import { addI18n } from '../services/i18n.js';
+import { getUiLang } from '../services/localeContext.js';
 import { findUserById, findUserByUsername } from "../db/userService.js";
 import { findByUserWithLangPref, getRecentActivityByUser } from '../db/blockService.js';
 import Block from '../db/models/Block.js';
@@ -10,12 +12,19 @@ import { getRoomMetadata } from "../db/roomService.js";
 
 const router = express.Router();
 
-router.get('/signup', (req, res) => {
-  res.render('signup', {
-    title: 'Create an Account',
-    description: 'Sign up for Daily Page to access all features.',
+router.get(
+  '/signup',
+  addI18n(['signup']),
+  stripLegacyLang({ canonicalPath: '/signup' }),
+  (req, res) => {
+    const { t } = res.locals;
+    const uiLang = getUiLang(res);
+    res.render('signup', {
+      title: t('signup.meta.title'),
+      description: t('signup.meta.description'),
+      uiLang,
+    });
   });
-});
 
 router.get('/verify-email', (req, res) => {
   res.render('users/verify-email', {
