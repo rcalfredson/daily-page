@@ -100,7 +100,7 @@ const useUserAPI = (app) => {
     const { token } = req.query;
 
     if (!token) {
-      return res.status(400).json({ error: 'Verification token is required.' });
+      return res.status(400).json({ ok: false, code: 'MISSING_TOKEN' });
     }
 
     try {
@@ -110,19 +110,18 @@ const useUserAPI = (app) => {
       });
 
       if (!user) {
-        return res.status(400).json({ error: 'Invalid or expired verification token.' });
+        return res.status(400).json({ ok: false, code: 'INVALID_OR_EXPIRED_TOKEN' });
       }
 
-      // Marcar usuario como verificado y limpiar el token
       user.verified = true;
       user.verificationToken = null;
       user.verificationTokenExpires = null;
       await user.save();
 
-      res.status(200).json({ message: 'Your account has been verified successfully!' });
+      return res.status(200).json({ ok: true, code: 'VERIFIED' });
     } catch (error) {
       console.error('Error verifying email:', error.message);
-      res.status(500).json({ error: 'Internal server error.' });
+      return res.status(500).json({ ok: false, code: 'INTERNAL_ERROR' });
     }
   });
 
