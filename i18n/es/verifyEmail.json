@@ -1,19 +1,26 @@
 {
-  "verifyEmail": {
-    "meta": {
-      "title": "Verificar correo",
-      "description": "Verifica tu correo electrónico para Daily Page."
-    },
-    "header": {
-      "title": "Verificando tu correo..."
-    },
-    "status": {
-      "checking": "Comprobando el token, espera un momento...",
-      "missingToken": "Falta el token de verificación o no es válido.",
-      "genericFailure": "Falló la verificación.",
-      "unexpectedError": "Ocurrió un error inesperado.",
-      "success": "¡Tu cuenta se verificó con éxito!",
-      "invalidOrExpired": "El token de verificación no es válido o ya caducó."
+    "verifyEmail": {
+        "meta": {
+            "title": "Verificar correo",
+            "description": "Verifica tu correo electrónico para Daily Page."
+        },
+        "header": {
+            "title": "Verificando tu correo..."
+        },
+        "status": {
+            "checking": "Comprobando el token, espera un momento...",
+            "missingToken": "Falta el token de verificación o no es válido.",
+            "genericFailure": "Falló la verificación.",
+            "unexpectedError": "Ocurrió un error inesperado.",
+            "success": "¡Tu cuenta se verificó con éxito!",
+            "invalidOrExpired": "El token de verificación no es válido o ya caducó."
+        },
+        "verificationMsg": {
+            "subject": "Verifica tu cuenta de Daily Page ✨",
+            "heading": "¡Bienvenido a Daily Page, {username}!",
+            "body": "Por favor verifica tu correo haciendo clic abajo:",
+            "cta": "Verificar correo",
+            "expires": "Este enlace expira en {hours} horas."
+        }
     }
-  }
 }

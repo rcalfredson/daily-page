@@ -9,7 +9,9 @@ import {
 } from '../../db/userService.js';
 import User from '../../db/models/User.js';
 import { isAuthenticated } from '../../middleware/auth.js'
+import { getUiLangFromReq } from '../../services/localeContext.js';
 import { uploadProfilePic } from '../../services/uploadProfilePic.js';
+import { buildVerifyEmail } from '../../services/emailTemplates/verifyEmail.js';
 import { makeUserJWT, refreshAuthToken } from '../../utils/jwtHelper.js';
 import { sendEmail } from '../../services/mailgunService.js';
 
@@ -75,18 +77,17 @@ const useUserAPI = (app) => {
         updatedAt: new Date(),
       });
 
+      const uiLang = getUiLangFromReq(req);
       const verifyLink = `${process.env.BASE_URL || 'http://localhost:3000'}/verify-email?token=${verificationToken}`;
       // Envía email de verificación
-      await sendEmail({
-        to: email,
-        subject: 'Verify your Daily Page account ✨',
-        html: `
-        <h1>Welcome to Daily Page, ${username}!</h1>
-        <p>Please verify your email by clicking below:</p>
-        <a href="${verifyLink}">Verify Email Address</a>
-        <p>This link expires in 24 hours.</p>
-      `
+      const { subject, html } = await buildVerifyEmail({
+        uiLang,
+        username,
+        verifyLink,
+        hours: 24
       });
+
+      await sendEmail({ to: email, subject, html });
 
       res.status(201).json({ userId, message: 'User created successfully!' });
     } catch (error) {
