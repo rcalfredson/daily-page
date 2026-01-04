@@ -76,3 +76,13 @@ export function addI18n(extraNamespaces = [], { defaultLang = DEFAULT_LANG } = {
     next();
   };
 }
+
+export async function getTranslatorRuntime(lang = DEFAULT_LANG, namespaces = [], { defaultLang = DEFAULT_LANG } = {}) {
+  const bundles = await loadBundles(lang, namespaces, defaultLang);
+
+  return function t(key, params) {
+    const val = deepGet(bundles, key, null);
+    if (val == null) return process.env.NODE_ENV === 'production' ? '' : key;
+    return interpolate(val, params);
+  };
+}
