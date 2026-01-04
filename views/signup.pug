@@ -4,24 +4,49 @@ block nav
   include navLinks
 
 block append head
-  link(rel='stylesheet' href='css/signup.css')
+  link(rel='stylesheet' href='/css/signup.css')
 
 block scripts
   script(src='/js/signup.js')
 
 block content
-  .signup-form-container
-    h1 Create Your Account
-    p Join Daily Page to start creating and sharing your daily writing!
+  .signup-form-container(lang=(uiLang || 'en'))
+    h1= t('signup.header.title')
+    p= t('signup.header.subtitle')
+
     form.signup-form(id="signupForm")
       .form-group
-        label(for="email") Email
-        input#email(type="email" name="email" required placeholder="Enter your email")
+        label(for="email")= t('signup.form.email.label')
+        input#email(
+          type="email"
+          name="email"
+          required
+          placeholder=t('signup.form.email.placeholder')
+        )
+
       .form-group
-        label(for="username") Username
-        input#username(type="text" name="username" required placeholder="Enter your username")
+        label(for="username")= t('signup.form.username.label')
+        input#username(
+          type="text"
+          name="username"
+          required
+          placeholder=t('signup.form.username.placeholder')
+        )
+
       .form-group
-        label(for="password") Password
-        input#password(type="password" name="password" required placeholder="Enter a password")
-      button.signup-button(type="submit") Sign Up
-    .form-feedback(style="display:none;") Form submission successful!
+        label(for="password")= t('signup.form.password.label')
+        input#password(
+          type="password"
+          name="password"
+          required
+          placeholder=t('signup.form.password.placeholder')
+        )
+
+      button.signup-button(type="submit")= t('signup.form.submit')
+
+    .form-feedback(
+      style="display:none;"
+      data-success=t('signup.form.feedback.successCreatedVerify')
+      data-generic-error=t('signup.form.feedback.genericError')
+      data-unexpected-error=t('signup.form.feedback.unexpectedError')
+    )= '' 

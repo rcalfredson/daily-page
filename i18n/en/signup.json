@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Create an Account",
+      "description": "Sign up for Daily Page to access all features."
+    },
+    "header": {
+      "title": "Create Your Account",
+      "subtitle": "Join Daily Page to start creating and sharing your daily writing!"
+    },
+    "form": {
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter your email"
+      },
+      "username": {
+        "label": "Username",
+        "placeholder": "Enter your username"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter a password"
+      },
+      "submit": "Sign Up",
+      "feedback": {
+        "success": "Form submission successful!",
+        "successCreatedVerify": "Account created successfully! Please check your email to verify your account.",
+        "genericError": "Failed to create account. Please try again.",
+        "unexpectedError": "An unexpected error occurred. Please try again."
+      }
+    }
+  }
+}
