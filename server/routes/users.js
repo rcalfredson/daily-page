@@ -26,12 +26,21 @@ router.get(
     });
   });
 
-router.get('/verify-email', (req, res) => {
-  res.render('users/verify-email', {
-    title: 'Verify Email',
-    description: 'Verify your email address for Daily Page.',
-  });
-});
+router.get(
+  '/verify-email',
+  addI18n(['verifyEmail']),
+  stripLegacyLang({ canonicalPath: '/verify-email' }),
+  (req, res) => {
+    const { t } = res.locals;
+    const uiLang = getUiLang(res);
+
+    res.render('users/verify-email', {
+      title: t('verifyEmail.meta.title'),
+      description: t('verifyEmail.meta.description'),
+      uiLang,
+    });
+  }
+);
 
 router.get('/forgot-password', (req, res) => {
   res.render('users/forgot-password', {

@@ -10,6 +10,13 @@ block scripts
   script(src='/js/verify-email.js')
 
 block content
-  .verify-email-container
-    h1 Verifying your email...
-    p#verification-status Checking token, please wait...
+  .verify-email-container(lang=(uiLang || 'en'))
+    h1= t('verifyEmail.header.title')
+    p#verification-status(
+      data-checking=t('verifyEmail.status.checking')
+      data-missing-token=t('verifyEmail.status.missingToken')
+      data-generic-failure=t('verifyEmail.status.genericFailure')
+      data-unexpected-error=t('verifyEmail.status.unexpectedError')
+      data-success=t('verifyEmail.status.success')
+      data-invalid-or-expired=t('verifyEmail.status.invalidOrExpired')
+    )= t('verifyEmail.status.checking')
