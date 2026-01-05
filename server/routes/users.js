@@ -42,12 +42,21 @@ router.get(
   }
 );
 
-router.get('/forgot-password', (req, res) => {
-  res.render('users/forgot-password', {
-    title: 'Reset Password',
-    description: 'Request a reset link for your Daily Page account.'
-  });
-});
+router.get(
+  '/forgot-password',
+  addI18n(['forgotPassword']),
+  stripLegacyLang({ canonicalPath: '/forgot-password' }),
+  (req, res) => {
+    const { t } = res.locals;
+    const uiLang = getUiLang(res);
+
+    res.render('users/forgot-password', {
+      title: t('forgotPassword.meta.title'),
+      description: t('forgotPassword.meta.description'),
+      uiLang,
+    });
+  }
+);
 
 router.get('/reset-password', (req, res) => {
   res.render('users/reset-password', {
