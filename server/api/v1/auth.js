@@ -111,7 +111,7 @@ const useAuthAPI = (app) => {
     const { token, newPassword } = req.body;
 
     if (!token || !newPassword) {
-      return res.status(400).json({ error: 'Token and new password are required.' });
+      return res.status(400).json({ ok: false, code: 'MISSING_FIELDS' });
     }
 
     try {
@@ -121,7 +121,7 @@ const useAuthAPI = (app) => {
       });
 
       if (!user) {
-        return res.status(400).json({ error: 'Invalid or expired token.' });
+        return res.status(400).json({ ok: false, code: 'INVALID_OR_EXPIRED_TOKEN' });
       }
 
       const hashed = await bcrypt.hash(newPassword, 10);
@@ -130,10 +130,10 @@ const useAuthAPI = (app) => {
       user.resetPasswordExpires = null;
       await user.save();
 
-      res.status(200).json({ message: 'Password updated successfully!' });
+      return res.status(200).json({ ok: true, code: 'RESET_OK' });
     } catch (error) {
       console.error('Error resetting password:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      return res.status(500).json({ ok: false, code: 'INTERNAL_ERROR' });
     }
   });
 
