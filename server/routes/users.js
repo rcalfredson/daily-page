@@ -58,12 +58,20 @@ router.get(
   }
 );
 
-router.get('/reset-password', (req, res) => {
-  res.render('users/reset-password', {
-    title: 'Reset Your Password',
-    description: 'Set a new password for your account.'
+router.get(
+  '/reset-password',
+  addI18n(['resetPassword']),
+  stripLegacyLang({ canonicalPath: '/reset-password' }),
+  (req, res) => {
+    const { t } = res.locals;
+    const uiLang = getUiLang(res);
+
+    res.render('users/reset-password', {
+      title: t('resetPassword.meta.title'),
+      description: t('resetPassword.meta.description'),
+      uiLang,
+    });
   });
-});
 
 router.get('/privacy', addI18n(['privacy']), (req, res) => {
   const { t, lang } = res.locals;
