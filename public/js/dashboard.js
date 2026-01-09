@@ -1,21 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Check if the device is a touchscreen
-  const isTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-  // Add the `touchscreen` class to the profile section if applicable
+  const container = document.querySelector('.dashboard-container');
   const profileSection = document.querySelector('.profile-section');
-  if (isTouchScreen) {
-    profileSection.classList.add('touchscreen');
-  }
-
-  // Elements for handling file uploads
   const profilePicInput = document.getElementById('profilePicInput');
   const profilePicImage = document.querySelector('.profile-pic');
-  const userId = document.querySelector('.dashboard-container').dataset.userId;
 
-  // Handle profile picture upload
+  if (!container || !profileSection || !profilePicInput || !profilePicImage) return;
+
+  const userId = container.dataset.userId;
+
+  const msgUploadFailed = container.dataset.uploadFailed || 'Failed to upload profile picture. Please try again.';
+  const msgUploadUnexpected = container.dataset.uploadUnexpected || 'An unexpected error occurred. Please try again.';
+
+  const isTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if (isTouchScreen) profileSection.classList.add('touchscreen');
+
   profilePicInput.addEventListener('change', async (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files?.[0];
     if (!file) return;
 
     const formData = new FormData();
@@ -28,17 +28,19 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error uploading profile picture:', errorData.error);
-        alert('Failed to upload profile picture. Please try again.');
+        // Keep dev signal, but show localized user message
+        let errorData = null;
+        try { errorData = await response.json(); } catch (_) {}
+        console.error('Error uploading profile picture:', errorData?.error || response.status);
+        alert(msgUploadFailed);
         return;
       }
 
       const { imageUrl } = await response.json();
-      profilePicImage.src = imageUrl; // Update the profile picture dynamically
+      if (imageUrl) profilePicImage.src = imageUrl;
     } catch (error) {
       console.error('Error uploading profile picture:', error);
-      alert('An unexpected error occurred. Please try again.');
+      alert(msgUploadUnexpected);
     }
   });
 });
