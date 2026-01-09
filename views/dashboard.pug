@@ -11,74 +11,82 @@ block append scripts
   script(src='/js/edit-user-bio.js')
 
 block content
-  .dashboard-container(data-user-id=user.id)
-    // Profile Section
+  .dashboard-container(
+    data-user-id=user.id
+    data-upload-failed=t('dashboard.alerts.uploadFailed')
+    data-upload-unexpected=t('dashboard.alerts.uploadUnexpected')
+    data-bio-update-failed=t('dashboard.alerts.bioUpdateFailed')
+    data-no-bio=t('dashboard.profile.noBio')
+    lang=(uiLang || 'en')
+  )
     .profile-section
       label.profile-pic-label(for="profilePicInput")
-        img.profile-pic(src=user.profilePic || '/assets/img/default-pic.png', alt='Profile Picture')
+        img.profile-pic(
+          src=user.profilePic || '/assets/img/default-pic.png',
+          alt=t('dashboard.profile.profilePicAlt')
+        )
         i.fa.fa-pencil.edit-icon
       input#profilePicInput(type="file", accept="image/*", hidden)
+
       h2 #{user.username}
-      // Bio Section with inline editing
+
       .bio-container
         .bio-row
           if user.bio
             p.bio-text #{user.bio}
           else
-            p.bio-text No bio yet. Click "Edit" to add one!
-          button#edit-bio-btn.btn Edit Bio
-        // Hidden textarea for editing the bio
-        textarea#bio-input.hidden(placeholder="Enter your bio here") #{user.bio}
-        .bio-edit-buttons.hidden
-          button#save-bio-btn.btn Save
-          button#cancel-bio-btn.btn Cancel
+            p.bio-text= t('dashboard.profile.noBio')
+          button#edit-bio-btn.btn= t('dashboard.profile.editBio')
 
-    // Main Dashboard Content, etc.
+        textarea#bio-input.hidden(placeholder=t('dashboard.profile.bioPlaceholder')) #{user.bio}
+        .bio-edit-buttons.hidden
+          button#save-bio-btn.btn= t('dashboard.profile.save')
+          button#cancel-bio-btn.btn= t('dashboard.profile.cancel')
+
     .dashboard-main
       .activity-section.dashboard-card
-        h3 Recent Activity
+        h3= t('dashboard.activity.title')
         if recentActivity.length
           ul.activity-list
             each activity in recentActivity
               li.activity-item
                 a(href=`/rooms/${activity.roomId}/blocks/${activity._id}`)= activity.title
-                p Updated on #{new Date(activity.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
-        
+                - const formatted = new Date(activity.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+                p= t('dashboard.activity.updatedOn', { date: formatted })
         else
-          p No recent activity.
-        a(href="/dashboard/blocks").btn.stats-btn View All Blocks
+          p= t('dashboard.activity.none')
+        a(href="/dashboard/blocks").btn.stats-btn= t('dashboard.activity.viewAllBlocks')
 
       .streak-section.dashboard-card
-        h3 Writing Streak
-        p.streak-info #{streakLength || 0} days in a row! Keep going!
+        h3= t('dashboard.streak.title')
+        p.streak-info= t('dashboard.streak.line', { days: (streakLength || 0) })
 
       .starred-rooms.dashboard-card
-        h3 Starred Rooms
+        h3= t('dashboard.starredRooms.title')
         if starredRooms.length
           ul.starred-room-list
             each room in starredRooms
               li.starred-room-item
                 a(href=`/rooms/${room.id}`)= room.name
           if totalStarredRooms > starredRooms.length
-            a.view-more(href="/dashboard/starred-rooms") View All Starred Rooms
+            a.view-more(href="/dashboard/starred-rooms")= t('dashboard.starredRooms.viewAll')
         else
-          p You haven't starred any rooms yet. Start exploring to find your favorites!
+          p= t('dashboard.starredRooms.none')
 
     .account-stats
-      h3 Your Stats
+      h3= t('dashboard.stats.title')
       ul.stats-list
         li.stat-item
-          span.stat-label Total Blocks Created
+          span.stat-label= t('dashboard.stats.totalBlocks')
           span.stat-value #{userStats.totalBlocks}
         li.stat-item
-          span.stat-label Collaborations
+          span.stat-label= t('dashboard.stats.collaborations')
           span.stat-value #{userStats.totalCollaborations}
         li.stat-item
-          span.stat-label Votes Given
+          span.stat-label= t('dashboard.stats.votesGiven')
           span.stat-value #{userStats.totalVotesGiven}
         li.stat-item
-          span.stat-label Days Active
+          span.stat-label= t('dashboard.stats.daysActive')
           span.stat-value #{userStats.daysActive}
 
-      a(href="/dashboard/stats").btn.stats-btn View Detailed Stats 📊
-  
+      a(href="/dashboard/stats").btn.stats-btn= t('dashboard.stats.viewDetailed')

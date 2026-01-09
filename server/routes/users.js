@@ -147,57 +147,69 @@ router.get('/users/:username', async (req, res) => {
   }
 });
 
-router.get('/dashboard', isAuthenticated, async (req, res) => {
-  try {
-    const username = req.user.username;
-    const userId = req.user.id;
+router.get(
+  '/dashboard',
+  isAuthenticated,
+  addI18n(['dashboard']),
+  stripLegacyLang({ canonicalPath: '/dashboard' }),
+  async (req, res) => {
+    try {
+      const { t } = res.locals;
+      const uiLang = getUiLang(res);
 
-    const recentActivity = await getRecentActivityByUser(username, { days: 7, limit: 10 });
-    const dbUser = await findUserById(userId);
-    let starredRooms = dbUser.starredRooms || [];
+      const username = req.user.username;
+      const userId = req.user.id;
 
-    const starredRoomsPreview = await Promise.all(
-      starredRooms.slice(0, 3).map(async (roomId) => {
-        const metadata = await getRoomMetadata(roomId);
-        return {
-          id: roomId,
-          name: metadata?.name || "Unnamed Room"
-        };
-      })
-    );
+      const recentActivity = await getRecentActivityByUser(username, { days: 7, limit: 10 });
+      const dbUser = await findUserById(userId);
+      const starredRooms = dbUser.starredRooms || [];
 
-    // 🔥 Añadido: Obtener estadísticas básicas del usuario
-    const totalBlocks = await Block.countDocuments({ creator: username });
-    const totalCollaborations = await Block.countDocuments({ collaborators: username });
-    const totalVotesGiven = await Block.countDocuments({ 'votes.userId': userId });
+      const starredRoomsPreview = await Promise.all(
+        starredRooms.slice(0, 3).map(async (roomId) => {
+          const metadata = await getRoomMetadata(roomId);
+          return {
+            id: roomId,
+            name: metadata?.name || t('dashboard.starredRooms.unnamedRoom'),
+          };
+        })
+      );
 
-    const activeDaysAgg = await Block.aggregate([
-      { $match: { $or: [{ creator: username }, { collaborators: username }] } },
-      { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } } } },
-      { $count: "activeDays" }
-    ]);
+      // 🔥 Obtener estadísticas básicas del usuario
+      const totalBlocks = await Block.countDocuments({ creator: username });
+      const totalCollaborations = await Block.countDocuments({ collaborators: username });
+      const totalVotesGiven = await Block.countDocuments({ 'votes.userId': userId });
 
-    const daysActive = activeDaysAgg[0]?.activeDays || 0;
+      const activeDaysAgg = await Block.aggregate([
+        { $match: { $or: [{ creator: username }, { collaborators: username }] } },
+        { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } } } },
+        { $count: "activeDays" }
+      ]);
 
-    res.render('dashboard', {
-      title: 'Dashboard',
-      user: req.user,
-      recentActivity,
-      streakLength: req.user.streakLength,
-      starredRooms: starredRoomsPreview,
-      totalStarredRooms: starredRooms.length,
-      userStats: {
-        totalBlocks,
-        totalCollaborations,
-        totalVotesGiven,
-        daysActive
-      }
-    });
-  } catch (error) {
-    console.error('Error loading dashboard:', error.message);
-    res.status(500).render('error', { message: 'Error loading dashboard' });
+      const daysActive = activeDaysAgg[0]?.activeDays || 0;
+
+      res.render('dashboard', {
+        title: t('dashboard.meta.title'),
+        description: t('dashboard.meta.description'),
+        uiLang,
+        user: req.user,
+        recentActivity,
+        streakLength: req.user.streakLength,
+        starredRooms: starredRoomsPreview,
+        totalStarredRooms: starredRooms.length,
+        userStats: {
+          totalBlocks,
+          totalCollaborations,
+          totalVotesGiven,
+          daysActive
+        }
+      });
+    } catch (error) {
+      console.error('Error loading dashboard:', error.message);
+      // leave error page i18n for later, or do it now if you already have error ns
+      res.status(500).render('error', { message: 'Error loading dashboard' });
+    }
   }
-});
+);
 
 router.get('/dashboard/stats', isAuthenticated, async (req, res) => {
   try {

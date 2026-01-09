@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Panel",
+      "description": "Tu panel de Daily Page y resumen de cuenta."
+    },
+    "profile": {
+      "profilePicAlt": "Foto de perfil",
+      "noBio": "Aún no tienes bio. Haz clic en \"Editar\" para agregar una.",
+      "editBio": "Editar bio",
+      "bioPlaceholder": "Escribe tu bio aquí",
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    },
+    "activity": {
+      "title": "Actividad reciente",
+      "none": "No hay actividad reciente.",
+      "updatedOn": "Actualizado el {date}",
+      "viewAllBlocks": "Ver todos los bloques"
+    },
+    "streak": {
+      "title": "Racha de escritura",
+      "line": "¡{days} días seguidos! Sigue así."
+    },
+    "starredRooms": {
+      "title": "Salas favoritas",
+      "none": "Aún no has marcado salas. ¡Explora y encuentra tus favoritas!",
+      "viewAll": "Ver todas las salas favoritas",
+      "unnamedRoom": "Sala sin nombre"
+    },
+    "stats": {
+      "title": "Tus estadísticas",
+      "totalBlocks": "Bloques creados",
+      "collaborations": "Colaboraciones",
+      "votesGiven": "Votos emitidos",
+      "daysActive": "Días activo",
+      "viewDetailed": "Ver estadísticas detalladas 📊"
+    },
+    "alerts": {
+      "uploadFailed": "No se pudo subir la foto de perfil. Inténtalo de nuevo.",
+      "uploadUnexpected": "Ocurrió un error inesperado. Inténtalo de nuevo.",
+      "bioUpdateFailed": "Error al guardar la bio. Inténtalo de nuevo."
+    }
+  }
+}

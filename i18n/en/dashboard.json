@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Dashboard",
+      "description": "Your Daily Page dashboard and account overview."
+    },
+    "profile": {
+      "profilePicAlt": "Profile Picture",
+      "noBio": "No bio yet. Click \"Edit\" to add one!",
+      "editBio": "Edit Bio",
+      "bioPlaceholder": "Enter your bio here",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "activity": {
+      "title": "Recent Activity",
+      "none": "No recent activity.",
+      "updatedOn": "Updated on {date}",
+      "viewAllBlocks": "View All Blocks"
+    },
+    "streak": {
+      "title": "Writing Streak",
+      "line": "{days} days in a row! Keep going!"
+    },
+    "starredRooms": {
+      "title": "Starred Rooms",
+      "none": "You haven't starred any rooms yet. Start exploring to find your favorites!",
+      "viewAll": "View All Starred Rooms",
+      "unnamedRoom": "Unnamed Room"
+    },
+    "stats": {
+      "title": "Your Stats",
+      "totalBlocks": "Total Blocks Created",
+      "collaborations": "Collaborations",
+      "votesGiven": "Votes Given",
+      "daysActive": "Days Active",
+      "viewDetailed": "View Detailed Stats 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Failed to upload profile picture. Please try again.",
+      "uploadUnexpected": "An unexpected error occurred. Please try again.",
+      "bioUpdateFailed": "Error updating bio. Please try again."
+    }
+  }
+}
