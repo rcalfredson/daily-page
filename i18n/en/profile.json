@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "{username}'s Profile",
+      "descriptionUser": "View {username}'s recent activity, starred rooms, and stats."
+    },
+    "profile": {
+      "profilePicAlt": "Profile picture",
+      "noBio": "(No bio available.)"
+    },
+    "activity": {
+      "title": "Recent Activity",
+      "updatedOn": "Updated on {date}",
+      "none": "No recent activity.",
+      "viewAllBlocks": "View All Blocks"
+    },
+    "starredRooms": {
+      "title": "Starred Rooms",
+      "none": "No starred rooms yet.",
+      "unnamedRoom": "Unnamed Room"
+    },
+    "stats": {
+      "title": "User Stats",
+      "totalBlocks": "Total Blocks Created",
+      "collaborations": "Collaborations",
+      "daysActive": "Days Active"
+    }
+  }
+}
