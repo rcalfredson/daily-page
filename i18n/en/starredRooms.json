@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "All Starred Rooms",
+      "description": "A list of all the rooms you've starred."
+    },
+    "nav": {
+      "backToDashboard": "← Back to Dashboard"
+    },
+    "header": {
+      "title": "🌟 All Your Starred Rooms 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Unnamed Room",
+      "noDescription": "No description."
+    },
+    "empty": {
+      "message": "You haven't starred any rooms yet!"
+    }
+  }
+}
