@@ -6,13 +6,14 @@
     },
     "header": {
       "dashboardLink": "Tu panel",
-      "profileLink": "Perfil de {{username}}",
+      "profileLink": "Perfil de {username}",
       "allBlocks": "Todos los bloques"
     },
     "empty": "Aún no hay bloques.",
     "pagination": {
       "prev": "← Anterior",
       "next": "Siguiente →"
-    }
+    },
+    "titleUser": "Bloques de {username}"
   }
 }
