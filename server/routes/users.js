@@ -94,58 +94,63 @@ router.get('/users/anonymous', (req, res) => {
 });
 
 // View user profile (public)
-router.get('/users/:username', async (req, res) => {
-  try {
-    const profileUsername = req.params.username;
+router.get(
+  '/users/:username',
+  optionalAuth,
+  addI18n(['profile']),
+  stripLegacyLang({ canonicalPath: (req) => `/users/${req.params.username}` }),
+  async (req, res) => {
+    try {
+      const { t } = res.locals;
+      const uiLang = getUiLang(res);
 
-    // Fetch user data
-    const profileUser = await findUserByUsername(profileUsername);
-    if (!profileUser) {
-      return res.status(404).render('error', { title: 'User not found', message: 'User not found' });
+      const profileUsername = req.params.username;
+
+      const profileUser = await findUserByUsername(profileUsername);
+      if (!profileUser) {
+        return res.status(404).render('error', { title: 'User not found', message: 'User not found' });
+      }
+
+      const recentActivity = await getRecentActivityByUser(profileUsername, { days: 7, limit: 10 });
+
+      const starredRoomsPreview = await Promise.all(
+        (profileUser.starredRooms || []).slice(0, 3).map(async (roomId) => {
+          const metadata = await getRoomMetadata(roomId, uiLang);
+          return {
+            id: roomId,
+            name: metadata?.displayName || metadata?.name || t('profile.starredRooms.unnamedRoom')
+          };
+        })
+      );
+
+      const totalBlocks = await Block.countDocuments({ creator: profileUsername });
+      const totalCollaborations = await Block.countDocuments({ collaborators: profileUsername });
+
+      const daysActiveAgg = await Block.aggregate([
+        { $match: { $or: [{ creator: profileUsername }, { collaborators: profileUsername }] } },
+        { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } } } },
+        { $count: "activeDays" }
+      ]);
+      const daysActive = daysActiveAgg[0]?.activeDays || 0;
+
+      const isOwnProfile = !!(req.user && req.user.username === profileUsername);
+
+      res.render('profile', {
+        title: t('profile.meta.titleUser', { username: profileUsername }),
+        description: t('profile.meta.descriptionUser', { username: profileUsername }),
+        uiLang,
+        profileUser,
+        recentActivity,
+        starredRooms: starredRoomsPreview,
+        userStats: { totalBlocks, totalCollaborations, daysActive },
+        isOwnProfile
+      });
+    } catch (error) {
+      console.error('Error loading profile:', error.message);
+      res.status(500).render('error', { message: 'Error loading user profile' });
     }
-
-    // Fetch recent activity
-    const recentActivity = await getRecentActivityByUser(profileUsername, { days: 7, limit: 10 });
-
-    // Fetch starred rooms (just a preview for the MVP)
-    const starredRoomsPreview = await Promise.all(
-      (profileUser.starredRooms || []).slice(0, 3).map(async (roomId) => {
-        const metadata = await getRoomMetadata(roomId);
-        return {
-          id: roomId,
-          name: metadata?.name || "Unnamed Room"
-        };
-      })
-    );
-
-    // User stats
-    const totalBlocks = await Block.countDocuments({ creator: profileUsername });
-    const totalCollaborations = await Block.countDocuments({ collaborators: profileUsername });
-    const daysActiveAgg = await Block.aggregate([
-      { $match: { $or: [{ creator: profileUsername }, { collaborators: profileUsername }] } },
-      { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } } } },
-      { $count: "activeDays" }
-    ]);
-
-    const daysActive = daysActiveAgg[0]?.activeDays || 0;
-
-    res.render('profile', {
-      title: `${profileUsername}'s Profile`,
-      profileUser,
-      recentActivity,
-      starredRooms: starredRoomsPreview,
-      userStats: {
-        totalBlocks,
-        totalCollaborations,
-        daysActive
-      },
-      isOwnProfile: req.user && (req.user.username === profileUsername)
-    });
-  } catch (error) {
-    console.error('Error loading profile:', error.message);
-    res.status(500).render('error', { message: 'Error loading user profile' });
   }
-});
+);
 
 router.get(
   '/dashboard',

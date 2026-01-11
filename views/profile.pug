@@ -7,49 +7,53 @@ block append head
   link(rel='stylesheet', href='/css/dashboard.css')
 
 block content
-  .dashboard-container
+  .dashboard-container(lang=(uiLang || 'en'))
     .profile-section
-      img.profile-pic(src=profileUser.profilePic || '/assets/img/default-pic.png', alt='Profile Picture')
+      img.profile-pic(
+        src=profileUser.profilePic || '/assets/img/default-pic.png',
+        alt=t('profile.profile.profilePicAlt')
+      )
       h2 #{profileUser.username}
       if profileUser.bio
         p.bio-text #{profileUser.bio}
       else
-        p.bio-text (No bio available.)
+        p.bio-text= t('profile.profile.noBio')
 
     .dashboard-main
       .activity-section.dashboard-card
-        h3 Recent Activity
+        h3= t('profile.activity.title')
         if recentActivity.length
           ul.activity-list
             each activity in recentActivity
               li.activity-item
                 a(href=`/rooms/${activity.roomId}/blocks/${activity._id}`)= activity.title
-                p Updated on #{new Date(activity.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                - const formatted = new Date(activity.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+                p= t('profile.activity.updatedOn', { date: formatted })
         else
-          p No recent activity.
-        - const encodedProfileUser = encodeURIComponent(profileUser.username)
-        a(href=`/users/${encodedProfileUser}/blocks`).btn.stats-btn View All Blocks
+          p= t('profile.activity.none')
 
+        - const encodedProfileUser = encodeURIComponent(profileUser.username)
+        a(href=`/users/${encodedProfileUser}/blocks`).btn.stats-btn= t('profile.activity.viewAllBlocks')
 
       .starred-rooms.dashboard-card
-        h3 Starred Rooms
+        h3= t('profile.starredRooms.title')
         if starredRooms.length
           ul.starred-room-list
             each room in starredRooms
               li.starred-room-item
                 a(href=`/rooms/${room.id}`)= room.name
         else
-          p No starred rooms yet.
+          p= t('profile.starredRooms.none')
 
     .account-stats
-      h3 User Stats
+      h3= t('profile.stats.title')
       ul.stats-list
         li.stat-item
-          span.stat-label Total Blocks Created
+          span.stat-label= t('profile.stats.totalBlocks')
           span.stat-value #{userStats.totalBlocks}
         li.stat-item
-          span.stat-label Collaborations
+          span.stat-label= t('profile.stats.collaborations')
           span.stat-value #{userStats.totalCollaborations}
         li.stat-item
-          span.stat-label Days Active
+          span.stat-label= t('profile.stats.daysActive')
           span.stat-value #{userStats.daysActive}

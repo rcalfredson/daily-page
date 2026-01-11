@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "Perfil de {username}",
+      "descriptionUser": "Ver actividad reciente, salas favoritas y estadísticas de {username}."
+    },
+    "profile": {
+      "profilePicAlt": "Foto de perfil",
+      "noBio": "(No hay biografía.)"
+    },
+    "activity": {
+      "title": "Actividad reciente",
+      "updatedOn": "Actualizado el {date}",
+      "none": "No hay actividad reciente.",
+      "viewAllBlocks": "Ver todos los bloques"
+    },
+    "starredRooms": {
+      "title": "Salas favoritas",
+      "none": "Aún no hay salas marcadas como favoritas.",
+      "unnamedRoom": "Sala sin nombre"
+    },
+    "stats": {
+      "title": "Estadísticas",
+      "totalBlocks": "Bloques creados",
+      "collaborations": "Colaboraciones",
+      "daysActive": "Días activos"
+    }
+  }
+}
