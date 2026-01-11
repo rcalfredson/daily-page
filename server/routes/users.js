@@ -4,7 +4,7 @@ import { isAuthenticated } from '../middleware/auth.js';
 import optionalAuth from '../middleware/optionalAuth.js'
 import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
 import { addI18n } from '../services/i18n.js';
-import { getUiLang } from '../services/localeContext.js';
+import { getUiLang, getPreferredContentLang } from '../services/localeContext.js';
 import { findUserById, findUserByUsername } from "../db/userService.js";
 import { findByUserWithLangPref, getRecentActivityByUser } from '../db/blockService.js';
 import Block from '../db/models/Block.js';
@@ -289,58 +289,67 @@ router.get(
 );
 
 
-// GET /dashboard/blocks?page=&sort=&dir=&lang=
-router.get('/dashboard/blocks', isAuthenticated, async (req, res) => {
-  try {
-    const username = req.user.username;
-    const preferredLang =
-      req.query.lang ||
-      req.user?.preferredLang ||
-      (req.acceptsLanguages()[0] || "en").split("-")[0];
+// GET /dashboard/blocks?page=&sort=&dir=
+router.get(
+  '/dashboard/blocks',
+  isAuthenticated,
+  addI18n(['userBlocks', 'archive']),
+  stripLegacyLang({ canonicalPath: '/dashboard/blocks' }),
+  async (req, res) => {
+    try {
+      const { t } = res.locals;
 
-    const page = +req.query.page || 1;
-    const limit = 20;
-    const sortKey = ['title', 'createdAt', 'voteCount'].includes(req.query.sort)
-      ? req.query.sort : 'createdAt';
-    const dirStr = req.query.dir === 'asc' ? 'asc' : 'desc';
-    const sortDir = dirStr === 'asc' ? 1 : -1;
+      const uiLang = getUiLang(res);
+      const preferredContentLang = getPreferredContentLang(res);
 
-    const currentLang = preferredLang;
-    const langQuery = currentLang ? `&lang=${currentLang}` : '';
+      const username = req.user.username;
 
-    const blocks = await findByUserWithLangPref({
-      username,
-      preferredLang,
-      sortBy: sortKey,
-      sortDir,
-      skip: (page - 1) * limit,
-      limit
-    });
+      const page = +req.query.page || 1;
+      const limit = 20;
 
-    const [{ total = 0 } = {}] = await Block.aggregate([
-      { $match: { $or: [{ creator: username }, { collaborators: username }] } },
-      { $group: { _id: "$groupId" } },
-      { $count: "total" }
-    ]);
-    const totalPages = Math.max(1, Math.ceil(total / limit));
+      const sortKey = ['title', 'createdAt', 'voteCount'].includes(req.query.sort)
+        ? req.query.sort
+        : 'createdAt';
 
-    res.render('users/blocks', {
-      title: 'Your Blocks',
-      username,
-      blocks,
-      currentPage: page,
-      totalPages,
-      sortKey,
-      dir: dirStr,
-      lang: currentLang,
-      langQuery,
-      isOwnProfile: true
-    });
-  } catch (err) {
-    console.error('Error fetching user blocks:', err);
-    res.status(500).render('error', { message: 'Error fetching user blocks' });
+      const dirStr = req.query.dir === 'asc' ? 'asc' : 'desc';
+      const sortDir = dirStr === 'asc' ? 1 : -1;
+
+      const blocks = await findByUserWithLangPref({
+        username,
+        preferredLang: preferredContentLang,
+        sortBy: sortKey,
+        sortDir,
+        skip: (page - 1) * limit,
+        limit
+      });
+
+      const [{ total = 0 } = {}] = await Block.aggregate([
+        { $match: { $or: [{ creator: username }, { collaborators: username }] } },
+        { $group: { _id: "$groupId" } },
+        { $count: "total" }
+      ]);
+
+      const totalPages = Math.max(1, Math.ceil(total / limit));
+
+      res.render('users/blocks', {
+        title: t('userBlocks.meta.title'),
+        description: t('userBlocks.meta.description'),
+        username,
+        blocks,
+        currentPage: page,
+        totalPages,
+        sortKey,
+        dir: dirStr,
+        isOwnProfile: true,
+        uiLang,
+        preferredContentLang,
+      });
+    } catch (err) {
+      console.error('Error fetching user blocks:', err);
+      res.status(500).render('error', { message: 'Error fetching user blocks' });
+    }
   }
-});
+);
 
 // GET /users/:username/blocks?page=&sort=&dir=&lang=
 router.get('/users/:username/blocks', optionalAuth, async (req, res) => {
