@@ -62,6 +62,10 @@
         },
         "submit": "Aplicar"
       }
+    },
+    "pagination": {
+      "prev": "← Anterior",
+      "next": "Siguiente →"
     }
   }
 }
