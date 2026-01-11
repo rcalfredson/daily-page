@@ -11,7 +11,8 @@ block content
     a.room-link(href=`/rooms/${roomId}`)= roomName
     |  #{t('archive.index.header.allBlocks')}
   .room-index-container
-    form.sort-bar(method='get' action=`?sort=${sortKey}&dir=${dir}`)
+    form.sort-bar(method='get' action=`/rooms/${roomId}/index`)
+      input(type='hidden' name='page' value='1')
       | #{t('archive.index.sort.label')} 
       select(name='sort')
         option(value='createdAt' selected=sortKey=='createdAt')= t('archive.index.sort.options.date')
@@ -32,5 +33,6 @@ block content
     +pagination(
       currentPage,
       totalPages,
-      `/rooms/${roomId}/index?sort=${sortKey}&dir=${dir}`
+      `/rooms/${roomId}/index?sort=${sortKey}&dir=${dir}`,
+      { prev: t('archive.pagination.prev'), next: t('archive.pagination.next') }
     )
