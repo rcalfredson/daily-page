@@ -1,27 +1,22 @@
-//- views/partials/_pagination.pug
-//- usage: +pagination(currentPage, totalPages, urlPrefix)
-mixin pagination(currentPage, totalPages, urlPrefix)
+mixin pagination(currentPage, totalPages, urlPrefix, labels)
+  - const prevLabel = (labels && labels.prev) || '← Previous'
+  - const nextLabel = (labels && labels.next) || 'Next →'
+
   if totalPages > 1
     - const sep = urlPrefix.includes('?') ? '&' : '?'
     .pagination
       if currentPage > 1
-        a.page-link(
-          href=`${urlPrefix}${sep}page=${currentPage-1}`
-        ) ← Previous
+        a.page-link(href=`${urlPrefix}${sep}page=${currentPage-1}`)= prevLabel
       else
-        span.page-link.disabled ← Previous
+        span.page-link.disabled= prevLabel
 
       each n in [...Array(totalPages)].map((_,i)=>i+1)
         if n === currentPage
           span.page-link.active= n
         else
-          a.page-link(
-            href=`${urlPrefix}${sep}page=${n}`
-          )= n
+          a.page-link(href=`${urlPrefix}${sep}page=${n}`)= n
 
       if currentPage < totalPages
-        a.page-link(
-          href=`${urlPrefix}${sep}page=${currentPage+1}`
-        ) Next →
+        a.page-link(href=`${urlPrefix}${sep}page=${currentPage+1}`)= nextLabel
       else
-        span.page-link.disabled Next →
+        span.page-link.disabled= nextLabel

@@ -1,4 +1,5 @@
 extends ../layout
+
 block append head
   link(rel='stylesheet' href='/css/room-index.css')
   link(rel='stylesheet' href='/css/pagination.css')
@@ -9,38 +10,43 @@ block nav
 block content
   - const encodedUser = encodeURIComponent(username || '')
   - const baseUrl = isOwnProfile ? '/dashboard/blocks' : `/users/${encodedUser}/blocks`
+
   h1
     if isOwnProfile
-      a.room-link(href='/dashboard') Your Dashboard
-      |  — All Blocks
+      a.room-link(href='/dashboard')= t('userBlocks.header.dashboardLink')
+      |  — #{t('userBlocks.header.allBlocks')}
     else
-      a.room-link(href=`/users/${encodedUser}`)= `${username}'s Profile`
-      |  — All Blocks
+      a.room-link(href=`/users/${encodedUser}`)= t('userBlocks.header.profileLink', { username })
+      |  — #{t('userBlocks.header.allBlocks')}
+
   .room-index-container
-    form.sort-bar(method='get' action=`?sort=${sortKey}&dir=${dir}${langQuery}`)
-      | Sort by 
+    form.sort-bar(method='get' action=baseUrl)
+      input(type='hidden' name='page' value='1')
+      | #{t('archive.index.sort.label')} 
       select(name='sort')
-        option(value='createdAt' selected=sortKey=='createdAt') Date
-        option(value='title' selected=sortKey=='title') Title
-        option(value='voteCount' selected=sortKey=='voteCount') Votes
+        option(value='createdAt' selected=sortKey=='createdAt')= t('archive.index.sort.options.date')
+        option(value='title' selected=sortKey=='title')= t('archive.index.sort.options.title')
+        option(value='voteCount' selected=sortKey=='voteCount')= t('archive.index.sort.options.votes')
       |  
       select(name='dir')
         option(value='desc' selected=dir=='desc') ↓
         option(value='asc'  selected=dir=='asc') ↑
-      button(type='submit') Go
+      button(type='submit')= t('archive.index.sort.submit')
 
     if blocks.length
       ul.block-toc
         each b in blocks
-          li
-            a(href=`/rooms/${b.roomId}/blocks/${b._id}`)= b.title
-            span.meta (#{b.voteCount} ★ • #{b.createdAt.toLocaleDateString()})
+          li(lang=(b.lang || 'en'))
+            a(href=`/rooms/${b.roomId}/blocks/${b._id}` lang=(b.lang || 'en'))= b.title
+            span.meta(lang=(uiLang || 'en'))
+              | (#{b.voteCount} ★ • #{b.createdAt.toLocaleDateString(uiLang || undefined)})
     else
-      p No blocks yet.
+      p= t('userBlocks.empty')
 
     include ../partials/_pagination
     +pagination(
       currentPage,
       totalPages,
-      `${baseUrl}?sort=${sortKey}&dir=${dir}${langQuery}`
+      `${baseUrl}?sort=${sortKey}&dir=${dir}`,
+      { prev: t('userBlocks.pagination.prev'), next: t('userBlocks.pagination.next') }
     )

@@ -1,0 +1,18 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "Your Blocks",
+      "description": "Browse and sort all blocks you’ve created or collaborated on."
+    },
+    "header": {
+      "dashboardLink": "Your Dashboard",
+      "profileLink": "{{username}}'s Profile",
+      "allBlocks": "All Blocks"
+    },
+    "empty": "No blocks yet.",
+    "pagination": {
+      "prev": "← Previous",
+      "next": "Next →"
+    }
+  }
+}
