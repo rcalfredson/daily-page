@@ -6,13 +6,14 @@
     },
     "header": {
       "dashboardLink": "Your Dashboard",
-      "profileLink": "{{username}}'s Profile",
+      "profileLink": "{username}'s Profile",
       "allBlocks": "All Blocks"
     },
     "empty": "No blocks yet.",
     "pagination": {
       "prev": "← Previous",
       "next": "Next →"
-    }
+    },
+    "titleUser": "{username}'s Blocks"
   }
 }
