@@ -211,40 +211,44 @@ router.get(
   }
 );
 
-router.get('/dashboard/stats', isAuthenticated, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const username = req.user.username;
+router.get(
+  '/dashboard/stats',
+  isAuthenticated,
+  addI18n(['detailedStats']),
+  stripLegacyLang({ canonicalPath: '/dashboard/stats' }),
+  async (req, res) => {
+    try {
+      const { t } = res.locals;
+      const uiLang = getUiLang(res);
 
-    const totalBlocks = await Block.countDocuments({ creator: username });
-    const totalCollaborations = await Block.countDocuments({ collaborators: username });
-    const totalVotesGiven = await Block.countDocuments({ 'votes.userId': userId });
+      const userId = req.user.id;
+      const username = req.user.username;
 
-    // Días activos (días distintos con actividad)
-    const activeDaysAgg = await Block.aggregate([
-      { $match: { $or: [{ creator: username }, { collaborators: username }] } },
-      { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } } } },
-      { $count: "activeDays" }
-    ]);
+      const totalBlocks = await Block.countDocuments({ creator: username });
+      const totalCollaborations = await Block.countDocuments({ collaborators: username });
+      const totalVotesGiven = await Block.countDocuments({ 'votes.userId': userId });
 
-    const daysActive = activeDaysAgg[0]?.activeDays || 0;
+      const activeDaysAgg = await Block.aggregate([
+        { $match: { $or: [{ creator: username }, { collaborators: username }] } },
+        { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } } } },
+        { $count: "activeDays" }
+      ]);
 
-    res.render('detailed-stats', {
-      title: 'Detailed Stats',
-      user: req.user,
-      stats: {
-        totalBlocks,
-        totalCollaborations,
-        totalVotesGiven,
-        daysActive,
-      }
-    });
+      const daysActive = activeDaysAgg[0]?.activeDays || 0;
 
-  } catch (error) {
-    console.error('Error loading detailed stats:', error.message);
-    res.status(500).render('error', { message: 'Error loading detailed stats' });
+      res.render('detailed-stats', {
+        title: t('detailedStats.meta.title'),
+        description: t('detailedStats.meta.description'),
+        uiLang,
+        user: req.user,
+        stats: { totalBlocks, totalCollaborations, totalVotesGiven, daysActive },
+      });
+    } catch (error) {
+      console.error('Error loading detailed stats:', error.message);
+      res.status(500).render('error', { message: 'Error loading detailed stats' });
+    }
   }
-});
+);
 
 router.get('/dashboard/starred-rooms', isAuthenticated, async (req, res) => {
   try {

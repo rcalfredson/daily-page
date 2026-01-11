@@ -5,31 +5,31 @@ block nav
 
 block append head
   link(rel='stylesheet', href='/css/detailed-stats.css')
-  script(src='https://cdn.jsdelivr.net/npm/chart.js') // Opcional, para gráficos bonitos!
+  script(src='https://cdn.jsdelivr.net/npm/chart.js')
 
 block content
-  a.btn(href="/dashboard") ← Back to Dashboard
-  .detailed-stats-container
-    h2 📊 Your Stats Overview 📊
+  .detailed-stats-container(lang=(uiLang || 'en'))
+    a.btn(href="/dashboard")= t('detailedStats.nav.backToDashboard')
+
+    h2= t('detailedStats.header.title')
 
     .stats-grid
       .stat-card
-        h4 Total Blocks Created 📝
+        h4= t('detailedStats.cards.totalBlocks')
         p.stat-number #{stats.totalBlocks}
 
       .stat-card
-        h4 Collaborations 🤝
+        h4= t('detailedStats.cards.collaborations')
         p.stat-number #{stats.totalCollaborations}
 
       .stat-card
-        h4 Votes Given 👍
+        h4= t('detailedStats.cards.votesGiven')
         p.stat-number #{stats.totalVotesGiven}
 
       .stat-card
-        h4 Days Active 📆
+        h4= t('detailedStats.cards.daysActive')
         p.stat-number #{stats.daysActive}
 
-    // Placeholder para gráficos interactivos
     canvas#activityChart(width="400" height="300")
 
   script.
@@ -37,9 +37,14 @@ block content
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Blocks Created', 'Collaborations', 'Votes Given', 'Days Active'],
+        labels: [
+          '!{t("detailedStats.chart.labels.blocksCreated")}',
+          '!{t("detailedStats.chart.labels.collaborations")}',
+          '!{t("detailedStats.chart.labels.votesGiven")}',
+          '!{t("detailedStats.chart.labels.daysActive")}'
+        ],
         datasets: [{
-          label: 'Your Stats',
+          label: '!{t("detailedStats.chart.datasetLabel")}',
           data: [
             #{stats.totalBlocks},
             #{stats.totalCollaborations},
@@ -51,20 +56,10 @@ block content
       },
       options: {
         responsive: true,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
+        plugins: { legend: { display: false } },
         scales: {
           y: { beginAtZero: true },
-          x: {
-            ticks: {
-              maxRotation: 45,
-              minRotation: 45,
-              autoSkip: false
-            }
-          }
+          x: { ticks: { maxRotation: 45, minRotation: 45, autoSkip: false } }
         }
       }
     });
