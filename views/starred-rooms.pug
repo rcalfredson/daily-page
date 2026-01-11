@@ -7,9 +7,10 @@ block append head
   link(rel='stylesheet' href='/css/starred-rooms.css')
 
 block content
-  a.btn(href="/dashboard") ← Back to Dashboard
-  .starred-rooms-container
-    h2 🌟 All Your Starred Rooms 🌟
+  .starred-rooms-container(lang=(uiLang || 'en'))
+    a.btn(href="/dashboard")= t('starredRooms.nav.backToDashboard')
+    h2= t('starredRooms.header.title')
+
     if starredRooms.length
       ul.starred-rooms-full-list
         each room in starredRooms
@@ -18,4 +19,4 @@ block content
               span.room-name= room.name
               p.starred-room-description= room.description
     else
-      p You haven't starred any rooms yet!
+      p= t('starredRooms.empty.message')

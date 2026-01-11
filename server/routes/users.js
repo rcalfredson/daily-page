@@ -250,32 +250,44 @@ router.get(
   }
 );
 
-router.get('/dashboard/starred-rooms', isAuthenticated, async (req, res) => {
-  try {
-    const dbUser = await findUserById(req.user.id);
-    let starredRooms = dbUser.starredRooms || [];
+router.get(
+  '/dashboard/starred-rooms',
+  isAuthenticated,
+  addI18n(['starredRooms']),
+  stripLegacyLang({ canonicalPath: '/dashboard/starred-rooms' }),
+  async (req, res) => {
+    try {
+      const { t } = res.locals;
+      const uiLang = getUiLang(res);
 
-    const starredRoomsFull = await Promise.all(
-      starredRooms.map(async (roomId) => {
-        const metadata = await getRoomMetadata(roomId);
-        return {
-          id: roomId,
-          name: metadata?.name || "Unnamed Room",
-          description: metadata?.description || "No description."
-        };
-      })
-    );
+      const dbUser = await findUserById(req.user.id);
+      const starredRooms = dbUser.starredRooms || [];
 
-    res.render('starred-rooms', {
-      title: 'All Starred Rooms',
-      starredRooms: starredRoomsFull,
-      user: req.user
-    });
-  } catch (error) {
-    console.error('Error loading starred rooms:', error.message);
-    res.status(500).render('error', { message: 'Error loading starred rooms' });
+      const starredRoomsFull = await Promise.all(
+        starredRooms.map(async (roomId) => {
+          const metadata = await getRoomMetadata(roomId, uiLang);
+          return {
+            id: roomId,
+            name: metadata?.displayName || t('starredRooms.rooms.unnamedRoom'),
+            description: metadata?.displayDescription || t('starredRooms.rooms.noDescription')
+          };
+        })
+      );
+
+      res.render('starred-rooms', {
+        title: t('starredRooms.meta.title'),
+        description: t('starredRooms.meta.description'),
+        uiLang,
+        starredRooms: starredRoomsFull,
+        user: req.user
+      });
+    } catch (error) {
+      console.error('Error loading starred rooms:', error.message);
+      res.status(500).render('error', { message: 'Error loading starred rooms' });
+    }
   }
-});
+);
+
 
 // GET /dashboard/blocks?page=&sort=&dir=&lang=
 router.get('/dashboard/blocks', isAuthenticated, async (req, res) => {
