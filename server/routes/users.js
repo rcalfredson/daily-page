@@ -86,12 +86,23 @@ router.get('/privacy', addI18n(['privacy']), (req, res) => {
   });
 });
 
-router.get('/users/anonymous', (req, res) => {
-  res.render('users/anonymous', {
-    title: 'The Anonymous Wanderer',
-    description: 'No profile. No past. Just vibes.',
-  });
-});
+router.get(
+  '/users/anonymous',
+  optionalAuth,
+  addI18n(['anonymousUser']),
+  stripLegacyLang({ canonicalPath: '/users/anonymous' }),
+  async (req, res) => {
+    const { t } = res.locals;
+    const uiLang = getUiLang(res);
+
+    res.render('users/anonymous', {
+      title: t('anonymousUser.meta.title'),
+      description: t('anonymousUser.meta.description'),
+      uiLang,
+    });
+  }
+);
+
 
 // View user profile (public)
 router.get(

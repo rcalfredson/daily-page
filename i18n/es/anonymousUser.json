@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "El Viajero Anónimo",
+      "description": "Sin perfil. Sin pasado. Solo vibra."
+    },
+    "ascii": {
+      "ariaLabel": "Arte ASCII de una criatura caprichosa con una cita"
+    },
+    "header": {
+      "title": "El Anónimo"
+    },
+    "body": {
+      "line1": "Has tropezado en el vacío. Aquí no hay nada que ver—",
+      "line2": "solo un espíritu errante sin historia."
+    },
+    "buttons": {
+      "home": "← Volver al inicio",
+      "signup": "Crear una identidad"
+    }
+  }
+}
