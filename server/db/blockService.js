@@ -152,9 +152,44 @@ export async function getTagTrendData(tagName, defaultDays = 30, opts = {}) {
 }
 
 export async function getFeaturedBlockWithFallback(options = {}) {
-  const { lockedOnly = false, limit = 1, preferredLang = 'en' } = options;
-  const { blocks, period } = await getTopBlocksWithFallback({ lockedOnly, limit, preferredLang });
-  return { featuredBlock: blocks[0] || null, period };
+  const { preferredLang = 'en' } = options;
+
+  // “Featured” becomes: random block from last year (prefer lang if possible)
+  const { block, period } = await getRandomBlockFromLastYear({ preferredLang });
+
+  // If absolutely nothing exists (very early dev), fall back to old logic
+  if (!block) {
+    const { blocks, period: p2 } = await getTopBlocksWithFallback({
+      lockedOnly: false,
+      limit: 1,
+      preferredLang,
+    });
+    return { featuredBlock: blocks[0] || null, period: p2 };
+  }
+
+  return { featuredBlock: block, period };
+}
+
+export async function getRandomBlockFromLastYear(options = {}) {
+  const { preferredLang = 'en', days = 365 } = options;
+  const end = new Date();
+  const start = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+  // 1) Try preferred language
+  const preferred = await Block.aggregate([
+    { $match: { createdAt: { $gte: start, $lte: end }, lang: preferredLang } },
+    { $sample: { size: 1 } },
+  ]).exec();
+
+  if (preferred?.[0]) return { block: preferred[0], period: { type: 'days', value: days } };
+
+  // 2) Fallback: any language
+  const anyLang = await Block.aggregate([
+    { $match: { createdAt: { $gte: start, $lte: end } } },
+    { $sample: { size: 1 } },
+  ]).exec();
+
+  return { block: anyLang?.[0] || null, period: { type: 'days', value: days } };
 }
 
 export async function getTopBlocksByTimeframe(
@@ -264,55 +299,80 @@ export async function getRecentActivityByUser(username, options = {}) {
 export async function getTopBlocksWithFallback(options = {}) {
   const { lockedOnly = false, limit = 20, preferredLang = "en" } = options;
 
-  const intervals = [1, 7, 30]; // días
-  let blocks = [];
-  let period = { type: 'days', value: 1 }; // default
+  const now = Date.now();
+  const endNow = new Date();
 
-  // 1, 7, 30 días
-  for (let days of intervals) {
-    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  // Disjoint windows (fromDays -> toDays), newest first
+  // 0–1d, 1–7d, 7–30d, 30–365d, then all-time
+  const windows = [
+    { fromDays: 0, toDays: 1 },
+    { fromDays: 1, toDays: 7 },
+    { fromDays: 7, toDays: 30 },
+    { fromDays: 30, toDays: 365 },
+    { fromDays: 365, toDays: null }, // all-time remainder
+  ];
 
-    blocks = await cache.get(
-      `top-blocks-last-${days}d-${lockedOnly}-${limit}-${preferredLang}`,
+  const target = Number(limit);
+  const collected = [];
+  const seen = new Set();
+
+  let maxDaysUsed = 1;
+  let usedAllTime = false;
+
+  // Cache each band at a “reasonable” fixed size to avoid key explosion.
+  // Pull more than you need so dedupe doesn’t starve you.
+  const BAND_FETCH = Math.max(target * 3, 50);
+
+  for (const w of windows) {
+    if (collected.length >= target) break;
+
+    const startDate = w.toDays == null
+      ? new Date(0)
+      : new Date(now - w.toDays * 24 * 60 * 60 * 1000);
+
+    const endDate = w.fromDays === 0
+      ? endNow
+      : new Date(now - w.fromDays * 24 * 60 * 60 * 1000);
+
+    const cacheKey =
+      w.toDays == null
+        ? `top-blocks-band-all-${lockedOnly}-${preferredLang}-${BAND_FETCH}`
+        : `top-blocks-band-${w.fromDays}-${w.toDays}-${lockedOnly}-${preferredLang}-${BAND_FETCH}`;
+
+    const bandBlocks = await cache.get(
+      cacheKey,
       async () => {
         return await findTopGlobalWithLangPref({
           preferredLang,
           lockedOnly,
-          limit: Number(limit),
-          startDate: cutoff,
-          endDate: new Date(),
+          limit: BAND_FETCH,
+          startDate,
+          endDate,
         });
       },
       [],
       CACHE_TTL
     );
 
-    if (Array.isArray(blocks) && blocks.length > 0) {
-      period = { type: 'days', value: days };
-      break;
+    if (Array.isArray(bandBlocks) && bandBlocks.length > 0) {
+      for (const b of bandBlocks) {
+        const id = String(b?._id);
+        if (!id || seen.has(id)) continue;
+        seen.add(id);
+        collected.push(b);
+        if (collected.length >= target) break;
+      }
+
+      if (w.toDays == null) usedAllTime = true;
+      else maxDaysUsed = Math.max(maxDaysUsed, w.toDays);
     }
   }
 
-  // All-time explícito con fechas amplias
-  if (!blocks || blocks.length === 0) {
-    blocks = await cache.get(
-      `top-blocks-all-time-${lockedOnly}-${limit}-${preferredLang}`,
-      async () => {
-        return await findTopGlobalWithLangPref({
-          preferredLang,
-          lockedOnly,
-          limit: Number(limit),
-          startDate: new Date(0),    // 👈 clave para all-time
-          endDate: new Date(),
-        });
-      },
-      [],
-      CACHE_TTL
-    );
-    period = { type: 'all' };
-  }
+  const period = usedAllTime
+    ? { type: 'all' }
+    : { type: 'days', value: maxDaysUsed };
 
-  return { blocks, period };
+  return { blocks: collected, period };
 }
 
 // Fallback para bloques por room (locked o in-progress)
@@ -362,21 +422,28 @@ export async function getBlocksByRoomWithFallback({
 export async function getTrendingTagsWithFallback(options = {}) {
   const {
     limit = 10,
-    sortBy = 'totalBlocks', // 'totalBlocks' o 'totalVotes'
-    minCount = 1,           // opcional: ignora etiquetas con < minCount bloques
+    sortBy = 'totalBlocks',
+    minCount = 1,
   } = options;
 
-  const intervals = [1, 7, 30]; // días
-  let tags = [];
-  let period = { type: 'days', value: 1 };
+  const now = Date.now();
+  const endNow = new Date();
 
-  const makePipeline = (startDate, endDate) => {
+  const windows = [
+    { fromDays: 0, toDays: 1 },
+    { fromDays: 1, toDays: 7 },
+    { fromDays: 7, toDays: 30 },
+    { fromDays: 30, toDays: 365 },
+    { fromDays: 365, toDays: null },
+  ];
+
+  const target = Number(limit);
+
+  // Pull extra candidates per band so merging still yields a strong top-N
+  const BAND_FETCH = Math.max(target * 5, 50);
+
+  const makePipeline = (startDate, endDate, bandLimit) => {
     const stageMatch = { createdAt: { $gte: startDate, $lte: endDate } };
-    const stageGroup = {
-      _id: '$tags',
-      totalBlocks: { $sum: 1 },
-      totalVotes: { $sum: '$voteCount' },
-    };
     const stageAfterGroupMatch =
       minCount > 1 ? [{ $match: { totalBlocks: { $gte: minCount } } }] : [];
     const stageSort = { [sortBy]: -1, totalVotes: -1, totalBlocks: -1, _id: 1 };
@@ -384,44 +451,86 @@ export async function getTrendingTagsWithFallback(options = {}) {
     return [
       { $match: stageMatch },
       { $unwind: '$tags' },
-      { $group: stageGroup },
+      {
+        $group: {
+          _id: '$tags',
+          totalBlocks: { $sum: 1 },
+          totalVotes: { $sum: '$voteCount' },
+        }
+      },
       ...stageAfterGroupMatch,
       { $sort: stageSort },
-      { $limit: Number(limit) },
+      { $limit: Number(bandLimit) },
     ];
   };
 
-  // 1, 7, 30 días
-  for (let days of intervals) {
-    const start = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-    const end = new Date();
+  const totals = new Map(); // tag -> { _id, totalBlocks, totalVotes }
+  let maxDaysUsed = 1;
+  let usedAllTime = false;
 
-    tags = await cache.get(
-      `trending-tags-last-${days}d-${limit}-${sortBy}-min${minCount}`,
-      async () => Block.aggregate(makePipeline(start, end)).exec(),
+  for (const w of windows) {
+    // If we already have a lot of distinct tags, we can stop early.
+    // (Still safe: final slice will choose best.)
+    if (totals.size >= target * 3) break;
+
+    const startDate = w.toDays == null
+      ? new Date(0)
+      : new Date(now - w.toDays * 24 * 60 * 60 * 1000);
+
+    const endDate = w.fromDays === 0
+      ? endNow
+      : new Date(now - w.fromDays * 24 * 60 * 60 * 1000);
+
+    const cacheKey =
+      w.toDays == null
+        ? `trending-tags-band-all-${BAND_FETCH}-${sortBy}-min${minCount}`
+        : `trending-tags-band-${w.fromDays}-${w.toDays}-${BAND_FETCH}-${sortBy}-min${minCount}`;
+
+    const bandTags = await cache.get(
+      cacheKey,
+      async () => Block.aggregate(makePipeline(startDate, endDate, BAND_FETCH)).exec(),
       [],
       CACHE_TTL
     );
 
-    if (Array.isArray(tags) && tags.length > 0) {
-      period = { type: 'days', value: days };
-      break;
+    if (Array.isArray(bandTags) && bandTags.length > 0) {
+      for (const row of bandTags) {
+        const key = String(row._id);
+        if (!key) continue;
+
+        const prev = totals.get(key) || { _id: row._id, totalBlocks: 0, totalVotes: 0 };
+        totals.set(key, {
+          _id: row._id,
+          totalBlocks: prev.totalBlocks + (row.totalBlocks || 0),
+          totalVotes: prev.totalVotes + (row.totalVotes || 0),
+        });
+      }
+
+      if (w.toDays == null) usedAllTime = true;
+      else maxDaysUsed = Math.max(maxDaysUsed, w.toDays);
     }
   }
 
-  // All-time
-  if (!tags || tags.length === 0) {
-    tags = await cache.get(
-      `trending-tags-all-${limit}-${sortBy}-min${minCount}`,
-      async () => Block.aggregate(makePipeline(new Date(0), new Date())).exec(),
-      [],
-      CACHE_TTL
-    );
-    period = { type: 'all' };
-  }
+  const merged = Array.from(totals.values());
 
-  return { tags, period };
+  // Final sort and slice
+  merged.sort((a, b) => {
+    const primary = (b[sortBy] || 0) - (a[sortBy] || 0);
+    if (primary !== 0) return primary;
+    const votes = (b.totalVotes || 0) - (a.totalVotes || 0);
+    if (votes !== 0) return votes;
+    const blocks = (b.totalBlocks || 0) - (a.totalBlocks || 0);
+    if (blocks !== 0) return blocks;
+    return String(a._id).localeCompare(String(b._id));
+  });
+
+  const period = usedAllTime
+    ? { type: 'all' }
+    : { type: 'days', value: maxDaysUsed };
+
+  return { tags: merged.slice(0, target), period };
 }
+
 
 export async function findByUserWithLangPref({
   username,
