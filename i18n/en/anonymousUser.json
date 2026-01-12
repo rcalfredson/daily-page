@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "The Anonymous Wanderer",
+      "description": "No profile. No past. Just vibes."
+    },
+    "ascii": {
+      "ariaLabel": "ASCII art of whimsical creature with quote"
+    },
+    "header": {
+      "title": "The Anonymous"
+    },
+    "body": {
+      "line1": "You’ve stumbled into the void. There’s nothing to see here—",
+      "line2": "just a wandering spirit without a story."
+    },
+    "buttons": {
+      "home": "← Return home",
+      "signup": "Create an identity"
+    }
+  }
+}
