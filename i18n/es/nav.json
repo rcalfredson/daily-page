@@ -7,6 +7,11 @@
     "bestOf": "Lo mejor",
     "about": "Acerca de",
     "support": "Soporte",
-    "otherProjects": "Otros proyectos"
+    "otherProjects": "Otros proyectos",
+    "auth": {
+      "welcomePrefix": "¡Bienvenido, ",
+      "welcomeFallbackUser": "tú",
+      "welcomeSuffix": "!"
+    }
   }
 }

@@ -30,7 +30,11 @@ html(lang=htmlLang)
       include partials/_i18n_exports
   body(data-is-logged-in=user ? "true" : "false" data-user-id=user ? user.id : null)
     div.auth-wrapper
-      p#welcome-message= t('layout.welcomeUser')
+      p#welcome-message(
+        data-welcome-prefix=t('nav.auth.welcomePrefix')
+        data-welcome-fallback=t('nav.auth.welcomeFallbackUser')
+        data-welcome-suffix=t('nav.auth.welcomeSuffix')
+      )= t('layout.welcomeUser')
       button#nav-logout(type="button" style="display:none;")= t('layout.logout')
       a#nav-login(href="/login" style="display:none;")= t('layout.login')
     .navbar

@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const navLogin = document.querySelector('#nav-login');
   const navLogout = document.querySelector('#nav-logout');
   const welcomeMessage = document.querySelector('#welcome-message');
+  const prefix = welcomeMessage?.dataset.welcomePrefix ?? 'Welcome, ';
+  const fallbackUser = welcomeMessage?.dataset.welcomeFallback ?? 'you';
+  const suffix = welcomeMessage?.dataset.welcomeSuffix ?? '!';
 
   const setLoggedOutUI = () => {
     if (navLogin) navLogin.style.display = 'block';
@@ -13,14 +16,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (navLogin) navLogin.style.display = 'none';
     if (navLogout) navLogout.style.display = 'block';
     if (welcomeMessage) {
-      welcomeMessage.textContent = 'Welcome, ';
+      welcomeMessage.textContent = prefix;
       const a = document.createElement('a');
       a.href = '/dashboard';
       a.style.color = 'rgb(26, 167, 214)';
       a.style.textDecoration = 'underline dotted';
-      a.textContent = user.username ?? 'you';
+      a.textContent = user.username ?? fallbackUser;
       welcomeMessage.appendChild(a);
-      welcomeMessage.appendChild(document.createTextNode('!'));
+      welcomeMessage.appendChild(document.createTextNode(suffix));
       welcomeMessage.style.display = 'block';
     }
   };
