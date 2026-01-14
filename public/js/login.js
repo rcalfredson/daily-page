@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('loginForm');
   const feedback = document.querySelector('.form-feedback');
 
+  const msgSuccess = feedback?.dataset.success ?? 'Login successful! Redirecting...';
+  const msgFailedGeneric = feedback?.dataset.failedGeneric ?? 'Login failed. Please try again.';
+  const msgUnexpected = feedback?.dataset.unexpected ?? 'An unexpected error occurred. Please try again.';
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent page reload
 
@@ -24,19 +28,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (response.ok) {
         // Success: Redirect or show success message
-        feedback.textContent = 'Login successful! Redirecting...';
+        feedback.textContent = msgSuccess;
         feedback.style.color = 'green';
         feedback.style.display = 'block';
         setTimeout(() => (window.location.href = '/dashboard'), 2000); // Redirect to dashboard
       } else {
         // Failure: Show error
-        feedback.textContent = result.error || 'Login failed. Please try again.';
+        feedback.textContent = result.error || msgFailedGeneric;
         feedback.style.color = 'red';
         feedback.style.display = 'block';
       }
     } catch (error) {
       // Unexpected error
-      feedback.textContent = 'An unexpected error occurred. Please try again.';
+      feedback.textContent = msgUnexpected;
       feedback.style.color = 'red';
       feedback.style.display = 'block';
     }

@@ -31,7 +31,12 @@ block content
           placeholder=t('auth.login.fields.password.placeholder')
         )
       button.login-button(type="submit")= t('auth.login.actions.submit')
-    .form-feedback(style="display:none;")
+    .form-feedback(
+      style="display:none;"
+      data-success=t('auth.login.feedback.success')
+      data-failed-generic=t('auth.login.feedback.failedGeneric')
+      data-unexpected=t('auth.login.feedback.unexpected')
+    )
     p.forgot-link
       a(href='/forgot-password')= t('auth.login.links.forgotPassword')
     p.signup-link
