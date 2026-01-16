@@ -9,6 +9,9 @@ html(lang=htmlLang)
         meta(name="description" content=description)
       if canonicalUrl
         link(rel="canonical" href=canonicalUrl)
+      if hreflang
+        each alt in hreflang
+          link(rel="alternate" hreflang=alt.lang href=alt.href)
       meta(name="viewport" content="width=device-width, initial-scale=1.0")
       link(rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css")
       link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet")
@@ -38,7 +41,7 @@ html(lang=htmlLang)
       button#nav-logout(type="button" style="display:none;")= t('layout.logout')
       a#nav-login(href="/login" style="display:none;")= t('layout.login')
     .navbar
-      a(href='/')
+      a(href=uiPath('/'))
         h1.logo= t('layout.siteName')
       header
         a(href="#main-menu"

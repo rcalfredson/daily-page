@@ -30,7 +30,7 @@ import blockViewRoute from './server/routes/blockView.js';
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
 import { getUiLang, getPreferredContentLang } from './server/services/localeContext.js';
-import setLangMiddleware from './server/services/localization.js';
+import { isLocalizedPath } from './server/services/localizedPaths.js';
 import { initI18n, addI18n } from './server/services/i18n.js'
 import { startJobs } from './server/services/cron.js';
 import * as google from './server/services/google.js';
@@ -56,9 +56,12 @@ import {
   getTotalRooms
 
 } from './server/db/roomService.js'
+import {addHreflangLocals} from './server/middleware/hreflang.js';
 import optionalAuth from './server/middleware/optionalAuth.js';
+import { makePrefixRedirectMiddleware } from './server/middleware/prefixRedirect.js'
 import { addSeoLocals } from './server/middleware/seo.js';
 import { stripLegacyLang } from './server/middleware/stripLegacyLang.js';
+import { uiPrefixAndLangContext } from './server/middleware/uiPrefix.js';
 import { findUserById } from './server/db/userService.js';
 import { toBlockPreviewDTO } from './server/utils/block.js';
 
@@ -102,8 +105,10 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     app.use(cookieParser());
     app.use(cors(corsOptions));
-    app.use(setLangMiddleware);
+    app.use(uiPrefixAndLangContext);
+    app.use(makePrefixRedirectMiddleware({isLocalizedPath}))
     app.use(addSeoLocals);
+    app.use(addHreflangLocals);
     app.use(initI18n(['layout', 'nav', 'modals']));
     app.options('*', cors(corsOptions));
 
