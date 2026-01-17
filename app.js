@@ -56,7 +56,7 @@ import {
   getTotalRooms
 
 } from './server/db/roomService.js'
-import {addHreflangLocals} from './server/middleware/hreflang.js';
+import { addHreflangLocals } from './server/middleware/hreflang.js';
 import optionalAuth from './server/middleware/optionalAuth.js';
 import { makePrefixRedirectMiddleware } from './server/middleware/prefixRedirect.js'
 import { addSeoLocals } from './server/middleware/seo.js';
@@ -106,7 +106,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.use(cookieParser());
     app.use(cors(corsOptions));
     app.use(uiPrefixAndLangContext);
-    app.use(makePrefixRedirectMiddleware({isLocalizedPath}))
+    app.use(makePrefixRedirectMiddleware({ isLocalizedPath }))
     app.use(addSeoLocals);
     app.use(addHreflangLocals);
     app.use(initI18n(['layout', 'nav', 'modals']));
