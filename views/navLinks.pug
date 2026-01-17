@@ -10,10 +10,10 @@ a(
 ul
   li
     .home
-      a.link(href='/')= t('nav.home')
+      a.link(href=uiPath('/'))= t('nav.home')
   li
     .app
-      a.link(href='/rooms')= t('nav.rooms')
+      a.link(href=uiPath('/rooms'))= t('nav.rooms')
   li
     .tags
       a.link(href='/tags')= t('nav.tags')

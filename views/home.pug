@@ -31,7 +31,7 @@ block content
       = t('home.hero.subtitle') + ' '
       | 
       = t('home.hero.ctaPrefix') + ' '
-      a(href="/rooms").join-room= t('home.hero.cta')
+      a(href=uiPath("/rooms")).join-room= t('home.hero.cta')
       |  #{' '}
       = t('home.hero.ctaSuffix')
 
@@ -40,7 +40,7 @@ block content
       i.fas.fa-layer-group
       span.stat-number= globalStats.totalBlocks
       span.stat-label= t('home.stats.blocks')
-    a.stat-item(href='/rooms')
+    a.stat-item(href=uiPath('/rooms'))
       i.fas.fa-door-open
       span.stat-number= globalStats.totalRooms
       span.stat-label= t('home.stats.rooms')
