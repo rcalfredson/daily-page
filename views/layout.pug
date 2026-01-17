@@ -61,7 +61,7 @@ html(lang=htmlLang)
     footer.footer(role="contentinfo")
       .footer-content
         p #{t('layout.copyright', {year: new Date().getFullYear()})} #{t('layout.siteName')}
-        a(href="/privacy")= t('layout.privacy')
+        a(href=uiPath('/privacy'))= t('layout.privacy')
 
     include partials/_common_scripts
     block scripts
