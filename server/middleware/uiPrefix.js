@@ -1,7 +1,7 @@
 // server/middleware/uiPrefix.js
 const supportedLanguages = [
-  'en','es','fr','ru','id','de','it','pt','zh','ja','ko','ar','hi','tr',
-  'nl','sv','no','da','fi','pl','cs','el','he','th','vi',
+  'en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr',
+  'nl', 'sv', 'no', 'da', 'fi', 'pl', 'cs', 'el', 'he', 'th', 'vi',
 ];
 const defaultLanguage = 'en';
 
@@ -63,12 +63,19 @@ export function uiPrefixAndLangContext(req, res, next) {
   // SEO and routing helpers
   res.locals.hadUiPrefix = hadPrefix;
   res.locals.unprefixedPath = unprefixedPath;
-  res.locals.prefixedPath = `/${uiLang}${unprefixedPath === '/' ? '' : unprefixedPath}`;
+
+  const prefixed =
+    unprefixedPath === '/'
+      ? `/${uiLang}/`
+      : `/${uiLang}${unprefixedPath}`;
+
+  res.locals.prefixedPath = prefixed;
 
   // Template helper: build UI-prefixed internal links
   res.locals.uiPath = (p) => {
-    const clean = (p || '/').startsWith('/') ? p : `/${p}`;
-    return `/${uiLang}${clean === '/' ? '' : clean}`;
+    const clean = (p || '/').startsWith('/') ? (p || '/') : `/${p}`;
+    if (clean === '/') return `/${uiLang}/`;
+    return `/${uiLang}${clean}`;
   };
 
   // If prefix present, set cookie (authoritative)

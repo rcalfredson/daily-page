@@ -14,7 +14,7 @@ export function stripLegacyLang({ canonicalPath }) {
 
     // Only send people into /{ui}/... when that route is actually in rollout
     const finalPath = isLocalizedPath(targetPath)
-      ? `/${ui}${targetPath === '/' ? '' : targetPath}`
+      ? (targetPath === '/' ? `/${ui}/` : `/${ui}${targetPath}`)
       : targetPath;
 
     return res.redirect(302, withQuery(finalPath, buildRedirectQuery(req)));
