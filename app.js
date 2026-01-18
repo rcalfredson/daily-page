@@ -34,6 +34,7 @@ import { isLocalizedPath } from './server/services/localizedPaths.js';
 import { initI18n, addI18n } from './server/services/i18n.js'
 import { startJobs } from './server/services/cron.js';
 import * as google from './server/services/google.js';
+import { timeIt } from './server/services/perf.js';
 
 import { renderMarkdownContent } from './server/utils/markdownHelper.js';
 import * as viewHelper from './server/utils/view.js'; // Utils
@@ -562,24 +563,50 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           const preferredContentLang = getPreferredContentLang(res);
           const userId = req.user?.id || null;
 
-          // Dispara todo en paralelo
-          const [
-            fbRes,   // featured block
-            frRes,   // featured room (ids/raw)
-            topRes,  // top blocks
-            tagsRes, // trending tags
-            statsRes,// global block stats
-            roomsRes, // total rooms
-            totalTagsRes // total tags
-          ] = await Promise.all([
-            getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }),
-            getFeaturedRoomWithFallback(),
-            getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang }),
-            getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' }),
-            getGlobalBlockStats(),
-            getTotalRooms(),
-            getTotalTags()
-          ]);
+          const PERF = process.env.PERF_HOME === '1';
+
+          let fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes;
+
+          // Dispara todo en paralelo (con perf opcional por cada llamada)
+          if (!PERF) {
+            [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes] = await Promise.all([
+              getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }),
+              getFeaturedRoomWithFallback(),
+              getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang }),
+              getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' }),
+              getGlobalBlockStats(),
+              getTotalRooms(),
+              getTotalTags(),
+            ]);
+          } else {
+            const perfResults = await Promise.all([
+              timeIt('featuredBlock', () => getFeaturedBlockWithFallback({ preferredLang: preferredContentLang })),
+              timeIt('featuredRoomRaw', () => getFeaturedRoomWithFallback()),
+              timeIt('topBlocks', () => getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang })),
+              timeIt('trendingTags', () => getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' })),
+              timeIt('globalBlockStats', () => getGlobalBlockStats()),
+              timeIt('totalRooms', () => getTotalRooms()),
+              timeIt('totalTags', () => getTotalTags()),
+            ]);
+
+            perfResults
+              .slice()
+              .sort((a, b) => b.ms - a.ms)
+              .forEach(r => {
+                const status = r.ok ? 'OK' : 'ERR';
+                console.log(`[home] ${status} ${r.label}: ${r.ms.toFixed(1)}ms`);
+                if (!r.ok) console.log(`[home] ${r.label} error:`, r.err);
+              });
+
+            fbRes = perfResults.find(r => r.label === 'featuredBlock')?.value;
+            frRes = perfResults.find(r => r.label === 'featuredRoomRaw')?.value;
+            topRes = perfResults.find(r => r.label === 'topBlocks')?.value;
+            tagsRes = perfResults.find(r => r.label === 'trendingTags')?.value;
+            statsRes = perfResults.find(r => r.label === 'globalBlockStats')?.value;
+            roomsRes = perfResults.find(r => r.label === 'totalRooms')?.value;
+            totalTagsRes = perfResults.find(r => r.label === 'totalTags')?.value;
+          }
+
 
           // Post-procesamiento mínimo (sin I/O extra)
           const featuredBlock = fbRes?.featuredBlock?.content
