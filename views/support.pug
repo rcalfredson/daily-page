@@ -43,4 +43,9 @@ block content
           label(for="room-description")= t('support.rooms.form.descriptionLabel')
           textarea#room-description(name="roomDescription" rows="4" required)
         button(type="submit" class="submit-button")= t('support.rooms.form.submit')
-      .form-feedback(style="display:none;")= t('support.rooms.form.success')
+      .form-feedback(
+        style="display:none;"
+        data-msg-success=t('support.rooms.form.success')
+        data-msg-error=t('support.rooms.form.errorGeneric')
+        data-msg-unexpected=t('support.rooms.form.errorUnexpected')
+      )= t('support.rooms.form.success')
