@@ -61,7 +61,7 @@ prepend content
   p.room-archive-link
     a(href=`/rooms/${room_id}/archive`)= t('roomDashboard.links.browseByDate')
   p.room-archive-link
-    a(href=`/rooms/${room_id}/archive/best-of`)= t('roomDashboard.links.bestOf')
+    a(href=uiPath(`/rooms/${room_id}/archive/best-of`))= t('roomDashboard.links.bestOf')
 
 append content
   include ../partials/_login_modal
