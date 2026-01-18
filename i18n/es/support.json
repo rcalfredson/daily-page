@@ -34,7 +34,9 @@
         "topicLabel": "Tema (opcional)",
         "descriptionLabel": "Descripción",
         "submit": "Enviar solicitud",
-        "success": "¡Solicitud enviada con éxito!"
+        "success": "¡Solicitud enviada con éxito!",
+        "errorGeneric": "No se pudo enviar la solicitud. Por favor, inténtalo de nuevo.",
+        "errorUnexpected": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo."
       }
     }
   }

@@ -34,7 +34,9 @@
         "topicLabel": "Topic (optional)",
         "descriptionLabel": "Description",
         "submit": "Submit Request",
-        "success": "Request submitted successfully!"
+        "success": "Request submitted successfully!",
+        "errorGeneric": "Failed to submit request. Please try again.",
+        "errorUnexpected": "An unexpected error occurred. Please try again."
       }
     }
   }
