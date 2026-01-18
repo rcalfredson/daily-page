@@ -8,6 +8,8 @@ export function isLocalizedPath(path) {
     path === '/archive' ||
     path === '/about' ||
     path === '/archive/best-of' ||
+    path === '/support' ||
+    path === '/random' ||
     /^\/rooms\/[^/]+\/archive\/best-of$/.test(path)
   );
 }
