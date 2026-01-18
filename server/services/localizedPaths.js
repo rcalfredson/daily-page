@@ -10,6 +10,8 @@ export function isLocalizedPath(path) {
     path === '/archive/best-of' ||
     path === '/support' ||
     path === '/random' ||
+    /^\/archive\/\d{4}\/\d{1,2}$/.test(path) ||
+    /^\/rooms\/[^/]+\/archive\/\d{4}\/\d{1,2}$/.test(path) ||
     /^\/rooms\/[^/]+\/archive\/best-of$/.test(path)
   );
 }

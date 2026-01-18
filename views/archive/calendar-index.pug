@@ -13,7 +13,7 @@ block content
       p 
         = t('archive.roomViewing', { roomName })
         |  · 
-        a(href=`/rooms/${roomId}`)= t('archive.viewRoomLink')
+        a(href=uiPath(`/rooms/${roomId}`))= t('archive.viewRoomLink')
   .archive-index-container
     if roomId
       h1= t('archive.titleRoom', { roomName })
@@ -24,9 +24,8 @@ block content
       ul.year-month-list
         each combo in yearMonthCombos
           - const monthPadded = String(combo.month).padStart(2, '0')
-          a.year-month-link(
-            href=roomId ? `/rooms/${roomId}/archive/${combo.year}/${monthPadded}` : `/archive/${combo.year}/${monthPadded}`
-          )
+          - const dest = roomId ? `/rooms/${roomId}/archive/${combo.year}/${monthPadded}` : `/archive/${combo.year}/${monthPadded}`
+          a.year-month-link(href=uiPath(dest))
             li.year-month-item
               | #{combo.year} - #{monthName(combo.month)}
 
@@ -34,4 +33,4 @@ block content
       p= t('archive.noContent')
   if roomId
     .back-to-room-link
-      a(href=`/rooms/${roomId}`)= t('archive.backToRoom')
+      a(href=uiPath(`/rooms/${roomId}`))= t('archive.backToRoom')
