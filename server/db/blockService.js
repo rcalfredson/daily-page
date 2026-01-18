@@ -2,7 +2,18 @@ import mongoose from 'mongoose';
 import Block from './models/Block.js';
 import * as cache from '../services/cache.js';
 
-const CACHE_TTL = 5000; // Cache for 5 seconds (adjust as needed)
+const DEFAULT_TTL = 5000; // Cache for 5 seconds (adjust as needed)
+
+const TTL = {
+  globalBlockStats: 60 * 1000,     // 60s
+  trendingTags: 120 * 1000,        // 2 min
+  totalTags: 10 * 60 * 1000,       // 10 min
+  featuredRoom: 60 * 1000,         // 60s
+  topBlocks: 60 * 1000             // 60s
+};
+
+// optional: spread expirations so you don't get synchronized misses
+const JITTER = 10 * 1000; // up to 10s extra
 
 // Create a new block
 export async function createBlock(data) {
@@ -50,7 +61,7 @@ export async function getGlobalBlockStats() {
       return { totalBlocks, collaborationsToday: collaborationsLast24Hours };
     },
     [],
-    CACHE_TTL
+    { ttlMs: TTL.globalBlockStats, jitterMs: JITTER }
   );
 }
 
@@ -62,7 +73,7 @@ export async function getTotalTags() {
       { $count: 'totalTags' }
     ]);
     return result?.[0]?.totalTags ?? 0;
-  }, [], CACHE_TTL);
+  }, [], { ttlMs: TTL.totalTags, jitterMs: JITTER });
 }
 
 export async function getAllTagsWithCounts(timeframe = 'all') {
@@ -100,7 +111,7 @@ export async function getAllTagsWithCounts(timeframe = 'all') {
       return await Block.aggregate(pipeline).exec();
     },
     [],
-    CACHE_TTL
+    DEFAULT_TTL
   );
 }
 
@@ -233,7 +244,7 @@ export async function getTopBlocksByTimeframe(
       });
     },
     [],
-    CACHE_TTL
+    DEFAULT_TTL
   );
 }
 
@@ -265,7 +276,7 @@ export async function getFeaturedRoomWithFallback() {
       return { featuredRoomData: result, period: usedInterval };
     },
     [],
-    CACHE_TTL
+    { ttlMs: TTL.featuredRoom, jitterMs: JITTER }
   );
 }
 
@@ -291,7 +302,7 @@ export async function getRecentActivityByUser(username, options = {}) {
       return activities;
     },
     [],
-    CACHE_TTL
+    DEFAULT_TTL
   );
 }
 
@@ -351,7 +362,7 @@ export async function getTopBlocksWithFallback(options = {}) {
         });
       },
       [],
-      CACHE_TTL
+      { ttlMs: TTL.topBlocks, jitterMs: JITTER }
     );
 
     if (Array.isArray(bandBlocks) && bandBlocks.length > 0) {
@@ -490,7 +501,7 @@ export async function getTrendingTagsWithFallback(options = {}) {
       cacheKey,
       async () => Block.aggregate(makePipeline(startDate, endDate, BAND_FETCH)).exec(),
       [],
-      CACHE_TTL
+      { ttlMs: TTL.trendingTags, jitterMs: JITTER }
     );
 
     if (Array.isArray(bandTags) && bandTags.length > 0) {
@@ -598,7 +609,7 @@ export async function getBlocksByDate(date) {
       return blocks;
     },
     [],
-    CACHE_TTL
+    DEFAULT_TTL
   );
 }
 
@@ -621,7 +632,7 @@ export async function getBlockDatesByYearMonth(year, month, roomId = null) {
       return uniqueDates;
     },
     [],
-    CACHE_TTL
+    DEFAULT_TTL
   );
 }
 
@@ -645,7 +656,7 @@ export async function getAllBlockYearMonthCombos(roomId = null) {
       return aggDocs.map(doc => ({ year: doc._id.year, month: doc._id.month }));
     },
     [],
-    CACHE_TTL
+    DEFAULT_TTL
   );
 }
 
