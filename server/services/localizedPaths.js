@@ -4,6 +4,7 @@ export function isLocalizedPath(path) {
   // Add more patterns as you expand.
   return (path === '/' ||
     path === '/privacy' ||
-    path === '/rooms'
+    path === '/rooms' ||
+    path === '/tags'
   );
 }
