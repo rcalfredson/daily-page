@@ -36,7 +36,7 @@ block content
       = t('home.hero.ctaSuffix')
 
   .global-stats
-    a.stat-item(href='/archive')
+    a.stat-item(href=uiPath('/archive'))
       i.fas.fa-layer-group
       span.stat-number= globalStats.totalBlocks
       span.stat-label= t('home.stats.blocks')

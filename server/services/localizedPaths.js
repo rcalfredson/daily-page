@@ -5,6 +5,7 @@ export function isLocalizedPath(path) {
   return (path === '/' ||
     path === '/privacy' ||
     path === '/rooms' ||
-    path === '/tags'
+    path === '/tags' ||
+    path === '/archive'
   );
 }

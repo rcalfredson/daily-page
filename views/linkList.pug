@@ -4,7 +4,7 @@ block content
   div(id='header')
     div(style="display: inline-block; width: 230px;")
       a(href='/') ← homepage
-      a(href='/archive' style="float: right;") ← archive
+      a(href=uiPath('/archive') style="float: right;") ← archive
     if titleLink
       p(id='headerText')
         a.titleLink(href=titleLink) #{title}
