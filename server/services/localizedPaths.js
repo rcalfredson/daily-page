@@ -6,6 +6,7 @@ export function isLocalizedPath(path) {
     path === '/rooms' ||
     path === '/tags' ||
     path === '/archive' ||
+    path === '/about' ||
     path === '/archive/best-of' ||
     /^\/rooms\/[^/]+\/archive\/best-of$/.test(path)
   );
