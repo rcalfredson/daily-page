@@ -23,13 +23,16 @@ block content
     // Tag Cloud
     .tag-cloud
       each tag in tags
-        a.tag-chip(href=`/tags/${encodeURIComponent(tag._id)}`, style=`font-size: ${Math.min(24, 12 + tag.totalBlocks)}px`)
+        a.tag-chip(
+          href=`${uiPath('/tags')}/${encodeURIComponent(tag._id)}`
+          style=`font-size: ${Math.min(24, 12 + tag.totalBlocks)}px`
+        )
           | #{tag._id} (#{tag.totalBlocks})
 
   script.
     document.querySelectorAll('.timeframe-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         const timeframe = this.getAttribute('data-timeframe');
-        window.location.href = `/tags?timeframe=${timeframe}`;
+        window.location.href = `!{uiPath('/tags')}?timeframe=${encodeURIComponent(timeframe)}`;
       });
     });
