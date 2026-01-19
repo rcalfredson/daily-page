@@ -15,16 +15,12 @@ block append head
   link(rel='stylesheet' href='/css/modal.css')
   link(rel='stylesheet' href='/css/translation-attribution.css')
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
-  if prevDate
-    link(rel="prev" href= roomId
-      ? `/rooms/${roomId}/archive/${prevDate.split('-').join('/')}`
-      : `/archive/${prevDate.split('-').join('/')}`
-    )
-  if nextDate
-    link(rel="next" href= roomId
-      ? `/rooms/${roomId}/archive/${nextDate.split('-').join('/')}`
-      : `/archive/${nextDate.split('-').join('/')}`
-    )
+  - const prevHref = prevDate ? (roomId ? `/rooms/${roomId}/archive/${prevDate.split('-').join('/')}` : `/archive/${prevDate.split('-').join('/')}`) : null
+  - const nextHref = nextDate ? (roomId ? `/rooms/${roomId}/archive/${nextDate.split('-').join('/')}` : `/archive/${nextDate.split('-').join('/')}`) : null
+  if prevHref
+    link(rel="prev" href=uiPath(prevHref))
+  if nextHref
+    link(rel="next" href=uiPath(nextHref))
 
 block append scripts
   script(src='/js/toast-utils.js')
@@ -36,25 +32,15 @@ block content
   .archive-container
     include ../partials/_archiveNav
     +archiveNav(
-      prevDate
-        ? (roomId
-            ? `/rooms/${roomId}/archive/${prevDate.split('-').join('/')}`
-            : `/archive/${prevDate.split('-').join('/')}`
-          )
-        : null,
+      prevHref ? uiPath(prevHref) : null,
       prevDate || '',
-      nextDate
-        ? (roomId 
-            ? `/rooms/${roomId}/archive/${nextDate.split('-').join('/')}` 
-            : `/archive/${nextDate.split('-').join('/')}`
-          )
-        : null,
+      nextHref ? uiPath(nextHref) : null,
       nextDate || '',
       'archive-nav'
     )
     if roomId
       h1
-        a.room-link(href=`/rooms/${roomId}` title=roomName)= roomName
+        a.room-link(href=uiPath(`/rooms/${roomId}`) title=roomName)= roomName
         |  — 
         = t('archive.date.heading', { date })
     else
@@ -68,9 +54,9 @@ block content
               a.block-link(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
               .block-meta(lang=(uiLang || 'en'))
                 | #{t('archive.date.labels.createdBy')} 
-                a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+                a.user-profile-link(href=uiPath(`/users/${block.creator}`))= block.creator
                 |  #{t('archive.date.labels.in')} 
-                a.room-link(href=`/rooms/${block.roomId}`)= block.roomDisplayName || block.roomId || t('archive.date.labels.unknownRoom')
+                a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('archive.date.labels.unknownRoom')
                 |  #{t('archive.date.labels.on', { datetime: formatDateTime(block.createdAt) })}
               +translationAttribution(block)
               div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
@@ -80,13 +66,8 @@ block content
     else
       p= t('archive.date.empty')
   include ../partials/_pagination
-  +pagination(
-    currentPage,
-    totalPages,
-    roomId
-      ? `/rooms/${roomId}/archive/${dateISO.split('-').join('/')}`
-      : `/archive/${dateISO.split('-').join('/')}`
-  )
+  - const pageBase = roomId ? `/rooms/${roomId}/archive/${dateISO.split('-').join('/')}` : `/archive/${dateISO.split('-').join('/')}`
+  +pagination(currentPage, totalPages, uiPath(pageBase))
 
   include ../partials/_login_modal
   #toast-container
