@@ -29,5 +29,5 @@ block content
       | #{t('anonymousUser.body.line2')}
 
     .btn-container
-      a.btn(href='/')= t('anonymousUser.buttons.home')
-      a.btn(href='/signup')= t('anonymousUser.buttons.signup')
+      a.btn(href=uiPath('/'))= t('anonymousUser.buttons.home')
+      a.btn(href=uiPath('/signup'))= t('anonymousUser.buttons.signup')
