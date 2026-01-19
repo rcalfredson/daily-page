@@ -57,9 +57,9 @@ prepend content
   else
     p#room-description(lang=(uiLang || 'en'))= t('roomDashboard.empty.noDescription')
   p.room-archive-link
-    a(href=`/rooms/${room_id}/index`)= t('roomDashboard.links.allBlocks')
+    a(href=uiPath(`/rooms/${room_id}/index`))= t('roomDashboard.links.allBlocks')
   p.room-archive-link
-    a(href=`/rooms/${room_id}/archive`)= t('roomDashboard.links.browseByDate')
+    a(href=uiPath(`/rooms/${room_id}/archive`))= t('roomDashboard.links.browseByDate')
   p.room-archive-link
     a(href=uiPath(`/rooms/${room_id}/archive/best-of`))= t('roomDashboard.links.bestOf')
 
