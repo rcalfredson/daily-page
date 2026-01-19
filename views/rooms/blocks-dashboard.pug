@@ -67,7 +67,7 @@ append content
   include ../partials/_login_modal
   
   p
-    a.btn(href=`/rooms/${room_id}/blocks/new`)= t('roomDashboard.actions.createBlock')
+    a.btn(href=uiPath(/rooms/${room_id}/blocks/new))= t('roomDashboard.actions.createBlock')
 
   //- Tab links
   if useTabs
