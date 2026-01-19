@@ -4,7 +4,7 @@ mixin tagSection(tags, canManageBlock)
     div#tag-container
       each tag in tags
         span.tag-pill
-          a(href=`/tags/${encodeURIComponent(tag)}`) #{tag}
+          a(href=uiPath(`/tags/${encodeURIComponent(tag)}`)) #{tag}
           if canManageBlock
             button.tag-remove(data-tag=tag) x
       if canManageBlock

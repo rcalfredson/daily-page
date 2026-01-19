@@ -43,9 +43,9 @@ block content
             a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
             p(lang=(uiLang || 'en'))
               | #{t('tags.detail.blockInfo.createdBy')} 
-              a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+              a.user-profile-link(href=uiPath(`/users/${block.creator}`))= block.creator
               |  #{t('tags.detail.blockInfo.inRoom')} 
-              a.room-link(href=`/rooms/${block.roomId}`)= block.roomDisplayName || block.roomId || t('tags.detail.blockInfo.unknownRoom')
+              a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('tags.detail.blockInfo.unknownRoom')
               |  #{t('tags.detail.blockInfo.onDate')} 
               = new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
             +translationAttribution(block)
@@ -57,7 +57,7 @@ block content
   else
     p= t('tags.detail.empty.message')
 
-  - const baseUrl = `/tags/${encodeURIComponent(tagName)}`;
+  - const baseUrl = uiPath(`/tags/${encodeURIComponent(tagName)}`);
   include ../partials/_pagination
   +pagination(currentPage, totalPages, baseUrl)
   include ../partials/_login_modal

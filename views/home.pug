@@ -111,7 +111,7 @@ block content
           each tagObj in trendingTags
             li.tag-chip
               i.tag-icon.fas.fa-tag
-              a(href=`/tags/${encodeURIComponent(tagObj._id)}`)= tagObj._id
+              a(href=uiPath(`/tags/${encodeURIComponent(tagObj._id)}`))= tagObj._id
               span.tag-badge (#{t('home.trendingTags.blocks', {n: tagObj.totalBlocks})}, #{t('home.trendingTags.votes', {n: tagObj.totalVotes})})
     else
       p= t('home.trendingTags.empty')
