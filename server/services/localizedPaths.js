@@ -9,6 +9,7 @@ export function isLocalizedPath(path) {
     path === '/archive/best-of' ||
     path === '/support' ||
     path === '/random' ||
+    path === '/login' ||
 
     // room archive, index, create-block
     /^\/rooms\/[^/]+\/archive$/.test(path) ||
