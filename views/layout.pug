@@ -39,7 +39,7 @@ html(lang=htmlLang)
         data-welcome-suffix=t('nav.auth.welcomeSuffix')
       )= t('layout.welcomeUser')
       button#nav-logout(type="button" style="display:none;")= t('layout.logout')
-      a#nav-login(href="/login" style="display:none;")= t('layout.login')
+      a#nav-login(href=uiPath("/login") style="display:none;")= t('layout.login')
     .navbar
       a(href=uiPath('/'))
         h1.logo= t('layout.siteName')
