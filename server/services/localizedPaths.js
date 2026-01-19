@@ -25,6 +25,9 @@ export function isLocalizedPath(path) {
     /^\/rooms\/[^/]+\/archive\/\d{4}\/\d{1,2}\/\d{1,2}$/.test(path) ||
 
     // best-of
-    /^\/rooms\/[^/]+\/archive\/best-of$/.test(path)
+    /^\/rooms\/[^/]+\/archive\/best-of$/.test(path) ||
+
+    // tag pages
+    /^\/tags\/[^/]+$/.test(path)
   );
 }
