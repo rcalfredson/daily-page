@@ -78,7 +78,7 @@ const useUserAPI = (app) => {
       });
 
       const uiLang = getUiLangFromReq(req);
-      const verifyLink = `${process.env.BASE_URL || 'http://localhost:3000'}/verify-email?token=${verificationToken}`;
+      const verifyLink = `${process.env.BASE_URL || 'http://localhost:3000'}/${uiLang}/verify-email?token=${verificationToken}`;
       // Envía email de verificación
       const { subject, html } = await buildVerifyEmail({
         uiLang,
