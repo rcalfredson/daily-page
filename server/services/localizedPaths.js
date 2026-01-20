@@ -11,6 +11,7 @@ export function isLocalizedPath(path) {
     path === '/random' ||
     path === '/login' ||
     path === '/signup' ||
+    path === '/verify-email' ||
 
     // room archive, index, create-block
     /^\/rooms\/[^/]+\/archive$/.test(path) ||
