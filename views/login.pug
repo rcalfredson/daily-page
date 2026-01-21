@@ -38,7 +38,7 @@ block content
       data-unexpected=t('auth.login.feedback.unexpected')
     )
     p.forgot-link
-      a(href='/forgot-password')= t('auth.login.links.forgotPassword')
+      a(href=uiPath('/forgot-password'))= t('auth.login.links.forgotPassword')
     p.signup-link
       = t('auth.login.links.noAccount') + ' '
       a(href=uiPath('/signup'))= t('auth.login.links.signupHere')
