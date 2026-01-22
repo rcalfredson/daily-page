@@ -19,7 +19,8 @@ mixin blockList(blocks, period, label, room_id)
 
           p(lang=(uiLang || 'en'))
             | #{t('blockList.createdBy')} 
-            a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+            - const u = encodeURIComponent(block.creator || '')
+            a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
             |  #{t('blockList.on')} 
             = new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
 

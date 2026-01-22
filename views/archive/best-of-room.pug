@@ -62,7 +62,8 @@ mixin renderBlockList(blocks)
             a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
             p(lang=(uiLang || 'en'))
               | #{t('bestOf.labels.createdBy')} 
-              a.user-profile-link(href=`/users/${block.creator}`)= block.creator
+              - const u = encodeURIComponent(block.creator || '')
+              a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
               |  #{t('bestOf.labels.inRoom')} 
               if block.roomId
                 a.room-link(href=`/rooms/${block.roomId}`)= block.roomDisplayName || block.roomId

@@ -15,6 +15,9 @@ export function isLocalizedPath(path) {
     path === '/forgot-password' ||
     path === '/reset-password' ||
 
+    // user profiles
+    /^\/users\/[^/]+$/.test(path) ||
+
     // room archive, index, create-block
     /^\/rooms\/[^/]+\/archive$/.test(path) ||
     /^\/rooms\/[^/]+\/index$/.test(path) ||

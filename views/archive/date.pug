@@ -54,7 +54,8 @@ block content
               a.block-link(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
               .block-meta(lang=(uiLang || 'en'))
                 | #{t('archive.date.labels.createdBy')} 
-                a.user-profile-link(href=uiPath(`/users/${block.creator}`))= block.creator
+                - const u = encodeURIComponent(block.creator || '')
+                a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
                 |  #{t('archive.date.labels.in')} 
                 a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('archive.date.labels.unknownRoom')
                 |  #{t('archive.date.labels.on', { datetime: formatDateTime(block.createdAt) })}

@@ -2,7 +2,8 @@ mixin translationAttribution(item)
   if item.originalAuthor && item.originalAuthor !== item.creator
     p.translation-attribution
       | #{t('translation.prefix')} 
-      a.user-profile-link(href=`/users/${item.originalAuthor}`)= item.originalAuthor
+      - const u = encodeURIComponent(item.originalAuthor || '')
+      a.user-profile-link(href=uiPath(`/users/${u}`))= item.originalAuthor
       |  (#{t('translation.see')} 
       a(href=`/rooms/${item.roomId}/blocks/${item.originalBlock}`)= t('translation.originalBlock')
       |)

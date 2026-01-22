@@ -16,7 +16,7 @@ block content
       a.room-link(href='/dashboard')= t('userBlocks.header.dashboardLink')
       |  — #{t('userBlocks.header.allBlocks')}
     else
-      a.room-link(href=`/users/${encodedUser}`)= t('userBlocks.header.profileLink', { username })
+      a.room-link(href=uiPath(`/users/${encodedUser}`))= t('userBlocks.header.profileLink', { username })
       |  — #{t('userBlocks.header.allBlocks')}
 
   .room-index-container
