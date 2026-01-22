@@ -43,7 +43,8 @@ block content
             a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
             p(lang=(uiLang || 'en'))
               | #{t('tags.detail.blockInfo.createdBy')} 
-              a.user-profile-link(href=uiPath(`/users/${block.creator}`))= block.creator
+              - const u = encodeURIComponent(block.creator || '')
+              a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
               |  #{t('tags.detail.blockInfo.inRoom')} 
               a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('tags.detail.blockInfo.unknownRoom')
               |  #{t('tags.detail.blockInfo.onDate')} 
