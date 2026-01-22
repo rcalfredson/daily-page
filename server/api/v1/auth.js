@@ -87,9 +87,8 @@ const useAuthAPI = (app) => {
       user.resetPasswordExpires = expires;
       await user.save();
 
-      const resetUrl = `${process.env.BASE_URL || 'http://localhost:3000'}/reset-password?token=${encodeURIComponent(token)}`;
-
       const uiLang = getUiLangFromReq(req);
+      const resetUrl = `${process.env.BASE_URL || 'http://localhost:3000'}/${uiLang}/reset-password?token=${encodeURIComponent(token)}`;
 
       const { subject, html } = await buildPasswordResetEmail({
         uiLang,
