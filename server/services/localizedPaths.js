@@ -21,6 +21,8 @@ export function isLocalizedPath(path) {
 
     // user profiles
     /^\/users\/[^/]+$/.test(path) ||
+    // user block list
+    /^\/users\/[^/]+\/blocks\/?$/.test(path) ||
 
     // room archive, index, create-block
     /^\/rooms\/[^/]+\/archive$/.test(path) ||
