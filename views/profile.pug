@@ -33,7 +33,7 @@ block content
           p= t('profile.activity.none')
 
         - const encodedProfileUser = encodeURIComponent(profileUser.username)
-        a(href=`/users/${encodedProfileUser}/blocks`).btn.stats-btn= t('profile.activity.viewAllBlocks')
+        a(href=uiPath(`/users/${encodedProfileUser}/blocks`)).btn.stats-btn= t('profile.activity.viewAllBlocks')
 
       .starred-rooms.dashboard-card
         h3= t('profile.starredRooms.title')
@@ -41,7 +41,7 @@ block content
           ul.starred-room-list
             each room in starredRooms
               li.starred-room-item
-                a(href=`/rooms/${room.id}`)= room.name
+                a(href=uiPath(`/rooms/${room.id}`))= room.name
         else
           p= t('profile.starredRooms.none')
 
