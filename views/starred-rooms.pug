@@ -8,7 +8,7 @@ block append head
 
 block content
   .starred-rooms-container(lang=(uiLang || 'en'))
-    a.btn(href="/dashboard")= t('starredRooms.nav.backToDashboard')
+    a.btn(href=uiPath("/dashboard"))= t('starredRooms.nav.backToDashboard')
     h2= t('starredRooms.header.title')
 
     if starredRooms.length

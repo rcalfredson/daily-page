@@ -9,7 +9,7 @@ block append head
 
 block content
   .detailed-stats-container(lang=(uiLang || 'en'))
-    a.btn(href="/dashboard")= t('detailedStats.nav.backToDashboard')
+    a.btn(href=uiPath("/dashboard"))= t('detailedStats.nav.backToDashboard')
 
     h2= t('detailedStats.header.title')
 

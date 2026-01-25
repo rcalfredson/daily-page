@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const fallbackUser = welcomeMessage?.dataset.welcomeFallback ?? 'you';
   const suffix = welcomeMessage?.dataset.welcomeSuffix ?? '!';
 
+  const uiBaseRaw = document.body?.dataset.uiBase || '';
+  const uiBase = uiBaseRaw.endsWith('/') ? uiBaseRaw.slice(0, -1) : uiBaseRaw;
+  const ui = (path) => (path.startsWith('/') ? `${uiBase}${path}` : `${uiBase}/${path}`);
+
   const setLoggedOutUI = () => {
     if (navLogin) navLogin.style.display = 'block';
     if (navLogout) navLogout.style.display = 'none';
@@ -18,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (welcomeMessage) {
       welcomeMessage.textContent = prefix;
       const a = document.createElement('a');
-      a.href = '/dashboard';
+      a.href = ui('/dashboard');
       a.style.color = 'rgb(26, 167, 214)';
       a.style.textDecoration = 'underline dotted';
       a.textContent = user.username ?? fallbackUser;
@@ -54,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await fetch('/api/v1/auth/logout', { method: 'POST', credentials: 'include' });
       // idealmente el server también borra la cookie HttpOnly
-      window.location.href = '/';
+      window.location.href = ui('/');
     } catch (err) {
       console.error('Logout error:', err);
     }

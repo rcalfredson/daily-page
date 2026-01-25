@@ -13,7 +13,7 @@ block content
 
   h1
     if isOwnProfile
-      a.room-link(href='/dashboard')= t('userBlocks.header.dashboardLink')
+      a.room-link(href=uiPath('/dashboard'))= t('userBlocks.header.dashboardLink')
       |  — #{t('userBlocks.header.allBlocks')}
     else
       a.room-link(href=uiPath(`/users/${encodedUser}`))= t('userBlocks.header.profileLink', { username })
