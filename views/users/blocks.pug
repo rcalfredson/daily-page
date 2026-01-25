@@ -9,7 +9,7 @@ block nav
 
 block content
   - const encodedUser = encodeURIComponent(username || '')
-  - const baseUrl = isOwnProfile ? '/dashboard/blocks' : `/users/${encodedUser}/blocks`
+  - const baseUrl = isOwnProfile ? uiPath('/dashboard/blocks') : `/users/${encodedUser}/blocks`
 
   h1
     if isOwnProfile

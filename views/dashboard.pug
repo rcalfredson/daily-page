@@ -55,7 +55,7 @@ block content
                 p= t('dashboard.activity.updatedOn', { date: formatted })
         else
           p= t('dashboard.activity.none')
-        a(href="/dashboard/blocks").btn.stats-btn= t('dashboard.activity.viewAllBlocks')
+        a(href=uiPath("/dashboard/blocks")).btn.stats-btn= t('dashboard.activity.viewAllBlocks')
 
       .streak-section.dashboard-card
         h3= t('dashboard.streak.title')
