@@ -12,6 +12,7 @@ export function isLocalizedPath(path) {
     path === '/login' ||
     path === '/dashboard' ||
     path === '/dashboard/stats' ||
+    path === '/dashboard/starred-rooms' ||
     path === '/signup' ||
     path === '/verify-email' ||
     path === '/forgot-password' ||

@@ -69,7 +69,7 @@ block content
               li.starred-room-item
                 a(href=`/rooms/${room.id}`)= room.name
           if totalStarredRooms > starredRooms.length
-            a.view-more(href="/dashboard/starred-rooms")= t('dashboard.starredRooms.viewAll')
+            a.view-more(href=uiPath("/dashboard/starred-rooms"))= t('dashboard.starredRooms.viewAll')
         else
           p= t('dashboard.starredRooms.none')
 
