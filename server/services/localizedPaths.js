@@ -29,6 +29,9 @@ export function isLocalizedPath(path) {
     /^\/rooms\/[^/]+\/index$/.test(path) ||
     /^\/rooms\/[^/]+\/blocks\/new$/.test(path) ||
 
+    // room home
+    /^\/rooms\/[^/]+\/?$/.test(path) ||
+
     // month index
     /^\/archive\/\d{4}\/\d{1,2}$/.test(path) ||
     /^\/rooms\/[^/]+\/archive\/\d{4}\/\d{1,2}$/.test(path) ||

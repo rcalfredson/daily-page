@@ -42,7 +42,7 @@ block content
       .header-top(style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;")
         .room-info
           | #{t('blockView.labels.room')}
-          a.room-link(href=`/rooms/${room_id}`)= roomName
+          a.room-link(href=uiPath(`/rooms/${room_id}`))= roomName
 
         // only show when multiple translations exist
         if translations.length > 1

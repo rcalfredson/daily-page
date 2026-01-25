@@ -15,7 +15,7 @@ block content
       ul.starred-rooms-full-list
         each room in starredRooms
           li.starred-room-full-item
-            a.card-link(href=`/rooms/${room.id}`)
+            a.card-link(href=uiPath(`/rooms/${room.id}`))
               span.room-name= room.name
               p.starred-room-description= room.description
     else

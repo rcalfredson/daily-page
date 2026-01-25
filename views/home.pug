@@ -76,7 +76,7 @@ block content
                 votes: featuredRoomData.totalRoomVotes
               })
             = roomInfo
-        a.btn(href=`/rooms/${featuredRoom._id}`)= t('home.featured.checkItOut')
+        a.btn(href=uiPath(`/rooms/${featuredRoom._id}`))= t('home.featured.checkItOut')
 
   if featuredBlock
     .featured-section
@@ -136,7 +136,7 @@ block content
                 - const u = encodeURIComponent(block.creator || '')
                 a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
                 |  #{t('home.trendingBlocks.in')} 
-                a.room-link(href=`/rooms/${block.roomId}`)= block.roomDisplayName || block.roomId || t('home.trendingBlocks.unknownRoom')
+                a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('home.trendingBlocks.unknownRoom')
                 |  #{t('home.trendingBlocks.on')} #{new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })}
               +translationAttribution(block)
               div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML

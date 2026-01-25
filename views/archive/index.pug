@@ -8,10 +8,10 @@ block nav
 
 block content
   h1
-    a.room-link(href=`/rooms/${roomId}`)= roomName
+    a.room-link(href=uiPath(`/rooms/${roomId}`))= roomName
     |  #{t('archive.index.header.allBlocks')}
   .room-index-container
-    form.sort-bar(method='get' action=`/rooms/${roomId}/index`)
+    form.sort-bar(method='get' action=uiPath(`/rooms/${roomId}/index`))
       input(type='hidden' name='page' value='1')
       | #{t('archive.index.sort.label')} 
       select(name='sort')
@@ -30,9 +30,10 @@ block content
           span.meta(lang=(uiLang || 'en'))
             | (#{b.voteCount} ★ • #{b.createdAt.toLocaleDateString(uiLang || undefined)})
     include ../partials/_pagination
+    - const basePath = uiPath(`/rooms/${roomId}/index`)
     +pagination(
       currentPage,
       totalPages,
-      `/rooms/${roomId}/index?sort=${sortKey}&dir=${dir}`,
+      `${basePath}?sort=${sortKey}&dir=${dir}`,
       { prev: t('archive.pagination.prev'), next: t('archive.pagination.next') }
     )

@@ -67,7 +67,7 @@ block content
           ul.starred-room-list
             each room in starredRooms
               li.starred-room-item
-                a(href=`/rooms/${room.id}`)= room.name
+                a(href=uiPath(`/rooms/${room.id}`))= room.name
           if totalStarredRooms > starredRooms.length
             a.view-more(href=uiPath("/dashboard/starred-rooms"))= t('dashboard.starredRooms.viewAll')
         else

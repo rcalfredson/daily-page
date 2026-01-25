@@ -19,7 +19,7 @@ block content
   if roomMetadata
     h2#room-name
       | #{t('createBlock.roomInfo.roomLabel')} 
-      a(href=`/rooms/${roomMetadata._id}`)= (roomMetadata.displayName || roomMetadata.name)
+      a(href=uiPath(`/rooms/${roomMetadata._id}`))= (roomMetadata.displayName || roomMetadata.name)
     - descriptionFallback = (roomMetadata.displayDescription || roomMetadata.description || t('createBlock.roomInfo.noDescription'))
 
   p#room-description= descriptionFallback
