@@ -21,7 +21,7 @@ block content
           #block-meta
             p.room-info
               | #{t('blockEditor.roomInfo.label')} 
-              a.room-link(href=`/rooms/${room_id}`)= roomName
+              a.room-link(href=uiPath(`/rooms/${room_id}`))= roomName
             h2#block-title-container
               span#block-title= block.title
               if canManageBlock
