@@ -31,7 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
         feedback.textContent = msgSuccess;
         feedback.style.color = 'green';
         feedback.style.display = 'block';
-        setTimeout(() => (window.location.href = '/dashboard'), 2000); // Redirect to dashboard
+
+        const redirectTo = form?.dataset.redirect || '/dashboard';
+        setTimeout(() => (window.location.href = redirectTo), 2000); // Redirect to dashboard
       } else {
         // Failure: Show error
         feedback.textContent = result.error || msgFailedGeneric;

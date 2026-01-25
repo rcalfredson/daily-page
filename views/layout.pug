@@ -31,7 +31,11 @@ html(lang=htmlLang)
       script#i18n-lang(type='application/json').
         !{JSON.stringify(htmlLang)}
       include partials/_i18n_exports
-  body(data-is-logged-in=user ? "true" : "false" data-user-id=user ? user.id : null)
+  body(
+    data-is-logged-in=user ? "true" : "false"
+    data-user-id=user ? user.id : null
+    data-ui-base=uiPath("")
+  )
     div.auth-wrapper
       p#welcome-message(
         data-welcome-prefix=t('nav.auth.welcomePrefix')

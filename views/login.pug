@@ -13,7 +13,10 @@ block content
   .login-form-container
     h1= t('auth.login.heading')
     p= t('auth.login.subheading')
-    form.login-form(id="loginForm")
+    form.login-form(
+      id="loginForm"
+      data-redirect=uiPath("/dashboard")
+    )
       .form-group
         label(for="usernameOrEmail")= t('auth.login.fields.usernameOrEmail.label')
         input#usernameOrEmail(

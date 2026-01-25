@@ -10,6 +10,7 @@ export function isLocalizedPath(path) {
     path === '/support' ||
     path === '/random' ||
     path === '/login' ||
+    path === '/dashboard' ||
     path === '/signup' ||
     path === '/verify-email' ||
     path === '/forgot-password' ||
