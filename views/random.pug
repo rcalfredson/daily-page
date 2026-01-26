@@ -17,7 +17,7 @@ block content
         li
           a.link(href='/baseball')= t('random.links.baseball')
         li
-          a.link(href='/random-writer')= t('random.links.randomWriter')
+          a.link(href=uiPath('/random-writer'))= t('random.links.randomWriter')
 
     .cta
       a.btn.primary(href=uiPath("/rooms"))= t('random.cta.backToRooms')
