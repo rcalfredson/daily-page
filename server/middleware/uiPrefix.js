@@ -78,6 +78,12 @@ export function uiPrefixAndLangContext(req, res, next) {
     return `/${uiLang}${clean}`;
   };
 
+  res.locals.uiPathFor = (lang, p) => {
+    const clean = (p || '/').startsWith('/') ? (p || '/') : `/${p}`;
+    if (clean === '/') return `/${lang}/`;
+    return `/${lang}${clean}`;
+  };
+
   // If prefix present, set cookie (authoritative)
   // If query ?ui present, also set cookie, but do not rewrite here (redirect middleware will canonicalize)
   const uiFromQuery = pickSupportedLang(req.query?.ui);

@@ -18,7 +18,7 @@ block append head
   link(rel='stylesheet' href='/css/toast.css')
   link(rel='stylesheet' href='/css/modal.css')
   link(rel='stylesheet' href='/css/flag-modal.css')
-  link(rel='stylesheet' href='/css/lang-switcher.css')
+  link(rel='stylesheet' href='/css/block-lang-switcher.css')
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
 
 block append scripts
@@ -35,30 +35,16 @@ block append scripts
 
 block content
   - const isRtl = ['ar','he','fa','ur'].includes(lang);
-  - const flagEmoji = { en:'🇺🇸', es:'🇪🇸', fr:'🇫🇷', ru:'🇷🇺', id:'🇮🇩', de:'🇩🇪', it:'🇮🇹', pt:'🇵🇹', zh:'🇨🇳', ja:'🇯🇵', ko:'🇰🇷', ar:'🇸🇦', hi:'🇮🇳', tr:'🇹🇷', nl:'🇳🇱', sv:'🇸🇪', no:'🇳🇴', da:'🇩🇰', fi:'🇫🇮', pl:'🇵🇱', cs:'🇨🇿', el:'🇬🇷', he:'🇮🇱', th:'🇹🇭', vi:'🇻🇳' };
   include ../partials/_tag_section
   #block-page
     .block-header
-      .header-top(style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;")
+      .header-top
         .room-info
           | #{t('blockView.labels.room')}
           a.room-link(href=uiPath(`/rooms/${room_id}`))= roomName
 
-        // only show when multiple translations exist
-        if translations.length > 1
-          details.lang-switcher
-            summary
-              span #{t('blockView.labels.lang')}
-              span.current-lang.pill
-                span.flag= flagEmoji[lang] || '🏳️'
-                | #{lang}
-            ul.lang-list
-              each tr in translations
-                if tr.lang !== lang
-                  li
-                    a.pill(href=`/rooms/${room_id}/blocks/${tr._id}`)
-                      span.flag= flagEmoji[tr.lang] || '🏳️'
-                      | #{tr.lang}
+        include ../partials/_block_lang_switcher
+
       .title-section
         .vote-section
           include ../partials/_vote_controls

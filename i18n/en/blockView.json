@@ -6,7 +6,8 @@
     },
     "labels": {
       "room": "Room: ",
-      "lang": "Lang: "
+      "lang": "Translations: ",
+      "available": "available"
     },
     "buttons": {
       "edit": "Edit",

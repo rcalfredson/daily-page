@@ -1,0 +1,51 @@
+// views/partials/_ui_lang_switcher.pug
+-
+  const uiS = (() => {
+    const uiFlag = {
+      en:'us', es:'es', fr:'fr', ru:'ru', id:'id', de:'de', it:'it', pt:'pt',
+      zh:'cn', ja:'jp', ko:'kr', ar:'sa', hi:'in', tr:'tr',
+      nl:'nl', sv:'se', no:'no', da:'dk', fi:'fi', pl:'pl', cs:'cz',
+      el:'gr', he:'il', th:'th', vi:'vn',
+    };
+
+    const supported = [
+      'en','es','fr','ru','id','de','it','pt','zh','ja','ko','ar','hi','tr',
+      'nl','sv','no','da','fi','pl','cs','el','he','th','vi'
+    ];
+
+    const uiHere = unprefixedPath || '/';
+
+    const cleanQuery = (() => {
+      const q = Object.assign({}, (query || {}));
+      delete q.ui;
+      delete q.lang;
+      return q;
+    })();
+
+    const withQuery = (path, q) => {
+      const qs = new URLSearchParams(q || {}).toString();
+      return qs ? (path + '?' + qs) : path;
+    };
+
+    const isBlockPath = /^\/rooms\/[^/]+\/blocks\/[^/]+/.test(uiHere);
+
+    return { uiFlag, supported, uiHere, cleanQuery, withQuery, isBlockPath };
+  })();
+
+details.ui-lang-switcher
+  summary.ui-lang-summary(aria-label=t('layout.language') || 'Language')
+    span.fi(class=`fi fi-${uiS.uiFlag[uiLang] || 'xx'}`)
+    span.ui-lang-code= (uiLang || 'en').toUpperCase()
+    span.ui-lang-caret(aria-hidden=true) ▾
+
+  ul.ui-lang-menu
+    each l in uiS.supported
+      if l !== uiLang
+        -
+          const dest = uiS.isBlockPath
+            ? uiS.withQuery(uiS.uiHere, Object.assign({}, uiS.cleanQuery, { ui: l }))
+            : uiS.withQuery(uiPathFor(l, uiS.uiHere), uiS.cleanQuery);
+        li
+          a.ui-lang-option(href=dest)
+            span.fi(class=`fi fi-${uiS.uiFlag[l] || 'xx'}`)
+            span.ui-lang-option-code= l.toUpperCase()

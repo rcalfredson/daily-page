@@ -14,6 +14,7 @@
   justify-content: center;
   gap: 15px;
   align-items: center;
+  white-space: nowrap;
 }
 
 .footer a {
@@ -24,3 +25,9 @@
 .footer a:hover {
   text-decoration: underline;
 }
+
+ @media (max-width: 420px) {
+    .footer-content {
+      flex-direction: column;
+    }
+  }
