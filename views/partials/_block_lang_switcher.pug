@@ -1,0 +1,53 @@
+// views/partials/_block_lang_switcher.pug
+-
+  const blkS = (() => {
+    const flag = {
+      en:'us', es:'es', fr:'fr', ru:'ru', id:'id', de:'de', it:'it', pt:'pt',
+      zh:'cn', ja:'jp', ko:'kr', ar:'sa', hi:'in', tr:'tr',
+      nl:'nl', sv:'se', no:'no', da:'dk', fi:'fi', pl:'pl', cs:'cz',
+      el:'gr', he:'il', th:'th', vi:'vn',
+    };
+
+    const blockHere = unprefixedPath || '/';
+
+    // Keep any existing query params (like ui) but replace lang
+    const baseQuery = (() => {
+      const q = Object.assign({}, (query || {}));
+      delete q.lang;
+      return q;
+    })();
+
+    const withQuery = (path, q) => {
+      const qs = new URLSearchParams(q || {}).toString();
+      return qs ? (path + '?' + qs) : path;
+    };
+
+    const availableLangs = Array.from(
+      new Set((translations || []).map(tr => tr.lang).filter(Boolean))
+    ).sort();
+
+    const shouldShow = availableLangs.length > 1;
+
+    return { flag, blockHere, baseQuery, withQuery, availableLangs, shouldShow };
+  })();
+
+if blkS.shouldShow
+  details.block-lang-switcher
+    summary.block-lang-summary(aria-label=(t('blockView.labels.lang') || 'Content language'))
+      span.block-lang-label= (t('blockView.labels.lang') || 'Lang')
+      span.fi(class=('fi fi-' + (blkS.flag[lang] || 'xx')))
+      span.block-lang-code= (lang || 'en').toUpperCase()
+      if uiLang && uiLang !== lang && blkS.availableLangs.includes(uiLang)
+        span.block-lang-hint= '(' + (uiLang || '').toUpperCase() + ' ' + t('blockView.labels.available') + ')'
+      span.block-lang-caret(aria-hidden=true) ▾
+
+    ul.block-lang-menu
+      each l in blkS.availableLangs
+        -
+          const q2 = Object.assign({}, blkS.baseQuery, { lang: l });
+          const dest = blkS.withQuery(blkS.blockHere, q2);
+          const isActive = (l === lang);
+        li
+          a.block-lang-option(href=dest class=(isActive ? 'is-active' : ''))
+            span.fi(class=('fi fi-' + (blkS.flag[l] || 'xx')))
+            span.block-lang-option-code= l.toUpperCase()

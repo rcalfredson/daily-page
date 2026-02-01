@@ -6,7 +6,8 @@
     },
     "labels": {
       "room": "Sala: ",
-      "lang": "Idioma: "
+      "lang": "Traducciones: ",
+      "available": "disponible"
     },
     "buttons": {
       "edit": "Editar",

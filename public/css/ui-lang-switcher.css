@@ -1,0 +1,112 @@
+/* public/css/ui-lang-switcher.css */
+.navbar .navbar-header {
+  overflow: visible;
+}
+
+.ui-lang-switcher {
+  position: relative;
+  z-index: 500;
+}
+
+.ui-lang-summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  top: -0.5rem;
+  padding: 0.35rem 0.6rem;
+  margin-top: -0.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  color: var(--text-color);
+  
+}
+
+.ui-lang-summary::-webkit-details-marker { display: none; }
+
+.ui-lang-code {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-size: 0.85rem;
+}
+
+.ui-lang-caret {
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
+
+.ui-lang-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  margin: 0;
+  padding: 0.5rem;
+  list-style: none;
+  background: var(--primary-bg);
+  opacity: 0.98;
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  border-radius: 12px;
+  z-index: 500;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+  min-width: 240px;
+}
+
+.ui-lang-menu::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+
+.ui-lang-menu {
+  max-height: min(60vh, 360px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ui-lang-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text-color);
+  border: 1px solid transparent;
+}
+
+.ui-lang-option:hover {
+  background: var(--highlight-color);
+  color: var(--primary-bg); /* usually dark text on light highlight */
+  border-color: var(--highlight-color);
+}
+
+.ui-lang-option-code {
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.fi {
+  border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+  .ui-lang-menu {
+    min-width: min(240px, calc(100vw - 24px));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    right: 0;
+  }
+  .ui-lang-summary {
+    padding: 0.25rem 0.5rem;
+  }
+}
