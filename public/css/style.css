@@ -66,10 +66,107 @@ General
 
 body {
   font-family: "Rubik-Light";
-  margin: 0 auto;
-  padding: 15px;
   background-color: #ffffff;
+  margin: 0;
+}
+
+.with-margins {
+  margin: 0 auto;
   width: 85%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Full-bleed sticky bar without 100vw overflow quirks */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  background: var(--primary-bg);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+
+  /* full-bleed naturally */
+  width: 100%;
+}
+
+/* Ensure the header inner content has breathing room even when full-bleed */
+.site-header .navbar {
+  box-sizing: border-box;
+  padding: 10px 15px;
+  /* match body padding vibe */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-start;
+}
+
+/* Make sure the right side never forces horizontal overflow */
+header.navbar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+}
+
+/* Let nav shrink instead of clipping */
+.main-menu {
+  min-width: 0;
+}
+
+/* When it gets narrow: logo left + utilities right on row 1,
+   nav becomes row 2, left-aligned under logo */
+@media (max-width: 1260px) and (min-width: 700px) {
+  header.navbar-header {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* Row 1: nav stays on the main line */
+  .main-menu {
+    flex: 1 1 auto;
+    min-width: 0;
+    order: 1;
+  }
+
+/* Top row: utilities live at far right */
+.navbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+  /* Welcome can be less greedy earlier */
+  #welcome-message {
+    max-width: 220px;
+    /* tighten slightly in this band */
+  }
+
+
+  /* ensure row 1 stays as logo + utilities */
+  a:has(.logo) { order: 1; }
+
+  .navbar-right {
+    order: 2;           /* keep it on row 1 */
+    margin-left: auto;  /* push to right */
+  }
+
+  nav#main-menu.main-menu {
+    order: 3;           /* row 2 */
+    flex: 0 0 100%;
+    width: 100%;
+    margin-top: 6px;
+    padding-left: 10px;
+  }
+
+  /* Make links start under the logo’s left edge */
+  nav#main-menu.main-menu ul {
+    justify-content: flex-start;
+  }
 }
 
 h1 {
@@ -82,7 +179,8 @@ h2 {
   margin-top: 0;
 }
 
-ul, ol {
+ul,
+ol {
   margin-top: 0;
 }
 
@@ -112,7 +210,8 @@ a.link:before {
   transition: all 0.3s ease-in-out 0s;
 }
 
-a.link:hover:before, .selected a.link:before {
+a.link:hover:before,
+.selected a.link:before {
   visibility: visible;
   -webkit-transform: scaleX(1);
   transform: scaleX(1);
@@ -157,7 +256,8 @@ strong {
   font-family: 'Rubik-Regular';
 }
 
-.hide, .hide * {
+.hide,
+.hide * {
   visibility: hidden;
 }
 
@@ -186,25 +286,33 @@ NavBar
   padding-top: 10px;
 }
 
-.nav-items {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 15px;
-  flex-grow: 1;
-  min-width: 0;
+.main-menu div a {
+  font-family: 'Rubik-Regular';
 }
 
-.nav-items div a {
-  font-family: 'Rubik-Regular';
+a.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0; /* lets the text shrink if needed */
+}
+
+.brand-mark {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
 }
 
 .logo {
   transition: all 0.3s ease-in-out 0s;
-  min-width: 170px
+  padding-left: 0;          /* because spacing is handled by gap now */
+  white-space: nowrap;
 }
 
-a:has(.logo) {
+a.brand {
   text-decoration: none;
 }
 
@@ -228,13 +336,13 @@ a:has(.logo) {
 .menu-toggle {
   display: inline-block;
   padding: .75em 15px;
-  padding-top: 2.5px;
   line-height: 1em;
   font-size: 1em;
   color: #333;
 }
 
-.menu-toggle:hover, .menu-toggle:focus {
+.menu-toggle:hover,
+.menu-toggle:focus {
   color: rgb(83, 175, 218);
 }
 
@@ -282,7 +390,8 @@ a:has(.logo) {
   border-top: 1px solid #383838;
 }
 
-.main-menu a:hover, .main-menu a:focus {
+.main-menu a:hover,
+.main-menu a:focus {
   background: #333;
   text-decoration: underline;
 }
@@ -293,22 +402,12 @@ a:has(.logo) {
   top: 0;
 }
 
-/*
- More to come here...
-*/
-
-/*
- Demo purposes only
-*/
-
-/* *, *:before, *:after {
-  box-sizing: border-box;
-} */
-
-header {
+.navbar-right {
+  margin-left: auto;
   display: flex;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
 }
 
 article {
@@ -323,7 +422,8 @@ article h2 {
   font-size: 28px;
 }
 
-.main-menu:target, .main-menu[aria-expanded="true"] {
+.main-menu:target,
+.main-menu[aria-expanded="true"] {
   display: block;
   left: 0;
   outline: none;
@@ -332,11 +432,13 @@ article h2 {
   box-shadow: 3px 0 12px rgba(0, 0, 0, .25);
 }
 
-.main-menu:target .menu-close, .main-menu[aria-expanded="true"] .menu-close {
+.main-menu:target .menu-close,
+.main-menu[aria-expanded="true"] .menu-close {
   z-index: 1001;
 }
 
-.main-menu:target ul, .main-menu[aria-expanded="true"] ul {
+.main-menu:target ul,
+.main-menu[aria-expanded="true"] ul {
   position: relative;
   z-index: 1000;
 }
@@ -346,7 +448,8 @@ article h2 {
  it wouldn't be clickable.
 */
 
-.main-menu:target+.backdrop, .main-menu[aria-expanded="true"]+.backdrop {
+.main-menu:target+.backdrop,
+.main-menu[aria-expanded="true"]+.backdrop {
   position: absolute;
   display: block;
   left: 0;
@@ -360,13 +463,18 @@ article h2 {
 }
 
 @supports (position: fixed) {
-  .main-menu, .main-menu:target+.backdrop, .main-menu[aria-expanded="true"]+.backdrop {
+
+  .main-menu,
+  .main-menu:target+.backdrop,
+  .main-menu[aria-expanded="true"]+.backdrop {
     position: fixed;
   }
 }
 
-@media (min-width: 840px) {
-  .menu-toggle, .main-menu .menu-close {
+@media (min-width: 700px) {
+
+  .menu-toggle,
+  .main-menu .menu-close {
     display: none;
   }
 
@@ -379,6 +487,10 @@ article h2 {
     display: block;
     overflow-x: hidden;
     overflow-y: hidden;
+    /* Let nav shrink without pushing the right-side controls off-screen */
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-left: 10px;
   }
 
   .main-menu ul {
@@ -391,6 +503,28 @@ article h2 {
     height: auto;
     width: auto;
     background: none;
+    flex-wrap: nowrap;
+  }
+
+  /* No more "Lo↵mejor" */
+  .main-menu a.link {
+    white-space: nowrap;
+  }
+
+  /* Middle widths: allow horizontal scroll instead of wrapping or overflow */
+  .main-menu {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .navbar-right {
+    margin-left: auto;
+    order: 2
+  }
+
+  .main-menu::-webkit-scrollbar {
+    display: none;
   }
 
   a.link {
@@ -416,7 +550,8 @@ article h2 {
     transition: all 0.3s ease-in-out 0s;
   }
 
-  a.link:hover:before, .selected a.link:before {
+  a.link:hover:before,
+  .selected a.link:before {
     visibility: visible;
     -webkit-transform: scaleX(1);
     transform: scaleX(1);
@@ -468,9 +603,10 @@ Editor
 }
 
 @media (max-width: 500px) {
-  body {
+  .with-margins {
     width: unset;
   }
+
   .text-wrapper {
     display: block;
   }
@@ -534,7 +670,8 @@ button.inactive-dismiss {
   padding: 3px;
 }
 
-label, button {
+label,
+button {
   float: right;
   padding: 0 15px;
   border-radius: 5px;
@@ -566,7 +703,8 @@ button:hover {
   display: none;
 }
 
-#sync-infobox, #closing-soon-infobox {
+#sync-infobox,
+#closing-soon-infobox {
   float: left;
   font-size: 13px;
   padding-top: 8px;
@@ -637,7 +775,8 @@ Archive and static pages
   text-indent: -1.3em;
 }
 
-.info p, .not-found p {
+.info p,
+.not-found p {
   font-size: 18px;
   margin-left: 46px;
 }
@@ -662,7 +801,9 @@ Archive and static pages
   padding-left: 20px;
 }
 
-#viewer a:not(.hover-effect-link), .info a, .not-found a {
+#viewer a:not(.hover-effect-link),
+.info a,
+.not-found a {
   text-decoration-style: dotted;
   text-decoration-line: underline;
   text-decoration-color: rgb(116, 137, 163);
@@ -707,7 +848,8 @@ Video
   border-radius: 6px;
 }
 
-.exit, .minimize {
+.exit,
+.minimize {
   cursor: pointer;
 }
 
@@ -772,11 +914,15 @@ Calling Peer
   display: inline-block;
 }
 
-.phone-in, .phone-out, .phone-call {
+.phone-in,
+.phone-out,
+.phone-call {
   display: none;
 }
 
-.calling .phone, .beingCalled .phone, .answered .phone {
+.calling .phone,
+.beingCalled .phone,
+.answered .phone {
   display: none;
 }
 
@@ -794,7 +940,10 @@ Calling Peer
   display: inline-block;
 }
 
-.phone, .phone-in, .phone-out, .phone-call {
+.phone,
+.phone-in,
+.phone-out,
+.phone-call {
   margin-left: 5px;
   height: 20px;
   vertical-align: -5px;
@@ -908,7 +1057,8 @@ ToolTip
   animation: fadein 2s;
 }
 
-.loading, .closed {
+.loading,
+.closed {
   display: none;
   color: rgb(26, 167, 214);
   position: absolute;
@@ -1088,7 +1238,10 @@ ToolTip
 }
 
 @-webkit-keyframes sk-circleFadeDelay {
-  0%, 39%, 100% {
+
+  0%,
+  39%,
+  100% {
     opacity: 0;
   }
 
@@ -1098,7 +1251,10 @@ ToolTip
 }
 
 @keyframes sk-circleFadeDelay {
-  0%, 39%, 100% {
+
+  0%,
+  39%,
+  100% {
     opacity: 0;
   }
 

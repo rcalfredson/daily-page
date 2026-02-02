@@ -3,13 +3,16 @@
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
+  min-width: 0;
 }
 
-#nav-login, #nav-logout {
+#nav-login,
+#nav-logout {
   display: inline-block;
   font-family: 'Rubik-Medium', sans-serif;
   font-size: 13px;
   padding: 0px 10px;
+  margin: unset;
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -36,6 +39,10 @@
   font-size: 14px;
   margin: 0 10px 0 0;
   color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
 }
 
 @media (max-width: 800px) {
@@ -43,7 +50,51 @@
     font-size: 13px;
   }
 
-  #nav-login, #nav-logout {
+  #nav-login,
+  #nav-logout {
     font-size: 12px;
+  }
+}
+
+/* hidden by default */
+.nav-mobile-only {
+  display: none;
+}
+
+.nav-mobile-only a {
+  font-family: 'Rubik-Regular';
+}
+
+@media (max-width: 590px) {
+  #welcome-message {
+    display: none !important;
+  }
+
+  .nav-mobile-only#dashboard {
+    display: list-item;
+  }
+}
+
+@media (max-width: 470px) {
+  #nav-login {
+    display: none !important;
+  }
+
+  .nav-mobile-only#login {
+    display: list-item;
+  }
+}
+
+@media (max-width: 402px) {
+  #nav-logout {
+    display: none !important;
+  }
+
+  .nav-mobile-only#logout {
+    display: list-item;
+  }
+
+  .nav-mobile-only#logout a {
+    color: #cc4a4a;
   }
 }
