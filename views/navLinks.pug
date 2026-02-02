@@ -32,3 +32,16 @@ ul
   li
     .random
       a.link(href=uiPath('/random'))= t('nav.otherProjects')
+  
+  // Mobile-only auth links
+  if !user
+    li.nav-mobile-only#login
+        a#nav-login-menu.link(href=uiPath('/login'))= t('layout.login')
+
+  if user
+    li.nav-mobile-only#dashboard
+      a.link(href=uiPath('/dashboard'))= t('nav.dashboard')
+
+  if user
+    li.nav-mobile-only#logout
+      a#nav-logout-menu.link(href="#")= t('layout.logout')

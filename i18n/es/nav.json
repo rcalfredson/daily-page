@@ -12,6 +12,7 @@
       "welcomePrefix": "¡Bienvenido, ",
       "welcomeFallbackUser": "tú",
       "welcomeSuffix": "!"
-    }
+    },
+    "dashboard": "Panel"
   }
 }

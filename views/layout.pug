@@ -38,32 +38,43 @@ html(lang=htmlLang)
     data-user-id=user ? user.id : null
     data-ui-base=uiPath("")
   )
-    div.auth-wrapper
-      p#welcome-message(
-        data-welcome-prefix=t('nav.auth.welcomePrefix')
-        data-welcome-fallback=t('nav.auth.welcomeFallbackUser')
-        data-welcome-suffix=t('nav.auth.welcomeSuffix')
-      )= t('layout.welcomeUser')
-      button#nav-logout(type="button" style="display:none;")= t('layout.logout')
-      a#nav-login(href=uiPath("/login") style="display:none;")= t('layout.login')
-    .navbar
-      a(href=uiPath('/'))
-        h1.logo= t('layout.siteName')
-      header.navbar-header
-        a(href="#main-menu"
-          id="main-menu-toggle"
-          class="menu-toggle"
-          aria-label=t('layout.openMenu'))
-          span(class="sr-only")= t('layout.openMenu')
-          span(class="fa fa-bars" aria-hidden="true")
-        nav#main-menu.nav-items.main-menu
-          block nav
-        a(href="#main-menu-toggle"
-          class="backdrop"
-          tabindex="-1"
-          aria-hidden="true" hidden)
-        include partials/_ui_lang_switcher
-    block content
+    header.site-header
+      .navbar
+        header.navbar-header
+          a.brand(href=uiPath('/'))
+            img.brand-mark(
+              src="/assets/img/logo-48.png"
+              alt=""
+              width="24"
+              height="24"
+              loading="eager"
+              decoding="async"
+            )
+            span.logo= t('layout.siteName')
+          a(href="#main-menu"
+            id="main-menu-toggle"
+            class="menu-toggle"
+            aria-label=t('layout.openMenu'))
+            span(class="sr-only")= t('layout.openMenu')
+            span(class="fa fa-bars" aria-hidden="true")
+          nav#main-menu.main-menu
+            block nav
+          a(href="#main-menu-toggle"
+            class="backdrop"
+            tabindex="-1"
+            aria-hidden="true" hidden)
+          .navbar-right
+            .auth-wrapper
+              p#welcome-message(
+                data-welcome-prefix=t('nav.auth.welcomePrefix')
+                data-welcome-fallback=t('nav.auth.welcomeFallbackUser')
+                data-welcome-suffix=t('nav.auth.welcomeSuffix')
+              )= t('layout.welcomeUser')
+              button#nav-logout(type="button" style="display:none;")= t('layout.logout')
+              a#nav-login(href=uiPath("/login") style="display:none;")= t('layout.login')
+            include partials/_ui_lang_switcher
+    .with-margins
+      block content
 
     footer.footer(role="contentinfo")
       .footer-content

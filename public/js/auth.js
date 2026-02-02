@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const navLogin = document.querySelector('#nav-login');
   const navLogout = document.querySelector('#nav-logout');
+  const navLoginMenu = document.querySelector('#nav-login-menu');
+  const navLogoutMenu = document.querySelector('#nav-logout-menu');
   const welcomeMessage = document.querySelector('#welcome-message');
   const prefix = welcomeMessage?.dataset.welcomePrefix ?? 'Welcome, ';
   const fallbackUser = welcomeMessage?.dataset.welcomeFallback ?? 'you';
@@ -10,15 +12,46 @@ document.addEventListener('DOMContentLoaded', async () => {
   const uiBase = uiBaseRaw.endsWith('/') ? uiBaseRaw.slice(0, -1) : uiBaseRaw;
   const ui = (path) => (path.startsWith('/') ? `${uiBase}${path}` : `${uiBase}/${path}`);
 
+  const doLogout = async (e) => {
+    e?.preventDefault?.();
+
+    try {
+      const res = await fetch('/api/v1/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+
+      // Optional: if you want to be strict
+      // if (!res.ok) throw new Error(`logout failed: ${res.status}`);
+
+      window.location.href = ui('/');
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  };
+
   const setLoggedOutUI = () => {
     if (navLogin) navLogin.style.display = 'block';
+
     if (navLogout) navLogout.style.display = 'none';
+    if (navLogoutMenu) navLogoutMenu.style.display = 'none';
+
+    // dashboard menu item (li) is optional to toggle here too
+    const dashLi = document.querySelector('li.nav-mobile-only#dashboard');
+    if (dashLi) dashLi.style.display = 'none';
+
     if (welcomeMessage) welcomeMessage.style.display = 'none';
   };
 
   const setLoggedInUI = (user) => {
     if (navLogin) navLogin.style.display = 'none';
+
     if (navLogout) navLogout.style.display = 'block';
+    if (navLogoutMenu) navLogoutMenu.style.display = 'block';
+
+    const dashLi = document.querySelector('li.nav-mobile-only#dashboard');
+    if (dashLi) dashLi.style.display = 'list-item';
+
     if (welcomeMessage) {
       welcomeMessage.textContent = prefix;
       const a = document.createElement('a');
@@ -53,14 +86,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     setLoggedOutUI();
   }
 
-  navLogout?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch('/api/v1/auth/logout', { method: 'POST', credentials: 'include' });
-      // idealmente el server también borra la cookie HttpOnly
-      window.location.href = ui('/');
-    } catch (err) {
-      console.error('Logout error:', err);
-    }
-  });
+  navLogout?.addEventListener('click', doLogout);
+  navLogoutMenu?.addEventListener('click', doLogout);
 });
