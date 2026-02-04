@@ -62,6 +62,7 @@ import optionalAuth from './server/middleware/optionalAuth.js';
 import { makePrefixRedirectMiddleware } from './server/middleware/prefixRedirect.js'
 import { addSeoLocals } from './server/middleware/seo.js';
 import { stripLegacyLang } from './server/middleware/stripLegacyLang.js';
+import { uiLangFallbackNotice } from './server/middleware/uiLangFallbackNotice.js';
 import { uiPrefixAndLangContext } from './server/middleware/uiPrefix.js';
 import { findUserById } from './server/db/userService.js';
 import { toBlockPreviewDTO } from './server/utils/block.js';
@@ -107,6 +108,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.use(cookieParser());
     app.use(cors(corsOptions));
     app.use(uiPrefixAndLangContext);
+    app.use(uiLangFallbackNotice);
     app.use(makePrefixRedirectMiddleware({ isLocalizedPath }))
     app.use(addSeoLocals);
     app.use(addHreflangLocals);
