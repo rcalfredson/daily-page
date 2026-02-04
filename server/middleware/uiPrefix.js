@@ -1,22 +1,24 @@
 // server/middleware/uiPrefix.js
-const supportedLanguages = [
+const selectableLanguages = [
   'en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr',
   'nl', 'sv', 'no', 'da', 'fi', 'pl', 'cs', 'el', 'he', 'th', 'vi',
 ];
+
+const supportedUiLangs = ['en', 'es'];
 const defaultLanguage = 'en';
 
 function pickSupportedLang(raw) {
   if (!raw) return null;
-  if (Array.isArray(raw)) return raw.find(v => supportedLanguages.includes(v)) || null;
+  if (Array.isArray(raw)) return raw.find(v => selectableLanguages.includes(v)) || null;
   if (typeof raw === 'string') {
     const v = raw.trim();
-    return supportedLanguages.includes(v) ? v : null;
+    return selectableLanguages.includes(v) ? v : null;
   }
   return null;
 }
 
 function bestFromHeader(req) {
-  const best = req.acceptsLanguages?.(supportedLanguages);
+  const best = req.acceptsLanguages?.(selectableLanguages);
   return best || defaultLanguage;
 }
 
@@ -27,7 +29,7 @@ export function uiPrefixAndLangContext(req, res, next) {
 
   // Detect /{lang} prefix at the start of the path
   // Accept "/es" and "/es/..."
-  const m = originalPath.match(new RegExp(`^\\/(${supportedLanguages.join('|')})(?=\\/|$)`));
+  const m = originalPath.match(new RegExp(`^\\/(${selectableLanguages.join('|')})(?=\\/|$)`));
 
   let uiLang = null;
   let hadPrefix = false;
@@ -52,13 +54,46 @@ export function uiPrefixAndLangContext(req, res, next) {
       bestFromHeader(req);
   }
 
+  const requestedUiLang = uiLang; // at this point, uiLang is the user's requested UI choice
+
+  const isUiTranslated = supportedUiLangs.includes(requestedUiLang);
+
+  // If the URL prefix requested an untranslated UI language, redirect to default UI language prefix
+  if (hadPrefix && !isUiTranslated) {
+    // Remember what they asked for so we can show a banner on the destination page
+    res.cookie('ui_requested', requestedUiLang, {
+      maxAge: 1000 * 60 * 60 * 24 * 30, // 30d
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+    });
+
+    // Force actual UI language
+    const fallbackUi = defaultLanguage;
+
+    // Preserve querystring
+    const qsIndex = req.originalUrl.indexOf('?');
+    const qs = qsIndex >= 0 ? req.originalUrl.slice(qsIndex) : '';
+
+    // We already computed unprefixedPath; redirect to /en{unprefixedPath}
+    const dest = (unprefixedPath === '/')
+      ? `/${fallbackUi}/` + qs
+      : `/${fallbackUi}${unprefixedPath}` + qs;
+
+    return res.redirect(302, dest);
+  }
+
+  // If they asked for an untranslated language via query/cookie/header (no prefix),
+  // we still allow it to be "requested" but we render in defaultLanguage.
+  const effectiveUiLang = supportedUiLangs.includes(uiLang) ? uiLang : defaultLanguage;
+
   // Expose the context consistently
-  res.locals.uiLang = uiLang;
-  req.uiLang = uiLang;
+  res.locals.uiLang = effectiveUiLang;
+  req.uiLang = effectiveUiLang;
 
   // Keep legacy alias for now if you want
-  res.locals.lang = uiLang;
-  req.lang = uiLang;
+  res.locals.lang = effectiveUiLang;
+  req.lang = effectiveUiLang;
 
   // SEO and routing helpers
   res.locals.hadUiPrefix = hadPrefix;
@@ -66,16 +101,16 @@ export function uiPrefixAndLangContext(req, res, next) {
 
   const prefixed =
     unprefixedPath === '/'
-      ? `/${uiLang}/`
-      : `/${uiLang}${unprefixedPath}`;
+      ? `/${effectiveUiLang}/`
+      : `/${effectiveUiLang}${unprefixedPath}`;
 
   res.locals.prefixedPath = prefixed;
 
   // Template helper: build UI-prefixed internal links
   res.locals.uiPath = (p) => {
     const clean = (p || '/').startsWith('/') ? (p || '/') : `/${p}`;
-    if (clean === '/') return `/${uiLang}/`;
-    return `/${uiLang}${clean}`;
+    if (clean === '/') return `/${effectiveUiLang}/`;
+    return `/${effectiveUiLang}${clean}`;
   };
 
   res.locals.uiPathFor = (lang, p) => {

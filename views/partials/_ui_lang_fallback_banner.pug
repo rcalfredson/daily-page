@@ -1,0 +1,8 @@
+// views/partials/_ui_lang_fallback_banner.pug
+-
+  const requested = (uiLangFallbackFrom || '').toUpperCase();
+
+div.ui-lang-fallback-banner(role="status" aria-live="polite" data-requested=uiLangFallbackFrom)
+  span
+    | #{requested} isn’t translated yet. Showing #{(uiLang || 'en').toUpperCase()} for now.
+  button.ui-lang-fallback-dismiss(type="button") ×
