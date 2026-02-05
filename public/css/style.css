@@ -100,6 +100,10 @@ body {
   justify-content: flex-start;
 }
 
+.site-header:has(.ui-lang-fallback-banner) .navbar {
+  margin-bottom: 0;
+}
+
 /* Make sure the right side never forces horizontal overflow */
 header.navbar-header {
   display: flex;
