@@ -359,7 +359,7 @@ a.brand {
   overflow-y: scroll;
   overflow-x: visible;
   transition: left 0.3s ease, box-shadow 0.3s ease;
-  z-index: 499;
+  z-index: 400;
 }
 
 .main-menu ul {
@@ -455,7 +455,7 @@ article h2 {
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 498;
+  z-index: 600;
   background: #000;
   background: rgba(0, 0, 0, .85);
   cursor: default;
