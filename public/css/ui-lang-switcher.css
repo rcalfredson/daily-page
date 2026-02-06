@@ -5,7 +5,7 @@
 
 .ui-lang-switcher {
   position: relative;
-  z-index: 497;
+  z-index: var(--z-popover);
   padding-right: 5px;
 }
 
@@ -52,7 +52,7 @@
   border: 1px solid var(--border-color);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   border-radius: 12px;
-  z-index: 497;
+  z-index: calc(var(--z-popover) + 1);
 
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -125,6 +125,15 @@
   line-height: 1;
   cursor: pointer;
   padding: 4px 8px;
+}
+
+/* When the drawer is open, keep the language switcher/dropdown behind the backdrop */
+.site-header:has(.main-menu:target) .ui-lang-switcher,
+.site-header:has(.main-menu[aria-expanded="true"]) .ui-lang-switcher,
+.site-header:has(.main-menu:target) .ui-lang-menu,
+.site-header:has(.main-menu[aria-expanded="true"]) .ui-lang-menu {
+  z-index: var(--z-behind-backdrop);
+  pointer-events: none;
 }
 
 @media (max-width: 600px) {
