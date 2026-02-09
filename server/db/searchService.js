@@ -6,6 +6,23 @@ function clampInt(val, def, min, max) {
   return Math.max(min, Math.min(max, n));
 }
 
+export async function countSearchGroups({ q, roomId = null }) {
+  const matchStage = {
+    visibility: 'public',
+    $text: { $search: q },
+  };
+  if (roomId) matchStage.roomId = roomId;
+
+  const pipeline = [
+    { $match: matchStage },
+    { $group: { _id: '$groupId' } },
+    { $count: 'total' }
+  ];
+
+  const out = await Block.aggregate(pipeline).exec();
+  return out[0]?.total || 0;
+}
+
 export async function searchBlocks({
   q,
   roomId = null,
