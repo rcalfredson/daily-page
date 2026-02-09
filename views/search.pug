@@ -1,0 +1,73 @@
+extends layout
+
+block nav
+  include navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/pagination.css')
+  link(rel='stylesheet' href='/css/block-tags.css')
+  link(rel='stylesheet' href='/css/search.css')
+
+block content
+  h1= t('search.title')
+
+  form.search-form(method='GET' action=uiPath('/search'))
+    .search-row
+      input.search-input(
+        type='text'
+        name='q'
+        value=q
+        placeholder=t('search.placeholder')
+        autocomplete='off'
+        minlength='2'
+      )
+      button#search-btn(type='submit')= t('search.buttons.search')
+
+    if roomId
+      input(type='hidden' name='roomId' value=roomId)
+    if preferredLang
+      input(type='hidden' name='lang' value=preferredLang)
+
+  if roomId
+    .search-filters
+      span.filter-chip
+        | #{t('search.filters.inRoom')}: #{roomName}
+        a.filter-x(href=uiPath(`/search?q=${encodeURIComponent(q || '')}&lang=${encodeURIComponent(preferredLang || '')}`)) ×
+
+  if hasSearched
+    if results.length === 0
+      p.search-empty= t('search.noResults')
+    else
+      ul.search-results
+        each r in results
+          li.search-result(lang=(r.lang || 'en'))
+            .result-top
+              a.result-title(href=uiPath(`/rooms/${r.roomId}/blocks/${r._id}`))= r.title || t('search.untitled')
+              if r.voteCount !== undefined && r.voteCount !== null
+                span.result-votes(title=t('search.votesTitle')) 👍 #{r.voteCount}
+            if r.description
+              p.result-desc= r.description
+            if r.snippet
+              p.result-snippet= r.snippet
+            .result-meta
+              if r.roomId
+                span.meta-pill= r.roomId
+              if r.lang
+                span.meta-pill= r.lang
+              if r.tags && r.tags.length
+                #tag-container
+                  each tag in r.tags.slice(0, 6)
+                    span.tag-pill
+                      a(href=uiPath(`/tags/${encodeURIComponent(tag)}`))= tag
+
+      include partials/_pagination
+      - const baseUrl = uiPath('/search')
+      - const qs = `q=${encodeURIComponent(q || '')}${roomId ? `&roomId=${encodeURIComponent(roomId)}` : ''}${preferredLang ? `&lang=${encodeURIComponent(preferredLang)}` : ''}`
+      +pagination(
+          currentPage,
+          totalPages,
+          `${baseUrl}?${qs}`,
+          { prev: t('search.buttons.prev'), next: t('search.buttons.next') }
+      )
+  else
+    p.search-hint= t('search.hint')

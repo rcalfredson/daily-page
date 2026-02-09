@@ -22,6 +22,7 @@ import useVoteAPI from './server/api/v1/votes.js';
 
 import roomRoute from './server/routes/rooms.js'; // Routes
 import usersRoute from './server/routes/users.js';
+import searchRoute from './server/routes/search.js';
 import tagsRoute from './server/routes/tags.js';
 import loginRoute from './server/routes/login.js';
 import blocksRoute from './server/routes/blocks.js';
@@ -130,6 +131,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     useUserAPI(app);
     useVoteAPI(app);
     app.use('/', roomRoute);
+    app.use('/', searchRoute);
     app.use('/', usersRoute);
     app.use('/', tagsRoute);
     app.use('/', loginRoute);
