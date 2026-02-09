@@ -16,6 +16,7 @@ import useAuthAPI from './server/api/v1/auth.js';
 import useBlockAPI from './server/api/v1/blocks.js';
 import usePeersAPI from './server/api/v1/peers.js';
 import useRoomAPI from './server/api/v1/rooms.js';
+import useSearchAPI from './server/api/v1/search.js';
 import useUserAPI from './server/api/v1/users.js';
 import useVoteAPI from './server/api/v1/votes.js';
 
@@ -125,6 +126,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     useBlockAPI(app);
     useRoomAPI(app);
     usePeersAPI(app);
+    useSearchAPI(app);
     useUserAPI(app);
     useVoteAPI(app);
     app.use('/', roomRoute);
