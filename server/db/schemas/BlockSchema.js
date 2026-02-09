@@ -70,4 +70,17 @@ blockSchema.index({ groupId: 1, lang: 1 }, { unique: true });
 blockSchema.index({ creator: 1, createdAt: -1 });
 blockSchema.index({ collaborators: 1, createdAt: -1 });
 
+// Text search index for MVP search
+// Notes:
+// - default_language: "none" avoids stemming/stopword behavior that can get weird across mixed languages.
+// - weights let title/tags punch above their weight.
+blockSchema.index(
+  { title: 'text', content: 'text', tags: 'text', description: 'text' },
+  {
+    name: 'block_text_search',
+    default_language: 'none',
+    weights: { title: 10, tags: 6, description: 4, content: 1 },
+  }
+);
+
 export default blockSchema;
