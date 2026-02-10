@@ -5,9 +5,11 @@
       "description": "Explore recent and in-progress blocks in {roomName}."
     },
     "links": {
-      "allBlocks": "🗂️ All Blocks",
-      "browseByDate": "🗓️ Browse by Date",
-      "bestOf": "🏅 Best of this Room"
+      "exploreLabel": "Explore:",
+      "allBlocks": "🗂️ All blocks",
+      "browseByDate": "🗓️ By date",
+      "bestOf": "🏅 Best of",
+      "searchInRoom": "🔎 Search"
     },
     "actions": {
       "createBlock": "Create a Block",

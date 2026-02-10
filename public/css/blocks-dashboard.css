@@ -62,7 +62,8 @@ ul {
   display: flex;
 }
 
-.content-preview img, .featured-content-preview img {
+.content-preview img,
+.featured-content-preview img {
   max-width: 100%;
   height: auto;
   display: block;
@@ -109,7 +110,8 @@ a.btn {
   background-color: #0056b3;
 }
 
-.user-profile-link, .more-link {
+.user-profile-link,
+.more-link {
   color: #007bff;
   text-decoration: none;
   font-weight: bold;
@@ -132,6 +134,46 @@ a.btn {
 
 .room-archive-link a:hover {
   text-decoration: underline;
+}
+
+.room-explore {
+  margin-top: 0.75rem;
+  margin-left: 10px;
+  font-size: 0.9rem;
+  color: #666;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px; /* row-gap col-gap */
+  line-height: 1.35;
+}
+
+.room-explore .sep {
+  display: none;
+}
+
+.room-explore a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.room-explore a:hover {
+  text-decoration: none;
+  filter: brightness(0.98);
+}
+
+.room-explore-label {
+  flex: 0 0 100%;
+  margin: 0;
+  padding-top: 2px;
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 600;
 }
 
 .tab-period {
