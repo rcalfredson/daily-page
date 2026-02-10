@@ -56,12 +56,12 @@ prepend content
     p#room-description(lang=(uiLang || 'en'))= roomMetadata.displayDescription || roomMetadata.description
   else
     p#room-description(lang=(uiLang || 'en'))= t('roomDashboard.empty.noDescription')
-  p.room-archive-link
+  .room-explore
+    span.room-explore-label= t('roomDashboard.links.exploreLabel')
     a(href=uiPath(`/rooms/${room_id}/index`))= t('roomDashboard.links.allBlocks')
-  p.room-archive-link
     a(href=uiPath(`/rooms/${room_id}/archive`))= t('roomDashboard.links.browseByDate')
-  p.room-archive-link
     a(href=uiPath(`/rooms/${room_id}/archive/best-of`))= t('roomDashboard.links.bestOf')
+    a(href=uiPath(`/search?roomId=${encodeURIComponent(room_id)}`))= t('roomDashboard.links.searchInRoom')
 
 append content
   include ../partials/_login_modal
