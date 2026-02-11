@@ -85,7 +85,7 @@
   }
 }
 
-@media (max-width: 402px) {
+@media (max-width: 410px) {
   #nav-logout {
     display: none !important;
   }

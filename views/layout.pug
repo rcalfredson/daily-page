@@ -72,6 +72,14 @@ html(lang=htmlLang)
               )= t('layout.welcomeUser')
               button#nav-logout(type="button" style="display:none;")= t('layout.logout')
               a#nav-login(href=uiPath("/login") style="display:none;")= t('layout.login')
+            // Quick Search (desktop + mobile)
+            a.search-quick(
+              href=uiPath('/search')
+              aria-label=t('nav.search')
+              title=t('nav.search')
+            )
+              i.fa.fa-search(aria-hidden="true")
+              span.sr-only= t('nav.search')
             include partials/_ui_lang_switcher
       if uiLangIsFallback && uiLangFallbackFrom
         include partials/_ui_lang_fallback_banner

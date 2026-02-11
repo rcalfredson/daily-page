@@ -126,7 +126,7 @@ header.navbar-header {
 
 /* When it gets narrow: logo left + utilities right on row 1,
    nav becomes row 2, left-aligned under logo */
-@media (max-width: 1260px) and (min-width: 700px) {
+@media (max-width: 1300px) and (min-width: 750px) {
   header.navbar-header {
     flex-wrap: wrap;
     align-items: center;
@@ -418,6 +418,38 @@ a.brand {
   min-width: 0;
 }
 
+.search-quick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  color: rgb(26, 167, 214);
+  text-decoration: none;
+}
+
+.search-quick:focus-visible {
+  outline: 3px solid rgba(26, 167, 214, 0.35);
+  outline-offset: 2px;
+}
+
+.search-quick:hover {
+  filter: brightness(0.98);
+  border-color: #cfcfcf;
+}
+
+.search-quick:active {
+  transform: translateY(1px);
+}
+
+.search-quick i {
+  font-size: 15px;
+  line-height: 1;
+}
+
 article {
   padding: 30px;
   width: 55em;
@@ -479,7 +511,7 @@ article h2 {
   }
 }
 
-@media (min-width: 700px) {
+@media (min-width: 750px) {
 
   .menu-toggle,
   .main-menu .menu-close {
@@ -576,6 +608,10 @@ article h2 {
     border: 0 !important;
     /* Remove borders from off-canvas styling */
     padding-bottom: 3px;
+  }
+
+  .nav-desktop-hide {
+    display: none;
   }
 }
 
