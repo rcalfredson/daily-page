@@ -59,7 +59,7 @@
     "jsdom": "^20.0.0",
     "jsonwebtoken": "^9.0.1",
     "mailgun.js": "^12.0.1",
-    "markdown-it": "^14.1.0",
+    "markdown-it": "^14.1.1",
     "memory-cache": "^0.2.0",
     "moment-timezone": "^0.5.31",
     "mongodb": "^6",
