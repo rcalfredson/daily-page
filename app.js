@@ -15,6 +15,7 @@ import { config } from './config/config.js';
 import useAuthAPI from './server/api/v1/auth.js';
 import useBlockAPI from './server/api/v1/blocks.js';
 import usePeersAPI from './server/api/v1/peers.js';
+import useReactionsAPI from './server/api/v1/reactions.js';
 import useRoomAPI from './server/api/v1/rooms.js';
 import useSearchAPI from './server/api/v1/search.js';
 import useUserAPI from './server/api/v1/users.js';
@@ -125,6 +126,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     useAuthAPI(app);
     useBlockAPI(app);
+    useReactionsAPI(app);
     useRoomAPI(app);
     usePeersAPI(app);
     useSearchAPI(app);
