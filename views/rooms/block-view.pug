@@ -20,6 +20,7 @@ block append head
   link(rel='stylesheet' href='/css/flag-modal.css')
   link(rel='stylesheet' href='/css/block-lang-switcher.css')
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
+  link(rel='stylesheet' href='/css/reactions.css')
 
 block append scripts
   include ../envImport
@@ -32,6 +33,7 @@ block append scripts
   script(src="/js/view-block-description.js")
   script(src="/js/share-block.js")
   script(src='/js/table-scroll-fade.js')
+  script(src='/js/reactions.js')
 
 block content
   - const isRtl = ['ar','he','fa','ur'].includes(lang);
@@ -80,6 +82,7 @@ block content
     // The main content, already rendered to HTML on the server
     .block-content(lang=lang dir=(isRtl ? 'rtl' : null))
       != block.contentHTML
+    include ../partials/_reaction_bar
     hr
     +tagSection(block.tags, false)
 

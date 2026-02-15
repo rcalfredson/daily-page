@@ -1,0 +1,6 @@
+{
+    "reactions": {
+        "aria": "{emoji} reactions: {count}",
+        "loginToReact": "Log in to react"
+    }
+}

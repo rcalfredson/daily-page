@@ -4,6 +4,7 @@ import {
   getTranslations,
   getTranslationByGroupAndLang
 } from '../db/blockService.js';
+import { getReactionCounts, getUserReactionsForBlock } from '../db/reactionService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
@@ -17,7 +18,13 @@ const router = express.Router();
 router.get(
   '/rooms/:room_id/blocks/:block_id',
   optionalAuth,
-  addI18n(['blockView', 'blockTags', 'blockCommon', 'flagModal', 'voteControls']),
+  addI18n([
+    'blockView',
+    'blockTags',
+    'blockCommon',
+    'flagModal',
+    'voteControls',
+    'reactions']),
   resolveBlockLangParam({
     loadBlock: async (req) => {
       const block = await getBlockById(req.params.block_id);
@@ -47,6 +54,13 @@ router.get(
       const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
       const translations = await getTranslations(block.groupId);
 
+      const reactionCounts = await getReactionCounts(block_id);
+
+      let userReactions = [];
+      if (req.user) {
+        userReactions = await getUserReactionsForBlock({ blockId: block_id, userId: req.user.id });
+      }
+
       if (req.user) {
         const userVote = block.votes.find(vote => vote.userId === req.user.id)?.type;
         block.userVote = userVote;
@@ -74,6 +88,8 @@ router.get(
         translations,
         canManageBlock: canManageBlock(req.user, block, editTokens),
         user: req.user,
+        reactionCounts,
+        userReactions,
         uiLang,
         lang: block.lang
       });

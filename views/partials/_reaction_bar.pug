@@ -1,0 +1,35 @@
+-
+  const REACTIONS = [
+    { type: 'heart', emoji: '❤️' },
+    { type: 'leaf',  emoji: '🌿' },
+    { type: 'wow',   emoji: '😮' },
+    { type: 'laugh', emoji: '😂' }
+  ];
+
+-
+  const counts = reactionCounts || { heart:0, leaf:0, wow:0, laugh:0 };
+  const mine = new Set(userReactions || []);
+  const isLoggedIn = !!user;
+
+.reaction-bar(
+  data-block-id=block._id
+  data-endpoint=uiPath(`/api/v1/reactions/${block._id}`)
+)
+  each r in REACTIONS
+    -
+      const c = counts[r.type] || 0;
+      const active = mine.has(r.type);
+      const aria = (typeof t === 'function')
+        ? t('reactions.aria', { emoji: r.emoji, count: c })
+        : `${r.emoji} ${c}`;
+    button.reaction-btn(
+      type="button"
+      class=active ? 'is-active' : null
+      data-reaction-type=r.type
+      aria-label=aria
+      title=!isLoggedIn ? (t ? t('reactions.loginToReact') : 'Log in to react') : null
+      data-login-action="actions.reactToBlock"
+    )
+      span.reaction-emoji= r.emoji
+      span.reaction-count(data-count-for=r.type)= c
+
