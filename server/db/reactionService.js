@@ -44,3 +44,30 @@ export async function getUserReactionsForBlock({ blockId, userId }) {
     .lean();
   return docs.map(d => d.type);
 }
+
+export async function getReactionCountsForBlocks(blockIds = []) {
+  const ids = [...new Set((blockIds || []).map(String))].filter(Boolean);
+  if (!ids.length) return {};
+
+  const rows = await BlockReaction.aggregate([
+    { $match: { blockId: { $in: ids } } },
+    { $group: { _id: { blockId: '$blockId', type: '$type' }, count: { $sum: 1 } } },
+  ]).exec();
+
+  const empty = { heart: 0, leaf: 0, wow: 0, laugh: 0 };
+  const out = Object.create(null);
+
+  // Initialize all requested ids so response is stable
+  for (const id of ids) out[id] = { ...empty };
+
+  for (const r of rows) {
+    const blockId = r._id?.blockId;
+    const type = r._id?.type;
+    if (!blockId || !type) continue;
+    if (!out[blockId]) out[blockId] = { ...empty };
+    out[blockId][type] = r.count;
+  }
+
+  return out;
+}
+

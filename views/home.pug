@@ -9,6 +9,7 @@ block nav
 block append scripts
   script(src='/js/toast-utils.js')
   script(src="/js/vote-controls.js")
+  script(src='/js/reaction-counts-hydrate.js')
   script(src="/js/modal.js")
   script(src='/js/table-scroll-fade.js')
 
@@ -16,6 +17,7 @@ block append head
   link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel='stylesheet' href='/css/vote-controls.css')
+  link(rel='stylesheet' href='/css/reaction-counts.css')
   link(rel='stylesheet' href='/css/toast.css')
   link(rel='stylesheet' href='/css/modal.css')
   link(rel='stylesheet' href='/css/home.css')
@@ -142,6 +144,7 @@ block content
               div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
             +readMoreIfTruncated(block, block.roomId)
             footer.block-footer
+              include partials/_reaction_counts
               include partials/_vote_controls
     else
       p= t('home.trendingBlocks.empty24h')

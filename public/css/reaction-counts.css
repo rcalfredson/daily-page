@@ -1,0 +1,36 @@
+.reaction-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  margin-top: 0.35rem;
+}
+
+.reaction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.12rem 0.45rem;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  background: var(--secondary-bg);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.reaction-pill .reaction-emoji {
+  font-size: 1rem;
+}
+
+.reaction-pill .reaction-count {
+  font-size: 0.85rem;
+}
+
+@media (max-width: 420px) {
+  .reaction-pill {
+    padding: 0.10rem 0.38rem;
+  }
+  .reaction-counts {
+    gap: 0.25rem;
+  }
+}

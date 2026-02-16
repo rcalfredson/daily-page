@@ -1,0 +1,30 @@
+-
+  const REACTIONS = [
+    { type: 'heart', emoji: '❤️' },
+    { type: 'leaf',  emoji: '🌿' },
+    { type: 'wow',   emoji: '😮' },
+    { type: 'laugh', emoji: '😂' }
+  ];
+
+-
+  // This partial expects `block` in scope (as your lists already do).
+  // Optionally you can pass a className if a page needs layout tweaks.
+  const _class = typeof className === 'string' ? className : '';
+
+-
+  const ariaTemplate = (typeof t === 'function')
+    ? t('reactions.aria', { emoji: '{emoji}', count: '{count}' })
+    : '{emoji} reactions: {count}';
+  const countsLabel = (typeof t === 'function')
+    ? t('reactions.countsLabel')
+    : 'Reactions';
+.reaction-counts(
+  class=_class
+  data-block-id=block._id
+  aria-label=countsLabel
+  data-aria-template=ariaTemplate
+)
+  each r in REACTIONS
+    span.reaction-pill(data-type=r.type)
+      span.reaction-emoji= r.emoji
+      span.reaction-count(data-count-for=r.type)= 0

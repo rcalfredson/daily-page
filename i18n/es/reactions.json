@@ -1,6 +1,7 @@
 {
     "reactions": {
         "aria": "Reacciones {emoji}: {count}",
-        "loginToReact": "Inicia sesión para reaccionar"
+        "loginToReact": "Inicia sesión para reaccionar",
+        "countsLabel": "Reacciones"
     }
 }

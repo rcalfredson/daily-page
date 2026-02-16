@@ -562,7 +562,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.get(
       '/',
       optionalAuth,
-      addI18n(['home', 'translation', 'readMore', 'voteControls']),
+      addI18n(['home', 'translation', 'reactions', 'readMore', 'voteControls']),
       stripLegacyLang({ canonicalPath: '/' }),
       async (req, res) => {
         try {

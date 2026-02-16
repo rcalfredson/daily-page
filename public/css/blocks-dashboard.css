@@ -60,6 +60,32 @@ ul {
   padding-top: 10px;
   border-top: 1px solid #f0f2f7;
   display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Let reactions take remaining space, votes stay compact */
+.block-footer .reaction-counts {
+  flex: 1 1 auto;
+  min-width: 180px; /* tweak: keeps votes from dropping too eagerly */
+  margin-top: 0;    /* since it's in the footer now */
+}
+
+.block-footer .vote-controls {
+  padding-left: 0.75rem;
+  border-left: 1px solid #f0f2f7;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+/* On small screens, don't force the divider or right-justify */
+@media (max-width: 600px) {
+  .block-footer .vote-controls {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+  }
 }
 
 .content-preview img,
