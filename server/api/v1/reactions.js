@@ -4,6 +4,7 @@ import {
   toggleReaction,
   getReactionCounts,
   getUserReactionsForBlock,
+  getReactionCountsForBlocks,
   ALLOWED_REACTIONS
 } from '../../db/reactionService.js';
 
@@ -11,6 +12,26 @@ const router = Router();
 
 const useReactionsAPI = (app) => {
   app.use('/api/v1/reactions', router);
+
+  // Batch counts-only endpoint for list views
+  // POST /api/v1/reactions/batch
+  // body: { blockIds: ["id1","id2",...] }
+  router.post('/batch', async (req, res) => {
+    const { blockIds } = req.body || {};
+    if (!Array.isArray(blockIds)) {
+      return res.status(400).json({ error: 'blockIds must be an array' });
+    }
+
+    const ids = blockIds.map(String).filter(Boolean).slice(0, 200);
+
+    try {
+      const countsByBlockId = await getReactionCountsForBlocks(ids);
+      return res.status(200).json({ countsByBlockId });
+    } catch (error) {
+      console.error('Error fetching batch reaction counts:', error);
+      return res.status(500).json({ error: 'Failed to fetch reaction counts' });
+    }
+  });
 
   // Toggle a reaction
   // POST /api/v1/reactions/:blockId
