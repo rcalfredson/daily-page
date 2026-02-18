@@ -6,6 +6,10 @@
   margin-top: 0.35rem;
 }
 
+.reaction-counts.is-hydrating {
+  display: none;
+}
+
 .reaction-pill {
   display: inline-flex;
   align-items: center;

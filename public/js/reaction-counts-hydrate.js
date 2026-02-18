@@ -29,6 +29,8 @@
 
     const anyVisible = Object.values(counts).some((n) => Number(n) > 0);
     container.style.display = anyVisible ? "" : "none";
+
+    container.classList.remove("is-hydrating");
   }
 
   async function fetchBatchCounts(blockIds) {
@@ -62,6 +64,7 @@
         const counts = map[id];
         if (!counts) {
           c.style.display = "none";
+          c.classList.remove("is-hydrating");
           return;
         }
         setCountsForContainer(c, counts);
@@ -71,6 +74,7 @@
       // Fail quietly: hide counts so we don't show misleading zeros
       containers.forEach((c) => {
         c.style.display = "none";
+        c.classList.remove("is-hydrating");
       });
     }
   });
