@@ -6,6 +6,7 @@ include ../partials/_translation_attribution
 block append head
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel='stylesheet' href='/css/vote-controls.css')
+  link(rel='stylesheet' href='/css/reaction-counts.css')
   link(rel='stylesheet' href='/css/toast.css')
   link(rel='stylesheet' href='/css/modal.css')
   link(rel='stylesheet' href='/css/best-of.css')
@@ -18,6 +19,7 @@ block nav
 block append scripts
   script(src='/js/toast-utils.js')
   script(src="/js/vote-controls.js")
+  script(src='/js/reaction-counts-hydrate.js')
   script(src="/js/modal.js")
   script(src="/js/best-of-tabs.js")
   script(src='/js/table-scroll-fade.js')
@@ -76,6 +78,7 @@ mixin renderBlockList(blocks)
             div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
           +readMoreIfTruncated(block, block.roomId)
           footer.block-footer
+            include ../partials/_reaction_counts
             include ../partials/_vote_controls
   else
     p= t('bestOf.labels.noBlocks')

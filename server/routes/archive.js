@@ -52,7 +52,7 @@ router.get(
 router.get(
   '/rooms/:roomId/archive/best-of',
   optionalAuth,
-  addI18n(['bestOf', 'translation', 'readMore', 'voteControls']),
+  addI18n(['bestOf', 'translation', 'readMore', 'voteControls', 'reactions']),
   stripLegacyLang(
     { canonicalPath: (req) => `/rooms/${req.params.roomId}/archive/best-of` }
   ),
