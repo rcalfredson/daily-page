@@ -118,7 +118,7 @@ router.get(
 router.get(
   '/archive/best-of',
   optionalAuth,
-  addI18n(['bestOf', 'translation', 'readMore', 'voteControls']),
+  addI18n(['bestOf', 'translation', 'readMore', 'voteControls', 'reactions']),
   stripLegacyLang({ canonicalPath: '/archive/best-of' }),
   async (req, res) => {
     try {
