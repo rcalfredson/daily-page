@@ -31,4 +31,5 @@ mixin blockList(blocks, period, label, room_id)
           +readMoreIfTruncated(block, room_id)
 
           footer.block-footer
+            include ../partials/_reaction_counts
             include ../partials/_vote_controls
