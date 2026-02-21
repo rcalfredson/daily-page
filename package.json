@@ -77,10 +77,6 @@
     "strip-bom": "^4.0.0",
     "uuid": "^8"
   },
-  "overrides": {
-    "whatwg-url": "^14.0.0",
-    "fast-xml-parser": "^5.3.4"
-  },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
     "@babel/core": "^7.12.3",
