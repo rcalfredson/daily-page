@@ -52,7 +52,8 @@ block content
               |  #{t('tags.detail.blockInfo.onDate')} 
               = new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
             +translationAttribution(block)
-            div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
+            if block.contentHTML
+              div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
           +readMoreIfTruncated(block, block.roomId)
           footer.block-footer
             include ../partials/_reaction_counts

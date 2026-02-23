@@ -92,8 +92,6 @@ block content
         // Preview del contenido (ya convertido a HTML)
         if featuredBlock.contentHTML
           div.featured-content-preview!= featuredBlock.contentHTML
-        else
-          p.card-info= t('home.featured.noContent')
 
         // Botón para ver más
         a.btn(href=`/rooms/${featuredBlock.roomId}/blocks/${featuredBlock._id}`)= t('home.featured.viewBlock')
@@ -141,7 +139,8 @@ block content
                 a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('home.trendingBlocks.unknownRoom')
                 |  #{t('home.trendingBlocks.on')} #{new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })}
               +translationAttribution(block)
-              div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
+              if block.contentHTML
+                div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
             +readMoreIfTruncated(block, block.roomId)
             footer.block-footer
               include partials/_reaction_counts
