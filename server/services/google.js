@@ -22,15 +22,33 @@ let auth;
 let drive;
 let lastRequestTime = 0;
 
-export function init() {
+
+export async function init() {
+  let credentials;
   try {
-    credentials = JSON.parse(fs.readFileSync('./credentials.json'));
-  } catch (error) {
+    credentials = JSON.parse(fs.readFileSync('./credentials.json', 'utf8'));
+  } catch {
     credentials = JSON.parse(config.googCreds);
+
+    // If your private_key is stored with literal "\n" sequences, normalize it:
+    if (typeof credentials.private_key === 'string') {
+      credentials.private_key = credentials.private_key.replace(/\\n/g, '\n');
+    }
+
     fs.writeFileSync('./credentials.json', JSON.stringify(credentials));
   }
-  auth = new google.auth.JWT(credentials.client_email, null, credentials.private_key, scopes);
-  drive = google.drive({ version: 'v3', auth });
+
+  auth = new google.auth.GoogleAuth({
+    credentials,
+    scopes,
+  });
+
+  const authClient = await auth.getClient();
+
+  drive = google.drive({
+    version: 'v3',
+    auth: authClient,
+  });
 }
 
 export async function getDocTitles() {

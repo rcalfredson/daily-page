@@ -279,31 +279,6 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       });
     });
 
-    app.get('/artist/:artistID/album/:albumID/:trackID', async (req, res) => {
-      const albumName = req.params.albumID;
-      const artist = req.params.artistID;
-      const trackList = JSON.parse((await axios.get(`${audioHost}/meta/music/artist/${artist}/${albumName}`)).body);
-      const { trackID } = req.params;
-      const trackPos = trackList.tracks.findIndex((el) => encodeHelper.htmlString(el.name) === encodeHelper.htmlString(trackID));
-      const trackArtist = trackList.tracks[trackPos].artist || trackList.albumArtist;
-      let nextTrackIndex = trackPos + 1;
-      if (trackPos === trackList.length - 1) {
-        nextTrackIndex = 0;
-      }
-      res.render('audioPlayer', {
-        host: audioHost,
-        title: trackList.tracks[trackPos].name,
-        artist: trackArtist,
-        albumArtist: trackList.albumArtist,
-        albumID: albumName,
-        albumName,
-        trackID: trackList.tracks[trackPos].id,
-        nextTrackIndex,
-        trackPos,
-        trackList,
-      });
-    });
-
     app.get('/artist/:artistID/album/:albumID', async (req, res) => {
       const artist = req.params.artistID;
       const album = req.params.albumID;

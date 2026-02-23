@@ -4,17 +4,16 @@
   "description": "",
   "main": "app.js",
   "engines": {
-    "node": "^22"
+    "node": "^24"
   },
   "type": "module",
   "scripts": {
     "pretest": "eslint --fix app.js server/ lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js",
     "test": "jasmine",
     "start": "node --trace-deprecation app.js",
-    "build": "babel lib -d build",
-    "compile": "browserify build/main.js -o public/js/bundle.js && browserify build/clearSelection.js -o public/js/clearSelection.js && browserify build/iPod.js -o public/js/iPod.js && browserify build/analyzeBPM.js -o public/js/analyzeBPM.js",
-    "postinstall": "npm run build && npm run compile",
-    "local": "npm run build && npm run compile && npm start",
+    "build": "esbuild lib/main.js --bundle --platform=browser --format=iife --outfile=public/js/bundle.js && esbuild lib/clearSelection.js --bundle --platform=browser --format=iife --outfile=public/js/clearSelection.js && esbuild lib/iPod.js --bundle --platform=browser --format=iife --outfile=public/js/iPod.js",
+    "postinstall": "npm run build",
+    "local": "npm run build && npm start",
     "perform": "babel-node performance/script.js",
     "perform-linear": "babel-node performance/scriptLinear.js"
   },
@@ -41,7 +40,6 @@
     "bcrypt": "^6.0.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.20.4",
-    "browserify": "^16.5.2",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "core-js": "^3.32",
@@ -53,21 +51,20 @@
     "feather-icons": "^4.28.0",
     "fluent-ffmpeg": "^2.1.2",
     "form-data": "^4.0.4",
-    "googleapis": "^144.0.0",
+    "googleapis": "^171.4.0",
     "humanize-duration": "^3.24.0",
     "jquery": "^3.5.1",
-    "jsdom": "^20.0.0",
+    "jsdom": "^28.1.0",
     "jsonwebtoken": "^9.0.1",
     "mailgun.js": "^12.0.1",
     "markdown-it": "^14.1.1",
     "memory-cache": "^0.2.0",
     "moment-timezone": "^0.5.31",
-    "mongodb": "^6",
-    "mongoose": "^8.9.5",
+    "mongodb": "^7.1.0",
+    "mongoose": "^9.2.1",
     "multer": "^2.0.2",
     "peer": "^1",
     "pug": "^3.0.1",
-    "realtime-bpm-analyzer": "^4.0.2",
     "rxjs": "^5.5.2",
     "sanitize-html": "^2.12.1",
     "sharp": "^0.33.5",
@@ -84,6 +81,7 @@
     "@babel/preset-env": "^7.12.1",
     "@babel/register": "^7.0.0",
     "@eslint/js": "^9.33.0",
+    "esbuild": "^0.27.3",
     "eslint": "^9.33.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -91,6 +89,6 @@
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "jasmine": "^2.8.0"
+    "jasmine": "^6.1.0"
   }
 }
