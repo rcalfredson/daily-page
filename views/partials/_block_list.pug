@@ -26,7 +26,8 @@ mixin blockList(blocks, period, label, room_id)
 
           +translationAttribution(block)
 
-          div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
+          if block.contentHTML
+            div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
 
           +readMoreIfTruncated(block, room_id)
 

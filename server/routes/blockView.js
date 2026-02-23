@@ -50,7 +50,7 @@ router.get(
 
       const uiLang = res.locals.uiLang || res.locals.lang || 'en';
 
-      block.contentHTML = renderMarkdownContent(block.content);
+      block.contentHTML = renderMarkdownContent(block.content, { emptyHtml: '' });
       const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
       const translations = await getTranslations(block.groupId);
 

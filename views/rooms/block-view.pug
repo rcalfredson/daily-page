@@ -68,20 +68,21 @@ block content
               | #{t('blockView.buttons.flagContent')}
 
     // Description block, read-only style
-    .block-description-card(lang=lang dir=(isRtl ? 'rtl' : null))
-      span.description-label= t('blockView.description.label')
-      .description-body.collapsed
-        - const noDesc = `<p><em>${t('blockView.description.none')}</em></p>`;
-        div#description-view!= descriptionHTML || noDesc
-      .expand-toggle
-        span(
-          data-expand-label=t('blockView.description.expand')
-          data-collapse-label=t('blockView.description.collapse')
-        )= t('blockView.description.expand')
+    if descriptionHTML
+      .block-description-card(lang=lang dir=(isRtl ? 'rtl' : null))
+        span.description-label= t('blockView.description.label')
+        .description-body.collapsed
+          div#description-view!= descriptionHTML
+        .expand-toggle
+          span(
+            data-expand-label=t('blockView.description.expand')
+            data-collapse-label=t('blockView.description.collapse')
+          )= t('blockView.description.expand')
 
     // The main content, already rendered to HTML on the server
-    .block-content(lang=lang dir=(isRtl ? 'rtl' : null))
-      != block.contentHTML
+    if block.contentHTML
+      .block-content(lang=lang dir=(isRtl ? 'rtl' : null))
+        != block.contentHTML
     include ../partials/_reaction_bar
     hr
     +tagSection(block.tags, false)

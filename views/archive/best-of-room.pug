@@ -75,7 +75,8 @@ mixin renderBlockList(blocks)
               - const _date = new Date(block.createdAt).toLocaleString(_ui, { dateStyle: 'medium', timeStyle: 'short' });
               |  #{t('bestOf.labels.onDate', { date: _date })}
             +translationAttribution(block)
-            div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
+            if block.contentHTML
+              div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
           +readMoreIfTruncated(block, block.roomId)
           footer.block-footer
             include ../partials/_reaction_counts

@@ -67,7 +67,8 @@ block content
                     button#save-description-btn= t('blockEditor.description.save')
                     button#cancel-description-btn= t('blockEditor.description.cancel')
                 else
-                  div#description-view!= descriptionHTML || `<p><em>${t('blockEditor.description.noDescriptionViewer')}</em></p>`
+                  if descriptionHTML
+                    div#description-view!= descriptionHTML
               
               // Expand/Collapse toggle at the bottom
               .expand-toggle
