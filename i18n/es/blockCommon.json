@@ -1,5 +1,8 @@
 {
   "blockCommon": {
+    "badges": {
+      "draft": "Borrador"
+    },
     "deleteModal": {
       "title": "Borrar bloque?",
       "message": "Esta acción no se puede deshacer.",

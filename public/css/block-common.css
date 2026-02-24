@@ -1,0 +1,21 @@
+/* Make title + badge align nicely */
+.card-title,
+.title-row,
+a.block-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* replaces margin-left on badge */
+}
+
+/* Badge itself */
+.badge.badge-draft {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1;          /* keeps pill tight */
+  opacity: 0.75;
+  border: 1px solid currentColor;
+  /* remove margin-left if you use gap */
+}

@@ -40,6 +40,7 @@ import * as google from './server/services/google.js';
 import { timeIt } from './server/services/perf.js';
 
 import { renderMarkdownContent } from './server/utils/markdownHelper.js';
+import { unfinishedMeta } from './server/utils/unfinished.js';
 import * as viewHelper from './server/utils/view.js'; // Utils
 
 import { initMongooseConnection } from './server/db/mongoose.js';
@@ -537,7 +538,9 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.get(
       '/',
       optionalAuth,
-      addI18n(['home', 'translation', 'reactions', 'readMore', 'voteControls']),
+      addI18n([
+        'home', 'blockCommon', 'translation', 'reactions', 'readMore', 'voteControls'
+      ]),
       stripLegacyLang({ canonicalPath: '/' }),
       async (req, res) => {
         try {
@@ -592,9 +595,14 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
 
           // Post-procesamiento mínimo (sin I/O extra)
-          const featuredBlock = fbRes?.featuredBlock?.content
-            ? { ...fbRes.featuredBlock, contentHTML: renderMarkdownContent(fbRes.featuredBlock.content) }
-            : fbRes?.featuredBlock || null;
+          const fb = fbRes?.featuredBlock || null;
+          const featuredBlock = fb ?
+            {
+              ...fb,
+              ...unfinishedMeta(fb, { graceDays: 7 }),
+              contentHTML: fb?.content ? renderMarkdownContent(fb.content, { emptyHtml: '' }) : ''
+            }
+            : null;
 
           const featuredBlockPeriod = fbRes?.period || null;
 

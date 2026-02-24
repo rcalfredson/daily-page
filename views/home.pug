@@ -15,6 +15,7 @@ block append scripts
 
 block append head
   link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
+  link(rel='stylesheet' href='/css/block-common.css')
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel='stylesheet' href='/css/vote-controls.css')
   link(rel='stylesheet' href='/css/reaction-counts.css')
@@ -85,7 +86,10 @@ block content
       .featured-card
         .featured-ribbon= t('home.featured.blockRibbon')
         // Título del block
-        h2.card-title= featuredBlock.title
+        h2.card-title
+          = featuredBlock.title
+          if featuredBlock.isUnfinished
+            span.badge.badge-draft= t('blockCommon.badges.draft')
         // Votos
         p.card-info= t('home.featured.votes', {n: featuredBlock.voteCount})
 
@@ -130,7 +134,10 @@ block content
         each block in topBlocks
           li.block-preview(lang=(block.lang || 'en'))
             div.content
-              a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
+              .title-row
+                a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
+                if block.isUnfinished
+                  span.badge.badge-draft= t('blockCommon.badges.draft')
               p(lang=(uiLang || 'en'))
                 | #{t('home.trendingBlocks.createdBy')} 
                 - const u = encodeURIComponent(block.creator || '')
