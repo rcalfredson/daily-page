@@ -1,5 +1,8 @@
 {
   "blockCommon": {
+    "badges": {
+      "draft": "Draft"
+    },
     "deleteModal": {
       "title": "Delete Block?",
       "message": "This action cannot be undone.",

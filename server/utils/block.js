@@ -1,4 +1,5 @@
 import { renderMarkdownPreview } from "./markdownHelper.js"
+import { unfinishedMeta } from './unfinished.js';
 
 export function canManageBlock(user, block, editTokens) {
   const isCreator = user && user.username === block.creator;
@@ -17,8 +18,8 @@ export function toBlockPreviewDTO(block, {
     ? (block.votes?.find(v => v.userId === userId)?.type || null)
     : null;
 
-  const cleaned = block.content ? block.content.replace(/\u200B/g, '').trim() : '';
-  if (!cleaned) {
+  const meta = unfinishedMeta(block, { graceDays: 7 })
+  if (meta.isUnfinished) {
     return {
       _id: block._id,
       title: block.title,
@@ -31,8 +32,9 @@ export function toBlockPreviewDTO(block, {
       userVote,
       voteCount: block.voteCount,
       ...(includeTranslation && block.translation ? { translation: block.translation } : {}),
+      ...meta,
       truncated: false,
-      contentHTML: '' // ← key change: no placeholder
+      contentHTML: ''
     };
   }
 
