@@ -88,7 +88,7 @@ block content
         // Título del block
         h2.card-title
           = featuredBlock.title
-          if featuredBlock.isUnfinished
+          if featuredBlock.status === 'in-progress'
             span.badge.badge-draft= t('blockCommon.badges.draft')
         // Votos
         p.card-info= t('home.featured.votes', {n: featuredBlock.voteCount})
@@ -136,7 +136,7 @@ block content
             div.content
               .title-row
                 a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
-                if block.isUnfinished
+                if block.status === 'in-progress'
                   span.badge.badge-draft= t('blockCommon.badges.draft')
               p(lang=(uiLang || 'en'))
                 | #{t('home.trendingBlocks.createdBy')} 

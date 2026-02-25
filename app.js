@@ -40,7 +40,7 @@ import * as google from './server/services/google.js';
 import { timeIt } from './server/services/perf.js';
 
 import { renderMarkdownContent } from './server/utils/markdownHelper.js';
-import { unfinishedMeta } from './server/utils/unfinished.js';
+import { titleOnlyMeta } from './server/utils/unfinished.js';
 import * as viewHelper from './server/utils/view.js'; // Utils
 
 import { initMongooseConnection } from './server/db/mongoose.js';
@@ -599,7 +599,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           const featuredBlock = fb ?
             {
               ...fb,
-              ...unfinishedMeta(fb, { graceDays: 7 }),
+              ...titleOnlyMeta(fb, { graceDays: 7 }),
               contentHTML: fb?.content ? renderMarkdownContent(fb.content, { emptyHtml: '' }) : ''
             }
             : null;
