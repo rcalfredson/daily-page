@@ -52,7 +52,9 @@ router.get(
 router.get(
   '/rooms/:roomId/archive/best-of',
   optionalAuth,
-  addI18n(['bestOf', 'translation', 'readMore', 'voteControls', 'reactions']),
+  addI18n([
+    'bestOf', 'blockCommon', 'translation', 'readMore', 'voteControls', 'reactions'
+  ]),
   stripLegacyLang(
     { canonicalPath: (req) => `/rooms/${req.params.roomId}/archive/best-of` }
   ),
@@ -118,7 +120,9 @@ router.get(
 router.get(
   '/archive/best-of',
   optionalAuth,
-  addI18n(['bestOf', 'translation', 'readMore', 'voteControls', 'reactions']),
+  addI18n([
+    'bestOf', 'blockCommon', 'translation', 'readMore', 'voteControls', 'reactions'
+  ]),
   stripLegacyLang({ canonicalPath: '/archive/best-of' }),
   async (req, res) => {
     try {
@@ -221,7 +225,9 @@ router.get(
 router.get(
   '/archive/:year/:month/:day',
   optionalAuth,
-  addI18n(['archive', 'translation', 'readMore', 'voteControls', 'reactions']),
+  addI18n([
+    'archive', 'blockCommon', 'translation', 'readMore', 'voteControls', 'reactions'
+  ]),
   stripLegacyLang({
     canonicalPath: (req) => `/archive/${req.params.year}/${req.params.month}/${req.params.day}`,
   }),
@@ -442,7 +448,9 @@ router.get(
 router.get(
   '/rooms/:roomId/archive/:year/:month/:day',
   optionalAuth,
-  addI18n(['archive', 'translation', 'readMore', 'voteControls', 'reactions']),
+  addI18n([
+    'archive', 'blockCommon', 'translation', 'readMore', 'voteControls', 'reactions'
+  ]),
   stripLegacyLang({
     canonicalPath: (req) => `/rooms/${req.params.roomId}/archive/${req.params.year}/${req.params.month}/${req.params.day}`
   }),

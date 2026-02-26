@@ -73,7 +73,9 @@ router.get(
 router.get(
   '/tags/:tagName',
   optionalAuth,
-  addI18n(['tags', 'translation', 'readMore', 'voteControls', 'reactions']),
+  addI18n([
+    'blockCommon', 'tags', 'translation', 'readMore', 'voteControls', 'reactions'
+  ]),
   stripLegacyLang({
     canonicalPath: (req) => `/tags/${encodeURIComponent(req.params.tagName)}`
   }),

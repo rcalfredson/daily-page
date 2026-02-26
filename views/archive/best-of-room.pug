@@ -4,6 +4,7 @@ include ../partials/_read_more
 include ../partials/_translation_attribution
 
 block append head
+  link(rel='stylesheet' href='/css/block-common.css')
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel='stylesheet' href='/css/vote-controls.css')
   link(rel='stylesheet' href='/css/reaction-counts.css')
@@ -61,7 +62,11 @@ mixin renderBlockList(blocks)
       each block in blocks
         li.block-preview(lang=(block.lang || 'en'))
           div.content
-            a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}`)= block.title
+            .title-row
+              a.block-title(
+                href=`/rooms/${block.roomId}/blocks/${block._id}`
+              )= block.title
+              include ../partials/_draft_badge
             p(lang=(uiLang || 'en'))
               | #{t('bestOf.labels.createdBy')} 
               - const u = encodeURIComponent(block.creator || '')

@@ -7,6 +7,7 @@ block nav
   include ../navLinks
 
 block append head
+  link(rel='stylesheet' href='/css/block-common.css')
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel='stylesheet' href='/css/archive.css')
   link(rel='stylesheet' href='/css/pagination.css')
@@ -53,7 +54,11 @@ block content
         each block in blocks
           li.block-item(lang=(block.lang || 'en'))
             div.block-main
-              a.block-link(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
+              .title-row
+                a.block-link(
+                  href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en')
+                )= block.title
+                include ../partials/_draft_badge
               .block-meta(lang=(uiLang || 'en'))
                 | #{t('archive.date.labels.createdBy')} 
                 - const u = encodeURIComponent(block.creator || '')

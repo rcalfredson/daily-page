@@ -431,7 +431,9 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.get(
       '/rooms/:room_id',
       optionalAuth,
-      addI18n(['roomDashboard', 'blockList', 'translation', 'readMore', 'voteControls', 'reactions']),
+      addI18n([
+        'roomDashboard', 'blockCommon', 'blockList', 'translation', 'readMore', 'voteControls', 'reactions'
+      ]),
       stripLegacyLang({ canonicalPath: (req) => `/rooms/${encodeURIComponent(req.params.room_id)}` }),
       async (req, res) => {
         try {
@@ -493,7 +495,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
           const date = DateHelper.currentDateI18n(uiLang || 'en', 'Europe/London');
 
-          const showInProgressTab = (inProgressPeriod === 1 && inProgressBlocks.length > 0);
+          const showInProgressTab = (inProgressPeriod !== 'all' && inProgressBlocks.length > 0);
           const showLockedTab = (lockedBlocks.length > 0);
           const useTabs = (showLockedTab ? 1 : 0) + (showInProgressTab ? 1 : 0) >= 2;
 

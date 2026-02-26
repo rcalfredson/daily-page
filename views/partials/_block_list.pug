@@ -12,10 +12,12 @@ mixin blockList(blocks, period, label, room_id)
     each block in blocks
       li.block-preview(lang=(block.lang || 'en'))
         div.content
-          a.block-title(
-            href=`/rooms/${room_id}/blocks/${block._id}`
-            lang=(block.lang || 'en')
-          )= block.title
+          .title-row
+            a.block-title(
+              href=`/rooms/${room_id}/blocks/${block._id}`
+              lang=(block.lang || 'en')
+            )= block.title
+            include ../partials/_draft_badge
 
           p(lang=(uiLang || 'en'))
             | #{t('blockList.createdBy')} 
