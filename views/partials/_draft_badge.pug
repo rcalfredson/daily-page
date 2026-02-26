@@ -1,0 +1,5 @@
+//- views/partials/_draft_badge.pug
+//- Expects `block` in scope.
+//- Renders nothing unless block.status === 'in-progress'.
+if block && block.status === 'in-progress'
+  span.badge.badge-draft= t('blockCommon.badges.draft')

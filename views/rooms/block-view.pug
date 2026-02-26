@@ -11,6 +11,7 @@ block append head
     link(rel='alternate' hreflang=tr.lang href=makeAbs(tr._id))
   // fallback for “any/unknown” language
   link(rel='alternate' hreflang='x-default' href=makeAbs(block._id))
+  link(rel='stylesheet' href='/css/block-common.css')
   link(rel='stylesheet' href='/css/block-view.css')
   link(rel='stylesheet' href='/css/block-tags.css')
   link(rel='stylesheet' href='/css/delete-block.css')
@@ -50,7 +51,9 @@ block content
       .title-section
         .vote-section
           include ../partials/_vote_controls
-        h1.block-title= block.title
+        .title-row
+          h1.block-title= block.title
+          include ../partials/_draft_badge
         // Only show edit link if the block is in-progress
         .interact-section
           .action-buttons

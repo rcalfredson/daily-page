@@ -7,6 +7,7 @@ block nav
   include ../navLinks
 
 block append head
+  link(rel='stylesheet' href='/css/block-common.css')
   link(rel='stylesheet' href='/css/blocks-dashboard.css')
   link(rel='stylesheet' href='/css/pagination.css')
   link(rel='stylesheet' href='/css/tags.css')
@@ -42,7 +43,9 @@ block content
       each block in taggedBlocks
         li.block-preview(lang=(block.lang || 'en'))
           .content
-            a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
+            .title-row
+              a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
+              include ../partials/_draft_badge
             p(lang=(uiLang || 'en'))
               | #{t('tags.detail.blockInfo.createdBy')} 
               - const u = encodeURIComponent(block.creator || '')
