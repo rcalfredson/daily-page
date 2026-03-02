@@ -4,6 +4,7 @@ import {
   getTranslations,
   getTranslationByGroupAndLang
 } from '../db/blockService.js';
+import { getCommentsForBlock } from '../db/commentService.js';
 import { getReactionCounts, getUserReactionsForBlock } from '../db/reactionService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
@@ -54,7 +55,10 @@ router.get(
       const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
       const translations = await getTranslations(block.groupId);
 
-      const reactionCounts = await getReactionCounts(block_id);
+      const [reactionCounts, comments] = await Promise.all([
+        getReactionCounts(block_id),
+        getCommentsForBlock({ blockId: block_id, limit: 20 })
+      ]);
 
       let userReactions = [];
       if (req.user) {
@@ -90,6 +94,7 @@ router.get(
         user: req.user,
         reactionCounts,
         userReactions,
+        comments,
         uiLang,
         lang: block.lang
       });
