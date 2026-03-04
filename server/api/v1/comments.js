@@ -1,6 +1,11 @@
 // server/api/v1/comments.js
 import { Router } from 'express';
-import { getCommentsForBlock } from '../../db/commentService.js';
+import optionalAuth from '../../middleware/optionalAuth.js';
+import { getBlockById } from '../../db/blockService.js';
+import { createComment, getCommentsForBlock } from '../../db/commentService.js';
+import { commentHasUrl, enforceAndRecordCommentRateLimit } from '../../db/rateLimitService.js';
+import { findUserById } from '../../db/userService.js';
+
 
 const router = Router();
 
@@ -18,6 +23,44 @@ const useCommentsAPI = (app) => {
     } catch (error) {
       console.error(`Error fetching comments for block ${blockId}:`, error);
       return res.status(500).json({ error: 'Failed to fetch comments' });
+    }
+  });
+
+  // Create comment (slice 2)
+  router.post('/:blockId', optionalAuth, async (req, res) => {
+    const { blockId } = req.params;
+    if (!req.user?.id) return res.status(401).json({ error: 'User not authenticated' });
+
+    try {
+      // Ensure the block exists (prevents orphaned comments / spam to random ids)
+      const block = await getBlockById(blockId);
+      if (!block) return res.status(404).json({ error: 'Block not found' });
+
+      // Verified email check (authoritative)
+      const dbUser = await findUserById(req.user.id);
+      if (!dbUser) return res.status(401).json({ error: 'User not authenticated' });
+      if (!dbUser.verified) {
+        return res.status(403).json({ error: 'Please verify your email before commenting.' });
+      }
+
+      const body = req.body?.body;
+      const hasUrl = commentHasUrl(body);
+
+      // Rate limiting (DB-backed)
+      const ip =
+        req.headers['x-forwarded-for']?.toString().split(',')[0].trim() ||
+        req.socket?.remoteAddress ||
+        req.ip;
+
+      await enforceAndRecordCommentRateLimit({ userId: req.user.id, ip, hasUrl });
+
+      const comment = await createComment({ blockId, userId: req.user.id, body });
+
+      return res.status(201).json({ comment });
+    } catch (error) {
+      console.error(`Error creating comment for block ${blockId}:`, error);
+      const status = error?.status || 500;
+      return res.status(status).json({ error: error?.message || 'Failed to create comment' });
     }
   });
 };
