@@ -33,5 +33,6 @@ export const config = {
 
   // App Config
   port: process.env.PORT || 3000,
-  backendUrl: process.env.BACKEND_URL
+  backendUrl: process.env.BACKEND_URL,
+  rateLimitSalt: process.env.RATE_LIMIT_SALT
 };
