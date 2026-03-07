@@ -2,7 +2,7 @@
 import { Router } from 'express';
 import optionalAuth from '../../middleware/optionalAuth.js';
 import { getBlockById } from '../../db/blockService.js';
-import { createComment, getCommentsForBlock } from '../../db/commentService.js';
+import { createComment, getCommentsForBlock, reportComment } from '../../db/commentService.js';
 import { commentHasUrl, enforceAndRecordCommentRateLimit } from '../../db/rateLimitService.js';
 import { findUserById } from '../../db/userService.js';
 
@@ -61,6 +61,21 @@ const useCommentsAPI = (app) => {
       console.error(`Error creating comment for block ${blockId}:`, error);
       const status = error?.status || 500;
       return res.status(status).json({ error: error?.message || 'Failed to create comment' });
+    }
+  });
+
+  router.post('/:commentId/report', optionalAuth, async (req, res) => {
+    const { commentId } = req.params;
+
+    if (!req.user?.id) return res.status(401).json({ error: 'User not authenticated' });
+
+    try {
+      const result = await reportComment({ commentId, reporterId: req.user.id });
+      return res.status(200).json(result);
+    } catch (error) {
+      console.error(`Error reporting comment ${commentId}:`, error);
+      const status = error?.status || 500;
+      return res.status(status).json({ error: error?.message || 'Failed to report comment' });
     }
   });
 };

@@ -18,6 +18,7 @@ const blockCommentSchema = new Schema(
 
     editedAt: { type: Date, default: null },
     deletedAt: { type: Date, default: null, index: true },
+    hiddenAt: { type: Date, default: null },
 
     // Optional: if you want to prep for “reply to comment” later without threading UI:
     // replyToCommentId: { type: String, default: null, index: true },
