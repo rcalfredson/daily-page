@@ -1,0 +1,15 @@
+{
+  "notifications": {
+    "email": {
+      "blockComment": {
+        "subject": "New comment on \"{blockTitle}\"",
+        "heading": "New comment on your block",
+        "headingWithName": "Hi {username},",
+        "body": "<strong>{actorUsername}</strong> commented on your block <strong>{blockTitle}</strong>.",
+        "cta": "View the conversation on Daily Page",
+        "fallbackActor": "Someone",
+        "fallbackBlockTitle": "your block"
+      }
+    }
+  }
+}
