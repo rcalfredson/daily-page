@@ -1,0 +1,15 @@
+{
+  "notifications": {
+    "email": {
+      "blockComment": {
+        "subject": "Nuevo comentario en \"{blockTitle}\"",
+        "heading": "Nuevo comentario en tu bloque",
+        "headingWithName": "Hola {username},",
+        "body": "<strong>{actorUsername}</strong> comentó en tu bloque <strong>{blockTitle}</strong>.",
+        "cta": "Ver la conversación en Daily Page",
+        "fallbackActor": "Alguien",
+        "fallbackBlockTitle": "tu bloque"
+      }
+    }
+  }
+}

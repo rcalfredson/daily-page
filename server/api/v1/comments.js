@@ -3,6 +3,7 @@ import { Router } from 'express';
 import optionalAuth from '../../middleware/optionalAuth.js';
 import { getBlockById } from '../../db/blockService.js';
 import { createComment, getCommentsForBlock, reportComment } from '../../db/commentService.js';
+import { notifyBlockAuthorOfComment } from '../../db/notificationService.js';
 import { commentHasUrl, enforceAndRecordCommentRateLimit } from '../../db/rateLimitService.js';
 import { findUserById } from '../../db/userService.js';
 
@@ -55,6 +56,16 @@ const useCommentsAPI = (app) => {
       await enforceAndRecordCommentRateLimit({ userId: req.user.id, ip, hasUrl });
 
       const comment = await createComment({ blockId, userId: req.user.id, body });
+
+      try {
+        await notifyBlockAuthorOfComment({
+          block,
+          comment,
+          actorUser: req.user
+        });
+      } catch (notifyError) {
+        console.error(`Failed to notify block author for comment ${comment._id}:`, notifyError);
+      }
 
       return res.status(201).json({ comment });
     } catch (error) {
