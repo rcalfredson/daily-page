@@ -1,16 +1,61 @@
 import BlockComment from './models/BlockComment.js';
 import CommentReport from './models/CommentReport.js';
+import User from './models/User.js';
+import mongoose from 'mongoose';
 
 const REPORT_HIDE_THRESHOLD = 3;
 
-export async function getCommentsForBlock({ blockId, limit = 20 }) {
+export async function getCommentsForBlock({ blockId, limit = 20, offset = 0 }) {
   const safeLimit = Math.max(1, Math.min(Number(limit) || 20, 50));
+  const safeOffset = Math.max(0, Number(offset) || 0);
 
   return BlockComment
     .find({ blockId: String(blockId), status: 'visible', deletedAt: null })
     .sort({ createdAt: 1 })
+    .skip(safeOffset)
     .limit(safeLimit)
     .lean();
+}
+
+export async function getCommentsForBlockView({ blockId, limit = 20, offset = 0 }) {
+  const safeLimit = Math.max(1, Math.min(Number(limit) || 20, 50));
+  const safeOffset = Math.max(0, Number(offset) || 0);
+  const filter = { blockId: String(blockId), status: 'visible', deletedAt: null };
+
+  const [rawComments, total] = await Promise.all([
+    BlockComment
+      .find(filter)
+      .sort({ createdAt: 1 })
+      .skip(safeOffset)
+      .limit(safeLimit)
+      .lean(),
+    BlockComment.countDocuments(filter)
+  ]);
+
+  const userIds = [...new Set(rawComments.map((comment) => String(comment.userId)).filter(Boolean))];
+  const validUserIds = userIds.filter((userId) => mongoose.isValidObjectId(userId));
+  const users = validUserIds.length
+    ? await User.find({ _id: { $in: validUserIds } }).select({ username: 1 }).lean()
+    : [];
+
+  const usernamesById = new Map(
+    users.map((user) => [String(user._id), user.username])
+  );
+
+  const comments = rawComments.map((comment) => ({
+    ...comment,
+    authorUsername:
+      usernamesById.get(String(comment.userId)) ||
+      (mongoose.isValidObjectId(comment.userId) ? null : String(comment.userId)),
+  }));
+
+  return {
+    comments,
+    total,
+    limit: safeLimit,
+    offset: safeOffset,
+    hasMore: safeOffset + comments.length < total,
+  };
 }
 
 export async function createComment({ blockId, userId, body }) {

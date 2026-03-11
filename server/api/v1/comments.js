@@ -2,7 +2,7 @@
 import { Router } from 'express';
 import optionalAuth from '../../middleware/optionalAuth.js';
 import { getBlockById } from '../../db/blockService.js';
-import { createComment, getCommentsForBlock, reportComment } from '../../db/commentService.js';
+import { createComment, getCommentsForBlockView, reportComment } from '../../db/commentService.js';
 import { notifyBlockAuthorOfComment } from '../../db/notificationService.js';
 import { commentHasUrl, enforceAndRecordCommentRateLimit } from '../../db/rateLimitService.js';
 import { findUserById } from '../../db/userService.js';
@@ -16,11 +16,11 @@ const useCommentsAPI = (app) => {
   // Read-only (slice 1)
   router.get('/:blockId', async (req, res) => {
     const { blockId } = req.params;
-    const { limit } = req.query;
+    const { limit, offset } = req.query;
 
     try {
-      const comments = await getCommentsForBlock({ blockId, limit });
-      return res.status(200).json({ comments });
+      const result = await getCommentsForBlockView({ blockId, limit, offset });
+      return res.status(200).json(result);
     } catch (error) {
       console.error(`Error fetching comments for block ${blockId}:`, error);
       return res.status(500).json({ error: 'Failed to fetch comments' });
