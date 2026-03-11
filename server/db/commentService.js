@@ -5,6 +5,10 @@ import mongoose from 'mongoose';
 
 const REPORT_HIDE_THRESHOLD = 3;
 
+function buildAuthorProfilePath(username) {
+  return username ? `/users/${encodeURIComponent(username)}` : null;
+}
+
 export async function getCommentsForBlock({ blockId, limit = 20, offset = 0 }) {
   const safeLimit = Math.max(1, Math.min(Number(limit) || 20, 50));
   const safeOffset = Math.max(0, Number(offset) || 0);
@@ -44,9 +48,12 @@ export async function getCommentsForBlockView({ blockId, limit = 20, offset = 0 
 
   const comments = rawComments.map((comment) => ({
     ...comment,
-    authorUsername:
-      usernamesById.get(String(comment.userId)) ||
-      (mongoose.isValidObjectId(comment.userId) ? null : String(comment.userId)),
+    authorUsername: usernamesById.get(String(comment.userId)) || (
+      mongoose.isValidObjectId(comment.userId) ? null : String(comment.userId)
+    ),
+    authorProfilePath: usernamesById.has(String(comment.userId))
+      ? buildAuthorProfilePath(usernamesById.get(String(comment.userId)))
+      : null,
   }));
 
   return {

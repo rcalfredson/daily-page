@@ -38,7 +38,10 @@ section.comments-section(
             header.comment__meta
               span.comment__author
                 span.comment__byline= `${t('blockView.comments.by')} `
-                span.comment__username= comment.authorUsername || t('blockView.comments.unknownAuthor')
+                if comment.authorProfilePath
+                  a.comment__username.user-profile-link(href=uiPath(comment.authorProfilePath))= comment.authorUsername
+                else
+                  span.comment__username= comment.authorUsername || t('blockView.comments.unknownAuthor')
               time.comment__time(datetime=timestampIso)= timestampLabel
             .comment__body
               p= comment.body

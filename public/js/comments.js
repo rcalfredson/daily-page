@@ -1,4 +1,10 @@
 (function () {
+  function uiPath(path) {
+    const uiBaseRaw = document.body?.dataset.uiBase || '';
+    const uiBase = uiBaseRaw.endsWith('/') ? uiBaseRaw.slice(0, -1) : uiBaseRaw;
+    return path.startsWith('/') ? `${uiBase}${path}` : `${uiBase}/${path}`;
+  }
+
   function buildCommentItem(comment, byLabel, locale) {
     const item = document.createElement('li');
     item.className = 'comments-list__item';
@@ -16,9 +22,16 @@
     byline.className = 'comment__byline';
     byline.textContent = `${byLabel} `;
 
-    const username = document.createElement('span');
-    username.className = 'comment__username';
+    const username = comment.authorProfilePath
+      ? document.createElement('a')
+      : document.createElement('span');
+    username.className = comment.authorProfilePath
+      ? 'comment__username user-profile-link'
+      : 'comment__username';
     username.textContent = comment.authorUsername || 'Unknown';
+    if (comment.authorProfilePath) {
+      username.href = uiPath(comment.authorProfilePath);
+    }
 
     author.appendChild(byline);
     author.appendChild(username);
