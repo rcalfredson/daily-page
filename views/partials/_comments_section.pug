@@ -1,0 +1,56 @@
+-
+  const commentCount = Number(commentsTotal || 0);
+  const initialCount = Array.isArray(comments) ? comments.length : 0;
+  const commentDateFormatter = new Intl.DateTimeFormat(uiLang || lang || 'en', {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  });
+
+section.comments-section(
+  aria-labelledby="comments-heading"
+  data-comments-section
+  data-block-id=block._id
+  data-api-endpoint=uiPath(`/api/v1/comments/${block._id}`)
+  data-initial-count=initialCount
+  data-total-count=commentCount
+  data-page-size=commentsLimit || 20
+  data-load-more-label=t('blockView.comments.loadMore')
+  data-loading-label=t('blockView.comments.loading')
+  data-load-error-label=t('blockView.comments.loadError')
+  data-by-label=t('blockView.comments.by')
+  data-unknown-author-label=t('blockView.comments.unknownAuthor')
+)
+  .comments-section__header
+    h2#comments-heading.comments-section__title= t('blockView.comments.heading')
+    p.comments-section__count= t('blockView.comments.count', { count: commentCount })
+
+  if commentCount === 0
+    p.comments-section__empty= t('blockView.comments.empty')
+  else
+    ol.comments-list(data-comments-list)
+      each comment in comments
+        -
+          const timestamp = new Date(comment.createdAt);
+          const timestampIso = timestamp.toISOString();
+          const timestampLabel = commentDateFormatter.format(timestamp);
+        li.comments-list__item
+          article.comment
+            header.comment__meta
+              span.comment__author
+                span.comment__byline= `${t('blockView.comments.by')} `
+                span.comment__username= comment.authorUsername || t('blockView.comments.unknownAuthor')
+              time.comment__time(datetime=timestampIso)= timestampLabel
+            .comment__body
+              p= comment.body
+
+    if commentsHasMore
+      .comments-section__actions
+        button.comments-section__load-more(
+          type="button"
+          data-comments-load-more
+        )= t('blockView.comments.loadMore')
+      p.comments-section__load-error.hidden(
+        role="status"
+        aria-live="polite"
+        data-comments-load-error
+      )

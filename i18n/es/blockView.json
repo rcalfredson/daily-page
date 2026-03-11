@@ -21,6 +21,16 @@
       "expand": "Ver más",
       "collapse": "Ver menos"
     },
+    "comments": {
+      "heading": "Comentarios",
+      "count": "{count} comentarios",
+      "empty": "Todavía nadie ha respondido. Los comentarios aparecerán aquí cuando empiece la conversación.",
+      "by": "Por",
+      "unknownAuthor": "Desconocido",
+      "loadMore": "Cargar más comentarios",
+      "loading": "Cargando...",
+      "loadError": "No se pueden cargar más comentarios en este momento."
+    },
     "share": {
       "title": "Comparte este bloque",
       "shareOn": "Compartir en:",

@@ -22,6 +22,7 @@ block append head
   link(rel='stylesheet' href='/css/block-lang-switcher.css')
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
   link(rel='stylesheet' href='/css/reactions.css')
+  link(rel='stylesheet' href='/css/comments.css')
 
 block append scripts
   include ../envImport
@@ -35,6 +36,7 @@ block append scripts
   script(src="/js/share-block.js")
   script(src='/js/table-scroll-fade.js')
   script(src='/js/reactions.js')
+  script(src='/js/comments.js')
 
 block content
   - const isRtl = ['ar','he','fa','ur'].includes(lang);
@@ -89,6 +91,7 @@ block content
     include ../partials/_reaction_bar
     hr
     +tagSection(block.tags, false)
+    include ../partials/_comments_section
 
   // Reuse your login modal partial if needed
   include ../partials/_login_modal

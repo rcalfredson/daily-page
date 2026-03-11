@@ -1,0 +1,149 @@
+.comments-section {
+  margin: 2.5rem 0 1rem;
+  padding-top: 0.5rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.comments-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.comments-section__title {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.comments-section__count {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.comments-section__empty {
+  margin: 0;
+  padding: 1rem 0;
+  color: #5c6470;
+  font-size: 1rem;
+}
+
+.comments-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.comments-list__item + .comments-list__item {
+  border-top: 1px solid #e7e9ee;
+}
+
+.comment {
+  padding: 1rem 0;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.comment__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
+  margin-bottom: 0.45rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.comment__author {
+  color: #1f2937;
+  font-size: 0.96rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.comment__byline {
+  color: #6b7280;
+}
+
+.comment__username {
+  font-weight: 600;
+}
+
+.comment__time {
+  color: #6b7280;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.comment__body p {
+  margin: 0;
+  color: #27303b;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.comments-section__actions {
+  margin-top: 1rem;
+}
+
+.comments-section__load-more {
+  float: unset;
+  margin: 0;
+  background: #fff;
+  color: var(--highlight-color);
+  border: 1px solid #c9d6ea;
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.comments-section__load-more:hover:not(:disabled) {
+  background: #f6f9ff;
+  border-color: #aebfe0;
+}
+
+.comments-section__load-more:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.comments-section__load-error {
+  margin: 0.75rem 0 0;
+  color: #b42318;
+  font-size: 0.95rem;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .comments-section {
+    margin-top: 2rem;
+  }
+
+  .comments-section__header,
+  .comment__meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .comment__time {
+    white-space: normal;
+  }
+}

@@ -21,6 +21,16 @@
       "expand": "Expand",
       "collapse": "Collapse"
     },
+    "comments": {
+      "heading": "Comments",
+      "count": "{count} comments",
+      "empty": "No one has replied yet. Comments will show up here when the conversation starts.",
+      "by": "By",
+      "unknownAuthor": "Unknown",
+      "loadMore": "Load more comments",
+      "loading": "Loading...",
+      "loadError": "Unable to load more comments right now."
+    },
     "share": {
       "title": "Share this Block",
       "shareOn": "Share on:",

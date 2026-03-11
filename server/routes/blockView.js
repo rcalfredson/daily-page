@@ -4,7 +4,7 @@ import {
   getTranslations,
   getTranslationByGroupAndLang
 } from '../db/blockService.js';
-import { getCommentsForBlock } from '../db/commentService.js';
+import { getCommentsForBlockView } from '../db/commentService.js';
 import { getReactionCounts, getUserReactionsForBlock } from '../db/reactionService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
@@ -15,6 +15,7 @@ import { canManageBlock } from '../utils/block.js';
 import { canonicalBlockPath } from '../utils/canonical.js';
 
 const router = express.Router();
+const INITIAL_COMMENT_LIMIT = 20;
 
 router.get(
   '/rooms/:room_id/blocks/:block_id',
@@ -36,9 +37,10 @@ router.get(
     canonicalPathForBlock: canonicalBlockPath,
   }),
   async (req, res) => {
+    const t = res.locals.t || ((key) => key);
+
     try {
       const { room_id, block_id } = req.params;
-      const { t } = res.locals;
 
       const block = await getBlockById(block_id);
       const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
@@ -55,9 +57,9 @@ router.get(
       const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
       const translations = await getTranslations(block.groupId);
 
-      const [reactionCounts, comments] = await Promise.all([
+      const [reactionCounts, commentsData] = await Promise.all([
         getReactionCounts(block_id),
-        getCommentsForBlock({ blockId: block_id, limit: 20 })
+        getCommentsForBlockView({ blockId: block_id, limit: INITIAL_COMMENT_LIMIT })
       ]);
 
       let userReactions = [];
@@ -94,7 +96,10 @@ router.get(
         user: req.user,
         reactionCounts,
         userReactions,
-        comments,
+        comments: commentsData.comments,
+        commentsTotal: commentsData.total,
+        commentsLimit: commentsData.limit,
+        commentsHasMore: commentsData.hasMore,
         uiLang,
         lang: block.lang
       });
