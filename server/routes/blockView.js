@@ -17,6 +17,10 @@ import { canonicalBlockPath } from '../utils/canonical.js';
 const router = express.Router();
 const INITIAL_COMMENT_LIMIT = 20;
 
+function normalizeCommentsSortDir(sortDir) {
+  return sortDir === 'desc' ? 'desc' : 'asc';
+}
+
 router.get(
   '/rooms/:room_id/blocks/:block_id',
   optionalAuth,
@@ -41,6 +45,7 @@ router.get(
 
     try {
       const { room_id, block_id } = req.params;
+      const commentsSortDir = normalizeCommentsSortDir(req.query.commentsDir);
 
       const block = await getBlockById(block_id);
       const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
@@ -59,7 +64,11 @@ router.get(
 
       const [reactionCounts, commentsData] = await Promise.all([
         getReactionCounts(block_id),
-        getCommentsForBlockView({ blockId: block_id, limit: INITIAL_COMMENT_LIMIT })
+        getCommentsForBlockView({
+          blockId: block_id,
+          limit: INITIAL_COMMENT_LIMIT,
+          sortDir: commentsSortDir
+        })
       ]);
 
       let userReactions = [];
@@ -100,6 +109,7 @@ router.get(
         commentsTotal: commentsData.total,
         commentsLimit: commentsData.limit,
         commentsHasMore: commentsData.hasMore,
+        commentsSortDir,
         uiLang,
         lang: block.lang
       });

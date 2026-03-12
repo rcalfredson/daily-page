@@ -25,6 +25,11 @@
       "heading": "Comments",
       "count": "{count} comments",
       "empty": "No one has replied yet. Comments will show up here when the conversation starts.",
+      "sort": {
+        "label": "Sort",
+        "oldestFirst": "Oldest first",
+        "newestFirst": "Newest first"
+      },
       "by": "By",
       "unknownAuthor": "Unknown",
       "loadMore": "Load more comments",

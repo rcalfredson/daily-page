@@ -10,6 +10,10 @@ import { findUserById } from '../../db/userService.js';
 
 const router = Router();
 
+function normalizeCommentsSortDir(sortDir) {
+  return sortDir === 'desc' ? 'desc' : 'asc';
+}
+
 const useCommentsAPI = (app) => {
   app.use('/api/v1/comments', router);
 
@@ -17,9 +21,10 @@ const useCommentsAPI = (app) => {
   router.get('/:blockId', async (req, res) => {
     const { blockId } = req.params;
     const { limit, offset } = req.query;
+    const sortDir = normalizeCommentsSortDir(req.query.sortDir);
 
     try {
-      const result = await getCommentsForBlockView({ blockId, limit, offset });
+      const result = await getCommentsForBlockView({ blockId, limit, offset, sortDir });
       return res.status(200).json(result);
     } catch (error) {
       console.error(`Error fetching comments for block ${blockId}:`, error);

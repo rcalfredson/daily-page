@@ -9,6 +9,10 @@ function buildAuthorProfilePath(username) {
   return username ? `/users/${encodeURIComponent(username)}` : null;
 }
 
+function normalizeCommentSortDir(sortDir) {
+  return sortDir === 'desc' ? 'desc' : 'asc';
+}
+
 export async function getCommentsForBlock({ blockId, limit = 20, offset = 0 }) {
   const safeLimit = Math.max(1, Math.min(Number(limit) || 20, 50));
   const safeOffset = Math.max(0, Number(offset) || 0);
@@ -21,15 +25,17 @@ export async function getCommentsForBlock({ blockId, limit = 20, offset = 0 }) {
     .lean();
 }
 
-export async function getCommentsForBlockView({ blockId, limit = 20, offset = 0 }) {
+export async function getCommentsForBlockView({ blockId, limit = 20, offset = 0, sortDir = 'asc' }) {
   const safeLimit = Math.max(1, Math.min(Number(limit) || 20, 50));
   const safeOffset = Math.max(0, Number(offset) || 0);
+  const safeSortDir = normalizeCommentSortDir(sortDir);
+  const sortOrder = safeSortDir === 'desc' ? -1 : 1;
   const filter = { blockId: String(blockId), status: 'visible', deletedAt: null };
 
   const [rawComments, total] = await Promise.all([
     BlockComment
       .find(filter)
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: sortOrder, _id: sortOrder })
       .skip(safeOffset)
       .limit(safeLimit)
       .lean(),
@@ -61,6 +67,7 @@ export async function getCommentsForBlockView({ blockId, limit = 20, offset = 0 
     total,
     limit: safeLimit,
     offset: safeOffset,
+    sortDir: safeSortDir,
     hasMore: safeOffset + comments.length < total,
   };
 }

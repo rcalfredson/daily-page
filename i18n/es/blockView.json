@@ -25,6 +25,11 @@
       "heading": "Comentarios",
       "count": "{count} comentarios",
       "empty": "Todavía nadie ha respondido. Los comentarios aparecerán aquí cuando empiece la conversación.",
+      "sort": {
+        "label": "Orden",
+        "oldestFirst": "Más antiguos primero",
+        "newestFirst": "Más recientes primero"
+      },
       "by": "Por",
       "unknownAuthor": "Desconocido",
       "loadMore": "Cargar más comentarios",

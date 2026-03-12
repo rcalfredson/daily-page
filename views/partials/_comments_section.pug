@@ -1,12 +1,14 @@
 -
   const commentCount = Number(commentsTotal || 0);
   const initialCount = Array.isArray(comments) ? comments.length : 0;
+  const currentCommentsSortDir = commentsSortDir === 'desc' ? 'desc' : 'asc';
   const commentDateFormatter = new Intl.DateTimeFormat(uiLang || lang || 'en', {
     dateStyle: 'medium',
     timeStyle: 'short'
   });
 
 section.comments-section(
+  id=`comments-${block._id}`
   aria-labelledby="comments-heading"
   data-comments-section
   data-block-id=block._id
@@ -14,6 +16,7 @@ section.comments-section(
   data-initial-count=initialCount
   data-total-count=commentCount
   data-page-size=commentsLimit || 20
+  data-sort-dir=currentCommentsSortDir
   data-load-more-label=t('blockView.comments.loadMore')
   data-loading-label=t('blockView.comments.loading')
   data-load-error-label=t('blockView.comments.loadError')
@@ -21,8 +24,19 @@ section.comments-section(
   data-unknown-author-label=t('blockView.comments.unknownAuthor')
 )
   .comments-section__header
-    h2#comments-heading.comments-section__title= t('blockView.comments.heading')
-    p.comments-section__count= t('blockView.comments.count', { count: commentCount })
+    .comments-section__header-main
+      h2#comments-heading.comments-section__title= t('blockView.comments.heading')
+      p.comments-section__count= t('blockView.comments.count', { count: commentCount })
+    if commentCount > 0
+      .comments-section__sort
+        label.comments-section__sort-label.sr-only(for=`comments-sort-${block._id}`)= t('blockView.comments.sort.label')
+        select.comments-section__sort-select(
+          id=`comments-sort-${block._id}`
+          data-comments-sort
+          aria-label=t('blockView.comments.sort.label')
+        )
+          option(value='asc' selected=currentCommentsSortDir === 'asc')= t('blockView.comments.sort.oldestFirst')
+          option(value='desc' selected=currentCommentsSortDir === 'desc')= t('blockView.comments.sort.newestFirst')
 
   if commentCount === 0
     p.comments-section__empty= t('blockView.comments.empty')
