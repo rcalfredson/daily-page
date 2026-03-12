@@ -73,6 +73,7 @@
     const endpoint = section.dataset.apiEndpoint;
     const totalCount = Number(section.dataset.totalCount || '0');
     const pageSize = Number(section.dataset.pageSize || '20');
+    const sortDir = section.dataset.sortDir === 'desc' ? 'desc' : 'asc';
     const locale = document.documentElement.lang || 'en';
     const byLabel = section.dataset.byLabel || 'By';
     const unknownAuthorLabel = section.dataset.unknownAuthorLabel || 'Unknown';
@@ -97,6 +98,7 @@
       const url = new URL(endpoint || `/api/v1/comments/${encodeURIComponent(blockId)}`, window.location.origin);
       url.searchParams.set('limit', String(pageSize));
       url.searchParams.set('offset', String(currentCount));
+      url.searchParams.set('sortDir', sortDir);
 
       const response = await fetch(url.toString(), {
         credentials: 'same-origin',
@@ -140,11 +142,30 @@
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-comments-section]').forEach((section) => {
       const button = section.querySelector('[data-comments-load-more]');
-      if (!button) return;
+      const sortControl = section.querySelector('[data-comments-sort]');
 
-      button.addEventListener('click', function () {
-        loadMore(section);
-      });
+      if (sortControl) {
+        sortControl.addEventListener('change', function () {
+          const url = new URL(window.location.href);
+          const nextSortDir = sortControl.value === 'desc' ? 'desc' : 'asc';
+          const commentsAnchorId = section.id || `comments-${section.dataset.blockId || ''}`;
+          if (nextSortDir === 'asc') {
+            url.searchParams.delete('commentsDir');
+          } else {
+            url.searchParams.set('commentsDir', nextSortDir);
+          }
+          if (commentsAnchorId) {
+            url.hash = commentsAnchorId;
+          }
+          window.location.assign(url.toString());
+        });
+      }
+
+      if (button) {
+        button.addEventListener('click', function () {
+          loadMore(section);
+        });
+      }
     });
   });
 })();
