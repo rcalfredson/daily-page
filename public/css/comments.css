@@ -87,6 +87,117 @@
   font-size: 1rem;
 }
 
+.comments-composer {
+  margin-bottom: 1rem;
+}
+
+.comments-composer__form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.comments-composer__input {
+  width: 100%;
+  min-height: 7rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #d7dce6;
+  border-radius: 0.9rem;
+  background: #fff;
+  color: #1f2937;
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.comments-composer__input:focus {
+  outline: 2px solid rgba(17, 87, 170, 0.18);
+  outline-offset: 2px;
+  border-color: #aebfe0;
+}
+
+.comments-composer__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.comments-composer__submit,
+.comments-composer__gate-button,
+.comments-composer__gate-link {
+  float: unset;
+  margin: 0;
+  border-radius: 999px;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.comments-composer__submit,
+.comments-composer__gate-button {
+  border: 1px solid #c9d6ea;
+  background: #fff;
+  color: var(--highlight-color);
+}
+
+.comments-composer__submit:hover:not(:disabled),
+.comments-composer__gate-button:hover {
+  background: #f6f9ff;
+  border-color: #aebfe0;
+}
+
+.comments-composer__submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.comments-composer__status {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.comments-composer__status[data-status-type="error"] {
+  color: #b42318;
+}
+
+.comments-composer__status[data-status-type="success"] {
+  color: #0f766e;
+}
+
+.comments-composer__gate {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid #d7dce6;
+  border-radius: 0.9rem;
+  background: #f8fafc;
+}
+
+.comments-composer__gate--warning {
+  background: #fffbeb;
+  border-color: #f5d68a;
+}
+
+.comments-composer__gate-text {
+  margin: 0;
+  color: #27303b;
+}
+
+.comments-composer__gate-link {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #c9d6ea;
+  background: #fff;
+  color: var(--highlight-color);
+  text-decoration: none;
+}
+
+.comments-composer__gate-link:hover {
+  background: #f6f9ff;
+  border-color: #aebfe0;
+}
+
 .comments-list {
   list-style: none;
   margin: 0;
@@ -200,6 +311,10 @@
 
   .comments-section__sort {
     margin-left: 0;
+  }
+
+  .comments-composer__actions {
+    justify-content: flex-start;
   }
 
   .comment__time {

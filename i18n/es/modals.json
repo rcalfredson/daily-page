@@ -9,7 +9,8 @@
     "actions": {
       "voteOnBlock": "votar en un bloque",
       "starRoom": "marcar esta sala como favorita",
-      "reactToBlock": "reaccionar a esta publicación"
+      "reactToBlock": "reaccionar a esta publicación",
+      "commentOnBlock": "comentar en este bloque"
     },
     "errors": {
       "starToggleFail": "No se pudo actualizar el estado de favorito. Inténtalo de nuevo."
