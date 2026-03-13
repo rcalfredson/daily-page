@@ -25,6 +25,18 @@
       "heading": "Comments",
       "count": "{count} comments",
       "empty": "No one has replied yet. Comments will show up here when the conversation starts.",
+      "composer": {
+        "label": "Add a comment",
+        "placeholder": "Write a comment...",
+        "submit": "Post comment",
+        "submitting": "Posting...",
+        "success": "Comment posted.",
+        "error": "Unable to post your comment right now.",
+        "loginPrompt": "Log in to join the conversation.",
+        "loginCta": "Log in to comment",
+        "verifyPrompt": "Verify your email before posting a comment.",
+        "verifyCta": "Verify email"
+      },
       "sort": {
         "label": "Sort",
         "oldestFirst": "Oldest first",

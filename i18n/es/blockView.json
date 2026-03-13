@@ -25,6 +25,18 @@
       "heading": "Comentarios",
       "count": "{count} comentarios",
       "empty": "Todavía nadie ha respondido. Los comentarios aparecerán aquí cuando empiece la conversación.",
+      "composer": {
+        "label": "Agregar un comentario",
+        "placeholder": "Escribe un comentario...",
+        "submit": "Publicar comentario",
+        "submitting": "Publicando...",
+        "success": "Comentario publicado.",
+        "error": "No se puede publicar tu comentario en este momento.",
+        "loginPrompt": "Inicia sesión para unirte a la conversación.",
+        "loginCta": "Entrar para comentar",
+        "verifyPrompt": "Verifica tu correo electrónico antes de publicar un comentario.",
+        "verifyCta": "Verificar correo"
+      },
       "sort": {
         "label": "Orden",
         "oldestFirst": "Más antiguos primero",

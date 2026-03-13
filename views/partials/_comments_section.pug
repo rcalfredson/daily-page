@@ -2,6 +2,8 @@
   const commentCount = Number(commentsTotal || 0);
   const initialCount = Array.isArray(comments) ? comments.length : 0;
   const currentCommentsSortDir = commentsSortDir === 'desc' ? 'desc' : 'asc';
+  const currentUsername = user && user.username ? user.username : '';
+  const currentProfilePath = currentUsername ? `/users/${encodeURIComponent(currentUsername)}` : '';
   const commentDateFormatter = new Intl.DateTimeFormat(uiLang || lang || 'en', {
     dateStyle: 'medium',
     timeStyle: 'short'
@@ -22,11 +24,19 @@ section.comments-section(
   data-load-error-label=t('blockView.comments.loadError')
   data-by-label=t('blockView.comments.by')
   data-unknown-author-label=t('blockView.comments.unknownAuthor')
+  data-count-label-template=t('blockView.comments.count', { count: '__COUNT__' })
+  data-empty-label=t('blockView.comments.empty')
+  data-submit-label=t('blockView.comments.composer.submit')
+  data-submitting-label=t('blockView.comments.composer.submitting')
+  data-submit-success-label=t('blockView.comments.composer.success')
+  data-submit-error-label=t('blockView.comments.composer.error')
+  data-current-username=currentUsername
+  data-current-profile-path=currentProfilePath
 )
   .comments-section__header
     .comments-section__header-main
       h2#comments-heading.comments-section__title= t('blockView.comments.heading')
-      p.comments-section__count= t('blockView.comments.count', { count: commentCount })
+      p.comments-section__count(data-comments-count)= t('blockView.comments.count', { count: commentCount })
     if commentCount > 0
       .comments-section__sort
         label.comments-section__sort-label.sr-only(for=`comments-sort-${block._id}`)= t('blockView.comments.sort.label')
@@ -38,36 +48,77 @@ section.comments-section(
           option(value='asc' selected=currentCommentsSortDir === 'asc')= t('blockView.comments.sort.oldestFirst')
           option(value='desc' selected=currentCommentsSortDir === 'desc')= t('blockView.comments.sort.newestFirst')
 
-  if commentCount === 0
-    p.comments-section__empty= t('blockView.comments.empty')
-  else
-    ol.comments-list(data-comments-list)
-      each comment in comments
-        -
-          const timestamp = new Date(comment.createdAt);
-          const timestampIso = timestamp.toISOString();
-          const timestampLabel = commentDateFormatter.format(timestamp);
-        li.comments-list__item
-          article.comment
-            header.comment__meta
-              span.comment__author
-                span.comment__byline= `${t('blockView.comments.by')} `
-                if comment.authorProfilePath
-                  a.comment__username.user-profile-link(href=uiPath(comment.authorProfilePath))= comment.authorUsername
-                else
-                  span.comment__username= comment.authorUsername || t('blockView.comments.unknownAuthor')
-              time.comment__time(datetime=timestampIso)= timestampLabel
-            .comment__body
-              p= comment.body
-
-    if commentsHasMore
-      .comments-section__actions
-        button.comments-section__load-more(
+  .comments-composer
+    if user && user.id
+      if commentComposerCanSubmit
+        form.comments-composer__form(data-comments-form)
+          label.sr-only(for=`comment-body-${block._id}`)= t('blockView.comments.composer.label')
+          textarea.comments-composer__input(
+            id=`comment-body-${block._id}`
+            name="body"
+            rows="4"
+            maxlength="1500"
+            required
+            placeholder=t('blockView.comments.composer.placeholder')
+            data-comments-input
+          )
+          .comments-composer__actions
+            button.comments-composer__submit(
+              type="submit"
+              data-comments-submit
+            )= t('blockView.comments.composer.submit')
+          p.comments-composer__status.hidden(
+            role="status"
+            aria-live="polite"
+            data-comments-form-status
+          )
+      else
+        .comments-composer__gate.comments-composer__gate--warning
+          p.comments-composer__gate-text= t('blockView.comments.composer.verifyPrompt')
+          a.comments-composer__gate-link(href=uiPath('/verify-email'))= t('blockView.comments.composer.verifyCta')
+    else
+      .comments-composer__gate
+        p.comments-composer__gate-text= t('blockView.comments.composer.loginPrompt')
+        button.comments-composer__gate-button(
           type="button"
-          data-comments-load-more
-        )= t('blockView.comments.loadMore')
-      p.comments-section__load-error.hidden(
-        role="status"
-        aria-live="polite"
-        data-comments-load-error
-      )
+          data-comments-login
+        )= t('blockView.comments.composer.loginCta')
+
+  p.comments-section__empty(
+    class=commentCount === 0 ? null : 'hidden'
+    data-comments-empty
+  )= t('blockView.comments.empty')
+
+  ol.comments-list(
+    class=commentCount === 0 ? 'hidden' : null
+    data-comments-list
+  )
+    each comment in comments
+      -
+        const timestamp = new Date(comment.createdAt);
+        const timestampIso = timestamp.toISOString();
+        const timestampLabel = commentDateFormatter.format(timestamp);
+      li.comments-list__item
+        article.comment
+          header.comment__meta
+            span.comment__author
+              span.comment__byline= `${t('blockView.comments.by')} `
+              if comment.authorProfilePath
+                a.comment__username.user-profile-link(href=uiPath(comment.authorProfilePath))= comment.authorUsername
+              else
+                span.comment__username= comment.authorUsername || t('blockView.comments.unknownAuthor')
+            time.comment__time(datetime=timestampIso)= timestampLabel
+          .comment__body
+            p= comment.body
+
+  if commentsHasMore
+    .comments-section__actions
+      button.comments-section__load-more(
+        type="button"
+        data-comments-load-more
+      )= t('blockView.comments.loadMore')
+  p.comments-section__load-error.hidden(
+    role="status"
+    aria-live="polite"
+    data-comments-load-error
+  )

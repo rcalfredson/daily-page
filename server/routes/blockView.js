@@ -7,6 +7,7 @@ import {
 import { getCommentsForBlockView } from '../db/commentService.js';
 import { getReactionCounts, getUserReactionsForBlock } from '../db/reactionService.js';
 import { getRoomMetadata } from '../db/roomService.js';
+import { findUserById } from '../db/userService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
@@ -28,6 +29,7 @@ router.get(
     'blockView',
     'blockTags',
     'blockCommon',
+    'modals',
     'flagModal',
     'voteControls',
     'reactions']),
@@ -62,13 +64,14 @@ router.get(
       const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
       const translations = await getTranslations(block.groupId);
 
-      const [reactionCounts, commentsData] = await Promise.all([
+      const [reactionCounts, commentsData, dbUser] = await Promise.all([
         getReactionCounts(block_id),
         getCommentsForBlockView({
           blockId: block_id,
           limit: INITIAL_COMMENT_LIMIT,
           sortDir: commentsSortDir
-        })
+        }),
+        req.user?.id ? findUserById(req.user.id) : Promise.resolve(null)
       ]);
 
       let userReactions = [];
@@ -110,6 +113,7 @@ router.get(
         commentsLimit: commentsData.limit,
         commentsHasMore: commentsData.hasMore,
         commentsSortDir,
+        commentComposerCanSubmit: Boolean(req.user?.id && dbUser?.verified),
         uiLang,
         lang: block.lang
       });
