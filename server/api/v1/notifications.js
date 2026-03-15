@@ -1,12 +1,82 @@
 import { Router } from 'express';
+import mongoose from 'mongoose';
 import optionalAuth from '../../middleware/optionalAuth.js';
+import Block from '../../db/models/Block.js';
+import User from '../../db/models/User.js';
 import {
   getNotificationsForUser,
   getUnreadNotificationCount,
   markNotificationRead
 } from '../../db/notificationService.js';
+import { canonicalBlockPath } from '../../utils/canonical.js';
 
 const router = Router();
+
+function uniqueStrings(values = []) {
+  return [...new Set(values.map((value) => String(value || '')).filter(Boolean))];
+}
+
+async function serializeNotifications(notifications, { t }) {
+  const actorIds = uniqueStrings(
+    notifications
+      .map((notification) => notification.actorUserId)
+      .filter((id) => mongoose.isValidObjectId(id))
+  );
+  const blockIds = uniqueStrings(
+    notifications
+      .map((notification) => notification.blockId)
+      .filter((id) => mongoose.isValidObjectId(id))
+  );
+
+  const [actors, blocks] = await Promise.all([
+    actorIds.length
+      ? User.find({ _id: { $in: actorIds } }).select({ username: 1 }).lean()
+      : Promise.resolve([]),
+    blockIds.length
+      ? Block.find({ _id: { $in: blockIds } }).select({ title: 1, roomId: 1 }).lean()
+      : Promise.resolve([])
+  ]);
+
+  const actorsById = new Map(actors.map((actor) => [String(actor._id), actor.username]));
+  const blocksById = new Map(blocks.map((block) => [String(block._id), block]));
+  const fallbackActor = t('notifications.inSite.fallbackActor');
+  const fallbackBlockTitle = t('notifications.inSite.fallbackBlockTitle');
+
+  return notifications.map((notification) => {
+    const actorUsername = actorsById.get(String(notification.actorUserId)) || fallbackActor;
+    const block = blocksById.get(String(notification.blockId));
+    const blockTitle = block?.title || fallbackBlockTitle;
+
+    let message = t('notifications.inSite.item.unknown');
+    let path = null;
+
+    switch (notification.type) {
+      case 'block_comment':
+        message = t('notifications.inSite.item.blockComment', {
+          actorUsername,
+          blockTitle
+        });
+        if (block?.roomId) {
+          const anchor = notification.commentId
+            ? `#comment-${encodeURIComponent(String(notification.commentId))}`
+            : '';
+          path = `${canonicalBlockPath(block)}${anchor}`;
+        }
+        break;
+      default:
+        break;
+    }
+
+    return {
+      _id: String(notification._id),
+      type: notification.type,
+      message,
+      path,
+      readAt: notification.readAt || null,
+      createdAt: notification.createdAt || null
+    };
+  });
+}
 
 const useNotificationsAPI = (app) => {
   app.use('/api/v1/notifications', router);
@@ -15,9 +85,12 @@ const useNotificationsAPI = (app) => {
     if (!req.user?.id) return res.status(401).json({ error: 'User not authenticated' });
 
     try {
-      const notifications = await getNotificationsForUser({
+      const rawNotifications = await getNotificationsForUser({
         userId: req.user.id,
         limit: req.query.limit
+      });
+      const notifications = await serializeNotifications(rawNotifications, {
+        t: res.locals.t || ((key) => key)
       });
       return res.status(200).json({ notifications });
     } catch (error) {

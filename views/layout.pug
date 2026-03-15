@@ -20,6 +20,7 @@ html(lang=htmlLang)
       link(rel='stylesheet' href='/css/style.css')
       link(rel='stylesheet' href='/css/footer.css')
       link(rel="stylesheet" href="/css/auth.css")
+      link(rel="stylesheet" href="/css/notifications.css")
       link(rel="stylesheet" href="/css/ui-lang-switcher.css")
       link(rel="stylesheet" href="/css/copy-btn.css")
       script(src="/js/auth.js")
@@ -72,6 +73,21 @@ html(lang=htmlLang)
               )= t('layout.welcomeUser')
               button#nav-logout(type="button" style="display:none;")= t('layout.logout')
               a#nav-login(href=uiPath("/login") style="display:none;")= t('layout.login')
+            details#nav-notifications.notifications-menu(
+              style=user ? null : 'display:none;'
+              data-notifications-root
+            )
+              summary.notifications-toggle(
+                aria-label=t('notifications.inSite.openMenu')
+                title=t('notifications.inSite.openMenu')
+              )
+                i.fa.fa-bell(aria-hidden="true")
+                span.notifications-badge.hidden(data-notifications-badge aria-hidden="true") 0
+                span.sr-only= t('notifications.inSite.openMenu')
+              .notifications-panel
+                p.notifications-panel__title= t('notifications.inSite.title')
+                p.notifications-panel__status.hidden(data-notifications-status)
+                ul.notifications-list.hidden(data-notifications-list)
             // Quick Search (desktop + mobile)
             a.search-quick(
               href=uiPath('/search')

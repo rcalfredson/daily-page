@@ -13,6 +13,7 @@ const blockSchema = new Schema({
   content: { type: String, default: '' },
   roomId: { type: String, required: true, index: true },
   creator: { type: String, required: true },
+  userId: { type: String, required: false, index: true },
   editToken: { type: String, required: false },
   collaborators: { type: [String], default: [] },
   visibility: { type: String, enum: ['public', 'private'], default: 'public' },

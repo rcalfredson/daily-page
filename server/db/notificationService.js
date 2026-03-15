@@ -1,6 +1,6 @@
 // server/db/notificationService.js
 import Notification from './models/Notification.js';
-import { findUserById } from './userService.js';
+import { findUserById, findUserByUsername } from './userService.js';
 import { buildCommentNotificationEmail } from '../services/emailTemplates/commentNotification.js';
 import { sendEmail } from '../services/mailgunService.js';
 
@@ -58,6 +58,21 @@ export async function markNotificationRead({ notificationId, userId }) {
   return updated;
 }
 
+async function resolveBlockNotificationRecipient(block) {
+  const directUserId = String(block?.userId || '').trim();
+  if (directUserId) {
+    return directUserId;
+  }
+
+  const creatorUsername = String(block?.creator || '').trim();
+  if (!creatorUsername || creatorUsername === 'anonymous') {
+    return '';
+  }
+
+  const creator = await findUserByUsername(creatorUsername);
+  return creator?._id ? String(creator._id) : '';
+}
+
 export async function notifyBlockAuthorOfComment({
   block,
   comment,
@@ -65,7 +80,7 @@ export async function notifyBlockAuthorOfComment({
 }) {
   if (!block || !comment || !actorUser) return null;
 
-  const recipientUserId = String(block.userId || '');
+  const recipientUserId = await resolveBlockNotificationRecipient(block);
   const actorUserId = String(actorUser.id || actorUser._id || '');
 
   // No self-notification

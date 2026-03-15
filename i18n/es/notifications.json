@@ -1,5 +1,19 @@
 {
   "notifications": {
+    "inSite": {
+      "title": "Notificaciones",
+      "openMenu": "Abrir notificaciones",
+      "loading": "Cargando notificaciones...",
+      "error": "No se pueden cargar las notificaciones en este momento.",
+      "empty": "Todavía no tienes notificaciones.",
+      "markRead": "Marcar como leída",
+      "fallbackActor": "Alguien",
+      "fallbackBlockTitle": "tu bloque",
+      "item": {
+        "blockComment": "{actorUsername} comentó en tu bloque \"{blockTitle}\".",
+        "unknown": "Notificación"
+      }
+    },
     "email": {
       "blockComment": {
         "subject": "Nuevo comentario en \"{blockTitle}\"",

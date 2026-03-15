@@ -6,7 +6,6 @@
 .ui-lang-switcher {
   position: relative;
   z-index: var(--z-popover);
-  padding-right: 5px;
 }
 
 .ui-lang-summary {
@@ -145,5 +144,16 @@
 
   .ui-lang-summary {
     padding: 0.25rem 0.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .ui-lang-summary {
+    gap: 0.35rem;
+    padding: 0.25rem 0.45rem;
+  }
+
+  .ui-lang-code {
+    font-size: 0.78rem;
   }
 }

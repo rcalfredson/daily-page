@@ -106,7 +106,10 @@ section.comments-section(
         const timestampIso = timestamp.toISOString();
         const timestampLabel = commentDateFormatter.format(timestamp);
       li.comments-list__item
-        article.comment(data-comment-id=comment._id)
+        article.comment(
+          data-comment-id=comment._id
+          id=comment._id ? `comment-${comment._id}` : null
+        )
           header.comment__meta
             span.comment__author
               span.comment__byline= `${t('blockView.comments.by')} `

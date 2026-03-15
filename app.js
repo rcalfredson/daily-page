@@ -118,7 +118,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.use(makePrefixRedirectMiddleware({ isLocalizedPath }))
     app.use(addSeoLocals);
     app.use(addHreflangLocals);
-    app.use(initI18n(['layout', 'nav', 'modals']));
+    app.use(initI18n(['layout', 'nav', 'modals', 'notifications']));
     app.options('*', cors(corsOptions));
 
     app.use(express.static('public'));
