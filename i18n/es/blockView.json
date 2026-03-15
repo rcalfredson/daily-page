@@ -44,6 +44,15 @@
       },
       "by": "Por",
       "unknownAuthor": "Desconocido",
+      "report": {
+        "action": "Reportar",
+        "pending": "Reportando...",
+        "success": "Comentario reportado.",
+        "error": "No se puede reportar este comentario en este momento.",
+        "ownError": "No puedes reportar tu propio comentario.",
+        "hidden": "Comentario ocultado tras el reporte.",
+        "reported": "Reportado"
+      },
       "loadMore": "Cargar más comentarios",
       "loading": "Cargando...",
       "loadError": "No se pueden cargar más comentarios en este momento."

@@ -44,6 +44,15 @@
       },
       "by": "By",
       "unknownAuthor": "Unknown",
+      "report": {
+        "action": "Report",
+        "pending": "Reporting...",
+        "success": "Comment reported.",
+        "error": "Unable to report this comment right now.",
+        "ownError": "You cannot report your own comment.",
+        "hidden": "Comment hidden after report.",
+        "reported": "Reported"
+      },
       "loadMore": "Load more comments",
       "loading": "Loading...",
       "loadError": "Unable to load more comments right now."

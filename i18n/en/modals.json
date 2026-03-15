@@ -10,7 +10,8 @@
       "voteOnBlock": "vote on a block",
       "starRoom": "star this room",
       "reactToBlock": "react to this post",
-      "commentOnBlock": "comment on this block"
+      "commentOnBlock": "comment on this block",
+      "reportComment": "report this comment"
     },
     "errors": {
       "starToggleFail": "Failed to update star status. Please try again."
