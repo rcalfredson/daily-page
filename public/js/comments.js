@@ -67,12 +67,65 @@
     }
   }
 
-  function buildCommentItem(comment, byLabel, locale) {
+  function getReportState(section) {
+    const raw = section.dataset.reportedCommentIds;
+    if (raw) {
+      return new Set(raw.split(',').map((id) => id.trim()).filter(Boolean));
+    }
+    return new Set();
+  }
+
+  function setReportState(section, reportedIds) {
+    section.dataset.reportedCommentIds = Array.from(reportedIds).join(',');
+  }
+
+  function markCommentReported(section, button, label) {
+    if (!button) return;
+    const commentId = button.dataset.commentId;
+    if (commentId) {
+      const reportedIds = getReportState(section);
+      reportedIds.add(commentId);
+      setReportState(section, reportedIds);
+    }
+
+    button.disabled = true;
+    button.classList.add('is-reported');
+    button.dataset.reported = 'true';
+    button.textContent = label || section.dataset.reportReportedLabel || 'Reported';
+    button.setAttribute('aria-disabled', 'true');
+  }
+
+  function removeComment(section, article) {
+    const item = article?.closest('.comments-list__item');
+    if (!item) return;
+
+    const wasLocalTail = item.dataset.commentsLocalTail === 'true';
+    item.remove();
+
+    if (wasLocalTail) {
+      section.dataset.localTailCount = String(Math.max(0, getLocalTailCount(section) - 1));
+    } else {
+      section.dataset.loadedCount = String(Math.max(0, getLoadedCount(section) - 1));
+    }
+
+    section.dataset.totalCount = String(Math.max(0, getTotalCount(section) - 1));
+    updateCount(section);
+    toggleEmptyState(section);
+    updateLoadMoreState(section);
+  }
+
+  function buildCommentItem(comment, options) {
+    const byLabel = options.byLabel || 'By';
+    const locale = options.locale || 'en';
+
     const item = document.createElement('li');
     item.className = 'comments-list__item';
 
     const article = document.createElement('article');
     article.className = 'comment';
+    if (comment._id) {
+      article.dataset.commentId = comment._id;
+    }
 
     const header = document.createElement('header');
     header.className = 'comment__meta';
@@ -107,8 +160,22 @@
       timeStyle: 'short'
     }).format(createdAt);
 
+    const metaActions = document.createElement('div');
+    metaActions.className = 'comment__meta-actions';
+    metaActions.appendChild(time);
+
+    const reportButton = document.createElement('button');
+    reportButton.type = 'button';
+    reportButton.className = 'comment__report-button';
+    reportButton.dataset.commentReport = 'true';
+    if (comment._id) {
+      reportButton.dataset.commentId = comment._id;
+    }
+    reportButton.textContent = options.reportLabel || 'Report';
+    metaActions.appendChild(reportButton);
+
     header.appendChild(author);
-    header.appendChild(time);
+    header.appendChild(metaActions);
 
     const body = document.createElement('div');
     body.className = 'comment__body';
@@ -121,6 +188,10 @@
     article.appendChild(body);
     item.appendChild(article);
 
+    if (comment._id && options.reportedIds?.has(comment._id)) {
+      markCommentReported(options.section, reportButton, options.reportedLabel);
+    }
+
     return item;
   }
 
@@ -129,7 +200,7 @@
     if (!list) return;
 
     const sortDir = section.dataset.sortDir === 'desc' ? 'desc' : 'asc';
-    const item = buildCommentItem(comment, options.byLabel, options.locale);
+    const item = buildCommentItem(comment, options);
 
     if (sortDir === 'desc') {
       list.prepend(item);
@@ -208,7 +279,14 @@
         const item = buildCommentItem({
           ...comment,
           authorUsername: comment.authorUsername || unknownAuthorLabel
-        }, byLabel, locale);
+        }, {
+          byLabel,
+          locale,
+          reportLabel: section.dataset.reportLabel || 'Report',
+          reportedLabel: section.dataset.reportReportedLabel || 'Reported',
+          reportedIds: getReportState(section),
+          section
+        });
 
         if (insertBefore) {
           list.insertBefore(item, insertBefore);
@@ -271,7 +349,7 @@
 
       if (response.status === 401) {
         window.showLoginModal?.('actions.commentOnBlock');
-        throw new Error(payload?.error || 'User not authenticated');
+        return;
       }
 
       if (!response.ok) {
@@ -282,7 +360,14 @@
         ...payload.comment,
         authorUsername: section.dataset.currentUsername || unknownAuthorLabel,
         authorProfilePath: section.dataset.currentProfilePath || null
-      }, { byLabel, locale });
+      }, {
+        byLabel,
+        locale,
+        reportLabel: section.dataset.reportLabel || 'Report',
+        reportedLabel: section.dataset.reportReportedLabel || 'Reported',
+        reportedIds: getReportState(section),
+        section
+      });
 
       section.dataset.totalCount = String(getTotalCount(section) + 1);
       updateCount(section);
@@ -303,6 +388,78 @@
       submit.textContent = submitLabel;
       input.focus();
     }
+  }
+
+  async function reportComment(section, button) {
+    if (!button || button.disabled || button.dataset.reported === 'true') return;
+
+    if (document.body?.dataset?.isLoggedIn !== 'true') {
+      window.showLoginModal?.('actions.reportComment');
+      return;
+    }
+
+    const commentId = button.dataset.commentId || button.closest('.comment')?.dataset.commentId;
+    const article = button.closest('.comment');
+    if (!commentId || !article) return;
+
+    const reportLabel = section.dataset.reportLabel || 'Report';
+    const reportingLabel = section.dataset.reportingLabel || 'Reporting...';
+    const successLabel = section.dataset.reportSuccessLabel || 'Comment reported.';
+    const hiddenLabel = section.dataset.reportHiddenLabel || 'Comment hidden after report.';
+    const errorLabel = section.dataset.reportErrorLabel || 'Unable to report this comment right now.';
+    const ownErrorLabel = section.dataset.reportOwnErrorLabel || 'You cannot report your own comment.';
+    const reportedLabel = section.dataset.reportReportedLabel || 'Reported';
+
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    button.textContent = reportingLabel;
+
+    try {
+      const response = await fetch(uiPath(`/api/v1/comments/${encodeURIComponent(commentId)}/report`), {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (response.status === 401) {
+        window.showLoginModal?.('actions.reportComment');
+        button.disabled = false;
+        button.removeAttribute('aria-busy');
+        button.textContent = reportLabel;
+        return;
+      }
+
+      if (!response.ok) {
+        const serverMessage = payload?.error || errorLabel;
+        if (response.status === 400 && /own comment/i.test(serverMessage)) {
+          throw new Error(ownErrorLabel);
+        }
+        throw new Error(serverMessage);
+      }
+
+      markCommentReported(section, button, reportedLabel);
+
+      if (payload?.hidden) {
+        removeComment(section, article);
+        window.showToast?.(hiddenLabel, 'success');
+        return;
+      }
+
+      window.showToast?.(successLabel, 'success');
+    } catch (error) {
+      console.error('Error reporting comment:', error);
+      button.disabled = false;
+      button.removeAttribute('aria-busy');
+      button.textContent = reportLabel;
+      window.showToast?.(error?.message || errorLabel, 'error');
+      return;
+    }
+
+    button.removeAttribute('aria-busy');
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -351,6 +508,12 @@
           submitComment(section);
         });
       }
+
+      section.addEventListener('click', function (event) {
+        const reportButton = event.target.closest('[data-comment-report]');
+        if (!reportButton || !section.contains(reportButton)) return;
+        reportComment(section, reportButton);
+      });
     });
   });
 })();

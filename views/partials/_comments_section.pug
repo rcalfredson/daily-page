@@ -30,6 +30,13 @@ section.comments-section(
   data-submitting-label=t('blockView.comments.composer.submitting')
   data-submit-success-label=t('blockView.comments.composer.success')
   data-submit-error-label=t('blockView.comments.composer.error')
+  data-report-label=t('blockView.comments.report.action')
+  data-reporting-label=t('blockView.comments.report.pending')
+  data-report-success-label=t('blockView.comments.report.success')
+  data-report-error-label=t('blockView.comments.report.error')
+  data-report-own-error-label=t('blockView.comments.report.ownError')
+  data-report-hidden-label=t('blockView.comments.report.hidden')
+  data-report-reported-label=t('blockView.comments.report.reported')
   data-current-username=currentUsername
   data-current-profile-path=currentProfilePath
 )
@@ -99,7 +106,7 @@ section.comments-section(
         const timestampIso = timestamp.toISOString();
         const timestampLabel = commentDateFormatter.format(timestamp);
       li.comments-list__item
-        article.comment
+        article.comment(data-comment-id=comment._id)
           header.comment__meta
             span.comment__author
               span.comment__byline= `${t('blockView.comments.by')} `
@@ -107,7 +114,13 @@ section.comments-section(
                 a.comment__username.user-profile-link(href=uiPath(comment.authorProfilePath))= comment.authorUsername
               else
                 span.comment__username= comment.authorUsername || t('blockView.comments.unknownAuthor')
-            time.comment__time(datetime=timestampIso)= timestampLabel
+            .comment__meta-actions
+              time.comment__time(datetime=timestampIso)= timestampLabel
+              button.comment__report-button(
+                type="button"
+                data-comment-report
+                data-comment-id=comment._id
+              )= t('blockView.comments.report.action')
           .comment__body
             p= comment.body
 
