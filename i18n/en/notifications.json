@@ -1,5 +1,19 @@
 {
   "notifications": {
+    "inSite": {
+      "title": "Notifications",
+      "openMenu": "Open notifications",
+      "loading": "Loading notifications...",
+      "error": "Unable to load notifications right now.",
+      "empty": "No notifications yet.",
+      "markRead": "Mark read",
+      "fallbackActor": "Someone",
+      "fallbackBlockTitle": "your block",
+      "item": {
+        "blockComment": "{actorUsername} commented on your block \"{blockTitle}\".",
+        "unknown": "Notification"
+      }
+    },
     "email": {
       "blockComment": {
         "subject": "New comment on \"{blockTitle}\"",

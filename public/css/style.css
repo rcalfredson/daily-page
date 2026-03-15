@@ -101,82 +101,36 @@ body {
 .site-header .navbar {
   box-sizing: border-box;
   padding: 10px 15px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  justify-content: flex-start;
 }
 
 .site-header:has(.ui-lang-fallback-banner) .navbar {
   margin-bottom: 0;
 }
 
-/* Make sure the right side never forces horizontal overflow */
 header.navbar-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: center;
-  gap: 12px;
-  min-width: 0;
-  flex-wrap: wrap;
-  flex: 1 1 auto;
+  gap: 10px;
 }
 
-/* Let nav shrink instead of clipping */
-.main-menu {
+a.brand {
+  grid-column: 1;
   min-width: 0;
 }
 
-/* When it gets narrow: logo left + utilities right on row 1,
-   nav becomes row 2, left-aligned under logo */
-@media (max-width: 1300px) and (min-width: 750px) {
-  header.navbar-header {
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  /* Row 1: nav stays on the main line */
-  .main-menu {
-    flex: 1 1 auto;
-    min-width: 0;
-    order: 1;
-  }
-
-/* Top row: utilities live at far right */
 .navbar-right {
-  margin-left: auto;
+  grid-column: 2;
   display: flex;
   align-items: center;
   gap: 10px;
   min-width: 0;
+  justify-self: end;
 }
 
-  /* Welcome can be less greedy earlier */
-  #welcome-message {
-    max-width: 220px;
-    /* tighten slightly in this band */
-  }
-
-
-  /* ensure row 1 stays as logo + utilities */
-  a:has(.logo) { order: 1; }
-
-  .navbar-right {
-    order: 2;           /* keep it on row 1 */
-    margin-left: auto;  /* push to right */
-  }
-
-  nav#main-menu.main-menu {
-    order: 3;           /* row 2 */
-    flex: 0 0 100%;
-    width: 100%;
-    margin-top: 6px;
-    padding-left: 10px;
-  }
-
-  /* Make links start under the logo’s left edge */
-  nav#main-menu.main-menu ul {
-    justify-content: flex-start;
-  }
+.menu-toggle {
+  grid-column: 3;
+  justify-self: end;
 }
 
 h1 {
@@ -287,10 +241,6 @@ NavBar
 ****************/
 
 .navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
   border-radius: 10px;
   margin-bottom: 15px;
   padding-top: 10px;
@@ -412,14 +362,6 @@ a.brand {
   top: 0;
 }
 
-.navbar-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-
 .search-quick {
   display: inline-flex;
   align-items: center;
@@ -513,56 +455,60 @@ article h2 {
   }
 }
 
-@media (min-width: 750px) {
+@media (min-width: 980px) {
 
   .menu-toggle,
   .main-menu .menu-close {
     display: none;
   }
 
-  /* Undo positioning of off-canvas menu */
-  .main-menu {
+  header.navbar-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "brand utilities"
+      "nav nav";
+    gap: 10px 16px;
+  }
+
+  a.brand {
+    grid-area: brand;
+  }
+
+  .navbar-right {
+    grid-area: utilities;
+  }
+
+  nav#main-menu.main-menu {
+    grid-area: nav;
     position: relative;
     left: auto;
     top: auto;
     height: auto;
     display: block;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: hidden;
-    /* Let nav shrink without pushing the right-side controls off-screen */
-    flex: 1 1 auto;
     min-width: 0;
-    padding-left: 10px;
+    padding-left: 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   .main-menu ul {
     display: flex;
-    /* Undo off-canvas styling */
+    justify-content: flex-start;
     padding: 0;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
     height: auto;
-    width: auto;
+    width: max-content;
+    min-width: 100%;
     background: none;
     flex-wrap: nowrap;
   }
 
-  /* No more "Lo↵mejor" */
   .main-menu a.link {
     white-space: nowrap;
-  }
-
-  /* Middle widths: allow horizontal scroll instead of wrapping or overflow */
-  .main-menu {
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .navbar-right {
-    margin-left: auto;
-    order: 2
   }
 
   .main-menu::-webkit-scrollbar {
@@ -614,6 +560,95 @@ article h2 {
 
   .nav-desktop-hide {
     display: none;
+  }
+}
+
+@media (min-width: 980px) {
+  .site-header.site-header--nav-inline header.navbar-header {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "brand nav utilities";
+    gap: 12px;
+  }
+
+  .site-header.site-header--nav-inline nav#main-menu.main-menu {
+    padding-left: 10px;
+  }
+
+  .site-header.site-header--nav-inline .main-menu ul {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 979px) {
+  header.navbar-header {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 8px;
+    grid-template-areas: "brand utilities menu";
+  }
+
+  a.brand {
+    grid-area: brand;
+    min-width: 0;
+  }
+
+  .navbar-right {
+    grid-area: utilities;
+    gap: 8px;
+    justify-self: end;
+  }
+
+  .menu-toggle {
+    grid-area: menu;
+    justify-self: end;
+  }
+}
+
+@media (max-width: 700px) {
+  header.navbar-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "brand brand"
+      "utilities menu";
+    row-gap: 8px;
+  }
+
+  a.brand {
+    grid-area: brand;
+  }
+
+  .navbar-right {
+    grid-area: utilities;
+    justify-self: start;
+  }
+
+  .menu-toggle {
+    grid-area: menu;
+    justify-self: end;
+  }
+}
+
+@media (max-width: 380px) {
+  .site-header .navbar {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  header.navbar-header {
+    gap: 6px;
+  }
+
+  .navbar-right {
+    gap: 6px;
+  }
+
+  .search-quick {
+    width: 32px;
+    height: 32px;
+  }
+
+  .menu-toggle {
+    padding-left: 12px;
+    padding-right: 12px;
   }
 }
 

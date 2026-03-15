@@ -125,6 +125,7 @@
     article.className = 'comment';
     if (comment._id) {
       article.dataset.commentId = comment._id;
+      article.id = `comment-${comment._id}`;
     }
 
     const header = document.createElement('header');

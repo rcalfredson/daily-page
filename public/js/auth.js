@@ -3,7 +3,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const navLogout = document.querySelector('#nav-logout');
   const navLoginMenu = document.querySelector('#nav-login-menu');
   const navLogoutMenu = document.querySelector('#nav-logout-menu');
+  const notificationsRoot = document.querySelector('[data-notifications-root]');
   const welcomeMessage = document.querySelector('#welcome-message');
+  const siteHeader = document.querySelector('.site-header');
+  const headerRow = document.querySelector('header.navbar-header');
+  const brandLink = document.querySelector('a.brand');
+  const mainMenu = document.querySelector('nav#main-menu.main-menu');
+  const mainMenuList = mainMenu?.querySelector('ul');
+  const navbarRight = document.querySelector('.navbar-right');
   const prefix = welcomeMessage?.dataset.welcomePrefix ?? 'Welcome, ';
   const fallbackUser = welcomeMessage?.dataset.welcomeFallback ?? 'you';
   const suffix = welcomeMessage?.dataset.welcomeSuffix ?? '!';
@@ -11,6 +18,34 @@ document.addEventListener('DOMContentLoaded', async () => {
   const uiBaseRaw = document.body?.dataset.uiBase || '';
   const uiBase = uiBaseRaw.endsWith('/') ? uiBaseRaw.slice(0, -1) : uiBaseRaw;
   const ui = (path) => (path.startsWith('/') ? `${uiBase}${path}` : `${uiBase}/${path}`);
+
+  const updateHeaderLayout = () => {
+    if (!siteHeader || !headerRow || !brandLink || !navbarRight || !mainMenu || !mainMenuList) return;
+
+    if (window.innerWidth < 980) {
+      siteHeader.classList.remove('site-header--nav-inline');
+      return;
+    }
+
+    siteHeader.classList.add('site-header--nav-inline');
+
+    const rowOverflow = headerRow.scrollWidth > Math.ceil(headerRow.clientWidth + 1);
+    const navOverflow = mainMenu.scrollWidth > Math.ceil(mainMenu.clientWidth + 1);
+    const fitsInline = !rowOverflow && !navOverflow;
+
+    siteHeader.classList.toggle('site-header--nav-inline', fitsInline);
+  };
+
+  const publishAuthState = (isLoggedIn, user = null) => {
+    if (document.body?.dataset) {
+      document.body.dataset.isLoggedIn = isLoggedIn ? 'true' : 'false';
+      document.body.dataset.userId = isLoggedIn && user?.id ? String(user.id) : '';
+    }
+
+    window.dispatchEvent(new CustomEvent('auth:state-changed', {
+      detail: { isLoggedIn, user }
+    }));
+  };
 
   const doLogout = async (e) => {
     e?.preventDefault?.();
@@ -35,12 +70,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (navLogout) navLogout.style.display = 'none';
     if (navLogoutMenu) navLogoutMenu.style.display = 'none';
+    if (notificationsRoot) {
+      notificationsRoot.style.display = 'none';
+      notificationsRoot.removeAttribute('open');
+    }
 
     // dashboard menu item (li) is optional to toggle here too
     const dashLi = document.querySelector('li.nav-mobile-only#dashboard');
     if (dashLi) dashLi.style.display = 'none';
 
     if (welcomeMessage) welcomeMessage.style.display = 'none';
+    updateHeaderLayout();
+    publishAuthState(false, null);
   };
 
   const setLoggedInUI = (user) => {
@@ -48,21 +89,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (navLogout) navLogout.style.display = 'block';
     if (navLogoutMenu) navLogoutMenu.style.display = 'block';
+    if (notificationsRoot) notificationsRoot.style.display = 'inline-block';
 
     const dashLi = document.querySelector('li.nav-mobile-only#dashboard');
     if (dashLi) dashLi.style.display = 'list-item';
 
     if (welcomeMessage) {
-      welcomeMessage.textContent = prefix;
+      welcomeMessage.textContent = '';
+
+      const prefixSpan = document.createElement('span');
+      prefixSpan.className = 'welcome-message__prefix';
+      prefixSpan.textContent = prefix;
+
       const a = document.createElement('a');
+      a.className = 'welcome-message__user';
       a.href = ui('/dashboard');
       a.style.color = 'rgb(26, 167, 214)';
       a.style.textDecoration = 'underline dotted';
       a.textContent = user.username ?? fallbackUser;
+
+      const suffixSpan = document.createElement('span');
+      suffixSpan.className = 'welcome-message__suffix';
+      suffixSpan.textContent = suffix;
+
+      welcomeMessage.appendChild(prefixSpan);
       welcomeMessage.appendChild(a);
-      welcomeMessage.appendChild(document.createTextNode(suffix));
+      welcomeMessage.appendChild(suffixSpan);
       welcomeMessage.style.display = 'block';
     }
+
+    updateHeaderLayout();
+    publishAuthState(true, user);
   };
 
   try {
@@ -88,4 +145,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   navLogout?.addEventListener('click', doLogout);
   navLogoutMenu?.addEventListener('click', doLogout);
+  window.addEventListener('resize', updateHeaderLayout);
+  window.addEventListener('load', updateHeaderLayout);
 });

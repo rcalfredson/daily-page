@@ -1,6 +1,6 @@
 // public/js/details-autoclose.js
 (function () {
-  const selector = 'details.ui-lang-switcher, details.block-lang-switcher';
+  const selector = 'details.ui-lang-switcher, details.block-lang-switcher, details.notifications-menu';
 
   function closeAll(except = null) {
     document.querySelectorAll(selector).forEach(d => {

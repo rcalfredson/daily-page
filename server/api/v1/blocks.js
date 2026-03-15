@@ -103,6 +103,7 @@ const useBlockAPI = (app) => {
       tags,
       visibility: req.user ? visibility : 'public',
       creator: req.user?.username || 'anonymous',
+      userId: req.user?.id || null,
       roomId: room_id,
       editToken: uuidv4(),
       lang: lang || (req.user?.preferredLang ?? 'en'),
