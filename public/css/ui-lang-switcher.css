@@ -72,6 +72,7 @@
   max-height: min(60vh, 360px);
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+  transform-origin: top right;
 }
 
 .ui-lang-option {
@@ -135,11 +136,21 @@
   pointer-events: none;
 }
 
+@media (max-width: 979px) {
+  .ui-lang-menu {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 600px) {
   .ui-lang-menu {
-    min-width: min(240px, calc(100vw - 24px));
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    right: 0;
+    max-height: min(65vh, 360px);
   }
 
   .ui-lang-summary {
@@ -148,6 +159,11 @@
 }
 
 @media (max-width: 380px) {
+  .ui-lang-menu {
+    left: 10px;
+    right: 10px;
+  }
+
   .ui-lang-summary {
     gap: 0.35rem;
     padding: 0.25rem 0.45rem;
