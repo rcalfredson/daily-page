@@ -37,6 +37,12 @@ hr {
   align-items: center;
   gap: 1rem;
   flex: 1;
+  min-width: 0;
+}
+
+.title-row {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .room-info {
@@ -60,6 +66,9 @@ hr {
 
 .block-title {
   padding-bottom: 5px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .block-content img {
@@ -78,6 +87,12 @@ hr {
   color: #fff;
   padding: 0.4rem 0.8rem;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  line-height: 1.2;
+  text-align: center;
   text-decoration: none;
   font-weight: bold;
   transition: background-color 0.2s ease;
@@ -155,6 +170,20 @@ hr {
 .interact-section a.block-edit-btn,
 .interact-section button.share-btn {
   white-space: nowrap;
+}
+
+.block-edit-btn,
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-weight: bold;
+  line-height: 1.2;
+  text-align: center;
 }
 
 .share-btn {
@@ -274,27 +303,22 @@ hr {
     gap: 0.5rem;
   }
 
-  /* Stop the "never shrink, never wrap" behavior */
-  .action-buttons > * {
-    flex-shrink: 1;
-    min-width: 0;            /* allow wrapping */
+  .interact-section {
+    flex-basis: 100%;
+    width: 100%;
+    margin-left: 0;
   }
 
-  /* Let the action buttons behave like a tidy grid */
+  /* Let the action buttons stack and fill the available width */
   .action-buttons {
     width: 100%;
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .action-buttons a,
-  .action-buttons button {
-    flex: 1 1 auto;
-  }
-
-  /* If you want: force single-column for ultra narrow */
-  @media (max-width: 420px) {
-    .action-buttons a,
-    .action-buttons button {
-      flex-basis: 100%;
-    }
+  .action-buttons > * {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
   }
 }

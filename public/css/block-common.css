@@ -1,21 +1,48 @@
 /* Make title + badge align nicely */
 .card-title,
-.title-row,
-a.block-title {
-  display: inline-flex;
+.title-row {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px; /* replaces margin-left on badge */
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+a.block-title {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* Badge itself */
 .badge.badge-draft {
   display: inline-flex;
   align-items: center;
+  flex: 0 0 auto;
+  max-width: 100%;
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 12px;
-  line-height: 1;          /* keeps pill tight */
+  line-height: 1;
+  white-space: normal;
   opacity: 0.75;
   border: 1px solid currentColor;
-  /* remove margin-left if you use gap */
+}
+
+@media (max-width: 360px) {
+  .title-row,
+  .card-title {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+  }
+
+  .title-row .badge.badge-draft,
+  .card-title .badge.badge-draft {
+    width: auto;
+    max-width: 100%;
+    margin-right: auto;
+  }
 }

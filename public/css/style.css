@@ -73,6 +73,7 @@ body {
   font-family: "Rubik-Light";
   background-color: #ffffff;
   margin: 0;
+  overflow-x: hidden;
 }
 
 .with-margins {
