@@ -14,27 +14,85 @@ document.addEventListener('DOMContentLoaded', async () => {
   const prefix = welcomeMessage?.dataset.welcomePrefix ?? 'Welcome, ';
   const fallbackUser = welcomeMessage?.dataset.welcomeFallback ?? 'you';
   const suffix = welcomeMessage?.dataset.welcomeSuffix ?? '!';
+  let headerLayoutFrame = null;
 
   const uiBaseRaw = document.body?.dataset.uiBase || '';
   const uiBase = uiBaseRaw.endsWith('/') ? uiBaseRaw.slice(0, -1) : uiBaseRaw;
   const ui = (path) => (path.startsWith('/') ? `${uiBase}${path}` : `${uiBase}/${path}`);
 
-  const updateHeaderLayout = () => {
+  const measureInlineHeaderFit = () => {
     if (!siteHeader || !headerRow || !brandLink || !navbarRight || !mainMenu || !mainMenuList) return;
+
+    if (window.innerWidth < 980) {
+      return false;
+    }
+
+    const wasInline = siteHeader.classList.contains('site-header--nav-inline');
+    siteHeader.classList.add('site-header--nav-inline');
+
+    const headerWidth = Math.ceil(headerRow.getBoundingClientRect().width);
+    const brandWidth = Math.ceil(brandLink.getBoundingClientRect().width);
+    const utilitiesWidth = Math.ceil(navbarRight.getBoundingClientRect().width);
+    const navWidth = Math.ceil(mainMenuList.scrollWidth);
+    const headerStyles = window.getComputedStyle(headerRow);
+    const navStyles = window.getComputedStyle(mainMenu);
+    const columnGap = parseFloat(headerStyles.columnGap || headerStyles.gap || '0') || 0;
+    const navPaddingLeft = parseFloat(navStyles.paddingLeft || '0') || 0;
+    const inlineWidthNeeded = brandWidth + navWidth + utilitiesWidth + (columnGap * 2) + navPaddingLeft;
+    const fitsInline = inlineWidthNeeded <= headerWidth + 1;
+
+    if (!wasInline) {
+      siteHeader.classList.remove('site-header--nav-inline');
+    }
+
+    return fitsInline;
+  };
+
+  const updateHeaderLayout = () => {
+    if (!siteHeader) return;
 
     if (window.innerWidth < 980) {
       siteHeader.classList.remove('site-header--nav-inline');
       return;
     }
 
-    siteHeader.classList.add('site-header--nav-inline');
-
-    const rowOverflow = headerRow.scrollWidth > Math.ceil(headerRow.clientWidth + 1);
-    const navOverflow = mainMenu.scrollWidth > Math.ceil(mainMenu.clientWidth + 1);
-    const fitsInline = !rowOverflow && !navOverflow;
-
-    siteHeader.classList.toggle('site-header--nav-inline', fitsInline);
+    siteHeader.classList.toggle('site-header--nav-inline', measureInlineHeaderFit());
   };
+
+  const scheduleHeaderLayoutUpdate = () => {
+    if (headerLayoutFrame !== null) {
+      window.cancelAnimationFrame(headerLayoutFrame);
+    }
+
+    headerLayoutFrame = window.requestAnimationFrame(() => {
+      headerLayoutFrame = null;
+      updateHeaderLayout();
+    });
+  };
+
+  window.addEventListener('resize', scheduleHeaderLayoutUpdate);
+  window.addEventListener('load', scheduleHeaderLayoutUpdate);
+  window.visualViewport?.addEventListener('resize', scheduleHeaderLayoutUpdate);
+
+  if (typeof ResizeObserver !== 'undefined') {
+    const headerResizeObserver = new ResizeObserver(() => {
+      scheduleHeaderLayoutUpdate();
+    });
+
+    [
+      headerRow,
+      brandLink,
+      mainMenu,
+      mainMenuList,
+      navbarRight
+    ].filter(Boolean).forEach((element) => headerResizeObserver.observe(element));
+  }
+
+  document.fonts?.ready
+    ?.then(() => {
+      scheduleHeaderLayoutUpdate();
+    })
+    .catch(() => {});
 
   const publishAuthState = (isLoggedIn, user = null) => {
     if (document.body?.dataset) {
@@ -80,7 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (dashLi) dashLi.style.display = 'none';
 
     if (welcomeMessage) welcomeMessage.style.display = 'none';
-    updateHeaderLayout();
+    scheduleHeaderLayoutUpdate();
     publishAuthState(false, null);
   };
 
@@ -118,7 +176,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       welcomeMessage.style.display = 'block';
     }
 
-    updateHeaderLayout();
+    scheduleHeaderLayoutUpdate();
     publishAuthState(true, user);
   };
 
@@ -145,6 +203,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   navLogout?.addEventListener('click', doLogout);
   navLogoutMenu?.addEventListener('click', doLogout);
-  window.addEventListener('resize', updateHeaderLayout);
-  window.addEventListener('load', updateHeaderLayout);
 });
