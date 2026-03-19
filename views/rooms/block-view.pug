@@ -40,22 +40,46 @@ block append scripts
 
 block content
   - const isRtl = ['ar','he','fa','ur'].includes(lang);
+  - const createdAt = block.createdAt ? new Date(block.createdAt) : null;
+  - const createdAtLabel = createdAt ? createdAt.toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' }) : null;
   include ../partials/_tag_section
   #block-page
     .block-header
       .header-top
-        .room-info
-          | #{t('blockView.labels.room')}
-          a.room-link(href=uiPath(`/rooms/${room_id}`))= roomName
-
         include ../partials/_block_lang_switcher
 
       .title-section
-        .vote-section
-          include ../partials/_vote_controls
-        .title-row
-          h1.block-title= block.title
-          include ../partials/_draft_badge
+        .title-main
+          .title-row
+            .vote-section
+              include ../partials/_vote_controls
+            .title-copy
+              h1.block-title= block.title
+              include ../partials/_draft_badge
+
+          .block-meta-card(lang=(uiLang || 'en'))
+            .block-meta-author
+              if authorProfile && authorProfile.profilePath
+                a.block-author-avatar(href=uiPath(authorProfile.profilePath) aria-label=t('blockView.labels.viewAuthorProfile', { username: authorProfile.username }))
+                  img(src=authorProfile.avatarUrl alt=t('blockView.labels.authorAvatarAlt', { username: authorProfile.username }))
+                .block-author-copy
+                  span.meta-label= t('blockView.labels.author')
+                  a.user-profile-link.block-author-name(href=uiPath(authorProfile.profilePath))= authorProfile.username
+              else
+                span.block-author-avatar.block-author-avatar--placeholder(aria-hidden='true')
+                .block-author-copy
+                  span.meta-label= t('blockView.labels.author')
+                  span.block-author-name= (authorProfile && authorProfile.username) || t('blockView.labels.unknownAuthor')
+
+            .block-meta-details
+              .meta-item
+                span.meta-label= t('blockView.labels.room')
+                a.room-link(href=uiPath(`/rooms/${room_id}`))= roomName
+              if createdAtLabel
+                .meta-item
+                  span.meta-label= t('blockView.labels.created')
+                  time(datetime=createdAt.toISOString())= createdAtLabel
+
         // Only show edit link if the block is in-progress
         .interact-section
           .action-buttons

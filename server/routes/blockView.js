@@ -7,7 +7,7 @@ import {
 import { getCommentsForBlockView } from '../db/commentService.js';
 import { getReactionCounts, getUserReactionsForBlock } from '../db/reactionService.js';
 import { getRoomMetadata } from '../db/roomService.js';
-import { findUserById } from '../db/userService.js';
+import { findUserById, findUserByUsername } from '../db/userService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
@@ -64,14 +64,17 @@ router.get(
       const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
       const translations = await getTranslations(block.groupId);
 
-      const [reactionCounts, commentsData, dbUser] = await Promise.all([
+      const [reactionCounts, commentsData, dbUser, authorUser] = await Promise.all([
         getReactionCounts(block_id),
         getCommentsForBlockView({
           blockId: block_id,
           limit: INITIAL_COMMENT_LIMIT,
           sortDir: commentsSortDir
         }),
-        req.user?.id ? findUserById(req.user.id) : Promise.resolve(null)
+        req.user?.id ? findUserById(req.user.id) : Promise.resolve(null),
+        block.creator && block.creator !== 'anonymous'
+          ? findUserByUsername(block.creator)
+          : Promise.resolve(null)
       ]);
 
       let userReactions = [];
@@ -87,6 +90,15 @@ router.get(
       // Room metadata localized (match your editor approach)
       const roomMetadata = await getRoomMetadata(room_id, uiLang || 'en');
       const roomName = roomMetadata.displayName || roomMetadata.name;
+      const authorProfile = block.creator
+        ? {
+          username: block.creator,
+          profilePath: block.creator !== 'anonymous'
+            ? `/users/${encodeURIComponent(block.creator)}`
+            : null,
+          avatarUrl: authorUser?.profilePic || '/assets/img/default-pic.png'
+        }
+        : null;
 
       // Page title i18n w/ safe fallback
       const key = 'blockView.meta.title';
@@ -99,6 +111,7 @@ router.get(
       res.render('rooms/block-view', {
         room_id,
         roomName,
+        authorProfile,
         block,
         descriptionHTML,
         title,

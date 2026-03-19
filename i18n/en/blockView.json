@@ -5,7 +5,12 @@
       "titleFallback": "Block"
     },
     "labels": {
-      "room": "Room: ",
+      "room": "Room",
+      "author": "Author",
+      "created": "Created",
+      "unknownAuthor": "Anonymous",
+      "authorAvatarAlt": "{username}'s avatar",
+      "viewAuthorProfile": "View {username}'s profile",
       "lang": "Translations: ",
       "available": "available"
     },
