@@ -19,30 +19,46 @@ hr {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .header-top {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: flex-end;
   gap: 1rem;
   flex-wrap: wrap;
 }
 
-/* Title + optional edit button in a row */
 .title-section {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: 1.25rem;
   flex: 1;
   min-width: 0;
 }
 
-.title-row {
+.title-main {
+  display: flex;
+  flex: 1 1 32rem;
+  max-width: 56rem;
   min-width: 0;
-  max-width: 100%;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.title-copy {
+  min-width: 0;
+  flex: 1;
 }
 
 .room-info {
@@ -65,10 +81,105 @@ hr {
 }
 
 .block-title {
-  padding-bottom: 5px;
+  margin: 0;
+  padding-bottom: 0.25rem;
   max-width: 100%;
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+.block-meta-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1rem 1.25rem;
+  padding: 1rem 1.1rem;
+  width: min(100%, 46rem);
+  box-sizing: border-box;
+  border: 1px solid #d9e1ef;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 253, 0.98));
+  box-shadow: 0 8px 24px rgba(23, 43, 77, 0.06);
+}
+
+.block-meta-author {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.block-author-avatar {
+  display: inline-flex;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #edf3fb;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.08);
+}
+
+.block-author-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.block-author-avatar--placeholder {
+  background:
+    radial-gradient(circle at 30% 30%, #dbeafe, #bfdbfe 55%, #93c5fd 100%);
+}
+
+.block-author-copy,
+.block-meta-details,
+.meta-item {
+  min-width: 0;
+}
+
+.block-author-copy,
+.block-meta-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.block-author-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-color);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.block-meta-details {
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.meta-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7a90;
+}
+
+.meta-item time,
+.meta-item .room-link {
+  font-size: 0.98rem;
+  color: var(--text-color);
+}
+
+.meta-item .room-link:hover,
+.block-author-name:hover {
+  color: #0056b3;
 }
 
 .block-content img {
@@ -158,9 +269,25 @@ hr {
 .interact-section {
   display: flex;
   flex-wrap: wrap;
-  margin-left: auto;
   align-items: center;
   gap: 0.5rem;
+  margin-left: auto;
+  align-self: flex-start;
+}
+
+@media (min-width: 1100px) {
+  .title-section {
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
+  }
+
+  .title-main {
+    flex-basis: 0;
+  }
+
+  .block-meta-card {
+    grid-template-columns: minmax(16rem, 1.15fr) minmax(13rem, 0.85fr);
+  }
 }
 
 .interact-section.left-align {
@@ -299,8 +426,28 @@ hr {
 }
 
 @media (max-width: 600px) {
+  .header-top {
+    justify-content: stretch;
+  }
+
   .title-section {
     gap: 0.5rem;
+  }
+
+  .title-main {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+
+  .title-row {
+    flex-direction: column;
+  }
+
+  .block-meta-card {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    padding: 0.95rem;
+    border-radius: 14px;
   }
 
   .interact-section {
@@ -320,5 +467,18 @@ hr {
     flex: 1 1 100%;
     width: 100%;
     min-width: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .block-meta-author {
+    align-items: flex-start;
+  }
+
+  .block-author-avatar,
+  .block-author-avatar--placeholder {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
   }
 }

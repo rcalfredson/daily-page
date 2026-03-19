@@ -5,7 +5,12 @@
       "titleFallback": "Bloque"
     },
     "labels": {
-      "room": "Sala: ",
+      "room": "Sala",
+      "author": "Autor",
+      "created": "Creado",
+      "unknownAuthor": "Anónimo",
+      "authorAvatarAlt": "Avatar de {username}",
+      "viewAuthorProfile": "Ver el perfil de {username}",
       "lang": "Traducciones: ",
       "available": "disponible"
     },
