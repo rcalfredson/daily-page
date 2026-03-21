@@ -49,6 +49,17 @@
       },
       "by": "By",
       "unknownAuthor": "Unknown",
+      "reply": {
+        "action": "Reply",
+        "label": "Add a reply",
+        "placeholder": "Write a reply...",
+        "submit": "Post reply",
+        "submitting": "Posting...",
+        "success": "Reply posted.",
+        "error": "Unable to post your reply right now.",
+        "cancel": "Cancel",
+        "loginPrompt": "Log in to reply."
+      },
       "report": {
         "action": "Report",
         "pending": "Reporting...",

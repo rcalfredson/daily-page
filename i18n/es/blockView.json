@@ -49,6 +49,17 @@
       },
       "by": "Por",
       "unknownAuthor": "Desconocido",
+      "reply": {
+        "action": "Responder",
+        "label": "Agregar una respuesta",
+        "placeholder": "Escribe una respuesta...",
+        "submit": "Publicar respuesta",
+        "submitting": "Publicando...",
+        "success": "Respuesta publicada.",
+        "error": "No se puede publicar tu respuesta en este momento.",
+        "cancel": "Cancelar",
+        "loginPrompt": "Inicia sesión para responder."
+      },
       "report": {
         "action": "Reportar",
         "pending": "Reportando...",

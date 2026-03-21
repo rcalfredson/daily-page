@@ -50,6 +50,7 @@ const useCommentsAPI = (app) => {
       }
 
       const body = req.body?.body;
+      const parentCommentId = req.body?.parentCommentId || null;
       const hasUrl = commentHasUrl(body);
 
       // Rate limiting (DB-backed)
@@ -60,7 +61,12 @@ const useCommentsAPI = (app) => {
 
       await enforceAndRecordCommentRateLimit({ userId: req.user.id, ip, hasUrl });
 
-      const comment = await createComment({ blockId, userId: req.user.id, body });
+      const comment = await createComment({
+        blockId,
+        userId: req.user.id,
+        body,
+        parentCommentId
+      });
 
       try {
         await notifyBlockAuthorOfComment({

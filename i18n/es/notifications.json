@@ -11,6 +11,7 @@
       "fallbackBlockTitle": "tu bloque",
       "item": {
         "blockComment": "{actorUsername} comentó en tu bloque \"{blockTitle}\".",
+        "commentReply": "{actorUsername} respondió a tu comentario en \"{blockTitle}\".",
         "unknown": "Notificación"
       }
     },
@@ -20,6 +21,15 @@
         "heading": "Nuevo comentario en tu bloque",
         "headingWithName": "Hola {username},",
         "body": "<strong>{actorUsername}</strong> comentó en tu bloque <strong>{blockTitle}</strong>.",
+        "cta": "Ver la conversación en Daily Page",
+        "fallbackActor": "Alguien",
+        "fallbackBlockTitle": "tu bloque"
+      },
+      "commentReply": {
+        "subject": "Nueva respuesta en \"{blockTitle}\"",
+        "heading": "Nueva respuesta a tu comentario",
+        "headingWithName": "Hola {username},",
+        "body": "<strong>{actorUsername}</strong> respondió a tu comentario en <strong>{blockTitle}</strong>.",
         "cta": "Ver la conversación en Daily Page",
         "fallbackActor": "Alguien",
         "fallbackBlockTitle": "tu bloque"

@@ -63,6 +63,18 @@ async function serializeNotifications(notifications, { t }) {
           path = `${canonicalBlockPath(block)}${anchor}`;
         }
         break;
+      case 'comment_reply':
+        message = t('notifications.inSite.item.commentReply', {
+          actorUsername,
+          blockTitle
+        });
+        if (block?.roomId) {
+          const anchor = notification.commentId
+            ? `#comment-${encodeURIComponent(String(notification.commentId))}`
+            : '';
+          path = `${canonicalBlockPath(block)}${anchor}`;
+        }
+        break;
       default:
         break;
     }

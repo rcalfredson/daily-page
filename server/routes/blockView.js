@@ -123,6 +123,7 @@ router.get(
         userReactions,
         comments: commentsData.comments,
         commentsTotal: commentsData.total,
+        commentsTopLevelTotal: commentsData.topLevelTotal,
         commentsLimit: commentsData.limit,
         commentsHasMore: commentsData.hasMore,
         commentsSortDir,
