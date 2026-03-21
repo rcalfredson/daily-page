@@ -1,5 +1,6 @@
 // server/db/notificationService.js
 import Notification from './models/Notification.js';
+import BlockComment from './models/BlockComment.js';
 import { findUserById, findUserByUsername } from './userService.js';
 import { buildCommentNotificationEmail } from '../services/emailTemplates/commentNotification.js';
 import { sendEmail } from '../services/mailgunService.js';
@@ -73,6 +74,69 @@ async function resolveBlockNotificationRecipient(block) {
   return creator?._id ? String(creator._id) : '';
 }
 
+async function sendCommentNotificationEmail({
+  notificationId,
+  notificationType,
+  recipientUserId,
+  block,
+  comment,
+  actorUser
+}) {
+  const recipient = await findUserById(recipientUserId);
+  if (!recipient?.email) {
+    return;
+  }
+
+  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+  const uiLang = block.lang || 'en';
+  const blockUrl = `${baseUrl}/${uiLang}/rooms/${encodeURIComponent(block.roomId)}/blocks/${encodeURIComponent(block._id || block.id)}#comment-${encodeURIComponent(String(comment._id || comment.id))}`;
+  const emailLang = ['en', 'es'].includes(block.lang) ? block.lang : 'en';
+
+  const { subject, html } = await buildCommentNotificationEmail({
+    uiLang: emailLang,
+    notificationType,
+    recipientUsername: recipient.username,
+    actorUsername: actorUser.username || 'Someone',
+    blockTitle: block.title || 'your block',
+    commentBody: comment.body || '',
+    blockUrl
+  });
+
+  await sendEmail({
+    to: recipient.email,
+    subject,
+    html
+  });
+
+  await Notification.updateOne(
+    { _id: notificationId },
+    { $set: { emailedAt: new Date() } }
+  );
+}
+
+async function resolveCommentNotificationRecipients({ block, comment, actorUser }) {
+  const recipients = new Map();
+  const actorUserId = String(actorUser.id || actorUser._id || '');
+  const blockRecipientUserId = await resolveBlockNotificationRecipient(block);
+
+  if (blockRecipientUserId && blockRecipientUserId !== actorUserId) {
+    recipients.set(blockRecipientUserId, 'block_comment');
+  }
+
+  if (comment?.parentCommentId) {
+    const parentComment = await BlockComment.findById(String(comment.parentCommentId))
+      .select({ userId: 1 })
+      .lean();
+    const parentAuthorUserId = String(parentComment?.userId || '');
+
+    if (parentAuthorUserId && parentAuthorUserId !== actorUserId) {
+      recipients.set(parentAuthorUserId, 'comment_reply');
+    }
+  }
+
+  return recipients;
+}
+
 export async function notifyBlockAuthorOfComment({
   block,
   comment,
@@ -80,57 +144,39 @@ export async function notifyBlockAuthorOfComment({
 }) {
   if (!block || !comment || !actorUser) return null;
 
-  const recipientUserId = await resolveBlockNotificationRecipient(block);
-  const actorUserId = String(actorUser.id || actorUser._id || '');
-
-  // No self-notification
-  if (!recipientUserId || recipientUserId === actorUserId) {
+  const recipients = await resolveCommentNotificationRecipients({ block, comment, actorUser });
+  if (!recipients.size) {
     return null;
   }
 
-  // Create in-site notification first
-  const notification = await createNotification({
-    userId: recipientUserId,
-    type: 'block_comment',
-    actorUserId,
-    blockId: block._id || block.id,
-    commentId: comment._id || comment.id
-  });
+  const actorUserId = String(actorUser.id || actorUser._id || '');
+  const notifications = [];
 
-  // Best-effort email
-  try {
-    const recipient = await findUserById(recipientUserId);
-    if (recipient?.email) {
-      const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-      const uiLang = block.lang || 'en';
-      const blockUrl = `${baseUrl}/${uiLang}/rooms/${encodeURIComponent(block.roomId)}/blocks/${encodeURIComponent(block._id || block.id)}`;
+  for (const [recipientUserId, notificationType] of recipients.entries()) {
+    const notification = await createNotification({
+      userId: recipientUserId,
+      type: notificationType,
+      actorUserId,
+      blockId: block._id || block.id,
+      commentId: comment._id || comment.id
+    });
 
-      const emailLang = ['en', 'es'].includes(block.lang) ? block.lang : 'en';
+    notifications.push(notification);
 
-      const { subject, html } = await buildCommentNotificationEmail({
-        uiLang: emailLang,
-        recipientUsername: recipient.username,
-        actorUsername: actorUser.username || 'Someone',
-        blockTitle: block.title || 'your block',
-        commentBody: comment.body || '',
-        blockUrl
+    try {
+      await sendCommentNotificationEmail({
+        notificationId: notification._id,
+        notificationType,
+        recipientUserId,
+        block,
+        comment,
+        actorUser
       });
-
-      await sendEmail({
-        to: recipient.email,
-        subject,
-        html
-      });
-
-      await Notification.updateOne(
-        { _id: notification._id },
-        { $set: { emailedAt: new Date() } }
-      );
+    } catch (error) {
+      console.error('Failed to send comment notification email:', error);
+      // non-fatal on purpose
     }
-  } catch (error) {
-    console.error('Failed to send comment notification email:', error);
-    // non-fatal on purpose
   }
 
-  return notification;
+  return notifications[0] || null;
 }

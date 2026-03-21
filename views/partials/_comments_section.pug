@@ -1,6 +1,7 @@
 -
   const commentCount = Number(commentsTotal || 0);
   const initialCount = Array.isArray(comments) ? comments.length : 0;
+  const topLevelCount = Number(commentsTopLevelTotal || initialCount);
   const currentCommentsSortDir = commentsSortDir === 'desc' ? 'desc' : 'asc';
   const currentUsername = user && user.username ? user.username : '';
   const currentProfilePath = currentUsername ? `/users/${encodeURIComponent(currentUsername)}` : '';
@@ -8,6 +9,70 @@
     dateStyle: 'medium',
     timeStyle: 'short'
   });
+
+mixin renderComment(comment, isReply)
+  -
+    const timestamp = new Date(comment.createdAt);
+    const timestampIso = timestamp.toISOString();
+    const timestampLabel = commentDateFormatter.format(timestamp);
+    const isNestedReply = Boolean(isReply);
+  article.comment(
+    class=isNestedReply ? 'comment--reply' : null
+    data-comment-id=comment._id
+    data-parent-comment-id=comment.parentCommentId || ''
+    id=comment._id ? `comment-${comment._id}` : null
+  )
+    header.comment__meta
+      span.comment__author
+        span.comment__byline= `${t('blockView.comments.by')} `
+        if comment.authorProfilePath
+          a.comment__username.user-profile-link(href=uiPath(comment.authorProfilePath))= comment.authorUsername
+        else
+          span.comment__username= comment.authorUsername || t('blockView.comments.unknownAuthor')
+      .comment__meta-actions
+        time.comment__time(datetime=timestampIso)= timestampLabel
+        if !isNestedReply
+          button.comment__reply-button(
+            type="button"
+            data-comment-reply
+            data-comment-id=comment._id
+          )= t('blockView.comments.reply.action')
+        button.comment__report-button(
+          type="button"
+          data-comment-report
+          data-comment-id=comment._id
+        )= t('blockView.comments.report.action')
+    .comment__body
+      p= comment.body
+    if !isNestedReply && user && user.id && commentComposerCanSubmit
+      form.comment-reply-form.hidden(
+        data-comment-reply-form
+        data-parent-comment-id=comment._id
+      )
+        label.sr-only(for=`reply-body-${comment._id}`)= t('blockView.comments.reply.label')
+        textarea.comment-reply-form__input(
+          id=`reply-body-${comment._id}`
+          name="body"
+          rows="3"
+          maxlength="1500"
+          required
+          placeholder=t('blockView.comments.reply.placeholder')
+          data-comment-reply-input
+        )
+        .comment-reply-form__actions
+          button.comment-reply-form__submit(
+            type="submit"
+            data-comment-reply-submit
+          )= t('blockView.comments.reply.submit')
+          button.comment-reply-form__cancel(
+            type="button"
+            data-comment-reply-cancel
+          )= t('blockView.comments.reply.cancel')
+        p.comment-reply-form__status.hidden(
+          role="status"
+          aria-live="polite"
+          data-comment-reply-status
+        )
 
 section.comments-section(
   id=`comments-${block._id}`
@@ -17,6 +82,7 @@ section.comments-section(
   data-api-endpoint=uiPath(`/api/v1/comments/${block._id}`)
   data-initial-count=initialCount
   data-total-count=commentCount
+  data-thread-total-count=topLevelCount
   data-page-size=commentsLimit || 20
   data-sort-dir=currentCommentsSortDir
   data-load-more-label=t('blockView.comments.loadMore')
@@ -30,6 +96,7 @@ section.comments-section(
   data-submitting-label=t('blockView.comments.composer.submitting')
   data-submit-success-label=t('blockView.comments.composer.success')
   data-submit-error-label=t('blockView.comments.composer.error')
+  data-verify-prompt-label=t('blockView.comments.composer.verifyPrompt')
   data-report-label=t('blockView.comments.report.action')
   data-reporting-label=t('blockView.comments.report.pending')
   data-report-success-label=t('blockView.comments.report.success')
@@ -37,8 +104,17 @@ section.comments-section(
   data-report-own-error-label=t('blockView.comments.report.ownError')
   data-report-hidden-label=t('blockView.comments.report.hidden')
   data-report-reported-label=t('blockView.comments.report.reported')
+  data-reply-label=t('blockView.comments.reply.action')
+  data-reply-cancel-label=t('blockView.comments.reply.cancel')
+  data-reply-submit-label=t('blockView.comments.reply.submit')
+  data-reply-submitting-label=t('blockView.comments.reply.submitting')
+  data-reply-success-label=t('blockView.comments.reply.success')
+  data-reply-error-label=t('blockView.comments.reply.error')
+  data-reply-placeholder=t('blockView.comments.reply.placeholder')
+  data-reply-login-label=t('blockView.comments.reply.loginPrompt')
   data-current-username=currentUsername
   data-current-profile-path=currentProfilePath
+  data-can-reply=commentComposerCanSubmit ? 'true' : 'false'
 )
   .comments-section__header
     .comments-section__header-main
@@ -101,31 +177,13 @@ section.comments-section(
     data-comments-list
   )
     each comment in comments
-      -
-        const timestamp = new Date(comment.createdAt);
-        const timestampIso = timestamp.toISOString();
-        const timestampLabel = commentDateFormatter.format(timestamp);
       li.comments-list__item
-        article.comment(
-          data-comment-id=comment._id
-          id=comment._id ? `comment-${comment._id}` : null
-        )
-          header.comment__meta
-            span.comment__author
-              span.comment__byline= `${t('blockView.comments.by')} `
-              if comment.authorProfilePath
-                a.comment__username.user-profile-link(href=uiPath(comment.authorProfilePath))= comment.authorUsername
-              else
-                span.comment__username= comment.authorUsername || t('blockView.comments.unknownAuthor')
-            .comment__meta-actions
-              time.comment__time(datetime=timestampIso)= timestampLabel
-              button.comment__report-button(
-                type="button"
-                data-comment-report
-                data-comment-id=comment._id
-              )= t('blockView.comments.report.action')
-          .comment__body
-            p= comment.body
+        +renderComment(comment, false)
+        if Array.isArray(comment.replies) && comment.replies.length
+          ol.comments-list__replies
+            each reply in comment.replies
+              li.comments-list__reply-item
+                +renderComment(reply, true)
 
   if commentsHasMore
     .comments-section__actions

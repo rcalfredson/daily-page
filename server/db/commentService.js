@@ -13,6 +13,39 @@ function normalizeCommentSortDir(sortDir) {
   return sortDir === 'desc' ? 'desc' : 'asc';
 }
 
+function normalizeParentCommentId(parentCommentId) {
+  const value = String(parentCommentId || '').trim();
+  return value || null;
+}
+
+async function resolveReplyParent({ blockId, parentCommentId }) {
+  if (!parentCommentId) {
+    return null;
+  }
+
+  const parent = await BlockComment.findById(String(parentCommentId)).lean();
+
+  if (!parent || parent.deletedAt || parent.status !== 'visible') {
+    const err = new Error('Parent comment not found.');
+    err.status = 404;
+    throw err;
+  }
+
+  if (String(parent.blockId) !== String(blockId)) {
+    const err = new Error('Parent comment does not belong to this block.');
+    err.status = 400;
+    throw err;
+  }
+
+  if (parent.parentCommentId) {
+    const err = new Error('Replies can only target top-level comments.');
+    err.status = 400;
+    throw err;
+  }
+
+  return parent;
+}
+
 export async function getCommentsForBlock({ blockId, limit = 20, offset = 0 }) {
   const safeLimit = Math.max(1, Math.min(Number(limit) || 20, 50));
   const safeOffset = Math.max(0, Number(offset) || 0);
@@ -30,18 +63,29 @@ export async function getCommentsForBlockView({ blockId, limit = 20, offset = 0,
   const safeOffset = Math.max(0, Number(offset) || 0);
   const safeSortDir = normalizeCommentSortDir(sortDir);
   const sortOrder = safeSortDir === 'desc' ? -1 : 1;
-  const filter = { blockId: String(blockId), status: 'visible', deletedAt: null };
+  const baseFilter = { blockId: String(blockId), status: 'visible', deletedAt: null };
+  const topLevelFilter = { ...baseFilter, parentCommentId: null };
 
-  const [rawComments, total] = await Promise.all([
+  const [rawTopLevelComments, total, topLevelTotal] = await Promise.all([
     BlockComment
-      .find(filter)
+      .find(topLevelFilter)
       .sort({ createdAt: sortOrder, _id: sortOrder })
       .skip(safeOffset)
       .limit(safeLimit)
       .lean(),
-    BlockComment.countDocuments(filter)
+    BlockComment.countDocuments(baseFilter),
+    BlockComment.countDocuments(topLevelFilter)
   ]);
 
+  const parentCommentIds = rawTopLevelComments.map((comment) => String(comment._id));
+  const rawReplies = parentCommentIds.length
+    ? await BlockComment
+        .find({ ...baseFilter, parentCommentId: { $in: parentCommentIds } })
+        .sort({ createdAt: sortOrder, _id: sortOrder })
+        .lean()
+    : [];
+
+  const rawComments = [...rawTopLevelComments, ...rawReplies];
   const userIds = [...new Set(rawComments.map((comment) => String(comment.userId)).filter(Boolean))];
   const validUserIds = userIds.filter((userId) => mongoose.isValidObjectId(userId));
   const users = validUserIds.length
@@ -52,7 +96,7 @@ export async function getCommentsForBlockView({ blockId, limit = 20, offset = 0,
     users.map((user) => [String(user._id), user.username])
   );
 
-  const comments = rawComments.map((comment) => ({
+  const commentsWithAuthors = rawComments.map((comment) => ({
     ...comment,
     authorUsername: usernamesById.get(String(comment.userId)) || (
       mongoose.isValidObjectId(comment.userId) ? null : String(comment.userId)
@@ -62,17 +106,39 @@ export async function getCommentsForBlockView({ blockId, limit = 20, offset = 0,
       : null,
   }));
 
+  const repliesByParentId = new Map();
+  commentsWithAuthors
+    .filter((comment) => normalizeParentCommentId(comment.parentCommentId))
+    .forEach((comment) => {
+      const parentId = normalizeParentCommentId(comment.parentCommentId);
+      if (!repliesByParentId.has(parentId)) {
+        repliesByParentId.set(parentId, []);
+      }
+      repliesByParentId.get(parentId).push({
+        ...comment,
+        replies: []
+      });
+    });
+
+  const comments = commentsWithAuthors
+    .filter((comment) => !normalizeParentCommentId(comment.parentCommentId))
+    .map((comment) => ({
+      ...comment,
+      replies: repliesByParentId.get(String(comment._id)) || []
+    }));
+
   return {
     comments,
     total,
+    topLevelTotal,
     limit: safeLimit,
     offset: safeOffset,
     sortDir: safeSortDir,
-    hasMore: safeOffset + comments.length < total,
+    hasMore: safeOffset + comments.length < topLevelTotal,
   };
 }
 
-export async function createComment({ blockId, userId, body }) {
+export async function createComment({ blockId, userId, body, parentCommentId = null }) {
   const trimmed = String(body || '').trim();
 
   if (!trimmed) {
@@ -87,10 +153,13 @@ export async function createComment({ blockId, userId, body }) {
     throw err;
   }
 
+  const parent = await resolveReplyParent({ blockId, parentCommentId });
+
   const doc = await BlockComment.create({
     blockId: String(blockId),
     userId: String(userId),
     body: trimmed,
+    parentCommentId: parent ? String(parent._id) : null,
     status: 'visible',
     deletedAt: null,
     editedAt: null,
@@ -143,6 +212,21 @@ export async function reportComment({ commentId, reporterId }) {
     comment.status = 'hidden';
     comment.hiddenAt = new Date();
     await comment.save();
+    if (!normalizeParentCommentId(comment.parentCommentId)) {
+      await BlockComment.updateMany(
+        {
+          blockId: String(comment.blockId),
+          parentCommentId: String(comment._id),
+          status: { $ne: 'hidden' }
+        },
+        {
+          $set: {
+            status: 'hidden',
+            hiddenAt: new Date()
+          }
+        }
+      );
+    }
     hidden = true;
   } else if (comment.status === 'hidden') {
     hidden = true;

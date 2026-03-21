@@ -7,7 +7,7 @@ const notificationSchema = new Schema(
     type: {
       type: String,
       required: true,
-      enum: ['block_comment'],
+      enum: ['block_comment', 'comment_reply'],
       index: true
     },
     actorUserId: { type: String, required: true, index: true },  // initiator
