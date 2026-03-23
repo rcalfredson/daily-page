@@ -5,6 +5,7 @@
       "description": "Daily Page is a minimalist, indie writing site where anyone can post creative thoughts, memories, or experiments—one block at a time. Explore new ideas, join rooms, and contribute your voice."
     },
     "hero": {
+      "eyebrow": "A quiet place for writing, reading, and returning",
       "title": "Welcome to Daily Page!",
       "subtitle": "Explore the most popular blocks from the last 24 hours.",
       "ctaPrefix": "Feeling inspired?",
@@ -16,6 +17,30 @@
       "rooms": "Rooms",
       "tags": "Tags",
       "collabsToday": "Collaborations Today"
+    },
+    "activity": {
+      "title": "Live on Daily Page",
+      "subtitle": "Fresh conversation and reactions, all in one glance.",
+      "fallbackActor": "Someone",
+      "inRoom": "in",
+      "comments": {
+        "title": "Recent comments",
+        "more": "Search discussions",
+        "commentVerb": "commented on",
+        "replyVerb": "replied on",
+        "empty": "No recent comments yet. The next conversation can start with your block."
+      },
+      "reactions": {
+        "title": "Recent reactions",
+        "more": "Browse top blocks",
+        "empty": "No recent reactions yet. A good post could wake this up quickly.",
+        "types": {
+          "heart": "hearted",
+          "leaf": "reacted with a leaf to",
+          "wow": "reacted with wow to",
+          "laugh": "laughed at"
+        }
+      }
     },
     "featured": {
       "roomRibbon": "★ Featured Room",

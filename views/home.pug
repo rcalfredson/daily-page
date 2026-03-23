@@ -27,34 +27,95 @@ block append head
 
 block content
 
-  // Encabezado principal de la página
-  .homepage-header
-    h1= t('home.hero.title')
-    p.subtitle
-      = t('home.hero.subtitle') + ' '
-      | 
-      = t('home.hero.ctaPrefix') + ' '
-      a(href=uiPath("/rooms")).join-room= t('home.hero.cta')
-      |  #{' '}
-      = t('home.hero.ctaSuffix')
+  .home-top
+    .homepage-header
+      p.homepage-header__eyebrow= t('home.hero.eyebrow')
+      h1= t('home.hero.title')
+      p.subtitle
+        = t('home.hero.subtitle') + ' '
+        |
+        = t('home.hero.ctaPrefix') + ' '
+        a(href=uiPath("/rooms")).join-room= t('home.hero.cta')
+        |  #{' '}
+        = t('home.hero.ctaSuffix')
 
-  .global-stats
-    a.stat-item(href=uiPath('/archive'))
-      i.fas.fa-layer-group
-      span.stat-number= globalStats.totalBlocks
-      span.stat-label= t('home.stats.blocks')
-    a.stat-item(href=uiPath('/rooms'))
-      i.fas.fa-door-open
-      span.stat-number= globalStats.totalRooms
-      span.stat-label= t('home.stats.rooms')
-    a.stat-item(href=uiPath('/tags'))
-      i.fas.fa-hashtag
-      span.stat-number= globalStats.totalTags
-      span.stat-label= t('home.stats.tags')
-    .stat-item
-      i.fas.fa-users
-      span.stat-number= globalStats.collaborationsToday
-      span.stat-label= t('home.stats.collabsToday')
+    .global-stats
+      a.stat-item(href=uiPath('/archive'))
+        i.fas.fa-layer-group
+        span.stat-number= globalStats.totalBlocks
+        span.stat-label= t('home.stats.blocks')
+      a.stat-item(href=uiPath('/rooms'))
+        i.fas.fa-door-open
+        span.stat-number= globalStats.totalRooms
+        span.stat-label= t('home.stats.rooms')
+      a.stat-item(href=uiPath('/tags'))
+        i.fas.fa-hashtag
+        span.stat-number= globalStats.totalTags
+        span.stat-label= t('home.stats.tags')
+      .stat-item
+        i.fas.fa-users
+        span.stat-number= globalStats.collaborationsToday
+        span.stat-label= t('home.stats.collabsToday')
+
+    .live-activity
+      .section-heading
+        h2= t('home.activity.title')
+        p= t('home.activity.subtitle')
+      .activity-grid
+        section.activity-card(aria-labelledby='recent-comments-heading')
+          .activity-card__header
+            h3#recent-comments-heading= t('home.activity.comments.title')
+            a.activity-card__link(href=uiPath('/search'))= t('home.activity.comments.more')
+          if recentComments && recentComments.length
+            ul.activity-list
+              each comment in recentComments
+                li.activity-item
+                  .activity-item__topline
+                    if comment.actorProfilePath
+                      a.activity-item__actor(href=uiPath(comment.actorProfilePath))= comment.actorUsername || t('home.activity.fallbackActor')
+                    else
+                      span.activity-item__actor= comment.actorUsername || t('home.activity.fallbackActor')
+                    span.activity-item__verb= comment.isReply ? t('home.activity.comments.replyVerb') : t('home.activity.comments.commentVerb')
+                    time.activity-item__time(datetime=new Date(comment.createdAt).toISOString())= new Date(comment.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
+                  p.activity-item__summary
+                    a(href=uiPath(comment.commentPath))= comment.blockTitle
+                  if comment.excerpt
+                    p.activity-item__excerpt= comment.excerpt
+                  p.activity-item__meta
+                    | #{t('home.activity.inRoom')} 
+                    if comment.roomPath
+                      a(href=uiPath(comment.roomPath))= comment.roomName
+                    else
+                      span= comment.roomName
+          else
+            p.activity-card__empty= t('home.activity.comments.empty')
+
+        section.activity-card(aria-labelledby='recent-reactions-heading')
+          .activity-card__header
+            h3#recent-reactions-heading= t('home.activity.reactions.title')
+            a.activity-card__link(href=uiPath('/archive/best-of'))= t('home.activity.reactions.more')
+          if recentReactions && recentReactions.length
+            ul.activity-list
+              each reaction in recentReactions
+                li.activity-item
+                  .activity-item__topline
+                    span.activity-item__reaction-emoji(aria-hidden='true')= reaction.reactionEmoji
+                    if reaction.actorProfilePath
+                      a.activity-item__actor(href=uiPath(reaction.actorProfilePath))= reaction.actorUsername || t('home.activity.fallbackActor')
+                    else
+                      span.activity-item__actor= reaction.actorUsername || t('home.activity.fallbackActor')
+                    span.activity-item__verb= t(`home.activity.reactions.types.${reaction.reactionType}`)
+                    time.activity-item__time(datetime=new Date(reaction.createdAt).toISOString())= new Date(reaction.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
+                  p.activity-item__summary
+                    a(href=uiPath(reaction.blockPath))= reaction.blockTitle
+                  p.activity-item__meta
+                    | #{t('home.activity.inRoom')} 
+                    if reaction.roomPath
+                      a(href=uiPath(reaction.roomPath))= reaction.roomName
+                    else
+                      span= reaction.roomName
+          else
+            p.activity-card__empty= t('home.activity.reactions.empty')
 
 
   if featuredRoom

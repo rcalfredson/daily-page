@@ -5,6 +5,7 @@
       "description": "Daily Page es un sitio minimalista e independiente de escritura donde cualquiera puede publicar pensamientos creativos, recuerdos o experimentos—un bloque a la vez. Explora nuevas ideas, únete a salas y comparte tu voz."
     },
     "hero": {
+      "eyebrow": "Un lugar tranquilo para escribir, leer y volver",
       "title": "¡Bienvenido a Daily Page!",
       "subtitle": "Explora los bloques más populares de las últimas 24 horas.",
       "ctaPrefix": "¿Te sientes inspirado?",
@@ -16,6 +17,30 @@
       "rooms": "Salas",
       "tags": "Etiquetas",
       "collabsToday": "Colaboraciones de hoy"
+    },
+    "activity": {
+      "title": "Vida reciente en Daily Page",
+      "subtitle": "Conversaciones y reacciones frescas de un vistazo.",
+      "fallbackActor": "Alguien",
+      "inRoom": "en",
+      "comments": {
+        "title": "Comentarios recientes",
+        "more": "Buscar conversaciones",
+        "commentVerb": "comentó en",
+        "replyVerb": "respondió en",
+        "empty": "Todavía no hay comentarios recientes. La próxima conversación puede empezar con tu bloque."
+      },
+      "reactions": {
+        "title": "Reacciones recientes",
+        "more": "Ver bloques destacados",
+        "empty": "Todavía no hay reacciones recientes. Un buen post podría animar esto rápido.",
+        "types": {
+          "heart": "reaccionó con corazón a",
+          "leaf": "reaccionó con hoja a",
+          "wow": "reaccionó con sorpresa a",
+          "laugh": "se rió con"
+        }
+      }
     },
     "featured": {
       "roomRibbon": "★ Sala destacada",

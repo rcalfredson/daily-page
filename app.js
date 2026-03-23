@@ -54,6 +54,10 @@ import {
   getTotalTags
 } from './server/db/blockService.js';
 import {
+  getRecentCommentActivity,
+  getRecentReactionActivity
+} from './server/db/homeActivityService.js';
+import {
   pagesByDate,
   getPageDatesByYearAndMonth,
   getPage
@@ -557,11 +561,11 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
           const PERF = process.env.PERF_HOME === '1';
 
-          let fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes;
+          let fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions;
 
           // Dispara todo en paralelo (con perf opcional por cada llamada)
           if (!PERF) {
-            [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes] = await Promise.all([
+            [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions] = await Promise.all([
               getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }),
               getFeaturedRoomWithFallback(),
               getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang }),
@@ -569,6 +573,8 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
               getGlobalBlockStats(),
               getTotalRooms(),
               getTotalTags(),
+              getRecentCommentActivity({ limit: 5, lang: uiLang }),
+              getRecentReactionActivity({ limit: 5, lang: uiLang }),
             ]);
           } else {
             const perfResults = await Promise.all([
@@ -579,6 +585,8 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
               timeIt('globalBlockStats', () => getGlobalBlockStats()),
               timeIt('totalRooms', () => getTotalRooms()),
               timeIt('totalTags', () => getTotalTags()),
+              timeIt('recentComments', () => getRecentCommentActivity({ limit: 5, lang: uiLang })),
+              timeIt('recentReactions', () => getRecentReactionActivity({ limit: 5, lang: uiLang })),
             ]);
 
             perfResults
@@ -597,6 +605,8 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
             statsRes = perfResults.find(r => r.label === 'globalBlockStats')?.value;
             roomsRes = perfResults.find(r => r.label === 'totalRooms')?.value;
             totalTagsRes = perfResults.find(r => r.label === 'totalTags')?.value;
+            recentComments = perfResults.find(r => r.label === 'recentComments')?.value || [];
+            recentReactions = perfResults.find(r => r.label === 'recentReactions')?.value || [];
           }
 
 
@@ -650,6 +660,8 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
             globalStats,
             trendingTags,
             tagsPeriod,
+            recentComments: recentComments || [],
+            recentReactions: recentReactions || [],
 
             user: req.user || null,
             uiLang,
