@@ -60,6 +60,23 @@
         "cancel": "Cancelar",
         "loginPrompt": "Inicia sesión para responder."
       },
+      "manage": {
+        "edited": "Editado",
+        "editAction": "Editar",
+        "deleteAction": "Borrar",
+        "deleteConfirm": "¿Borrar este comentario? Esto también eliminará las respuestas que tenga debajo.",
+        "deleteSuccess": "Comentario borrado.",
+        "deleteError": "No se puede borrar este comentario en este momento.",
+        "forbidden": "Solo puedes administrar tus propios comentarios.",
+        "edit": {
+          "label": "Editar comentario",
+          "save": "Guardar",
+          "saving": "Guardando...",
+          "cancel": "Cancelar",
+          "success": "Comentario actualizado.",
+          "error": "No se puede actualizar este comentario en este momento."
+        }
+      },
       "report": {
         "action": "Reportar",
         "pending": "Reportando...",

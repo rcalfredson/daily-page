@@ -209,6 +209,99 @@
     return form;
   }
 
+  function buildEditForm(comment, options) {
+    const form = document.createElement('form');
+    form.className = 'comment-edit-form hidden';
+    form.dataset.commentEditForm = 'true';
+    form.dataset.commentId = comment._id;
+
+    const label = document.createElement('label');
+    label.className = 'sr-only';
+    label.htmlFor = `edit-body-${comment._id}`;
+    label.textContent = options.editFieldLabel || 'Edit comment';
+
+    const input = document.createElement('textarea');
+    input.className = 'comment-edit-form__input';
+    input.id = `edit-body-${comment._id}`;
+    input.name = 'body';
+    input.rows = 4;
+    input.maxLength = 1500;
+    input.required = true;
+    input.dataset.commentEditInput = 'true';
+    input.value = comment.body || '';
+    input.defaultValue = comment.body || '';
+
+    const actions = document.createElement('div');
+    actions.className = 'comment-edit-form__actions';
+
+    const submit = document.createElement('button');
+    submit.type = 'submit';
+    submit.className = 'comment-edit-form__submit';
+    submit.dataset.commentEditSubmit = 'true';
+    submit.textContent = options.editSubmitLabel || 'Save';
+
+    const cancel = document.createElement('button');
+    cancel.type = 'button';
+    cancel.className = 'comment-edit-form__cancel';
+    cancel.dataset.commentEditCancel = 'true';
+    cancel.textContent = options.editCancelLabel || 'Cancel';
+
+    const status = document.createElement('p');
+    status.className = 'comment-edit-form__status hidden';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    status.dataset.commentEditStatus = 'true';
+
+    actions.appendChild(submit);
+    actions.appendChild(cancel);
+    form.appendChild(label);
+    form.appendChild(input);
+    form.appendChild(actions);
+    form.appendChild(status);
+
+    return form;
+  }
+
+  function ensureEditedBadge(article, label) {
+    if (!article) return;
+    const actions = article.querySelector('.comment__meta-actions');
+    const time = actions?.querySelector('.comment__time');
+    if (!actions || !time) return;
+
+    let badge = actions.querySelector('.comment__edited');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'comment__edited';
+      actions.insertBefore(badge, time.nextSibling);
+    }
+    badge.textContent = label || 'Edited';
+  }
+
+  function updateCommentArticle(section, article, comment) {
+    if (!article || !comment) return;
+
+    const body = article.querySelector('.comment__body p');
+    if (body) {
+      body.textContent = comment.body || '';
+    }
+
+    if (comment.editedAt) {
+      ensureEditedBadge(article, section.dataset.commentEditedLabel || 'Edited');
+    }
+
+    const editForm = article.querySelector('[data-comment-edit-form]');
+    const editInput = editForm?.querySelector('[data-comment-edit-input]');
+    if (editInput) {
+      editInput.value = comment.body || '';
+      editInput.defaultValue = comment.body || '';
+    }
+  }
+
+  function setCommentEditingState(article, isEditing) {
+    if (!article) return;
+    article.classList.toggle('comment--editing', Boolean(isEditing));
+  }
+
   function buildCommentArticle(comment, options, isReply) {
     const byLabel = options.byLabel || 'By';
     const locale = options.locale || 'en';
@@ -258,6 +351,13 @@
     metaActions.className = 'comment__meta-actions';
     metaActions.appendChild(time);
 
+    if (comment.editedAt) {
+      const editedBadge = document.createElement('span');
+      editedBadge.className = 'comment__edited';
+      editedBadge.textContent = options.editedLabel || 'Edited';
+      metaActions.appendChild(editedBadge);
+    }
+
     if (!isReply) {
       const replyButton = document.createElement('button');
       replyButton.type = 'button';
@@ -266,6 +366,24 @@
       replyButton.dataset.commentId = comment._id;
       replyButton.textContent = options.replyButtonLabel || 'Reply';
       metaActions.appendChild(replyButton);
+    }
+
+    if (comment.ownedByViewer) {
+      const editButton = document.createElement('button');
+      editButton.type = 'button';
+      editButton.className = 'comment__edit-button';
+      editButton.dataset.commentEdit = 'true';
+      editButton.dataset.commentId = comment._id;
+      editButton.textContent = options.editButtonLabel || 'Edit';
+      metaActions.appendChild(editButton);
+
+      const deleteButton = document.createElement('button');
+      deleteButton.type = 'button';
+      deleteButton.className = 'comment__delete-button';
+      deleteButton.dataset.commentDelete = 'true';
+      deleteButton.dataset.commentId = comment._id;
+      deleteButton.textContent = options.deleteButtonLabel || 'Delete';
+      metaActions.appendChild(deleteButton);
     }
 
     const reportButton = document.createElement('button');
@@ -290,6 +408,11 @@
 
     article.appendChild(header);
     article.appendChild(body);
+
+    if (comment.ownedByViewer && comment._id) {
+      article.dataset.ownedByViewer = 'true';
+      article.appendChild(buildEditForm(comment, options));
+    }
 
     if (!isReply && options.canReply && comment._id) {
       article.appendChild(buildReplyForm(comment._id, options));
@@ -409,9 +532,31 @@
     input?.blur();
   }
 
+  function closeEditForm(form, preserveValue) {
+    if (!form) return;
+    const input = form.querySelector('[data-comment-edit-input]');
+    const status = form.querySelector('[data-comment-edit-status]');
+    const article = form.closest('.comment');
+
+    if (!preserveValue && input) {
+      input.value = input.defaultValue;
+    }
+
+    form.classList.add('hidden');
+    setCommentEditingState(article, false);
+    setStatus(status, '', null);
+    input?.blur();
+  }
+
   function closeAllReplyForms(section) {
     section.querySelectorAll('[data-comment-reply-form]').forEach((form) => {
       closeReplyForm(form);
+    });
+  }
+
+  function closeAllEditForms(section, preserveValue) {
+    section.querySelectorAll('[data-comment-edit-form]').forEach((form) => {
+      closeEditForm(form, preserveValue);
     });
   }
 
@@ -428,6 +573,12 @@
       replyPlaceholder: section.dataset.replyPlaceholder || 'Write a reply...',
       replySubmitLabel: section.dataset.replySubmitLabel || 'Post reply',
       replyCancelLabel: section.dataset.replyCancelLabel || 'Cancel',
+      editedLabel: section.dataset.commentEditedLabel || 'Edited',
+      editButtonLabel: section.dataset.editLabel || 'Edit',
+      deleteButtonLabel: section.dataset.deleteLabel || 'Delete',
+      editFieldLabel: section.dataset.editFieldLabel || 'Edit comment',
+      editSubmitLabel: section.dataset.editSubmitLabel || 'Save',
+      editCancelLabel: section.dataset.editCancelLabel || 'Cancel',
       canReply: section.dataset.canReply === 'true',
       section
     };
@@ -571,6 +722,7 @@
         ...payload.comment,
         authorUsername: section.dataset.currentUsername || section.dataset.unknownAuthorLabel || 'Unknown',
         authorProfilePath: section.dataset.currentProfilePath || null,
+        ownedByViewer: true,
         replies: []
       }, buildRenderOptions(section));
 
@@ -657,12 +809,163 @@
     if (!article || !form || !input) return;
 
     const isHidden = form.classList.contains('hidden');
+    closeAllEditForms(section);
     closeAllReplyForms(section);
 
     if (isHidden) {
       form.classList.remove('hidden');
       input.focus();
     }
+  }
+
+  function handleEditAction(section, button) {
+    const article = button.closest('.comment');
+    const form = article?.querySelector('[data-comment-edit-form]');
+    const input = form?.querySelector('[data-comment-edit-input]');
+    if (!article || !form || !input) return;
+
+    const body = article.querySelector('.comment__body p');
+    const isHidden = form.classList.contains('hidden');
+
+    closeAllReplyForms(section);
+    closeAllEditForms(section);
+
+    if (isHidden) {
+      input.value = body?.textContent || '';
+      input.defaultValue = body?.textContent || '';
+      form.classList.remove('hidden');
+      setCommentEditingState(article, true);
+      setStatus(form.querySelector('[data-comment-edit-status]'), '', null);
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+    }
+  }
+
+  async function submitEdit(section, form) {
+    const input = form.querySelector('[data-comment-edit-input]');
+    const submit = form.querySelector('[data-comment-edit-submit]');
+    const status = form.querySelector('[data-comment-edit-status]');
+    const commentId = form.dataset.commentId || form.closest('.comment')?.dataset.commentId;
+    const article = form.closest('.comment');
+
+    if (!input || !submit || !commentId || !article) return;
+
+    const body = input.value.trim();
+    const saveLabel = section.dataset.editSubmitLabel || 'Save';
+    const savingLabel = section.dataset.editSubmittingLabel || 'Saving...';
+    const successLabel = section.dataset.editSuccessLabel || 'Comment updated.';
+    const errorLabel = section.dataset.editErrorLabel || 'Unable to update this comment right now.';
+    const forbiddenLabel = section.dataset.editForbiddenLabel || 'You can only manage your own comments.';
+
+    if (!body) {
+      setStatus(status, errorLabel, 'error');
+      return;
+    }
+
+    input.disabled = true;
+    submit.disabled = true;
+    submit.textContent = savingLabel;
+    setStatus(status, savingLabel, null);
+
+    try {
+      const response = await fetch(uiPath(`/api/v1/comments/${encodeURIComponent(commentId)}`), {
+        method: 'PATCH',
+        credentials: 'same-origin',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ body })
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (response.status === 401) {
+        window.showLoginModal?.('actions.commentOnBlock');
+        return;
+      }
+
+      if (!response.ok) {
+        const serverMessage = payload?.error || errorLabel;
+        if (response.status === 403) {
+          throw new Error(forbiddenLabel);
+        }
+        throw new Error(serverMessage);
+      }
+
+      updateCommentArticle(section, article, payload.comment || { body, editedAt: new Date().toISOString() });
+      input.defaultValue = (payload.comment?.body || body);
+      setStatus(status, successLabel, 'success');
+      window.showToast?.(successLabel, 'success');
+      closeEditForm(form, true);
+    } catch (error) {
+      console.error('Error editing comment:', error);
+      setStatus(status, error?.message || errorLabel, 'error');
+      window.showToast?.(error?.message || errorLabel, 'error');
+    } finally {
+      input.disabled = false;
+      submit.disabled = false;
+      submit.textContent = saveLabel;
+    }
+  }
+
+  async function deleteCommentAction(section, button) {
+    if (!button || button.disabled) return;
+
+    const article = button.closest('.comment');
+    const commentId = button.dataset.commentId || article?.dataset.commentId;
+    if (!article || !commentId) return;
+
+    const confirmLabel = section.dataset.deleteConfirmLabel || 'Delete this comment? This will also remove any replies beneath it.';
+    const successLabel = section.dataset.deleteSuccessLabel || 'Comment deleted.';
+    const errorLabel = section.dataset.deleteErrorLabel || 'Unable to delete this comment right now.';
+    const forbiddenLabel = section.dataset.editForbiddenLabel || 'You can only manage your own comments.';
+    const deleteLabel = section.dataset.deleteLabel || 'Delete';
+
+    if (!window.confirm(confirmLabel)) {
+      return;
+    }
+
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+
+    try {
+      const response = await fetch(uiPath(`/api/v1/comments/${encodeURIComponent(commentId)}`), {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: {
+          Accept: 'application/json'
+        }
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (response.status === 401) {
+        window.showLoginModal?.('actions.commentOnBlock');
+        button.disabled = false;
+        button.removeAttribute('aria-busy');
+        return;
+      }
+
+      if (!response.ok) {
+        if (response.status === 403) {
+          throw new Error(forbiddenLabel);
+        }
+        throw new Error(payload?.error || errorLabel);
+      }
+
+      removeComment(section, article);
+      window.showToast?.(successLabel, 'success');
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      button.disabled = false;
+      button.removeAttribute('aria-busy');
+      button.textContent = deleteLabel;
+      window.showToast?.(error?.message || errorLabel, 'error');
+      return;
+    }
+
+    button.removeAttribute('aria-busy');
   }
 
   async function reportComment(section, button) {
@@ -791,9 +1094,27 @@
           return;
         }
 
+        const editButton = event.target.closest('[data-comment-edit]');
+        if (editButton && section.contains(editButton)) {
+          handleEditAction(section, editButton);
+          return;
+        }
+
         const cancelButton = event.target.closest('[data-comment-reply-cancel]');
         if (cancelButton && section.contains(cancelButton)) {
           closeReplyForm(cancelButton.closest('[data-comment-reply-form]'));
+          return;
+        }
+
+        const editCancelButton = event.target.closest('[data-comment-edit-cancel]');
+        if (editCancelButton && section.contains(editCancelButton)) {
+          closeEditForm(editCancelButton.closest('[data-comment-edit-form]'));
+          return;
+        }
+
+        const deleteButton = event.target.closest('[data-comment-delete]');
+        if (deleteButton && section.contains(deleteButton)) {
+          deleteCommentAction(section, deleteButton);
           return;
         }
 
@@ -804,6 +1125,13 @@
       });
 
       section.addEventListener('submit', function (event) {
+        const editForm = event.target.closest('[data-comment-edit-form]');
+        if (editForm && section.contains(editForm)) {
+          event.preventDefault();
+          submitEdit(section, editForm);
+          return;
+        }
+
         const replyForm = event.target.closest('[data-comment-reply-form]');
         if (!replyForm || !section.contains(replyForm)) return;
         event.preventDefault();

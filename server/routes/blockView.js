@@ -69,7 +69,8 @@ router.get(
         getCommentsForBlockView({
           blockId: block_id,
           limit: INITIAL_COMMENT_LIMIT,
-          sortDir: commentsSortDir
+          sortDir: commentsSortDir,
+          viewerUserId: req.user?.id || null
         }),
         req.user?.id ? findUserById(req.user.id) : Promise.resolve(null),
         block.creator && block.creator !== 'anonymous'

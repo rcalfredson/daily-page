@@ -273,6 +273,16 @@
   max-width: 100%;
 }
 
+.comment__edited {
+  color: #667085;
+  font-size: 0.86rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.comment__reply-button,
+.comment__edit-button,
+.comment__delete-button,
 .comment__report-button {
   appearance: none;
   border: 0;
@@ -290,39 +300,28 @@
   transition: color 120ms ease, text-decoration-color 120ms ease;
 }
 
-.comment__reply-button {
-  appearance: none;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  color: #667085;
-  font: inherit;
-  font-size: 0.92rem;
-  font-weight: 500;
-  line-height: 1.2;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 0.12em;
-  text-decoration-color: #cbd5e1;
-  transition: color 120ms ease, text-decoration-color 120ms ease;
-}
-
 .comment__reply-button:hover:not(:disabled),
-.comment__reply-button:focus-visible {
+.comment__reply-button:focus-visible,
+.comment__edit-button:hover:not(:disabled),
+.comment__edit-button:focus-visible {
   color: var(--highlight-color);
   text-decoration-color: currentColor;
 }
 
+.comment__delete-button:hover:not(:disabled),
+.comment__delete-button:focus-visible,
 .comment__report-button:hover:not(:disabled) {
   color: #7a263a;
   text-decoration-color: currentColor;
 }
 
+.comment__delete-button:focus-visible,
 .comment__report-button:focus-visible {
   color: #7a263a;
   text-decoration-color: currentColor;
 }
 
+.comment__delete-button:disabled,
 .comment__report-button:disabled {
   cursor: wait;
   opacity: 0.72;
@@ -342,6 +341,10 @@
   overflow-wrap: anywhere;
 }
 
+.comment--editing .comment__body {
+  display: none;
+}
+
 .comment-reply-form {
   display: grid;
   gap: 0.65rem;
@@ -352,6 +355,17 @@
   background: #f8fafc;
 }
 
+.comment-edit-form {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #dbe4f2;
+  border-radius: 0.85rem;
+  background: #f9fafb;
+}
+
+.comment-edit-form__input,
 .comment-reply-form__input {
   width: 100%;
   min-height: 5rem;
@@ -366,12 +380,14 @@
   box-sizing: border-box;
 }
 
+.comment-edit-form__input:focus,
 .comment-reply-form__input:focus {
   outline: 2px solid rgba(17, 87, 170, 0.18);
   outline-offset: 2px;
   border-color: #aebfe0;
 }
 
+.comment-edit-form__actions,
 .comment-reply-form__actions {
   display: flex;
   flex-wrap: wrap;
@@ -379,6 +395,8 @@
   gap: 0.6rem;
 }
 
+.comment-edit-form__submit,
+.comment-edit-form__cancel,
 .comment-reply-form__submit,
 .comment-reply-form__cancel {
   float: unset;
@@ -389,41 +407,49 @@
   line-height: 1.2;
 }
 
+.comment-edit-form__submit,
 .comment-reply-form__submit {
   border: 1px solid #c9d6ea;
   background: #fff;
   color: var(--highlight-color);
 }
 
+.comment-edit-form__submit:hover:not(:disabled),
 .comment-reply-form__submit:hover:not(:disabled) {
   background: #f6f9ff;
   border-color: #aebfe0;
 }
 
+.comment-edit-form__submit:disabled,
 .comment-reply-form__submit:disabled {
   opacity: 0.7;
   cursor: wait;
 }
 
+.comment-edit-form__cancel,
 .comment-reply-form__cancel {
   border: 1px solid #d7dce6;
   background: transparent;
   color: #475467;
 }
 
+.comment-edit-form__cancel:hover,
 .comment-reply-form__cancel:hover {
   background: #f3f4f6;
 }
 
+.comment-edit-form__status,
 .comment-reply-form__status {
   margin: 0;
   font-size: 0.92rem;
 }
 
+.comment-edit-form__status[data-status-type="error"],
 .comment-reply-form__status[data-status-type="error"] {
   color: #b42318;
 }
 
+.comment-edit-form__status[data-status-type="success"],
 .comment-reply-form__status[data-status-type="success"] {
   color: #0f766e;
 }
@@ -477,7 +503,13 @@
   }
 
   .comment__meta-actions {
+    width: 100%;
+    gap: 0.45rem 0.85rem;
     justify-content: flex-start;
+  }
+
+  .comment__time {
+    flex-basis: 100%;
   }
 
   .comments-section__sort {
@@ -488,14 +520,10 @@
     justify-content: flex-start;
   }
 
+  .comment-edit-form__actions,
   .comment-reply-form__actions {
     justify-content: flex-start;
   }
-
-  .comment__time {
-    white-space: normal;
-  }
-
   .comments-list__replies {
     margin-left: 0.85rem;
     padding-left: 0.85rem;
@@ -504,13 +532,6 @@
 
 @media (max-width: 360px) {
   .comment__meta-actions {
-    display: grid;
-    grid-template-columns: repeat(2, max-content);
-    justify-content: flex-start;
-    gap: 0.45rem 1rem;
-  }
-
-  .comment__time {
-    grid-column: 1 / -1;
+    gap: 0.35rem 0.7rem;
   }
 }
