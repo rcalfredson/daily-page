@@ -18,6 +18,44 @@ function normalizeParentCommentId(parentCommentId) {
   return value || null;
 }
 
+function normalizeViewerUserId(viewerUserId) {
+  const value = String(viewerUserId || '').trim();
+  return value || null;
+}
+
+function serializeCommentForViewer(comment, usernamesById, viewerUserId) {
+  const normalizedViewerUserId = normalizeViewerUserId(viewerUserId);
+  const normalizedUserId = String(comment.userId || '');
+
+  return {
+    ...comment,
+    authorUsername: usernamesById.get(normalizedUserId) || (
+      mongoose.isValidObjectId(normalizedUserId) ? null : normalizedUserId
+    ),
+    authorProfilePath: usernamesById.has(normalizedUserId)
+      ? buildAuthorProfilePath(usernamesById.get(normalizedUserId))
+      : null,
+    ownedByViewer: Boolean(normalizedViewerUserId && normalizedViewerUserId === normalizedUserId),
+  };
+}
+
+async function getOwnedVisibleComment({ commentId, userId }) {
+  const comment = await BlockComment.findById(String(commentId));
+  if (!comment || comment.deletedAt || comment.status !== 'visible') {
+    const err = new Error('Comment not found.');
+    err.status = 404;
+    throw err;
+  }
+
+  if (String(comment.userId) !== String(userId)) {
+    const err = new Error('You can only manage your own comments.');
+    err.status = 403;
+    throw err;
+  }
+
+  return comment;
+}
+
 async function resolveReplyParent({ blockId, parentCommentId }) {
   if (!parentCommentId) {
     return null;
@@ -58,7 +96,13 @@ export async function getCommentsForBlock({ blockId, limit = 20, offset = 0 }) {
     .lean();
 }
 
-export async function getCommentsForBlockView({ blockId, limit = 20, offset = 0, sortDir = 'asc' }) {
+export async function getCommentsForBlockView({
+  blockId,
+  limit = 20,
+  offset = 0,
+  sortDir = 'asc',
+  viewerUserId = null
+}) {
   const safeLimit = Math.max(1, Math.min(Number(limit) || 20, 50));
   const safeOffset = Math.max(0, Number(offset) || 0);
   const safeSortDir = normalizeCommentSortDir(sortDir);
@@ -96,15 +140,9 @@ export async function getCommentsForBlockView({ blockId, limit = 20, offset = 0,
     users.map((user) => [String(user._id), user.username])
   );
 
-  const commentsWithAuthors = rawComments.map((comment) => ({
-    ...comment,
-    authorUsername: usernamesById.get(String(comment.userId)) || (
-      mongoose.isValidObjectId(comment.userId) ? null : String(comment.userId)
-    ),
-    authorProfilePath: usernamesById.has(String(comment.userId))
-      ? buildAuthorProfilePath(usernamesById.get(String(comment.userId)))
-      : null,
-  }));
+  const commentsWithAuthors = rawComments.map((comment) => (
+    serializeCommentForViewer(comment, usernamesById, viewerUserId)
+  ));
 
   const repliesByParentId = new Map();
   commentsWithAuthors
@@ -168,6 +206,56 @@ export async function createComment({ blockId, userId, body, parentCommentId = n
 
   // keep response lean & consistent
   return doc.toObject();
+}
+
+export async function updateComment({ commentId, userId, body }) {
+  const trimmed = String(body || '').trim();
+
+  if (!trimmed) {
+    const err = new Error('Comment body required.');
+    err.status = 400;
+    throw err;
+  }
+
+  if (trimmed.length > 1500) {
+    const err = new Error('Comment too long (max 1500 characters).');
+    err.status = 400;
+    throw err;
+  }
+
+  const comment = await getOwnedVisibleComment({ commentId, userId });
+
+  comment.body = trimmed;
+  comment.editedAt = new Date();
+  await comment.save();
+
+  return comment.toObject();
+}
+
+export async function deleteComment({ commentId, userId }) {
+  const comment = await getOwnedVisibleComment({ commentId, userId });
+  const deletedAt = new Date();
+  let deletedReplyCount = 0;
+
+  comment.deletedAt = deletedAt;
+  await comment.save();
+
+  if (!normalizeParentCommentId(comment.parentCommentId)) {
+    const replyDeleteResult = await BlockComment.updateMany(
+      {
+        blockId: String(comment.blockId),
+        parentCommentId: String(comment._id),
+        deletedAt: null
+      },
+      { $set: { deletedAt } }
+    );
+    deletedReplyCount = Number(replyDeleteResult.modifiedCount || 0);
+  }
+
+  return {
+    deleted: true,
+    deletedReplyCount
+  };
 }
 
 export async function reportComment({ commentId, reporterId }) {

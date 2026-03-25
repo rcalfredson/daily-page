@@ -16,10 +16,12 @@ mixin renderComment(comment, isReply)
     const timestampIso = timestamp.toISOString();
     const timestampLabel = commentDateFormatter.format(timestamp);
     const isNestedReply = Boolean(isReply);
+    const isOwnedByViewer = Boolean(comment.ownedByViewer);
   article.comment(
     class=isNestedReply ? 'comment--reply' : null
     data-comment-id=comment._id
     data-parent-comment-id=comment.parentCommentId || ''
+    data-owned-by-viewer=isOwnedByViewer ? 'true' : 'false'
     id=comment._id ? `comment-${comment._id}` : null
   )
     header.comment__meta
@@ -31,12 +33,25 @@ mixin renderComment(comment, isReply)
           span.comment__username= comment.authorUsername || t('blockView.comments.unknownAuthor')
       .comment__meta-actions
         time.comment__time(datetime=timestampIso)= timestampLabel
+        if comment.editedAt
+          span.comment__edited= t('blockView.comments.manage.edited')
         if !isNestedReply
           button.comment__reply-button(
             type="button"
             data-comment-reply
             data-comment-id=comment._id
           )= t('blockView.comments.reply.action')
+        if isOwnedByViewer
+          button.comment__edit-button(
+            type="button"
+            data-comment-edit
+            data-comment-id=comment._id
+          )= t('blockView.comments.manage.editAction')
+          button.comment__delete-button(
+            type="button"
+            data-comment-delete
+            data-comment-id=comment._id
+          )= t('blockView.comments.manage.deleteAction')
         button.comment__report-button(
           type="button"
           data-comment-report
@@ -44,6 +59,34 @@ mixin renderComment(comment, isReply)
         )= t('blockView.comments.report.action')
     .comment__body
       p= comment.body
+    if isOwnedByViewer
+      form.comment-edit-form.hidden(
+        data-comment-edit-form
+        data-comment-id=comment._id
+      )
+        label.sr-only(for=`edit-body-${comment._id}`)= t('blockView.comments.manage.edit.label')
+        textarea.comment-edit-form__input(
+          id=`edit-body-${comment._id}`
+          name="body"
+          rows="4"
+          maxlength="1500"
+          required
+          data-comment-edit-input
+        )= comment.body
+        .comment-edit-form__actions
+          button.comment-edit-form__submit(
+            type="submit"
+            data-comment-edit-submit
+          )= t('blockView.comments.manage.edit.save')
+          button.comment-edit-form__cancel(
+            type="button"
+            data-comment-edit-cancel
+          )= t('blockView.comments.manage.edit.cancel')
+        p.comment-edit-form__status.hidden(
+          role="status"
+          aria-live="polite"
+          data-comment-edit-status
+        )
     if !isNestedReply && user && user.id && commentComposerCanSubmit
       form.comment-reply-form.hidden(
         data-comment-reply-form
@@ -112,6 +155,19 @@ section.comments-section(
   data-reply-error-label=t('blockView.comments.reply.error')
   data-reply-placeholder=t('blockView.comments.reply.placeholder')
   data-reply-login-label=t('blockView.comments.reply.loginPrompt')
+  data-comment-edited-label=t('blockView.comments.manage.edited')
+  data-edit-label=t('blockView.comments.manage.editAction')
+  data-edit-field-label=t('blockView.comments.manage.edit.label')
+  data-delete-label=t('blockView.comments.manage.deleteAction')
+  data-edit-submit-label=t('blockView.comments.manage.edit.save')
+  data-edit-submitting-label=t('blockView.comments.manage.edit.saving')
+  data-edit-cancel-label=t('blockView.comments.manage.edit.cancel')
+  data-edit-success-label=t('blockView.comments.manage.edit.success')
+  data-edit-error-label=t('blockView.comments.manage.edit.error')
+  data-edit-forbidden-label=t('blockView.comments.manage.forbidden')
+  data-delete-confirm-label=t('blockView.comments.manage.deleteConfirm')
+  data-delete-success-label=t('blockView.comments.manage.deleteSuccess')
+  data-delete-error-label=t('blockView.comments.manage.deleteError')
   data-current-username=currentUsername
   data-current-profile-path=currentProfilePath
   data-can-reply=commentComposerCanSubmit ? 'true' : 'false'

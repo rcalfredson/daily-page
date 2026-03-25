@@ -2,7 +2,13 @@
 import { Router } from 'express';
 import optionalAuth from '../../middleware/optionalAuth.js';
 import { getBlockById } from '../../db/blockService.js';
-import { createComment, getCommentsForBlockView, reportComment } from '../../db/commentService.js';
+import {
+  createComment,
+  deleteComment,
+  getCommentsForBlockView,
+  reportComment,
+  updateComment
+} from '../../db/commentService.js';
 import { notifyBlockAuthorOfComment } from '../../db/notificationService.js';
 import { commentHasUrl, enforceAndRecordCommentRateLimit } from '../../db/rateLimitService.js';
 import { findUserById } from '../../db/userService.js';
@@ -18,13 +24,19 @@ const useCommentsAPI = (app) => {
   app.use('/api/v1/comments', router);
 
   // Read-only (slice 1)
-  router.get('/:blockId', async (req, res) => {
+  router.get('/:blockId', optionalAuth, async (req, res) => {
     const { blockId } = req.params;
     const { limit, offset } = req.query;
     const sortDir = normalizeCommentsSortDir(req.query.sortDir);
 
     try {
-      const result = await getCommentsForBlockView({ blockId, limit, offset, sortDir });
+      const result = await getCommentsForBlockView({
+        blockId,
+        limit,
+        offset,
+        sortDir,
+        viewerUserId: req.user?.id || null
+      });
       return res.status(200).json(result);
     } catch (error) {
       console.error(`Error fetching comments for block ${blockId}:`, error);
@@ -98,6 +110,41 @@ const useCommentsAPI = (app) => {
       console.error(`Error reporting comment ${commentId}:`, error);
       const status = error?.status || 500;
       return res.status(status).json({ error: error?.message || 'Failed to report comment' });
+    }
+  });
+
+  router.patch('/:commentId', optionalAuth, async (req, res) => {
+    const { commentId } = req.params;
+    if (!req.user?.id) return res.status(401).json({ error: 'User not authenticated' });
+
+    try {
+      const comment = await updateComment({
+        commentId,
+        userId: req.user.id,
+        body: req.body?.body
+      });
+      return res.status(200).json({ comment });
+    } catch (error) {
+      console.error(`Error updating comment ${commentId}:`, error);
+      const status = error?.status || 500;
+      return res.status(status).json({ error: error?.message || 'Failed to update comment' });
+    }
+  });
+
+  router.delete('/:commentId', optionalAuth, async (req, res) => {
+    const { commentId } = req.params;
+    if (!req.user?.id) return res.status(401).json({ error: 'User not authenticated' });
+
+    try {
+      const result = await deleteComment({
+        commentId,
+        userId: req.user.id
+      });
+      return res.status(200).json(result);
+    } catch (error) {
+      console.error(`Error deleting comment ${commentId}:`, error);
+      const status = error?.status || 500;
+      return res.status(status).json({ error: error?.message || 'Failed to delete comment' });
     }
   });
 };

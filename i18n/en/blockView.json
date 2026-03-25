@@ -60,6 +60,23 @@
         "cancel": "Cancel",
         "loginPrompt": "Log in to reply."
       },
+      "manage": {
+        "edited": "Edited",
+        "editAction": "Edit",
+        "deleteAction": "Delete",
+        "deleteConfirm": "Delete this comment? This will also remove any replies beneath it.",
+        "deleteSuccess": "Comment deleted.",
+        "deleteError": "Unable to delete this comment right now.",
+        "forbidden": "You can only manage your own comments.",
+        "edit": {
+          "label": "Edit comment",
+          "save": "Save",
+          "saving": "Saving...",
+          "cancel": "Cancel",
+          "success": "Comment updated.",
+          "error": "Unable to update this comment right now."
+        }
+      },
       "report": {
         "action": "Report",
         "pending": "Reporting...",
