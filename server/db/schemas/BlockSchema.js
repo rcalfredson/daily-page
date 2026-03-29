@@ -1,5 +1,36 @@
 import { Schema } from 'mongoose';
 
+const editorialSchema = new Schema({
+  clusterKey: {
+    type: String,
+    trim: true,
+    maxlength: 120,
+    default: undefined
+  },
+  role: {
+    type: String,
+    enum: ['pillar', 'companion', 'texture'],
+    default: undefined
+  },
+  primaryPillarBlockId: {
+    type: String,
+    default: undefined
+  },
+  sequence: {
+    type: Number,
+    min: 0,
+    validate: {
+      validator: Number.isInteger,
+      message: 'Editorial sequence must be an integer.'
+    },
+    default: undefined
+  },
+  relatedBlockIds: {
+    type: [String],
+    default: undefined
+  }
+}, { _id: false });
+
 const blockSchema = new Schema({
   title: {
     type: String,
@@ -56,6 +87,11 @@ const blockSchema = new Schema({
   originalBlock: {
     type: String,  // block._id
     required: false,
+  },
+  editorial: {
+    type: editorialSchema,
+    required: false,
+    default: undefined,
   },
 
 }, {
