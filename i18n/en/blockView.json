@@ -86,6 +86,10 @@
         "hidden": "Comment hidden after report.",
         "reported": "Reported"
       },
+      "deepLink": {
+        "focused": "Linked comment",
+        "unavailable": "The linked comment is no longer available."
+      },
       "loadMore": "Load more comments",
       "loading": "Loading...",
       "loadError": "Unable to load more comments right now."

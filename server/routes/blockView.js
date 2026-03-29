@@ -4,7 +4,10 @@ import {
   getTranslations,
   getTranslationByGroupAndLang
 } from '../db/blockService.js';
-import { getCommentsForBlockView } from '../db/commentService.js';
+import {
+  getCommentsForBlockView,
+  getFocusedCommentThreadForBlockView
+} from '../db/commentService.js';
 import { getReactionCounts, getUserReactionsForBlock } from '../db/reactionService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { findUserById, findUserByUsername } from '../db/userService.js';
@@ -20,6 +23,11 @@ const INITIAL_COMMENT_LIMIT = 20;
 
 function normalizeCommentsSortDir(sortDir) {
   return sortDir === 'desc' ? 'desc' : 'asc';
+}
+
+function normalizeCommentId(commentId) {
+  const value = String(commentId || '').trim();
+  return value || null;
 }
 
 router.get(
@@ -48,6 +56,7 @@ router.get(
     try {
       const { room_id, block_id } = req.params;
       const commentsSortDir = normalizeCommentsSortDir(req.query.commentsDir);
+      const deepLinkCommentId = normalizeCommentId(req.query.commentId);
 
       const block = await getBlockById(block_id);
       const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
@@ -64,7 +73,7 @@ router.get(
       const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
       const translations = await getTranslations(block.groupId);
 
-      const [reactionCounts, commentsData, dbUser, authorUser] = await Promise.all([
+      const [reactionCounts, commentsData, focusedCommentData, dbUser, authorUser] = await Promise.all([
         getReactionCounts(block_id),
         getCommentsForBlockView({
           blockId: block_id,
@@ -72,6 +81,19 @@ router.get(
           sortDir: commentsSortDir,
           viewerUserId: req.user?.id || null
         }),
+        deepLinkCommentId
+          ? getFocusedCommentThreadForBlockView({
+              blockId: block_id,
+              commentId: deepLinkCommentId,
+              sortDir: commentsSortDir,
+              viewerUserId: req.user?.id || null
+            })
+          : Promise.resolve({
+              status: 'idle',
+              targetCommentId: null,
+              topLevelCommentId: null,
+              thread: null
+            }),
         req.user?.id ? findUserById(req.user.id) : Promise.resolve(null),
         block.creator && block.creator !== 'anonymous'
           ? findUserByUsername(block.creator)
@@ -109,6 +131,11 @@ router.get(
           ? raw
           : `${t('blockView.meta.titleFallback')} - ${block.title}`;
 
+      const focusedThreadAlreadyIncluded = Boolean(
+        focusedCommentData?.topLevelCommentId &&
+        commentsData.comments.some((comment) => String(comment._id) === String(focusedCommentData.topLevelCommentId))
+      );
+
       res.render('rooms/block-view', {
         room_id,
         roomName,
@@ -128,6 +155,9 @@ router.get(
         commentsLimit: commentsData.limit,
         commentsHasMore: commentsData.hasMore,
         commentsSortDir,
+        commentsFocusedThread: focusedThreadAlreadyIncluded ? null : (focusedCommentData.thread || null),
+        commentsDeepLinkCommentId: focusedCommentData.targetCommentId || null,
+        commentsDeepLinkStatus: focusedCommentData.status || 'idle',
         commentComposerCanSubmit: Boolean(req.user?.id && dbUser?.verified),
         uiLang,
         lang: block.lang

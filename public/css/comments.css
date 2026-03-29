@@ -87,6 +87,17 @@
   font-size: 1rem;
 }
 
+.comments-section__focus-note,
+.comments-section__deep-link-status {
+  margin: 0 0 0.9rem;
+  font-size: 0.95rem;
+  color: #566270;
+}
+
+.comments-section__deep-link-status {
+  color: #b42318;
+}
+
 .comments-composer {
   margin-bottom: 1rem;
 }
@@ -204,6 +215,10 @@
   padding: 0;
   max-width: 100%;
   min-width: 0;
+}
+
+.comments-list--focused {
+  margin-bottom: 1rem;
 }
 
 .comments-list__item + .comments-list__item {
@@ -343,6 +358,11 @@
 
 .comment--editing .comment__body {
   display: none;
+}
+
+.comment--highlighted {
+  border-color: rgba(207, 140, 47, 0.85);
+  box-shadow: 0 0 0 3px rgba(207, 140, 47, 0.14);
 }
 
 .comment-reply-form {

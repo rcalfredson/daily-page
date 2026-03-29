@@ -23,6 +23,55 @@ function normalizeViewerUserId(viewerUserId) {
   return value || null;
 }
 
+function buildVisibleCommentFilter(blockId) {
+  return {
+    blockId: String(blockId),
+    status: 'visible',
+    deletedAt: null
+  };
+}
+
+async function getUsernamesById(rawComments = []) {
+  const userIds = [...new Set(rawComments.map((comment) => String(comment.userId)).filter(Boolean))];
+  const validUserIds = userIds.filter((userId) => mongoose.isValidObjectId(userId));
+  const users = validUserIds.length
+    ? await User.find({ _id: { $in: validUserIds } }).select({ username: 1 }).lean()
+    : [];
+
+  return new Map(
+    users.map((user) => [String(user._id), user.username])
+  );
+}
+
+async function buildThreadsForViewer({ rawTopLevelComments = [], rawReplies = [], viewerUserId = null }) {
+  const rawComments = [...rawTopLevelComments, ...rawReplies];
+  const usernamesById = await getUsernamesById(rawComments);
+  const commentsWithAuthors = rawComments.map((comment) => (
+    serializeCommentForViewer(comment, usernamesById, viewerUserId)
+  ));
+
+  const repliesByParentId = new Map();
+  commentsWithAuthors
+    .filter((comment) => normalizeParentCommentId(comment.parentCommentId))
+    .forEach((comment) => {
+      const parentId = normalizeParentCommentId(comment.parentCommentId);
+      if (!repliesByParentId.has(parentId)) {
+        repliesByParentId.set(parentId, []);
+      }
+      repliesByParentId.get(parentId).push({
+        ...comment,
+        replies: []
+      });
+    });
+
+  return commentsWithAuthors
+    .filter((comment) => !normalizeParentCommentId(comment.parentCommentId))
+    .map((comment) => ({
+      ...comment,
+      replies: repliesByParentId.get(String(comment._id)) || []
+    }));
+}
+
 function serializeCommentForViewer(comment, usernamesById, viewerUserId) {
   const normalizedViewerUserId = normalizeViewerUserId(viewerUserId);
   const normalizedUserId = String(comment.userId || '');
@@ -107,7 +156,7 @@ export async function getCommentsForBlockView({
   const safeOffset = Math.max(0, Number(offset) || 0);
   const safeSortDir = normalizeCommentSortDir(sortDir);
   const sortOrder = safeSortDir === 'desc' ? -1 : 1;
-  const baseFilter = { blockId: String(blockId), status: 'visible', deletedAt: null };
+  const baseFilter = buildVisibleCommentFilter(blockId);
   const topLevelFilter = { ...baseFilter, parentCommentId: null };
 
   const [rawTopLevelComments, total, topLevelTotal] = await Promise.all([
@@ -129,41 +178,11 @@ export async function getCommentsForBlockView({
         .lean()
     : [];
 
-  const rawComments = [...rawTopLevelComments, ...rawReplies];
-  const userIds = [...new Set(rawComments.map((comment) => String(comment.userId)).filter(Boolean))];
-  const validUserIds = userIds.filter((userId) => mongoose.isValidObjectId(userId));
-  const users = validUserIds.length
-    ? await User.find({ _id: { $in: validUserIds } }).select({ username: 1 }).lean()
-    : [];
-
-  const usernamesById = new Map(
-    users.map((user) => [String(user._id), user.username])
-  );
-
-  const commentsWithAuthors = rawComments.map((comment) => (
-    serializeCommentForViewer(comment, usernamesById, viewerUserId)
-  ));
-
-  const repliesByParentId = new Map();
-  commentsWithAuthors
-    .filter((comment) => normalizeParentCommentId(comment.parentCommentId))
-    .forEach((comment) => {
-      const parentId = normalizeParentCommentId(comment.parentCommentId);
-      if (!repliesByParentId.has(parentId)) {
-        repliesByParentId.set(parentId, []);
-      }
-      repliesByParentId.get(parentId).push({
-        ...comment,
-        replies: []
-      });
-    });
-
-  const comments = commentsWithAuthors
-    .filter((comment) => !normalizeParentCommentId(comment.parentCommentId))
-    .map((comment) => ({
-      ...comment,
-      replies: repliesByParentId.get(String(comment._id)) || []
-    }));
+  const comments = await buildThreadsForViewer({
+    rawTopLevelComments,
+    rawReplies,
+    viewerUserId
+  });
 
   return {
     comments,
@@ -173,6 +192,80 @@ export async function getCommentsForBlockView({
     offset: safeOffset,
     sortDir: safeSortDir,
     hasMore: safeOffset + comments.length < topLevelTotal,
+  };
+}
+
+export async function getFocusedCommentThreadForBlockView({
+  blockId,
+  commentId,
+  sortDir = 'asc',
+  viewerUserId = null
+}) {
+  const normalizedCommentId = String(commentId || '').trim();
+  if (!normalizedCommentId || !mongoose.isValidObjectId(normalizedCommentId)) {
+    return {
+      status: normalizedCommentId ? 'unavailable' : 'idle',
+      targetCommentId: normalizedCommentId || null,
+      topLevelCommentId: null,
+      thread: null
+    };
+  }
+
+  const safeSortDir = normalizeCommentSortDir(sortDir);
+  const sortOrder = safeSortDir === 'desc' ? -1 : 1;
+  const baseFilter = buildVisibleCommentFilter(blockId);
+
+  const targetComment = await BlockComment.findOne({
+    ...baseFilter,
+    _id: normalizedCommentId
+  }).lean();
+
+  if (!targetComment) {
+    return {
+      status: 'unavailable',
+      targetCommentId: normalizedCommentId,
+      topLevelCommentId: null,
+      thread: null
+    };
+  }
+
+  const topLevelCommentId = normalizeParentCommentId(targetComment.parentCommentId) || String(targetComment._id);
+  const rawTopLevelComments = await BlockComment
+    .find({
+      ...baseFilter,
+      _id: topLevelCommentId,
+      parentCommentId: null
+    })
+    .lean();
+
+  if (!rawTopLevelComments.length) {
+    return {
+      status: 'unavailable',
+      targetCommentId: normalizedCommentId,
+      topLevelCommentId,
+      thread: null
+    };
+  }
+
+  const rawReplies = await BlockComment
+    .find({
+      ...baseFilter,
+      parentCommentId: topLevelCommentId
+    })
+    .sort({ createdAt: sortOrder, _id: sortOrder })
+    .lean();
+
+  const [thread] = await buildThreadsForViewer({
+    rawTopLevelComments,
+    rawReplies,
+    viewerUserId
+  });
+
+  return {
+    status: 'found',
+    targetCommentId: normalizedCommentId,
+    topLevelCommentId,
+    thread: thread || null
   };
 }
 

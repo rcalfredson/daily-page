@@ -5,6 +5,8 @@
   const currentCommentsSortDir = commentsSortDir === 'desc' ? 'desc' : 'asc';
   const currentUsername = user && user.username ? user.username : '';
   const currentProfilePath = currentUsername ? `/users/${encodeURIComponent(currentUsername)}` : '';
+  const focusedThread = commentsFocusedThread || null;
+  const focusedCommentId = commentsDeepLinkCommentId || '';
   const commentDateFormatter = new Intl.DateTimeFormat(uiLang || lang || 'en', {
     dateStyle: 'medium',
     timeStyle: 'short'
@@ -18,7 +20,7 @@ mixin renderComment(comment, isReply)
     const isNestedReply = Boolean(isReply);
     const isOwnedByViewer = Boolean(comment.ownedByViewer);
   article.comment(
-    class=isNestedReply ? 'comment--reply' : null
+    class=[isNestedReply ? 'comment--reply' : null, focusedCommentId && String(comment._id) === String(focusedCommentId) ? 'comment--highlighted' : null]
     data-comment-id=comment._id
     data-parent-comment-id=comment.parentCommentId || ''
     data-owned-by-viewer=isOwnedByViewer ? 'true' : 'false'
@@ -171,6 +173,9 @@ section.comments-section(
   data-current-username=currentUsername
   data-current-profile-path=currentProfilePath
   data-can-reply=commentComposerCanSubmit ? 'true' : 'false'
+  data-deep-link-status=commentsDeepLinkStatus || 'idle'
+  data-deep-link-comment-id=focusedCommentId
+  data-deep-link-unavailable-label=t('blockView.comments.deepLink.unavailable')
 )
   .comments-section__header
     .comments-section__header-main
@@ -227,6 +232,23 @@ section.comments-section(
     class=commentCount === 0 ? null : 'hidden'
     data-comments-empty
   )= t('blockView.comments.empty')
+
+  if commentsDeepLinkStatus === 'unavailable'
+    p.comments-section__deep-link-status(
+      role='status'
+      aria-live='polite'
+    )= t('blockView.comments.deepLink.unavailable')
+
+  if focusedThread
+    p.comments-section__focus-note= t('blockView.comments.deepLink.focused')
+    ol.comments-list.comments-list--focused(data-comments-focused-list)
+      li.comments-list__item(data-comments-focused-thread='true')
+        +renderComment(focusedThread, false)
+        if Array.isArray(focusedThread.replies) && focusedThread.replies.length
+          ol.comments-list__replies
+            each reply in focusedThread.replies
+              li.comments-list__reply-item
+                +renderComment(reply, true)
 
   ol.comments-list(
     class=commentCount === 0 ? 'hidden' : null

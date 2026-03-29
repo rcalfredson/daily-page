@@ -86,6 +86,10 @@
         "hidden": "Comentario ocultado tras el reporte.",
         "reported": "Reportado"
       },
+      "deepLink": {
+        "focused": "Comentario enlazado",
+        "unavailable": "El comentario enlazado ya no está disponible."
+      },
       "loadMore": "Cargar más comentarios",
       "loading": "Cargando...",
       "loadError": "No se pueden cargar más comentarios en este momento."

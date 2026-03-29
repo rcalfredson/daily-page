@@ -5,6 +5,7 @@ import BlockReaction from './models/BlockReaction.js';
 import Room from './models/Room.js';
 import User from './models/User.js';
 import { toRoomI18nDTO } from './roomService.js';
+import { canonicalCommentPath } from '../utils/canonical.js';
 
 const REACTION_EMOJI_BY_TYPE = {
   heart: '❤️',
@@ -158,7 +159,7 @@ export async function getRecentCommentActivity({ limit = 5, lang = 'en' } = {}) 
       blockId,
       blockTitle: (block && block.title) || blockId,
       blockPath: `/rooms/${encodeURIComponent(roomId)}/blocks/${encodeURIComponent(blockId)}`,
-      commentPath: `/rooms/${encodeURIComponent(roomId)}/blocks/${encodeURIComponent(blockId)}#comment-${encodeURIComponent(commentId)}`,
+      commentPath: canonicalCommentPath({ roomId, _id: blockId }, commentId),
       excerpt: trimSnippet(comment.body, 180),
       createdAt: comment.createdAt,
       isReply: Boolean(comment.parentCommentId),
