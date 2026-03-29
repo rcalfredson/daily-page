@@ -165,7 +165,7 @@ const useUserAPI = (app) => {
       res.cookie('auth_token', newToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Strict',
+        sameSite: 'Lax',
         maxAge: 24 * 60 * 60 * 1000,
       });
 
@@ -221,7 +221,7 @@ const useUserAPI = (app) => {
         res.cookie('auth_token', newToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
-          sameSite: 'Strict',
+          sameSite: 'Lax',
           maxAge: 24 * 60 * 60 * 1000,
         });
 

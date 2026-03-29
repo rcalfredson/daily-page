@@ -109,6 +109,18 @@
     return section.querySelector(`[data-comment-id="${escapeSelector(commentId)}"]`);
   }
 
+  function getHashCommentId() {
+    const hash = String(window.location.hash || '');
+    const match = hash.match(/^#comment-(.+)$/);
+    if (!match || !match[1]) return null;
+
+    try {
+      return decodeURIComponent(match[1]);
+    } catch {
+      return match[1];
+    }
+  }
+
   function getThreadItemForComment(article) {
     return article?.closest('.comments-list__item');
   }
@@ -638,6 +650,10 @@
         : null;
 
       comments.forEach((comment) => {
+        if (findCommentArticle(section, comment._id)) {
+          return;
+        }
+
         const item = buildThreadItem(comment, {
           ...options,
           reportedIds: getReportState(section)
@@ -1137,6 +1153,32 @@
         event.preventDefault();
         submitReply(section, replyForm);
       });
+
+      const hashCommentId = getHashCommentId();
+      if (!hashCommentId) {
+        return;
+      }
+
+      if (findCommentArticle(section, hashCommentId)) {
+        return;
+      }
+
+      const url = new URL(window.location.href);
+      const queryCommentId = String(url.searchParams.get('commentId') || '').trim();
+
+      if (queryCommentId !== hashCommentId) {
+        url.searchParams.set('commentId', hashCommentId);
+        window.location.replace(url.toString());
+        return;
+      }
+
+      if (section.dataset.deepLinkStatus === 'unavailable') {
+        setStatus(
+          section.querySelector('[data-comments-load-error]'),
+          section.dataset.deepLinkUnavailableLabel || 'The linked comment is no longer available.',
+          'error'
+        );
+      }
     });
   });
 })();

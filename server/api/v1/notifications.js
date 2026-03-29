@@ -8,7 +8,7 @@ import {
   getUnreadNotificationCount,
   markNotificationRead
 } from '../../db/notificationService.js';
-import { canonicalBlockPath } from '../../utils/canonical.js';
+import { canonicalCommentPath } from '../../utils/canonical.js';
 
 const router = Router();
 
@@ -57,10 +57,7 @@ async function serializeNotifications(notifications, { t }) {
           blockTitle
         });
         if (block?.roomId) {
-          const anchor = notification.commentId
-            ? `#comment-${encodeURIComponent(String(notification.commentId))}`
-            : '';
-          path = `${canonicalBlockPath(block)}${anchor}`;
+          path = canonicalCommentPath(block, notification.commentId);
         }
         break;
       case 'comment_reply':
@@ -69,10 +66,7 @@ async function serializeNotifications(notifications, { t }) {
           blockTitle
         });
         if (block?.roomId) {
-          const anchor = notification.commentId
-            ? `#comment-${encodeURIComponent(String(notification.commentId))}`
-            : '';
-          path = `${canonicalBlockPath(block)}${anchor}`;
+          path = canonicalCommentPath(block, notification.commentId);
         }
         break;
       default:

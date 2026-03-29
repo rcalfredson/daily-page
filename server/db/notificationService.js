@@ -4,6 +4,7 @@ import BlockComment from './models/BlockComment.js';
 import { findUserById, findUserByUsername } from './userService.js';
 import { buildCommentNotificationEmail } from '../services/emailTemplates/commentNotification.js';
 import { sendEmail } from '../services/mailgunService.js';
+import { canonicalCommentPath } from '../utils/canonical.js';
 
 export async function createNotification({
   userId,
@@ -89,7 +90,7 @@ async function sendCommentNotificationEmail({
 
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
   const uiLang = block.lang || 'en';
-  const blockUrl = `${baseUrl}/${uiLang}/rooms/${encodeURIComponent(block.roomId)}/blocks/${encodeURIComponent(block._id || block.id)}#comment-${encodeURIComponent(String(comment._id || comment.id))}`;
+  const blockUrl = `${baseUrl}/${uiLang}${canonicalCommentPath(block, comment._id || comment.id)}`;
   const emailLang = ['en', 'es'].includes(block.lang) ? block.lang : 'en';
 
   const { subject, html } = await buildCommentNotificationEmail({

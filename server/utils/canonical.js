@@ -24,3 +24,15 @@ export function canonicalBlockPath(input, blockIdMaybe) {
 export function canonicalBlockEditPath(input, blockIdMaybe) {
   return `${canonicalBlockPath(input, blockIdMaybe)}/edit`;
 }
+
+export function canonicalCommentPath(input, commentId) {
+  const blockPath = canonicalBlockPath(input);
+  const normalizedCommentId = String(commentId || '').trim();
+
+  if (!normalizedCommentId) {
+    return blockPath;
+  }
+
+  const encodedCommentId = encodeURIComponent(normalizedCommentId);
+  return `${blockPath}?commentId=${encodedCommentId}#comment-${encodedCommentId}`;
+}
