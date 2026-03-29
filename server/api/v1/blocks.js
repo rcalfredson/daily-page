@@ -19,9 +19,17 @@ import {
 import { updateUserStreak } from '../../db/userService.js';
 import optionalAuth from '../../middleware/optionalAuth.js';
 import { refreshAuthToken } from '../../utils/jwtHelper.js';
+import { normalizeEditorialInput } from '../../db/editorial.js';
 
 const roomScopedRouter = Router({ mergeParams: true });
 const globalRouter = Router();
+
+function getValidationMessage(error, fallbackMessage) {
+  if (error?.name === 'ValidationError' || error?.name === 'CastError') {
+    return error.message;
+  }
+  return fallbackMessage;
+}
 
 const useBlockAPI = (app) => {
   // 🏠 Room-specific block routes
@@ -77,7 +85,8 @@ const useBlockAPI = (app) => {
       visibility,
       lang,
       groupId,
-      originalBlock
+      originalBlock,
+      editorial
     } = req.body;
 
     if (!title || title.length < 3) {
@@ -96,6 +105,13 @@ const useBlockAPI = (app) => {
       ? JSON.parse(req.cookies.edit_tokens)
       : [];
 
+    let normalizedEditorial;
+    try {
+      normalizedEditorial = normalizeEditorialInput(editorial);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
     const blockData = {
       title,
       description,
@@ -109,6 +125,10 @@ const useBlockAPI = (app) => {
       lang: lang || (req.user?.preferredLang ?? 'en'),
       groupId: groupId || null //service rellenerá si null
     };
+
+    if (normalizedEditorial?.value !== undefined) {
+      blockData.editorial = normalizedEditorial.value;
+    }
 
     existingTokens.push(blockData.editToken);
 
@@ -150,6 +170,9 @@ const useBlockAPI = (app) => {
         return res
           .status(409)
           .json({ error: 'A translation for that language already exists.' });
+      }
+      if (error?.name === 'ValidationError' || error?.name === 'CastError') {
+        return res.status(400).json({ error: error.message });
       }
       console.error('Error creating block:', error.message);
       res.status(500).json({ error: 'Failed to create block.' });
@@ -242,7 +265,7 @@ const useBlockAPI = (app) => {
   // 📌 Update the **metadata** of a block (Title, Description, Tags) → Requires Authentication or Edit Token
   globalRouter.post('/:block_id/metadata', optionalAuth, async (req, res) => {
     const { block_id } = req.params;
-    const { title, description, tags, status } = req.body;
+    const { title, description, tags, status, editorial } = req.body;
 
     try {
       const block = await getBlockById(block_id);
@@ -259,17 +282,45 @@ const useBlockAPI = (app) => {
         return res.status(403).json({ error: 'You are not authorized to update this block.' });
       }
 
+      const fieldUpdates = {};
+      if (title !== undefined) fieldUpdates.title = title;
+      if (description !== undefined) fieldUpdates.description = description;
+      if (tags !== undefined) fieldUpdates.tags = tags;
+      if (status !== undefined) fieldUpdates.status = status;
+
       const updates = {};
-      if (title !== undefined) updates.title = title;
-      if (description !== undefined) updates.description = description;
-      if (tags !== undefined) updates.tags = tags;
-      if (status !== undefined) updates.status = status;
+      if (editorial !== undefined) {
+        let normalizedEditorial;
+        try {
+          normalizedEditorial = normalizeEditorialInput(editorial);
+        } catch (error) {
+          return res.status(400).json({ error: error.message });
+        }
+
+        if (normalizedEditorial.shouldUnset) {
+          updates.$unset = { editorial: 1 };
+        } else if (normalizedEditorial.value !== undefined) {
+          fieldUpdates.editorial = normalizedEditorial.value;
+        }
+      }
+
+      if (updates.$unset) {
+        if (Object.keys(fieldUpdates).length) {
+          updates.$set = fieldUpdates;
+        }
+      } else {
+        Object.assign(updates, fieldUpdates);
+      }
 
       await updateBlock(block_id, updates);
       res.status(200).json({ message: 'Block metadata updated successfully.' });
     } catch (error) {
-      console.error('Error updating block metadata:', error.message);
-      res.status(500).json({ error: 'Failed to update block metadata.' });
+      const message = getValidationMessage(error, 'Failed to update block metadata.');
+      const statusCode = message === 'Failed to update block metadata.' ? 500 : 400;
+      if (statusCode === 500) {
+        console.error('Error updating block metadata:', error.message);
+      }
+      res.status(statusCode).json({ error: message });
     }
   });
 

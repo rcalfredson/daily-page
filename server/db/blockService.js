@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Block from './models/Block.js';
 import * as cache from '../services/cache.js';
+import { normalizeEditorialInput } from './editorial.js';
 
 const DEFAULT_TTL = 5000; // Cache for 5 seconds (adjust as needed)
 
@@ -19,6 +20,11 @@ const JITTER = 10 * 1000; // up to 10s extra
 export async function createBlock(data) {
   if (!data.groupId) data.groupId = new mongoose.Types.ObjectId().toString();
   if (!data.lang) data.lang = 'en';
+  if (Object.prototype.hasOwnProperty.call(data, 'editorial')) {
+    const { value } = normalizeEditorialInput(data.editorial);
+    if (value !== undefined) data.editorial = value;
+    else delete data.editorial;
+  }
   const block = new Block(data);
   return await block.save();
 }
@@ -925,7 +931,11 @@ export const saveVote = async (blockId, userId, action) => {
 
 // Update a block by ID
 export async function updateBlock(blockId, updates) {
-  return await Block.findByIdAndUpdate(blockId, updates, { new: true });
+  return await Block.findByIdAndUpdate(blockId, updates, {
+    new: true,
+    runValidators: true,
+    context: 'query'
+  });
 }
 
 // Delete a block by ID
