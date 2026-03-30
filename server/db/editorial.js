@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const EDITORIAL_ROLES = new Set(['pillar', 'companion', 'texture']);
 const MAX_CLUSTER_KEY_LENGTH = 120;
+const MAX_GUIDE_TITLE_LENGTH = 120;
 
 function hasOwn(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
@@ -95,6 +96,13 @@ export function normalizeEditorialInput(editorial) {
       maxLength: MAX_CLUSTER_KEY_LENGTH
     });
     if (clusterKey !== null && clusterKey !== undefined) normalized.clusterKey = clusterKey;
+  }
+
+  if (hasOwn(editorial, 'guideTitle')) {
+    const guideTitle = normalizeOptionalString(editorial.guideTitle, 'editorial.guideTitle', {
+      maxLength: MAX_GUIDE_TITLE_LENGTH
+    });
+    if (guideTitle !== null && guideTitle !== undefined) normalized.guideTitle = guideTitle;
   }
 
   if (hasOwn(editorial, 'role')) {

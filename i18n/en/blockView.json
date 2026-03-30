@@ -26,6 +26,20 @@
       "expand": "Expand",
       "collapse": "Collapse"
     },
+    "editorial": {
+      "heading": "Reading guide",
+      "roleLabel": "Reading type",
+      "clusterLabel": "Guide",
+      "sequence": "Part {sequence}",
+      "primaryPillarHeading": "Start here",
+      "relatedHeading": "Keep reading",
+      "clusterHeading": "More in this guide",
+      "roleNames": {
+        "pillar": "Core guide",
+        "companion": "Deep dive",
+        "texture": "Background"
+      }
+    },
     "comments": {
       "heading": "Comments",
       "count": "{count} comments",

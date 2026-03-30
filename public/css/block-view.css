@@ -192,6 +192,93 @@ hr {
   white-space: unset;
 }
 
+.block-editorial-sequence {
+  display: block;
+  margin-top: 0.15rem;
+  color: #6b7280;
+}
+
+.block-editorial-card {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #d9e1ef;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 249, 253, 0.95));
+}
+
+.block-editorial-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.block-editorial-card__title,
+.block-editorial-section__title {
+  margin: 0;
+}
+
+.block-editorial-card__cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.block-editorial-card__cluster-name {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.block-editorial-section + .block-editorial-section {
+  margin-top: 1rem;
+}
+
+.block-editorial-list {
+  list-style: none;
+  margin: 0.65rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.block-editorial-section__title + .block-editorial-link {
+  margin-top: 0.65rem;
+}
+
+.block-editorial-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  background: #f8fbff;
+  border: 1px solid #e3ebf7;
+}
+
+.block-editorial-link:hover {
+  border-color: #bfd4f3;
+  background: #f2f7ff;
+}
+
+.block-editorial-link__title {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.block-editorial-link__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.8rem;
+  color: #6b7280;
+  font-size: 0.92rem;
+}
+
 /* Make that edit button look fancy */
 .block-edit-btn {
   background-color: var(--highlight-color);
