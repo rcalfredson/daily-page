@@ -26,6 +26,20 @@
       "expand": "Ver más",
       "collapse": "Ver menos"
     },
+    "editorial": {
+      "heading": "Guía de lectura",
+      "roleLabel": "Tipo de lectura",
+      "clusterLabel": "Guía",
+      "sequence": "Parte {sequence}",
+      "primaryPillarHeading": "Empieza aquí",
+      "relatedHeading": "Sigue leyendo",
+      "clusterHeading": "Más en esta guía",
+      "roleNames": {
+        "pillar": "Guía principal",
+        "companion": "Profundización",
+        "texture": "Contexto"
+      }
+    },
     "comments": {
       "heading": "Comentarios",
       "count": "{count} comentarios",

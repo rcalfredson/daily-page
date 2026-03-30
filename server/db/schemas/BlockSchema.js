@@ -7,6 +7,12 @@ const editorialSchema = new Schema({
     maxlength: 120,
     default: undefined
   },
+  guideTitle: {
+    type: String,
+    trim: true,
+    maxlength: 120,
+    default: undefined
+  },
   role: {
     type: String,
     enum: ['pillar', 'companion', 'texture'],

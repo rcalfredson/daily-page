@@ -38,7 +38,7 @@ router.get(
         title: t('createBlock.meta.title'),
         description: t('createBlock.meta.description'),
         room_id,
-        roomMetadata,
+        roomMetadata: roomMetadata || { _id: room_id, name: room_id, displayName: room_id },
         user: req.user || null,
         uiLang,
       });
@@ -116,7 +116,7 @@ router.get(
 
       // Room metadata localized to UI lang (chrome)
       const roomMetadata = await getRoomMetadata(room_id, uiLang);
-      const roomName = roomMetadata.displayName || roomMetadata.name;
+      const roomName = roomMetadata?.displayName || roomMetadata?.name || room_id;
 
       // Page title i18n
       const key = 'blockEditor.meta.title';

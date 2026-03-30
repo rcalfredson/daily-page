@@ -42,6 +42,11 @@ block content
   - const isRtl = ['ar','he','fa','ur'].includes(lang);
   - const createdAt = block.createdAt ? new Date(block.createdAt) : null;
   - const createdAtLabel = createdAt ? createdAt.toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' }) : null;
+  - const editorialRoleLabel = (item) => item && (item.role || item.key) ? t(`blockView.editorial.roleNames.${item.role || item.key}`) : null;
+  - const editorialRole = editorialContext && editorialContext.role ? editorialContext.role : null;
+  - const editorialCluster = editorialContext && editorialContext.cluster ? editorialContext.cluster : null;
+  - const editorialPrimaryPillar = editorialContext && editorialContext.primaryPillar ? editorialContext.primaryPillar : null;
+  - const editorialRelated = editorialContext && editorialContext.related ? editorialContext.related : [];
   include ../partials/_tag_section
   #block-page
     .block-header
@@ -79,6 +84,12 @@ block content
                 .meta-item
                   span.meta-label= t('blockView.labels.created')
                   time(datetime=createdAt.toISOString())= createdAtLabel
+              if editorialRole
+                .meta-item
+                  span.meta-label= t('blockView.editorial.roleLabel')
+                  span= editorialRoleLabel(editorialRole) || editorialRole.label
+                  if editorialRole.sequence !== null
+                    small.block-editorial-sequence= t('blockView.editorial.sequence', { sequence: editorialRole.sequence })
 
         // Only show edit link if the block is in-progress
         .interact-section
@@ -107,6 +118,54 @@ block content
             data-expand-label=t('blockView.description.expand')
             data-collapse-label=t('blockView.description.collapse')
           )= t('blockView.description.expand')
+
+    if editorialContext
+      aside.block-editorial-card(lang=(uiLang || 'en'))
+        .block-editorial-card__header
+          h2.block-editorial-card__title= t('blockView.editorial.heading')
+          if editorialCluster && editorialCluster.label
+            p.block-editorial-card__cluster
+              span.meta-label= t('blockView.editorial.clusterLabel')
+              span.block-editorial-card__cluster-name= editorialCluster.label
+
+        if editorialPrimaryPillar
+          section.block-editorial-section
+            h3.block-editorial-section__title= t('blockView.editorial.primaryPillarHeading')
+            a.block-editorial-link(href=uiPath(`/rooms/${editorialPrimaryPillar.roomId}/blocks/${editorialPrimaryPillar.id}`) lang=(editorialPrimaryPillar.lang || 'en'))
+              span.block-editorial-link__title= editorialPrimaryPillar.title
+              span.block-editorial-link__meta
+                if editorialRoleLabel(editorialPrimaryPillar) || editorialPrimaryPillar.roleLabel
+                  span= editorialRoleLabel(editorialPrimaryPillar) || editorialPrimaryPillar.roleLabel
+                if editorialPrimaryPillar.sequence !== null
+                  span= t('blockView.editorial.sequence', { sequence: editorialPrimaryPillar.sequence })
+
+        if editorialRelated.length
+          section.block-editorial-section
+            h3.block-editorial-section__title= t('blockView.editorial.relatedHeading')
+            ul.block-editorial-list
+              each item in editorialRelated
+                li
+                  a.block-editorial-link(href=uiPath(`/rooms/${item.roomId}/blocks/${item.id}`) lang=(item.lang || 'en'))
+                    span.block-editorial-link__title= item.title
+                    span.block-editorial-link__meta
+                      if editorialRoleLabel(item) || item.roleLabel
+                        span= editorialRoleLabel(item) || item.roleLabel
+                      if item.sequence !== null
+                        span= t('blockView.editorial.sequence', { sequence: item.sequence })
+
+        if editorialCluster && editorialCluster.nearby && editorialCluster.nearby.length
+          section.block-editorial-section
+            h3.block-editorial-section__title= t('blockView.editorial.clusterHeading')
+            ul.block-editorial-list
+              each item in editorialCluster.nearby
+                li
+                  a.block-editorial-link(href=uiPath(`/rooms/${item.roomId}/blocks/${item.id}`) lang=(item.lang || 'en'))
+                    span.block-editorial-link__title= item.title
+                    span.block-editorial-link__meta
+                      if editorialRoleLabel(item) || item.roleLabel
+                        span= editorialRoleLabel(item) || item.roleLabel
+                      if item.sequence !== null
+                        span= t('blockView.editorial.sequence', { sequence: item.sequence })
 
     // The main content, already rendered to HTML on the server
     if block.contentHTML
