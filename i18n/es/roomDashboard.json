@@ -24,6 +24,15 @@
       "lockedHeader": "Bloques bloqueados",
       "inProgressHeader": "Bloques en progreso"
     },
+    "editorial": {
+      "heading": "Guías destacadas",
+      "description": "Empieza con las guías centrales cuando esta sala tenga una estructura editorial curada.",
+      "roleNames": {
+        "pillar": "Guía principal",
+        "companion": "Guía de lectura",
+        "texture": "Guía de contexto"
+      }
+    },
     "empty": {
       "noDescription": "Sin descripción por ahora.",
       "noLocked": "¡Aún no hay bloqueados! Los bloques se bloquean tras 1 hora sin actividad.",

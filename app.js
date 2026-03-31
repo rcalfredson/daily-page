@@ -53,6 +53,7 @@ import {
   getGlobalBlockStats,
   getTotalTags
 } from './server/db/blockService.js';
+import { getRoomEditorialClusters } from './server/db/roomEditorialClusterService.js';
 import {
   getRecentCommentActivity,
   getRecentReactionActivity
@@ -451,7 +452,32 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
           const preferredContentLang = getPreferredContentLang(res);
           const userId = req.user?.id || null;
 
-          const roomMetadataRaw = await getRoomMetadata(room_id, uiLang);
+          const [
+            roomMetadataRaw,
+            { blocks: lockedBlocks, period: lockedPeriod },
+            { blocks: inProgressBlocks, period: inProgressPeriod },
+            roomEditorialClusters
+          ] = await Promise.all([
+            getRoomMetadata(room_id, uiLang),
+            getBlocksByRoomWithFallback({
+              roomId: room_id,
+              userId,
+              status: 'locked',
+              limit: 20,
+              preferredLang: preferredContentLang,
+            }),
+            getBlocksByRoomWithFallback({
+              roomId: room_id,
+              userId,
+              status: 'in-progress',
+              limit: 20,
+              preferredLang: preferredContentLang
+            }),
+            getRoomEditorialClusters({
+              roomId: room_id,
+              preferredLang: preferredContentLang
+            })
+          ]);
 
           const roomMetadata = roomMetadataRaw ? {
             ...roomMetadataRaw,
@@ -470,24 +496,6 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
             const dbUser = await findUserById(req.user.id);
             isStarred = dbUser?.starredRooms?.includes(room_id);
           }
-
-          const { blocks: lockedBlocks, period: lockedPeriod } =
-            await getBlocksByRoomWithFallback({
-              roomId: room_id,
-              userId,
-              status: 'locked',
-              limit: 20,
-              preferredLang: preferredContentLang,
-            });
-
-          const { blocks: inProgressBlocks, period: inProgressPeriod } =
-            await getBlocksByRoomWithFallback({
-              roomId: room_id,
-              userId,
-              status: 'in-progress',
-              limit: 20,
-              preferredLang: preferredContentLang
-            });
 
           // Render markdown…
           const lightLocked = lockedBlocks.map(
@@ -525,6 +533,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
             user: req.user || null,
             roomMetadata,
             isStarred,
+            roomEditorialClusters,
             date,
 
             uiLang,
@@ -681,7 +690,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       });
     });
   } catch (error) {
-    console.log(`Server startup failed: ${error.message}`); // eslint-disable-line no-console
+    console.log(`Server startup failed: ${error.message}`);  
     console.log(error.stack);
   }
 })();

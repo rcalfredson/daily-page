@@ -202,9 +202,87 @@ a.btn {
   font-weight: 600;
 }
 
+.room-editorial-guides {
+  margin: 1.5rem 0 1.25rem 10px;
+  padding: 1rem;
+  border: 1px solid #e6ebf2;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fafcff 0%, #ffffff 100%);
+}
+
+.room-editorial-guides__header {
+  margin-bottom: 0.9rem;
+}
+
+.room-editorial-guides__title {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1f2937;
+}
+
+.room-editorial-guides__description {
+  margin: 0.35rem 0 0;
+  color: #5f6b7a;
+  line-height: 1.45;
+}
+
+.room-editorial-guides__list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.room-editorial-guides__item {
+  margin: 0;
+}
+
+.room-editorial-guides__link {
+  display: block;
+  padding: 0.85rem 1rem;
+  border: 1px solid #dde6f0;
+  border-radius: 10px;
+  background: #ffffff;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
+}
+
+.room-editorial-guides__link:hover {
+  border-color: #c7d6e8;
+  text-decoration: none;
+}
+
+.room-editorial-guides__eyebrow {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: #5d6b7c;
+}
+
+.room-editorial-guides__entry-title {
+  display: block;
+  color: #0f4aa3;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.room-editorial-guides__meta {
+  display: block;
+  margin-top: 0.35rem;
+  color: #627080;
+  font-size: 0.92rem;
+}
+
 .tab-period {
   font-size: 0.9rem;
   color: #777;
   font-style: italic;
   margin-bottom: 1rem;
+}
+
+@media (min-width: 760px) {
+  .room-editorial-guides__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
