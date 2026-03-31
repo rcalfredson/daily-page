@@ -34,6 +34,8 @@
       "primaryPillarHeading": "Start here",
       "relatedHeading": "Keep reading",
       "clusterHeading": "More in this guide",
+      "expandSection": "Show {count} more",
+      "collapseSection": "Show less",
       "roleNames": {
         "pillar": "Core guide",
         "companion": "Deep dive",

@@ -34,6 +34,8 @@
       "primaryPillarHeading": "Empieza aquí",
       "relatedHeading": "Sigue leyendo",
       "clusterHeading": "Más en esta guía",
+      "expandSection": "Mostrar {count} más",
+      "collapseSection": "Mostrar menos",
       "roleNames": {
         "pillar": "Guía principal",
         "companion": "Profundización",
