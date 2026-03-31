@@ -24,6 +24,15 @@
       "lockedHeader": "Locked blocks",
       "inProgressHeader": "In-progress blocks"
     },
+    "editorial": {
+      "heading": "Featured guides",
+      "description": "Start with the core reading guides when this room has a curated structure.",
+      "roleNames": {
+        "pillar": "Core guide",
+        "companion": "Reading guide",
+        "texture": "Background guide"
+      }
+    },
     "empty": {
       "noDescription": "No description available.",
       "noLocked": "No locked blocks yet! Blocks auto-lock after 1 hour of inactivity.",

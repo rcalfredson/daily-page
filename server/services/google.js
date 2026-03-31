@@ -1,4 +1,4 @@
-/* eslint-disable no-await-in-loop */
+ 
 import fs from 'fs';
 import { google } from 'googleapis';
 import jsdom from 'jsdom';
