@@ -428,11 +428,13 @@ hr {
 }
 
 .interact-section a.block-edit-btn,
+.interact-section button.delete-btn,
 .interact-section button.share-btn {
   white-space: nowrap;
 }
 
 .block-edit-btn,
+.delete-btn,
 .share-btn {
   display: inline-flex;
   align-items: center;
