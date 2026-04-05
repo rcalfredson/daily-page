@@ -6,10 +6,13 @@ const addr = config.mongoDbAddr;
 const pw = config.mongoDbPw;
 const baseURL = `mongodb+srv://${user}:${pw}@${addr}`;
 
-const dbName = `daily-page${process.env.NODE_ENV === 'production' ? '' : '-test'}`;
+function resolveDbName({ useProductionDb = false } = {}) {
+  return `daily-page${useProductionDb ? '' : '-test'}`;
+}
 
-export async function initMongooseConnection() {
+export async function initMongooseConnection(options = {}) {
   try {
+    const dbName = resolveDbName(options);
     const fullConnectionString = `${baseURL}/${dbName}?retryWrites=true&w=majority`;
     await mongoose.connect(fullConnectionString, {
       maxPoolSize: 10,
