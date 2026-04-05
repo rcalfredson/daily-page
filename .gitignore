@@ -9,4 +9,6 @@ credentials.json
 .DS_Store
 /performance/logs/*
 !/performance/logs/.gitkeep
+/tmp/*
+!/tmp/.gitkeep
 *.diff

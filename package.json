@@ -15,7 +15,9 @@
     "postinstall": "npm run build",
     "local": "npm run build && npm start",
     "perform": "babel-node performance/script.js",
-    "perform-linear": "babel-node performance/scriptLinear.js"
+    "perform-linear": "babel-node performance/scriptLinear.js",
+    "room-i18n:export": "node scripts/migrations/exportRoomI18nSource.js",
+    "room-i18n:migrate": "node scripts/migrations/populateRoomI18n.js"
   },
   "repository": {
     "type": "git",
