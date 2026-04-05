@@ -82,6 +82,17 @@
       "headerWithTags": "Etiquetas:",
       "headerNoTags": "Todavía no hay etiquetas. Añade algunas:",
       "updateError": "Error al actualizar las etiquetas."
+    },
+    "fullBlock": {
+      "headingPrefix": "Lo sentimos; el bloque \"{blockTitle}\" está ahora",
+      "headingStatus": "completamente ocupado.",
+      "retryPrefix": "Por favor,",
+      "retryLink": "prueba con otro bloque",
+      "retrySuffix": "o vuelve más tarde.",
+      "consolationPrefix": "Mientras esperas, puedes leer",
+      "consolationBestOf": "algunos de nuestros bloques favoritos",
+      "consolationMiddle": "o explorar",
+      "consolationArchive": "el archivo."
     }
   }
 }

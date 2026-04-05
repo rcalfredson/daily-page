@@ -1,11 +1,13 @@
 // server/middleware/uiPrefix.js
+import { SUPPORTED_UI_LANGS, DEFAULT_UI_LANG } from '../services/localeContext.js';
+
 const selectableLanguages = [
   'en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr',
   'nl', 'sv', 'no', 'da', 'fi', 'pl', 'cs', 'el', 'he', 'th', 'vi',
 ];
 
-const supportedUiLangs = ['en', 'es'];
-const defaultLanguage = 'en';
+const supportedUiLangs = SUPPORTED_UI_LANGS;
+const defaultLanguage = DEFAULT_UI_LANG;
 
 function pickSupportedLang(raw) {
   if (!raw) return null;

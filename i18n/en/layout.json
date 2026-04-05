@@ -4,9 +4,15 @@
     "welcomeUser": "Welcome, User!",
     "logout": "Logout",
     "login": "Login / Sign Up",
+    "language": "Language",
     "openMenu": "Open main menu",
     "closeMenu": "Close main menu",
     "privacy": "Privacy Policy",
+    "uiFallbackNotice": "{requested} isn’t translated yet. Showing {current} for now.",
+    "copyButton": {
+      "copy": "Copy",
+      "copied": "Copied!"
+    },
     "copyright": "© {year}"
   }
 }

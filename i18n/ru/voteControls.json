@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "За",
+    "downvote": "Против",
+    "errors": {
+      "failed": "Не удалось сохранить ваш голос."
+    }
+  }
+}

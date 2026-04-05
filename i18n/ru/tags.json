@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Обзор тегов",
+      "description": "Просматривайте все теги на Daily Page с быстрыми фильтрами по времени."
+    },
+    "title": "Обзор тегов",
+    "intro": "Изучайте все теги, используемые в Daily Page.",
+    "tagCloudTitle": "Облако тегов",
+    "timeframe": {
+      "last24h": "Последние 24 часа",
+      "last7d": "Последние 7 дней",
+      "last30d": "Последние 30 дней",
+      "all": "За все время"
+    },
+    "error": {
+      "loading": "Ошибка при загрузке обзора тегов"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "Блоки с тегом"
+      },
+      "header": {
+        "label": "Тег:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Всего блоков с тегом",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Создано:",
+        "inRoom": "в",
+        "unknownRoom": "Неизвестная комната",
+        "onDate": "в"
+      },
+      "chart": {
+        "label": "Создание блоков со временем"
+      },
+      "empty": {
+        "message": "Блоков с этим тегом пока нет. Может быть, именно вам стоит создать первый? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Ошибка при загрузке страницы тега"
+      }
+    }
+  }
+}

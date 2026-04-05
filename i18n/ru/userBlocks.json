@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "Ваши блоки",
+      "description": "Просматривайте и сортируйте все блоки, которые вы создали или редактировали совместно."
+    },
+    "header": {
+      "dashboardLink": "Ваша панель",
+      "profileLink": "Профиль {username}",
+      "allBlocks": "Все блоки"
+    },
+    "empty": "Блоков пока нет.",
+    "pagination": {
+      "prev": "← Назад",
+      "next": "Вперед →"
+    },
+    "titleUser": "Блоки пользователя {username}"
+  }
+}

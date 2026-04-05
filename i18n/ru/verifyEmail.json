@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "Подтверждение email",
+      "description": "Подтвердите свой email-адрес для Daily Page."
+    },
+    "header": {
+      "title": "Подтверждаем ваш email..."
+    },
+    "status": {
+      "checking": "Проверяем токен, пожалуйста, подождите...",
+      "missingToken": "Токен подтверждения отсутствует или недействителен.",
+      "genericFailure": "Подтверждение не удалось.",
+      "unexpectedError": "Произошла непредвиденная ошибка.",
+      "success": "Ваш аккаунт успешно подтвержден!",
+      "invalidOrExpired": "Недействительный или просроченный токен подтверждения."
+    },
+    "verificationMsg": {
+      "subject": "Подтвердите аккаунт Daily Page ✨",
+      "heading": "Добро пожаловать в Daily Page, {username}!",
+      "body": "Пожалуйста, подтвердите email, нажав ниже:",
+      "cta": "Подтвердить email",
+      "expires": "Ссылка действует {hours} часов."
+    }
+  }
+}

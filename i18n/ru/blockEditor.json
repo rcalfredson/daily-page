@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Вы)"
+    },
+    "meta": {
+      "title": "Редактировать блок — {blockTitle}",
+      "titleFallback": "Редактировать блок"
+    },
+    "errors": {
+      "imageUrlRequired": "Пожалуйста, введите URL изображения.",
+      "notFound": "Блок не найден или не принадлежит этой комнате.",
+      "loadFailed": "При загрузке редактора блока произошла ошибка.",
+      "updateTitleFailed": "Ошибка при обновлении заголовка."
+    },
+    "roomInfo": {
+      "label": "Комната:"
+    },
+    "title": {
+      "placeholder": "Введите заголовок блока",
+      "editTooltip": "Редактировать заголовок",
+      "lock": "Заблокировать блок",
+      "delete": "Удалить блок"
+    },
+    "description": {
+      "label": "Описание",
+      "editTooltip": "Редактировать описание",
+      "placeholder": "Введите описание",
+      "noDescriptionOwner": "Описания пока нет...",
+      "noDescriptionViewer": "Описание не указано...",
+      "save": "Сохранить",
+      "cancel": "Отмена",
+      "expand": "Развернуть",
+      "collapse": "Свернуть",
+      "updateError": "Ошибка при обновлении описания."
+    },
+    "status": {
+      "lastBackup": "Последняя резервная копия: {datetime}",
+      "lastBackupUnknown": "Последняя резервная копия: неизвестно"
+    },
+    "peers": {
+      "label": "Участники:"
+    },
+    "toasts": {
+      "blockLocked": "Этот блок был заблокирован!"
+    },
+    "editor": {
+      "placeholder": "Пустая страница ждет ваш голос; пишите смело."
+    },
+    "loading": {
+      "label": "Загрузка",
+      "quote": "Позволь миру пройти сквозь тебя. Брось на бумагу призматический, раскаленно-белый свет.<br>— Рэй Брэдбери"
+    },
+    "inactiveWarning": {
+      "message": "Вы ничего не писали 5 минут. Нажмите OK, чтобы продолжить сессию; иначе вы будете перенаправлены в архив.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Ссылка для доступа",
+      "copyTooltip": "Скопировать в буфер обмена",
+      "copied": "Скопировано!"
+    },
+    "toolbar": {
+      "insertImage": "Вставить изображение",
+      "insertImageUrlPlaceholder": "Введите URL изображения",
+      "insertImageAltPlaceholder": "Альтернативный текст (необязательно)",
+      "insertImageConfirm": "Подтвердить",
+      "insertImageCancel": "Отмена"
+    },
+    "buttons": {
+      "downloadFile": "Скачать файл"
+    },
+    "lockModal": {
+      "messageLine1": "Вы уверены, что хотите заблокировать этот блок?",
+      "messageLine2": "Это завершит работу над ним и запретит дальнейшее редактирование.",
+      "confirm": "Заблокировать",
+      "cancel": "Отмена",
+      "successToast": "Блок успешно заблокирован.",
+      "errorToast": "Ошибка при блокировке блока."
+    },
+    "tags": {
+      "headerWithTags": "Теги:",
+      "headerNoTags": "Тегов пока нет! Добавьте несколько:",
+      "updateError": "Ошибка при обновлении тегов."
+    },
+    "fullBlock": {
+      "headingPrefix": "Извините, блок \"{blockTitle}\" сейчас",
+      "headingStatus": "полностью занят.",
+      "retryPrefix": "Пожалуйста,",
+      "retryLink": "попробуйте другой блок",
+      "retrySuffix": "или вернитесь позже.",
+      "consolationPrefix": "Пока ждете, можете почитать",
+      "consolationBestOf": "некоторые из наших любимых блоков",
+      "consolationMiddle": "или заглянуть в",
+      "consolationArchive": "архив."
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Главная",
+    "rooms": "Комнаты",
+    "tags": "Теги",
+    "archive": "Архив",
+    "search": "Поиск",
+    "bestOf": "Лучшее",
+    "about": "О проекте",
+    "support": "Поддержка",
+    "otherProjects": "Другие проекты",
+    "auth": {
+      "welcomePrefix": "Добро пожаловать, ",
+      "welcomeFallbackUser": "вы",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "Панель"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Уведомления",
+      "openMenu": "Открыть уведомления",
+      "loading": "Загрузка уведомлений...",
+      "error": "Сейчас не удалось загрузить уведомления.",
+      "empty": "Уведомлений пока нет.",
+      "markRead": "Отметить как прочитанное",
+      "fallbackActor": "Кто-то",
+      "fallbackBlockTitle": "ваш блок",
+      "item": {
+        "blockComment": "{actorUsername} прокомментировал(а) ваш блок \"{blockTitle}\".",
+        "commentReply": "{actorUsername} ответил(а) на ваш комментарий в \"{blockTitle}\".",
+        "unknown": "Уведомление"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Новый комментарий к \"{blockTitle}\"",
+        "heading": "Новый комментарий к вашему блоку",
+        "headingWithName": "Здравствуйте, {username}!",
+        "body": "<strong>{actorUsername}</strong> прокомментировал(а) ваш блок <strong>{blockTitle}</strong>.",
+        "cta": "Открыть разговор на Daily Page",
+        "fallbackActor": "Кто-то",
+        "fallbackBlockTitle": "ваш блок"
+      },
+      "commentReply": {
+        "subject": "Новый ответ в \"{blockTitle}\"",
+        "heading": "Новый ответ на ваш комментарий",
+        "headingWithName": "Здравствуйте, {username}!",
+        "body": "<strong>{actorUsername}</strong> ответил(а) на ваш комментарий в <strong>{blockTitle}</strong>.",
+        "cta": "Открыть разговор на Daily Page",
+        "fallbackActor": "Кто-то",
+        "fallbackBlockTitle": "ваш блок"
+      }
+    }
+  }
+}

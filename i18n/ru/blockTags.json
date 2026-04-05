@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "Теги:",
+      "noTags": "Тегов пока нет! Добавьте несколько:"
+    },
+    "input": {
+      "placeholder": "Новый тег",
+      "addButton": "Добавить"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}
