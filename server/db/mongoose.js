@@ -6,7 +6,7 @@ const addr = config.mongoDbAddr;
 const pw = config.mongoDbPw;
 const baseURL = `mongodb+srv://${user}:${pw}@${addr}`;
 
-function resolveDbName({ useProductionDb = false } = {}) {
+function resolveDbName({ useProductionDb = process.env.NODE_ENV === 'production' } = {}) {
   return `daily-page${useProductionDb ? '' : '-test'}`;
 }
 
