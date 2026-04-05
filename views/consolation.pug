@@ -1,5 +1,5 @@
 h2
-  | While you wait, feel free to read 
-  a(href=uiPath("/archive/best-of")) some of our favorite blocks
-  |  or to browse 
-  a(href=uiPath("/archive")) the archive.
+  | #{t('blockEditor.fullBlock.consolationPrefix')} 
+  a(href=uiPath("/archive/best-of"))= t('blockEditor.fullBlock.consolationBestOf')
+  |  #{t('blockEditor.fullBlock.consolationMiddle')} 
+  a(href=uiPath("/archive"))= t('blockEditor.fullBlock.consolationArchive')

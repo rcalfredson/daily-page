@@ -5,11 +5,12 @@ block nav
 
 block content
   #viewer
-    h1 Sorry; the block "#{block_title}" is now 
-      span(style="color: #e53449") fully occupied.
+    h1
+      = t('blockEditor.fullBlock.headingPrefix', { blockTitle: block_title }) + ' '
+      span(style="color: #e53449")= t('blockEditor.fullBlock.headingStatus')
     h2
-      | Please 
-      a(href=uiPath(`/rooms/${room_id}`)) try a different block
-      |  or come back another time.
+      | #{t('blockEditor.fullBlock.retryPrefix')} 
+      a(href=uiPath(`/rooms/${room_id}`))= t('blockEditor.fullBlock.retryLink')
+      |  #{t('blockEditor.fullBlock.retrySuffix')}
 
     include consolation

@@ -82,6 +82,17 @@
       "headerWithTags": "Tags:",
       "headerNoTags": "No tags yet! Add some:",
       "updateError": "Error updating tags."
+    },
+    "fullBlock": {
+      "headingPrefix": "Sorry; the block \"{blockTitle}\" is now",
+      "headingStatus": "fully occupied.",
+      "retryPrefix": "Please",
+      "retryLink": "try a different block",
+      "retrySuffix": "or come back another time.",
+      "consolationPrefix": "While you wait, feel free to read",
+      "consolationBestOf": "some of our favorite blocks",
+      "consolationMiddle": "or to browse",
+      "consolationArchive": "the archive."
     }
   }
 }

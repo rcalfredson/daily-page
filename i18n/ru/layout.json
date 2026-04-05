@@ -1,0 +1,18 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "Добро пожаловать, пользователь!",
+    "logout": "Выйти",
+    "login": "Войти / Зарегистрироваться",
+    "language": "Язык",
+    "openMenu": "Открыть главное меню",
+    "closeMenu": "Закрыть главное меню",
+    "privacy": "Политика конфиденциальности",
+    "uiFallbackNotice": "{requested} пока не переведен. Сейчас показывается {current}.",
+    "copyButton": {
+      "copy": "Копировать",
+      "copied": "Скопировано!"
+    },
+    "copyright": "© {year}"
+  }
+}

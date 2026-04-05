@@ -40,6 +40,9 @@ script.
   });
 script.
   window.addEventListener('load', () => {
+    const copyLabel = window.i18nT?.('layout.copyButton.copy') || 'Copy';
+    const copiedLabel = window.i18nT?.('layout.copyButton.copied') || 'Copied!';
+
     // Encuentra todos los contenedores <pre>
     document.querySelectorAll('pre').forEach((pre, i) => {
       // Asegúrate de que haya un <code> dentro
@@ -50,7 +53,7 @@ script.
       const btn = document.createElement('button');
       btn.className = 'copy-btn';
       btn.type = 'button';
-      btn.innerText = 'Copy';  // Puedes cambiarlo a "Copiar" si prefieres
+      btn.innerText = copyLabel;
 
       // Prepara el texto para copiar
       // Opción A: usar data-clipboard-target con un ID
@@ -71,8 +74,8 @@ script.
 
     // Inicializa clipboard.js
     new ClipboardJS('.copy-btn').on('success', e => {
-      e.trigger.innerText = 'Copied!';      // feedback al usuario
-      setTimeout(() => e.trigger.innerText = 'Copy', 1500);
+      e.trigger.innerText = copiedLabel;
+      setTimeout(() => e.trigger.innerText = copyLabel, 1500);
       e.clearSelection();
     });
   });

@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "Подробная статистика",
+      "description": "Подробная разбивка вашей активности на Daily Page."
+    },
+    "nav": {
+      "backToDashboard": "← Назад к панели"
+    },
+    "header": {
+      "title": "📊 Обзор вашей статистики 📊"
+    },
+    "cards": {
+      "totalBlocks": "Всего создано блоков 📝",
+      "collaborations": "Совместные работы 🤝",
+      "votesGiven": "Отдано голосов 👍",
+      "daysActive": "Активных дней 📆"
+    },
+    "chart": {
+      "datasetLabel": "Ваша статистика",
+      "labels": {
+        "blocksCreated": "Созданные блоки",
+        "collaborations": "Совместные работы",
+        "votesGiven": "Отдано голосов",
+        "daysActive": "Активных дней"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "Черновик"
+    },
+    "deleteModal": {
+      "title": "Удалить блок?",
+      "message": "Это действие нельзя отменить.",
+      "confirm": "Удалить",
+      "cancel": "Отмена",
+      "closeAriaLabel": "Закрыть"
+    },
+    "toasts": {
+      "deleteSuccess": "Блок успешно удален!",
+      "deleteFailed": "Не удалось удалить блок."
+    }
+  }
+}
