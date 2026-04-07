@@ -10,48 +10,99 @@ block append scripts
   script(src='/js/room-directory.js')
 
 block content
-  h1= t('roomsDirectory.heading')
-  if topics.length === 0
-    p= t('roomsDirectory.empty')
-  else
-    if recentlyActiveRooms && recentlyActiveRooms.length > 0
-      .topic-section.recently-active
-        h2.topic-header(data-topic=t('roomsDirectory.recentlyActive') data-recently-active='true')
-          span.topic-title= t('roomsDirectory.recentlyActive')
-          span.expand-icon
-        .room-grid.collapsible
-          each room in recentlyActiveRooms
-            .room-tile.recently-active(
-              data-room-title=(room.displayName || room.name)
-              data-room-description=(room.displayDescription || room.description)
-              data-room-link=uiPath(`/rooms/${room._id}`)
-              data-room-active-users=(room.activeUsers || 0)
-            )
-              a.room-link(href=uiPath(`/rooms/${room._id}`) title=(room.displayName || room.name))
-                span.room-title= room.displayName || room.name
-                span.room-description= room.displayDescription || room.description
-                span.room-activity= t('roomsDirectory.activeUsers', { count: room.activeUsers || 0 })
+  - const totalRooms = topics.reduce((sum, topicGroup) => sum + topicGroup.rooms.length, 0);
+  - const totalTopics = topics.length;
+  - const activeRoomCount = recentlyActiveRooms ? recentlyActiveRooms.length : 0;
 
-    each topicGroup in topics
-      .topic-section
-        h2.topic-header(data-topic=topicGroup.topic)
-          span.topic-title= topicGroup.topic
-          span.expand-icon.collapsed
-        .room-grid.collapsible
-          each room in topicGroup.rooms
-            .room-tile(
-              data-room-title=(room.displayName || room.name)
-              data-room-description=(room.displayDescription || room.description)
-              data-room-link=uiPath(`/rooms/${room._id}`)
-              data-room-active-users=(room.activeUsers || 0)
-            )
-              a.room-link(href=uiPath(`/rooms/${room._id}`) title=(room.displayName || room.name))
-                span.room-title= room.displayName || room.name
-                span.room-description= room.displayDescription || room.description
-                span.room-activity
+  .rooms-directory
+    .rooms-hero
+      .rooms-hero__content
+        p.rooms-hero__eyebrow= t('roomsDirectory.eyebrow')
+        h1.rooms-hero__title= t('roomsDirectory.heading')
+        p.rooms-hero__lede= t('roomsDirectory.intro')
+        .rooms-hero__actions
+          if activeRoomCount > 0
+            a.rooms-hero__action.rooms-hero__action--primary(href='#recently-active')= t('roomsDirectory.jumpToActive')
+          if totalTopics > 0
+            a.rooms-hero__action.rooms-hero__action--secondary(href='#browse-by-topic')= t('roomsDirectory.jumpToTopics')
+      if totalRooms > 0
+        .rooms-hero__stats(aria-label=t('roomsDirectory.statsLabel'))
+          .rooms-stat
+            span.rooms-stat__value= totalRooms
+            span.rooms-stat__label= t('roomsDirectory.stats.rooms')
+          .rooms-stat
+            span.rooms-stat__value= totalTopics
+            span.rooms-stat__label= t('roomsDirectory.stats.topics')
+          .rooms-stat
+            span.rooms-stat__value= activeRoomCount
+            span.rooms-stat__label= t('roomsDirectory.stats.active')
+
+    if topics.length === 0
+      .rooms-empty-state
+        p= t('roomsDirectory.empty')
+    else
+      if recentlyActiveRooms && recentlyActiveRooms.length > 0
+        .topic-section.recently-active#recently-active
+          .section-label= t('roomsDirectory.liveNow')
+          h2.topic-header(data-topic=t('roomsDirectory.recentlyActive') data-recently-active='true')
+            .topic-header__main
+              span.topic-title= t('roomsDirectory.recentlyActive')
+              span.topic-subtitle= t('roomsDirectory.recentlyActiveSubtitle')
+            .topic-header__meta
+              span.topic-count= t('roomsDirectory.roomCount', { count: recentlyActiveRooms.length })
+              span.expand-icon
+          .room-grid.collapsible
+            each room in recentlyActiveRooms
+              .room-tile.recently-active(
+                data-room-id=room._id
+                data-room-title=(room.displayName || room.name)
+                data-room-description=(room.displayDescription || room.description)
+                data-room-link=uiPath(`/rooms/${room._id}`)
+                data-room-active-users=(room.activeUsers || 0)
+                data-room-active-users-loaded='true'
+              )
+                a.room-link(href=uiPath(`/rooms/${room._id}`) title=(room.displayName || room.name))
+                  .room-card-head
+                    span.room-title= room.displayName || room.name
+                    span.room-activity= t('roomsDirectory.activeUsers', { count: room.activeUsers || 0 })
+                  span.room-description= room.displayDescription || room.description
+                  span.room-cta
+                    span.room-cta__label= t('roomsDirectory.visitRoom')
+                    span.room-cta__icon(aria-hidden='true') →
+
+      .section-anchor#browse-by-topic
+      .rooms-section-intro
+        p.section-label= t('roomsDirectory.browseByTopic')
+        p.rooms-section-intro__text= t('roomsDirectory.topicSubtitle')
+      each topicGroup in topics
+        .topic-section
+          h2.topic-header(data-topic=topicGroup.topic)
+            .topic-header__main
+              span.topic-title= topicGroup.topic
+            .topic-header__meta
+              span.topic-count= t('roomsDirectory.roomCount', { count: topicGroup.rooms.length })
+              span.expand-icon.collapsed
+          .room-grid.collapsible
+            each room in topicGroup.rooms
+              .room-tile(
+                data-room-id=room._id
+                data-room-title=(room.displayName || room.name)
+                data-room-description=(room.displayDescription || room.description)
+                data-room-link=uiPath(`/rooms/${room._id}`)
+                data-room-active-users=(room.activeUsers || 0)
+                data-room-active-users-loaded=(room.activeUsers ? 'true' : 'false')
+              )
+                a.room-link(href=uiPath(`/rooms/${room._id}`) title=(room.displayName || room.name))
+                  .room-card-head
+                    span.room-title= room.displayName || room.name
+                    span.room-activity
+                  span.room-description= room.displayDescription || room.description
+                  span.room-cta
+                    span.room-cta__label= t('roomsDirectory.visitRoom')
+                    span.room-cta__icon(aria-hidden='true') →
 
   // Modal overlay for room details
-  .room-modal.hidden
+  .room-modal
     .room-modal-content
       button.modal-close(type="button" aria-label=t('roomsDirectory.close')) ×
       h2.modal-title
