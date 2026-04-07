@@ -16,8 +16,19 @@
 }
 
 .rooms-directory {
+  box-sizing: border-box;
   color: var(--rooms-text);
   padding: 1.5rem 0 3rem;
+}
+
+.rooms-directory *,
+.rooms-directory *::before,
+.rooms-directory *::after,
+.room-modal,
+.room-modal *,
+.room-modal *::before,
+.room-modal *::after {
+  box-sizing: inherit;
 }
 
 .rooms-hero {
@@ -86,6 +97,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  max-width: 100%;
   min-height: 2.8rem;
   padding: 0.8rem 1.1rem;
   border-radius: 999px;
@@ -228,6 +240,7 @@
   font-size: 1.18rem;
   font-weight: 700;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .topic-subtitle {
@@ -354,17 +367,14 @@
 }
 
 .room-activity.is-visible,
-.room-tile.recently-active .room-activity,
-.room-tile:hover .room-activity,
-.room-tile:focus-within .room-activity {
+.room-tile.recently-active .room-activity {
   display: inline-flex;
   opacity: 1;
   visibility: visible;
 }
 
 .room-tile.recently-active .room-activity,
-.room-tile:hover .room-activity,
-.room-tile:focus-within .room-activity {
+.room-activity.is-visible {
   background: rgba(202, 107, 44, 0.14);
   color: var(--rooms-accent-deep);
 }
@@ -421,6 +431,7 @@
 }
 
 .room-modal {
+  box-sizing: border-box;
   position: fixed;
   inset: 0;
   display: flex;
@@ -445,6 +456,9 @@
 .room-modal-content {
   position: relative;
   width: min(100%, 28rem);
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
   padding: 1.5rem;
   border: 1px solid var(--rooms-border);
   border-radius: var(--rooms-radius-lg);
@@ -482,10 +496,14 @@
 
 .modal-close {
   position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   top: 0.85rem;
   right: 0.85rem;
   width: 2rem;
   height: 2rem;
+  padding: 0;
   border: none;
   border-radius: 999px;
   background: rgba(47, 36, 26, 0.06);
@@ -605,11 +623,42 @@
   .modal-title {
     font-size: 1.35rem;
   }
+
+  .room-modal {
+    padding: 0.85rem;
+  }
+
+  .room-modal-content {
+    padding: 1.25rem;
+  }
+
+  .modal-title {
+    margin-right: 2.75rem;
+  }
+
+  .modal-close {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 2.25rem;
+    height: 2.25rem;
+  }
 }
 
 @media (max-width: 320px) {
+  .rooms-directory {
+    padding-bottom: 1.75rem;
+  }
+
+  .rooms-hero {
+    padding: 0.9rem;
+  }
+
   .rooms-hero__title {
     font-size: 1.75rem;
+  }
+
+  .rooms-hero__lede {
+    font-size: 1rem;
   }
 
   .topic-title {
