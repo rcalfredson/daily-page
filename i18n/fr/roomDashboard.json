@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "Explorez les blocs récents et en cours dans {roomName}."
+    },
+    "links": {
+      "exploreLabel": "Explorer :",
+      "allBlocks": "🗂️ Tous les blocs",
+      "browseByDate": "🗓️ Par date",
+      "bestOf": "🏅 Le meilleur",
+      "searchInRoom": "🔎 Recherche"
+    },
+    "actions": {
+      "createBlock": "Créer un bloc",
+      "starTitle": "Ajouter ce salon aux favoris",
+      "unstarTitle": "Retirer ce salon des favoris"
+    },
+    "tabs": {
+      "locked": "Blocs verrouillés",
+      "inProgress": "Blocs en cours"
+    },
+    "sections": {
+      "lockedHeader": "Blocs verrouillés",
+      "inProgressHeader": "Blocs en cours"
+    },
+    "editorial": {
+      "heading": "Guides à la une",
+      "description": "Commencez ici avec les guides à la une sélectionnés pour ce salon.",
+      "roleNames": {
+        "pillar": "Guide principal",
+        "companion": "Guide de lecture",
+        "texture": "Guide de contexte"
+      }
+    },
+    "empty": {
+      "noDescription": "Aucune description disponible.",
+      "noLocked": "Aucun bloc verrouillé pour le moment ! Les blocs se verrouillent automatiquement après 1 heure d'inactivité.",
+      "noInProgress": "Aucun bloc en cours pour le moment ! C'est le moment d'en commencer un.",
+      "noBlocks": "Aucun bloc pour le moment ! Créez le premier et laissez votre marque. 😎"
+    }
+  }
+}

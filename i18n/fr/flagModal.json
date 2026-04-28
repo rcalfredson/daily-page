@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Signaler un contenu inapproprié",
+    "fields": {
+      "reason": {
+        "label": "Motif",
+        "options": {
+          "spam": "Spam",
+          "offensive": "Offensant (propos haineux ou injures)",
+          "inappropriate": "Inapproprié (nudité, contenu explicite, etc.)",
+          "other": "Autre"
+        }
+      },
+      "details": {
+        "label": "Détails (facultatif)",
+        "placeholder": "Décrivez ce que vous avez vu..."
+      }
+    },
+    "buttons": {
+      "submit": "Envoyer le signalement",
+      "cancel": "Annuler"
+    },
+    "toasts": {
+      "success": "Signalement envoyé, merci !",
+      "failed": "Impossible d'envoyer le signalement."
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Politique de confidentialité",
+      "description": "Comment Daily Page collecte, utilise et protège vos données, en langage clair."
+    },
+    "title": "Politique de confidentialité",
+    "lastUpdated": "Dernière mise à jour : {date}",
+    "intro": {
+      "h2": "Introduction",
+      "p1": "Daily Page (\"nous\", \"notre\" ou \"nos\") exploite le site dailypage.org (ci-après le \"Service\").",
+      "p2": "Cette page vous informe de nos politiques concernant la collecte, l'utilisation et la divulgation des données personnelles lorsque vous utilisez notre Service."
+    },
+    "collection": {
+      "h2": "Collecte et utilisation des informations",
+      "p": "Nous collectons un minimum de données personnelles afin d'améliorer et de fournir notre Service. Cela inclut les adresses e-mail pour la gestion des comptes et les contenus soumis volontairement par les utilisateurs."
+    },
+    "usage": {
+      "h2": "Utilisation des données",
+      "p": "Les données collectées servent uniquement à l'authentification des comptes, à la modération du contenu et à l'amélioration de l'expérience utilisateur."
+    },
+    "storage": {
+      "h2": "Stockage et sécurité des données",
+      "p": "Vos données sont stockées de manière sécurisée et ne sont jamais partagées ni vendues à des tiers sans consentement explicite, sauf obligation légale."
+    },
+    "cookies": {
+      "h2": "Cookies",
+      "p": "Nous utilisons les cookies uniquement pour la gestion des sessions et l'amélioration de l'expérience utilisateur. Vous pouvez les désactiver dans les paramètres de votre navigateur."
+    },
+    "rights": {
+      "h2": "Vos droits",
+      "p": "Vous pouvez demander la suppression ou la modification de vos données personnelles à tout moment en nous contactant."
+    },
+    "changes": {
+      "h2": "Modifications de cette politique de confidentialité",
+      "p": "Nous pouvons mettre à jour notre politique de confidentialité de temps à autre. Les modifications seront publiées sur cette page."
+    },
+    "contact": {
+      "h2": "Nous contacter",
+      "p": "Pour toute question concernant cette politique de confidentialité, contactez-nous à :",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}

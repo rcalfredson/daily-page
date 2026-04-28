@@ -123,7 +123,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.use(makePrefixRedirectMiddleware({ isLocalizedPath }))
     app.use(addSeoLocals);
     app.use(addHreflangLocals);
-    app.use(initI18n(['layout', 'nav', 'modals', 'notifications']));
+    app.use(initI18n(['layout', 'nav', 'modals', 'notifications', 'errors']));
     app.options('*', cors(corsOptions));
 
     app.use(express.static('public'));
@@ -683,8 +683,9 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       });
 
     app.get('*', (req, res) => {
+      const { t } = res.locals;
       res.status(404).render('404', {
-        title: 'Page Not Found',
+        title: t('errors.notFound.metaTitle'),
         translations: res.locals.translations,
         lang: res.locals.lang,
       });

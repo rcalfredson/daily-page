@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Meilleurs blocs des dernières 24 heures",
+      "description": "Daily Page est un site d'écriture minimaliste et indépendant où chacun peut publier des pensées créatives, des souvenirs ou des expériences, un bloc à la fois. Explorez de nouvelles idées, rejoignez des salons et faites entendre votre voix."
+    },
+    "hero": {
+      "eyebrow": "Un lieu calme pour écrire, lire et revenir",
+      "title": "Bienvenue sur Daily Page !",
+      "subtitle": "Explorez les blocs les plus populaires des dernières 24 heures.",
+      "ctaPrefix": "Vous vous sentez inspiré ?",
+      "cta": "Rejoignez un salon",
+      "ctaSuffix": "et créez votre propre bloc !"
+    },
+    "stats": {
+      "blocks": "Blocs",
+      "rooms": "Salons",
+      "tags": "Tags",
+      "collabsToday": "Collaborations aujourd'hui"
+    },
+    "activity": {
+      "title": "En direct sur Daily Page",
+      "subtitle": "Conversations et réactions récentes, en un coup d'œil.",
+      "fallbackActor": "Quelqu'un",
+      "inRoom": "dans",
+      "comments": {
+        "title": "Commentaires récents",
+        "more": "Rechercher dans les discussions",
+        "commentVerb": "a commenté",
+        "replyVerb": "a répondu sur",
+        "empty": "Aucun commentaire récent pour le moment. La prochaine conversation peut commencer avec votre bloc."
+      },
+      "reactions": {
+        "title": "Réactions récentes",
+        "more": "Parcourir les meilleurs blocs",
+        "empty": "Aucune réaction récente pour le moment. Une bonne publication pourrait vite lancer les choses.",
+        "types": {
+          "heart": "a aimé",
+          "leaf": "a réagi avec une feuille à",
+          "wow": "a réagi avec wow à",
+          "laugh": "a ri de"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Salon à la une",
+      "roomInfoDays": "Activité des {days} derniers jours : {blocks} blocs, {votes} votes.",
+      "roomInfo24h": "Activité des dernières 24 heures : {blocks} blocs, {votes} votes.",
+      "checkItOut": "Voir ça",
+      "blockRibbon": "★ Bloc à la une",
+      "votes": "{n} votes",
+      "noContent": "(Aucun contenu fourni...)",
+      "viewBlock": "Voir le bloc"
+    },
+    "trendingTags": {
+      "title": "Tags tendance",
+      "suffixDays": "({days} derniers jours)",
+      "suffixAllTime": "(depuis toujours)",
+      "blocks": "{n} blocs",
+      "votes": "{n} votes",
+      "empty": "Pas encore de tags tendance. Soyez le premier à taguer quelque chose d'intéressant !"
+    },
+    "trendingBlocks": {
+      "title": "Blocs tendance",
+      "suffixDays": "({days} derniers jours)",
+      "createdBy": "Créé par :",
+      "in": "dans",
+      "on": "le",
+      "unknownRoom": "Salon inconnu",
+      "empty24h": "Aucun bloc au cours des dernières 24 heures. Revenez bientôt !"
+    }
+  }
+}

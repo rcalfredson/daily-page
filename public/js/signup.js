@@ -33,12 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      let errorData = null;
-      try {
-        errorData = await response.json();
-      } catch (_) {}
-
-      showFeedback(errorData?.error || msgGenericError, false);
+      showFeedback(msgGenericError, false);
     } catch (error) {
       showFeedback(msgUnexpectedError, false);
     }

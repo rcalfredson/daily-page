@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — Écriture aléatoire",
+      "description": "Générez un flux infini de pseudo-texte aléatoire pour le plaisir, l'inspiration ou le chaos."
+    },
+    "title": "Écriture aléatoire",
+    "buttons": {
+      "clear": "Effacer",
+      "stop": "Arrêter l'écriture",
+      "start": "Démarrer l'écriture"
+    }
+  }
+}

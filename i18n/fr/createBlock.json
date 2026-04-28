@@ -1,0 +1,65 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Créer un nouveau bloc — Daily Page",
+      "description": "Commencez un nouveau bloc créatif avec tags, langue et visibilité facultatifs."
+    },
+    "heading": "Créer un nouveau bloc",
+    "roomInfo": {
+      "roomLabel": "Salon :",
+      "unavailable": "Informations du salon indisponibles.",
+      "noDescription": "Aucune description disponible."
+    },
+    "form": {
+      "title": {
+        "label": "Titre :",
+        "placeholder": {
+          "full": "p. ex. 'Mon chef-d'œuvre', 'La meilleure idée du monde', 'Piège à clics pour nerds'",
+          "short": "p. ex. 'Mon chef-d'œuvre'"
+        }
+      },
+      "description": {
+        "label": "Description (facultatif) :",
+        "placeholder": "Expliquez votre génie... ou improvisez."
+      },
+      "initialContent": {
+        "label": "Contenu initial (facultatif) :",
+        "help": "Commencez à écrire ici ou appuyez sur Créer pour continuer dans l'éditeur complet, où vous pourrez intégrer des images et collaborer en temps réel.",
+        "placeholder": "Commencez votre bloc ici, ou poursuivez la modification après sa création..."
+      },
+      "visibility": {
+        "label": "Visibilité :"
+      },
+      "submit": "Créer le bloc"
+    },
+    "visibility": {
+      "public": {
+        "label": "Public",
+        "title": "Modifiable par tout le monde en temps réel. Aucune connexion requise.",
+        "inline": "Modifiable par tout le monde en temps réel. Aucune connexion requise."
+      },
+      "private": {
+        "label": "Privé",
+        "title": "Réservé aux utilisateurs connectés. Visible une fois l'édition terminée.",
+        "inline": "Réservé aux utilisateurs connectés. Visible une fois l'édition terminée.",
+        "tooltip": "Les blocs privés sont accessibles uniquement sur invitation pendant votre travail et deviennent visibles lorsque vous avez terminé."
+      }
+    },
+    "advanced": {
+      "summary": "Options avancées",
+      "lang": {
+        "label": "Langue :"
+      },
+      "translate": {
+        "label": "Traduire un bloc existant (URL ou ID) :",
+        "placeholder": "Collez une URL ou un ID de bloc (facultatif)",
+        "invalid": "Cela ne ressemble pas à une URL ou un ID de bloc valide.",
+        "fetchError": "Impossible de récupérer les informations du bloc."
+      }
+    },
+    "messages": {
+      "langExists": "Une traduction existe déjà pour cette langue. Veuillez en choisir une autre.",
+      "genericError": "Une erreur est survenue. Veuillez réessayer."
+    }
+  }
+}

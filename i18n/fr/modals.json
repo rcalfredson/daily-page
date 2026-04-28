@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Veuillez vous connecter",
+      "message": "Vous devez être connecté pour continuer.",
+      "messageWithAction": "Vous devez être connecté pour {action}.",
+      "cta": "Se connecter"
+    },
+    "actions": {
+      "voteOnBlock": "voter pour un bloc",
+      "starRoom": "mettre ce salon en favori",
+      "reactToBlock": "réagir à cette publication",
+      "commentOnBlock": "commenter ce bloc",
+      "reportComment": "signaler ce commentaire"
+    },
+    "errors": {
+      "starToggleFail": "Impossible de mettre à jour le favori. Veuillez réessayer."
+    }
+  }
+}

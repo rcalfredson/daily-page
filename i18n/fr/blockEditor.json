@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Vous)"
+    },
+    "meta": {
+      "title": "Modifier le bloc - {blockTitle}",
+      "titleFallback": "Modifier le bloc"
+    },
+    "errors": {
+      "imageUrlRequired": "Veuillez saisir l'URL d'une image.",
+      "notFound": "Bloc introuvable ou n'appartenant pas à ce salon.",
+      "loadFailed": "Une erreur est survenue lors du chargement de l'éditeur de bloc.",
+      "updateTitleFailed": "Erreur lors de la mise à jour du titre."
+    },
+    "roomInfo": {
+      "label": "Salon :"
+    },
+    "title": {
+      "placeholder": "Saisissez le titre du bloc",
+      "editTooltip": "Modifier le titre",
+      "lock": "Verrouiller le bloc",
+      "delete": "Supprimer le bloc"
+    },
+    "description": {
+      "label": "Description",
+      "editTooltip": "Modifier la description",
+      "placeholder": "Saisissez une description",
+      "noDescriptionOwner": "Pas encore de description...",
+      "noDescriptionViewer": "Aucune description fournie...",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "expand": "Développer",
+      "collapse": "Réduire",
+      "updateError": "Erreur lors de la mise à jour de la description."
+    },
+    "status": {
+      "lastBackup": "Dernière sauvegarde : {datetime}",
+      "lastBackupUnknown": "Dernière sauvegarde : inconnue"
+    },
+    "peers": {
+      "label": "Pairs :"
+    },
+    "toasts": {
+      "blockLocked": "Ce bloc a été verrouillé !"
+    },
+    "editor": {
+      "placeholder": "La page blanche attend votre voix ; écrivez sans crainte."
+    },
+    "loading": {
+      "label": "Chargement",
+      "quote": "Laissez le monde brûler à travers vous. Projetez la lumière du prisme, blanche et ardente, sur le papier.<br>—Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "Vous n'avez rien écrit depuis 5 minutes. Cliquez sur OK pour poursuivre la session ; sinon, vous serez redirigé vers les archives.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Lien de partage",
+      "copyTooltip": "Copier dans le presse-papiers",
+      "copied": "Copié !"
+    },
+    "toolbar": {
+      "insertImage": "Insérer une image",
+      "insertImageUrlPlaceholder": "Saisissez l'URL de l'image",
+      "insertImageAltPlaceholder": "Texte alternatif (facultatif)",
+      "insertImageConfirm": "Confirmer",
+      "insertImageCancel": "Annuler"
+    },
+    "buttons": {
+      "downloadFile": "Télécharger le fichier"
+    },
+    "lockModal": {
+      "messageLine1": "Voulez-vous vraiment verrouiller ce bloc ?",
+      "messageLine2": "Cela le finalisera et empêchera toute modification ultérieure.",
+      "confirm": "Verrouiller",
+      "cancel": "Annuler",
+      "successToast": "Bloc verrouillé avec succès.",
+      "errorToast": "Erreur lors du verrouillage du bloc."
+    },
+    "tags": {
+      "headerWithTags": "Tags :",
+      "headerNoTags": "Pas encore de tags ! Ajoutez-en :",
+      "updateError": "Erreur lors de la mise à jour des tags."
+    },
+    "fullBlock": {
+      "headingPrefix": "Désolé ; le bloc \"{blockTitle}\" est maintenant",
+      "headingStatus": "complet.",
+      "retryPrefix": "Veuillez",
+      "retryLink": "essayer un autre bloc",
+      "retrySuffix": "ou revenir plus tard.",
+      "consolationPrefix": "Pendant votre attente, vous pouvez lire",
+      "consolationBestOf": "quelques-uns de nos blocs préférés",
+      "consolationMiddle": "ou parcourir",
+      "consolationArchive": "les archives."
+    }
+  }
+}

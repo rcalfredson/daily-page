@@ -5,9 +5,10 @@ block nav
 
 block content
   .not-found
-    h1 404 - Page Not Found
-    p Sorry, we couldn’t find the page you were looking for. 
-    p You can head back to 
-      a(href=uiPath('/')) the homepage
-      | , or check out the 
-      a(href=uiPath('/rooms')) rooms directory.
+    h1= t('errors.notFound.title')
+    p= t('errors.notFound.message')
+    p
+      | #{t('errors.notFound.homePrefix')} 
+      a(href=uiPath('/'))= t('errors.notFound.homeLink')
+      | , #{t('errors.notFound.roomsPrefix')} 
+      a(href=uiPath('/rooms'))= t('errors.notFound.roomsLink')

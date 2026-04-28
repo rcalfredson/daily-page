@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Assistance",
+      "description": "Comment nous contacter, signaler des problèmes, demander des fonctionnalités ou des salons, et soutenir financièrement Daily Page."
+    },
+    "contact": {
+      "h1": "★ Je souhaite poser une question, signaler un problème ou demander une fonctionnalité.",
+      "p1": {
+        "before": "Si vous préférez utiliser GitHub, consultez",
+        "link": "les issues de ce projet",
+        "after": "et ajoutez votre voix. Les pull requests sont bien sûr les bienvenues."
+      },
+      "p2": {
+        "before": "Sinon,",
+        "link": "envoyez un e-mail",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Je souhaite soutenir ce projet par une contribution.",
+      "p1": {
+        "before": "Merci d'avance de financer ce projet. Veuillez envoyer vos paiements de manière sécurisée via",
+        "paypal": "PayPal",
+        "middle": "ou, si vous préférez,",
+        "amazon": "commandez quelques sachets des jouets que je vends sur Amazon",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Je souhaite demander un nouveau salon.",
+      "form": {
+        "nameLabel": "Nom du salon",
+        "topicLabel": "Sujet (facultatif)",
+        "descriptionLabel": "Description",
+        "submit": "Envoyer la demande",
+        "success": "Demande envoyée avec succès !",
+        "errorGeneric": "Impossible d'envoyer la demande. Veuillez réessayer.",
+        "errorUnexpected": "Une erreur inattendue est survenue. Veuillez réessayer."
+      }
+    }
+  }
+}

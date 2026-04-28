@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Tableau de bord",
+      "description": "Votre tableau de bord Daily Page et l'aperçu de votre compte."
+    },
+    "profile": {
+      "profilePicAlt": "Photo de profil",
+      "noBio": "Pas encore de bio. Cliquez sur \"Modifier\" pour en ajouter une !",
+      "editBio": "Modifier la bio",
+      "bioPlaceholder": "Saisissez votre bio ici",
+      "save": "Enregistrer",
+      "cancel": "Annuler"
+    },
+    "activity": {
+      "title": "Activité récente",
+      "none": "Aucune activité récente.",
+      "updatedOn": "Mis à jour le {date}",
+      "viewAllBlocks": "Voir tous les blocs"
+    },
+    "streak": {
+      "title": "Série d'écriture",
+      "line": "{days} jours d'affilée ! Continuez !"
+    },
+    "starredRooms": {
+      "title": "Salons favoris",
+      "none": "Vous n'avez encore ajouté aucun salon aux favoris. Explorez pour trouver vos préférés !",
+      "viewAll": "Voir tous les salons favoris",
+      "unnamedRoom": "Salon sans nom"
+    },
+    "stats": {
+      "title": "Vos statistiques",
+      "totalBlocks": "Total de blocs créés",
+      "collaborations": "Collaborations",
+      "votesGiven": "Votes donnés",
+      "daysActive": "Jours actifs",
+      "viewDetailed": "Voir les statistiques détaillées 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Échec du téléversement de la photo de profil. Veuillez réessayer.",
+      "uploadUnexpected": "Une erreur inattendue est survenue. Veuillez réessayer.",
+      "bioUpdateFailed": "Erreur lors de la mise à jour de la bio. Veuillez réessayer."
+    }
+  }
+}

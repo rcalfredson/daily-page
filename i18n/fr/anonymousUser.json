@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "Le vagabond anonyme",
+      "description": "Pas de profil. Pas de passé. Juste une ambiance."
+    },
+    "ascii": {
+      "ariaLabel": "Art ASCII d'une créature fantaisiste avec une citation"
+    },
+    "header": {
+      "title": "L'anonyme"
+    },
+    "body": {
+      "line1": "Vous êtes tombé dans le vide. Il n'y a rien à voir ici :",
+      "line2": "juste un esprit errant sans histoire."
+    },
+    "buttons": {
+      "home": "← Retour à l'accueil",
+      "signup": "Créer une identité"
+    }
+  }
+}
