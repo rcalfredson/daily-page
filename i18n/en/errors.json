@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Oops! Something went wrong.",
+      "message": "An unexpected error occurred. Please try again later.",
+      "home": "Back to Home"
+    },
+    "notFound": {
+      "title": "404 - Page Not Found",
+      "metaTitle": "Page Not Found",
+      "message": "Sorry, we couldn’t find the page you were looking for.",
+      "homePrefix": "You can head back to",
+      "homeLink": "the homepage",
+      "roomsPrefix": "or check out the",
+      "roomsLink": "rooms directory."
+    }
+  }
+}

@@ -8,9 +8,9 @@ block append head
 
 block content
   .error-container
-    h1 😵‍💫 Oops! Algo salió mal.
+    h1 😵‍💫 #{t('errors.generic.title')}
     if message
       p.error-message= message
     else
-      p.error-message An unexpected error occurred. Please try again later.
-    a.btn(href=uiPath("/")) 🏠 Regresar al Inicio
+      p.error-message= t('errors.generic.message')
+    a.btn(href=uiPath("/")) 🏠 #{t('errors.generic.home')}

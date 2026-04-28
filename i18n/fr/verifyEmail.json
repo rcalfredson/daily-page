@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "Vérifier l'e-mail",
+      "description": "Vérifiez votre adresse e-mail pour Daily Page."
+    },
+    "header": {
+      "title": "Vérification de votre e-mail..."
+    },
+    "status": {
+      "checking": "Vérification du jeton, veuillez patienter...",
+      "missingToken": "Jeton de vérification manquant ou invalide.",
+      "genericFailure": "Échec de la vérification.",
+      "unexpectedError": "Une erreur inattendue est survenue.",
+      "success": "Votre compte a été vérifié avec succès !",
+      "invalidOrExpired": "Jeton de vérification invalide ou expiré."
+    },
+    "verificationMsg": {
+      "subject": "Vérifiez votre compte Daily Page ✨",
+      "heading": "Bienvenue sur Daily Page, {username} !",
+      "body": "Veuillez vérifier votre e-mail en cliquant ci-dessous :",
+      "cta": "Vérifier l'adresse e-mail",
+      "expires": "Ce lien expire dans {hours} heures."
+    }
+  }
+}

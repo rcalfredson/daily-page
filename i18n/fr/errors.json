@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Oups ! Une erreur est survenue.",
+      "message": "Une erreur inattendue est survenue. Veuillez réessayer plus tard.",
+      "home": "Retour à l'accueil"
+    },
+    "notFound": {
+      "title": "404 - Page introuvable",
+      "metaTitle": "Page introuvable",
+      "message": "Désolé, nous n'avons pas trouvé la page que vous cherchiez.",
+      "homePrefix": "Vous pouvez retourner à",
+      "homeLink": "la page d'accueil",
+      "roomsPrefix": "ou consulter le",
+      "roomsLink": "répertoire des salons."
+    }
+  }
+}

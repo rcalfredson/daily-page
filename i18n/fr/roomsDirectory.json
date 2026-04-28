@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Répertoire des salons",
+      "description": "Chaque salon est une porte vers un monde différent. Entrez, partagez votre histoire et rejoignez les autres pour construire quelque chose de beau."
+    },
+    "eyebrow": "Trouvez votre coin",
+    "heading": "Répertoire des salons",
+    "intro": "Commencez par les salons qui semblent actifs en ce moment, ou parcourez les sujets jusqu'à ce qu'un déclic se fasse. Chaque salon est une invitation à écrire, un fandom ou une obsession partagée qui attend votre voix.",
+    "empty": "Aucun salon n'est disponible pour le moment. Revenez plus tard !",
+    "jumpToActive": "Voir les salons actifs",
+    "jumpToTopics": "Parcourir par sujet",
+    "statsLabel": "Points forts du répertoire des salons",
+    "liveNow": "En direct",
+    "recentlyActive": "Récemment actifs",
+    "recentlyActiveSubtitle": "Le moyen le plus rapide de trouver un salon avec des personnes présentes maintenant.",
+    "browseByTopic": "Parcourir par sujet",
+    "topicSubtitle": "Ouvrez un sujet pour explorer ses salons.",
+    "roomCount": "{count} salons",
+    "stats": {
+      "rooms": "salons à explorer",
+      "topics": "groupes de sujets",
+      "active": "sélections actives"
+    },
+    "activeUsers": "Utilisateurs actifs : {count}",
+    "visitRoom": "Visiter le salon",
+    "close": "Fermer",
+    "noTitle": "Aucun titre disponible",
+    "noDescription": "Aucune description disponible"
+  }
+}

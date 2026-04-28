@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Tous les salons favoris",
+      "description": "Une liste de tous les salons que vous avez ajoutés aux favoris."
+    },
+    "nav": {
+      "backToDashboard": "← Retour au tableau de bord"
+    },
+    "header": {
+      "title": "🌟 Tous vos salons favoris 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Salon sans nom",
+      "noDescription": "Aucune description."
+    },
+    "empty": {
+      "message": "Vous n'avez encore ajouté aucun salon aux favoris !"
+    }
+  }
+}

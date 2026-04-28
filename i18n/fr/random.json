@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Autres projets",
+      "description": "Explorez le journal de baseball, les expériences d'écriture aléatoire et d'autres projets parallèles de Daily Page."
+    },
+    "title": "Autres projets",
+    "tagline": "Un coin confortable pour les expériences et les quêtes annexes.",
+    "links": {
+      "baseball": "📖 Journal de baseball",
+      "randomWriter": "🎲 Écriture aléatoire"
+    },
+    "cta": {
+      "backToRooms": "Retour aux salons principaux"
+    }
+  }
+}

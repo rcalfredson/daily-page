@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — À propos",
+      "description": "Ce qu'est Daily Page, comment il fonctionne et pourquoi il a été conçu comme un coin du web plus lent et plus bienveillant."
+    },
+    "title": "À propos de Daily Page",
+    "tagline": "Nourrissez votre esprit, pas votre fil.",
+    "mission": {
+      "h2": "Mission",
+      "p1": "Un laboratoire d'écriture indépendant, né dans mon salon et nourri par la curiosité des lecteurs.",
+      "p2": "Il n'est pas conçu pour abîmer votre esprit, mais pour le nourrir : un lieu où vous pouvez écrire lentement, anonymement si vous le souhaitez, sans jamais vous soucier d'impressionner qui que ce soit."
+    },
+    "how": {
+      "h2": "Comment ça marche",
+      "features": {
+        "rooms": {
+          "label": "Salons",
+          "text": "sont des espaces thématiques (pensez à un subreddit, mais plus accueillant)."
+        },
+        "blocks": {
+          "label": "Blocs",
+          "text": "sont des publications collaboratives : n'importe qui, même en anonyme, peut en créer une, la modifier jusqu'à son verrouillage et voter pour les autres."
+        },
+        "privacy": {
+          "label": "Confidentialité et partage",
+          "text": "Les blocs publics apparaissent dans le fil du salon. Les blocs privés restent masqués jusqu'à leur verrouillage, mais vous recevez un lien de partage pour inviter des amis."
+        },
+        "markdown": {
+          "label": "Markdown et médias",
+          "text": "Vous écrivez en Markdown, intégrez des images et coéditez comme dans Google Docs."
+        },
+        "trends": {
+          "label": "Tendances et tags",
+          "text": "Ajoutez des tags à votre bloc, suivez les tendances et découvrez les meilleurs contenus (7 j / 30 j / depuis toujours)."
+        },
+        "streaks": {
+          "label": "Séries",
+          "text": "Gardez votre série d'écriture quotidienne en vie : votre meilleure motivation pour revenir chaque jour."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Comment nous en sommes arrivés là",
+      "p1": "En 2018, j'ai créé un wiki basé sur la date pour la page du jour, et j'ai vu quelques auteurs introspectifs en faire un espace pour leurs pensées. Le projet n'est jamais devenu énorme, mais il a planté une graine.",
+      "p2": "Aujourd'hui, Daily Page est cette graine devenue de nombreux salons : un web social tranquille pour les introvertis, les idéalistes et toutes les personnes qui cherchent un rythme plus lent."
+    },
+    "next": {
+      "h2": "Et ensuite",
+      "p1": "Nous ne faisons que commencer : intégrations plus riches, statistiques utilisateur plus détaillées, classements de réputation et davantage de façons de récompenser les créations réfléchies.",
+      "p2": "Merci de faire partie de cette petite expérience indépendante."
+    },
+    "cta": {
+      "rooms": "Explorer les salons",
+      "signup": "Rejoindre la communauté"
+    }
+  }
+}

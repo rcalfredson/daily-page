@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "Recherche",
+      "description": "Rechercher dans les blocs publics."
+    },
+    "title": "Recherche",
+    "placeholder": "Rechercher des blocs...",
+    "hint": "Saisissez au moins 2 caractères pour rechercher.",
+    "noResults": "Aucun résultat trouvé.",
+    "untitled": "Sans titre",
+    "votesTitle": "Votes",
+    "pageLabel": "Page",
+    "filters": {
+      "inRoom": "Dans le salon"
+    },
+    "buttons": {
+      "search": "Recherche",
+      "prev": "Préc.",
+      "next": "Suivant"
+    }
+  }
+}

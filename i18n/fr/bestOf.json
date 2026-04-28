@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Le meilleur de Daily Page",
+      "description": "Les blocs les plus aimés sur Daily Page : drôles, sincères, poétiques ou simplement étranges. Voyez ce qui s'est démarqué au cours du dernier jour, de la semaine, du mois et au-delà.",
+      "titleRoom": "Le meilleur de {roomName}",
+      "descriptionRoom": "Découvrez les publications marquantes du salon {roomName}, celles que les lecteurs ont le plus aimées au cours des dernières 24 heures, 7 jours, 30 jours et depuis toujours."
+    },
+    "heading": "🏆 Le meilleur de Daily Page",
+    "headingRoomPrefix": "🏆 Le meilleur de ",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 heures",
+      "7d": "🚀 7 jours",
+      "30d": "🌕 30 jours",
+      "all": "👑 Depuis toujours"
+    },
+    "labels": {
+      "createdBy": "Créé par :",
+      "inRoom": "dans",
+      "onDate": "le {date}",
+      "unknownRoom": "Salon inconnu",
+      "noBlocks": "Aucun bloc trouvé.",
+      "viewRoom": "Voir le salon"
+    }
+  }
+}

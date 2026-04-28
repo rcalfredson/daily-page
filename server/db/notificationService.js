@@ -91,7 +91,7 @@ async function sendCommentNotificationEmail({
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
   const uiLang = block.lang || 'en';
   const blockUrl = `${baseUrl}/${uiLang}${canonicalCommentPath(block, comment._id || comment.id)}`;
-  const emailLang = ['en', 'es'].includes(block.lang) ? block.lang : 'en';
+  const emailLang = ['en', 'es', 'fr'].includes(block.lang) ? block.lang : 'en';
 
   const { subject, html } = await buildCommentNotificationEmail({
     uiLang: emailLang,

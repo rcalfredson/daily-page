@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Notifications",
+      "openMenu": "Ouvrir les notifications",
+      "loading": "Chargement des notifications...",
+      "error": "Impossible de charger les notifications pour le moment.",
+      "empty": "Aucune notification pour le moment.",
+      "markRead": "Marquer comme lu",
+      "fallbackActor": "Quelqu'un",
+      "fallbackBlockTitle": "votre bloc",
+      "item": {
+        "blockComment": "{actorUsername} a commenté votre bloc \"{blockTitle}\".",
+        "commentReply": "{actorUsername} a répondu à votre commentaire sur \"{blockTitle}\".",
+        "unknown": "Notification"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Nouveau commentaire sur \"{blockTitle}\"",
+        "heading": "Nouveau commentaire sur votre bloc",
+        "headingWithName": "Bonjour {username},",
+        "body": "<strong>{actorUsername}</strong> a commenté votre bloc <strong>{blockTitle}</strong>.",
+        "cta": "Voir la conversation sur Daily Page",
+        "fallbackActor": "Quelqu'un",
+        "fallbackBlockTitle": "votre bloc"
+      },
+      "commentReply": {
+        "subject": "Nouvelle réponse sur \"{blockTitle}\"",
+        "heading": "Nouvelle réponse à votre commentaire",
+        "headingWithName": "Bonjour {username},",
+        "body": "<strong>{actorUsername}</strong> a répondu à votre commentaire sur <strong>{blockTitle}</strong>.",
+        "cta": "Voir la conversation sur Daily Page",
+        "fallbackActor": "Quelqu'un",
+        "fallbackBlockTitle": "votre bloc"
+      }
+    }
+  }
+}

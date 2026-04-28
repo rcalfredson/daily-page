@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Bloc - {blockTitle}",
+      "titleFallback": "Bloc"
+    },
+    "labels": {
+      "room": "Salon",
+      "author": "Auteur",
+      "created": "Créé",
+      "unknownAuthor": "Anonyme",
+      "authorAvatarAlt": "Avatar de {username}",
+      "viewAuthorProfile": "Voir le profil de {username}",
+      "lang": "Traductions : ",
+      "available": "disponibles"
+    },
+    "buttons": {
+      "edit": "Modifier",
+      "deleteBlock": "Supprimer le bloc",
+      "share": "Partager",
+      "flagContent": "Signaler le contenu"
+    },
+    "description": {
+      "label": "Description",
+      "none": "Aucune description fournie...",
+      "expand": "Développer",
+      "collapse": "Réduire"
+    },
+    "editorial": {
+      "heading": "Guide de lecture",
+      "roleLabel": "Type de lecture",
+      "clusterLabel": "Guide",
+      "sequence": "Partie {sequence}",
+      "primaryPillarHeading": "Commencez ici",
+      "relatedHeading": "Poursuivre la lecture",
+      "clusterHeading": "Plus dans ce guide",
+      "expandSection": "Afficher {count} de plus",
+      "collapseSection": "Afficher moins",
+      "roleNames": {
+        "pillar": "Guide principal",
+        "companion": "Exploration approfondie",
+        "texture": "Contexte"
+      }
+    },
+    "comments": {
+      "heading": "Commentaires",
+      "count": "{count} commentaires",
+      "empty": "Personne n'a encore répondu. Les commentaires apparaîtront ici lorsque la conversation commencera.",
+      "composer": {
+        "label": "Ajouter un commentaire",
+        "placeholder": "Écrire un commentaire...",
+        "submit": "Publier le commentaire",
+        "submitting": "Publication...",
+        "success": "Commentaire publié.",
+        "error": "Impossible de publier votre commentaire pour le moment.",
+        "loginPrompt": "Connectez-vous pour rejoindre la conversation.",
+        "loginCta": "Se connecter pour commenter",
+        "verifyPrompt": "Vérifiez votre e-mail avant de publier un commentaire.",
+        "verifyCta": "Vérifier l'e-mail"
+      },
+      "sort": {
+        "label": "Trier",
+        "oldestFirst": "Les plus anciens d'abord",
+        "newestFirst": "Les plus récents d'abord"
+      },
+      "by": "Par",
+      "unknownAuthor": "Inconnu",
+      "reply": {
+        "action": "Répondre",
+        "label": "Ajouter une réponse",
+        "placeholder": "Écrire une réponse...",
+        "submit": "Publier la réponse",
+        "submitting": "Publication...",
+        "success": "Réponse publiée.",
+        "error": "Impossible de publier votre réponse pour le moment.",
+        "cancel": "Annuler",
+        "loginPrompt": "Connectez-vous pour répondre."
+      },
+      "manage": {
+        "edited": "Modifié",
+        "editAction": "Modifier",
+        "deleteAction": "Supprimer",
+        "deleteConfirm": "Supprimer ce commentaire ? Cela supprimera aussi toutes les réponses associées.",
+        "deleteSuccess": "Commentaire supprimé.",
+        "deleteError": "Impossible de supprimer ce commentaire pour le moment.",
+        "forbidden": "Vous ne pouvez gérer que vos propres commentaires.",
+        "edit": {
+          "label": "Modifier le commentaire",
+          "save": "Enregistrer",
+          "saving": "Enregistrement...",
+          "cancel": "Annuler",
+          "success": "Commentaire mis à jour.",
+          "error": "Impossible de mettre à jour ce commentaire pour le moment."
+        }
+      },
+      "report": {
+        "action": "Signaler",
+        "pending": "Signalement...",
+        "success": "Commentaire signalé.",
+        "error": "Impossible de signaler ce commentaire pour le moment.",
+        "ownError": "Vous ne pouvez pas signaler votre propre commentaire.",
+        "hidden": "Commentaire masqué après signalement.",
+        "reported": "Signalé"
+      },
+      "deepLink": {
+        "focused": "Commentaire lié",
+        "unavailable": "Le commentaire lié n'est plus disponible."
+      },
+      "loadMore": "Charger plus de commentaires",
+      "loading": "Chargement...",
+      "loadError": "Impossible de charger plus de commentaires pour le moment."
+    },
+    "share": {
+      "title": "Partager ce bloc",
+      "shareOn": "Partager sur :",
+      "nativeText": "Découvrez ce bloc : {title}",
+      "alt": {
+        "facebook": "Logo Facebook",
+        "reddit": "Logo Reddit",
+        "whatsapp": "Logo WhatsApp",
+        "twitter": "Logo Twitter"
+      }
+    },
+    "errors": {
+      "notFound": "Bloc introuvable ou n'appartenant pas à ce salon.",
+      "loadFailed": "Erreur lors du chargement de la vue du bloc."
+    }
+  }
+}
