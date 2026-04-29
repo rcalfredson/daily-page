@@ -295,7 +295,10 @@
   border: 1px solid var(--rooms-border);
   border-radius: var(--rooms-radius-lg);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 247, 241, 0.96) 100%);
+    linear-gradient(180deg, #fffdf9 0%, #faf7f1 100%);
+  background-clip: padding-box;
+  contain: paint;
+  overflow: hidden;
   box-shadow: var(--rooms-shadow-card);
   transition:
     transform 0.2s ease,
@@ -380,14 +383,12 @@
 }
 
 .room-description {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   color: var(--rooms-muted);
   font-size: 1rem;
   line-height: 1.55;
+  max-height: 6.2em;
   overflow-wrap: anywhere;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
@@ -395,6 +396,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  margin-top: auto;
   color: var(--rooms-accent-deep);
   font-size: 0.96rem;
   font-weight: 700;
