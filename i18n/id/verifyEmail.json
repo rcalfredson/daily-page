@@ -1,0 +1,26 @@
+{
+    "verifyEmail": {
+        "meta": {
+            "title": "Verifikasi Email",
+            "description": "Verifikasi alamat emailmu untuk Daily Page."
+        },
+        "header": {
+            "title": "Memverifikasi emailmu..."
+        },
+        "status": {
+            "checking": "Memeriksa token, harap tunggu...",
+            "missingToken": "Token verifikasi hilang atau tidak valid.",
+            "genericFailure": "Verifikasi gagal.",
+            "unexpectedError": "Terjadi kesalahan tak terduga.",
+            "success": "Akunmu berhasil diverifikasi!",
+            "invalidOrExpired": "Token verifikasi tidak valid atau kedaluwarsa."
+        },
+        "verificationMsg": {
+            "subject": "Verifikasi akun Daily Page-mu ✨",
+            "heading": "Selamat datang di Daily Page, {username}!",
+            "body": "Silakan verifikasi emailmu dengan mengeklik di bawah:",
+            "cta": "Verifikasi Alamat Email",
+            "expires": "Tautan ini kedaluwarsa dalam {hours} jam."
+        }
+    }
+}

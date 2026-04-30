@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "Blokmu",
+      "description": "Telusuri dan urutkan semua blok yang kamu buat atau kerjakan bersama."
+    },
+    "header": {
+      "dashboardLink": "Dasbormu",
+      "profileLink": "Profil {username}",
+      "allBlocks": "Semua Blok"
+    },
+    "empty": "Belum ada blok.",
+    "pagination": {
+      "prev": "← Sebelumnya",
+      "next": "Berikutnya →"
+    },
+    "titleUser": "Blok {username}"
+  }
+}

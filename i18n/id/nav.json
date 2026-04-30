@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Beranda",
+    "rooms": "Ruang",
+    "tags": "Tag",
+    "archive": "Arsip",
+    "search": "Cari",
+    "bestOf": "Terbaik",
+    "about": "Tentang",
+    "support": "Dukungan",
+    "otherProjects": "Proyek Lain",
+    "auth": {
+      "welcomePrefix": "Selamat datang, ",
+      "welcomeFallbackUser": "kamu",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "Dasbor"
+  }
+}

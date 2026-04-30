@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Kebijakan Privasi",
+      "description": "Bagaimana Daily Page mengumpulkan, menggunakan, dan melindungi datamu, dengan bahasa sederhana."
+    },
+    "title": "Kebijakan Privasi",
+    "lastUpdated": "Terakhir diperbarui: {date}",
+    "intro": {
+      "h2": "Pengantar",
+      "p1": "Daily Page (\"kami\") mengoperasikan situs web dailypage.org (selanjutnya disebut \"Layanan\").",
+      "p2": "Halaman ini memberi tahu kamu tentang kebijakan kami terkait pengumpulan, penggunaan, dan pengungkapan data pribadi saat kamu menggunakan Layanan kami."
+    },
+    "collection": {
+      "h2": "Pengumpulan dan Penggunaan Informasi",
+      "p": "Kami mengumpulkan data pribadi minimal untuk meningkatkan dan menyediakan Layanan kami. Ini mencakup alamat email untuk pengelolaan akun dan konten yang dikirim secara sukarela oleh pengguna."
+    },
+    "usage": {
+      "h2": "Penggunaan Data",
+      "p": "Data yang dikumpulkan digunakan semata-mata untuk autentikasi akun, moderasi konten, dan meningkatkan pengalaman pengguna."
+    },
+    "storage": {
+      "h2": "Penyimpanan & Keamanan Data",
+      "p": "Datamu disimpan dengan aman dan tidak pernah dibagikan atau dijual kepada pihak ketiga tanpa persetujuan eksplisit, kecuali diwajibkan oleh hukum."
+    },
+    "cookies": {
+      "h2": "Cookie",
+      "p": "Kami menggunakan cookie hanya untuk pengelolaan sesi dan meningkatkan pengalaman pengguna. Kamu dapat menonaktifkan cookie melalui pengaturan browsermu."
+    },
+    "rights": {
+      "h2": "Hakmu",
+      "p": "Kamu dapat meminta penghapusan atau perubahan data pribadimu kapan saja dengan menghubungi kami."
+    },
+    "changes": {
+      "h2": "Perubahan pada Kebijakan Privasi Ini",
+      "p": "Kami dapat memperbarui Kebijakan Privasi kami dari waktu ke waktu. Perubahan akan diposting di halaman ini."
+    },
+    "contact": {
+      "h2": "Hubungi Kami",
+      "p": "Untuk pertanyaan tentang Kebijakan Privasi ini, hubungi kami di:",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}

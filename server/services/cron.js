@@ -13,7 +13,7 @@ import {
 } from '../db/blockService.js';
 import { getTotalRooms } from '../db/roomService.js';
 
-const HOME_LANGS = ['en', 'es', 'fr'];
+const HOME_LANGS = ['en', 'es', 'fr', 'ru', 'id'];
 
 async function warmHomeCache({ preferredLang }) {
   // Settled so one failure doesn’t prevent other keys from warming
@@ -56,4 +56,6 @@ export function startJobs() {
   setTimeout(() => warmHomeCache({ preferredLang: 'en' }).catch(console.error), 1_000);
   setTimeout(() => warmHomeCache({ preferredLang: 'es' }).catch(console.error), 1_500);
   setTimeout(() => warmHomeCache({ preferredLang: 'fr' }).catch(console.error), 2_000);
+  setTimeout(() => warmHomeCache({ preferredLang: 'ru' }).catch(console.error), 2_500);
+  setTimeout(() => warmHomeCache({ preferredLang: 'id' }).catch(console.error), 3_000);
 }

@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Notifikasi",
+      "openMenu": "Buka notifikasi",
+      "loading": "Memuat notifikasi...",
+      "error": "Tidak dapat memuat notifikasi saat ini.",
+      "empty": "Belum ada notifikasi.",
+      "markRead": "Tandai dibaca",
+      "fallbackActor": "Seseorang",
+      "fallbackBlockTitle": "blokmu",
+      "item": {
+        "blockComment": "{actorUsername} mengomentari blokmu \"{blockTitle}\".",
+        "commentReply": "{actorUsername} membalas komentarmu di \"{blockTitle}\".",
+        "unknown": "Notifikasi"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Komentar baru di \"{blockTitle}\"",
+        "heading": "Komentar baru di blokmu",
+        "headingWithName": "Hai {username},",
+        "body": "<strong>{actorUsername}</strong> mengomentari blokmu <strong>{blockTitle}</strong>.",
+        "cta": "Lihat percakapan di Daily Page",
+        "fallbackActor": "Seseorang",
+        "fallbackBlockTitle": "blokmu"
+      },
+      "commentReply": {
+        "subject": "Balasan baru di \"{blockTitle}\"",
+        "heading": "Balasan baru untuk komentarmu",
+        "headingWithName": "Hai {username},",
+        "body": "<strong>{actorUsername}</strong> membalas komentarmu di <strong>{blockTitle}</strong>.",
+        "cta": "Lihat percakapan di Daily Page",
+        "fallbackActor": "Seseorang",
+        "fallbackBlockTitle": "blokmu"
+      }
+    }
+  }
+}

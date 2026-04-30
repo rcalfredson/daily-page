@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — Tentang",
+      "description": "Apa itu Daily Page, cara kerjanya, dan mengapa dibuat sebagai sudut web yang lebih pelan dan ramah."
+    },
+    "title": "Tentang Daily Page",
+    "tagline": "Isi pikiranmu, bukan feed-mu.",
+    "mission": {
+      "h2": "Misi",
+      "p1": "Laboratorium menulis indie—dimulai dari ruang tamu saya, digerakkan oleh rasa ingin tahu pembaca.",
+      "p2": "Ini dibangun bukan untuk merusak otakmu, tetapi untuk menyehatkannya: tempat kamu bisa menulis perlahan, anonim jika mau, dan tidak perlu khawatir membuat siapa pun terkesan."
+    },
+    "how": {
+      "h2": "Cara Kerjanya",
+      "features": {
+        "rooms": {
+          "label": "Ruang",
+          "text": "adalah silo topik (bayangkan “subreddit, tetapi lebih ramah”)."
+        },
+        "blocks": {
+          "label": "Blok",
+          "text": "adalah posting kolaboratif—siapa pun (bahkan “anonim”) dapat membuatnya, mengeditnya sampai terkunci, dan memberi suara pada karya orang lain."
+        },
+        "privacy": {
+          "label": "Privasi & Berbagi",
+          "text": "Blok publik tampil di feed ruang. Blok privat tersembunyi sampai terkunci, tetapi kamu mendapat tautan berbagi untuk mengundang teman."
+        },
+        "markdown": {
+          "label": "Markdown & Media",
+          "text": "Kamu menulis dalam markdown, menyematkan gambar, dan menyunting bersama seperti di Google Docs."
+        },
+        "trends": {
+          "label": "Tren & Tag",
+          "text": "Tandai blokmu, pantau tren tag, dan temukan konten teratas (7 h / 30 h / sepanjang waktu)."
+        },
+        "streaks": {
+          "label": "Runtunan",
+          "text": "Jaga runtunan menulis harianmu tetap hidup—insentif terbaikmu untuk hadir setiap hari."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Bagaimana Kita Sampai di Sini",
+      "p1": "Pada 2018, saya membuat wiki berbasis tanggal untuk “halaman hari ini” dan melihat beberapa penulis reflektif mengubahnya menjadi ruang untuk pikiran mereka. Itu tidak pernah menjadi besar—tetapi menanam sebuah benih.",
+      "p2": "Maju cepat ke sekarang, dan Daily Page adalah benih itu yang tumbuh menjadi banyak ruang—web sosial yang tenang untuk introver, idealis, dan siapa pun yang merindukan tempo yang lebih pelan."
+    },
+    "next": {
+      "h2": "Selanjutnya",
+      "p1": "Kami baru mulai: sematan yang lebih kaya, statistik pengguna yang lebih dalam, papan peringkat reputasi, dan lebih banyak cara untuk menghargai kreasi yang penuh pikir.",
+      "p2": "Terima kasih sudah menjadi bagian dari eksperimen indie kecil ini."
+    },
+    "cta": {
+      "rooms": "Jelajahi Ruang",
+      "signup": "Bergabung dengan Komunitas"
+    }
+  }
+}

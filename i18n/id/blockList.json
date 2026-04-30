@@ -1,0 +1,11 @@
+{
+  "blockList": {
+    "period": {
+      "all": "sepanjang waktu",
+      "days": "dalam {n} hari terakhir",
+      "day": "dalam 24 jam terakhir"
+    },
+    "createdBy": "Dibuat oleh:",
+    "on": "pada"
+  }
+}

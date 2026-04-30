@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — Penulis Acak",
+      "description": "Buat aliran teks semu acak tanpa akhir untuk bersenang-senang, inspirasi, atau kekacauan."
+    },
+    "title": "Penulis Acak",
+    "buttons": {
+      "clear": "Bersihkan",
+      "stop": "Berhenti menulis",
+      "start": "Mulai menulis"
+    }
+  }
+}

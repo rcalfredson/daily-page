@@ -1,0 +1,71 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Arsip",
+      "description": "Jelajahi seluruh arsip berdasarkan bulan.",
+      "titleRoom": "Daily Page — Arsip · {roomName}",
+      "descriptionRoom": "Jelajahi tulisan lama di ruang {roomName}—bulan demi bulan. Lompat ke tanggal mana pun untuk melihat apa yang dibagikan orang lain di ruang ini dari waktu ke waktu."
+    },
+    "nav": {
+      "prev": "Sebelumnya",
+      "next": "Berikutnya"
+    },
+    "title": "📚 Jelajahi Arsip",
+    "titleRoom": "📚 {roomName} — Arsip",
+    "roomViewing": "Melihat arsip untuk ruang {roomName}",
+    "viewRoomLink": "Lihat ruang",
+    "noContent": "Belum ada konten.",
+    "backToRoom": "← Kembali ke Dasbor Ruang",
+    "calendar": {
+      "meta": {
+        "description": "Lihat semua blok kreatif yang diposting pada {month} {year}—dari pikiran singkat hingga refleksi mendalam. Klik tanggal mana pun untuk menjelajahi apa yang dibagikan.",
+        "descriptionRoom": "Lihat aktivitas kreatif di {roomName} selama {month} {year}. Pilih tanggal untuk menjelajahi blok yang dibagikan hari itu."
+      },
+      "title": "📆 Arsip untuk {month} {year}",
+      "prevLabel": "Arsip untuk {month} {year}",
+      "nextLabel": "Arsip untuk {month} {year}"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "Arsip untuk {date}",
+        "titleRoom": "{roomName} — Arsip untuk {date}",
+        "descriptionSite": "Jelajahi blok yang ditulis pada {date}—dari catatan tenang hingga pengakuan liar.",
+        "descriptionRoom": "Pada {date}, para penulis di ruang {roomName} meninggalkan jejak mereka—gulir melalui refleksi, ide, dan ungkapan yang dibagikan hari itu."
+      },
+      "heading": "Arsip untuk {date}",
+      "empty": "Tidak ada konten untuk tanggal ini.",
+      "labels": {
+        "createdBy": "Dibuat oleh:",
+        "in": "di",
+        "on": "pada {datetime}",
+        "unknownRoom": "Ruang Tidak Dikenal"
+      },
+      "nav": {
+        "prevDay": "Hari sebelumnya",
+        "nextDay": "Hari berikutnya"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — Semua Blok",
+        "descriptionRoom": "Telusuri setiap blok yang pernah diposting di ruang {roomName}. Urutkan berdasarkan tanggal, judul, atau suara untuk menjelajahi riwayatnya."
+      },
+      "header": {
+        "allBlocks": "— Semua Blok"
+      },
+      "sort": {
+        "label": "Urutkan berdasarkan",
+        "options": {
+          "date": "Tanggal",
+          "title": "Judul",
+          "votes": "Suara"
+        },
+        "submit": "Buka"
+      }
+    },
+    "pagination": {
+      "prev": "← Sebelumnya",
+      "next": "Berikutnya →"
+    }
+  }
+}

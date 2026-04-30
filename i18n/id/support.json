@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Dukungan",
+      "description": "Cara menghubungi kami, melaporkan masalah, meminta fitur atau ruang, dan mendukung Daily Page secara finansial."
+    },
+    "contact": {
+      "h1": "★ Saya ingin mengajukan pertanyaan, melaporkan masalah, atau meminta fitur.",
+      "p1": {
+        "before": "Jika kamu lebih suka menggunakan GitHub, silakan cek",
+        "link": "issue proyek ini",
+        "after": "dan tambahkan suaramu. Pull request juga tentu diterima."
+      },
+      "p2": {
+        "before": "Atau,",
+        "link": "kirim email",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Saya ingin mendukung proyek ini melalui kontribusi.",
+      "p1": {
+        "before": "Terima kasih sebelumnya karena mendanai proyek ini. Silakan kirim pembayaran dengan aman melalui",
+        "paypal": "PayPal",
+        "middle": "atau, jika kamu mau,",
+        "amazon": "pesan beberapa kantong mainan yang saya jual di Amazon",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Saya ingin meminta ruang baru.",
+      "form": {
+        "nameLabel": "Nama Ruang",
+        "topicLabel": "Topik (opsional)",
+        "descriptionLabel": "Deskripsi",
+        "submit": "Kirim Permintaan",
+        "success": "Permintaan berhasil dikirim!",
+        "errorGeneric": "Gagal mengirim permintaan. Silakan coba lagi.",
+        "errorUnexpected": "Terjadi kesalahan tak terduga. Silakan coba lagi."
+      }
+    }
+  }
+}

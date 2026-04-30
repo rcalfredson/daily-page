@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Laporkan Konten yang Tidak Pantas",
+    "fields": {
+      "reason": {
+        "label": "Alasan",
+        "options": {
+          "spam": "Spam",
+          "offensive": "Menyinggung (ujaran kebencian atau hinaan)",
+          "inappropriate": "Tidak pantas (ketelanjangan, konten grafis, dll.)",
+          "other": "Lainnya"
+        }
+      },
+      "details": {
+        "label": "Detail (opsional)",
+        "placeholder": "Jelaskan apa yang kamu lihat…"
+      }
+    },
+    "buttons": {
+      "submit": "Kirim Laporan",
+      "cancel": "Batal"
+    },
+    "toasts": {
+      "success": "Laporan dikirim—terima kasih!",
+      "failed": "Gagal mengirim laporan."
+    }
+  }
+}

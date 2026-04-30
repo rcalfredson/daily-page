@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Proyek Lain",
+      "description": "Jelajahi jurnal baseball, eksperimen menulis acak, dan proyek sampingan lain dari Daily Page."
+    },
+    "title": "Proyek Lain",
+    "tagline": "Sudut nyaman untuk eksperimen dan misi sampingan.",
+    "links": {
+      "baseball": "📖 Jurnal Baseball",
+      "randomWriter": "🎲 Penulis Acak"
+    },
+    "cta": {
+      "backToRooms": "Kembali ke Ruang Utama"
+    }
+  }
+}

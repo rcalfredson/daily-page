@@ -1,0 +1,18 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "Selamat datang, Pengguna!",
+    "logout": "Keluar",
+    "login": "Masuk / Daftar",
+    "language": "Bahasa",
+    "openMenu": "Buka menu utama",
+    "closeMenu": "Tutup menu utama",
+    "privacy": "Kebijakan Privasi",
+    "uiFallbackNotice": "{requested} belum diterjemahkan. Menampilkan {current} untuk saat ini.",
+    "copyButton": {
+      "copy": "Salin",
+      "copied": "Tersalin!"
+    },
+    "copyright": "© {year}"
+  }
+}

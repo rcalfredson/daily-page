@@ -1,0 +1,7 @@
+{
+    "reactions": {
+        "aria": "Reaksi {emoji}: {count}",
+        "loginToReact": "Masuk untuk bereaksi",
+        "countsLabel": "Reaksi"
+    }
+}
