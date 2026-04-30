@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "Pengembara Anonim",
+      "description": "Tanpa profil. Tanpa masa lalu. Hanya suasana."
+    },
+    "ascii": {
+      "ariaLabel": "Seni ASCII makhluk jenaka dengan kutipan"
+    },
+    "header": {
+      "title": "Sang Anonim"
+    },
+    "body": {
+      "line1": "Kamu tersandung masuk ke kehampaan. Tidak ada yang bisa dilihat di sini—",
+      "line2": "hanya roh pengembara tanpa cerita."
+    },
+    "buttons": {
+      "home": "← Kembali ke beranda",
+      "signup": "Buat identitas"
+    }
+  }
+}

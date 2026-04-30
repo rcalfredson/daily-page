@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Buat Akun",
+      "description": "Daftar ke Daily Page untuk mengakses semua fitur."
+    },
+    "header": {
+      "title": "Buat Akunmu",
+      "subtitle": "Bergabunglah dengan Daily Page untuk mulai membuat dan membagikan tulisan harianmu!"
+    },
+    "form": {
+      "email": {
+        "label": "Email",
+        "placeholder": "Masukkan emailmu"
+      },
+      "username": {
+        "label": "Nama Pengguna",
+        "placeholder": "Masukkan nama penggunamu"
+      },
+      "password": {
+        "label": "Kata Sandi",
+        "placeholder": "Masukkan kata sandi"
+      },
+      "submit": "Daftar",
+      "feedback": {
+        "success": "Formulir berhasil dikirim!",
+        "successCreatedVerify": "Akun berhasil dibuat! Silakan cek emailmu untuk memverifikasi akun.",
+        "genericError": "Gagal membuat akun. Silakan coba lagi.",
+        "unexpectedError": "Terjadi kesalahan tak terduga. Silakan coba lagi."
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Direktori Ruang",
+      "description": "Setiap ruang adalah pintu menuju dunia yang berbeda. Masuklah, bagikan ceritamu, dan bergabung dengan orang lain untuk membangun sesuatu yang indah."
+    },
+    "eyebrow": "Temukan sudutmu",
+    "heading": "Direktori Ruang",
+    "intro": "Mulailah dari ruang yang terasa hidup saat ini, atau jelajahi berdasarkan topik sampai sesuatu terasa pas. Setiap ruang adalah prompt menulis, fandom, atau obsesi bersama yang berbeda dan menunggu suaramu.",
+    "empty": "Tidak ada ruang yang tersedia saat ini. Cek lagi nanti!",
+    "jumpToActive": "Lihat ruang aktif",
+    "jumpToTopics": "Telusuri berdasarkan topik",
+    "statsLabel": "Sorotan direktori ruang",
+    "liveNow": "Aktif sekarang",
+    "recentlyActive": "Baru Aktif",
+    "recentlyActiveSubtitle": "Cara tercepat menemukan ruang yang sedang berisi orang saat ini.",
+    "browseByTopic": "Telusuri berdasarkan topik",
+    "topicSubtitle": "Buka topik untuk menjelajahi ruang-ruangnya.",
+    "roomCount": "{count} ruang",
+    "stats": {
+      "rooms": "ruang untuk dijelajahi",
+      "topics": "kelompok topik",
+      "active": "pilihan aktif"
+    },
+    "activeUsers": "Pengguna Aktif: {count}",
+    "visitRoom": "Kunjungi Ruang",
+    "close": "Tutup",
+    "noTitle": "Tidak Ada Judul",
+    "noDescription": "Tidak Ada Deskripsi"
+  }
+}

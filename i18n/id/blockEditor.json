@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Kamu)"
+    },
+    "meta": {
+      "title": "Edit Blok - {blockTitle}",
+      "titleFallback": "Edit Blok"
+    },
+    "errors": {
+      "imageUrlRequired": "Masukkan URL gambar.",
+      "notFound": "Blok tidak ditemukan atau bukan milik ruang ini.",
+      "loadFailed": "Terjadi kesalahan saat memuat editor blok.",
+      "updateTitleFailed": "Kesalahan saat memperbarui judul."
+    },
+    "roomInfo": {
+      "label": "Ruang:"
+    },
+    "title": {
+      "placeholder": "Masukkan judul blok",
+      "editTooltip": "Edit Judul",
+      "lock": "Kunci Blok",
+      "delete": "Hapus Blok"
+    },
+    "description": {
+      "label": "Deskripsi",
+      "editTooltip": "Edit Deskripsi",
+      "placeholder": "Masukkan deskripsi",
+      "noDescriptionOwner": "Belum ada deskripsi...",
+      "noDescriptionViewer": "Tidak ada deskripsi...",
+      "save": "Simpan",
+      "cancel": "Batal",
+      "expand": "Perluas",
+      "collapse": "Ciutkan",
+      "updateError": "Kesalahan saat memperbarui deskripsi."
+    },
+    "status": {
+      "lastBackup": "Cadangan terakhir: {datetime}",
+      "lastBackupUnknown": "Cadangan terakhir: Tidak diketahui"
+    },
+    "peers": {
+      "label": "Rekan:"
+    },
+    "toasts": {
+      "blockLocked": "Blok ini telah dikunci!"
+    },
+    "editor": {
+      "placeholder": "Halaman kosong menunggu suaramu; menulislah tanpa takut."
+    },
+    "loading": {
+      "label": "Memuat",
+      "quote": "Biarkan dunia membakar lewat dirimu. Lemparkan cahaya prisma, putih membara, ke atas kertas.<br>—Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "Kamu belum menulis apa pun selama 5 menit. Klik OK untuk melanjutkan sesi; jika tidak, kamu akan dialihkan ke arsip.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Tautan Berbagi",
+      "copyTooltip": "Salin ke Clipboard",
+      "copied": "Tersalin!"
+    },
+    "toolbar": {
+      "insertImage": "Sisipkan Gambar",
+      "insertImageUrlPlaceholder": "Masukkan URL gambar",
+      "insertImageAltPlaceholder": "Teks alt (opsional)",
+      "insertImageConfirm": "Konfirmasi",
+      "insertImageCancel": "Batal"
+    },
+    "buttons": {
+      "downloadFile": "Unduh file"
+    },
+    "lockModal": {
+      "messageLine1": "Yakin ingin mengunci blok ini?",
+      "messageLine2": "Ini akan memfinalkannya dan mencegah pengeditan lebih lanjut.",
+      "confirm": "Kunci",
+      "cancel": "Batal",
+      "successToast": "Blok berhasil dikunci.",
+      "errorToast": "Kesalahan saat mengunci blok."
+    },
+    "tags": {
+      "headerWithTags": "Tag:",
+      "headerNoTags": "Belum ada tag! Tambahkan beberapa:",
+      "updateError": "Kesalahan saat memperbarui tag."
+    },
+    "fullBlock": {
+      "headingPrefix": "Maaf; blok \"{blockTitle}\" sekarang",
+      "headingStatus": "sudah penuh.",
+      "retryPrefix": "Silakan",
+      "retryLink": "coba blok lain",
+      "retrySuffix": "atau kembali lain waktu.",
+      "consolationPrefix": "Sambil menunggu, silakan baca",
+      "consolationBestOf": "beberapa blok favorit kami",
+      "consolationMiddle": "atau telusuri",
+      "consolationArchive": "arsip."
+    }
+  }
+}

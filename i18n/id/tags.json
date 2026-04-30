@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Ikhtisar Tag",
+      "description": "Telusuri semua tag yang digunakan di Daily Page, dengan filter cepat berdasarkan waktu."
+    },
+    "title": "Ikhtisar Tag",
+    "intro": "Jelajahi semua tag yang digunakan di Daily Page.",
+    "tagCloudTitle": "Awan Tag",
+    "timeframe": {
+      "last24h": "24 Jam Terakhir",
+      "last7d": "7 Hari Terakhir",
+      "last30d": "30 Hari Terakhir",
+      "all": "Sepanjang Waktu"
+    },
+    "error": {
+      "loading": "Kesalahan saat memuat ikhtisar tag"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "Blok yang diberi tag"
+      },
+      "header": {
+        "label": "Tag:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Total blok dengan",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Dibuat oleh:",
+        "inRoom": "di",
+        "unknownRoom": "Ruang Tidak Dikenal",
+        "onDate": "pada"
+      },
+      "chart": {
+        "label": "Blok Dibuat dari Waktu ke Waktu"
+      },
+      "empty": {
+        "message": "Belum ada blok dengan tag ini. Mungkin kamu harus membuat yang pertama? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Kesalahan saat memuat halaman tag"
+      }
+    }
+  }
+}

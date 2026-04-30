@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "Naikkan suara",
+    "downvote": "Turunkan suara",
+    "errors": {
+      "failed": "Gagal menyimpan suaramu."
+    }
+  }
+}

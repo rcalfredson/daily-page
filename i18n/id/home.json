@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Blok Teratas dalam 24 Jam Terakhir",
+      "description": "Daily Page adalah situs menulis indie minimalis tempat siapa pun dapat memposting pikiran kreatif, kenangan, atau eksperimen—satu blok setiap kali. Jelajahi ide baru, bergabung dengan ruang, dan sumbangkan suaramu."
+    },
+    "hero": {
+      "eyebrow": "Tempat tenang untuk menulis, membaca, dan kembali",
+      "title": "Selamat datang di Daily Page!",
+      "subtitle": "Jelajahi blok paling populer dari 24 jam terakhir.",
+      "ctaPrefix": "Merasa terinspirasi?",
+      "cta": "Bergabung dengan ruang",
+      "ctaSuffix": "dan buat blokmu sendiri!"
+    },
+    "stats": {
+      "blocks": "Blok",
+      "rooms": "Ruang",
+      "tags": "Tag",
+      "collabsToday": "Kolaborasi Hari Ini"
+    },
+    "activity": {
+      "title": "Langsung di Daily Page",
+      "subtitle": "Percakapan dan reaksi segar, semua dalam satu pandangan.",
+      "fallbackActor": "Seseorang",
+      "inRoom": "di",
+      "comments": {
+        "title": "Komentar terbaru",
+        "more": "Cari diskusi",
+        "commentVerb": "mengomentari",
+        "replyVerb": "membalas di",
+        "empty": "Belum ada komentar terbaru. Percakapan berikutnya bisa dimulai dengan blokmu."
+      },
+      "reactions": {
+        "title": "Reaksi terbaru",
+        "more": "Telusuri blok teratas",
+        "empty": "Belum ada reaksi terbaru. Posting yang bagus bisa segera menghidupkannya.",
+        "types": {
+          "heart": "memberi hati pada",
+          "leaf": "bereaksi dengan daun pada",
+          "wow": "bereaksi wow pada",
+          "laugh": "tertawa pada"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Ruang Unggulan",
+      "roomInfoDays": "Aktivitas selama {days} hari terakhir: {blocks} blok, {votes} suara.",
+      "roomInfo24h": "Aktivitas selama 24 jam terakhir: {blocks} blok, {votes} suara.",
+      "checkItOut": "Lihat",
+      "blockRibbon": "★ Blok Unggulan",
+      "votes": "{n} suara",
+      "noContent": "(Tidak ada konten...)",
+      "viewBlock": "Lihat Blok"
+    },
+    "trendingTags": {
+      "title": "Tag Tren",
+      "suffixDays": "({days} hari terakhir)",
+      "suffixAllTime": "(sepanjang waktu)",
+      "blocks": "{n} blok",
+      "votes": "{n} suara",
+      "empty": "Belum ada tag tren. Jadilah yang pertama menandai sesuatu yang keren!"
+    },
+    "trendingBlocks": {
+      "title": "Blok Tren",
+      "suffixDays": "({days} hari terakhir)",
+      "createdBy": "Dibuat oleh:",
+      "in": "di",
+      "on": "pada",
+      "unknownRoom": "Ruang Tidak Dikenal",
+      "empty24h": "Belum ada blok dalam 24 jam terakhir. Cek lagi segera, kawan!"
+    }
+  }
+}

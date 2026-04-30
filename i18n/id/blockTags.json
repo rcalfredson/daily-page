@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "Tag:",
+      "noTags": "Belum ada tag! Tambahkan beberapa:"
+    },
+    "input": {
+      "placeholder": "Tag baru",
+      "addButton": "Tambah"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

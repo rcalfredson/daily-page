@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "Statistik Terperinci",
+      "description": "Rincian terperinci aktivitas Daily Page-mu."
+    },
+    "nav": {
+      "backToDashboard": "← Kembali ke Dasbor"
+    },
+    "header": {
+      "title": "📊 Ringkasan Statistikmu 📊"
+    },
+    "cards": {
+      "totalBlocks": "Total Blok Dibuat 📝",
+      "collaborations": "Kolaborasi 🤝",
+      "votesGiven": "Suara Diberikan 👍",
+      "daysActive": "Hari Aktif 📆"
+    },
+    "chart": {
+      "datasetLabel": "Statistikmu",
+      "labels": {
+        "blocksCreated": "Blok Dibuat",
+        "collaborations": "Kolaborasi",
+        "votesGiven": "Suara Diberikan",
+        "daysActive": "Hari Aktif"
+      }
+    }
+  }
+}

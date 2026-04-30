@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Blok - {blockTitle}",
+      "titleFallback": "Blok"
+    },
+    "labels": {
+      "room": "Ruang",
+      "author": "Penulis",
+      "created": "Dibuat",
+      "unknownAuthor": "Anonim",
+      "authorAvatarAlt": "avatar {username}",
+      "viewAuthorProfile": "Lihat profil {username}",
+      "lang": "Terjemahan: ",
+      "available": "tersedia"
+    },
+    "buttons": {
+      "edit": "Edit",
+      "deleteBlock": "Hapus Blok",
+      "share": "Bagikan",
+      "flagContent": "Laporkan Konten"
+    },
+    "description": {
+      "label": "Deskripsi",
+      "none": "Tidak ada deskripsi...",
+      "expand": "Perluas",
+      "collapse": "Ciutkan"
+    },
+    "editorial": {
+      "heading": "Panduan membaca",
+      "roleLabel": "Jenis bacaan",
+      "clusterLabel": "Panduan",
+      "sequence": "Bagian {sequence}",
+      "primaryPillarHeading": "Mulai di sini",
+      "relatedHeading": "Lanjut membaca",
+      "clusterHeading": "Lainnya dalam panduan ini",
+      "expandSection": "Tampilkan {count} lagi",
+      "collapseSection": "Tampilkan lebih sedikit",
+      "roleNames": {
+        "pillar": "Panduan inti",
+        "companion": "Bahasan mendalam",
+        "texture": "Latar belakang"
+      }
+    },
+    "comments": {
+      "heading": "Komentar",
+      "count": "{count} komentar",
+      "empty": "Belum ada yang membalas. Komentar akan muncul di sini ketika percakapan dimulai.",
+      "composer": {
+        "label": "Tambahkan komentar",
+        "placeholder": "Tulis komentar...",
+        "submit": "Kirim komentar",
+        "submitting": "Mengirim...",
+        "success": "Komentar diposting.",
+        "error": "Tidak dapat memposting komentarmu saat ini.",
+        "loginPrompt": "Masuk untuk bergabung dalam percakapan.",
+        "loginCta": "Masuk untuk berkomentar",
+        "verifyPrompt": "Verifikasi emailmu sebelum memposting komentar.",
+        "verifyCta": "Verifikasi email"
+      },
+      "sort": {
+        "label": "Urutkan",
+        "oldestFirst": "Terlama dulu",
+        "newestFirst": "Terbaru dulu"
+      },
+      "by": "Oleh",
+      "unknownAuthor": "Tidak diketahui",
+      "reply": {
+        "action": "Balas",
+        "label": "Tambahkan balasan",
+        "placeholder": "Tulis balasan...",
+        "submit": "Kirim balasan",
+        "submitting": "Mengirim...",
+        "success": "Balasan diposting.",
+        "error": "Tidak dapat memposting balasanmu saat ini.",
+        "cancel": "Batal",
+        "loginPrompt": "Masuk untuk membalas."
+      },
+      "manage": {
+        "edited": "Diedit",
+        "editAction": "Edit",
+        "deleteAction": "Hapus",
+        "deleteConfirm": "Hapus komentar ini? Ini juga akan menghapus semua balasan di bawahnya.",
+        "deleteSuccess": "Komentar dihapus.",
+        "deleteError": "Tidak dapat menghapus komentar ini saat ini.",
+        "forbidden": "Kamu hanya dapat mengelola komentarmu sendiri.",
+        "edit": {
+          "label": "Edit komentar",
+          "save": "Simpan",
+          "saving": "Menyimpan...",
+          "cancel": "Batal",
+          "success": "Komentar diperbarui.",
+          "error": "Tidak dapat memperbarui komentar ini saat ini."
+        }
+      },
+      "report": {
+        "action": "Laporkan",
+        "pending": "Melaporkan...",
+        "success": "Komentar dilaporkan.",
+        "error": "Tidak dapat melaporkan komentar ini saat ini.",
+        "ownError": "Kamu tidak dapat melaporkan komentarmu sendiri.",
+        "hidden": "Komentar disembunyikan setelah laporan.",
+        "reported": "Dilaporkan"
+      },
+      "deepLink": {
+        "focused": "Komentar tertaut",
+        "unavailable": "Komentar tertaut tidak lagi tersedia."
+      },
+      "loadMore": "Muat komentar lainnya",
+      "loading": "Memuat...",
+      "loadError": "Tidak dapat memuat komentar lainnya saat ini."
+    },
+    "share": {
+      "title": "Bagikan Blok ini",
+      "shareOn": "Bagikan di:",
+      "nativeText": "Lihat blok ini: {title}",
+      "alt": {
+        "facebook": "Logo Facebook",
+        "reddit": "Logo Reddit",
+        "whatsapp": "Logo WhatsApp",
+        "twitter": "Logo Twitter"
+      }
+    },
+    "errors": {
+      "notFound": "Blok tidak ditemukan atau bukan milik ruang ini.",
+      "loadFailed": "Kesalahan saat memuat tampilan blok."
+    }
+  }
+}

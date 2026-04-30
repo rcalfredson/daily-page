@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Semua Ruang Berbintang",
+      "description": "Daftar semua ruang yang kamu beri bintang."
+    },
+    "nav": {
+      "backToDashboard": "← Kembali ke Dasbor"
+    },
+    "header": {
+      "title": "🌟 Semua Ruang Berbintangmu 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Ruang Tanpa Nama",
+      "noDescription": "Tidak ada deskripsi."
+    },
+    "empty": {
+      "message": "Kamu belum memberi bintang pada ruang mana pun!"
+    }
+  }
+}

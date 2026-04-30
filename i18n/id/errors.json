@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Ups! Ada yang salah.",
+      "message": "Terjadi kesalahan tak terduga. Silakan coba lagi nanti.",
+      "home": "Kembali ke Beranda"
+    },
+    "notFound": {
+      "title": "404 - Halaman Tidak Ditemukan",
+      "metaTitle": "Halaman Tidak Ditemukan",
+      "message": "Maaf, kami tidak dapat menemukan halaman yang kamu cari.",
+      "homePrefix": "Kamu bisa kembali ke",
+      "homeLink": "beranda",
+      "roomsPrefix": "atau melihat",
+      "roomsLink": "direktori ruang."
+    }
+  }
+}

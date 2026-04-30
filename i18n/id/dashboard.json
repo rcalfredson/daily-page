@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Dasbor",
+      "description": "Dasbor Daily Page dan ringkasan akunmu."
+    },
+    "profile": {
+      "profilePicAlt": "Foto Profil",
+      "noBio": "Belum ada bio. Klik \"Edit\" untuk menambahkannya!",
+      "editBio": "Edit Bio",
+      "bioPlaceholder": "Masukkan biomu di sini",
+      "save": "Simpan",
+      "cancel": "Batal"
+    },
+    "activity": {
+      "title": "Aktivitas Terbaru",
+      "none": "Tidak ada aktivitas terbaru.",
+      "updatedOn": "Diperbarui pada {date}",
+      "viewAllBlocks": "Lihat Semua Blok"
+    },
+    "streak": {
+      "title": "Runtunan Menulis",
+      "line": "{days} hari berturut-turut! Teruskan!"
+    },
+    "starredRooms": {
+      "title": "Ruang Berbintang",
+      "none": "Kamu belum memberi bintang pada ruang mana pun. Mulai jelajahi untuk menemukan favoritmu!",
+      "viewAll": "Lihat Semua Ruang Berbintang",
+      "unnamedRoom": "Ruang Tanpa Nama"
+    },
+    "stats": {
+      "title": "Statistikmu",
+      "totalBlocks": "Total Blok Dibuat",
+      "collaborations": "Kolaborasi",
+      "votesGiven": "Suara Diberikan",
+      "daysActive": "Hari Aktif",
+      "viewDetailed": "Lihat Statistik Terperinci 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Gagal mengunggah foto profil. Silakan coba lagi.",
+      "uploadUnexpected": "Terjadi kesalahan tak terduga. Silakan coba lagi.",
+      "bioUpdateFailed": "Kesalahan saat memperbarui bio. Silakan coba lagi."
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "Profil {username}",
+      "descriptionUser": "Lihat aktivitas terbaru, ruang berbintang, dan statistik {username}."
+    },
+    "profile": {
+      "profilePicAlt": "Foto profil",
+      "noBio": "(Tidak ada bio.)"
+    },
+    "activity": {
+      "title": "Aktivitas Terbaru",
+      "updatedOn": "Diperbarui pada {date}",
+      "none": "Tidak ada aktivitas terbaru.",
+      "viewAllBlocks": "Lihat Semua Blok"
+    },
+    "starredRooms": {
+      "title": "Ruang Berbintang",
+      "none": "Belum ada ruang berbintang.",
+      "unnamedRoom": "Ruang Tanpa Nama"
+    },
+    "stats": {
+      "title": "Statistik Pengguna",
+      "totalBlocks": "Total Blok Dibuat",
+      "collaborations": "Kolaborasi",
+      "daysActive": "Hari Aktif"
+    }
+  }
+}

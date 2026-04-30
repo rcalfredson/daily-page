@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "Draf"
+    },
+    "deleteModal": {
+      "title": "Hapus Blok?",
+      "message": "Tindakan ini tidak dapat dibatalkan.",
+      "confirm": "Hapus",
+      "cancel": "Batal",
+      "closeAriaLabel": "Tutup"
+    },
+    "toasts": {
+      "deleteSuccess": "Blok berhasil dihapus!",
+      "deleteFailed": "Gagal menghapus blok."
+    }
+  }
+}

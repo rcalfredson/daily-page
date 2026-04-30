@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Silakan Masuk",
+      "message": "Kamu perlu masuk untuk melanjutkan.",
+      "messageWithAction": "Kamu perlu masuk untuk {action}.",
+      "cta": "Masuk"
+    },
+    "actions": {
+      "voteOnBlock": "memberi suara pada blok",
+      "starRoom": "memberi bintang pada ruang ini",
+      "reactToBlock": "bereaksi pada posting ini",
+      "commentOnBlock": "mengomentari blok ini",
+      "reportComment": "melaporkan komentar ini"
+    },
+    "errors": {
+      "starToggleFail": "Gagal memperbarui status bintang. Silakan coba lagi."
+    }
+  }
+}
