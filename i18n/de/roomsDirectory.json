@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Raumverzeichnis",
+      "description": "Jeder Raum ist eine Tur zu einer anderen Welt. Tritt ein, teile deine Geschichte und baue mit anderen etwas Schoneres auf."
+    },
+    "eyebrow": "Finde deine Ecke",
+    "heading": "Raumverzeichnis",
+    "intro": "Beginne mit den Raumen, die gerade lebendig wirken, oder wandere nach Themen, bis etwas klickt. Jeder Raum ist ein anderer Schreibimpuls, ein Fandom oder eine geteilte Begeisterung, die auf deine Stimme wartet.",
+    "empty": "Momentan sind keine Raume verfugbar. Schau spater wieder vorbei!",
+    "jumpToActive": "Aktive Raume anzeigen",
+    "jumpToTopics": "Nach Thema durchsuchen",
+    "statsLabel": "Highlights des Raumverzeichnisses",
+    "liveNow": "Jetzt live",
+    "recentlyActive": "Kurzlich aktiv",
+    "recentlyActiveSubtitle": "Der schnellste Weg, einen Raum zu finden, in dem gerade Menschen aktiv sind.",
+    "browseByTopic": "Nach Thema durchsuchen",
+    "topicSubtitle": "Offne ein Thema, um seine Raume zu erkunden.",
+    "roomCount": "{count} Raume",
+    "stats": {
+      "rooms": "Raume zum Entdecken",
+      "topics": "Themengruppen",
+      "active": "aktive Auswahl"
+    },
+    "activeUsers": "Aktive Benutzer: {count}",
+    "visitRoom": "Raum besuchen",
+    "close": "Schliessen",
+    "noTitle": "Kein Titel verfugbar",
+    "noDescription": "Keine Beschreibung verfugbar"
+  }
+}

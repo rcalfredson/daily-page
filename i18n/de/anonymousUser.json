@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "Der anonyme Wanderer",
+      "description": "Kein Profil. Keine Vergangenheit. Nur Vibes."
+    },
+    "ascii": {
+      "ariaLabel": "ASCII-Kunst eines verspielten Wesens mit Zitat"
+    },
+    "header": {
+      "title": "Der Anonyme"
+    },
+    "body": {
+      "line1": "Du bist ins Leere gestolpert. Hier gibt es nichts zu sehen -",
+      "line2": "nur einen wandernden Geist ohne Geschichte."
+    },
+    "buttons": {
+      "home": "← Zur Startseite",
+      "signup": "Identitat erstellen"
+    }
+  }
+}

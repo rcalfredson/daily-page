@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Datenschutzerklarung",
+      "description": "Wie Daily Page deine Daten sammelt, nutzt und schutzt - in klarer Sprache."
+    },
+    "title": "Datenschutzerklarung",
+    "lastUpdated": "Zuletzt aktualisiert: {date}",
+    "intro": {
+      "h2": "Einfuhrung",
+      "p1": "Daily Page (\"uns\", \"wir\" oder \"unser\") betreibt die Website dailypage.org (im Folgenden \"Dienst\").",
+      "p2": "Diese Seite informiert dich uber unsere Richtlinien zur Erhebung, Nutzung und Offenlegung personenbezogener Daten, wenn du unseren Dienst verwendest."
+    },
+    "collection": {
+      "h2": "Datenerhebung und Nutzung",
+      "p": "Wir erheben nur minimale personenbezogene Daten, um unseren Dienst bereitzustellen und zu verbessern. Dazu gehoren E-Mail-Adressen fur die Kontoverwaltung und Inhalte, die Benutzer freiwillig einreichen."
+    },
+    "usage": {
+      "h2": "Datennutzung",
+      "p": "Erhobene Daten werden ausschliesslich fur Kontoauthentifizierung, Inhaltsmoderation und die Verbesserung der Nutzererfahrung verwendet."
+    },
+    "storage": {
+      "h2": "Datenspeicherung und Sicherheit",
+      "p": "Deine Daten werden sicher gespeichert und ohne ausdruckliche Zustimmung niemals an Dritte weitergegeben oder verkauft, ausser wenn dies gesetzlich vorgeschrieben ist."
+    },
+    "cookies": {
+      "h2": "Cookies",
+      "p": "Wir verwenden Cookies ausschliesslich fur Sitzungsverwaltung und zur Verbesserung der Nutzererfahrung. Du kannst Cookies in deinen Browsereinstellungen deaktivieren."
+    },
+    "rights": {
+      "h2": "Deine Rechte",
+      "p": "Du kannst jederzeit die Loschung oder Anderung deiner personenbezogenen Daten verlangen, indem du uns kontaktierst."
+    },
+    "changes": {
+      "h2": "Anderungen an dieser Datenschutzerklarung",
+      "p": "Wir konnen unsere Datenschutzerklarung von Zeit zu Zeit aktualisieren. Anderungen werden auf dieser Seite veroffentlicht."
+    },
+    "contact": {
+      "h2": "Kontakt",
+      "p": "Bei Fragen zu dieser Datenschutzerklarung kontaktiere uns unter:",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}

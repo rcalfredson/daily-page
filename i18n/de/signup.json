@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Konto erstellen",
+      "description": "Registriere dich bei Daily Page, um alle Funktionen zu nutzen."
+    },
+    "header": {
+      "title": "Erstelle dein Konto",
+      "subtitle": "Tritt Daily Page bei, um mit dem Erstellen und Teilen deiner taglichen Texte zu beginnen!"
+    },
+    "form": {
+      "email": {
+        "label": "E-Mail",
+        "placeholder": "E-Mail eingeben"
+      },
+      "username": {
+        "label": "Benutzername",
+        "placeholder": "Benutzernamen eingeben"
+      },
+      "password": {
+        "label": "Passwort",
+        "placeholder": "Passwort eingeben"
+      },
+      "submit": "Registrieren",
+      "feedback": {
+        "success": "Formular erfolgreich gesendet!",
+        "successCreatedVerify": "Konto erfolgreich erstellt! Bitte prufe deine E-Mail, um dein Konto zu bestatigen.",
+        "genericError": "Konto konnte nicht erstellt werden. Bitte versuche es erneut.",
+        "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut."
+      }
+    }
+  }
+}

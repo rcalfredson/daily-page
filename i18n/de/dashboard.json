@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Dashboard",
+      "description": "Dein Daily-Page-Dashboard und Kontouberblick."
+    },
+    "profile": {
+      "profilePicAlt": "Profilbild",
+      "noBio": "Noch keine Bio. Klicke auf \"Bearbeiten\", um eine hinzuzufugen!",
+      "editBio": "Bio bearbeiten",
+      "bioPlaceholder": "Gib hier deine Bio ein",
+      "save": "Speichern",
+      "cancel": "Abbrechen"
+    },
+    "activity": {
+      "title": "Letzte Aktivitat",
+      "none": "Keine neue Aktivitat.",
+      "updatedOn": "Aktualisiert am {date}",
+      "viewAllBlocks": "Alle Blocke anzeigen"
+    },
+    "streak": {
+      "title": "Schreibserie",
+      "line": "{days} Tage in Folge! Weiter so!"
+    },
+    "starredRooms": {
+      "title": "Markierte Raume",
+      "none": "Du hast noch keine Raume markiert. Entdecke Raume, um deine Favoriten zu finden!",
+      "viewAll": "Alle markierten Raume anzeigen",
+      "unnamedRoom": "Unbenannter Raum"
+    },
+    "stats": {
+      "title": "Deine Statistiken",
+      "totalBlocks": "Erstellte Blocke insgesamt",
+      "collaborations": "Zusammenarbeiten",
+      "votesGiven": "Abgegebene Stimmen",
+      "daysActive": "Aktive Tage",
+      "viewDetailed": "Detaillierte Statistiken anzeigen 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Profilbild konnte nicht hochgeladen werden. Bitte versuche es erneut.",
+      "uploadUnexpected": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.",
+      "bioUpdateFailed": "Fehler beim Aktualisieren der Bio. Bitte versuche es erneut."
+    }
+  }
+}

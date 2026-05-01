@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "E-Mail bestatigen",
+      "description": "Bestatige deine E-Mail-Adresse fur Daily Page."
+    },
+    "header": {
+      "title": "E-Mail wird bestatigt..."
+    },
+    "status": {
+      "checking": "Token wird gepruft, bitte warten...",
+      "missingToken": "Bestatigungstoken fehlt oder ist ungultig.",
+      "genericFailure": "Bestatigung fehlgeschlagen.",
+      "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten.",
+      "success": "Dein Konto wurde erfolgreich bestatigt!",
+      "invalidOrExpired": "Ungultiger oder abgelaufener Bestatigungstoken."
+    },
+    "verificationMsg": {
+      "subject": "Bestatige dein Daily-Page-Konto ✨",
+      "heading": "Willkommen bei Daily Page, {username}!",
+      "body": "Bitte bestatige deine E-Mail, indem du unten klickst:",
+      "cta": "E-Mail-Adresse bestatigen",
+      "expires": "Dieser Link lauft in {hours} Stunden ab."
+    }
+  }
+}

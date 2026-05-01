@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Bitte anmelden",
+      "message": "Du musst angemeldet sein, um fortzufahren.",
+      "messageWithAction": "Du musst angemeldet sein, um {action}.",
+      "cta": "Anmelden"
+    },
+    "actions": {
+      "voteOnBlock": "fur einen Block abzustimmen",
+      "starRoom": "diesen Raum zu markieren",
+      "reactToBlock": "auf diesen Beitrag zu reagieren",
+      "commentOnBlock": "diesen Block zu kommentieren",
+      "reportComment": "diesen Kommentar zu melden"
+    },
+    "errors": {
+      "starToggleFail": "Sternstatus konnte nicht aktualisiert werden. Bitte versuche es erneut."
+    }
+  }
+}

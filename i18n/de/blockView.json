@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Block - {blockTitle}",
+      "titleFallback": "Block"
+    },
+    "labels": {
+      "room": "Raum",
+      "author": "Autor",
+      "created": "Erstellt",
+      "unknownAuthor": "Anonym",
+      "authorAvatarAlt": "Avatar von {username}",
+      "viewAuthorProfile": "Profil von {username} anzeigen",
+      "lang": "Ubersetzungen: ",
+      "available": "verfugbar"
+    },
+    "buttons": {
+      "edit": "Bearbeiten",
+      "deleteBlock": "Block loschen",
+      "share": "Teilen",
+      "flagContent": "Inhalt melden"
+    },
+    "description": {
+      "label": "Beschreibung",
+      "none": "Keine Beschreibung angegeben...",
+      "expand": "Erweitern",
+      "collapse": "Einklappen"
+    },
+    "editorial": {
+      "heading": "Leseleitfaden",
+      "roleLabel": "Lesetyp",
+      "clusterLabel": "Leitfaden",
+      "sequence": "Teil {sequence}",
+      "primaryPillarHeading": "Hier beginnen",
+      "relatedHeading": "Weiterlesen",
+      "clusterHeading": "Mehr in diesem Leitfaden",
+      "expandSection": "{count} weitere anzeigen",
+      "collapseSection": "Weniger anzeigen",
+      "roleNames": {
+        "pillar": "Kernleitfaden",
+        "companion": "Vertiefung",
+        "texture": "Hintergrund"
+      }
+    },
+    "comments": {
+      "heading": "Kommentare",
+      "count": "{count} Kommentare",
+      "empty": "Noch hat niemand geantwortet. Kommentare erscheinen hier, sobald das Gesprach beginnt.",
+      "composer": {
+        "label": "Kommentar hinzufugen",
+        "placeholder": "Kommentar schreiben...",
+        "submit": "Kommentar posten",
+        "submitting": "Wird gepostet...",
+        "success": "Kommentar gepostet.",
+        "error": "Dein Kommentar kann gerade nicht gepostet werden.",
+        "loginPrompt": "Melde dich an, um am Gesprach teilzunehmen.",
+        "loginCta": "Zum Kommentieren anmelden",
+        "verifyPrompt": "Bestatige deine E-Mail, bevor du kommentierst.",
+        "verifyCta": "E-Mail bestatigen"
+      },
+      "sort": {
+        "label": "Sortieren",
+        "oldestFirst": "Alteste zuerst",
+        "newestFirst": "Neueste zuerst"
+      },
+      "by": "Von",
+      "unknownAuthor": "Unbekannt",
+      "reply": {
+        "action": "Antworten",
+        "label": "Antwort hinzufugen",
+        "placeholder": "Antwort schreiben...",
+        "submit": "Antwort posten",
+        "submitting": "Wird gepostet...",
+        "success": "Antwort gepostet.",
+        "error": "Deine Antwort kann gerade nicht gepostet werden.",
+        "cancel": "Abbrechen",
+        "loginPrompt": "Melde dich an, um zu antworten."
+      },
+      "manage": {
+        "edited": "Bearbeitet",
+        "editAction": "Bearbeiten",
+        "deleteAction": "Loschen",
+        "deleteConfirm": "Diesen Kommentar loschen? Dadurch werden auch alle Antworten darunter entfernt.",
+        "deleteSuccess": "Kommentar geloscht.",
+        "deleteError": "Dieser Kommentar kann gerade nicht geloscht werden.",
+        "forbidden": "Du kannst nur deine eigenen Kommentare verwalten.",
+        "edit": {
+          "label": "Kommentar bearbeiten",
+          "save": "Speichern",
+          "saving": "Wird gespeichert...",
+          "cancel": "Abbrechen",
+          "success": "Kommentar aktualisiert.",
+          "error": "Dieser Kommentar kann gerade nicht aktualisiert werden."
+        }
+      },
+      "report": {
+        "action": "Melden",
+        "pending": "Wird gemeldet...",
+        "success": "Kommentar gemeldet.",
+        "error": "Dieser Kommentar kann gerade nicht gemeldet werden.",
+        "ownError": "Du kannst deinen eigenen Kommentar nicht melden.",
+        "hidden": "Kommentar nach Meldung ausgeblendet.",
+        "reported": "Gemeldet"
+      },
+      "deepLink": {
+        "focused": "Verlinkter Kommentar",
+        "unavailable": "Der verlinkte Kommentar ist nicht mehr verfugbar."
+      },
+      "loadMore": "Weitere Kommentare laden",
+      "loading": "Wird geladen...",
+      "loadError": "Weitere Kommentare konnen gerade nicht geladen werden."
+    },
+    "share": {
+      "title": "Diesen Block teilen",
+      "shareOn": "Teilen auf:",
+      "nativeText": "Sieh dir diesen Block an: {title}",
+      "alt": {
+        "facebook": "Facebook-Logo",
+        "reddit": "Reddit-Logo",
+        "whatsapp": "WhatsApp-Logo",
+        "twitter": "Twitter-Logo"
+      }
+    },
+    "errors": {
+      "notFound": "Block nicht gefunden oder gehort nicht zu diesem Raum.",
+      "loadFailed": "Fehler beim Laden der Blockansicht."
+    }
+  }
+}

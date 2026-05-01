@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "Hochstimmen",
+    "downvote": "Runterstimmen",
+    "errors": {
+      "failed": "Deine Stimme konnte nicht gespeichert werden."
+    }
+  }
+}

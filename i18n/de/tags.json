@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Tags-Ubersicht",
+      "description": "Durchsuche alle Tags, die auf Daily Page verwendet werden, mit schnellen Zeitfiltern."
+    },
+    "title": "Tags-Ubersicht",
+    "intro": "Entdecke alle Tags, die auf Daily Page verwendet werden.",
+    "tagCloudTitle": "Tag-Cloud",
+    "timeframe": {
+      "last24h": "Letzte 24 Stunden",
+      "last7d": "Letzte 7 Tage",
+      "last30d": "Letzte 30 Tage",
+      "all": "Alle Time"
+    },
+    "error": {
+      "loading": "Fehler beim Laden der Tags-Ubersicht"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "Blocke mit Tag"
+      },
+      "header": {
+        "label": "Tag:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Blocke insgesamt mit",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Erstellt von:",
+        "inRoom": "in",
+        "unknownRoom": "Unbekannter Raum",
+        "onDate": "am"
+      },
+      "chart": {
+        "label": "Erstellte Blocke im Zeitverlauf"
+      },
+      "empty": {
+        "message": "Noch keine Blocke mit diesem Tag gefunden. Vielleicht solltest du den ersten erstellen? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Fehler beim Laden der Tag-Seite"
+      }
+    }
+  }
+}

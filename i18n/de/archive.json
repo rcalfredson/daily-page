@@ -1,0 +1,71 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Archiv",
+      "description": "Durchsuche das gesamte Archiv nach Monaten.",
+      "titleRoom": "Daily Page — Archiv · {roomName}",
+      "descriptionRoom": "Entdecke fruhere Texte im Raum {roomName} - Monat fur Monat. Springe zu einem Datum, um zu sehen, was andere im Laufe der Zeit in diesem Raum geteilt haben."
+    },
+    "nav": {
+      "prev": "Zuruck",
+      "next": "Weiter"
+    },
+    "title": "📚 Archive durchsuchen",
+    "titleRoom": "📚 {roomName} — Archivs",
+    "roomViewing": "Archiv fur Raum {roomName} wird angezeigt",
+    "viewRoomLink": "Raum anzeigen",
+    "noContent": "Noch keine Inhalte verfugbar.",
+    "backToRoom": "← Zuruck zum Raum-Dashboard",
+    "calendar": {
+      "meta": {
+        "description": "Sieh alle kreativen Blocke aus {month} {year} - von schnellen Gedanken bis zu tiefen Reflexionen. Klicke auf ein Datum, um zu entdecken, was geteilt wurde.",
+        "descriptionRoom": "Sieh die kreative Aktivitat in {roomName} im {month} {year}. Wahle ein Datum, um die an diesem Tag geteilten Blocke zu entdecken."
+      },
+      "title": "📆 Archiv fur {month} {year}",
+      "prevLabel": "Archiv fur {month} {year}",
+      "nextLabel": "Archiv fur {month} {year}"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "Archiv fur {date}",
+        "titleRoom": "{roomName} — Archiv fur {date}",
+        "descriptionSite": "Entdecke die am {date} geschriebenen Blocke - von stillen Notizen bis zu wilden Gestandnissen.",
+        "descriptionRoom": "Am {date} haben Schreibende im Raum {roomName} ihre Spuren hinterlassen - scrolle durch Gedanken, Ideen und Ausdrucksformen dieses Tages."
+      },
+      "heading": "Archiv fur {date}",
+      "empty": "Fur dieses Datum wurden keine Inhalte gefunden.",
+      "labels": {
+        "createdBy": "Erstellt von:",
+        "in": "in",
+        "on": "am {datetime}",
+        "unknownRoom": "Unbekannter Raum"
+      },
+      "nav": {
+        "prevDay": "Vorheriger Tag",
+        "nextDay": "Nachster Tag"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — Alle Blocke",
+        "descriptionRoom": "Durchsuche jeden Block, der je im Raum {roomName} gepostet wurde. Sortiere nach Datum, Titel oder Stimmen, um seine Geschichte zu erkunden."
+      },
+      "header": {
+        "allBlocks": "— Alle Blocke"
+      },
+      "sort": {
+        "label": "Sortieren nach",
+        "options": {
+          "date": "Datum",
+          "title": "Titel",
+          "votes": "Stimmen"
+        },
+        "submit": "Los"
+      }
+    },
+    "pagination": {
+      "prev": "← Zuruck",
+      "next": "Weiter →"
+    }
+  }
+}

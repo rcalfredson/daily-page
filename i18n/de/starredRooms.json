@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Alle markierten Raume",
+      "description": "Eine Liste aller Raume, die du markiert hast."
+    },
+    "nav": {
+      "backToDashboard": "← Zuruck zum Dashboard"
+    },
+    "header": {
+      "title": "🌟 Alle deine markierten Raume 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Unbenannter Raum",
+      "noDescription": "Keine Beschreibung."
+    },
+    "empty": {
+      "message": "Du hast noch keine Raume markiert!"
+    }
+  }
+}

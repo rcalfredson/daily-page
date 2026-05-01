@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Top-Blocke der letzten 24 Stunden",
+      "description": "Daily Page ist eine minimalistische, unabhangige Schreibseite, auf der jede Person kreative Gedanken, Erinnerungen oder Experimente veroffentlichen kann - Block fur Block. Entdecke neue Ideen, tritt Raumen bei und bring deine Stimme ein."
+    },
+    "hero": {
+      "eyebrow": "Ein ruhiger Ort zum Schreiben, Lesen und Wiederkommen",
+      "title": "Willkommen bei Daily Page!",
+      "subtitle": "Entdecke die beliebtesten Blocke der letzten 24 Stunden.",
+      "ctaPrefix": "Inspiriert?",
+      "cta": "Einem Raum beitreten",
+      "ctaSuffix": "und erstelle deinen eigenen Block!"
+    },
+    "stats": {
+      "blocks": "Blocke",
+      "rooms": "Raume",
+      "tags": "Tags",
+      "collabsToday": "Zusammenarbeiten heute"
+    },
+    "activity": {
+      "title": "Live auf Daily Page",
+      "subtitle": "Neue Gesprache und Reaktionen auf einen Blick.",
+      "fallbackActor": "Jemand",
+      "inRoom": "in",
+      "comments": {
+        "title": "Neue Kommentare",
+        "more": "Diskussionen durchsuchen",
+        "commentVerb": "kommentierte",
+        "replyVerb": "antwortete auf",
+        "empty": "Noch keine neuen Kommentare. Das nachste Gesprach kann mit deinem Block beginnen."
+      },
+      "reactions": {
+        "title": "Neue Reaktionen",
+        "more": "Top-Blocke durchsuchen",
+        "empty": "Noch keine neuen Reaktionen. Ein guter Beitrag konnte das schnell beleben.",
+        "types": {
+          "heart": "gab ein Herz fur",
+          "leaf": "reagierte mit einem Blatt auf",
+          "wow": "reagierte mit Wow auf",
+          "laugh": "lachte uber"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Hervorgehobener Raum",
+      "roomInfoDays": "Aktivitat in den letzten {days} Tagen: {blocks} Blocke, {votes} Stimmen.",
+      "roomInfo24h": "Aktivitat in den letzten 24 Stunden: {blocks} Blocke, {votes} Stimmen.",
+      "checkItOut": "Ansehen",
+      "blockRibbon": "★ Hervorgehobener Block",
+      "votes": "{n} Stimmen",
+      "noContent": "(Kein Inhalt angegeben...)",
+      "viewBlock": "Block anzeigen"
+    },
+    "trendingTags": {
+      "title": "Trend-Tags",
+      "suffixDays": "(letzte {days} Tage)",
+      "suffixAllTime": "(gesamte Zeit)",
+      "blocks": "{n} Blocke",
+      "votes": "{n} Stimmen",
+      "empty": "Noch keine Trend-Tags. Sei die erste Person, die etwas Cooles taggt!"
+    },
+    "trendingBlocks": {
+      "title": "Trend-Blocke",
+      "suffixDays": "(letzte {days} Tage)",
+      "createdBy": "Erstellt von:",
+      "in": "in",
+      "on": "am",
+      "unknownRoom": "Unbekannter Raum",
+      "empty24h": "Noch keine Blocke in den letzten 24 Stunden. Schau bald wieder vorbei!"
+    }
+  }
+}

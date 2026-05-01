@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Das Beste von Daily Page",
+      "description": "Die beliebtesten Blocke auf Daily Page - lustig, ehrlich, poetisch oder einfach seltsam. Sieh, was am letzten Tag, in der letzten Woche, im letzten Monat und daruber hinaus herausragte.",
+      "titleRoom": "Das Beste aus {roomName}",
+      "descriptionRoom": "Entdecke herausragende Beitrage aus dem Raum {roomName} - die, die Leser in den letzten 24 Stunden, 7 Tagen, 30 Tagen und insgesamt am meisten mochten."
+    },
+    "heading": "🏆 Das Beste von Daily Page",
+    "headingRoomPrefix": "🏆 Das Beste von ",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 Stunden",
+      "7d": "🚀 7 Tage",
+      "30d": "🌕 30 Tage",
+      "all": "👑 Gesamte Zeit"
+    },
+    "labels": {
+      "createdBy": "Erstellt von:",
+      "inRoom": "in",
+      "onDate": "am {date}",
+      "unknownRoom": "Unbekannter Raum",
+      "noBlocks": "Keine Blocke gefunden.",
+      "viewRoom": "Raum anzeigen"
+    }
+  }
+}
