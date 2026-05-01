@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Benachrichtigungen",
+      "openMenu": "Benachrichtigungen offnen",
+      "loading": "Benachrichtigungen werden geladen...",
+      "error": "Benachrichtigungen konnen gerade nicht geladen werden.",
+      "empty": "Noch keine Benachrichtigungen.",
+      "markRead": "Als gelesen markieren",
+      "fallbackActor": "Jemand",
+      "fallbackBlockTitle": "dein Block",
+      "item": {
+        "blockComment": "{actorUsername} hat deinen Block \"{blockTitle}\" kommentiert.",
+        "commentReply": "{actorUsername} hat auf deinen Kommentar zu \"{blockTitle}\" geantwortet.",
+        "unknown": "Benachrichtigung"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Neu comment on \"{blockTitle}\"",
+        "heading": "Neuer Kommentar zu deinem Block",
+        "headingWithName": "Hallo {username},",
+        "body": "<strong>{actorUsername}</strong> hat deinen Block <strong>{blockTitle}</strong> kommentiert.",
+        "cta": "Gesprach auf Daily Page ansehen",
+        "fallbackActor": "Jemand",
+        "fallbackBlockTitle": "dein Block"
+      },
+      "commentReply": {
+        "subject": "Neu reply on \"{blockTitle}\"",
+        "heading": "Neue Antwort auf deinen Kommentar",
+        "headingWithName": "Hallo {username},",
+        "body": "<strong>{actorUsername}</strong> hat auf deinen Kommentar zu <strong>{blockTitle}</strong> geantwortet.",
+        "cta": "Gesprach auf Daily Page ansehen",
+        "fallbackActor": "Jemand",
+        "fallbackBlockTitle": "dein Block"
+      }
+    }
+  }
+}

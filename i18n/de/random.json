@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Andere Projekte",
+      "description": "Entdecke Baseball-Journaling, zufallige Schreibexperimente und andere Nebenprojekte von Daily Page."
+    },
+    "title": "Andere Projekte",
+    "tagline": "Eine gemutliche Ecke fur Experimente und Nebenprojekte.",
+    "links": {
+      "baseball": "📖 Baseball-Journal",
+      "randomWriter": "🎲 Zufallsschreiber"
+    },
+    "cta": {
+      "backToRooms": "Zuruck zu den Hauptraumen"
+    }
+  }
+}

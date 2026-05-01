@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — Zufallsschreiber",
+      "description": "Erzeuge einen endlosen Strom zufalligen Pseudotexts fur Spass, Inspiration oder Chaos."
+    },
+    "title": "Zufallsschreiber",
+    "buttons": {
+      "clear": "Loschen",
+      "stop": "Schreiben stoppen",
+      "start": "Schreiben starten"
+    }
+  }
+}

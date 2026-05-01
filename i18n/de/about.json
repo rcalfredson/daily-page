@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — Uber uns",
+      "description": "Was Daily Page ist, wie es funktioniert und warum es als langsamere, freundlichere Ecke des Webs entstanden ist."
+    },
+    "title": "Uber Daily Page",
+    "tagline": "Nahre deinen Geist, nicht deinen Feed.",
+    "mission": {
+      "h2": "Auftrag",
+      "p1": "Ein unabhangiges Schreiblabor - begonnen in meinem Wohnzimmer, angetrieben von der Neugier der Leser.",
+      "p2": "Es ist nicht gebaut, um dein Gehirn zu vernebeln, sondern um es zu nahren: ein Ort, an dem du langsam schreiben kannst, anonym, wenn du magst, und ohne Sorge, jemanden beeindrucken zu mussen."
+    },
+    "how": {
+      "h2": "So funktioniert es",
+      "features": {
+        "rooms": {
+          "label": "Raume",
+          "text": "sind Themenbereiche (denk an \"Subreddit, aber freundlicher\")."
+        },
+        "blocks": {
+          "label": "Blocke",
+          "text": "sind kollaborative Beitrage - jede Person, sogar anonym, kann einen erstellen, ihn bis zur Sperrung bearbeiten und fur andere abstimmen."
+        },
+        "privacy": {
+          "label": "Datenschutz und Teilen",
+          "text": "Offentliche Blocke erscheinen im Feed des Raums. Private Blocke bleiben bis zur Sperrung verborgen, aber du erhaltst einen Link zum Teilen, um Freunde einzuladen."
+        },
+        "markdown": {
+          "label": "Markdown und Medien",
+          "text": "Du schreibst in Markdown, bettest Bilder ein und arbeitest gemeinsam wie in Google Docs."
+        },
+        "trends": {
+          "label": "Trends und Tags",
+          "text": "Tagge deinen Block, verfolge Tag-Trends und entdecke Top-Inhalte (7 T / 30 T / gesamte Zeit)."
+        },
+        "streaks": {
+          "label": "Serien",
+          "text": "Halte deine tagliche Schreibserie am Leben - dein bester Anreiz, jeden Tag aufzutauchen."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Wie wir hierher gekommen sind",
+      "p1": "2018 baute ich ein datumsbasiertes Wiki fur die \"heutige Seite\" und sah zu, wie einige nachdenkliche Schreibende daraus einen Ort fur ihre Gedanken machten. Es wurde nie riesig, aber es pflanzte einen Samen.",
+      "p2": "Heute ist aus diesem Samen Daily Page mit vielen Raumen geworden - ein ruhiges soziales Web fur Introvertierte, Idealisten und alle, die sich ein langsameres Tempo wunschen."
+    },
+    "next": {
+      "h2": "Was als Nachstes kommt",
+      "p1": "Wir fangen gerade erst an: reichhaltigere Einbettungen, tiefere Nutzerstatistiken, Reputations-Ranglisten und mehr Moglichkeiten, durchdachtes Schaffen zu belohnen.",
+      "p2": "Danke, dass du Teil dieses kleinen Indie-Experiments bist."
+    },
+    "cta": {
+      "rooms": "Raume entdecken",
+      "signup": "Der Community beitreten"
+    }
+  }
+}

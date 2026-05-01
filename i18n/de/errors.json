@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Hoppla! Etwas ist schiefgelaufen.",
+      "message": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es spater erneut.",
+      "home": "Zur Startseite"
+    },
+    "notFound": {
+      "title": "404 - Seite nicht gefunden",
+      "metaTitle": "Seite nicht gefunden",
+      "message": "Leider konnten wir die gesuchte Seite nicht finden.",
+      "homePrefix": "Du kannst zuruck zu",
+      "homeLink": "der Startseite",
+      "roomsPrefix": "oder dir das ansehen:",
+      "roomsLink": "Raumverzeichnis."
+    }
+  }
+}

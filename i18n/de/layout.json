@@ -1,0 +1,18 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "Willkommen, Benutzer!",
+    "logout": "Abmelden",
+    "login": "Anmelden / Registrieren",
+    "language": "Sprache",
+    "openMenu": "Hauptmenu offnen",
+    "closeMenu": "Hauptmenu schliessen",
+    "privacy": "Datenschutzerklarung",
+    "uiFallbackNotice": "{requested} ist noch nicht ubersetzt. Vorerst wird {current} angezeigt.",
+    "copyButton": {
+      "copy": "Kopieren",
+      "copied": "Kopiert!"
+    },
+    "copyright": "© {year}"
+  }
+}

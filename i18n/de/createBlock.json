@@ -1,0 +1,65 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Neuen Block erstellen — Daily Page",
+      "description": "Starte einen frischen kreativen Block mit optionalen Tags, Sprache und Sichtbarkeit."
+    },
+    "heading": "Neuen Block erstellen",
+    "roomInfo": {
+      "roomLabel": "Raum:",
+      "unavailable": "Rauminformationen nicht verfugbar.",
+      "noDescription": "Keine Beschreibung verfugbar."
+    },
+    "form": {
+      "title": {
+        "label": "Titel:",
+        "placeholder": {
+          "full": "z. B. 'Mein Meisterwerk', 'Die beste Idee aller Zeiten', 'Clickbait fur Nerds'",
+          "short": "z. B. 'Mein Meisterwerk'"
+        }
+      },
+      "description": {
+        "label": "Beschreibung (optional):",
+        "placeholder": "Erklare deine Genialitat... oder improvisiere einfach."
+      },
+      "initialContent": {
+        "label": "Anfangsinhalt (optional):",
+        "help": "Beginne hier zu schreiben oder drucke auf \"Erstellen\", um auf der vollstandigen Editorseite weiterzumachen, wo du Bilder einbetten und in Echtzeit zusammenarbeiten kannst.",
+        "placeholder": "Starte deinen Block hier oder bearbeite ihn nach der Erstellung weiter..."
+      },
+      "visibility": {
+        "label": "Sichtbarkeit:"
+      },
+      "submit": "Block erstellen"
+    },
+    "visibility": {
+      "public": {
+        "label": "Offentlich",
+        "title": "Von allen in Echtzeit bearbeitbar. Keine Anmeldung erforderlich.",
+        "inline": "Von allen in Echtzeit bearbeitbar. Keine Anmeldung erforderlich."
+      },
+      "private": {
+        "label": "Privat",
+        "title": "Nur fur angemeldete Benutzer. Sichtbar, nachdem die Bearbeitung abgeschlossen ist.",
+        "inline": "Nur fur angemeldete Benutzer. Sichtbar, nachdem die Bearbeitung abgeschlossen ist.",
+        "tooltip": "Private Blocke sind wahrend der Arbeit nur per Einladung zuganglich und werden sichtbar, wenn du fertig bist."
+      }
+    },
+    "advanced": {
+      "summary": "Erweiterte Optionen",
+      "lang": {
+        "label": "Sprache:"
+      },
+      "translate": {
+        "label": "Vorhandenen Block ubersetzen (URL oder ID):",
+        "placeholder": "Block-URL oder ID einfugen (optional)",
+        "invalid": "Das sieht nicht wie eine gultige Block-URL oder ID aus.",
+        "fetchError": "Blockinformationen konnten nicht abgerufen werden."
+      }
+    },
+    "messages": {
+      "langExists": "Eine Ubersetzung fur diese Sprache existiert bereits. Bitte wahle eine andere Sprache.",
+      "genericError": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "Profil von {username}",
+      "descriptionUser": "Sieh dir die neuesten Aktivitaten, markierten Raume und Statistiken von {username} an."
+    },
+    "profile": {
+      "profilePicAlt": "Profilbild",
+      "noBio": "(Keine Bio verfugbar.)"
+    },
+    "activity": {
+      "title": "Letzte Aktivitat",
+      "updatedOn": "Aktualisiert am {date}",
+      "none": "Keine neue Aktivitat.",
+      "viewAllBlocks": "Alle Blocke anzeigen"
+    },
+    "starredRooms": {
+      "title": "Markierte Raume",
+      "none": "Noch keine markierten Raume.",
+      "unnamedRoom": "Unbenannter Raum"
+    },
+    "stats": {
+      "title": "Benutzerstatistiken",
+      "totalBlocks": "Erstellte Blocke insgesamt",
+      "collaborations": "Zusammenarbeiten",
+      "daysActive": "Aktive Tage"
+    }
+  }
+}

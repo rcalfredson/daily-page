@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Unangemessenen Inhalt melden",
+    "fields": {
+      "reason": {
+        "label": "Grund",
+        "options": {
+          "spam": "Spam",
+          "offensive": "Beleidigend (Hassrede oder abwertende Begriffe)",
+          "inappropriate": "Unangemessen (Nacktheit, grafische Inhalte usw.)",
+          "other": "Sonstiges"
+        }
+      },
+      "details": {
+        "label": "Details (optional)",
+        "placeholder": "Beschreibe, was du gesehen hast..."
+      }
+    },
+    "buttons": {
+      "submit": "Meldung absenden",
+      "cancel": "Abbrechen"
+    },
+    "toasts": {
+      "success": "Meldung gesendet - danke!",
+      "failed": "Meldung konnte nicht gesendet werden."
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Hilfe",
+      "description": "Wie du Kontakt aufnimmst, Probleme meldest, Funktionen oder Raume anfragst und Daily Page finanziell unterstutzt."
+    },
+    "contact": {
+      "h1": "★ Ich mochte eine Frage stellen, ein Problem melden oder eine Funktion anfragen.",
+      "p1": {
+        "before": "Wenn du lieber GitHub nutzt, sieh dir bitte",
+        "link": "die Issues dieses Projekts",
+        "after": "an und bring dich ein. Pull Requests sind naturlich ebenfalls willkommen."
+      },
+      "p2": {
+        "before": "Alternativ:",
+        "link": "sende eine E-Mail",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Ich mochte dieses Projekt mit einem Beitrag unterstutzen.",
+      "p1": {
+        "before": "Vielen Dank im Voraus, dass du dieses Projekt finanzierst. Bitte sende Zahlungen sicher uber",
+        "paypal": "PayPal",
+        "middle": "oder, wenn du mochtest,",
+        "amazon": "bestelle ein paar Beutel der Spielzeuge, die ich auf Amazon verkaufe",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Ich mochte einen neuen Raum anfragen.",
+      "form": {
+        "nameLabel": "Raumname",
+        "topicLabel": "Thema (optional)",
+        "descriptionLabel": "Beschreibung",
+        "submit": "Anfrage senden",
+        "success": "Anfrage erfolgreich gesendet!",
+        "errorGeneric": "Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.",
+        "errorUnexpected": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut."
+      }
+    }
+  }
+}

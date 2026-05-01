@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "Suche",
+      "description": "Offentliche Blocke durchsuchen."
+    },
+    "title": "Suche",
+    "placeholder": "Blocke suchen...",
+    "hint": "Gib mindestens 2 Zeichen ein, um zu suchen.",
+    "noResults": "Keine Ergebnisse gefunden.",
+    "untitled": "Ohne Titel",
+    "votesTitle": "Stimmen",
+    "pageLabel": "Seite",
+    "filters": {
+      "inRoom": "In Raum"
+    },
+    "buttons": {
+      "search": "Suche",
+      "prev": "Zuruck",
+      "next": "Weiter"
+    }
+  }
+}

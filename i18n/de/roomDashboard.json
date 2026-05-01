@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "Entdecke neue und laufende Blocke in {roomName}."
+    },
+    "links": {
+      "exploreLabel": "Entdecken:",
+      "allBlocks": "🗂️ Alle Blocke",
+      "browseByDate": "🗓️ Nach Datum",
+      "bestOf": "🏅 Das Beste",
+      "searchInRoom": "🔎 Suche"
+    },
+    "actions": {
+      "createBlock": "Block erstellen",
+      "starTitle": "Diesen Raum markieren",
+      "unstarTitle": "Markierung fur diesen Raum entfernen"
+    },
+    "tabs": {
+      "locked": "Gesperrte Blocke",
+      "inProgress": "Blocke in Arbeit"
+    },
+    "sections": {
+      "lockedHeader": "Gesperrte Blocke",
+      "inProgressHeader": "Blocke in Arbeit"
+    },
+    "editorial": {
+      "heading": "Hervorgehobene Leitfaden",
+      "description": "Beginne hier mit den hervorgehobenen Leitfaden, die fur diesen Raum kuratiert wurden.",
+      "roleNames": {
+        "pillar": "Kernleitfaden",
+        "companion": "Leseleitfaden",
+        "texture": "Hintergrundleitfaden"
+      }
+    },
+    "empty": {
+      "noDescription": "Keine Beschreibung verfugbar.",
+      "noLocked": "Noch keine gesperrten Blocke! Blocke werden nach 1 Stunde Inaktivitat automatisch gesperrt.",
+      "noInProgress": "Noch keine Blocke in Arbeit! Zeit, einen zu starten.",
+      "noBlocks": "Noch keine Blocke! Erstelle den ersten und hinterlasse deine Spur. 😎"
+    }
+  }
+}
