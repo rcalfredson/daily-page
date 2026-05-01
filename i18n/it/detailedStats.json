@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "Statistiche dettagliate",
+      "description": "Un resoconto dettagliato della tua attivita su Daily Page."
+    },
+    "nav": {
+      "backToDashboard": "← Torna alla dashboard"
+    },
+    "header": {
+      "title": "📊 Panoramica delle tue statistiche 📊"
+    },
+    "cards": {
+      "totalBlocks": "Blocchi totali creati 📝",
+      "collaborations": "Collaborazioni 🤝",
+      "votesGiven": "Voti dati 👍",
+      "daysActive": "Giorni attivi 📆"
+    },
+    "chart": {
+      "datasetLabel": "Le tue statistiche",
+      "labels": {
+        "blocksCreated": "Blocchi creati",
+        "collaborations": "Collaborazioni",
+        "votesGiven": "Voti dati",
+        "daysActive": "Giorni attivi"
+      }
+    }
+  }
+}

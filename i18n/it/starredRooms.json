@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Tutte le stanze preferite",
+      "description": "Un elenco di tutte le stanze che hai aggiunto ai preferiti."
+    },
+    "nav": {
+      "backToDashboard": "← Torna alla dashboard"
+    },
+    "header": {
+      "title": "🌟 Tutte le tue stanze preferite 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Stanza senza nome",
+      "noDescription": "Nessuna descrizione."
+    },
+    "empty": {
+      "message": "Non hai ancora aggiunto stanze ai preferiti!"
+    }
+  }
+}

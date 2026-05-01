@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "Cerca",
+      "description": "Cerca nei blocchi pubblici."
+    },
+    "title": "Cerca",
+    "placeholder": "Cerca blocchi...",
+    "hint": "Digita almeno 2 caratteri per cercare.",
+    "noResults": "Nessun risultato trovato.",
+    "untitled": "Senza titolo",
+    "votesTitle": "Voti",
+    "pageLabel": "Pagina",
+    "filters": {
+      "inRoom": "Nella stanza"
+    },
+    "buttons": {
+      "search": "Cerca",
+      "prev": "Prec",
+      "next": "Successivo"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page - Altri progetti",
+      "description": "Esplora diari sul baseball, esperimenti di scrittura casuale e altri progetti paralleli di Daily Page."
+    },
+    "title": "Altri progetti",
+    "tagline": "Un angolo accogliente per esperimenti e missioni secondarie.",
+    "links": {
+      "baseball": "📖 Diario di baseball",
+      "randomWriter": "🎲 Scrittore casuale"
+    },
+    "cta": {
+      "backToRooms": "Torna alle stanze principali"
+    }
+  }
+}

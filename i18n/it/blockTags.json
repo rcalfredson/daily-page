@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "Tag:",
+      "noTags": "Ancora nessun tag! Aggiungine qualcuno:"
+    },
+    "input": {
+      "placeholder": "Nuovo tag",
+      "addButton": "Aggiungi"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Tu)"
+    },
+    "meta": {
+      "title": "Modifica blocco - {blockTitle}",
+      "titleFallback": "Modifica blocco"
+    },
+    "errors": {
+      "imageUrlRequired": "Inserisci l'URL di un'immagine.",
+      "notFound": "Blocco non trovato o non appartenente a questa stanza.",
+      "loadFailed": "Si e verificato un errore durante il caricamento dell'editor del blocco.",
+      "updateTitleFailed": "Errore durante l'aggiornamento del titolo."
+    },
+    "roomInfo": {
+      "label": "Stanza:"
+    },
+    "title": {
+      "placeholder": "Inserisci il titolo del blocco",
+      "editTooltip": "Modifica titolo",
+      "lock": "Blocca blocco",
+      "delete": "Elimina blocco"
+    },
+    "description": {
+      "label": "Descrizione",
+      "editTooltip": "Modifica descrizione",
+      "placeholder": "Inserisci descrizione",
+      "noDescriptionOwner": "Ancora nessuna descrizione...",
+      "noDescriptionViewer": "Nessuna descrizione fornita...",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "expand": "Espandi",
+      "collapse": "Comprimi",
+      "updateError": "Errore durante l'aggiornamento della descrizione."
+    },
+    "status": {
+      "lastBackup": "Ultimo backup: {datetime}",
+      "lastBackupUnknown": "Ultimo backup: sconosciuto"
+    },
+    "peers": {
+      "label": "Partecipanti:"
+    },
+    "toasts": {
+      "blockLocked": "Questo blocco e stato bloccato!"
+    },
+    "editor": {
+      "placeholder": "La pagina bianca aspetta la tua voce; scrivi senza paura."
+    },
+    "loading": {
+      "label": "Caricamento",
+      "quote": "Lascia che il mondo bruci attraverso di te. Getta sulla carta la luce del prisma, bianca e rovente.<br>- Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "Non hai scritto nulla per 5 minuti. Fai clic su OK per continuare la sessione; altrimenti verrai reindirizzato all'archivio.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Link di condivisione",
+      "copyTooltip": "Copia negli appunti",
+      "copied": "Copiato!"
+    },
+    "toolbar": {
+      "insertImage": "Inserisci immagine",
+      "insertImageUrlPlaceholder": "Inserisci URL immagine",
+      "insertImageAltPlaceholder": "Testo alternativo (opzionale)",
+      "insertImageConfirm": "Conferma",
+      "insertImageCancel": "Annulla"
+    },
+    "buttons": {
+      "downloadFile": "Scarica file"
+    },
+    "lockModal": {
+      "messageLine1": "Vuoi davvero bloccare questo blocco?",
+      "messageLine2": "Questo lo rendera definitivo e impedira ulteriori modifiche.",
+      "confirm": "Blocca",
+      "cancel": "Annulla",
+      "successToast": "Blocco bloccato con successo.",
+      "errorToast": "Errore durante il blocco del blocco."
+    },
+    "tags": {
+      "headerWithTags": "Tag:",
+      "headerNoTags": "Ancora nessun tag! Aggiungine qualcuno:",
+      "updateError": "Errore durante l'aggiornamento dei tag."
+    },
+    "fullBlock": {
+      "headingPrefix": "Spiacenti; il blocco \"{blockTitle}\" ora e",
+      "headingStatus": "completamente occupato.",
+      "retryPrefix": "Per favore",
+      "retryLink": "prova un blocco diverso",
+      "retrySuffix": "oppure torna un'altra volta.",
+      "consolationPrefix": "Mentre aspetti, puoi leggere",
+      "consolationBestOf": "alcuni dei nostri blocchi preferiti",
+      "consolationMiddle": "oppure sfogliare",
+      "consolationArchive": "l'archivio."
+    }
+  }
+}

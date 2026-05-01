@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "Profilo di {username}",
+      "descriptionUser": "Vedi l'attivita recente, le stanze preferite e le statistiche di {username}."
+    },
+    "profile": {
+      "profilePicAlt": "Immagine del profilo",
+      "noBio": "(Nessuna bio disponibile.)"
+    },
+    "activity": {
+      "title": "Attivita recente",
+      "updatedOn": "Aggiornato il {date}",
+      "none": "Nessuna attivita recente.",
+      "viewAllBlocks": "Vedi tutti i blocchi"
+    },
+    "starredRooms": {
+      "title": "Stanze preferite",
+      "none": "Ancora nessuna stanza preferita.",
+      "unnamedRoom": "Stanza senza nome"
+    },
+    "stats": {
+      "title": "Statistiche utente",
+      "totalBlocks": "Blocchi totali creati",
+      "collaborations": "Collaborazioni",
+      "daysActive": "Giorni attivi"
+    }
+  }
+}

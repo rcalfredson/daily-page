@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Il meglio di Daily Page",
+      "description": "I blocchi piu amati su Daily Page: divertenti, sinceri, poetici o semplicemente strani. Scopri cosa si e distinto nell'ultimo giorno, settimana, mese e oltre.",
+      "titleRoom": "Il meglio di {roomName}",
+      "descriptionRoom": "Scopri i post piu notevoli della stanza {roomName}, quelli piu amati dai lettori nelle ultime 24 ore, 7 giorni, 30 giorni e da sempre."
+    },
+    "heading": "🏆 Il meglio di Daily Page",
+    "headingRoomPrefix": "🏆 Il meglio di ",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 ore",
+      "7d": "🚀 7 giorni",
+      "30d": "🌕 30 giorni",
+      "all": "👑 Sempre"
+    },
+    "labels": {
+      "createdBy": "Creato da:",
+      "inRoom": "in",
+      "onDate": "il {date}",
+      "unknownRoom": "Stanza sconosciuta",
+      "noBlocks": "Nessun blocco trovato.",
+      "viewRoom": "Vedi stanza"
+    }
+  }
+}

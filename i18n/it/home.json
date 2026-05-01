@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Blocchi migliori nelle ultime 24 ore",
+      "description": "Daily Page e un sito di scrittura minimale e indipendente dove chiunque puo pubblicare pensieri creativi, ricordi o esperimenti, un blocco alla volta. Esplora nuove idee, entra nelle stanze e fai sentire la tua voce."
+    },
+    "hero": {
+      "eyebrow": "Un posto tranquillo per scrivere, leggere e tornare",
+      "title": "Benvenuto su Daily Page!",
+      "subtitle": "Esplora i blocchi piu popolari delle ultime 24 ore.",
+      "ctaPrefix": "Ti senti ispirato?",
+      "cta": "Entra in una stanza",
+      "ctaSuffix": "e crea il tuo blocco!"
+    },
+    "stats": {
+      "blocks": "Blocchi",
+      "rooms": "Stanze",
+      "tags": "Tag",
+      "collabsToday": "Collaborazioni oggi"
+    },
+    "activity": {
+      "title": "In diretta su Daily Page",
+      "subtitle": "Conversazioni e reazioni fresche, tutte a colpo d'occhio.",
+      "fallbackActor": "Qualcuno",
+      "inRoom": "in",
+      "comments": {
+        "title": "Commenti recenti",
+        "more": "Cerca discussioni",
+        "commentVerb": "ha commentato",
+        "replyVerb": "ha risposto a",
+        "empty": "Ancora nessun commento recente. La prossima conversazione puo iniziare dal tuo blocco."
+      },
+      "reactions": {
+        "title": "Reazioni recenti",
+        "more": "Sfoglia i blocchi migliori",
+        "empty": "Ancora nessuna reazione recente. Un buon post potrebbe ravvivare tutto in fretta.",
+        "types": {
+          "heart": "ha messo un cuore a",
+          "leaf": "ha reagito con una foglia a",
+          "wow": "ha reagito con wow a",
+          "laugh": "ha riso di"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Stanza in evidenza",
+      "roomInfoDays": "Attivita negli ultimi {days} giorni: {blocks} blocchi, {votes} voti.",
+      "roomInfo24h": "Attivita nelle ultime 24 ore: {blocks} blocchi, {votes} voti.",
+      "checkItOut": "Dai un'occhiata",
+      "blockRibbon": "★ Blocco in evidenza",
+      "votes": "{n} voti",
+      "noContent": "(Nessun contenuto fornito...)",
+      "viewBlock": "Vedi blocco"
+    },
+    "trendingTags": {
+      "title": "Tag di tendenza",
+      "suffixDays": "(ultimi {days} giorni)",
+      "suffixAllTime": "(sempre)",
+      "blocks": "{n} blocchi",
+      "votes": "{n} voti",
+      "empty": "Ancora nessun tag di tendenza. Sii il primo a taggare qualcosa di interessante!"
+    },
+    "trendingBlocks": {
+      "title": "Blocchi di tendenza",
+      "suffixDays": "(ultimi {days} giorni)",
+      "createdBy": "Creato da:",
+      "in": "in",
+      "on": "il",
+      "unknownRoom": "Stanza sconosciuta",
+      "empty24h": "Ancora nessun blocco nelle ultime 24 ore. Torna presto, compa!"
+    }
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Blocco - {blockTitle}",
+      "titleFallback": "Blocco"
+    },
+    "labels": {
+      "room": "Stanza",
+      "author": "Autore",
+      "created": "Creato",
+      "unknownAuthor": "Anonimo",
+      "authorAvatarAlt": "Avatar di {username}",
+      "viewAuthorProfile": "Vedi il profilo di {username}",
+      "lang": "Traduzioni: ",
+      "available": "disponibili"
+    },
+    "buttons": {
+      "edit": "Modifica",
+      "deleteBlock": "Elimina blocco",
+      "share": "Condividi",
+      "flagContent": "Segnala contenuto"
+    },
+    "description": {
+      "label": "Descrizione",
+      "none": "Nessuna descrizione fornita...",
+      "expand": "Espandi",
+      "collapse": "Comprimi"
+    },
+    "editorial": {
+      "heading": "Guida alla lettura",
+      "roleLabel": "Tipo di lettura",
+      "clusterLabel": "Guida",
+      "sequence": "Parte {sequence}",
+      "primaryPillarHeading": "Inizia qui",
+      "relatedHeading": "Continua a leggere",
+      "clusterHeading": "Altro in questa guida",
+      "expandSection": "Mostra altri {count}",
+      "collapseSection": "Mostra meno",
+      "roleNames": {
+        "pillar": "Guida principale",
+        "companion": "Approfondimento",
+        "texture": "Contesto"
+      }
+    },
+    "comments": {
+      "heading": "Commenti",
+      "count": "{count} commenti",
+      "empty": "Nessuno ha ancora risposto. I commenti appariranno qui quando iniziera la conversazione.",
+      "composer": {
+        "label": "Aggiungi un commento",
+        "placeholder": "Scrivi un commento...",
+        "submit": "Pubblica commento",
+        "submitting": "Pubblicazione...",
+        "success": "Commento pubblicato.",
+        "error": "Al momento non e possibile pubblicare il commento.",
+        "loginPrompt": "Accedi per partecipare alla conversazione.",
+        "loginCta": "Accedi per commentare",
+        "verifyPrompt": "Verifica la tua email prima di pubblicare un commento.",
+        "verifyCta": "Verifica email"
+      },
+      "sort": {
+        "label": "Ordina",
+        "oldestFirst": "Prima i piu vecchi",
+        "newestFirst": "Prima i piu recenti"
+      },
+      "by": "Da",
+      "unknownAuthor": "Sconosciuto",
+      "reply": {
+        "action": "Rispondi",
+        "label": "Aggiungi una risposta",
+        "placeholder": "Scrivi una risposta...",
+        "submit": "Pubblica risposta",
+        "submitting": "Pubblicazione...",
+        "success": "Risposta pubblicata.",
+        "error": "Al momento non e possibile pubblicare la risposta.",
+        "cancel": "Annulla",
+        "loginPrompt": "Accedi per rispondere."
+      },
+      "manage": {
+        "edited": "Modificato",
+        "editAction": "Modifica",
+        "deleteAction": "Elimina",
+        "deleteConfirm": "Eliminare questo commento? Verranno rimosse anche tutte le risposte sotto di esso.",
+        "deleteSuccess": "Commento eliminato.",
+        "deleteError": "Al momento non e possibile eliminare questo commento.",
+        "forbidden": "Puoi gestire solo i tuoi commenti.",
+        "edit": {
+          "label": "Modifica commento",
+          "save": "Salva",
+          "saving": "Salvataggio...",
+          "cancel": "Annulla",
+          "success": "Commento aggiornato.",
+          "error": "Al momento non e possibile aggiornare questo commento."
+        }
+      },
+      "report": {
+        "action": "Segnala",
+        "pending": "Segnalazione...",
+        "success": "Commento segnalato.",
+        "error": "Al momento non e possibile segnalare questo commento.",
+        "ownError": "Non puoi segnalare il tuo commento.",
+        "hidden": "Commento nascosto dopo la segnalazione.",
+        "reported": "Segnalato"
+      },
+      "deepLink": {
+        "focused": "Commento collegato",
+        "unavailable": "Il commento collegato non e piu disponibile."
+      },
+      "loadMore": "Carica altri commenti",
+      "loading": "Caricamento...",
+      "loadError": "Al momento non e possibile caricare altri commenti."
+    },
+    "share": {
+      "title": "Condividi questo blocco",
+      "shareOn": "Condividi su:",
+      "nativeText": "Dai un'occhiata a questo blocco: {title}",
+      "alt": {
+        "facebook": "Logo Facebook",
+        "reddit": "Logo Reddit",
+        "whatsapp": "Logo WhatsApp",
+        "twitter": "Logo Twitter"
+      }
+    },
+    "errors": {
+      "notFound": "Blocco non trovato o non appartenente a questa stanza.",
+      "loadFailed": "Errore durante il caricamento della vista del blocco."
+    }
+  }
+}

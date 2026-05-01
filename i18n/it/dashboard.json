@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Dashboard",
+      "description": "La tua dashboard di Daily Page e panoramica dell'account."
+    },
+    "profile": {
+      "profilePicAlt": "Immagine del profilo",
+      "noBio": "Ancora nessuna bio. Fai clic su \"Modifica\" per aggiungerne una!",
+      "editBio": "Modifica bio",
+      "bioPlaceholder": "Inserisci qui la tua bio",
+      "save": "Salva",
+      "cancel": "Annulla"
+    },
+    "activity": {
+      "title": "Attivita recente",
+      "none": "Nessuna attivita recente.",
+      "updatedOn": "Aggiornato il {date}",
+      "viewAllBlocks": "Vedi tutti i blocchi"
+    },
+    "streak": {
+      "title": "Serie di scrittura",
+      "line": "{days} giorni di fila! Continua cosi!"
+    },
+    "starredRooms": {
+      "title": "Stanze preferite",
+      "none": "Non hai ancora aggiunto stanze ai preferiti. Inizia a esplorare per trovare le tue preferite!",
+      "viewAll": "Vedi tutte le stanze preferite",
+      "unnamedRoom": "Stanza senza nome"
+    },
+    "stats": {
+      "title": "Le tue statistiche",
+      "totalBlocks": "Blocchi totali creati",
+      "collaborations": "Collaborazioni",
+      "votesGiven": "Voti dati",
+      "daysActive": "Giorni attivi",
+      "viewDetailed": "Vedi statistiche dettagliate 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Caricamento dell'immagine del profilo non riuscito. Riprova.",
+      "uploadUnexpected": "Si e verificato un errore imprevisto. Riprova.",
+      "bioUpdateFailed": "Errore durante l'aggiornamento della bio. Riprova."
+    }
+  }
+}

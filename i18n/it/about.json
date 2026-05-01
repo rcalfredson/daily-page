@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page - Informazioni",
+      "description": "Che cos'e Daily Page, come funziona e perche e stato creato come un angolo del web piu lento e gentile."
+    },
+    "title": "Informazioni su Daily Page",
+    "tagline": "Nutri la mente, non il feed.",
+    "mission": {
+      "h2": "Missione",
+      "p1": "Un laboratorio di scrittura indipendente, nato nel mio salotto e alimentato dalla curiosita dei lettori.",
+      "p2": "E costruito non per intorpidire la mente, ma per nutrirla: un posto dove puoi scrivere con calma, anche in forma anonima se vuoi, senza preoccuparti di impressionare nessuno."
+    },
+    "how": {
+      "h2": "Come funziona",
+      "features": {
+        "rooms": {
+          "label": "Stanze",
+          "text": "sono spazi tematici (pensa a un subreddit, ma piu amichevole)."
+        },
+        "blocks": {
+          "label": "Blocchi",
+          "text": "sono post collaborativi: chiunque (anche in forma anonima) puo crearne uno, modificarlo finche non viene bloccato e votare quelli degli altri."
+        },
+        "privacy": {
+          "label": "Privacy e condivisione",
+          "text": "I blocchi pubblici appaiono nel feed della stanza. I blocchi privati restano nascosti finche non vengono bloccati, ma ricevi un link di condivisione per invitare amici."
+        },
+        "markdown": {
+          "label": "Markdown e media",
+          "text": "Scrivi in markdown, incorpori immagini e collabori alle modifiche come in Google Docs."
+        },
+        "trends": {
+          "label": "Tendenze e tag",
+          "text": "Tagga il tuo blocco, segui le tendenze dei tag e scopri i contenuti migliori (7 g / 30 g / sempre)."
+        },
+        "streaks": {
+          "label": "Serie",
+          "text": "Mantieni viva la tua serie di scrittura quotidiana: il miglior incentivo per presentarti ogni giorno."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Come siamo arrivati qui",
+      "p1": "Nel 2018 ho creato una wiki basata sulle date per la pagina del giorno e ho visto alcuni scrittori introspettivi trasformarla in uno spazio per i loro pensieri. Non e mai diventata enorme, ma ha piantato un seme.",
+      "p2": "Arriviamo a oggi: Daily Page e quel seme cresciuto in molte stanze, un social web tranquillo per introversi, idealisti e chiunque desideri un ritmo piu lento."
+    },
+    "next": {
+      "h2": "Prossimi passi",
+      "p1": "Siamo solo all'inizio: incorporamenti piu ricchi, statistiche utente piu approfondite, classifiche di reputazione e altri modi per premiare la creazione ragionata.",
+      "p2": "Grazie per far parte di questo piccolo esperimento indipendente."
+    },
+    "cta": {
+      "rooms": "Esplora le stanze",
+      "signup": "Unisciti alla comunita"
+    }
+  }
+}

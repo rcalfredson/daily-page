@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Crea un nuovo blocco - Daily Page",
+      "description": "Inizia un nuovo blocco creativo con tag, lingua e visibilita opzionali."
+    },
+    "heading": "Crea un nuovo blocco",
+    "roomInfo": {
+      "roomLabel": "Stanza:",
+      "unavailable": "Informazioni sulla stanza non disponibili.",
+      "noDescription": "Nessuna descrizione disponibile."
+    },
+    "form": {
+      "title": {
+        "label": "Titolo:",
+        "placeholder": {
+          "full": "es. 'Il mio capolavoro', 'La migliore idea di sempre', 'Clickbait per nerd'",
+          "short": "es. 'Il mio capolavoro'"
+        }
+      },
+      "description": {
+        "label": "Descrizione (opzionale):",
+        "placeholder": "Spiega la tua genialita... oppure improvvisa."
+      },
+      "initialContent": {
+        "label": "Contenuto iniziale (opzionale):",
+        "help": "Inizia a scrivere qui oppure premi Crea per continuare nella pagina completa dell'editor, dove puoi incorporare immagini e collaborare in tempo reale.",
+        "placeholder": "Inizia il blocco qui, oppure continua a modificarlo dopo la creazione..."
+      },
+      "visibility": {
+        "label": "Visibilita:"
+      },
+      "submit": "Crea blocco"
+    },
+    "visibility": {
+      "public": {
+        "label": "Pubblico",
+        "title": "Modificabile da chiunque in tempo reale. Nessun accesso richiesto.",
+        "inline": "Modificabile da chiunque in tempo reale. Nessun accesso richiesto."
+      },
+      "private": {
+        "label": "Privato",
+        "title": "Solo per utenti registrati. Visibile al termine della modifica.",
+        "inline": "Solo per utenti registrati. Visibile al termine della modifica.",
+        "tooltip": "I blocchi privati sono solo su invito mentre lavori e diventano visibili quando hai finito."
+      }
+    },
+    "advanced": {
+      "summary": "Opzioni avanzate",
+      "lang": {
+        "label": "Lingua:",
+        "options": {
+          "en": "English",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "עברית",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "Traduci blocco esistente (URL o ID):",
+        "placeholder": "Incolla un URL o ID del blocco (opzionale)",
+        "invalid": "Non sembra un URL o ID di blocco valido.",
+        "fetchError": "Impossibile recuperare le informazioni del blocco."
+      }
+    },
+    "messages": {
+      "langExists": "Esiste gia una traduzione per quella lingua. Scegline un'altra.",
+      "genericError": "Qualcosa e andato storto. Riprova."
+    }
+  }
+}

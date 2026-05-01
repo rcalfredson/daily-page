@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Segnala contenuto inappropriato",
+    "fields": {
+      "reason": {
+        "label": "Motivo",
+        "options": {
+          "spam": "Spam",
+          "offensive": "Offensivo (linguaggio d'odio o insulti)",
+          "inappropriate": "Inappropriato (nudita, contenuti grafici, ecc.)",
+          "other": "Altro"
+        }
+      },
+      "details": {
+        "label": "Dettagli (opzionale)",
+        "placeholder": "Descrivi cosa hai visto..."
+      }
+    },
+    "buttons": {
+      "submit": "Invia segnalazione",
+      "cancel": "Annulla"
+    },
+    "toasts": {
+      "success": "Segnalazione inviata, grazie!",
+      "failed": "Invio della segnalazione non riuscito."
+    }
+  }
+}

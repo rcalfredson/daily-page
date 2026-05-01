@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page - Panoramica tag",
+      "description": "Sfoglia tutti i tag usati su Daily Page, con filtri rapidi per periodo."
+    },
+    "title": "Panoramica tag",
+    "intro": "Esplora tutti i tag usati in Daily Page.",
+    "tagCloudTitle": "Nuvola di tag",
+    "timeframe": {
+      "last24h": "Ultime 24 ore",
+      "last7d": "Ultimi 7 giorni",
+      "last30d": "Ultimi 30 giorni",
+      "all": "Sempre"
+    },
+    "error": {
+      "loading": "Errore durante il caricamento della panoramica tag"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "Blocchi taggati con"
+      },
+      "header": {
+        "label": "Tag:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Blocchi totali con",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Creato da:",
+        "inRoom": "in",
+        "unknownRoom": "Stanza sconosciuta",
+        "onDate": "il"
+      },
+      "chart": {
+        "label": "Blocchi creati nel tempo"
+      },
+      "empty": {
+        "message": "Ancora nessun blocco trovato con questo tag. Forse dovresti creare il primo? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Errore durante il caricamento della pagina del tag"
+      }
+    }
+  }
+}

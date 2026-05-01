@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page - Informativa sulla privacy",
+      "description": "Come Daily Page raccoglie, usa e protegge i tuoi dati, in parole semplici."
+    },
+    "title": "Informativa sulla privacy",
+    "lastUpdated": "Ultimo aggiornamento: {date}",
+    "intro": {
+      "h2": "Introduzione",
+      "p1": "Daily Page (\"noi\", \"ci\" o \"nostro\") gestisce il sito dailypage.org (di seguito il \"Servizio\").",
+      "p2": "Questa pagina ti informa sulle nostre politiche relative alla raccolta, all'uso e alla divulgazione dei dati personali quando usi il nostro Servizio."
+    },
+    "collection": {
+      "h2": "Raccolta e uso delle informazioni",
+      "p": "Raccogliamo dati personali minimi per migliorare e fornire il nostro Servizio. Questo include indirizzi email per la gestione dell'account e contenuti inviati volontariamente dagli utenti."
+    },
+    "usage": {
+      "h2": "Uso dei dati",
+      "p": "I dati raccolti vengono usati solo per l'autenticazione dell'account, la moderazione dei contenuti e il miglioramento dell'esperienza utente."
+    },
+    "storage": {
+      "h2": "Archiviazione e sicurezza dei dati",
+      "p": "I tuoi dati sono archiviati in modo sicuro e non vengono mai condivisi o venduti a terzi senza consenso esplicito, salvo quanto richiesto dalla legge."
+    },
+    "cookies": {
+      "h2": "Cookie",
+      "p": "Usiamo i cookie solo per la gestione della sessione e per migliorare l'esperienza utente. Puoi disattivarli dalle impostazioni del browser."
+    },
+    "rights": {
+      "h2": "I tuoi diritti",
+      "p": "Puoi richiedere in qualsiasi momento l'eliminazione o la modifica dei tuoi dati personali contattandoci."
+    },
+    "changes": {
+      "h2": "Modifiche a questa informativa sulla privacy",
+      "p": "Potremmo aggiornare periodicamente la nostra informativa sulla privacy. Le modifiche saranno pubblicate su questa pagina."
+    },
+    "contact": {
+      "h2": "Contattaci",
+      "p": "Per domande su questa informativa sulla privacy, contattaci a:",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}

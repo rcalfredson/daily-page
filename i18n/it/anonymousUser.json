@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "Il viandante anonimo",
+      "description": "Nessun profilo. Nessun passato. Solo vibrazioni."
+    },
+    "ascii": {
+      "ariaLabel": "Arte ASCII di una creatura stravagante con citazione"
+    },
+    "header": {
+      "title": "L'anonimo"
+    },
+    "body": {
+      "line1": "Sei inciampato nel vuoto. Non c'e niente da vedere qui:",
+      "line2": "solo uno spirito errante senza storia."
+    },
+    "buttons": {
+      "home": "← Torna alla home",
+      "signup": "Crea un'identita"
+    }
+  }
+}

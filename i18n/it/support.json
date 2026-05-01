@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page - Supporto",
+      "description": "Come metterti in contatto, segnalare problemi, richiedere funzionalita o stanze e sostenere economicamente Daily Page."
+    },
+    "contact": {
+      "h1": "★ Vorrei fare una domanda, segnalare un problema o richiedere una funzionalita.",
+      "p1": {
+        "before": "Se preferisci usare GitHub, controlla",
+        "link": "le issue di questo progetto",
+        "after": "e aggiungi la tua voce. Naturalmente sono benvenute anche le pull request."
+      },
+      "p2": {
+        "before": "In alternativa,",
+        "link": "invia un'email",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Vorrei sostenere questo progetto con un contributo.",
+      "p1": {
+        "before": "Grazie in anticipo per finanziare questo progetto. Invia i pagamenti in modo sicuro tramite",
+        "paypal": "PayPal",
+        "middle": "oppure, se preferisci,",
+        "amazon": "ordina qualche sacchetto dei giocattoli che vendo su Amazon",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Vorrei richiedere una nuova stanza.",
+      "form": {
+        "nameLabel": "Nome stanza",
+        "topicLabel": "Argomento (opzionale)",
+        "descriptionLabel": "Descrizione",
+        "submit": "Invia richiesta",
+        "success": "Richiesta inviata con successo!",
+        "errorGeneric": "Invio della richiesta non riuscito. Riprova.",
+        "errorUnexpected": "Si e verificato un errore imprevisto. Riprova."
+      }
+    }
+  }
+}

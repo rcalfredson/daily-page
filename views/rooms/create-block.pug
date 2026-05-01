@@ -67,32 +67,14 @@ block content
       .form-group
         label(for='lang')= t('createBlock.advanced.lang.label')
         select#lang(name='lang')
-          //- mismo listado de opciones; las etiquetas pueden quedarse en su idioma nativo
-          option(value='en' selected) English
-          option(value='es') Español
-          option(value='fr') Français
-          option(value='ru') Русский
-          option(value='id') Bahasa Indonesia
-          option(value='de') Deutsch
-          option(value='it') Italiano
-          option(value='pt') Português
-          option(value='zh') 中文
-          option(value='ja') 日本語
-          option(value='ko') 한국어
-          option(value='ar') العربية
-          option(value='hi') हिन्दी
-          option(value='tr') Türkçe
-          option(value='nl') Nederlands
-          option(value='sv') Svenska
-          option(value='no') Norsk
-          option(value='da') Dansk
-          option(value='fi') Suomi
-          option(value='pl') Polski
-          option(value='cs') Čeština
-          option(value='el') Ελληνικά
-          option(value='he') עברית
-          option(value='th') ไทย
-          option(value='vi') Tiếng Việt
+          -
+            const contentLangCodes = [
+              'en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja',
+              'ko', 'ar', 'hi', 'tr', 'nl', 'sv', 'no', 'da', 'fi', 'pl',
+              'cs', 'el', 'he', 'th', 'vi'
+            ];
+          each code in contentLangCodes
+            option(value=code selected=code === 'en')= t(`createBlock.advanced.lang.options.${code}`)
       .form-group
         label(for='source-block')= t('createBlock.advanced.translate.label')
         input#source-block(type='text' placeholder=t('createBlock.advanced.translate.placeholder'))
