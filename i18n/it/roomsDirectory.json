@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Directory delle stanze",
+      "description": "Ogni stanza e una porta verso un mondo diverso. Entra, condividi la tua storia e unisciti agli altri per costruire qualcosa di bello."
+    },
+    "eyebrow": "Trova il tuo angolo",
+    "heading": "Directory delle stanze",
+    "intro": "Inizia dalle stanze che sembrano vive in questo momento, oppure vaga per argomento finche qualcosa non scatta. Ogni stanza e uno spunto di scrittura, un fandom o un'ossessione condivisa che aspetta la tua voce.",
+    "empty": "Al momento non ci sono stanze disponibili. Torna piu tardi!",
+    "jumpToActive": "Vedi stanze attive",
+    "jumpToTopics": "Sfoglia per argomento",
+    "statsLabel": "Punti salienti della directory delle stanze",
+    "liveNow": "Attive ora",
+    "recentlyActive": "Attive di recente",
+    "recentlyActiveSubtitle": "Il modo piu rapido per trovare una stanza con persone presenti ora.",
+    "browseByTopic": "Sfoglia per argomento",
+    "topicSubtitle": "Apri un argomento per esplorarne le stanze.",
+    "roomCount": "{count} stanze",
+    "stats": {
+      "rooms": "stanze da esplorare",
+      "topics": "gruppi di argomenti",
+      "active": "scelte attive"
+    },
+    "activeUsers": "Utenti attivi: {count}",
+    "visitRoom": "Visita stanza",
+    "close": "Chiudi",
+    "noTitle": "Nessun titolo disponibile",
+    "noDescription": "Nessuna descrizione disponibile"
+  }
+}

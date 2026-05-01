@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page - Scrittore casuale",
+      "description": "Genera un flusso infinito di pseudo-testo casuale per divertimento, ispirazione o caos."
+    },
+    "title": "Scrittore casuale",
+    "buttons": {
+      "clear": "Cancella",
+      "stop": "Interrompi scrittura",
+      "start": "Avvia scrittura"
+    }
+  }
+}

@@ -27,7 +27,9 @@
         "help": "Escribe aquí o pulsa «Crear» para seguir en el editor completo, donde puedes incrustar imágenes y colaborar en tiempo real.",
         "placeholder": "Empieza aquí o sigue editando tras la creación…"
       },
-      "visibility": { "label": "Visibilidad:" },
+      "visibility": {
+        "label": "Visibilidad:"
+      },
       "submit": "Crear Bloque"
     },
     "visibility": {
@@ -45,7 +47,36 @@
     },
     "advanced": {
       "summary": "Opciones avanzadas",
-      "lang": { "label": "Idioma:" },
+      "lang": {
+        "label": "Idioma:",
+        "options": {
+          "en": "English",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "עברית",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
       "translate": {
         "label": "Traducir bloque existente (URL o ID):",
         "placeholder": "Pega la URL o el ID del bloque (opcional)",

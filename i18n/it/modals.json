@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Effettua l'accesso",
+      "message": "Devi effettuare l'accesso per continuare.",
+      "messageWithAction": "Devi effettuare l'accesso per {action}.",
+      "cta": "Accedi"
+    },
+    "actions": {
+      "voteOnBlock": "votare un blocco",
+      "starRoom": "aggiungere questa stanza ai preferiti",
+      "reactToBlock": "reagire a questo post",
+      "commentOnBlock": "commentare questo blocco",
+      "reportComment": "segnalare questo commento"
+    },
+    "errors": {
+      "starToggleFail": "Impossibile aggiornare lo stato del preferito. Riprova."
+    }
+  }
+}

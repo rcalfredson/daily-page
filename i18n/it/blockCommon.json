@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "Bozza"
+    },
+    "deleteModal": {
+      "title": "Eliminare il blocco?",
+      "message": "Questa azione non puo essere annullata.",
+      "confirm": "Elimina",
+      "cancel": "Annulla",
+      "closeAriaLabel": "Chiudi"
+    },
+    "toasts": {
+      "deleteSuccess": "Blocco eliminato con successo!",
+      "deleteFailed": "Impossibile eliminare il blocco."
+    }
+  }
+}

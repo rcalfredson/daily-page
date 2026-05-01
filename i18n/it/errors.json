@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Ops! Qualcosa e andato storto.",
+      "message": "Si e verificato un errore imprevisto. Riprova piu tardi.",
+      "home": "Torna alla home"
+    },
+    "notFound": {
+      "title": "404 - Pagina non trovata",
+      "metaTitle": "Pagina non trovata",
+      "message": "Spiacenti, non siamo riusciti a trovare la pagina che cercavi.",
+      "homePrefix": "Puoi tornare a",
+      "homeLink": "la homepage",
+      "roomsPrefix": "oppure dare un'occhiata alla",
+      "roomsLink": "directory delle stanze."
+    }
+  }
+}

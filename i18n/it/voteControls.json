@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "Voto positivo",
+    "downvote": "Voto negativo",
+    "errors": {
+      "failed": "Impossibile salvare il voto."
+    }
+  }
+}
