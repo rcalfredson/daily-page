@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Política de Privacidade",
+      "description": "Como o Daily Page coleta, usa e protege seus dados, em linguagem simples."
+    },
+    "title": "Política de Privacidade",
+    "lastUpdated": "Última atualização: {date}",
+    "intro": {
+      "h2": "Introdução",
+      "p1": "Daily Page (\"nós\", \"nos\" ou \"nosso\") opera o site dailypage.org (doravante referido como o \"Serviço\").",
+      "p2": "Esta página informa você sobre nossas políticas relacionadas à coleta, uso e divulgação de dados pessoais quando você usa nosso Serviço."
+    },
+    "collection": {
+      "h2": "Coleta e Uso de Informações",
+      "p": "Coletamos dados pessoais mínimos para melhorar e fornecer nosso Serviço. Isso inclui endereços de email para gerenciamento de conta e conteúdo enviado voluntariamente pelos usuários."
+    },
+    "usage": {
+      "h2": "Uso de Dados",
+      "p": "Os dados coletados são usados apenas para autenticação de conta, moderação de conteúdo e melhoria da experiência do usuário."
+    },
+    "storage": {
+      "h2": "Armazenamento e Segurança de Dados",
+      "p": "Seus dados são armazenados com segurança e nunca são compartilhados ou vendidos a terceiros sem consentimento explícito, exceto quando exigido por lei."
+    },
+    "cookies": {
+      "h2": "Cookies",
+      "p": "Usamos cookies apenas para gerenciamento de sessão e melhoria da experiência do usuário. Você pode desativar cookies nas configurações do seu navegador."
+    },
+    "rights": {
+      "h2": "Seus Direitos",
+      "p": "Você pode solicitar a exclusão ou modificação dos seus dados pessoais a qualquer momento entrando em contato conosco."
+    },
+    "changes": {
+      "h2": "Alterações nesta Política de Privacidade",
+      "p": "Podemos atualizar nossa Política de Privacidade periodicamente. As alterações serão publicadas nesta página."
+    },
+    "contact": {
+      "h2": "Fale Conosco",
+      "p": "Para perguntas sobre esta Política de Privacidade, entre em contato conosco em:",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}

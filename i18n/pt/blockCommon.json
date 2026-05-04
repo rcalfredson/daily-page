@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "Rascunho"
+    },
+    "deleteModal": {
+      "title": "Excluir Bloco?",
+      "message": "Esta ação não pode ser desfeita.",
+      "confirm": "Excluir",
+      "cancel": "Cancelar",
+      "closeAriaLabel": "Fechar"
+    },
+    "toasts": {
+      "deleteSuccess": "Bloco excluído com sucesso!",
+      "deleteFailed": "Falha ao excluir bloco."
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Notificações",
+      "openMenu": "Abrir notificações",
+      "loading": "Carregando notificações...",
+      "error": "Não foi possível carregar as notificações agora.",
+      "empty": "Ainda não há notificações.",
+      "markRead": "Marcar como lida",
+      "fallbackActor": "Alguém",
+      "fallbackBlockTitle": "seu bloco",
+      "item": {
+        "blockComment": "{actorUsername} comentou no seu bloco \"{blockTitle}\".",
+        "commentReply": "{actorUsername} respondeu ao seu comentário em \"{blockTitle}\".",
+        "unknown": "Notificação"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Novo comentário em \"{blockTitle}\"",
+        "heading": "Novo comentário no seu bloco",
+        "headingWithName": "Olá {username},",
+        "body": "<strong>{actorUsername}</strong> comentou no seu bloco <strong>{blockTitle}</strong>.",
+        "cta": "Ver a conversa no Daily Page",
+        "fallbackActor": "Alguém",
+        "fallbackBlockTitle": "seu bloco"
+      },
+      "commentReply": {
+        "subject": "Nova resposta em \"{blockTitle}\"",
+        "heading": "Nova resposta ao seu comentário",
+        "headingWithName": "Olá {username},",
+        "body": "<strong>{actorUsername}</strong> respondeu ao seu comentário em <strong>{blockTitle}</strong>.",
+        "cta": "Ver a conversa no Daily Page",
+        "fallbackActor": "Alguém",
+        "fallbackBlockTitle": "seu bloco"
+      }
+    }
+  }
+}

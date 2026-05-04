@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "Buscar",
+      "description": "Buscar blocos públicos."
+    },
+    "title": "Buscar",
+    "placeholder": "Buscar blocos...",
+    "hint": "Digite pelo menos 2 caracteres para buscar.",
+    "noResults": "Nenhum resultado encontrado.",
+    "untitled": "Sem título",
+    "votesTitle": "Votos",
+    "pageLabel": "Página",
+    "filters": {
+      "inRoom": "Na sala"
+    },
+    "buttons": {
+      "search": "Buscar",
+      "prev": "Anterior",
+      "next": "Próximo"
+    }
+  }
+}

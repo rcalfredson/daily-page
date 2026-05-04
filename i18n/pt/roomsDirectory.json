@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Diretório de Salas",
+      "description": "Cada sala é uma porta para um mundo diferente. Entre, compartilhe sua história e junte-se a outras pessoas para construir algo bonito."
+    },
+    "eyebrow": "Encontre seu canto",
+    "heading": "Diretório de Salas",
+    "intro": "Comece pelas salas que parecem vivas agora ou vagueie por tópico até algo clicar. Cada sala é um prompt de escrita, fandom ou obsessão compartilhada diferente esperando pela sua voz.",
+    "empty": "Nenhuma sala está disponível no momento. Volte mais tarde!",
+    "jumpToActive": "Ver salas ativas",
+    "jumpToTopics": "Navegar por tópico",
+    "statsLabel": "Destaques do diretório de salas",
+    "liveNow": "Ao vivo agora",
+    "recentlyActive": "Recentemente Ativas",
+    "recentlyActiveSubtitle": "A forma mais rápida de encontrar uma sala com pessoas agora.",
+    "browseByTopic": "Navegar por tópico",
+    "topicSubtitle": "Abra um tópico para explorar suas salas.",
+    "roomCount": "{count} salas",
+    "stats": {
+      "rooms": "salas para explorar",
+      "topics": "grupos de tópicos",
+      "active": "escolhas ativas"
+    },
+    "activeUsers": "Usuários Ativos: {count}",
+    "visitRoom": "Visitar Sala",
+    "close": "Fechar",
+    "noTitle": "Nenhum Título Disponível",
+    "noDescription": "Nenhuma Descrição Disponível"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Arquivo",
+      "description": "Explore o arquivo completo por mês.",
+      "titleRoom": "Daily Page — Arquivo · {roomName}",
+      "descriptionRoom": "Explore textos anteriores na sala {roomName}, mês a mês. Pule para qualquer data para ver o que outras pessoas compartilharam neste espaço ao longo do tempo."
+    },
+    "nav": {
+      "prev": "Anterior",
+      "next": "Próximo"
+    },
+    "title": "📚 Navegar pelos Arquivos",
+    "titleRoom": "📚 {roomName} — Arquivos",
+    "roomViewing": "Visualizando o arquivo da sala {roomName}",
+    "viewRoomLink": "Ver sala",
+    "noContent": "Ainda não há conteúdo disponível.",
+    "backToRoom": "← Voltar ao Painel da Sala",
+    "calendar": {
+      "meta": {
+        "description": "Veja todos os blocos criativos publicados em {month} de {year}, de pensamentos rápidos a reflexões profundas. Clique em qualquer data para explorar o que foi compartilhado.",
+        "descriptionRoom": "Veja a atividade criativa em {roomName} durante {month} de {year}. Escolha uma data para explorar os blocos compartilhados naquele dia."
+      },
+      "title": "📆 Arquivo de {month} de {year}",
+      "prevLabel": "Arquivo de {month} de {year}",
+      "nextLabel": "Arquivo de {month} de {year}"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "Arquivo de {date}",
+        "titleRoom": "{roomName} — Arquivo de {date}",
+        "descriptionSite": "Explore os blocos escritos em {date}, de notas silenciosas a confissões intensas.",
+        "descriptionRoom": "Em {date}, escritores na sala {roomName} deixaram sua marca: percorra reflexões, ideias e expressões compartilhadas naquele dia."
+      },
+      "heading": "Arquivo de {date}",
+      "empty": "Nenhum conteúdo encontrado para esta data.",
+      "labels": {
+        "createdBy": "Criado por:",
+        "in": "em",
+        "on": "em {datetime}",
+        "unknownRoom": "Sala Desconhecida"
+      },
+      "nav": {
+        "prevDay": "Dia anterior",
+        "nextDay": "Próximo dia"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — Todos os Blocos",
+        "descriptionRoom": "Navegue por todos os blocos já publicados na sala {roomName}. Ordene por data, título ou votos para explorar sua história."
+      },
+      "header": {
+        "allBlocks": "— Todos os Blocos"
+      },
+      "sort": {
+        "label": "Ordenar por",
+        "options": {
+          "date": "Data",
+          "title": "Título",
+          "votes": "Votos"
+        },
+        "submit": "Ir"
+      }
+    },
+    "pagination": {
+      "prev": "← Anterior",
+      "next": "Próximo →"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "Seus Blocos",
+      "description": "Navegue e ordene todos os blocos que você criou ou em que colaborou."
+    },
+    "header": {
+      "dashboardLink": "Seu Painel",
+      "profileLink": "Perfil de {username}",
+      "allBlocks": "Todos os Blocos"
+    },
+    "empty": "Ainda não há blocos.",
+    "pagination": {
+      "prev": "← Anterior",
+      "next": "Próximo →"
+    },
+    "titleUser": "Blocos de {username}"
+  }
+}

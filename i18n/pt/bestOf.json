@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Melhores do Daily Page",
+      "description": "Os blocos mais amados no Daily Page: engraçados, honestos, poéticos ou simplesmente estranhos. Veja o que se destacou no último dia, semana, mês e além.",
+      "titleRoom": "Melhores de {roomName}",
+      "descriptionRoom": "Descubra posts em destaque da sala {roomName}: aqueles que os leitores mais amaram nas últimas 24 horas, 7 dias, 30 dias e em todos os tempos."
+    },
+    "heading": "🏆 Melhores do Daily Page",
+    "headingRoomPrefix": "🏆 Melhores de ",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 Horas",
+      "7d": "🚀 7 Dias",
+      "30d": "🌕 30 Dias",
+      "all": "👑 Todos os Tempos"
+    },
+    "labels": {
+      "createdBy": "Criado por:",
+      "inRoom": "em",
+      "onDate": "em {date}",
+      "unknownRoom": "Sala Desconhecida",
+      "noBlocks": "Nenhum bloco encontrado.",
+      "viewRoom": "Ver sala"
+    }
+  }
+}

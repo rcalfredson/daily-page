@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Início",
+    "rooms": "Salas",
+    "tags": "Tags",
+    "archive": "Arquivo",
+    "search": "Buscar",
+    "bestOf": "Melhores",
+    "about": "Sobre",
+    "support": "Suporte",
+    "otherProjects": "Outros Projetos",
+    "auth": {
+      "welcomePrefix": "Boas-vindas, ",
+      "welcomeFallbackUser": "você",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "Painel"
+  }
+}

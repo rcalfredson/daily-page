@@ -1,0 +1,18 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "Boas-vindas, Usuário!",
+    "logout": "Sair",
+    "login": "Entrar / Cadastrar-se",
+    "language": "Idioma",
+    "openMenu": "Abrir menu principal",
+    "closeMenu": "Fechar menu principal",
+    "privacy": "Política de Privacidade",
+    "uiFallbackNotice": "{requested} ainda não está traduzido. Mostrando {current} por enquanto.",
+    "copyButton": {
+      "copy": "Copiar",
+      "copied": "Copiado!"
+    },
+    "copyright": "© {year}"
+  }
+}
