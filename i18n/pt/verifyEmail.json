@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "Verificar Email",
+      "description": "Verifique seu endereço de email no Daily Page."
+    },
+    "header": {
+      "title": "Verificando seu email..."
+    },
+    "status": {
+      "checking": "Verificando token, aguarde...",
+      "missingToken": "Token de verificação ausente ou inválido.",
+      "genericFailure": "Falha na verificação.",
+      "unexpectedError": "Ocorreu um erro inesperado.",
+      "success": "Sua conta foi verificada com sucesso!",
+      "invalidOrExpired": "Token de verificação inválido ou expirado."
+    },
+    "verificationMsg": {
+      "subject": "Verifique sua conta do Daily Page ✨",
+      "heading": "Boas-vindas ao Daily Page, {username}!",
+      "body": "Verifique seu email clicando abaixo:",
+      "cta": "Verificar Endereço de Email",
+      "expires": "Este link expira em {hours} horas."
+    }
+  }
+}

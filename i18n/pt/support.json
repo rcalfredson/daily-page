@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Suporte",
+      "description": "Como entrar em contato, relatar problemas, solicitar recursos ou salas e apoiar financeiramente o Daily Page."
+    },
+    "contact": {
+      "h1": "★ Gostaria de fazer uma pergunta, relatar um problema ou solicitar um recurso.",
+      "p1": {
+        "before": "Se preferir usar o GitHub, confira",
+        "link": "as issues deste projeto",
+        "after": "e acrescente sua voz. Pull requests também são bem-vindos, claro."
+      },
+      "p2": {
+        "before": "Como alternativa,",
+        "link": "envie um email",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Gostaria de apoiar este projeto com uma contribuição.",
+      "p1": {
+        "before": "Agradeço desde já por financiar este projeto. Envie pagamentos com segurança pelo",
+        "paypal": "PayPal",
+        "middle": "ou, se preferir,",
+        "amazon": "peça algumas sacolas dos brinquedos que estou vendendo na Amazon",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Gostaria de solicitar uma nova sala.",
+      "form": {
+        "nameLabel": "Nome da Sala",
+        "topicLabel": "Tópico (opcional)",
+        "descriptionLabel": "Descrição",
+        "submit": "Enviar Solicitação",
+        "success": "Solicitação enviada com sucesso!",
+        "errorGeneric": "Falha ao enviar solicitação. Tente novamente.",
+        "errorUnexpected": "Ocorreu um erro inesperado. Tente novamente."
+      }
+    }
+  }
+}

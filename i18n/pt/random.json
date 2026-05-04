@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Outros Projetos",
+      "description": "Explore diário de beisebol, experimentos aleatórios de escrita e outros projetos paralelos do Daily Page."
+    },
+    "title": "Outros Projetos",
+    "tagline": "Um cantinho aconchegante para experimentos e aventuras paralelas.",
+    "links": {
+      "baseball": "📖 Diário de Beisebol",
+      "randomWriter": "🎲 Escritor Aleatório"
+    },
+    "cta": {
+      "backToRooms": "Voltar às Salas Principais"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Criar um Novo Bloco — Daily Page",
+      "description": "Comece um novo bloco criativo com tags, idioma e visibilidade opcionais."
+    },
+    "heading": "Criar um Novo Bloco",
+    "roomInfo": {
+      "roomLabel": "Sala:",
+      "unavailable": "Informações da sala não disponíveis.",
+      "noDescription": "Nenhuma descrição disponível."
+    },
+    "form": {
+      "title": {
+        "label": "Título:",
+        "placeholder": {
+          "full": "ex.: 'Minha Obra-Prima', 'A Melhor Ideia de Todas', 'Clickbait para Nerds'",
+          "short": "ex.: 'Minha Obra-Prima'"
+        }
+      },
+      "description": {
+        "label": "Descrição (opcional):",
+        "placeholder": "Explique seu brilhantismo... ou improvise."
+      },
+      "initialContent": {
+        "label": "Conteúdo Inicial (opcional):",
+        "help": "Comece a escrever aqui ou pressione “Criar” para continuar na página completa do editor, onde você pode incorporar imagens e colaborar em tempo real.",
+        "placeholder": "Comece seu bloco aqui ou continue editando após a criação..."
+      },
+      "visibility": {
+        "label": "Visibilidade:"
+      },
+      "submit": "Criar Bloco"
+    },
+    "visibility": {
+      "public": {
+        "label": "Público",
+        "title": "Editável por qualquer pessoa em tempo real. Não precisa fazer login.",
+        "inline": "Editável por qualquer pessoa em tempo real. Não precisa fazer login."
+      },
+      "private": {
+        "label": "Privado",
+        "title": "Apenas para usuários logados. Visível após a conclusão da edição.",
+        "inline": "Apenas para usuários logados. Visível após a conclusão da edição.",
+        "tooltip": "Blocos privados são somente por convite enquanto você trabalha e ficam visíveis quando você termina."
+      }
+    },
+    "advanced": {
+      "summary": "Opções avançadas",
+      "lang": {
+        "label": "Idioma:",
+        "options": {
+          "en": "English",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "עברית",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "Traduzir bloco existente (URL ou ID):",
+        "placeholder": "Cole uma URL ou ID de bloco (opcional)",
+        "invalid": "Isso não parece uma URL ou ID de bloco válido.",
+        "fetchError": "Não foi possível buscar informações do bloco."
+      }
+    },
+    "messages": {
+      "langExists": "Já existe uma tradução para esse idioma. Escolha outro idioma.",
+      "genericError": "Algo deu errado. Tente novamente."
+    }
+  }
+}

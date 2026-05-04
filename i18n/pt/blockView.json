@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Bloco - {blockTitle}",
+      "titleFallback": "Bloco"
+    },
+    "labels": {
+      "room": "Sala",
+      "author": "Autor",
+      "created": "Criado",
+      "unknownAuthor": "Anônimo",
+      "authorAvatarAlt": "Avatar de {username}",
+      "viewAuthorProfile": "Ver perfil de {username}",
+      "lang": "Traduções: ",
+      "available": "disponível"
+    },
+    "buttons": {
+      "edit": "Editar",
+      "deleteBlock": "Excluir Bloco",
+      "share": "Compartilhar",
+      "flagContent": "Denunciar Conteúdo"
+    },
+    "description": {
+      "label": "Descrição",
+      "none": "Nenhuma descrição fornecida...",
+      "expand": "Expandir",
+      "collapse": "Recolher"
+    },
+    "editorial": {
+      "heading": "Guia de leitura",
+      "roleLabel": "Tipo de leitura",
+      "clusterLabel": "Guia",
+      "sequence": "Parte {sequence}",
+      "primaryPillarHeading": "Comece aqui",
+      "relatedHeading": "Continue lendo",
+      "clusterHeading": "Mais neste guia",
+      "expandSection": "Mostrar mais {count}",
+      "collapseSection": "Mostrar menos",
+      "roleNames": {
+        "pillar": "Guia principal",
+        "companion": "Aprofundamento",
+        "texture": "Contexto"
+      }
+    },
+    "comments": {
+      "heading": "Comentários",
+      "count": "{count} comentários",
+      "empty": "Ninguém respondeu ainda. Os comentários aparecerão aqui quando a conversa começar.",
+      "composer": {
+        "label": "Adicionar um comentário",
+        "placeholder": "Escreva um comentário...",
+        "submit": "Publicar comentário",
+        "submitting": "Publicando...",
+        "success": "Comentário publicado.",
+        "error": "Não foi possível publicar seu comentário agora.",
+        "loginPrompt": "Entre para participar da conversa.",
+        "loginCta": "Entrar para comentar",
+        "verifyPrompt": "Verifique seu email antes de publicar um comentário.",
+        "verifyCta": "Verificar email"
+      },
+      "sort": {
+        "label": "Ordenar",
+        "oldestFirst": "Mais antigos primeiro",
+        "newestFirst": "Mais recentes primeiro"
+      },
+      "by": "Por",
+      "unknownAuthor": "Desconhecido",
+      "reply": {
+        "action": "Responder",
+        "label": "Adicionar uma resposta",
+        "placeholder": "Escreva uma resposta...",
+        "submit": "Publicar resposta",
+        "submitting": "Publicando...",
+        "success": "Resposta publicada.",
+        "error": "Não foi possível publicar sua resposta agora.",
+        "cancel": "Cancelar",
+        "loginPrompt": "Entre para responder."
+      },
+      "manage": {
+        "edited": "Editado",
+        "editAction": "Editar",
+        "deleteAction": "Excluir",
+        "deleteConfirm": "Excluir este comentário? Isso também removerá todas as respostas abaixo dele.",
+        "deleteSuccess": "Comentário excluído.",
+        "deleteError": "Não foi possível excluir este comentário agora.",
+        "forbidden": "Você só pode gerenciar seus próprios comentários.",
+        "edit": {
+          "label": "Editar comentário",
+          "save": "Salvar",
+          "saving": "Salvando...",
+          "cancel": "Cancelar",
+          "success": "Comentário atualizado.",
+          "error": "Não foi possível atualizar este comentário agora."
+        }
+      },
+      "report": {
+        "action": "Denunciar",
+        "pending": "Denunciando...",
+        "success": "Comentário denunciado.",
+        "error": "Não foi possível denunciar este comentário agora.",
+        "ownError": "Você não pode denunciar seu próprio comentário.",
+        "hidden": "Comentário ocultado após denúncia.",
+        "reported": "Denunciado"
+      },
+      "deepLink": {
+        "focused": "Comentário vinculado",
+        "unavailable": "O comentário vinculado não está mais disponível."
+      },
+      "loadMore": "Carregar mais comentários",
+      "loading": "Carregando...",
+      "loadError": "Não foi possível carregar mais comentários agora."
+    },
+    "share": {
+      "title": "Compartilhar este Bloco",
+      "shareOn": "Compartilhar em:",
+      "nativeText": "Confira este bloco: {title}",
+      "alt": {
+        "facebook": "Logo do Facebook",
+        "reddit": "Logo do Reddit",
+        "whatsapp": "Logo do WhatsApp",
+        "twitter": "Logo do Twitter"
+      }
+    },
+    "errors": {
+      "notFound": "Bloco não encontrado ou não pertence a esta sala.",
+      "loadFailed": "Erro ao carregar a visualização do bloco."
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Faça Login",
+      "message": "Você precisa estar logado para continuar.",
+      "messageWithAction": "Você precisa estar logado para {action}.",
+      "cta": "Entrar"
+    },
+    "actions": {
+      "voteOnBlock": "votar em um bloco",
+      "starRoom": "favoritar esta sala",
+      "reactToBlock": "reagir a este post",
+      "commentOnBlock": "comentar neste bloco",
+      "reportComment": "denunciar este comentário"
+    },
+    "errors": {
+      "starToggleFail": "Falha ao atualizar o status de favorito. Tente novamente."
+    }
+  }
+}

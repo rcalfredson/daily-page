@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Painel",
+      "description": "Seu painel do Daily Page e visão geral da conta."
+    },
+    "profile": {
+      "profilePicAlt": "Foto do Perfil",
+      "noBio": "Ainda não há biografia. Clique em \"Editar\" para adicionar uma!",
+      "editBio": "Editar Biografia",
+      "bioPlaceholder": "Digite sua biografia aqui",
+      "save": "Salvar",
+      "cancel": "Cancelar"
+    },
+    "activity": {
+      "title": "Atividade Recente",
+      "none": "Nenhuma atividade recente.",
+      "updatedOn": "Atualizado em {date}",
+      "viewAllBlocks": "Ver Todos os Blocos"
+    },
+    "streak": {
+      "title": "Sequência de Escrita",
+      "line": "{days} dias seguidos! Continue assim!"
+    },
+    "starredRooms": {
+      "title": "Salas Favoritas",
+      "none": "Você ainda não favoritou nenhuma sala. Comece a explorar para encontrar suas favoritas!",
+      "viewAll": "Ver Todas as Salas Favoritas",
+      "unnamedRoom": "Sala sem Nome"
+    },
+    "stats": {
+      "title": "Suas Estatísticas",
+      "totalBlocks": "Total de Blocos Criados",
+      "collaborations": "Colaborações",
+      "votesGiven": "Votos Dados",
+      "daysActive": "Dias Ativos",
+      "viewDetailed": "Ver Estatísticas Detalhadas 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Falha ao enviar a foto do perfil. Tente novamente.",
+      "uploadUnexpected": "Ocorreu um erro inesperado. Tente novamente.",
+      "bioUpdateFailed": "Erro ao atualizar a biografia. Tente novamente."
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Todas as Salas Favoritas",
+      "description": "Uma lista de todas as salas que você favoritou."
+    },
+    "nav": {
+      "backToDashboard": "← Voltar ao Painel"
+    },
+    "header": {
+      "title": "🌟 Todas as Suas Salas Favoritas 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Sala sem Nome",
+      "noDescription": "Sem descrição."
+    },
+    "empty": {
+      "message": "Você ainda não favoritou nenhuma sala!"
+    }
+  }
+}

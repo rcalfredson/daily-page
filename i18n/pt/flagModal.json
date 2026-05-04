@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Denunciar Conteúdo Inapropriado",
+    "fields": {
+      "reason": {
+        "label": "Motivo",
+        "options": {
+          "spam": "Spam",
+          "offensive": "Ofensivo (linguagem de ódio ou insultos)",
+          "inappropriate": "Inapropriado (nudez, conteúdo gráfico etc.)",
+          "other": "Outro"
+        }
+      },
+      "details": {
+        "label": "Detalhes (opcional)",
+        "placeholder": "Descreva o que você viu..."
+      }
+    },
+    "buttons": {
+      "submit": "Enviar Denúncia",
+      "cancel": "Cancelar"
+    },
+    "toasts": {
+      "success": "Denúncia enviada — obrigado!",
+      "failed": "Falha ao enviar denúncia."
+    }
+  }
+}

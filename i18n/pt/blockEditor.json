@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Você)"
+    },
+    "meta": {
+      "title": "Editar Bloco - {blockTitle}",
+      "titleFallback": "Editar Bloco"
+    },
+    "errors": {
+      "imageUrlRequired": "Digite uma URL de imagem.",
+      "notFound": "Bloco não encontrado ou não pertence a esta sala.",
+      "loadFailed": "Ocorreu um erro ao carregar o editor de blocos.",
+      "updateTitleFailed": "Erro ao atualizar o título."
+    },
+    "roomInfo": {
+      "label": "Sala:"
+    },
+    "title": {
+      "placeholder": "Digite o título do bloco",
+      "editTooltip": "Editar Título",
+      "lock": "Bloquear Bloco",
+      "delete": "Excluir Bloco"
+    },
+    "description": {
+      "label": "Descrição",
+      "editTooltip": "Editar Descrição",
+      "placeholder": "Digite a descrição",
+      "noDescriptionOwner": "Ainda não há descrição...",
+      "noDescriptionViewer": "Nenhuma descrição fornecida...",
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "expand": "Expandir",
+      "collapse": "Recolher",
+      "updateError": "Erro ao atualizar a descrição."
+    },
+    "status": {
+      "lastBackup": "Último backup: {datetime}",
+      "lastBackupUnknown": "Último backup: Desconhecido"
+    },
+    "peers": {
+      "label": "Pares:"
+    },
+    "toasts": {
+      "blockLocked": "Este bloco foi bloqueado!"
+    },
+    "editor": {
+      "placeholder": "A página em branco espera sua voz; escreva sem medo."
+    },
+    "loading": {
+      "label": "Carregando",
+      "quote": "Deixe o mundo queimar através de você. Lance a luz do prisma, branca e quente, no papel.<br>—Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "Você não escreveu nada por 5 minutos. Clique em OK para continuar a sessão; caso contrário, você será redirecionado para o arquivo.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Link de Compartilhamento",
+      "copyTooltip": "Copiar para a Área de Transferência",
+      "copied": "Copiado!"
+    },
+    "toolbar": {
+      "insertImage": "Inserir Imagem",
+      "insertImageUrlPlaceholder": "Digite a URL da imagem",
+      "insertImageAltPlaceholder": "Texto alternativo (opcional)",
+      "insertImageConfirm": "Confirmar",
+      "insertImageCancel": "Cancelar"
+    },
+    "buttons": {
+      "downloadFile": "Baixar arquivo"
+    },
+    "lockModal": {
+      "messageLine1": "Tem certeza de que deseja bloquear este bloco?",
+      "messageLine2": "Isso irá finalizá-lo e impedir novas edições.",
+      "confirm": "Bloquear",
+      "cancel": "Cancelar",
+      "successToast": "Bloco bloqueado com sucesso.",
+      "errorToast": "Erro ao bloquear bloco."
+    },
+    "tags": {
+      "headerWithTags": "Tags:",
+      "headerNoTags": "Ainda não há tags! Adicione algumas:",
+      "updateError": "Erro ao atualizar tags."
+    },
+    "fullBlock": {
+      "headingPrefix": "Desculpe; o bloco \"{blockTitle}\" agora está",
+      "headingStatus": "totalmente ocupado.",
+      "retryPrefix": "Por favor,",
+      "retryLink": "tente um bloco diferente",
+      "retrySuffix": "ou volte em outra hora.",
+      "consolationPrefix": "Enquanto espera, fique à vontade para ler",
+      "consolationBestOf": "alguns dos nossos blocos favoritos",
+      "consolationMiddle": "ou navegar pelo",
+      "consolationArchive": "arquivo."
+    }
+  }
+}

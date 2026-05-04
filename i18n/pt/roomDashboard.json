@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "Explore blocos recentes e em andamento em {roomName}."
+    },
+    "links": {
+      "exploreLabel": "Explorar:",
+      "allBlocks": "🗂️ Todos os blocos",
+      "browseByDate": "🗓️ Por data",
+      "bestOf": "🏅 Melhores",
+      "searchInRoom": "🔎 Buscar"
+    },
+    "actions": {
+      "createBlock": "Criar um Bloco",
+      "starTitle": "Favoritar esta sala",
+      "unstarTitle": "Remover esta sala dos favoritos"
+    },
+    "tabs": {
+      "locked": "Blocos Bloqueados",
+      "inProgress": "Blocos em Andamento"
+    },
+    "sections": {
+      "lockedHeader": "Blocos bloqueados",
+      "inProgressHeader": "Blocos em andamento"
+    },
+    "editorial": {
+      "heading": "Guias em destaque",
+      "description": "Comece aqui com os guias em destaque selecionados para esta sala.",
+      "roleNames": {
+        "pillar": "Guia principal",
+        "companion": "Guia de leitura",
+        "texture": "Guia de contexto"
+      }
+    },
+    "empty": {
+      "noDescription": "Nenhuma descrição disponível.",
+      "noLocked": "Ainda não há blocos bloqueados! Os blocos são bloqueados automaticamente após 1 hora de inatividade.",
+      "noInProgress": "Ainda não há blocos em andamento! Hora de começar um.",
+      "noBlocks": "Ainda não há blocos! Crie o primeiro e deixe sua marca. 😎"
+    }
+  }
+}

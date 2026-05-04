@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Criar uma Conta",
+      "description": "Cadastre-se no Daily Page para acessar todos os recursos."
+    },
+    "header": {
+      "title": "Crie Sua Conta",
+      "subtitle": "Entre no Daily Page para começar a criar e compartilhar sua escrita diária!"
+    },
+    "form": {
+      "email": {
+        "label": "Email",
+        "placeholder": "Digite seu email"
+      },
+      "username": {
+        "label": "Nome de usuário",
+        "placeholder": "Digite seu nome de usuário"
+      },
+      "password": {
+        "label": "Senha",
+        "placeholder": "Digite uma senha"
+      },
+      "submit": "Cadastrar-se",
+      "feedback": {
+        "success": "Formulário enviado com sucesso!",
+        "successCreatedVerify": "Conta criada com sucesso! Verifique seu email para confirmar sua conta.",
+        "genericError": "Falha ao criar conta. Tente novamente.",
+        "unexpectedError": "Ocorreu um erro inesperado. Tente novamente."
+      }
+    }
+  }
+}

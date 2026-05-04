@@ -1,7 +1,7 @@
 // server/middleware/hreflang.js
 import { isLocalizedPath } from '../services/localizedPaths.js';
 
-const indexableLangs = ['en', 'es', 'fr', 'ru', 'id', 'de'];
+const indexableLangs = ['en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt'];
 
 // Treat block-view as "content-hreflang owns this page"
 function isBlockViewPath(path) {

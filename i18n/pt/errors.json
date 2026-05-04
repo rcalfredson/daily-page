@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Ops! Algo deu errado.",
+      "message": "Ocorreu um erro inesperado. Tente novamente mais tarde.",
+      "home": "Voltar ao Início"
+    },
+    "notFound": {
+      "title": "404 - Página Não Encontrada",
+      "metaTitle": "Página Não Encontrada",
+      "message": "Desculpe, não conseguimos encontrar a página que você estava procurando.",
+      "homePrefix": "Você pode voltar para",
+      "homeLink": "a página inicial",
+      "roomsPrefix": "ou conferir o",
+      "roomsLink": "diretório de salas."
+    }
+  }
+}
