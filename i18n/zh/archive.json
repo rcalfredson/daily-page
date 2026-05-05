@@ -1,0 +1,71 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — 归档",
+      "description": "按月份浏览完整归档。",
+      "titleRoom": "Daily Page — 归档 · {roomName}",
+      "descriptionRoom": "按月份探索 {roomName} 房间中的过往写作。跳转到任意日期，看看这个空间里曾分享过什么。"
+    },
+    "nav": {
+      "prev": "上一页",
+      "next": "下一页"
+    },
+    "title": "📚 浏览归档",
+    "titleRoom": "📚 {roomName} — 归档",
+    "roomViewing": "正在查看 {roomName} 房间的归档",
+    "viewRoomLink": "查看房间",
+    "noContent": "暂无可用内容。",
+    "backToRoom": "← 返回房间仪表板",
+    "calendar": {
+      "meta": {
+        "description": "查看 {year} 年 {month} 发布的所有创作块，从简短想法到深度反思。点击任意日期探索当天分享的内容。",
+        "descriptionRoom": "查看 {roomName} 在 {year} 年 {month} 的创作活动。选择日期探索当天分享的块。"
+      },
+      "title": "📆 {year} 年 {month}归档",
+      "prevLabel": "{year} 年 {month}归档",
+      "nextLabel": "{year} 年 {month}归档"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "{date} 的归档",
+        "titleRoom": "{roomName} — {date} 的归档",
+        "descriptionSite": "探索 {date} 写下的块，从安静笔记到大胆告白。",
+        "descriptionRoom": "{date}，{roomName} 房间中的写作者留下了他们的印记。向下浏览当天分享的反思、想法与表达。"
+      },
+      "heading": "{date} 的归档",
+      "empty": "这一天没有找到内容。",
+      "labels": {
+        "createdBy": "创建者：",
+        "in": "在",
+        "on": "于 {datetime}",
+        "unknownRoom": "未知房间"
+      },
+      "nav": {
+        "prevDay": "前一天",
+        "nextDay": "后一天"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — 全部块",
+        "descriptionRoom": "浏览 {roomName} 房间中发布过的每一个块。按日期、标题或票数排序，探索它的历史。"
+      },
+      "header": {
+        "allBlocks": "— 全部块"
+      },
+      "sort": {
+        "label": "排序方式",
+        "options": {
+          "date": "日期",
+          "title": "标题",
+          "votes": "票数"
+        },
+        "submit": "前往"
+      }
+    },
+    "pagination": {
+      "prev": "← 上一页",
+      "next": "下一页 →"
+    }
+  }
+}

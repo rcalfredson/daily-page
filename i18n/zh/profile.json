@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "{username} 的资料",
+      "descriptionUser": "查看 {username} 的最近活动、已收藏房间和统计。"
+    },
+    "profile": {
+      "profilePicAlt": "头像",
+      "noBio": "（暂无简介。）"
+    },
+    "activity": {
+      "title": "最近活动",
+      "updatedOn": "更新于 {date}",
+      "none": "暂无最近活动。",
+      "viewAllBlocks": "查看全部块"
+    },
+    "starredRooms": {
+      "title": "已收藏房间",
+      "none": "还没有收藏房间。",
+      "unnamedRoom": "未命名房间"
+    },
+    "stats": {
+      "title": "用户统计",
+      "totalBlocks": "创建的块总数",
+      "collaborations": "协作",
+      "daysActive": "活跃天数"
+    }
+  }
+}

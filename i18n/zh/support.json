@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — 支持",
+      "description": "如何联系、报告问题、请求功能或房间，以及在资金上支持 Daily Page。"
+    },
+    "contact": {
+      "h1": "★ 我想提问、报告问题或请求功能。",
+      "p1": {
+        "before": "如果你更喜欢使用 GitHub，请查看",
+        "link": "这个项目的 issues",
+        "after": "并加入你的声音。当然，也欢迎提交 pull request。"
+      },
+      "p2": {
+        "before": "或者，",
+        "link": "发送电子邮件",
+        "after": "。"
+      }
+    },
+    "contribute": {
+      "h1": "★ 我想通过捐助支持这个项目。",
+      "p1": {
+        "before": "提前感谢你资助这个项目。请通过以下方式安全付款：",
+        "paypal": "PayPal",
+        "middle": "或者，如果你愿意，",
+        "amazon": "订购几袋我在 Amazon 上销售的玩具",
+        "after": "。"
+      }
+    },
+    "rooms": {
+      "h1": "★ 我想请求一个新房间。",
+      "form": {
+        "nameLabel": "房间名称",
+        "topicLabel": "主题（可选）",
+        "descriptionLabel": "描述",
+        "submit": "提交请求",
+        "success": "请求已成功提交！",
+        "errorGeneric": "提交请求失败。请重试。",
+        "errorUnexpected": "发生意外错误。请重试。"
+      }
+    }
+  }
+}

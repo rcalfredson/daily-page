@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "搜索",
+      "description": "搜索公开块。"
+    },
+    "title": "搜索",
+    "placeholder": "搜索块...",
+    "hint": "输入至少 2 个字符以搜索。",
+    "noResults": "未找到结果。",
+    "untitled": "无标题",
+    "votesTitle": "票数",
+    "pageLabel": "页",
+    "filters": {
+      "inRoom": "在房间中"
+    },
+    "buttons": {
+      "search": "搜索",
+      "prev": "上一页",
+      "next": "下一页"
+    }
+  }
+}

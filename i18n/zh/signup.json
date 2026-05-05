@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "创建账户",
+      "description": "注册 Daily Page 以访问所有功能。"
+    },
+    "header": {
+      "title": "创建你的账户",
+      "subtitle": "加入 Daily Page，开始创作并分享你的每日写作！"
+    },
+    "form": {
+      "email": {
+        "label": "邮箱",
+        "placeholder": "输入你的邮箱"
+      },
+      "username": {
+        "label": "用户名",
+        "placeholder": "输入你的用户名"
+      },
+      "password": {
+        "label": "密码",
+        "placeholder": "输入密码"
+      },
+      "submit": "注册",
+      "feedback": {
+        "success": "表单提交成功！",
+        "successCreatedVerify": "账户创建成功！请查看邮箱以验证你的账户。",
+        "genericError": "创建账户失败。请重试。",
+        "unexpectedError": "发生意外错误。请重试。"
+      }
+    }
+  }
+}

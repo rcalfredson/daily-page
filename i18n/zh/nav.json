@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "首页",
+    "rooms": "房间",
+    "tags": "标签",
+    "archive": "归档",
+    "search": "搜索",
+    "bestOf": "精选",
+    "about": "关于",
+    "support": "支持",
+    "otherProjects": "其他项目",
+    "auth": {
+      "welcomePrefix": "欢迎，",
+      "welcomeFallbackUser": "你",
+      "welcomeSuffix": "！"
+    },
+    "dashboard": "仪表板"
+  }
+}

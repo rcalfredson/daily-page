@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "举报不当内容",
+    "fields": {
+      "reason": {
+        "label": "原因",
+        "options": {
+          "spam": "垃圾信息",
+          "offensive": "冒犯性内容（仇恨语言或侮辱性词语）",
+          "inappropriate": "不当内容（裸露、血腥内容等）",
+          "other": "其他"
+        }
+      },
+      "details": {
+        "label": "详情（可选）",
+        "placeholder": "描述你看到的内容……"
+      }
+    },
+    "buttons": {
+      "submit": "提交举报",
+      "cancel": "取消"
+    },
+    "toasts": {
+      "success": "举报已提交，谢谢！",
+      "failed": "提交举报失败。"
+    }
+  }
+}

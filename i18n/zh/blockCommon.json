@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "草稿"
+    },
+    "deleteModal": {
+      "title": "删除块？",
+      "message": "此操作无法撤销。",
+      "confirm": "删除",
+      "cancel": "取消",
+      "closeAriaLabel": "关闭"
+    },
+    "toasts": {
+      "deleteSuccess": "块已成功删除！",
+      "deleteFailed": "删除块失败。"
+    }
+  }
+}

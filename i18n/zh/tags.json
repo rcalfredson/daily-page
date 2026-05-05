@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — 标签概览",
+      "description": "浏览 Daily Page 中使用的所有标签，并按时间快速筛选。"
+    },
+    "title": "标签概览",
+    "intro": "探索 Daily Page 中使用的所有标签。",
+    "tagCloudTitle": "标签云",
+    "timeframe": {
+      "last24h": "最近 24 小时",
+      "last7d": "最近 7 天",
+      "last30d": "最近 30 天",
+      "all": "全部时间"
+    },
+    "error": {
+      "loading": "加载标签概览出错"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "带有此标签的块："
+      },
+      "header": {
+        "label": "标签：",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "包含此标签的块总数",
+        "totalBlocksTagSeparator": "："
+      },
+      "blockInfo": {
+        "createdBy": "创建者：",
+        "inRoom": "在",
+        "unknownRoom": "未知房间",
+        "onDate": "于"
+      },
+      "chart": {
+        "label": "随时间创建的块"
+      },
+      "empty": {
+        "message": "还没有找到带此标签的块。也许你该创建第一个？🔥"
+      },
+      "error": {
+        "loadingTagPage": "加载标签页面出错"
+      }
+    }
+  }
+}

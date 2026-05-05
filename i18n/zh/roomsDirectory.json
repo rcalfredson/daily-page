@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "房间目录",
+      "description": "每个房间都是通往不同世界的一扇门。走进去，分享你的故事，并与他人一起创造美好的东西。"
+    },
+    "eyebrow": "找到你的角落",
+    "heading": "房间目录",
+    "intro": "从此刻最活跃的房间开始，或按主题漫游，直到某个东西让你心动。每个房间都是不同的写作提示、同好空间或共同迷恋，等待你的声音。",
+    "empty": "目前没有可用房间。请稍后再来！",
+    "jumpToActive": "查看活跃房间",
+    "jumpToTopics": "按主题浏览",
+    "statsLabel": "房间目录亮点",
+    "liveNow": "正在进行",
+    "recentlyActive": "最近活跃",
+    "recentlyActiveSubtitle": "最快找到此刻有人在的房间。",
+    "browseByTopic": "按主题浏览",
+    "topicSubtitle": "打开一个主题来探索其中的房间。",
+    "roomCount": "{count} 个房间",
+    "stats": {
+      "rooms": "个可探索房间",
+      "topics": "个主题组",
+      "active": "个活跃精选"
+    },
+    "activeUsers": "活跃用户：{count}",
+    "visitRoom": "访问房间",
+    "close": "关闭",
+    "noTitle": "暂无标题",
+    "noDescription": "暂无描述"
+  }
+}

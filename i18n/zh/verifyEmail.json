@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "验证邮箱",
+      "description": "验证你用于 Daily Page 的邮箱地址。"
+    },
+    "header": {
+      "title": "正在验证你的邮箱..."
+    },
+    "status": {
+      "checking": "正在检查令牌，请稍候...",
+      "missingToken": "缺少验证令牌或令牌无效。",
+      "genericFailure": "验证失败。",
+      "unexpectedError": "发生意外错误。",
+      "success": "你的账户已成功验证！",
+      "invalidOrExpired": "验证令牌无效或已过期。"
+    },
+    "verificationMsg": {
+      "subject": "验证你的 Daily Page 账户 ✨",
+      "heading": "欢迎来到 Daily Page，{username}！",
+      "body": "请点击下面的按钮验证你的邮箱：",
+      "cta": "验证邮箱地址",
+      "expires": "此链接将在 {hours} 小时后过期。"
+    }
+  }
+}

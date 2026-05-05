@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "匿名漫游者",
+      "description": "没有资料。没有过往。只有氛围。"
+    },
+    "ascii": {
+      "ariaLabel": "带引语的奇趣生物 ASCII 艺术"
+    },
+    "header": {
+      "title": "匿名用户"
+    },
+    "body": {
+      "line1": "你误入了虚空。这里没有什么可看的—",
+      "line2": "只有一个没有故事的游荡灵魂。"
+    },
+    "buttons": {
+      "home": "← 返回首页",
+      "signup": "创建身份"
+    }
+  }
+}

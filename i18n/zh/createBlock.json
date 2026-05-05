@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "创建新块 — Daily Page",
+      "description": "创建一个新的创作块，可选择标签、语言和可见性。"
+    },
+    "heading": "创建新块",
+    "roomInfo": {
+      "roomLabel": "房间：",
+      "unavailable": "房间信息不可用。",
+      "noDescription": "暂无描述。"
+    },
+    "form": {
+      "title": {
+        "label": "标题：",
+        "placeholder": {
+          "full": "例如：'我的杰作'、'有史以来最棒的点子'、'给书呆子的标题党'",
+          "short": "例如：'我的杰作'"
+        }
+      },
+      "description": {
+        "label": "描述（可选）：",
+        "placeholder": "解释你的精彩想法……或者直接随性发挥。"
+      },
+      "initialContent": {
+        "label": "初始内容（可选）：",
+        "help": "在这里开始写作，或按“创建”继续到完整编辑器页面，在那里你可以嵌入图片并实时协作。",
+        "placeholder": "在这里开始你的块，或创建后继续编辑……"
+      },
+      "visibility": {
+        "label": "可见性："
+      },
+      "submit": "创建块"
+    },
+    "visibility": {
+      "public": {
+        "label": "公开",
+        "title": "任何人都可实时编辑。无需登录。",
+        "inline": "任何人都可实时编辑。无需登录。"
+      },
+      "private": {
+        "label": "私密",
+        "title": "仅限已登录用户。编辑完成后可见。",
+        "inline": "仅限已登录用户。编辑完成后可见。",
+        "tooltip": "私密块在编辑时仅限邀请，完成后会变为可见。"
+      }
+    },
+    "advanced": {
+      "summary": "高级选项",
+      "lang": {
+        "label": "语言：",
+        "options": {
+          "en": "English",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "עברית",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "翻译现有块（URL 或 ID）：",
+        "placeholder": "粘贴块 URL 或 ID（可选）",
+        "invalid": "这看起来不像有效的块 URL 或 ID。",
+        "fetchError": "无法获取块信息。"
+      }
+    },
+    "messages": {
+      "langExists": "该语言的翻译已存在。请选择另一种语言。",
+      "genericError": "出了点问题。请重试。"
+    }
+  }
+}

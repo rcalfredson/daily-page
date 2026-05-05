@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "仪表板",
+      "description": "你的 Daily Page 仪表板和账户概览。"
+    },
+    "profile": {
+      "profilePicAlt": "头像",
+      "noBio": "还没有简介。点击“编辑”添加一个！",
+      "editBio": "编辑简介",
+      "bioPlaceholder": "在这里输入你的简介",
+      "save": "保存",
+      "cancel": "取消"
+    },
+    "activity": {
+      "title": "最近活动",
+      "none": "暂无最近活动。",
+      "updatedOn": "更新于 {date}",
+      "viewAllBlocks": "查看全部块"
+    },
+    "streak": {
+      "title": "写作连续记录",
+      "line": "已连续 {days} 天！继续保持！"
+    },
+    "starredRooms": {
+      "title": "已收藏房间",
+      "none": "你还没有收藏任何房间。开始探索，找到你的最爱！",
+      "viewAll": "查看全部已收藏房间",
+      "unnamedRoom": "未命名房间"
+    },
+    "stats": {
+      "title": "你的统计",
+      "totalBlocks": "创建的块总数",
+      "collaborations": "协作",
+      "votesGiven": "已投票数",
+      "daysActive": "活跃天数",
+      "viewDetailed": "查看详细统计 📊"
+    },
+    "alerts": {
+      "uploadFailed": "上传头像失败。请重试。",
+      "uploadUnexpected": "发生意外错误。请重试。",
+      "bioUpdateFailed": "更新简介出错。请重试。"
+    }
+  }
+}
