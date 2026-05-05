@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "标签：",
+      "noTags": "还没有标签！添加一些："
+    },
+    "input": {
+      "placeholder": "新标签",
+      "addButton": "添加"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

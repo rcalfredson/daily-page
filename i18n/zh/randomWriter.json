@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — 随机写作者",
+      "description": "生成无限随机伪文本，用于娱乐、灵感或混沌。"
+    },
+    "title": "随机写作者",
+    "buttons": {
+      "clear": "清空",
+      "stop": "停止写作",
+      "start": "开始写作"
+    }
+  }
+}

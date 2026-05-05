@@ -1,0 +1,11 @@
+{
+  "blockList": {
+    "period": {
+      "all": "全部时间",
+      "days": "最近 {n} 天",
+      "day": "最近 24 小时"
+    },
+    "createdBy": "创建者：",
+    "on": "于"
+  }
+}

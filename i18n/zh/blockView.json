@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "块 - {blockTitle}",
+      "titleFallback": "块"
+    },
+    "labels": {
+      "room": "房间",
+      "author": "作者",
+      "created": "创建时间",
+      "unknownAuthor": "匿名",
+      "authorAvatarAlt": "{username} 的头像",
+      "viewAuthorProfile": "查看 {username} 的资料",
+      "lang": "翻译：",
+      "available": "可用"
+    },
+    "buttons": {
+      "edit": "编辑",
+      "deleteBlock": "删除块",
+      "share": "分享",
+      "flagContent": "举报内容"
+    },
+    "description": {
+      "label": "描述",
+      "none": "未提供描述...",
+      "expand": "展开",
+      "collapse": "收起"
+    },
+    "editorial": {
+      "heading": "阅读指南",
+      "roleLabel": "阅读类型",
+      "clusterLabel": "指南",
+      "sequence": "第 {sequence} 部分",
+      "primaryPillarHeading": "从这里开始",
+      "relatedHeading": "继续阅读",
+      "clusterHeading": "本指南中的更多内容",
+      "expandSection": "再显示 {count} 个",
+      "collapseSection": "显示更少",
+      "roleNames": {
+        "pillar": "核心指南",
+        "companion": "深入阅读",
+        "texture": "背景"
+      }
+    },
+    "comments": {
+      "heading": "评论",
+      "count": "{count} 条评论",
+      "empty": "还没有人回复。对话开始后，评论会显示在这里。",
+      "composer": {
+        "label": "添加评论",
+        "placeholder": "写一条评论...",
+        "submit": "发表评论",
+        "submitting": "正在发布...",
+        "success": "评论已发布。",
+        "error": "现在无法发布你的评论。",
+        "loginPrompt": "登录以加入对话。",
+        "loginCta": "登录后评论",
+        "verifyPrompt": "发布评论前请验证你的邮箱。",
+        "verifyCta": "验证邮箱"
+      },
+      "sort": {
+        "label": "排序",
+        "oldestFirst": "最早优先",
+        "newestFirst": "最新优先"
+      },
+      "by": "由",
+      "unknownAuthor": "未知",
+      "reply": {
+        "action": "回复",
+        "label": "添加回复",
+        "placeholder": "写一条回复...",
+        "submit": "发布回复",
+        "submitting": "正在发布...",
+        "success": "回复已发布。",
+        "error": "现在无法发布你的回复。",
+        "cancel": "取消",
+        "loginPrompt": "登录以回复。"
+      },
+      "manage": {
+        "edited": "已编辑",
+        "editAction": "编辑",
+        "deleteAction": "删除",
+        "deleteConfirm": "删除这条评论？这也会移除它下面的所有回复。",
+        "deleteSuccess": "评论已删除。",
+        "deleteError": "现在无法删除这条评论。",
+        "forbidden": "你只能管理自己的评论。",
+        "edit": {
+          "label": "编辑评论",
+          "save": "保存",
+          "saving": "正在保存...",
+          "cancel": "取消",
+          "success": "评论已更新。",
+          "error": "现在无法更新这条评论。"
+        }
+      },
+      "report": {
+        "action": "举报",
+        "pending": "正在举报...",
+        "success": "评论已举报。",
+        "error": "现在无法举报这条评论。",
+        "ownError": "你不能举报自己的评论。",
+        "hidden": "评论已在举报后隐藏。",
+        "reported": "已举报"
+      },
+      "deepLink": {
+        "focused": "已链接的评论",
+        "unavailable": "链接的评论已不可用。"
+      },
+      "loadMore": "加载更多评论",
+      "loading": "正在加载...",
+      "loadError": "现在无法加载更多评论。"
+    },
+    "share": {
+      "title": "分享此块",
+      "shareOn": "分享到：",
+      "nativeText": "看看这个块：{title}",
+      "alt": {
+        "facebook": "Facebook 标志",
+        "reddit": "Reddit 标志",
+        "whatsapp": "WhatsApp 标志",
+        "twitter": "Twitter 标志"
+      }
+    },
+    "errors": {
+      "notFound": "未找到块，或该块不属于此房间。",
+      "loadFailed": "加载块视图出错。"
+    }
+  }
+}

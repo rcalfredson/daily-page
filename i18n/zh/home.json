@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - 最近 24 小时热门块",
+      "description": "Daily Page 是一个极简的独立写作网站，任何人都可以一次一个块地发布创意想法、回忆或实验。探索新想法，加入房间，贡献你的声音。"
+    },
+    "hero": {
+      "eyebrow": "一个适合写作、阅读和回来的安静地方",
+      "title": "欢迎来到 Daily Page！",
+      "subtitle": "探索最近 24 小时最受欢迎的块。",
+      "ctaPrefix": "有灵感了吗？",
+      "cta": "加入房间",
+      "ctaSuffix": "并创建你自己的块！"
+    },
+    "stats": {
+      "blocks": "块",
+      "rooms": "房间",
+      "tags": "标签",
+      "collabsToday": "今日协作"
+    },
+    "activity": {
+      "title": "Daily Page 正在发生",
+      "subtitle": "新鲜对话与反应，一眼尽览。",
+      "fallbackActor": "有人",
+      "inRoom": "在",
+      "comments": {
+        "title": "最新评论",
+        "more": "搜索讨论",
+        "commentVerb": "评论了",
+        "replyVerb": "回复了",
+        "empty": "还没有最新评论。下一段对话可以从你的块开始。"
+      },
+      "reactions": {
+        "title": "最近反应",
+        "more": "浏览热门块",
+        "empty": "还没有最近反应。一篇好帖子很快就能让这里热闹起来。",
+        "types": {
+          "heart": "点了爱心",
+          "leaf": "用叶子回应了",
+          "wow": "用惊叹回应了",
+          "laugh": "笑了"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ 精选房间",
+      "roomInfoDays": "过去 {days} 天的活动：{blocks} 个块，{votes} 票。",
+      "roomInfo24h": "最近 24 小时的活动：{blocks} 个块，{votes} 票。",
+      "checkItOut": "去看看",
+      "blockRibbon": "★ 精选块",
+      "votes": "{n} 票",
+      "noContent": "（未提供内容...）",
+      "viewBlock": "查看块"
+    },
+    "trendingTags": {
+      "title": "趋势标签",
+      "suffixDays": "（最近 {days} 天）",
+      "suffixAllTime": "（全部时间）",
+      "blocks": "{n} 个块",
+      "votes": "{n} 票",
+      "empty": "还没有趋势标签。成为第一个标记酷东西的人吧！"
+    },
+    "trendingBlocks": {
+      "title": "趋势块",
+      "suffixDays": "（最近 {days} 天）",
+      "createdBy": "创建者：",
+      "in": "在",
+      "on": "于",
+      "unknownRoom": "未知房间",
+      "empty24h": "最近 24 小时还没有块。稍后再来看看吧，朋友！"
+    }
+  }
+}

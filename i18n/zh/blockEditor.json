@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "（你）"
+    },
+    "meta": {
+      "title": "编辑块 - {blockTitle}",
+      "titleFallback": "编辑块"
+    },
+    "errors": {
+      "imageUrlRequired": "请输入图片 URL。",
+      "notFound": "未找到块，或该块不属于此房间。",
+      "loadFailed": "加载块编辑器时出错。",
+      "updateTitleFailed": "更新标题出错。"
+    },
+    "roomInfo": {
+      "label": "房间："
+    },
+    "title": {
+      "placeholder": "输入块标题",
+      "editTooltip": "编辑标题",
+      "lock": "锁定块",
+      "delete": "删除块"
+    },
+    "description": {
+      "label": "描述",
+      "editTooltip": "编辑描述",
+      "placeholder": "输入描述",
+      "noDescriptionOwner": "还没有描述...",
+      "noDescriptionViewer": "未提供描述...",
+      "save": "保存",
+      "cancel": "取消",
+      "expand": "展开",
+      "collapse": "收起",
+      "updateError": "更新描述出错。"
+    },
+    "status": {
+      "lastBackup": "上次备份：{datetime}",
+      "lastBackupUnknown": "上次备份：未知"
+    },
+    "peers": {
+      "label": "协作者："
+    },
+    "toasts": {
+      "blockLocked": "此块已被锁定！"
+    },
+    "editor": {
+      "placeholder": "空白页面正等待你的声音；勇敢地写吧。"
+    },
+    "loading": {
+      "label": "正在加载",
+      "quote": "让世界穿过你燃烧。把棱镜般炽白的光投到纸上。<br>—雷·布拉德伯里"
+    },
+    "inactiveWarning": {
+      "message": "你已经 5 分钟没有写任何内容。点击“确定”继续会话；否则你将被重定向到归档。",
+      "confirm": "确定"
+    },
+    "sharing": {
+      "label": "分享链接",
+      "copyTooltip": "复制到剪贴板",
+      "copied": "已复制！"
+    },
+    "toolbar": {
+      "insertImage": "插入图片",
+      "insertImageUrlPlaceholder": "输入图片 URL",
+      "insertImageAltPlaceholder": "替代文本（可选）",
+      "insertImageConfirm": "确认",
+      "insertImageCancel": "取消"
+    },
+    "buttons": {
+      "downloadFile": "下载文件"
+    },
+    "lockModal": {
+      "messageLine1": "确定要锁定此块吗？",
+      "messageLine2": "这会将其定稿并阻止进一步编辑。",
+      "confirm": "锁定",
+      "cancel": "取消",
+      "successToast": "块已成功锁定。",
+      "errorToast": "锁定块出错。"
+    },
+    "tags": {
+      "headerWithTags": "标签：",
+      "headerNoTags": "还没有标签！添加一些：",
+      "updateError": "更新标签出错。"
+    },
+    "fullBlock": {
+      "headingPrefix": "抱歉，块“{blockTitle}”现在",
+      "headingStatus": "已满员。",
+      "retryPrefix": "请",
+      "retryLink": "尝试另一个块",
+      "retrySuffix": "或稍后再来。",
+      "consolationPrefix": "等待时，你可以阅读",
+      "consolationBestOf": "我们最喜欢的一些块",
+      "consolationMiddle": "或浏览",
+      "consolationArchive": "归档。"
+    }
+  }
+}

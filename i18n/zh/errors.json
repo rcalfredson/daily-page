@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "哎呀！出了点问题。",
+      "message": "发生意外错误。请稍后重试。",
+      "home": "返回首页"
+    },
+    "notFound": {
+      "title": "404 - 页面未找到",
+      "metaTitle": "页面未找到",
+      "message": "抱歉，我们找不到你要查找的页面。",
+      "homePrefix": "你可以返回",
+      "homeLink": "首页",
+      "roomsPrefix": "或查看",
+      "roomsLink": "房间目录。"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "全部已收藏房间",
+      "description": "你收藏过的所有房间列表。"
+    },
+    "nav": {
+      "backToDashboard": "← 返回仪表板"
+    },
+    "header": {
+      "title": "🌟 你收藏的所有房间 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "未命名房间",
+      "noDescription": "无描述。"
+    },
+    "empty": {
+      "message": "你还没有收藏任何房间！"
+    }
+  }
+}

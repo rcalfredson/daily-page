@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "请登录",
+      "message": "你需要登录才能继续。",
+      "messageWithAction": "你需要登录才能{action}。",
+      "cta": "登录"
+    },
+    "actions": {
+      "voteOnBlock": "为块投票",
+      "starRoom": "收藏这个房间",
+      "reactToBlock": "回应这篇帖子",
+      "commentOnBlock": "评论这个块",
+      "reportComment": "举报这条评论"
+    },
+    "errors": {
+      "starToggleFail": "更新收藏状态失败。请重试。"
+    }
+  }
+}

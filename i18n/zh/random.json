@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — 其他项目",
+      "description": "探索棒球日记、随机写作实验和 Daily Page 的其他副项目。"
+    },
+    "title": "其他项目",
+    "tagline": "一个适合实验和支线任务的温馨角落。",
+    "links": {
+      "baseball": "📖 棒球日记",
+      "randomWriter": "🎲 随机写作者"
+    },
+    "cta": {
+      "backToRooms": "返回主房间"
+    }
+  }
+}

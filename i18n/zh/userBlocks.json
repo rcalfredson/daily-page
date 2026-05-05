@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "你的块",
+      "description": "浏览并排序你创建或协作过的所有块。"
+    },
+    "header": {
+      "dashboardLink": "你的仪表板",
+      "profileLink": "{username} 的资料",
+      "allBlocks": "全部块"
+    },
+    "empty": "还没有块。",
+    "pagination": {
+      "prev": "← 上一页",
+      "next": "下一页 →"
+    },
+    "titleUser": "{username} 的块"
+  }
+}

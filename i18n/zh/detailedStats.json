@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "详细统计",
+      "description": "你的 Daily Page 活动详细分解。"
+    },
+    "nav": {
+      "backToDashboard": "← 返回仪表板"
+    },
+    "header": {
+      "title": "📊 你的统计概览 📊"
+    },
+    "cards": {
+      "totalBlocks": "创建的块总数 📝",
+      "collaborations": "协作 🤝",
+      "votesGiven": "已投票数 👍",
+      "daysActive": "活跃天数 📆"
+    },
+    "chart": {
+      "datasetLabel": "你的统计",
+      "labels": {
+        "blocksCreated": "创建的块",
+        "collaborations": "协作",
+        "votesGiven": "已投票数",
+        "daysActive": "活跃天数"
+      }
+    }
+  }
+}

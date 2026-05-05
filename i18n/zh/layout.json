@@ -1,0 +1,18 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "欢迎，用户！",
+    "logout": "退出登录",
+    "login": "登录 / 注册",
+    "language": "语言",
+    "openMenu": "打开主菜单",
+    "closeMenu": "关闭主菜单",
+    "privacy": "隐私政策",
+    "uiFallbackNotice": "{requested} 尚未翻译。当前暂时显示 {current}。",
+    "copyButton": {
+      "copy": "复制",
+      "copied": "已复制！"
+    },
+    "copyright": "© {year}"
+  }
+}

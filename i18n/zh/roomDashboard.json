@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "探索 {roomName} 中最近和进行中的块。"
+    },
+    "links": {
+      "exploreLabel": "探索：",
+      "allBlocks": "🗂️ 全部块",
+      "browseByDate": "🗓️ 按日期",
+      "bestOf": "🏅 精选",
+      "searchInRoom": "🔎 搜索"
+    },
+    "actions": {
+      "createBlock": "创建块",
+      "starTitle": "收藏这个房间",
+      "unstarTitle": "取消收藏这个房间"
+    },
+    "tabs": {
+      "locked": "已锁定块",
+      "inProgress": "进行中的块"
+    },
+    "sections": {
+      "lockedHeader": "已锁定块",
+      "inProgressHeader": "进行中的块"
+    },
+    "editorial": {
+      "heading": "精选指南",
+      "description": "从为这个房间精选的指南开始。",
+      "roleNames": {
+        "pillar": "核心指南",
+        "companion": "阅读指南",
+        "texture": "背景指南"
+      }
+    },
+    "empty": {
+      "noDescription": "暂无描述。",
+      "noLocked": "还没有已锁定块！块在 1 小时无活动后会自动锁定。",
+      "noInProgress": "还没有进行中的块！是时候开始一个了。",
+      "noBlocks": "还没有块！创建第一个，留下你的印记。😎"
+    }
+  }
+}

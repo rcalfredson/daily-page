@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "赞成票",
+    "downvote": "反对票",
+    "errors": {
+      "failed": "保存你的投票失败。"
+    }
+  }
+}
