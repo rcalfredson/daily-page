@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — ランダムライター",
+      "description": "楽しみ、ひらめき、混沌のために、ランダムな疑似テキストを無限に生成します。"
+    },
+    "title": "ランダムライター",
+    "buttons": {
+      "clear": "クリア",
+      "stop": "書き込み停止",
+      "start": "書き込み開始"
+    }
+  }
+}

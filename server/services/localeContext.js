@@ -1,6 +1,6 @@
 // server/services/localeContext.js
 
-export const SUPPORTED_UI_LANGS = ['en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh'];
+export const SUPPORTED_UI_LANGS = ['en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja'];
 export const DEFAULT_UI_LANG = 'en';
 
 export function isSupportedUiLang(l) {

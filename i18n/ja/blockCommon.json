@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "下書き"
+    },
+    "deleteModal": {
+      "title": "ブロックを削除しますか？",
+      "message": "この操作は元に戻せません。",
+      "confirm": "削除",
+      "cancel": "キャンセル",
+      "closeAriaLabel": "閉じる"
+    },
+    "toasts": {
+      "deleteSuccess": "ブロックを削除しました。",
+      "deleteFailed": "ブロックの削除に失敗しました。"
+    }
+  }
+}

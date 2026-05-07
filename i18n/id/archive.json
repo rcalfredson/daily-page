@@ -66,6 +66,12 @@
     "pagination": {
       "prev": "← Sebelumnya",
       "next": "Berikutnya →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "Daily Pages untuk {time}"
+      },
+      "empty": "Kami tidak dapat menemukan halaman dalam rentang waktu tersebut."
     }
   }
 }

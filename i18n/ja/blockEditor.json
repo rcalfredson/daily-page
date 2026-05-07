@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "（あなた）"
+    },
+    "meta": {
+      "title": "ブロックを編集 - {blockTitle}",
+      "titleFallback": "ブロックを編集"
+    },
+    "errors": {
+      "imageUrlRequired": "画像 URL を入力してください。",
+      "notFound": "ブロックが見つからないか、このルームに属していません。",
+      "loadFailed": "ブロックエディターの読み込み中にエラーが発生しました。",
+      "updateTitleFailed": "タイトルの更新中にエラーが発生しました。"
+    },
+    "roomInfo": {
+      "label": "ルーム:"
+    },
+    "title": {
+      "placeholder": "ブロックタイトルを入力",
+      "editTooltip": "タイトルを編集",
+      "lock": "ブロックをロック",
+      "delete": "ブロックを削除"
+    },
+    "description": {
+      "label": "説明",
+      "editTooltip": "説明を編集",
+      "placeholder": "説明を入力",
+      "noDescriptionOwner": "説明はまだありません...",
+      "noDescriptionViewer": "説明はありません...",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "expand": "展開",
+      "collapse": "折りたたむ",
+      "updateError": "説明の更新中にエラーが発生しました。"
+    },
+    "status": {
+      "lastBackup": "最終バックアップ: {datetime}",
+      "lastBackupUnknown": "最終バックアップ: 不明"
+    },
+    "peers": {
+      "label": "参加者:"
+    },
+    "toasts": {
+      "blockLocked": "このブロックはロックされました。"
+    },
+    "editor": {
+      "placeholder": "白紙のページがあなたの声を待っています。恐れずに書きましょう。"
+    },
+    "loading": {
+      "label": "読み込み中",
+      "quote": "世界をあなたの内側で燃やしなさい。白熱したプリズムの光を紙の上に投げかけなさい。<br>—レイ・ブラッドベリ"
+    },
+    "inactiveWarning": {
+      "message": "5分間何も書いていません。セッションを続けるには OK をクリックしてください。そうしない場合はアーカイブへ移動します。",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "共有リンク",
+      "copyTooltip": "クリップボードにコピー",
+      "copied": "コピーしました！"
+    },
+    "toolbar": {
+      "insertImage": "画像を挿入",
+      "insertImageUrlPlaceholder": "画像 URL を入力",
+      "insertImageAltPlaceholder": "代替テキスト（任意）",
+      "insertImageConfirm": "確認",
+      "insertImageCancel": "キャンセル"
+    },
+    "buttons": {
+      "downloadFile": "ファイルをダウンロード"
+    },
+    "lockModal": {
+      "messageLine1": "このブロックをロックしてもよろしいですか？",
+      "messageLine2": "これにより内容が確定し、以後の編集はできなくなります。",
+      "confirm": "ロック",
+      "cancel": "キャンセル",
+      "successToast": "ブロックをロックしました。",
+      "errorToast": "ブロックのロック中にエラーが発生しました。"
+    },
+    "tags": {
+      "headerWithTags": "タグ:",
+      "headerNoTags": "タグはまだありません。追加しましょう:",
+      "updateError": "タグの更新中にエラーが発生しました。"
+    },
+    "fullBlock": {
+      "headingPrefix": "申し訳ありません。ブロック「{blockTitle}」は現在",
+      "headingStatus": "満員です。",
+      "retryPrefix": "どうぞ",
+      "retryLink": "別のブロックをお試しください",
+      "retrySuffix": "または時間をおいて戻ってきてください。",
+      "consolationPrefix": "待っている間、よければ",
+      "consolationBestOf": "おすすめのブロック",
+      "consolationMiddle": "または",
+      "consolationArchive": "アーカイブを眺めてみてください。"
+    }
+  }
+}

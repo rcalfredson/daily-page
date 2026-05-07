@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "通知",
+      "openMenu": "通知を開く",
+      "loading": "通知を読み込み中...",
+      "error": "現在通知を読み込めません。",
+      "empty": "通知はまだありません。",
+      "markRead": "既読にする",
+      "fallbackActor": "誰か",
+      "fallbackBlockTitle": "あなたのブロック",
+      "item": {
+        "blockComment": "{actorUsername} があなたのブロック「{blockTitle}」にコメントしました。",
+        "commentReply": "{actorUsername} が「{blockTitle}」であなたのコメントに返信しました。",
+        "unknown": "通知"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "「{blockTitle}」に新しいコメント",
+        "heading": "あなたのブロックに新しいコメント",
+        "headingWithName": "こんにちは {username} さん、",
+        "body": "<strong>{actorUsername}</strong> があなたのブロック <strong>{blockTitle}</strong> にコメントしました。",
+        "cta": "Daily Page で会話を見る",
+        "fallbackActor": "誰か",
+        "fallbackBlockTitle": "あなたのブロック"
+      },
+      "commentReply": {
+        "subject": "「{blockTitle}」に新しい返信",
+        "heading": "あなたのコメントに新しい返信",
+        "headingWithName": "こんにちは {username} さん、",
+        "body": "<strong>{actorUsername}</strong> が <strong>{blockTitle}</strong> であなたのコメントに返信しました。",
+        "cta": "Daily Page で会話を見る",
+        "fallbackActor": "誰か",
+        "fallbackBlockTitle": "あなたのブロック"
+      }
+    }
+  }
+}

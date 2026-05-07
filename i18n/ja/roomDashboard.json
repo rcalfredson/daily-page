@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "{roomName} の最近のブロックと進行中のブロックを探索しましょう。"
+    },
+    "links": {
+      "exploreLabel": "探索:",
+      "allBlocks": "🗂️ すべてのブロック",
+      "browseByDate": "🗓️ 日付別",
+      "bestOf": "🏅 ベスト",
+      "searchInRoom": "🔎 検索"
+    },
+    "actions": {
+      "createBlock": "ブロックを作成",
+      "starTitle": "このルームにスターを付ける",
+      "unstarTitle": "このルームのスターを外す"
+    },
+    "tabs": {
+      "locked": "ロック済みブロック",
+      "inProgress": "進行中のブロック"
+    },
+    "sections": {
+      "lockedHeader": "ロック済みブロック",
+      "inProgressHeader": "進行中のブロック"
+    },
+    "editorial": {
+      "heading": "注目ガイド",
+      "description": "このルーム向けに選ばれた注目ガイドから始めましょう。",
+      "roleNames": {
+        "pillar": "中心ガイド",
+        "companion": "読書ガイド",
+        "texture": "背景ガイド"
+      }
+    },
+    "empty": {
+      "noDescription": "説明はありません。",
+      "noLocked": "ロック済みブロックはまだありません。ブロックは1時間操作がないと自動でロックされます。",
+      "noInProgress": "進行中のブロックはまだありません。ひとつ始める時間です。",
+      "noBlocks": "ブロックはまだありません。最初のひとつを作って足跡を残しましょう。😎"
+    }
+  }
+}

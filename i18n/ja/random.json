@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — その他のプロジェクト",
+      "description": "野球ジャーナル、ランダム文章実験、Daily Page のその他のサイドプロジェクトを探索しましょう。"
+    },
+    "title": "その他のプロジェクト",
+    "tagline": "実験と寄り道のための居心地のよい一角。",
+    "links": {
+      "baseball": "📖 野球ジャーナル",
+      "randomWriter": "🎲 ランダムライター"
+    },
+    "cta": {
+      "backToRooms": "メインルームへ戻る"
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - 過去24時間のトップブロック",
+      "description": "Daily Page は、誰でも創作的な考え、記憶、実験をブロック単位で投稿できる、ミニマルなインディー執筆サイトです。新しいアイデアを探索し、ルームに参加し、あなたの声を届けましょう。"
+    },
+    "hero": {
+      "eyebrow": "書き、読み、また戻ってくるための静かな場所",
+      "title": "Daily Page へようこそ！",
+      "subtitle": "過去24時間で最も人気のあるブロックを探索しましょう。",
+      "ctaPrefix": "刺激を受けましたか？",
+      "cta": "ルームに参加",
+      "ctaSuffix": "そして自分のブロックを作りましょう！"
+    },
+    "stats": {
+      "blocks": "ブロック",
+      "rooms": "ルーム",
+      "tags": "タグ",
+      "collabsToday": "今日の共同編集"
+    },
+    "activity": {
+      "title": "Daily Page の今",
+      "subtitle": "新しい会話やリアクションをひと目で確認できます。",
+      "fallbackActor": "誰か",
+      "inRoom": "内",
+      "comments": {
+        "title": "最近のコメント",
+        "more": "ディスカッションを検索",
+        "commentVerb": "にコメントしました",
+        "replyVerb": "に返信しました",
+        "empty": "最近のコメントはまだありません。次の会話はあなたのブロックから始まるかもしれません。"
+      },
+      "reactions": {
+        "title": "最近のリアクション",
+        "more": "トップブロックを見る",
+        "empty": "最近のリアクションはまだありません。よい投稿があればすぐに動き出します。",
+        "types": {
+          "heart": "ハートしました",
+          "leaf": "リーフでリアクションしました:",
+          "wow": "驚きでリアクションしました:",
+          "laugh": "に笑いました"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ 注目ルーム",
+      "roomInfoDays": "過去{days}日間のアクティビティ: {blocks} ブロック、{votes} 投票。",
+      "roomInfo24h": "過去24時間のアクティビティ: {blocks} ブロック、{votes} 投票。",
+      "checkItOut": "見てみる",
+      "blockRibbon": "★ 注目ブロック",
+      "votes": "{n} 票",
+      "noContent": "（コンテンツはありません...）",
+      "viewBlock": "ブロックを見る"
+    },
+    "trendingTags": {
+      "title": "トレンドタグ",
+      "suffixDays": "（過去{days}日）",
+      "suffixAllTime": "（全期間）",
+      "blocks": "{n} ブロック",
+      "votes": "{n} 票",
+      "empty": "トレンドタグはまだありません。素敵なものに最初のタグを付けましょう！"
+    },
+    "trendingBlocks": {
+      "title": "トレンドブロック",
+      "suffixDays": "（過去{days}日）",
+      "createdBy": "作成者:",
+      "in": "内",
+      "on": "日付",
+      "unknownRoom": "不明なルーム",
+      "empty24h": "過去24時間のブロックはまだありません。またすぐ確認してください！"
+    }
+  }
+}

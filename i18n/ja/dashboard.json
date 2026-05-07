@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "ダッシュボード",
+      "description": "Daily Page のダッシュボードとアカウント概要です。"
+    },
+    "profile": {
+      "profilePicAlt": "プロフィール画像",
+      "noBio": "自己紹介はまだありません。「編集」をクリックして追加しましょう。",
+      "editBio": "自己紹介を編集",
+      "bioPlaceholder": "ここに自己紹介を入力",
+      "save": "保存",
+      "cancel": "キャンセル"
+    },
+    "activity": {
+      "title": "最近のアクティビティ",
+      "none": "最近のアクティビティはありません。",
+      "updatedOn": "{date} に更新",
+      "viewAllBlocks": "すべてのブロックを見る"
+    },
+    "streak": {
+      "title": "執筆連続記録",
+      "line": "{days}日連続です！続けましょう！"
+    },
+    "starredRooms": {
+      "title": "スター付きルーム",
+      "none": "まだスターを付けたルームはありません。探索してお気に入りを見つけましょう！",
+      "viewAll": "スター付きルームをすべて見る",
+      "unnamedRoom": "名前のないルーム"
+    },
+    "stats": {
+      "title": "あなたの統計",
+      "totalBlocks": "作成したブロック数",
+      "collaborations": "共同編集",
+      "votesGiven": "投票した数",
+      "daysActive": "活動日数",
+      "viewDetailed": "詳細な統計を見る 📊"
+    },
+    "alerts": {
+      "uploadFailed": "プロフィール画像のアップロードに失敗しました。もう一度お試しください。",
+      "uploadUnexpected": "予期しないエラーが発生しました。もう一度お試しください。",
+      "bioUpdateFailed": "自己紹介の更新中にエラーが発生しました。もう一度お試しください。"
+    }
+  }
+}

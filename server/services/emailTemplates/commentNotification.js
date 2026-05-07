@@ -9,7 +9,7 @@ function truncate(str, max = 180) {
 }
 
 function normalizeEmailLang(lang) {
-  const supported = new Set(['en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh']);
+  const supported = new Set(['en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja']);
   return supported.has(lang) ? lang : 'en';
 }
 
