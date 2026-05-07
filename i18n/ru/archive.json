@@ -66,6 +66,12 @@
     "pagination": {
       "prev": "← Назад",
       "next": "Вперед →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "Daily Pages за {time}"
+      },
+      "empty": "Мы не нашли страниц за этот период."
     }
   }
 }

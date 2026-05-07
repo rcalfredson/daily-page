@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "新しいブロックを作成 — Daily Page",
+      "description": "任意のタグ、言語、公開設定を添えて、新しい創作ブロックを始めましょう。"
+    },
+    "heading": "新しいブロックを作成",
+    "roomInfo": {
+      "roomLabel": "ルーム:",
+      "unavailable": "ルーム情報を利用できません。",
+      "noDescription": "説明はありません。"
+    },
+    "form": {
+      "title": {
+        "label": "タイトル:",
+        "placeholder": {
+          "full": "例: '私の傑作', '史上最高のアイデア', 'オタク向けクリックベイト'",
+          "short": "例: '私の傑作'"
+        }
+      },
+      "description": {
+        "label": "説明（任意）:",
+        "placeholder": "あなたのひらめきを説明してもいいし、その場の勢いでも構いません。"
+      },
+      "initialContent": {
+        "label": "初期コンテンツ（任意）:",
+        "help": "ここで書き始めるか、「作成」を押してフルエディターのページで続けられます。そこでは画像の埋め込みやリアルタイム共同編集ができます。",
+        "placeholder": "ここでブロックを書き始めるか、作成後に編集を続けてください..."
+      },
+      "visibility": {
+        "label": "公開設定:"
+      },
+      "submit": "ブロックを作成"
+    },
+    "visibility": {
+      "public": {
+        "label": "公開",
+        "title": "誰でもリアルタイムで編集できます。ログインは不要です。",
+        "inline": "誰でもリアルタイムで編集できます。ログインは不要です。"
+      },
+      "private": {
+        "label": "非公開",
+        "title": "ログインユーザー専用です。編集完了後に表示されます。",
+        "inline": "ログインユーザー専用です。編集完了後に表示されます。",
+        "tooltip": "非公開ブロックは作業中は招待制で、完了すると表示されるようになります。"
+      }
+    },
+    "advanced": {
+      "summary": "詳細オプション",
+      "lang": {
+        "label": "言語:",
+        "options": {
+          "en": "英語",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "עברית",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "既存ブロックを翻訳（URL または ID）:",
+        "placeholder": "ブロック URL または ID を貼り付け（任意）",
+        "invalid": "有効なブロック URL または ID ではないようです。",
+        "fetchError": "ブロック情報を取得できませんでした。"
+      }
+    },
+    "messages": {
+      "langExists": "その言語の翻訳はすでに存在します。別の言語を選んでください。",
+      "genericError": "問題が発生しました。もう一度お試しください。"
+    }
+  }
+}

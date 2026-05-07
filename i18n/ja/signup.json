@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "アカウントを作成",
+      "description": "Daily Page に登録してすべての機能にアクセスしましょう。"
+    },
+    "header": {
+      "title": "アカウントを作成",
+      "subtitle": "Daily Page に参加して、日々の文章の作成と共有を始めましょう！"
+    },
+    "form": {
+      "email": {
+        "label": "メールアドレス",
+        "placeholder": "メールアドレスを入力"
+      },
+      "username": {
+        "label": "ユーザー名",
+        "placeholder": "ユーザー名を入力"
+      },
+      "password": {
+        "label": "パスワード",
+        "placeholder": "パスワードを入力"
+      },
+      "submit": "登録",
+      "feedback": {
+        "success": "フォームを送信しました。",
+        "successCreatedVerify": "アカウントを作成しました。メールを確認してアカウントを認証してください。",
+        "genericError": "アカウントの作成に失敗しました。もう一度お試しください。",
+        "unexpectedError": "予期しないエラーが発生しました。もう一度お試しください。"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "ログインしてください",
+      "message": "続行するにはログインが必要です。",
+      "messageWithAction": "{action} するにはログインが必要です。",
+      "cta": "ログイン"
+    },
+    "actions": {
+      "voteOnBlock": "ブロックに投票",
+      "starRoom": "このルームにスターを付ける",
+      "reactToBlock": "この投稿にリアクション",
+      "commentOnBlock": "このブロックにコメント",
+      "reportComment": "このコメントを報告"
+    },
+    "errors": {
+      "starToggleFail": "スター状態の更新に失敗しました。もう一度お試しください。"
+    }
+  }
+}

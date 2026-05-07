@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "賛成票",
+    "downvote": "反対票",
+    "errors": {
+      "failed": "投票の保存に失敗しました。"
+    }
+  }
+}

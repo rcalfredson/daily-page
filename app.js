@@ -350,13 +350,17 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       res.redirect(`/rooms/overview/${DateHelper.currentDate()}`);
     });
 
-    app.get('/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', async (req, res) => {
+    app.get('/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', addI18n(['archive']), async (req, res) => {
       const { year, month } = req.params;
-      const formattedTime = `${DateHelper.monthName(month)} ${year}`;
+      const formattedTime = new Intl.DateTimeFormat(res.locals.uiLang || 'en', {
+        month: 'long',
+        timeZone: 'UTC',
+        year: 'numeric'
+      }).format(new Date(Date.UTC(Number(year), Number(month) - 1, 1)));
       const dates = await cache.get(`${year}-${month}`, getPageDatesByYearAndMonth, [year, month]);
 
       res.render('yearMonth', {
-        title: `Daily Pages for ${formattedTime}`,
+        title: res.locals.t('archive.yearMonth.meta.title', { time: formattedTime }),
         header: formattedTime,
         dates,
       });

@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "検索",
+      "description": "公開ブロックを検索します。"
+    },
+    "title": "検索",
+    "placeholder": "ブロックを検索...",
+    "hint": "検索するには2文字以上入力してください。",
+    "noResults": "結果が見つかりません。",
+    "untitled": "無題",
+    "votesTitle": "投票",
+    "pageLabel": "ページ",
+    "filters": {
+      "inRoom": "ルーム内"
+    },
+    "buttons": {
+      "search": "検索",
+      "prev": "前へ",
+      "next": "次へ"
+    }
+  }
+}

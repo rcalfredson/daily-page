@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "詳細統計",
+      "description": "Daily Page でのアクティビティの詳細な内訳です。"
+    },
+    "nav": {
+      "backToDashboard": "← ダッシュボードへ戻る"
+    },
+    "header": {
+      "title": "📊 あなたの統計概要 📊"
+    },
+    "cards": {
+      "totalBlocks": "作成したブロック数 📝",
+      "collaborations": "共同編集 🤝",
+      "votesGiven": "投票した数 👍",
+      "daysActive": "活動日数 📆"
+    },
+    "chart": {
+      "datasetLabel": "あなたの統計",
+      "labels": {
+        "blocksCreated": "作成したブロック",
+        "collaborations": "共同編集",
+        "votesGiven": "投票した数",
+        "daysActive": "活動日数"
+      }
+    }
+  }
+}

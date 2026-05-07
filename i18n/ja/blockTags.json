@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "タグ:",
+      "noTags": "タグはまだありません。追加しましょう:"
+    },
+    "input": {
+      "placeholder": "新しいタグ",
+      "addButton": "追加"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

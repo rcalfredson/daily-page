@@ -1,0 +1,18 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "ようこそ、ユーザーさん！",
+    "logout": "ログアウト",
+    "login": "ログイン / 登録",
+    "language": "言語",
+    "openMenu": "メインメニューを開く",
+    "closeMenu": "メインメニューを閉じる",
+    "privacy": "プライバシーポリシー",
+    "uiFallbackNotice": "{requested} はまだ翻訳されていません。今は {current} を表示しています。",
+    "copyButton": {
+      "copy": "コピー",
+      "copied": "コピーしました！"
+    },
+    "copyright": "© {year}"
+  }
+}

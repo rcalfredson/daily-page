@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "ブロック - {blockTitle}",
+      "titleFallback": "ブロック"
+    },
+    "labels": {
+      "room": "ルーム",
+      "author": "作成者",
+      "created": "作成日時",
+      "unknownAuthor": "匿名",
+      "authorAvatarAlt": "{username} のアバター",
+      "viewAuthorProfile": "{username} のプロフィールを見る",
+      "lang": "翻訳: ",
+      "available": "利用可能"
+    },
+    "buttons": {
+      "edit": "編集",
+      "deleteBlock": "ブロックを削除",
+      "share": "共有",
+      "flagContent": "コンテンツを報告"
+    },
+    "description": {
+      "label": "説明",
+      "none": "説明はありません...",
+      "expand": "展開",
+      "collapse": "折りたたむ"
+    },
+    "editorial": {
+      "heading": "読書ガイド",
+      "roleLabel": "読み方",
+      "clusterLabel": "ガイド",
+      "sequence": "パート {sequence}",
+      "primaryPillarHeading": "ここから始める",
+      "relatedHeading": "続きを読む",
+      "clusterHeading": "このガイドの続き",
+      "expandSection": "さらに {count} 件表示",
+      "collapseSection": "少なく表示",
+      "roleNames": {
+        "pillar": "中心ガイド",
+        "companion": "深掘り",
+        "texture": "背景"
+      }
+    },
+    "comments": {
+      "heading": "コメント",
+      "count": "{count} 件のコメント",
+      "empty": "まだ返信はありません。会話が始まると、コメントがここに表示されます。",
+      "composer": {
+        "label": "コメントを追加",
+        "placeholder": "コメントを書く...",
+        "submit": "コメントを投稿",
+        "submitting": "投稿中...",
+        "success": "コメントを投稿しました。",
+        "error": "現在コメントを投稿できません。",
+        "loginPrompt": "会話に参加するにはログインしてください。",
+        "loginCta": "ログインしてコメント",
+        "verifyPrompt": "コメントを投稿する前にメールアドレスを確認してください。",
+        "verifyCta": "メールを確認"
+      },
+      "sort": {
+        "label": "並べ替え",
+        "oldestFirst": "古い順",
+        "newestFirst": "新しい順"
+      },
+      "by": "投稿者",
+      "unknownAuthor": "不明",
+      "reply": {
+        "action": "返信",
+        "label": "返信を追加",
+        "placeholder": "返信を書く...",
+        "submit": "返信を投稿",
+        "submitting": "投稿中...",
+        "success": "返信を投稿しました。",
+        "error": "現在返信を投稿できません。",
+        "cancel": "キャンセル",
+        "loginPrompt": "返信するにはログインしてください。"
+      },
+      "manage": {
+        "edited": "編集済み",
+        "editAction": "編集",
+        "deleteAction": "削除",
+        "deleteConfirm": "このコメントを削除しますか？下にある返信も削除されます。",
+        "deleteSuccess": "コメントを削除しました。",
+        "deleteError": "現在コメントを削除できません。",
+        "forbidden": "管理できるのは自分のコメントだけです。",
+        "edit": {
+          "label": "コメントを編集",
+          "save": "保存",
+          "saving": "保存中...",
+          "cancel": "キャンセル",
+          "success": "コメントを更新しました。",
+          "error": "現在コメントを更新できません。"
+        }
+      },
+      "report": {
+        "action": "報告",
+        "pending": "報告中...",
+        "success": "コメントを報告しました。",
+        "error": "現在コメントを報告できません。",
+        "ownError": "自分のコメントは報告できません。",
+        "hidden": "報告後、コメントは非表示になりました。",
+        "reported": "報告済み"
+      },
+      "deepLink": {
+        "focused": "リンクされたコメント",
+        "unavailable": "リンクされたコメントは利用できなくなりました。"
+      },
+      "loadMore": "さらにコメントを読み込む",
+      "loading": "読み込み中...",
+      "loadError": "現在これ以上コメントを読み込めません。"
+    },
+    "share": {
+      "title": "このブロックを共有",
+      "shareOn": "共有先:",
+      "nativeText": "このブロックを見てください: {title}",
+      "alt": {
+        "facebook": "Facebook ロゴ",
+        "reddit": "Reddit ロゴ",
+        "whatsapp": "WhatsApp ロゴ",
+        "twitter": "Twitter ロゴ"
+      }
+    },
+    "errors": {
+      "notFound": "ブロックが見つからないか、このルームに属していません。",
+      "loadFailed": "ブロック表示の読み込み中にエラーが発生しました。"
+    }
+  }
+}

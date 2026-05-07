@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "メールアドレスを確認",
+      "description": "Daily Page のメールアドレスを確認します。"
+    },
+    "header": {
+      "title": "メールアドレスを確認中..."
+    },
+    "status": {
+      "checking": "トークンを確認しています。お待ちください...",
+      "missingToken": "確認トークンがないか無効です。",
+      "genericFailure": "確認に失敗しました。",
+      "unexpectedError": "予期しないエラーが発生しました。",
+      "success": "アカウントの確認が完了しました。",
+      "invalidOrExpired": "確認トークンが無効または期限切れです。"
+    },
+    "verificationMsg": {
+      "subject": "Daily Page アカウントを確認 ✨",
+      "heading": "Daily Page へようこそ、{username} さん！",
+      "body": "下をクリックしてメールアドレスを確認してください:",
+      "cta": "メールアドレスを確認",
+      "expires": "このリンクは {hours} 時間で期限切れになります。"
+    }
+  }
+}

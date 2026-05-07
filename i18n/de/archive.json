@@ -66,6 +66,12 @@
     "pagination": {
       "prev": "← Zuruck",
       "next": "Weiter →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "Daily Pages für {time}"
+      },
+      "empty": "Wir konnten in diesem Zeitraum keine Seiten finden."
     }
   }
 }

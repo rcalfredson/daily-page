@@ -1,0 +1,77 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — アーカイブ",
+      "description": "月ごとに全アーカイブを探索できます。",
+      "titleRoom": "Daily Page — アーカイブ · {roomName}",
+      "descriptionRoom": "{roomName} ルームの過去の文章を月ごとに探索できます。任意の日付に移動して、この場所でこれまでに共有されたものを見てみましょう。"
+    },
+    "nav": {
+      "prev": "前へ",
+      "next": "次へ"
+    },
+    "title": "📚 アーカイブを見る",
+    "titleRoom": "📚 {roomName} — アーカイブ",
+    "roomViewing": "{roomName} ルームのアーカイブを表示中",
+    "viewRoomLink": "ルームを見る",
+    "noContent": "まだコンテンツはありません。",
+    "backToRoom": "← ルームダッシュボードへ戻る",
+    "calendar": {
+      "meta": {
+        "description": "{year}年{month}に投稿されたすべてのクリエイティブブロックを表示します。短い思いつきから深い省察まで、任意の日付をクリックして共有内容を探索できます。",
+        "descriptionRoom": "{year}年{month}の {roomName} での創作活動を表示します。日付を選んで、その日に共有されたブロックを探索しましょう。"
+      },
+      "title": "📆 {year}年{month}のアーカイブ",
+      "prevLabel": "{year}年{month}のアーカイブ",
+      "nextLabel": "{year}年{month}のアーカイブ"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "{date} のアーカイブ",
+        "titleRoom": "{roomName} — {date} のアーカイブ",
+        "descriptionSite": "{date} に書かれたブロックを探索しましょう。静かなメモから大胆な告白まで。",
+        "descriptionRoom": "{date}、{roomName} ルームの書き手たちは足跡を残しました。その日に共有された省察、アイデア、表現をスクロールしてみましょう。"
+      },
+      "heading": "{date} のアーカイブ",
+      "empty": "この日付のコンテンツは見つかりませんでした。",
+      "labels": {
+        "createdBy": "作成者:",
+        "in": "内",
+        "on": "{datetime}",
+        "unknownRoom": "不明なルーム"
+      },
+      "nav": {
+        "prevDay": "前の日",
+        "nextDay": "次の日"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — すべてのブロック",
+        "descriptionRoom": "{roomName} ルームに投稿されたすべてのブロックを閲覧できます。日付、タイトル、投票数で並べ替えて履歴を探索しましょう。"
+      },
+      "header": {
+        "allBlocks": "— すべてのブロック"
+      },
+      "sort": {
+        "label": "並べ替え",
+        "options": {
+          "date": "日付",
+          "title": "タイトル",
+          "votes": "投票"
+        },
+        "submit": "実行"
+      }
+    },
+    "pagination": {
+      "prev": "← 前へ",
+      "next": "次へ →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "{time} の Daily Pages"
+      },
+      "empty": "その期間のページは見つかりませんでした。"
+    }
+  }
+}

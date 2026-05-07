@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "不適切なコンテンツを報告",
+    "fields": {
+      "reason": {
+        "label": "理由",
+        "options": {
+          "spam": "スパム",
+          "offensive": "攻撃的（ヘイト表現や中傷語）",
+          "inappropriate": "不適切（裸、過激な内容など）",
+          "other": "その他"
+        }
+      },
+      "details": {
+        "label": "詳細（任意）",
+        "placeholder": "見た内容を説明してください..."
+      }
+    },
+    "buttons": {
+      "submit": "報告を送信",
+      "cancel": "キャンセル"
+    },
+    "toasts": {
+      "success": "報告を送信しました。ありがとうございます！",
+      "failed": "報告の送信に失敗しました。"
+    }
+  }
+}

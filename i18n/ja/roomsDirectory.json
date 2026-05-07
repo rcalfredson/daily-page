@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "ルーム一覧",
+      "description": "各ルームは別世界への扉です。中へ入り、あなたの物語を共有し、ほかの人と一緒に美しいものを作りましょう。"
+    },
+    "eyebrow": "あなたの居場所を見つける",
+    "heading": "ルーム一覧",
+    "intro": "今活気のあるルームから始めても、しっくりくるまでトピックを歩き回っても構いません。どのルームも、あなたの声を待つ異なるお題、ファンダム、共有された熱中です。",
+    "empty": "現在利用できるルームはありません。後でもう一度確認してください。",
+    "jumpToActive": "アクティブなルームを見る",
+    "jumpToTopics": "トピック別に見る",
+    "statsLabel": "ルーム一覧のハイライト",
+    "liveNow": "現在アクティブ",
+    "recentlyActive": "最近アクティブ",
+    "recentlyActiveSubtitle": "今人がいるルームを見つける最短の方法です。",
+    "browseByTopic": "トピック別に見る",
+    "topicSubtitle": "トピックを開いてルームを探索しましょう。",
+    "roomCount": "{count} ルーム",
+    "stats": {
+      "rooms": "探索できるルーム",
+      "topics": "トピックグループ",
+      "active": "アクティブなおすすめ"
+    },
+    "activeUsers": "アクティブユーザー: {count}",
+    "visitRoom": "ルームへ行く",
+    "close": "閉じる",
+    "noTitle": "タイトルはありません",
+    "noDescription": "説明はありません"
+  }
+}

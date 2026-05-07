@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "すべてのスター付きルーム",
+      "description": "スターを付けたすべてのルームの一覧です。"
+    },
+    "nav": {
+      "backToDashboard": "← ダッシュボードへ戻る"
+    },
+    "header": {
+      "title": "🌟 あなたのスター付きルーム 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "名前のないルーム",
+      "noDescription": "説明はありません。"
+    },
+    "empty": {
+      "message": "まだスターを付けたルームはありません！"
+    }
+  }
+}

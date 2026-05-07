@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — タグ概要",
+      "description": "Daily Page 全体で使われているタグを、期間フィルターつきで閲覧できます。"
+    },
+    "title": "タグ概要",
+    "intro": "Daily Page で使われているすべてのタグを探索しましょう。",
+    "tagCloudTitle": "タグクラウド",
+    "timeframe": {
+      "last24h": "過去24時間",
+      "last7d": "過去7日間",
+      "last30d": "過去30日間",
+      "all": "全期間"
+    },
+    "error": {
+      "loading": "タグ概要の読み込み中にエラーが発生しました"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "タグ付きブロック:"
+      },
+      "header": {
+        "label": "タグ:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "このタグの総ブロック数",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "作成者:",
+        "inRoom": "内",
+        "unknownRoom": "不明なルーム",
+        "onDate": "日付"
+      },
+      "chart": {
+        "label": "作成されたブロックの推移"
+      },
+      "empty": {
+        "message": "このタグのブロックはまだありません。最初のひとつを作ってみませんか？🔥"
+      },
+      "error": {
+        "loadingTagPage": "タグページの読み込み中にエラーが発生しました"
+      }
+    }
+  }
+}

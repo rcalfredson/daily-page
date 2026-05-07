@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "rooms": "ルーム",
+    "tags": "タグ",
+    "archive": "アーカイブ",
+    "search": "検索",
+    "bestOf": "ベスト",
+    "about": "概要",
+    "support": "サポート",
+    "otherProjects": "その他のプロジェクト",
+    "auth": {
+      "welcomePrefix": "ようこそ、",
+      "welcomeFallbackUser": "あなた",
+      "welcomeSuffix": "！"
+    },
+    "dashboard": "ダッシュボード"
+  }
+}

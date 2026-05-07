@@ -66,6 +66,12 @@
     "pagination": {
       "prev": "← 上一页",
       "next": "下一页 →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "{time} 的 Daily Pages"
+      },
+      "empty": "在该时间范围内找不到任何页面。"
     }
   }
 }
