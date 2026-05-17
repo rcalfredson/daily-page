@@ -40,6 +40,11 @@
       "uploadFailed": "No se pudo subir la foto de perfil. Inténtalo de nuevo.",
       "uploadUnexpected": "Ocurrió un error inesperado. Inténtalo de nuevo.",
       "bioUpdateFailed": "Error al guardar la bio. Inténtalo de nuevo."
+    },
+    "security": {
+      "title": "Seguridad de la cuenta",
+      "summary": "Cambia tu contraseña y administra la autenticación de dos factores.",
+      "manage": "Administrar seguridad"
     }
   }
 }

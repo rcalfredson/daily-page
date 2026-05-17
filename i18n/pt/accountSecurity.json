@@ -1,0 +1,59 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Segurança da conta",
+      "description": "Gerencie sua senha do Daily Page e a autenticação de dois fatores."
+    },
+    "backToDashboard": "Voltar ao painel",
+    "heading": "Segurança da conta",
+    "subheading": "Proteja sua conta com uma senha forte e um aplicativo autenticador.",
+    "password": {
+      "title": "Alterar senha",
+      "description": "Use uma senha única com pelo menos 8 caracteres.",
+      "current": {
+        "label": "Senha atual"
+      },
+      "new": {
+        "label": "Nova senha"
+      },
+      "submit": "Atualizar senha"
+    },
+    "twoFactor": {
+      "title": "Autenticação de dois fatores",
+      "statusOn": "Ativada",
+      "statusOff": "Desativada",
+      "description": "Adicione um código de uso único de um aplicativo autenticador depois da sua senha ao entrar.",
+      "currentPassword": {
+        "label": "Senha atual"
+      },
+      "startSetup": "Configurar aplicativo autenticador",
+      "qrAlt": "Código QR do aplicativo autenticador",
+      "manualKey": "Chave de configuração manual",
+      "code": {
+        "label": "Código de 6 dígitos"
+      },
+      "enable": "Ativar 2FA",
+      "disableCode": {
+        "label": "Código do autenticador"
+      },
+      "disable": "Desativar 2FA"
+    },
+    "feedback": {
+      "passwordChanged": "Sua senha foi atualizada.",
+      "setupReady": "Escaneie o código QR e depois insira o código de 6 dígitos para concluir a configuração.",
+      "twoFactorEnabled": "A autenticação de dois fatores agora está ativada.",
+      "twoFactorDisabled": "A autenticação de dois fatores agora está desativada.",
+      "missingFields": "Preencha todos os campos obrigatórios.",
+      "missingCurrentPassword": "Insira sua senha atual para continuar.",
+      "passwordTooShort": "Sua nova senha deve ter pelo menos 8 caracteres.",
+      "invalidCurrentPassword": "A senha atual não corresponde.",
+      "missingCode": "Insira o código de 6 dígitos do seu aplicativo autenticador.",
+      "invalidCode": "Esse código não funcionou. Tente novamente.",
+      "noPendingSetup": "Inicie a configuração novamente antes de inserir um código.",
+      "setupExpired": "Essa sessão de configuração expirou. Inicie a configuração novamente para receber um novo código QR.",
+      "twoFactorNotEnabled": "A autenticação de dois fatores não está ativada para esta conta.",
+      "genericError": "Algo deu errado. Tente novamente.",
+      "unexpectedError": "Ocorreu um erro inesperado. Tente novamente."
+    }
+  }
+}

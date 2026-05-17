@@ -40,6 +40,11 @@
       "uploadFailed": "Gagal mengunggah foto profil. Silakan coba lagi.",
       "uploadUnexpected": "Terjadi kesalahan tak terduga. Silakan coba lagi.",
       "bioUpdateFailed": "Kesalahan saat memperbarui bio. Silakan coba lagi."
+    },
+    "security": {
+      "title": "Keamanan Akun",
+      "summary": "Ubah kata sandi Anda dan kelola autentikasi dua faktor.",
+      "manage": "Kelola Keamanan"
     }
   }
 }

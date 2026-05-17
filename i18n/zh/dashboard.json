@@ -40,6 +40,11 @@
       "uploadFailed": "上传头像失败。请重试。",
       "uploadUnexpected": "发生意外错误。请重试。",
       "bioUpdateFailed": "更新简介出错。请重试。"
+    },
+    "security": {
+      "title": "账户安全",
+      "summary": "更改密码并管理双重认证。",
+      "manage": "管理安全设置"
     }
   }
 }

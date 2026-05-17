@@ -1,0 +1,59 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "アカウントのセキュリティ",
+      "description": "Daily Page のパスワードと二要素認証を管理します。"
+    },
+    "backToDashboard": "ダッシュボードに戻る",
+    "heading": "アカウントのセキュリティ",
+    "subheading": "強力なパスワードと認証アプリでアカウントを保護しましょう。",
+    "password": {
+      "title": "パスワードを変更",
+      "description": "8文字以上の一意のパスワードを使用してください。",
+      "current": {
+        "label": "現在のパスワード"
+      },
+      "new": {
+        "label": "新しいパスワード"
+      },
+      "submit": "パスワードを更新"
+    },
+    "twoFactor": {
+      "title": "二要素認証",
+      "statusOn": "有効",
+      "statusOff": "オフ",
+      "description": "ログイン時にパスワードの後で、認証アプリのワンタイムコードを入力します。",
+      "currentPassword": {
+        "label": "現在のパスワード"
+      },
+      "startSetup": "認証アプリを設定",
+      "qrAlt": "認証アプリ用のQRコード",
+      "manualKey": "手動設定キー",
+      "code": {
+        "label": "6桁のコード"
+      },
+      "enable": "2FAを有効にする",
+      "disableCode": {
+        "label": "認証コード"
+      },
+      "disable": "2FAを無効にする"
+    },
+    "feedback": {
+      "passwordChanged": "パスワードを更新しました。",
+      "setupReady": "QRコードをスキャンし、6桁のコードを入力して設定を完了してください。",
+      "twoFactorEnabled": "二要素認証が有効になりました。",
+      "twoFactorDisabled": "二要素認証が無効になりました。",
+      "missingFields": "必須項目をすべて入力してください。",
+      "missingCurrentPassword": "続行するには現在のパスワードを入力してください。",
+      "passwordTooShort": "新しいパスワードは8文字以上にしてください。",
+      "invalidCurrentPassword": "現在のパスワードが一致しません。",
+      "missingCode": "認証アプリの6桁のコードを入力してください。",
+      "invalidCode": "そのコードは使用できませんでした。もう一度お試しください。",
+      "noPendingSetup": "コードを入力する前に、もう一度設定を開始してください。",
+      "setupExpired": "この設定セッションは期限切れです。新しいQRコードを取得するには、もう一度設定を開始してください。",
+      "twoFactorNotEnabled": "このアカウントでは二要素認証が有効になっていません。",
+      "genericError": "問題が発生しました。もう一度お試しください。",
+      "unexpectedError": "予期しないエラーが発生しました。もう一度お試しください。"
+    }
+  }
+}

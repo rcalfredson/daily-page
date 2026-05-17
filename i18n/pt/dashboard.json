@@ -40,6 +40,11 @@
       "uploadFailed": "Falha ao enviar a foto do perfil. Tente novamente.",
       "uploadUnexpected": "Ocorreu um erro inesperado. Tente novamente.",
       "bioUpdateFailed": "Erro ao atualizar a biografia. Tente novamente."
+    },
+    "security": {
+      "title": "Segurança da conta",
+      "summary": "Altere sua senha e gerencie a autenticação de dois fatores.",
+      "manage": "Gerenciar segurança"
     }
   }
 }
