@@ -40,6 +40,11 @@
       "uploadFailed": "Échec du téléversement de la photo de profil. Veuillez réessayer.",
       "uploadUnexpected": "Une erreur inattendue est survenue. Veuillez réessayer.",
       "bioUpdateFailed": "Erreur lors de la mise à jour de la bio. Veuillez réessayer."
+    },
+    "security": {
+      "title": "Sécurité du compte",
+      "summary": "Changez votre mot de passe et gérez l'authentification à deux facteurs.",
+      "manage": "Gérer la sécurité"
     }
   }
 }

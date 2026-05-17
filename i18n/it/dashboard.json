@@ -40,6 +40,11 @@
       "uploadFailed": "Caricamento dell'immagine del profilo non riuscito. Riprova.",
       "uploadUnexpected": "Si e verificato un errore imprevisto. Riprova.",
       "bioUpdateFailed": "Errore durante l'aggiornamento della bio. Riprova."
+    },
+    "security": {
+      "title": "Sicurezza dell'account",
+      "summary": "Cambia la password e gestisci l'autenticazione a due fattori.",
+      "manage": "Gestisci sicurezza"
     }
   }
 }

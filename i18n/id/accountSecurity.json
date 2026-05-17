@@ -1,0 +1,59 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Keamanan Akun",
+      "description": "Kelola kata sandi Daily Page dan autentikasi dua faktor."
+    },
+    "backToDashboard": "Kembali ke dasbor",
+    "heading": "Keamanan Akun",
+    "subheading": "Lindungi akun Anda dengan kata sandi yang kuat dan aplikasi autentikator.",
+    "password": {
+      "title": "Ubah Kata Sandi",
+      "description": "Gunakan kata sandi unik dengan minimal 8 karakter.",
+      "current": {
+        "label": "Kata sandi saat ini"
+      },
+      "new": {
+        "label": "Kata sandi baru"
+      },
+      "submit": "Perbarui Kata Sandi"
+    },
+    "twoFactor": {
+      "title": "Autentikasi Dua Faktor",
+      "statusOn": "Aktif",
+      "statusOff": "Nonaktif",
+      "description": "Tambahkan kode sekali pakai dari aplikasi autentikator setelah kata sandi saat Anda masuk.",
+      "currentPassword": {
+        "label": "Kata sandi saat ini"
+      },
+      "startSetup": "Siapkan Aplikasi Autentikator",
+      "qrAlt": "Kode QR aplikasi autentikator",
+      "manualKey": "Kunci penyiapan manual",
+      "code": {
+        "label": "Kode 6 digit"
+      },
+      "enable": "Aktifkan 2FA",
+      "disableCode": {
+        "label": "Kode autentikator"
+      },
+      "disable": "Nonaktifkan 2FA"
+    },
+    "feedback": {
+      "passwordChanged": "Kata sandi Anda telah diperbarui.",
+      "setupReady": "Pindai kode QR, lalu masukkan kode 6 digit untuk menyelesaikan penyiapan.",
+      "twoFactorEnabled": "Autentikasi dua faktor sekarang aktif.",
+      "twoFactorDisabled": "Autentikasi dua faktor sekarang nonaktif.",
+      "missingFields": "Isi semua kolom yang wajib diisi.",
+      "missingCurrentPassword": "Masukkan kata sandi saat ini untuk melanjutkan.",
+      "passwordTooShort": "Kata sandi baru Anda harus memiliki minimal 8 karakter.",
+      "invalidCurrentPassword": "Kata sandi saat ini tidak cocok.",
+      "missingCode": "Masukkan kode 6 digit dari aplikasi autentikator Anda.",
+      "invalidCode": "Kode itu tidak berhasil. Coba lagi.",
+      "noPendingSetup": "Mulai penyiapan lagi sebelum memasukkan kode.",
+      "setupExpired": "Sesi penyiapan itu telah kedaluwarsa. Mulai penyiapan lagi untuk mendapatkan kode QR baru.",
+      "twoFactorNotEnabled": "Autentikasi dua faktor belum aktif untuk akun ini.",
+      "genericError": "Terjadi kesalahan. Coba lagi.",
+      "unexpectedError": "Terjadi kesalahan tak terduga. Coba lagi."
+    }
+  }
+}

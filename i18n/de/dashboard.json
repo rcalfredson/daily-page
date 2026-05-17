@@ -40,6 +40,11 @@
       "uploadFailed": "Profilbild konnte nicht hochgeladen werden. Bitte versuche es erneut.",
       "uploadUnexpected": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.",
       "bioUpdateFailed": "Fehler beim Aktualisieren der Bio. Bitte versuche es erneut."
+    },
+    "security": {
+      "title": "Kontosicherheit",
+      "summary": "Ändere dein Passwort und verwalte die Zwei-Faktor-Authentifizierung.",
+      "manage": "Sicherheit verwalten"
     }
   }
 }

@@ -1,0 +1,59 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Seguridad de la cuenta",
+      "description": "Administra tu contraseña de Daily Page y la autenticación de dos factores."
+    },
+    "backToDashboard": "Volver al panel",
+    "heading": "Seguridad de la cuenta",
+    "subheading": "Protege tu cuenta con una contraseña segura y una app de autenticación.",
+    "password": {
+      "title": "Cambiar contraseña",
+      "description": "Usa una contraseña única de al menos 8 caracteres.",
+      "current": {
+        "label": "Contraseña actual"
+      },
+      "new": {
+        "label": "Nueva contraseña"
+      },
+      "submit": "Actualizar contraseña"
+    },
+    "twoFactor": {
+      "title": "Autenticación de dos factores",
+      "statusOn": "Activada",
+      "statusOff": "Desactivada",
+      "description": "Agrega un código de un solo uso de una app de autenticación después de tu contraseña al iniciar sesión.",
+      "currentPassword": {
+        "label": "Contraseña actual"
+      },
+      "startSetup": "Configurar app de autenticación",
+      "qrAlt": "Código QR para app de autenticación",
+      "manualKey": "Clave de configuración manual",
+      "code": {
+        "label": "Código de 6 dígitos"
+      },
+      "enable": "Activar 2FA",
+      "disableCode": {
+        "label": "Código de autenticación"
+      },
+      "disable": "Desactivar 2FA"
+    },
+    "feedback": {
+      "passwordChanged": "Tu contraseña se actualizó.",
+      "setupReady": "Escanea el código QR y luego ingresa el código de 6 dígitos para terminar la configuración.",
+      "twoFactorEnabled": "La autenticación de dos factores ya está activada.",
+      "twoFactorDisabled": "La autenticación de dos factores ya está desactivada.",
+      "missingFields": "Completa todos los campos obligatorios.",
+      "missingCurrentPassword": "Ingresa tu contraseña actual para continuar.",
+      "passwordTooShort": "Tu nueva contraseña debe tener al menos 8 caracteres.",
+      "invalidCurrentPassword": "La contraseña actual no coincide.",
+      "missingCode": "Ingresa el código de 6 dígitos de tu app de autenticación.",
+      "invalidCode": "Ese código no funcionó. Inténtalo de nuevo.",
+      "noPendingSetup": "Inicia la configuración otra vez antes de ingresar un código.",
+      "setupExpired": "Esa sesión de configuración caducó. Inicia la configuración otra vez para obtener un código QR nuevo.",
+      "twoFactorNotEnabled": "La autenticación de dos factores no está activada para esta cuenta.",
+      "genericError": "Algo salió mal. Inténtalo de nuevo.",
+      "unexpectedError": "Ocurrió un error inesperado. Inténtalo de nuevo."
+    }
+  }
+}

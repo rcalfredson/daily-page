@@ -1,0 +1,59 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Kontosicherheit",
+      "description": "Verwalte dein Daily Page-Passwort und die Zwei-Faktor-Authentifizierung."
+    },
+    "backToDashboard": "Zurück zum Dashboard",
+    "heading": "Kontosicherheit",
+    "subheading": "Schütze dein Konto mit einem starken Passwort und einer Authenticator-App.",
+    "password": {
+      "title": "Passwort ändern",
+      "description": "Verwende ein einzigartiges Passwort mit mindestens 8 Zeichen.",
+      "current": {
+        "label": "Aktuelles Passwort"
+      },
+      "new": {
+        "label": "Neues Passwort"
+      },
+      "submit": "Passwort aktualisieren"
+    },
+    "twoFactor": {
+      "title": "Zwei-Faktor-Authentifizierung",
+      "statusOn": "Aktiviert",
+      "statusOff": "Aus",
+      "description": "Füge beim Anmelden nach deinem Passwort einen Einmalcode aus einer Authenticator-App hinzu.",
+      "currentPassword": {
+        "label": "Aktuelles Passwort"
+      },
+      "startSetup": "Authenticator-App einrichten",
+      "qrAlt": "QR-Code für Authenticator-App",
+      "manualKey": "Manueller Einrichtungsschlüssel",
+      "code": {
+        "label": "6-stelliger Code"
+      },
+      "enable": "2FA aktivieren",
+      "disableCode": {
+        "label": "Authenticator-Code"
+      },
+      "disable": "2FA deaktivieren"
+    },
+    "feedback": {
+      "passwordChanged": "Dein Passwort wurde aktualisiert.",
+      "setupReady": "Scanne den QR-Code und gib dann den 6-stelligen Code ein, um die Einrichtung abzuschließen.",
+      "twoFactorEnabled": "Die Zwei-Faktor-Authentifizierung ist jetzt aktiviert.",
+      "twoFactorDisabled": "Die Zwei-Faktor-Authentifizierung ist jetzt deaktiviert.",
+      "missingFields": "Bitte fülle alle erforderlichen Felder aus.",
+      "missingCurrentPassword": "Gib dein aktuelles Passwort ein, um fortzufahren.",
+      "passwordTooShort": "Dein neues Passwort muss mindestens 8 Zeichen lang sein.",
+      "invalidCurrentPassword": "Das aktuelle Passwort stimmt nicht.",
+      "missingCode": "Gib den 6-stelligen Code aus deiner Authenticator-App ein.",
+      "invalidCode": "Dieser Code hat nicht funktioniert. Bitte versuche es erneut.",
+      "noPendingSetup": "Starte die Einrichtung erneut, bevor du einen Code eingibst.",
+      "setupExpired": "Diese Einrichtungssitzung ist abgelaufen. Starte die Einrichtung erneut, um einen neuen QR-Code zu erhalten.",
+      "twoFactorNotEnabled": "Die Zwei-Faktor-Authentifizierung ist für dieses Konto nicht aktiviert.",
+      "genericError": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+      "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut."
+    }
+  }
+}

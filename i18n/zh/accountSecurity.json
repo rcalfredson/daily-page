@@ -1,0 +1,59 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "账户安全",
+      "description": "管理你的 Daily Page 密码和双重认证。"
+    },
+    "backToDashboard": "返回仪表板",
+    "heading": "账户安全",
+    "subheading": "使用强密码和认证器应用保护你的账户。",
+    "password": {
+      "title": "更改密码",
+      "description": "请使用至少 8 个字符的唯一密码。",
+      "current": {
+        "label": "当前密码"
+      },
+      "new": {
+        "label": "新密码"
+      },
+      "submit": "更新密码"
+    },
+    "twoFactor": {
+      "title": "双重认证",
+      "statusOn": "已启用",
+      "statusOff": "关闭",
+      "description": "登录时，在输入密码后再输入认证器应用生成的一次性代码。",
+      "currentPassword": {
+        "label": "当前密码"
+      },
+      "startSetup": "设置认证器应用",
+      "qrAlt": "认证器应用二维码",
+      "manualKey": "手动设置密钥",
+      "code": {
+        "label": "6 位代码"
+      },
+      "enable": "启用 2FA",
+      "disableCode": {
+        "label": "认证代码"
+      },
+      "disable": "停用 2FA"
+    },
+    "feedback": {
+      "passwordChanged": "你的密码已更新。",
+      "setupReady": "扫描二维码，然后输入 6 位代码以完成设置。",
+      "twoFactorEnabled": "双重认证现已启用。",
+      "twoFactorDisabled": "双重认证现已停用。",
+      "missingFields": "请填写所有必填字段。",
+      "missingCurrentPassword": "请输入当前密码以继续。",
+      "passwordTooShort": "新密码必须至少包含 8 个字符。",
+      "invalidCurrentPassword": "当前密码不匹配。",
+      "missingCode": "请输入认证器应用中的 6 位代码。",
+      "invalidCode": "该代码无效。请重试。",
+      "noPendingSetup": "请先重新开始设置，然后再输入代码。",
+      "setupExpired": "该设置会话已过期。请重新开始设置以获取新的二维码。",
+      "twoFactorNotEnabled": "此账户尚未启用双重认证。",
+      "genericError": "出了点问题。请重试。",
+      "unexpectedError": "发生意外错误。请重试。"
+    }
+  }
+}

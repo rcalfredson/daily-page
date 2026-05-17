@@ -1,0 +1,59 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Sécurité du compte",
+      "description": "Gérez votre mot de passe Daily Page et l'authentification à deux facteurs."
+    },
+    "backToDashboard": "Retour au tableau de bord",
+    "heading": "Sécurité du compte",
+    "subheading": "Protégez votre compte avec un mot de passe solide et une application d'authentification.",
+    "password": {
+      "title": "Changer le mot de passe",
+      "description": "Utilisez un mot de passe unique d'au moins 8 caractères.",
+      "current": {
+        "label": "Mot de passe actuel"
+      },
+      "new": {
+        "label": "Nouveau mot de passe"
+      },
+      "submit": "Mettre à jour le mot de passe"
+    },
+    "twoFactor": {
+      "title": "Authentification à deux facteurs",
+      "statusOn": "Activée",
+      "statusOff": "Désactivée",
+      "description": "Ajoutez un code à usage unique depuis une application d'authentification après votre mot de passe lors de la connexion.",
+      "currentPassword": {
+        "label": "Mot de passe actuel"
+      },
+      "startSetup": "Configurer une application d'authentification",
+      "qrAlt": "Code QR pour application d'authentification",
+      "manualKey": "Clé de configuration manuelle",
+      "code": {
+        "label": "Code à 6 chiffres"
+      },
+      "enable": "Activer la 2FA",
+      "disableCode": {
+        "label": "Code d'authentification"
+      },
+      "disable": "Désactiver la 2FA"
+    },
+    "feedback": {
+      "passwordChanged": "Votre mot de passe a été mis à jour.",
+      "setupReady": "Scannez le code QR, puis saisissez le code à 6 chiffres pour terminer la configuration.",
+      "twoFactorEnabled": "L'authentification à deux facteurs est maintenant activée.",
+      "twoFactorDisabled": "L'authentification à deux facteurs est maintenant désactivée.",
+      "missingFields": "Veuillez remplir tous les champs obligatoires.",
+      "missingCurrentPassword": "Saisissez votre mot de passe actuel pour continuer.",
+      "passwordTooShort": "Votre nouveau mot de passe doit contenir au moins 8 caractères.",
+      "invalidCurrentPassword": "Le mot de passe actuel ne correspond pas.",
+      "missingCode": "Saisissez le code à 6 chiffres de votre application d'authentification.",
+      "invalidCode": "Ce code n'a pas fonctionné. Veuillez réessayer.",
+      "noPendingSetup": "Relancez la configuration avant de saisir un code.",
+      "setupExpired": "Cette session de configuration a expiré. Relancez la configuration pour obtenir un nouveau code QR.",
+      "twoFactorNotEnabled": "L'authentification à deux facteurs n'est pas activée pour ce compte.",
+      "genericError": "Une erreur s'est produite. Veuillez réessayer.",
+      "unexpectedError": "Une erreur inattendue s'est produite. Veuillez réessayer."
+    }
+  }
+}
