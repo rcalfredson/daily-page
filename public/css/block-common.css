@@ -36,6 +36,8 @@ a.block-title {
   max-width: min(100%, 22rem);
   max-height: 15rem;
   margin: 0.75rem auto;
+  position: relative;
+  z-index: 0;
 }
 
 .block-content img:focus-visible,

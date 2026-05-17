@@ -32,6 +32,7 @@ ul {
 
 .content-preview {
   line-height: 1.4;
+  isolation: isolate;
   overflow: hidden;
   position: relative;
   white-space: normal;
@@ -52,7 +53,23 @@ ul {
   height: 50px;
   background: linear-gradient(transparent, #fff);
   pointer-events: none;
+  z-index: 2;
   transition: opacity 0.3s ease;
+}
+
+@supports (-webkit-mask-image: linear-gradient(#000, transparent)) or (mask-image: linear-gradient(#000, transparent)) {
+  .content-preview.fade-footer {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 50px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 50px), transparent);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+
+  .content-preview.fade-footer::after {
+    display: none;
+  }
 }
 
 .block-footer {
