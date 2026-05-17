@@ -2,9 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import QRCode from 'qrcode';
-import {
-  findUserByEmail, findUserById, findUserByUsername
-} from '../../db/userService.js';
+import { findUserById } from '../../db/userService.js';
 import User from '../../db/models/User.js';
 import { isAuthenticated, noCache } from '../../middleware/auth.js'
 import { verifyJWT } from '../../services/jwt.js';
@@ -12,6 +10,7 @@ import { makeUserJWT } from '../../utils/jwtHelper.js';
 import { getUiLangFromReq } from '../../services/localeContext.js';
 import { sendEmail } from '../../services/mailgunService.js';
 import { buildPasswordResetEmail } from '../../services/emailTemplates/passwordReset.js';
+import { consumeRecoveryCode, generateRecoveryCodes, hashRecoveryCodes } from '../../services/recoveryCodes.js';
 import { generateTotpSecret, makeOtpAuthUrl, verifyTotp } from '../../services/totp.js';
 
 const router = Router();
@@ -34,9 +33,12 @@ const useAuthAPI = (app) => {
     }
 
     try {
-      const user =
-        (await findUserByEmail(username)) ||
-        (await findUserByUsername(username));
+      const user = await User.findOne({
+        $or: [
+          { email: username },
+          { username },
+        ],
+      });
 
       if (!user) {
         return res.status(400).json({ error: 'Invalid username or email.' });
@@ -52,7 +54,10 @@ const useAuthAPI = (app) => {
       }
 
       if (user.twoFactorEnabled) {
-        if (!verifyTotp({ secret: user.twoFactorSecret, token: req.body.totpCode })) {
+        const validTotp = verifyTotp({ secret: user.twoFactorSecret, token: req.body.totpCode });
+        const validRecoveryCode = validTotp ? false : await consumeRecoveryCode(user, req.body.totpCode);
+
+        if (!validTotp && !validRecoveryCode) {
           return res.status(200).json({ requiresTwoFactor: true });
         }
       }
@@ -292,10 +297,12 @@ const useAuthAPI = (app) => {
       user.twoFactorSecret = user.twoFactorPendingSecret;
       user.twoFactorPendingSecret = null;
       user.twoFactorPendingSecretExpires = null;
+      const recoveryCodes = generateRecoveryCodes();
+      user.twoFactorRecoveryCodes = await hashRecoveryCodes(recoveryCodes);
       user.updatedAt = new Date();
       await user.save();
 
-      return res.status(200).json({ ok: true, code: 'TWO_FACTOR_ENABLED' });
+      return res.status(200).json({ ok: true, code: 'TWO_FACTOR_ENABLED', recoveryCodes });
     } catch (error) {
       console.error('Error enabling two-factor authentication:', error);
       return res.status(500).json({ ok: false, code: 'INTERNAL_ERROR' });
@@ -332,12 +339,51 @@ const useAuthAPI = (app) => {
       user.twoFactorSecret = null;
       user.twoFactorPendingSecret = null;
       user.twoFactorPendingSecretExpires = null;
+      user.twoFactorRecoveryCodes = [];
       user.updatedAt = new Date();
       await user.save();
 
       return res.status(200).json({ ok: true, code: 'TWO_FACTOR_DISABLED' });
     } catch (error) {
       console.error('Error disabling two-factor authentication:', error);
+      return res.status(500).json({ ok: false, code: 'INTERNAL_ERROR' });
+    }
+  });
+
+  router.post('/2fa/recovery-codes', isAuthenticated, async (req, res) => {
+    const { currentPassword, code } = req.body;
+
+    if (!currentPassword || !code) {
+      return res.status(400).json({ ok: false, code: 'MISSING_FIELDS' });
+    }
+
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(401).json({ ok: false, code: 'NOT_AUTHENTICATED' });
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ ok: false, code: 'INVALID_CURRENT_PASSWORD' });
+      }
+
+      if (!user.twoFactorEnabled || !user.twoFactorSecret) {
+        return res.status(400).json({ ok: false, code: 'TWO_FACTOR_NOT_ENABLED' });
+      }
+
+      if (!verifyTotp({ secret: user.twoFactorSecret, token: code })) {
+        return res.status(400).json({ ok: false, code: 'INVALID_CODE' });
+      }
+
+      const recoveryCodes = generateRecoveryCodes();
+      user.twoFactorRecoveryCodes = await hashRecoveryCodes(recoveryCodes);
+      user.updatedAt = new Date();
+      await user.save();
+
+      return res.status(200).json({ ok: true, code: 'RECOVERY_CODES_REGENERATED', recoveryCodes });
+    } catch (error) {
+      console.error('Error regenerating two-factor recovery codes:', error);
       return res.status(500).json({ ok: false, code: 'INTERNAL_ERROR' });
     }
   });

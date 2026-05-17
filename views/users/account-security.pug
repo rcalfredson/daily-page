@@ -74,6 +74,23 @@ block content
               )
             button.security-button(type="submit")= t('accountSecurity.twoFactor.enable')
       else
+        form#recoveryCodesForm.security-form
+          p= t('accountSecurity.recoveryCodes.regenerateDescription')
+          .form-group
+            label(for="recoveryCodesCurrentPassword")= t('accountSecurity.twoFactor.currentPassword.label')
+            input#recoveryCodesCurrentPassword(type="password" name="currentPassword" required autocomplete="current-password")
+          .form-group
+            label(for="recoveryCodesAuthenticatorCode")= t('accountSecurity.twoFactor.disableCode.label')
+            input#recoveryCodesAuthenticatorCode(
+              type="text"
+              name="code"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              pattern="[0-9]{6}"
+              required
+            )
+          button.security-button(type="submit")= t('accountSecurity.recoveryCodes.regenerate')
+
         form#twoFactorDisableForm.security-form
           .form-group
             label(for="disableTwoFactorCurrentPassword")= t('accountSecurity.twoFactor.currentPassword.label')
@@ -90,11 +107,18 @@ block content
             )
           button.security-button.security-button-secondary(type="submit")= t('accountSecurity.twoFactor.disable')
 
+      .recovery-codes-panel(hidden)
+        h3= t('accountSecurity.recoveryCodes.title')
+        p= t('accountSecurity.recoveryCodes.description')
+        ul.recovery-codes-list(data-recovery-codes)
+        p.recovery-codes-warning= t('accountSecurity.recoveryCodes.warning')
+
       p#twoFactorFeedback.security-feedback(
         hidden
         data-setup-ready=t('accountSecurity.feedback.setupReady')
         data-enabled=t('accountSecurity.feedback.twoFactorEnabled')
         data-disabled=t('accountSecurity.feedback.twoFactorDisabled')
+        data-regenerated=t('accountSecurity.feedback.recoveryCodesRegenerated')
         data-missing-fields=t('accountSecurity.feedback.missingFields')
         data-missing-current-password=t('accountSecurity.feedback.missingCurrentPassword')
         data-invalid-current-password=t('accountSecurity.feedback.invalidCurrentPassword')

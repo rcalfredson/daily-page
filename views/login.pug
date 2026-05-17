@@ -38,9 +38,7 @@ block content
         input#totpCode(
           type="text"
           name="totpCode"
-          inputmode="numeric"
           autocomplete="one-time-code"
-          pattern="[0-9]{6}"
           placeholder=t('auth.login.fields.totpCode.placeholder')
         )
       button.login-button(type="submit")= t('auth.login.actions.submit')

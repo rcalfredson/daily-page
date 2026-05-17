@@ -53,7 +53,15 @@
       "setupExpired": "该设置会话已过期。请重新开始设置以获取新的二维码。",
       "twoFactorNotEnabled": "此账户尚未启用双重认证。",
       "genericError": "出了点问题。请重试。",
-      "unexpectedError": "发生意外错误。请重试。"
+      "unexpectedError": "发生意外错误。请重试。",
+      "recoveryCodesRegenerated": "你的恢复代码已重新生成。请立即保存新代码。"
+    },
+    "recoveryCodes": {
+      "title": "保存你的恢复代码",
+      "description": "如果你无法使用认证器应用，可使用这些一次性代码之一登录。",
+      "warning": "请将它们保存在安全位置。它们不会再次显示。",
+      "regenerateDescription": "如果你丢失了之前的恢复代码，请生成一组新的恢复代码。这会使旧代码失效。",
+      "regenerate": "生成新的恢复代码"
     }
   }
 }

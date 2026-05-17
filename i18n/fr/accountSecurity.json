@@ -53,7 +53,15 @@
       "setupExpired": "Cette session de configuration a expiré. Relancez la configuration pour obtenir un nouveau code QR.",
       "twoFactorNotEnabled": "L'authentification à deux facteurs n'est pas activée pour ce compte.",
       "genericError": "Une erreur s'est produite. Veuillez réessayer.",
-      "unexpectedError": "Une erreur inattendue s'est produite. Veuillez réessayer."
+      "unexpectedError": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+      "recoveryCodesRegenerated": "Vos codes de récupération ont été régénérés. Enregistrez les nouveaux codes maintenant."
+    },
+    "recoveryCodes": {
+      "title": "Enregistrez vos codes de récupération",
+      "description": "Utilisez un de ces codes à usage unique pour vous connecter si vous perdez l'accès à votre application d'authentification.",
+      "warning": "Conservez-les dans un endroit sûr. Ils ne seront plus affichés.",
+      "regenerateDescription": "Générez un nouveau jeu de codes de récupération si vous avez perdu le précédent. Cela invalide les anciens codes.",
+      "regenerate": "Générer de nouveaux codes de récupération"
     }
   }
 }
