@@ -53,7 +53,15 @@
       "setupExpired": "Diese Einrichtungssitzung ist abgelaufen. Starte die Einrichtung erneut, um einen neuen QR-Code zu erhalten.",
       "twoFactorNotEnabled": "Die Zwei-Faktor-Authentifizierung ist für dieses Konto nicht aktiviert.",
       "genericError": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
-      "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut."
+      "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.",
+      "recoveryCodesRegenerated": "Deine Wiederherstellungscodes wurden neu erzeugt. Speichere die neuen Codes jetzt."
+    },
+    "recoveryCodes": {
+      "title": "Speichere deine Wiederherstellungscodes",
+      "description": "Verwende einen dieser Einmalcodes, um dich anzumelden, wenn du keinen Zugriff mehr auf deine Authenticator-App hast.",
+      "warning": "Bewahre sie an einem sicheren Ort auf. Sie werden nicht erneut angezeigt.",
+      "regenerateDescription": "Erzeuge einen neuen Satz Wiederherstellungscodes, wenn du den bisherigen Satz verloren hast. Dadurch werden alte Codes ungültig.",
+      "regenerate": "Neue Wiederherstellungscodes erzeugen"
     }
   }
 }

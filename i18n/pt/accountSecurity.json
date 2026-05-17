@@ -53,7 +53,15 @@
       "setupExpired": "Essa sessão de configuração expirou. Inicie a configuração novamente para receber um novo código QR.",
       "twoFactorNotEnabled": "A autenticação de dois fatores não está ativada para esta conta.",
       "genericError": "Algo deu errado. Tente novamente.",
-      "unexpectedError": "Ocorreu um erro inesperado. Tente novamente."
+      "unexpectedError": "Ocorreu um erro inesperado. Tente novamente.",
+      "recoveryCodesRegenerated": "Seus códigos de recuperação foram regenerados. Salve os novos códigos agora."
+    },
+    "recoveryCodes": {
+      "title": "Salve seus códigos de recuperação",
+      "description": "Use um destes códigos de uso único para entrar se perder acesso ao aplicativo autenticador.",
+      "warning": "Guarde-os em um lugar seguro. Eles não serão mostrados novamente.",
+      "regenerateDescription": "Gere um novo conjunto de códigos de recuperação se você perdeu o conjunto anterior. Isso invalida os códigos antigos.",
+      "regenerate": "Gerar novos códigos de recuperação"
     }
   }
 }

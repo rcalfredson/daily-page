@@ -180,6 +180,47 @@
   padding: 8px;
 }
 
+.recovery-codes-panel {
+  background: #f6f8fa;
+  border: 1px solid #d6dce2;
+  border-radius: 8px;
+  margin-top: 16px;
+  padding: 14px;
+}
+
+.recovery-codes-panel[hidden] {
+  display: none;
+}
+
+.recovery-codes-panel h3 {
+  color: #333;
+  font-size: 1rem;
+  margin: 0 0 8px;
+}
+
+.recovery-codes-list {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+}
+
+.recovery-codes-list code {
+  background: #fff;
+  border: 1px solid #cdd4db;
+  border-radius: 4px;
+  display: block;
+  font-size: 0.9rem;
+  padding: 8px;
+  text-align: center;
+}
+
+.recovery-codes-warning {
+  font-weight: 600;
+}
+
 @media (max-width: 420px) {
   .account-security-container {
     margin-top: 18px;

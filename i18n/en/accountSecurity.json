@@ -38,11 +38,19 @@
       },
       "disable": "Disable 2FA"
     },
+    "recoveryCodes": {
+      "title": "Save your recovery codes",
+      "description": "Use one of these one-time codes to log in if you lose access to your authenticator app.",
+      "regenerateDescription": "Generate a new set of recovery codes if you lost the previous set. This invalidates any old recovery codes.",
+      "regenerate": "Generate New Recovery Codes",
+      "warning": "Store them somewhere safe. They will not be shown again."
+    },
     "feedback": {
       "passwordChanged": "Your password was updated.",
       "setupReady": "Scan the QR code, then enter the 6-digit code to finish setup.",
       "twoFactorEnabled": "Two-factor authentication is now enabled.",
       "twoFactorDisabled": "Two-factor authentication is now disabled.",
+      "recoveryCodesRegenerated": "Your recovery codes were regenerated. Save the new codes now.",
       "missingFields": "Please fill in all required fields.",
       "missingCurrentPassword": "Enter your current password to continue.",
       "passwordTooShort": "Your new password must be at least 8 characters.",

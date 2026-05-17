@@ -53,7 +53,15 @@
       "setupExpired": "Sesi penyiapan itu telah kedaluwarsa. Mulai penyiapan lagi untuk mendapatkan kode QR baru.",
       "twoFactorNotEnabled": "Autentikasi dua faktor belum aktif untuk akun ini.",
       "genericError": "Terjadi kesalahan. Coba lagi.",
-      "unexpectedError": "Terjadi kesalahan tak terduga. Coba lagi."
+      "unexpectedError": "Terjadi kesalahan tak terduga. Coba lagi.",
+      "recoveryCodesRegenerated": "Kode pemulihan Anda telah dibuat ulang. Simpan kode baru sekarang."
+    },
+    "recoveryCodes": {
+      "title": "Simpan kode pemulihan Anda",
+      "description": "Gunakan salah satu kode sekali pakai ini untuk masuk jika Anda kehilangan akses ke aplikasi autentikator.",
+      "warning": "Simpan di tempat yang aman. Kode ini tidak akan ditampilkan lagi.",
+      "regenerateDescription": "Buat kumpulan kode pemulihan baru jika Anda kehilangan kumpulan sebelumnya. Ini akan membuat kode lama tidak berlaku.",
+      "regenerate": "Buat Kode Pemulihan Baru"
     }
   }
 }

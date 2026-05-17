@@ -13,6 +13,7 @@ const userSchema = new Schema({
   twoFactorSecret: { type: String, default: null },
   twoFactorPendingSecret: { type: String, default: null },
   twoFactorPendingSecretExpires: { type: Date, default: null },
+  twoFactorRecoveryCodes: { type: [String], default: [] },
   profilePic: { type: String, default: '/assets/img/default-pic.png' },
   bio: { type: String, default: '' },
   streakLength: { type: Number, default: 0 },

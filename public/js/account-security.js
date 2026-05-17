@@ -3,11 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const passwordFeedback = document.getElementById('passwordFeedback');
   const setupForm = document.getElementById('twoFactorSetupForm');
   const enableForm = document.getElementById('twoFactorEnableForm');
+  const recoveryCodesForm = document.getElementById('recoveryCodesForm');
   const disableForm = document.getElementById('twoFactorDisableForm');
   const twoFactorFeedback = document.getElementById('twoFactorFeedback');
   const setupResult = document.querySelector('.two-factor-setup-result');
   const qrImage = document.querySelector('.two-factor-qr');
   const manualKey = document.querySelector('[data-manual-key]');
+  const recoveryCodesPanel = document.querySelector('.recovery-codes-panel');
+  const recoveryCodesList = document.querySelector('[data-recovery-codes]');
 
   const show = (element, message, ok) => {
     if (!element) return;
@@ -34,6 +37,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let data = null;
     try { data = await res.json(); } catch (_) {}
     return { res, data };
+  };
+
+  const showRecoveryCodes = (codes) => {
+    if (!Array.isArray(codes) || !recoveryCodesList || !recoveryCodesPanel) return;
+
+    recoveryCodesList.replaceChildren(...codes.map((code) => {
+      const item = document.createElement('li');
+      const codeEl = document.createElement('code');
+      codeEl.textContent = code;
+      item.appendChild(codeEl);
+      return item;
+    }));
+    recoveryCodesPanel.hidden = false;
   };
 
   passwordForm?.addEventListener('submit', async (event) => {
@@ -80,8 +96,27 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const { res, data } = await postJson('/api/v1/auth/2fa/enable', Object.fromEntries(formData.entries()));
       if (res.ok) {
+        showRecoveryCodes(data.recoveryCodes);
+        enableForm.hidden = true;
         show(twoFactorFeedback, twoFactorFeedback?.dataset.enabled, true);
-        setTimeout(() => window.location.reload(), 900);
+        return;
+      }
+      show(twoFactorFeedback, messageFor(twoFactorFeedback, data?.code), false);
+    } catch (error) {
+      show(twoFactorFeedback, twoFactorFeedback?.dataset.unexpectedError, false);
+    }
+  });
+
+  recoveryCodesForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(recoveryCodesForm);
+
+    try {
+      const { res, data } = await postJson('/api/v1/auth/2fa/recovery-codes', Object.fromEntries(formData.entries()));
+      if (res.ok) {
+        recoveryCodesForm.reset();
+        showRecoveryCodes(data.recoveryCodes);
+        show(twoFactorFeedback, twoFactorFeedback?.dataset.regenerated, true);
         return;
       }
       show(twoFactorFeedback, messageFor(twoFactorFeedback, data?.code), false);
