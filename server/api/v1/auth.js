@@ -1,18 +1,27 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
+import QRCode from 'qrcode';
 import {
   findUserByEmail, findUserById, findUserByUsername
 } from '../../db/userService.js';
 import User from '../../db/models/User.js';
-import { noCache } from '../../middleware/auth.js'
+import { isAuthenticated, noCache } from '../../middleware/auth.js'
 import { verifyJWT } from '../../services/jwt.js';
 import { makeUserJWT } from '../../utils/jwtHelper.js';
 import { getUiLangFromReq } from '../../services/localeContext.js';
 import { sendEmail } from '../../services/mailgunService.js';
 import { buildPasswordResetEmail } from '../../services/emailTemplates/passwordReset.js';
+import { generateTotpSecret, makeOtpAuthUrl, verifyTotp } from '../../services/totp.js';
 
 const router = Router();
+
+const authCookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'Lax',
+  maxAge: 24 * 60 * 60 * 1000,
+};
 
 const useAuthAPI = (app) => {
   app.use('/api/v1/auth', router);
@@ -42,6 +51,12 @@ const useAuthAPI = (app) => {
         return res.status(401).json({ error: 'Please verify your email before logging in.' });
       }
 
+      if (user.twoFactorEnabled) {
+        if (!verifyTotp({ secret: user.twoFactorSecret, token: req.body.totpCode })) {
+          return res.status(200).json({ requiresTwoFactor: true });
+        }
+      }
+
       const token = makeUserJWT({
         id: user._id,
         username: user.username,
@@ -50,12 +65,7 @@ const useAuthAPI = (app) => {
         streakLength: user.streakLength
       });
 
-      res.cookie('auth_token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Lax',
-        maxAge: 24 * 60 * 60 * 1000,
-      });
+      res.cookie('auth_token', token, authCookieOptions);
 
       res.status(200).json({ message: 'Login successful!' });
     } catch (error) {
@@ -127,6 +137,8 @@ const useAuthAPI = (app) => {
       user.password = hashed;
       user.resetPasswordToken = null;
       user.resetPasswordExpires = null;
+      user.twoFactorPendingSecret = null;
+      user.twoFactorPendingSecretExpires = null;
       await user.save();
 
       return res.status(200).json({ ok: true, code: 'RESET_OK' });
@@ -162,6 +174,171 @@ const useAuthAPI = (app) => {
         });
     } catch (error) {
       res.status(401).json({ error: 'Invalid token' });
+    }
+  });
+
+  router.post('/change-password', isAuthenticated, async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ ok: false, code: 'MISSING_FIELDS' });
+    }
+
+    if (String(newPassword).length < 8) {
+      return res.status(400).json({ ok: false, code: 'PASSWORD_TOO_SHORT' });
+    }
+
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(401).json({ ok: false, code: 'NOT_AUTHENTICATED' });
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ ok: false, code: 'INVALID_CURRENT_PASSWORD' });
+      }
+
+      user.password = await bcrypt.hash(newPassword, 10);
+      user.resetPasswordToken = null;
+      user.resetPasswordExpires = null;
+      user.twoFactorPendingSecret = null;
+      user.twoFactorPendingSecretExpires = null;
+      user.updatedAt = new Date();
+      await user.save();
+
+      return res.status(200).json({ ok: true, code: 'PASSWORD_CHANGED' });
+    } catch (error) {
+      console.error('Error changing password:', error);
+      return res.status(500).json({ ok: false, code: 'INTERNAL_ERROR' });
+    }
+  });
+
+  router.post('/2fa/setup', isAuthenticated, async (req, res) => {
+    const { currentPassword } = req.body;
+
+    if (!currentPassword) {
+      return res.status(400).json({ ok: false, code: 'MISSING_CURRENT_PASSWORD' });
+    }
+
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(401).json({ ok: false, code: 'NOT_AUTHENTICATED' });
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ ok: false, code: 'INVALID_CURRENT_PASSWORD' });
+      }
+
+      const secret = generateTotpSecret();
+      const otpAuthUrl = makeOtpAuthUrl({
+        secret,
+        accountName: user.email || user.username,
+      });
+      const qrDataUrl = await QRCode.toDataURL(otpAuthUrl, {
+        errorCorrectionLevel: 'M',
+        margin: 2,
+        width: 240,
+      });
+
+      user.twoFactorPendingSecret = secret;
+      user.twoFactorPendingSecretExpires = new Date(Date.now() + 10 * 60 * 1000);
+      user.updatedAt = new Date();
+      await user.save();
+
+      return res.status(200).json({
+        ok: true,
+        code: 'TWO_FACTOR_SETUP_READY',
+        qrDataUrl,
+        manualKey: secret,
+      });
+    } catch (error) {
+      console.error('Error starting two-factor setup:', error);
+      return res.status(500).json({ ok: false, code: 'INTERNAL_ERROR' });
+    }
+  });
+
+  router.post('/2fa/enable', isAuthenticated, async (req, res) => {
+    const { code } = req.body;
+
+    if (!code) {
+      return res.status(400).json({ ok: false, code: 'MISSING_CODE' });
+    }
+
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(401).json({ ok: false, code: 'NOT_AUTHENTICATED' });
+      }
+
+      if (!user.twoFactorPendingSecret) {
+        return res.status(400).json({ ok: false, code: 'NO_PENDING_SETUP' });
+      }
+
+      if (!user.twoFactorPendingSecretExpires || user.twoFactorPendingSecretExpires <= new Date()) {
+        user.twoFactorPendingSecret = null;
+        user.twoFactorPendingSecretExpires = null;
+        await user.save();
+        return res.status(400).json({ ok: false, code: 'SETUP_EXPIRED' });
+      }
+
+      if (!verifyTotp({ secret: user.twoFactorPendingSecret, token: code })) {
+        return res.status(400).json({ ok: false, code: 'INVALID_CODE' });
+      }
+
+      user.twoFactorEnabled = true;
+      user.twoFactorSecret = user.twoFactorPendingSecret;
+      user.twoFactorPendingSecret = null;
+      user.twoFactorPendingSecretExpires = null;
+      user.updatedAt = new Date();
+      await user.save();
+
+      return res.status(200).json({ ok: true, code: 'TWO_FACTOR_ENABLED' });
+    } catch (error) {
+      console.error('Error enabling two-factor authentication:', error);
+      return res.status(500).json({ ok: false, code: 'INTERNAL_ERROR' });
+    }
+  });
+
+  router.post('/2fa/disable', isAuthenticated, async (req, res) => {
+    const { currentPassword, code } = req.body;
+
+    if (!currentPassword || !code) {
+      return res.status(400).json({ ok: false, code: 'MISSING_FIELDS' });
+    }
+
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(401).json({ ok: false, code: 'NOT_AUTHENTICATED' });
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ ok: false, code: 'INVALID_CURRENT_PASSWORD' });
+      }
+
+      if (!user.twoFactorEnabled || !user.twoFactorSecret) {
+        return res.status(400).json({ ok: false, code: 'TWO_FACTOR_NOT_ENABLED' });
+      }
+
+      if (!verifyTotp({ secret: user.twoFactorSecret, token: code })) {
+        return res.status(400).json({ ok: false, code: 'INVALID_CODE' });
+      }
+
+      user.twoFactorEnabled = false;
+      user.twoFactorSecret = null;
+      user.twoFactorPendingSecret = null;
+      user.twoFactorPendingSecretExpires = null;
+      user.updatedAt = new Date();
+      await user.save();
+
+      return res.status(200).json({ ok: true, code: 'TWO_FACTOR_DISABLED' });
+    } catch (error) {
+      console.error('Error disabling two-factor authentication:', error);
+      return res.status(500).json({ ok: false, code: 'INTERNAL_ERROR' });
     }
   });
 };

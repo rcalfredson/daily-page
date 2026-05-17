@@ -228,6 +228,38 @@ router.get(
 );
 
 router.get(
+  '/dashboard/security',
+  isAuthenticated,
+  addI18n(['accountSecurity']),
+  stripLegacyLang({ canonicalPath: '/dashboard/security' }),
+  async (req, res) => {
+    try {
+      const { t } = res.locals;
+      const uiLang = getUiLang(res);
+      const dbUser = await findUserById(req.user.id);
+
+      if (!dbUser) {
+        return res.status(404).render('error', { title: 'User not found', message: 'User not found' });
+      }
+
+      res.render('users/account-security', {
+        title: t('accountSecurity.meta.title'),
+        description: t('accountSecurity.meta.description'),
+        uiLang,
+        user: req.user,
+        account: {
+          email: dbUser.email,
+          twoFactorEnabled: !!dbUser.twoFactorEnabled,
+        },
+      });
+    } catch (error) {
+      console.error('Error loading account security:', error.message);
+      res.status(500).render('error', { message: 'Error loading account security' });
+    }
+  }
+);
+
+router.get(
   '/dashboard/stats',
   isAuthenticated,
   addI18n(['detailedStats']),

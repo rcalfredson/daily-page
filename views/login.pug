@@ -33,10 +33,22 @@ block content
           required
           placeholder=t('auth.login.fields.password.placeholder')
         )
+      .form-group.two-factor-login-field(hidden)
+        label(for="totpCode")= t('auth.login.fields.totpCode.label')
+        input#totpCode(
+          type="text"
+          name="totpCode"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          pattern="[0-9]{6}"
+          placeholder=t('auth.login.fields.totpCode.placeholder')
+        )
       button.login-button(type="submit")= t('auth.login.actions.submit')
     .form-feedback(
       style="display:none;"
       data-success=t('auth.login.feedback.success')
+      data-two-factor-required=t('auth.login.feedback.twoFactorRequired')
+      data-two-factor-failed=t('auth.login.feedback.twoFactorFailed')
       data-failed-generic=t('auth.login.feedback.failedGeneric')
       data-unexpected=t('auth.login.feedback.unexpected')
     )

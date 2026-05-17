@@ -73,6 +73,11 @@ block content
         else
           p= t('dashboard.starredRooms.none')
 
+      .security-section.dashboard-card
+        h3= t('dashboard.security.title')
+        p= t('dashboard.security.summary')
+        a(href=uiPath("/dashboard/security")).btn.stats-btn= t('dashboard.security.manage')
+
     .account-stats
       h3= t('dashboard.stats.title')
       ul.stats-list

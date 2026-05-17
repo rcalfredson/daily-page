@@ -52,6 +52,10 @@ p {
   outline: none;
 }
 
+.two-factor-login-field[hidden] {
+  display: none;
+}
+
 .login-button {
   display: block;
   width: 100%;
