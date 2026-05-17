@@ -346,6 +346,7 @@
   max-height: 200px;
   overflow: hidden;
   margin-top: 1rem;
+  isolation: isolate;
   position: relative;
 }
 
@@ -358,6 +359,22 @@
   height: 40px;
   background: linear-gradient(transparent, #fffbea);
   pointer-events: none;
+  z-index: 2;
+}
+
+@supports (-webkit-mask-image: linear-gradient(#000, transparent)) or (mask-image: linear-gradient(#000, transparent)) {
+  .featured-content-preview {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+
+  .featured-content-preview::after {
+    display: none;
+  }
 }
 
 .featured-section {
