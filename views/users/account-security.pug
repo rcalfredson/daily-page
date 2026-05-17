@@ -1,0 +1,108 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/account-security.css')
+
+block append scripts
+  script(src='/js/account-security.js')
+
+block content
+  .account-security-container(
+    data-two-factor-enabled=account.twoFactorEnabled ? "true" : "false"
+    lang=(uiLang || 'en')
+  )
+    .account-security-header
+      a.account-security-back(href=uiPath('/dashboard'))= t('accountSecurity.backToDashboard')
+      h1= t('accountSecurity.heading')
+      p= t('accountSecurity.subheading')
+
+    .security-panel
+      h2= t('accountSecurity.password.title')
+      p= t('accountSecurity.password.description')
+      form#changePasswordForm.security-form
+        .form-group
+          label(for="currentPassword")= t('accountSecurity.password.current.label')
+          input#currentPassword(type="password" name="currentPassword" required autocomplete="current-password")
+        .form-group
+          label(for="newPassword")= t('accountSecurity.password.new.label')
+          input#newPassword(type="password" name="newPassword" required minlength="8" autocomplete="new-password")
+        button.security-button(type="submit")= t('accountSecurity.password.submit')
+      p#passwordFeedback.security-feedback(
+        hidden
+        data-success=t('accountSecurity.feedback.passwordChanged')
+        data-missing-fields=t('accountSecurity.feedback.missingFields')
+        data-password-too-short=t('accountSecurity.feedback.passwordTooShort')
+        data-invalid-current-password=t('accountSecurity.feedback.invalidCurrentPassword')
+        data-generic-error=t('accountSecurity.feedback.genericError')
+        data-unexpected-error=t('accountSecurity.feedback.unexpectedError')
+      )
+
+    .security-panel
+      .security-panel-heading
+        h2= t('accountSecurity.twoFactor.title')
+        if account.twoFactorEnabled
+          span.status-badge.status-badge-on= t('accountSecurity.twoFactor.statusOn')
+        else
+          span.status-badge= t('accountSecurity.twoFactor.statusOff')
+      p= t('accountSecurity.twoFactor.description')
+
+      if !account.twoFactorEnabled
+        form#twoFactorSetupForm.security-form
+          .form-group
+            label(for="twoFactorCurrentPassword")= t('accountSecurity.twoFactor.currentPassword.label')
+            input#twoFactorCurrentPassword(type="password" name="currentPassword" required autocomplete="current-password")
+          button.security-button(type="submit")= t('accountSecurity.twoFactor.startSetup')
+
+        .two-factor-setup-result(hidden)
+          img.two-factor-qr(src="" alt=t('accountSecurity.twoFactor.qrAlt'))
+          .manual-key
+            span= t('accountSecurity.twoFactor.manualKey')
+            code(data-manual-key)
+          form#twoFactorEnableForm.security-form
+            .form-group
+              label(for="twoFactorCode")= t('accountSecurity.twoFactor.code.label')
+              input#twoFactorCode(
+                type="text"
+                name="code"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                pattern="[0-9]{6}"
+                required
+              )
+            button.security-button(type="submit")= t('accountSecurity.twoFactor.enable')
+      else
+        form#twoFactorDisableForm.security-form
+          .form-group
+            label(for="disableTwoFactorCurrentPassword")= t('accountSecurity.twoFactor.currentPassword.label')
+            input#disableTwoFactorCurrentPassword(type="password" name="currentPassword" required autocomplete="current-password")
+          .form-group
+            label(for="disableTwoFactorCode")= t('accountSecurity.twoFactor.disableCode.label')
+            input#disableTwoFactorCode(
+              type="text"
+              name="code"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              pattern="[0-9]{6}"
+              required
+            )
+          button.security-button.security-button-secondary(type="submit")= t('accountSecurity.twoFactor.disable')
+
+      p#twoFactorFeedback.security-feedback(
+        hidden
+        data-setup-ready=t('accountSecurity.feedback.setupReady')
+        data-enabled=t('accountSecurity.feedback.twoFactorEnabled')
+        data-disabled=t('accountSecurity.feedback.twoFactorDisabled')
+        data-missing-fields=t('accountSecurity.feedback.missingFields')
+        data-missing-current-password=t('accountSecurity.feedback.missingCurrentPassword')
+        data-invalid-current-password=t('accountSecurity.feedback.invalidCurrentPassword')
+        data-missing-code=t('accountSecurity.feedback.missingCode')
+        data-invalid-code=t('accountSecurity.feedback.invalidCode')
+        data-no-pending-setup=t('accountSecurity.feedback.noPendingSetup')
+        data-setup-expired=t('accountSecurity.feedback.setupExpired')
+        data-two-factor-not-enabled=t('accountSecurity.feedback.twoFactorNotEnabled')
+        data-generic-error=t('accountSecurity.feedback.genericError')
+        data-unexpected-error=t('accountSecurity.feedback.unexpectedError')
+      )

@@ -1,0 +1,59 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Account Security",
+      "description": "Manage your Daily Page password and two-factor authentication."
+    },
+    "backToDashboard": "Back to dashboard",
+    "heading": "Account Security",
+    "subheading": "Keep your account protected with a strong password and an authenticator app.",
+    "password": {
+      "title": "Change Password",
+      "description": "Use a unique password with at least 8 characters.",
+      "current": {
+        "label": "Current password"
+      },
+      "new": {
+        "label": "New password"
+      },
+      "submit": "Update Password"
+    },
+    "twoFactor": {
+      "title": "Two-Factor Authentication",
+      "statusOn": "Enabled",
+      "statusOff": "Off",
+      "description": "Add a one-time code from an authenticator app after your password when you log in.",
+      "currentPassword": {
+        "label": "Current password"
+      },
+      "startSetup": "Set Up Authenticator App",
+      "qrAlt": "Authenticator app QR code",
+      "manualKey": "Manual setup key",
+      "code": {
+        "label": "6-digit code"
+      },
+      "enable": "Enable 2FA",
+      "disableCode": {
+        "label": "Authenticator code"
+      },
+      "disable": "Disable 2FA"
+    },
+    "feedback": {
+      "passwordChanged": "Your password was updated.",
+      "setupReady": "Scan the QR code, then enter the 6-digit code to finish setup.",
+      "twoFactorEnabled": "Two-factor authentication is now enabled.",
+      "twoFactorDisabled": "Two-factor authentication is now disabled.",
+      "missingFields": "Please fill in all required fields.",
+      "missingCurrentPassword": "Enter your current password to continue.",
+      "passwordTooShort": "Your new password must be at least 8 characters.",
+      "invalidCurrentPassword": "The current password did not match.",
+      "missingCode": "Enter the 6-digit code from your authenticator app.",
+      "invalidCode": "That code did not work. Please try again.",
+      "noPendingSetup": "Start setup again before entering a code.",
+      "setupExpired": "That setup session expired. Start setup again to get a fresh QR code.",
+      "twoFactorNotEnabled": "Two-factor authentication is not enabled for this account.",
+      "genericError": "Something went wrong. Please try again.",
+      "unexpectedError": "An unexpected error occurred. Please try again."
+    }
+  }
+}

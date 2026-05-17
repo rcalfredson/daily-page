@@ -30,6 +30,18 @@ function mustMatchLoggedInUser(req, res, next) {
   next();
 }
 
+function toPublicUser(user) {
+  return {
+    id: user._id || user.id,
+    username: user.username,
+    profilePic: user.profilePic,
+    bio: user.bio,
+    streakLength: user.streakLength,
+    starredRooms: user.starredRooms || [],
+    createdAt: user.createdAt,
+  };
+}
+
 const useUserAPI = (app) => {
   app.use('/api/v1/users', router);
 
@@ -136,7 +148,7 @@ const useUserAPI = (app) => {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      res.status(200).json(user);
+      res.status(200).json(toPublicUser(user));
     } catch (error) {
       console.error(`Error fetching user with ID: ${userId}`, error.message);
       res.status(500).json({ error: 'Failed to fetch user' });
@@ -145,7 +157,11 @@ const useUserAPI = (app) => {
 
   router.put('/:userId', isAuthenticated, mustMatchLoggedInUser, async (req, res) => {
     const { userId } = req.params;
-    const updates = req.body;
+    const updates = {};
+
+    if (Object.hasOwn(req.body, 'bio')) {
+      updates.bio = req.body.bio;
+    }
 
     try {
       const updatedUser = await updateUserProfile(userId, updates);

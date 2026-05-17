@@ -28,6 +28,11 @@
       "viewAll": "View All Starred Rooms",
       "unnamedRoom": "Unnamed Room"
     },
+    "security": {
+      "title": "Account Security",
+      "summary": "Change your password and manage two-factor authentication.",
+      "manage": "Manage Security"
+    },
     "stats": {
       "title": "Your Stats",
       "totalBlocks": "Total Blocks Created",
