@@ -16,6 +16,116 @@ a.block-title {
   word-break: break-word;
 }
 
+.block-content img,
+.content-preview img,
+.featured-content-preview img {
+  display: block;
+  width: auto;
+  max-width: min(100%, 34rem);
+  height: auto;
+  max-height: 26rem;
+  margin: 1rem auto;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #f7f8fa;
+  cursor: zoom-in;
+}
+
+.content-preview img,
+.featured-content-preview img {
+  max-width: min(100%, 22rem);
+  max-height: 15rem;
+  margin: 0.75rem auto;
+}
+
+.block-content img:focus-visible,
+.content-preview img:focus-visible,
+.featured-content-preview img:focus-visible {
+  outline: 3px solid rgba(0, 123, 255, 0.45);
+  outline-offset: 3px;
+}
+
+.block-image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.82);
+}
+
+.block-image-lightbox *,
+.block-image-lightbox *::before,
+.block-image-lightbox *::after {
+  box-sizing: border-box;
+}
+
+.block-image-lightbox[hidden] {
+  display: none;
+}
+
+.block-image-lightbox__frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.block-image-lightbox__image {
+  display: block;
+  max-width: min(100%, 1200px);
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #111;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+.block-image-lightbox__close {
+  position: absolute;
+  top: -0.75rem;
+  right: -0.75rem;
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 0;
+  border-radius: 999px;
+  background: rgba(20, 20, 20, 0.92);
+  color: #fff;
+  cursor: pointer;
+}
+
+.block-image-lightbox__close::before,
+.block-image-lightbox__close::after {
+  content: "";
+  position: absolute;
+  width: 1.55rem;
+  height: 0.14rem;
+  border-radius: 999px;
+  background: currentColor;
+  transform-origin: center;
+}
+
+.block-image-lightbox__close::before {
+  transform: rotate(45deg);
+}
+
+.block-image-lightbox__close::after {
+  transform: rotate(-45deg);
+}
+
+.block-image-lightbox__close:hover,
+.block-image-lightbox__close:focus-visible {
+  background: #000;
+}
+
 /* Badge itself */
 .badge.badge-draft {
   display: inline-flex;
@@ -44,5 +154,28 @@ a.block-title {
     width: auto;
     max-width: 100%;
     margin-right: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .block-content img,
+  .content-preview img,
+  .featured-content-preview img {
+    max-width: 100%;
+    max-height: 55vh;
+  }
+
+  .content-preview img,
+  .featured-content-preview img {
+    max-height: 14rem;
+  }
+
+  .block-image-lightbox {
+    padding: 0.75rem;
+  }
+
+  .block-image-lightbox__close {
+    top: 0.5rem;
+    right: 0.5rem;
   }
 }
