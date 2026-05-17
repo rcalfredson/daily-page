@@ -49,12 +49,6 @@
   margin-bottom: 0.5rem;
 }
 
-.block-content img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
 .block-content p {
   margin: 5px 0;
 }

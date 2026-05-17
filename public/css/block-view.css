@@ -182,12 +182,6 @@ hr {
   color: #0056b3;
 }
 
-.block-content img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
 .block-content p, .block-content ul *, .block-content ol * {
   white-space: unset;
 }

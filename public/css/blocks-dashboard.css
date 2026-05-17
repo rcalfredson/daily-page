@@ -88,13 +88,6 @@ ul {
   }
 }
 
-.content-preview img,
-.featured-content-preview img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
 .block-title {
   font-size: 27px;
   font-weight: bold;
