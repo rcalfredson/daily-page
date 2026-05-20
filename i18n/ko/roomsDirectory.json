@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "방 디렉터리",
+      "description": "각 방은 다른 세계로 이어지는 문입니다. 안으로 들어가 이야기를 나누고, 다른 사람들과 함께 아름다운 것을 만들어 보세요."
+    },
+    "eyebrow": "나만의 구석 찾기",
+    "heading": "방 디렉터리",
+    "intro": "지금 활기가 느껴지는 방부터 시작하거나, 주제별로 거닐다가 마음에 닿는 곳을 찾아보세요. 모든 방은 당신의 목소리를 기다리는 다른 글쓰기 프롬프트, 팬덤, 공유된 관심사입니다.",
+    "empty": "현재 이용 가능한 방이 없습니다. 나중에 다시 확인하세요!",
+    "jumpToActive": "활성 방 보기",
+    "jumpToTopics": "주제별 둘러보기",
+    "statsLabel": "방 디렉터리 하이라이트",
+    "liveNow": "현재 활성",
+    "recentlyActive": "최근 활성",
+    "recentlyActiveSubtitle": "지금 사람이 있는 방을 가장 빠르게 찾는 방법입니다.",
+    "browseByTopic": "주제별 둘러보기",
+    "topicSubtitle": "주제를 열어 방을 탐색하세요.",
+    "roomCount": "방 {count}개",
+    "stats": {
+      "rooms": "둘러볼 방",
+      "topics": "주제 그룹",
+      "active": "활성 추천"
+    },
+    "activeUsers": "활성 사용자: {count}",
+    "visitRoom": "방 방문",
+    "close": "닫기",
+    "noTitle": "제목 없음",
+    "noDescription": "설명 없음"
+  }
+}

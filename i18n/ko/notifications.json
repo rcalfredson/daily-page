@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "알림",
+      "openMenu": "알림 열기",
+      "loading": "알림을 불러오는 중...",
+      "error": "지금 알림을 불러올 수 없습니다.",
+      "empty": "아직 알림이 없습니다.",
+      "markRead": "읽음으로 표시",
+      "fallbackActor": "누군가",
+      "fallbackBlockTitle": "내 블록",
+      "item": {
+        "blockComment": "{actorUsername}님이 내 블록 \"{blockTitle}\"에 댓글을 남겼습니다.",
+        "commentReply": "{actorUsername}님이 \"{blockTitle}\"의 내 댓글에 답글을 남겼습니다.",
+        "unknown": "알림"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "\"{blockTitle}\"에 새 댓글",
+        "heading": "내 블록에 새 댓글",
+        "headingWithName": "안녕하세요 {username}님,",
+        "body": "<strong>{actorUsername}</strong>님이 내 블록 <strong>{blockTitle}</strong>에 댓글을 남겼습니다.",
+        "cta": "Daily Page에서 대화 보기",
+        "fallbackActor": "누군가",
+        "fallbackBlockTitle": "내 블록"
+      },
+      "commentReply": {
+        "subject": "\"{blockTitle}\"에 새 답글",
+        "heading": "내 댓글에 새 답글",
+        "headingWithName": "안녕하세요 {username}님,",
+        "body": "<strong>{actorUsername}</strong>님이 <strong>{blockTitle}</strong>의 내 댓글에 답글을 남겼습니다.",
+        "cta": "Daily Page에서 대화 보기",
+        "fallbackActor": "누군가",
+        "fallbackBlockTitle": "내 블록"
+      }
+    }
+  }
+}

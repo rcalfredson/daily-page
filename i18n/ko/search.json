@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "검색",
+      "description": "공개 블록을 검색하세요."
+    },
+    "title": "검색",
+    "placeholder": "블록 검색...",
+    "hint": "검색하려면 최소 2자를 입력하세요.",
+    "noResults": "검색 결과가 없습니다.",
+    "untitled": "제목 없음",
+    "votesTitle": "투표",
+    "pageLabel": "페이지",
+    "filters": {
+      "inRoom": "방 안에서"
+    },
+    "buttons": {
+      "search": "검색",
+      "prev": "이전",
+      "next": "다음"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "홈",
+    "rooms": "방",
+    "tags": "태그",
+    "archive": "아카이브",
+    "search": "검색",
+    "bestOf": "베스트",
+    "about": "소개",
+    "support": "지원",
+    "otherProjects": "다른 프로젝트",
+    "auth": {
+      "welcomePrefix": "환영합니다, ",
+      "welcomeFallbackUser": "당신",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "대시보드"
+  }
+}

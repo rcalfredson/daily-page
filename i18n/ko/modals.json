@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "로그인해 주세요",
+      "message": "계속하려면 로그인해야 합니다.",
+      "messageWithAction": "{action}하려면 로그인해야 합니다.",
+      "cta": "로그인"
+    },
+    "actions": {
+      "voteOnBlock": "블록에 투표",
+      "starRoom": "이 방에 별표",
+      "reactToBlock": "이 게시물에 반응",
+      "commentOnBlock": "이 블록에 댓글 작성",
+      "reportComment": "이 댓글 신고"
+    },
+    "errors": {
+      "starToggleFail": "별표 상태를 업데이트하지 못했습니다. 다시 시도하세요."
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "이메일 인증",
+      "description": "Daily Page 이메일 주소를 인증하세요."
+    },
+    "header": {
+      "title": "이메일을 인증하는 중..."
+    },
+    "status": {
+      "checking": "토큰을 확인하는 중입니다. 잠시 기다려 주세요...",
+      "missingToken": "인증 토큰이 없거나 유효하지 않습니다.",
+      "genericFailure": "인증에 실패했습니다.",
+      "unexpectedError": "예기치 않은 오류가 발생했습니다.",
+      "success": "계정이 성공적으로 인증되었습니다!",
+      "invalidOrExpired": "인증 토큰이 유효하지 않거나 만료되었습니다."
+    },
+    "verificationMsg": {
+      "subject": "Daily Page 계정을 인증하세요 ✨",
+      "heading": "Daily Page에 오신 것을 환영합니다, {username}님!",
+      "body": "아래를 클릭해 이메일을 인증하세요:",
+      "cta": "이메일 주소 인증",
+      "expires": "이 링크는 {hours}시간 후 만료됩니다."
+    }
+  }
+}

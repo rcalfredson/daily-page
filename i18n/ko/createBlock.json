@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "새 블록 만들기 — Daily Page",
+      "description": "선택적 태그, 언어, 공개 범위와 함께 새 창작 블록을 시작하세요."
+    },
+    "heading": "새 블록 만들기",
+    "roomInfo": {
+      "roomLabel": "방:",
+      "unavailable": "방 정보를 사용할 수 없습니다.",
+      "noDescription": "설명이 없습니다."
+    },
+    "form": {
+      "title": {
+        "label": "제목:",
+        "placeholder": {
+          "full": "예: '나의 걸작', '최고의 아이디어', '덕후를 위한 클릭베이트'",
+          "short": "예: '나의 걸작'"
+        }
+      },
+      "description": {
+        "label": "설명(선택 사항):",
+        "placeholder": "당신의 빛나는 생각을 설명하거나... 그냥 즉흥으로 써 보세요."
+      },
+      "initialContent": {
+        "label": "초기 내용(선택 사항):",
+        "help": "여기서 글을 시작하거나 '만들기'를 눌러 전체 편집기 페이지에서 계속하세요. 이미지를 삽입하고 실시간으로 협업할 수 있습니다.",
+        "placeholder": "여기서 블록을 시작하거나 만든 뒤 계속 편집하세요..."
+      },
+      "visibility": {
+        "label": "공개 범위:"
+      },
+      "submit": "블록 만들기"
+    },
+    "visibility": {
+      "public": {
+        "label": "공개",
+        "title": "누구나 실시간으로 편집할 수 있습니다. 로그인이 필요 없습니다.",
+        "inline": "누구나 실시간으로 편집할 수 있습니다. 로그인이 필요 없습니다."
+      },
+      "private": {
+        "label": "비공개",
+        "title": "로그인한 사용자만 이용할 수 있습니다. 편집이 완료되면 표시됩니다.",
+        "inline": "로그인한 사용자만 이용할 수 있습니다. 편집이 완료되면 표시됩니다.",
+        "tooltip": "비공개 블록은 작업 중 초대받은 사람만 볼 수 있고, 완료되면 표시됩니다."
+      }
+    },
+    "advanced": {
+      "summary": "고급 옵션",
+      "lang": {
+        "label": "언어:",
+        "options": {
+          "en": "영어",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "עברית",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "기존 블록 번역(URL 또는 ID):",
+        "placeholder": "블록 URL 또는 ID 붙여넣기(선택 사항)",
+        "invalid": "유효한 블록 URL 또는 ID처럼 보이지 않습니다.",
+        "fetchError": "블록 정보를 가져올 수 없습니다."
+      }
+    },
+    "messages": {
+      "langExists": "해당 언어의 번역이 이미 있습니다. 다른 언어를 선택하세요.",
+      "genericError": "문제가 발생했습니다. 다시 시도하세요."
+    }
+  }
+}

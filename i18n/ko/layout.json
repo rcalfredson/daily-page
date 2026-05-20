@@ -1,0 +1,18 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "환영합니다, 사용자님!",
+    "logout": "로그아웃",
+    "login": "로그인 / 가입",
+    "language": "언어",
+    "openMenu": "주 메뉴 열기",
+    "closeMenu": "주 메뉴 닫기",
+    "privacy": "개인정보 처리방침",
+    "uiFallbackNotice": "{requested}은(는) 아직 번역되지 않았습니다. 현재 {current}로 표시합니다.",
+    "copyButton": {
+      "copy": "복사",
+      "copied": "복사됨!"
+    },
+    "copyright": "© {year}"
+  }
+}

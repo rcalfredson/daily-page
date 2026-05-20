@@ -1,0 +1,77 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — 아카이브",
+      "description": "월별 전체 아카이브를 둘러보세요.",
+      "titleRoom": "Daily Page — 아카이브 · {roomName}",
+      "descriptionRoom": "{roomName} 방의 지난 글을 월별로 탐색하세요. 날짜를 선택해 시간이 지나며 이 공간에서 사람들이 무엇을 나누었는지 확인할 수 있습니다."
+    },
+    "nav": {
+      "prev": "이전",
+      "next": "다음"
+    },
+    "title": "📚 아카이브 둘러보기",
+    "titleRoom": "📚 {roomName} — 아카이브",
+    "roomViewing": "{roomName} 방의 아카이브를 보고 있습니다",
+    "viewRoomLink": "방 보기",
+    "noContent": "아직 이용 가능한 콘텐츠가 없습니다.",
+    "backToRoom": "← 방 대시보드로 돌아가기",
+    "calendar": {
+      "meta": {
+        "description": "{year}년 {month}에 게시된 모든 창작 블록을 확인하세요. 짧은 생각부터 깊은 성찰까지, 날짜를 클릭해 공유된 내용을 둘러보세요.",
+        "descriptionRoom": "{year}년 {month} 동안 {roomName} 방의 창작 활동을 확인하세요. 날짜를 선택해 그날 공유된 블록을 탐색할 수 있습니다."
+      },
+      "title": "📆 {year}년 {month} 아카이브",
+      "prevLabel": "{year}년 {month} 아카이브",
+      "nextLabel": "{year}년 {month} 아카이브"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "{date} 아카이브",
+        "titleRoom": "{roomName} — {date} 아카이브",
+        "descriptionSite": "{date}에 작성된 블록을 둘러보세요. 조용한 메모부터 대담한 고백까지 있습니다.",
+        "descriptionRoom": "{date}, {roomName} 방의 작가들이 흔적을 남겼습니다. 그날 공유된 성찰, 아이디어, 표현을 훑어보세요."
+      },
+      "heading": "{date} 아카이브",
+      "empty": "이 날짜에는 콘텐츠가 없습니다.",
+      "labels": {
+        "createdBy": "작성자:",
+        "in": "방:",
+        "on": "{datetime}에",
+        "unknownRoom": "알 수 없는 방"
+      },
+      "nav": {
+        "prevDay": "이전 날",
+        "nextDay": "다음 날"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — 모든 블록",
+        "descriptionRoom": "{roomName} 방에 게시된 모든 블록을 둘러보세요. 날짜, 제목, 투표순으로 정렬해 기록을 탐색할 수 있습니다."
+      },
+      "header": {
+        "allBlocks": "— 모든 블록"
+      },
+      "sort": {
+        "label": "정렬 기준",
+        "options": {
+          "date": "날짜",
+          "title": "제목",
+          "votes": "투표"
+        },
+        "submit": "이동"
+      }
+    },
+    "pagination": {
+      "prev": "← 이전",
+      "next": "다음 →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "{time}의 Daily Page"
+      },
+      "empty": "해당 기간의 페이지를 찾을 수 없습니다."
+    }
+  }
+}

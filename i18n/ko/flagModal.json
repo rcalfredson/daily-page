@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "부적절한 콘텐츠 신고",
+    "fields": {
+      "reason": {
+        "label": "사유",
+        "options": {
+          "spam": "스팸",
+          "offensive": "공격적(혐오 표현 또는 비하 표현)",
+          "inappropriate": "부적절함(노출, 그래픽 콘텐츠 등)",
+          "other": "기타"
+        }
+      },
+      "details": {
+        "label": "세부 정보(선택 사항)",
+        "placeholder": "본 내용을 설명하세요..."
+      }
+    },
+    "buttons": {
+      "submit": "신고 제출",
+      "cancel": "취소"
+    },
+    "toasts": {
+      "success": "신고가 제출되었습니다. 감사합니다!",
+      "failed": "신고 제출에 실패했습니다."
+    }
+  }
+}

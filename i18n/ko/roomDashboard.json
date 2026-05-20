@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "{roomName}의 최근 블록과 진행 중인 블록을 둘러보세요."
+    },
+    "links": {
+      "exploreLabel": "둘러보기:",
+      "allBlocks": "🗂️ 모든 블록",
+      "browseByDate": "🗓️ 날짜별",
+      "bestOf": "🏅 베스트",
+      "searchInRoom": "🔎 검색"
+    },
+    "actions": {
+      "createBlock": "블록 만들기",
+      "starTitle": "이 방에 별표",
+      "unstarTitle": "이 방 별표 해제"
+    },
+    "tabs": {
+      "locked": "잠긴 블록",
+      "inProgress": "진행 중인 블록"
+    },
+    "sections": {
+      "lockedHeader": "잠긴 블록",
+      "inProgressHeader": "진행 중인 블록"
+    },
+    "editorial": {
+      "heading": "추천 가이드",
+      "description": "이 방을 위해 큐레이션된 추천 가이드부터 시작하세요.",
+      "roleNames": {
+        "pillar": "핵심 가이드",
+        "companion": "읽기 가이드",
+        "texture": "배경 가이드"
+      }
+    },
+    "empty": {
+      "noDescription": "설명이 없습니다.",
+      "noLocked": "아직 잠긴 블록이 없습니다! 블록은 1시간 동안 활동이 없으면 자동으로 잠깁니다.",
+      "noInProgress": "아직 진행 중인 블록이 없습니다! 하나 시작해 보세요.",
+      "noBlocks": "아직 블록이 없습니다! 첫 블록을 만들고 흔적을 남겨 보세요. 😎"
+    }
+  }
+}

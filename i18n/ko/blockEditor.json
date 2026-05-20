@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(나)"
+    },
+    "meta": {
+      "title": "블록 편집 - {blockTitle}",
+      "titleFallback": "블록 편집"
+    },
+    "errors": {
+      "imageUrlRequired": "이미지 URL을 입력하세요.",
+      "notFound": "블록을 찾을 수 없거나 이 방에 속하지 않습니다.",
+      "loadFailed": "블록 편집기를 불러오는 중 오류가 발생했습니다.",
+      "updateTitleFailed": "제목 업데이트 오류."
+    },
+    "roomInfo": {
+      "label": "방:"
+    },
+    "title": {
+      "placeholder": "블록 제목 입력",
+      "editTooltip": "제목 편집",
+      "lock": "블록 잠금",
+      "delete": "블록 삭제"
+    },
+    "description": {
+      "label": "설명",
+      "editTooltip": "설명 편집",
+      "placeholder": "설명 입력",
+      "noDescriptionOwner": "아직 설명이 없습니다...",
+      "noDescriptionViewer": "설명이 제공되지 않았습니다...",
+      "save": "저장",
+      "cancel": "취소",
+      "expand": "펼치기",
+      "collapse": "접기",
+      "updateError": "설명 업데이트 오류."
+    },
+    "status": {
+      "lastBackup": "마지막 백업: {datetime}",
+      "lastBackupUnknown": "마지막 백업: 알 수 없음"
+    },
+    "peers": {
+      "label": "참여자:"
+    },
+    "toasts": {
+      "blockLocked": "이 블록은 잠겼습니다!"
+    },
+    "editor": {
+      "placeholder": "빈 페이지가 당신의 목소리를 기다립니다. 두려움 없이 쓰세요."
+    },
+    "loading": {
+      "label": "로딩 중",
+      "quote": "세상이 당신을 통과해 타오르게 하라. 프리즘의 빛을 종이 위에 하얗게 뜨겁게 던져라.<br>—레이 브래드버리"
+    },
+    "inactiveWarning": {
+      "message": "5분 동안 아무것도 쓰지 않았습니다. 세션을 계속하려면 확인을 클릭하세요. 그렇지 않으면 아카이브로 이동합니다.",
+      "confirm": "확인"
+    },
+    "sharing": {
+      "label": "공유 링크",
+      "copyTooltip": "클립보드에 복사",
+      "copied": "복사됨!"
+    },
+    "toolbar": {
+      "insertImage": "이미지 삽입",
+      "insertImageUrlPlaceholder": "이미지 URL 입력",
+      "insertImageAltPlaceholder": "대체 텍스트(선택 사항)",
+      "insertImageConfirm": "확인",
+      "insertImageCancel": "취소"
+    },
+    "buttons": {
+      "downloadFile": "파일 다운로드"
+    },
+    "lockModal": {
+      "messageLine1": "이 블록을 잠그시겠습니까?",
+      "messageLine2": "잠그면 최종 확정되어 더 이상 편집할 수 없습니다.",
+      "confirm": "잠금",
+      "cancel": "취소",
+      "successToast": "블록이 성공적으로 잠겼습니다.",
+      "errorToast": "블록 잠금 오류."
+    },
+    "tags": {
+      "headerWithTags": "태그:",
+      "headerNoTags": "아직 태그가 없습니다! 추가해 보세요:",
+      "updateError": "태그 업데이트 오류."
+    },
+    "fullBlock": {
+      "headingPrefix": "죄송합니다. \"{blockTitle}\" 블록은 현재",
+      "headingStatus": "가득 찼습니다.",
+      "retryPrefix": "다른 블록을",
+      "retryLink": "시도해 보거나",
+      "retrySuffix": "나중에 다시 방문하세요.",
+      "consolationPrefix": "기다리는 동안",
+      "consolationBestOf": "추천 블록",
+      "consolationMiddle": "또는",
+      "consolationArchive": "아카이브를 둘러보세요."
+    }
+  }
+}
