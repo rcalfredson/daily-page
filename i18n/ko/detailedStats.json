@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "자세한 통계",
+      "description": "Daily Page 활동의 자세한 분석입니다."
+    },
+    "nav": {
+      "backToDashboard": "← 대시보드로 돌아가기"
+    },
+    "header": {
+      "title": "📊 내 통계 개요 📊"
+    },
+    "cards": {
+      "totalBlocks": "생성한 전체 블록 📝",
+      "collaborations": "협업 🤝",
+      "votesGiven": "투표한 수 👍",
+      "daysActive": "활동한 날 📆"
+    },
+    "chart": {
+      "datasetLabel": "내 통계",
+      "labels": {
+        "blocksCreated": "생성한 블록",
+        "collaborations": "협업",
+        "votesGiven": "투표한 수",
+        "daysActive": "활동한 날"
+      }
+    }
+  }
+}

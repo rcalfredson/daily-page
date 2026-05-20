@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "별표한 모든 방",
+      "description": "별표한 모든 방 목록입니다."
+    },
+    "nav": {
+      "backToDashboard": "← 대시보드로 돌아가기"
+    },
+    "header": {
+      "title": "🌟 별표한 모든 방 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "이름 없는 방",
+      "noDescription": "설명 없음."
+    },
+    "empty": {
+      "message": "아직 별표한 방이 없습니다!"
+    }
+  }
+}

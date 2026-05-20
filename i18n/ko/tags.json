@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — 태그 개요",
+      "description": "Daily Page 전체에서 사용된 태그를 시간 필터와 함께 둘러보세요."
+    },
+    "title": "태그 개요",
+    "intro": "Daily Page에서 사용된 모든 태그를 탐색하세요.",
+    "tagCloudTitle": "태그 클라우드",
+    "timeframe": {
+      "last24h": "최근 24시간",
+      "last7d": "최근 7일",
+      "last30d": "최근 30일",
+      "all": "전체 기간"
+    },
+    "error": {
+      "loading": "태그 개요 로딩 오류"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "다음 태그가 달린 블록"
+      },
+      "header": {
+        "label": "태그:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "전체 블록 수",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "작성자:",
+        "inRoom": "방:",
+        "unknownRoom": "알 수 없는 방",
+        "onDate": "일시"
+      },
+      "chart": {
+        "label": "시간에 따른 생성 블록"
+      },
+      "empty": {
+        "message": "아직 이 태그가 달린 블록이 없습니다. 첫 블록을 만들어 보는 건 어떨까요? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "태그 페이지 로딩 오류"
+      }
+    }
+  }
+}

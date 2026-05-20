@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "계정 만들기",
+      "description": "Daily Page의 모든 기능을 사용하려면 가입하세요."
+    },
+    "header": {
+      "title": "계정 만들기",
+      "subtitle": "Daily Page에 가입해 매일의 글쓰기를 만들고 공유하세요!"
+    },
+    "form": {
+      "email": {
+        "label": "이메일",
+        "placeholder": "이메일 입력"
+      },
+      "username": {
+        "label": "사용자 이름",
+        "placeholder": "사용자 이름 입력"
+      },
+      "password": {
+        "label": "비밀번호",
+        "placeholder": "비밀번호 입력"
+      },
+      "submit": "가입",
+      "feedback": {
+        "success": "양식 제출 성공!",
+        "successCreatedVerify": "계정이 성공적으로 생성되었습니다! 이메일을 확인해 계정을 인증하세요.",
+        "genericError": "계정을 만들지 못했습니다. 다시 시도하세요.",
+        "unexpectedError": "예기치 않은 오류가 발생했습니다. 다시 시도하세요."
+      }
+    }
+  }
+}

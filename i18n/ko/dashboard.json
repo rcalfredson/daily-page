@@ -1,0 +1,50 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "대시보드",
+      "description": "Daily Page 대시보드와 계정 개요입니다."
+    },
+    "profile": {
+      "profilePicAlt": "프로필 사진",
+      "noBio": "아직 소개가 없습니다. 추가하려면 \"편집\"을 클릭하세요!",
+      "editBio": "소개 편집",
+      "bioPlaceholder": "여기에 소개를 입력하세요",
+      "save": "저장",
+      "cancel": "취소"
+    },
+    "activity": {
+      "title": "최근 활동",
+      "none": "최근 활동이 없습니다.",
+      "updatedOn": "{date}에 업데이트됨",
+      "viewAllBlocks": "모든 블록 보기"
+    },
+    "streak": {
+      "title": "글쓰기 연속 기록",
+      "line": "{days}일 연속입니다! 계속 이어가세요!"
+    },
+    "starredRooms": {
+      "title": "별표한 방",
+      "none": "아직 별표한 방이 없습니다. 둘러보며 마음에 드는 방을 찾아보세요!",
+      "viewAll": "별표한 모든 방 보기",
+      "unnamedRoom": "이름 없는 방"
+    },
+    "security": {
+      "title": "계정 보안",
+      "summary": "비밀번호를 변경하고 2단계 인증을 관리하세요.",
+      "manage": "보안 관리"
+    },
+    "stats": {
+      "title": "내 통계",
+      "totalBlocks": "생성한 전체 블록",
+      "collaborations": "협업",
+      "votesGiven": "투표한 수",
+      "daysActive": "활동한 날",
+      "viewDetailed": "자세한 통계 보기 📊"
+    },
+    "alerts": {
+      "uploadFailed": "프로필 사진 업로드에 실패했습니다. 다시 시도하세요.",
+      "uploadUnexpected": "예기치 않은 오류가 발생했습니다. 다시 시도하세요.",
+      "bioUpdateFailed": "소개 업데이트 오류. 다시 시도하세요."
+    }
+  }
+}

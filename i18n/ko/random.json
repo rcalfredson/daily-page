@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — 다른 프로젝트",
+      "description": "Daily Page의 야구 저널링, 무작위 글쓰기 실험, 기타 사이드 프로젝트를 둘러보세요."
+    },
+    "title": "다른 프로젝트",
+    "tagline": "실험과 사이드 퀘스트를 위한 아늑한 구석입니다.",
+    "links": {
+      "baseball": "📖 야구 저널",
+      "randomWriter": "🎲 랜덤 라이터"
+    },
+    "cta": {
+      "backToRooms": "메인 방으로 돌아가기"
+    }
+  }
+}

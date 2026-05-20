@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "블록 - {blockTitle}",
+      "titleFallback": "블록"
+    },
+    "labels": {
+      "room": "방",
+      "author": "작성자",
+      "created": "작성일",
+      "unknownAuthor": "익명",
+      "authorAvatarAlt": "{username}의 아바타",
+      "viewAuthorProfile": "{username}의 프로필 보기",
+      "lang": "번역: ",
+      "available": "사용 가능"
+    },
+    "buttons": {
+      "edit": "편집",
+      "deleteBlock": "블록 삭제",
+      "share": "공유",
+      "flagContent": "콘텐츠 신고"
+    },
+    "description": {
+      "label": "설명",
+      "none": "설명이 제공되지 않았습니다...",
+      "expand": "펼치기",
+      "collapse": "접기"
+    },
+    "editorial": {
+      "heading": "읽기 가이드",
+      "roleLabel": "읽기 유형",
+      "clusterLabel": "가이드",
+      "sequence": "파트 {sequence}",
+      "primaryPillarHeading": "여기서 시작",
+      "relatedHeading": "계속 읽기",
+      "clusterHeading": "이 가이드의 더 많은 글",
+      "expandSection": "{count}개 더 보기",
+      "collapseSection": "간단히 보기",
+      "roleNames": {
+        "pillar": "핵심 가이드",
+        "companion": "심층 읽기",
+        "texture": "배경"
+      }
+    },
+    "comments": {
+      "heading": "댓글",
+      "count": "댓글 {count}개",
+      "empty": "아직 답글이 없습니다. 대화가 시작되면 댓글이 여기에 표시됩니다.",
+      "composer": {
+        "label": "댓글 추가",
+        "placeholder": "댓글을 작성하세요...",
+        "submit": "댓글 게시",
+        "submitting": "게시 중...",
+        "success": "댓글이 게시되었습니다.",
+        "error": "지금 댓글을 게시할 수 없습니다.",
+        "loginPrompt": "대화에 참여하려면 로그인하세요.",
+        "loginCta": "댓글을 쓰려면 로그인",
+        "verifyPrompt": "댓글을 게시하기 전에 이메일을 인증하세요.",
+        "verifyCta": "이메일 인증"
+      },
+      "sort": {
+        "label": "정렬",
+        "oldestFirst": "오래된 순",
+        "newestFirst": "최신 순"
+      },
+      "by": "작성자",
+      "unknownAuthor": "알 수 없음",
+      "reply": {
+        "action": "답글",
+        "label": "답글 추가",
+        "placeholder": "답글을 작성하세요...",
+        "submit": "답글 게시",
+        "submitting": "게시 중...",
+        "success": "답글이 게시되었습니다.",
+        "error": "지금 답글을 게시할 수 없습니다.",
+        "cancel": "취소",
+        "loginPrompt": "답글을 쓰려면 로그인하세요."
+      },
+      "manage": {
+        "edited": "수정됨",
+        "editAction": "편집",
+        "deleteAction": "삭제",
+        "deleteConfirm": "이 댓글을 삭제할까요? 아래의 모든 답글도 함께 삭제됩니다.",
+        "deleteSuccess": "댓글이 삭제되었습니다.",
+        "deleteError": "지금 댓글을 삭제할 수 없습니다.",
+        "forbidden": "자신의 댓글만 관리할 수 있습니다.",
+        "edit": {
+          "label": "댓글 편집",
+          "save": "저장",
+          "saving": "저장 중...",
+          "cancel": "취소",
+          "success": "댓글이 업데이트되었습니다.",
+          "error": "지금 댓글을 업데이트할 수 없습니다."
+        }
+      },
+      "report": {
+        "action": "신고",
+        "pending": "신고 중...",
+        "success": "댓글이 신고되었습니다.",
+        "error": "지금 이 댓글을 신고할 수 없습니다.",
+        "ownError": "자신의 댓글은 신고할 수 없습니다.",
+        "hidden": "신고 후 댓글이 숨겨졌습니다.",
+        "reported": "신고됨"
+      },
+      "deepLink": {
+        "focused": "링크된 댓글",
+        "unavailable": "링크된 댓글을 더 이상 사용할 수 없습니다."
+      },
+      "loadMore": "댓글 더 불러오기",
+      "loading": "로딩 중...",
+      "loadError": "지금 더 많은 댓글을 불러올 수 없습니다."
+    },
+    "share": {
+      "title": "이 블록 공유",
+      "shareOn": "공유 위치:",
+      "nativeText": "이 블록을 확인해 보세요: {title}",
+      "alt": {
+        "facebook": "Facebook 로고",
+        "reddit": "Reddit 로고",
+        "whatsapp": "WhatsApp 로고",
+        "twitter": "Twitter 로고"
+      }
+    },
+    "errors": {
+      "notFound": "블록을 찾을 수 없거나 이 방에 속하지 않습니다.",
+      "loadFailed": "블록 보기를 불러오는 중 오류가 발생했습니다."
+    }
+  }
+}

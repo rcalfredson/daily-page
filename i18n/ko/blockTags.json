@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "태그:",
+      "noTags": "아직 태그가 없습니다! 추가해 보세요:"
+    },
+    "input": {
+      "placeholder": "새 태그",
+      "addButton": "추가"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

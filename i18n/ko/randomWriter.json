@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — 랜덤 라이터",
+      "description": "재미, 영감, 혼돈을 위해 끝없는 무작위 가짜 텍스트 흐름을 생성하세요."
+    },
+    "title": "랜덤 라이터",
+    "buttons": {
+      "clear": "지우기",
+      "stop": "쓰기 중지",
+      "start": "쓰기 시작"
+    }
+  }
+}

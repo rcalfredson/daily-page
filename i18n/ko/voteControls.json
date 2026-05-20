@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "추천",
+    "downvote": "비추천",
+    "errors": {
+      "failed": "투표를 저장하지 못했습니다."
+    }
+  }
+}
