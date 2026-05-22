@@ -40,7 +40,7 @@ block append scripts
   script(src='/js/block-editorial-guide.js')
 
 block content
-  - const isRtl = ['ar','he','fa','ur'].includes(lang);
+  - const blockDir = textDirForLang ? textDirForLang(lang) : 'ltr';
   - const createdAt = block.createdAt ? new Date(block.createdAt) : null;
   - const createdAtLabel = createdAt ? createdAt.toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' }) : null;
   - const editorialRoleLabel = (item) => item && (item.role || item.key) ? t(`blockView.editorial.roleNames.${item.role || item.key}`) : null;
@@ -52,7 +52,7 @@ block content
   - const getEditorialPreviewItems = (items, previewCount = editorialPreviewCount) => Array.isArray(items) ? items.slice(0, previewCount) : [];
   - const getEditorialOverflowItems = (items, previewCount = editorialPreviewCount) => Array.isArray(items) ? items.slice(previewCount) : [];
   mixin editorialLink(item)
-    a.block-editorial-link(href=uiPath(`/rooms/${item.roomId}/blocks/${item.id}`) lang=(item.lang || 'en'))
+    a.block-editorial-link(href=uiPath(`/rooms/${item.roomId}/blocks/${item.id}`) lang=(item.lang || 'en') dir=(textDirForLang ? textDirForLang(item.lang || 'en') : 'ltr'))
       span.block-editorial-link__title= item.title
       span.block-editorial-link__meta
         if editorialRoleLabel(item) || item.roleLabel
@@ -140,7 +140,7 @@ block content
 
     // Description block, read-only style
     if descriptionHTML
-      .block-description-card(lang=lang dir=(isRtl ? 'rtl' : null))
+      .block-description-card(lang=lang dir=blockDir)
         span.description-label= t('blockView.description.label')
         .description-body.collapsed
           div#description-view!= descriptionHTML
@@ -172,7 +172,7 @@ block content
 
     // The main content, already rendered to HTML on the server
     if block.contentHTML
-      .block-content(lang=lang dir=(isRtl ? 'rtl' : null))
+      .block-content(lang=lang dir=blockDir)
         != block.contentHTML
     include ../partials/_reaction_bar
     hr

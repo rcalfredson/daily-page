@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "يبحث",
+      "description": "البحث في الكتل العامة."
+    },
+    "title": "بحث",
+    "placeholder": "كتل البحث...",
+    "hint": "اكتب حرفين على الأقل للبحث.",
+    "noResults": "لم يتم العثور على نتائج.",
+    "untitled": "بدون عنوان",
+    "votesTitle": "الأصوات",
+    "pageLabel": "صفحة",
+    "filters": {
+      "inRoom": "في الغرفة"
+    },
+    "buttons": {
+      "search": "يبحث",
+      "prev": "السابق",
+      "next": "التالي"
+    }
+  }
+}

@@ -52,14 +52,15 @@
 }
 
 .cta {
-  text-align: center;
-  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .btn.primary {
   background-color: #1aa7d6;
   color: #fff;
-  margin-right: 1rem;
 }
 
 .btn.secondary {
@@ -69,7 +70,8 @@
 }
 
 .btn.primary::after {
-  content: " →";
+  content: "→";
+  margin-inline-start: 0.35rem;
 }
 
 .btn.primary:hover {
@@ -77,7 +79,8 @@
 }
 
 .btn.secondary::before {
-  content: "✦ ";
+  content: "✦";
+  margin-inline-end: 0.35rem;
 }
 
 .btn.secondary:hover {
@@ -88,10 +91,8 @@
 /* make them sit stacked (or flex-wrap) on small screens */
 @media (max-width: 600px) {
   .cta {
-    display: flex;
     flex-direction: column;
-    /* stack them */
-    gap: 1rem;
+    align-items: stretch;
   }
 
   .cta a.btn {
@@ -101,6 +102,9 @@
 
 /* soften the look a bit */
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 6px;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;

@@ -1,0 +1,19 @@
+{
+  "nav": {
+  "home": "الرئيسية",
+    "rooms": "الغرف",
+    "tags": "العلامات",
+    "archive": "أرشيف",
+    "search": "يبحث",
+    "bestOf": "أفضل من",
+    "about": "عن",
+    "support": "يدعم",
+    "otherProjects": "مشاريع أخرى",
+    "auth": {
+      "welcomePrefix": "مرحباً،",
+      "welcomeFallbackUser": "أنت",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "لوحة القيادة"
+  }
+}

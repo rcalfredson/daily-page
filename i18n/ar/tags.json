@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — نظرة عامة على العلامات",
+      "description": "تصفح جميع العلامات المستخدمة عبر Daily Page، مع مرشحات سريعة حسب الوقت."
+    },
+    "title": "نظرة عامة على العلامات",
+    "intro": "استكشف جميع العلامات المستخدمة في Daily Page.",
+    "tagCloudTitle": "علامة السحابة",
+    "timeframe": {
+      "last24h": "آخر 24 ساعة",
+      "last7d": "آخر 7 أيام",
+      "last30d": "آخر 30 يومًا",
+      "all": "كل الوقت"
+    },
+    "error": {
+      "loading": "حدث خطأ أثناء تحميل النظرة العامة على العلامات"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": "| Daily Page",
+        "description": "الكتل الموسومة ب"
+      },
+      "header": {
+        "label": "العلامة:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "مجموع الكتل مع",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "تم الإنشاء بواسطة:",
+        "inRoom": "في",
+        "unknownRoom": "غرفة غير معروفة",
+        "onDate": "على"
+      },
+      "chart": {
+        "label": "الكتل التي تم إنشاؤها مع مرور الوقت"
+      },
+      "empty": {
+        "message": "لم يتم العثور على كتل مع هذه العلامة حتى الآن. ربما يجب عليك إنشاء أول واحد؟ 🔥"
+      },
+      "error": {
+        "loadingTagPage": "حدث خطأ أثناء تحميل صفحة العلامات"
+      }
+    }
+  }
+}

@@ -58,6 +58,8 @@ mixin renderBlockList(blocks)
             .title-row
               a.block-title(
                 href=`/rooms/${block.roomId}/blocks/${block._id}`
+                lang=(block.lang || 'en')
+                dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr')
               )= block.title
               include ../partials/_draft_badge
             p(lang=(uiLang || 'en'))
@@ -74,7 +76,7 @@ mixin renderBlockList(blocks)
               |  #{t('bestOf.labels.onDate', { date: _date })}
             +translationAttribution(block)
             if block.contentHTML
-              div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
+              div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))!= block.contentHTML
           +readMoreIfTruncated(block, block.roomId)
           footer.block-footer
             include ../partials/_reaction_counts

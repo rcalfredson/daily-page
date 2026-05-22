@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "إحصائيات مفصلة",
+      "description": "تحليل تفصيلي لنشاط Daily Page الخاص بك."
+    },
+    "nav": {
+      "backToDashboard": "← العودة إلى لوحة التحكم"
+    },
+    "header": {
+      "title": "📊 نظرة عامة على الإحصائيات الخاصة بك 📊"
+    },
+    "cards": {
+      "totalBlocks": "إجمالي الكتل التي تم إنشاؤها 📝",
+      "collaborations": "التعاون 🤝",
+      "votesGiven": "تم التصويت 👍",
+      "daysActive": "أيام النشاط 📆"
+    },
+    "chart": {
+      "datasetLabel": "احصائياتك",
+      "labels": {
+        "blocksCreated": "تم إنشاء الكتل",
+        "collaborations": "التعاون",
+        "votesGiven": "الأصوات المعطاة",
+        "daysActive": "الأيام النشطة"
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "استكشف عمليات الحظر الأخيرة وقيد التنفيذ في {roomName}."
+    },
+    "links": {
+      "exploreLabel": "يستكشف:",
+      "allBlocks": "🗂️ جميع الكتل",
+      "browseByDate": "🗓️ حسب التاريخ",
+      "bestOf": "🏅 الأفضل",
+      "searchInRoom": "🔎 بحث"
+    },
+    "actions": {
+      "createBlock": "إنشاء كتلة",
+      "starTitle": "نجمة هذه الغرفة",
+      "unstarTitle": "قم بإلغاء تمييز هذه الغرفة بنجمة"
+    },
+    "tabs": {
+      "locked": "كتل مقفلة",
+      "inProgress": "كتل قيد التقدم"
+    },
+    "sections": {
+      "lockedHeader": "كتل مقفلة",
+      "inProgressHeader": "الكتل قيد التقدم"
+    },
+    "editorial": {
+      "heading": "أدلة مميزة",
+      "description": "ابدأ هنا بالأدلة المميزة المخصصة لهذه الغرفة.",
+      "roleNames": {
+        "pillar": "الدليل الأساسي",
+        "companion": "دليل القراءة",
+        "texture": "دليل الخلفية"
+      }
+    },
+    "empty": {
+      "noDescription": "لا يوجد وصف متاح.",
+      "noLocked": "لا توجد كتل مقفلة حتى الآن! يحظر القفل التلقائي بعد ساعة واحدة من عدم النشاط.",
+      "noInProgress": "لا توجد كتل قيد التقدم حتى الآن! الوقت لبدء واحدة.",
+      "noBlocks": "لا توجد كتل حتى الآن! أنشئ الأول واترك بصمتك. 😉"
+    }
+  }
+}

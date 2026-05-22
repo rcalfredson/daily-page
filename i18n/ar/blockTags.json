@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "العلامات:",
+      "noTags": "لا توجد علامات حتى الآن! أضف بعضًا:"
+    },
+    "input": {
+      "placeholder": "علامة جديدة",
+      "addButton": "يضيف"
+    },
+    "buttons": {
+      "removeTag": "س"
+    }
+  }
+}

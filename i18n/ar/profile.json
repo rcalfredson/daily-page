@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "الملف الشخصي لـ {username}",
+      "descriptionUser": "عرض أنشطة {username} الأخيرة والغرف المميزة بنجمة والإحصائيات."
+    },
+    "profile": {
+      "profilePicAlt": "صورة الملف الشخصي",
+      "noBio": "(لا تتوفر السيرة الذاتية.)"
+    },
+    "activity": {
+      "title": "النشاط الأخير",
+      "updatedOn": "تم التحديث بتاريخ {date}",
+      "none": "لا يوجد نشاط حديث.",
+      "viewAllBlocks": "عرض جميع الكتل"
+    },
+    "starredRooms": {
+      "title": "الغرف المميزة بنجمة",
+      "none": "لا توجد غرف مميزة بنجمة حتى الآن.",
+      "unnamedRoom": "غرفة غير محددة"
+    },
+    "stats": {
+      "title": "إحصائيات المستخدم",
+      "totalBlocks": "إجمالي الكتل التي تم إنشاؤها",
+      "collaborations": "التعاون",
+      "daysActive": "الأيام النشطة"
+    }
+  }
+}

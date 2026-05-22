@@ -1,5 +1,6 @@
 // server/middleware/uiPrefix.js
 import { SUPPORTED_UI_LANGS, DEFAULT_UI_LANG } from '../services/localeContext.js';
+import { textDirForLang } from '../services/textDirection.js';
 
 const selectableLanguages = [
   'en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr',
@@ -91,6 +92,8 @@ export function uiPrefixAndLangContext(req, res, next) {
 
   // Expose the context consistently
   res.locals.uiLang = effectiveUiLang;
+  res.locals.uiDir = textDirForLang(effectiveUiLang);
+  res.locals.textDirForLang = textDirForLang;
   req.uiLang = effectiveUiLang;
 
   // Keep legacy alias for now if you want

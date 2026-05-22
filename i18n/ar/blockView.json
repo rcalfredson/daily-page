@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "كتلة - {blockTitle}",
+      "titleFallback": "كتلة"
+    },
+    "labels": {
+      "room": "غرفة",
+      "author": "مؤلف",
+      "created": "مخلوق",
+      "unknownAuthor": "مجهول",
+      "authorAvatarAlt": "الصورة الرمزية {username}",
+      "viewAuthorProfile": "عرض الملف الشخصي لـ {username}",
+      "lang": "الترجمات:",
+      "available": "متاح"
+    },
+    "buttons": {
+      "edit": "يحرر",
+      "deleteBlock": "حذف الكتلة",
+      "share": "يشارك",
+      "flagContent": "الإبلاغ عن المحتوى"
+    },
+    "description": {
+      "label": "وصف",
+      "none": "لم يتم تقديم أي وصف...",
+      "expand": "يوسع",
+      "collapse": "ينهار"
+    },
+    "editorial": {
+      "heading": "دليل القراءة",
+      "roleLabel": "نوع القراءة",
+      "clusterLabel": "مرشد",
+      "sequence": "الجزء {sequence}",
+      "primaryPillarHeading": "ابدأ هنا",
+      "relatedHeading": "استمر في القراءة",
+      "clusterHeading": "المزيد في هذا الدليل",
+      "expandSection": "عرض {count} المزيد",
+      "collapseSection": "عرض أقل",
+      "roleNames": {
+        "pillar": "الدليل الأساسي",
+        "companion": "الغوص العميق",
+        "texture": "خلفية"
+      }
+    },
+    "comments": {
+      "heading": "تعليقات",
+      "count": "{count} التعليقات",
+      "empty": "لم يرد أحد حتى الآن. ستظهر التعليقات هنا عندما تبدأ المحادثة.",
+      "composer": {
+        "label": "أضف تعليقا",
+        "placeholder": "أكتب تعليق...",
+        "submit": "نشر تعليق",
+        "submitting": "إرسال...",
+        "success": "تم نشر التعليق.",
+        "error": "غير قادر على نشر تعليقك الآن.",
+        "loginPrompt": "قم بتسجيل الدخول للانضمام إلى المحادثة.",
+        "loginCta": "تسجيل الدخول للتعليق",
+        "verifyPrompt": "تأكد من بريدك الإلكتروني قبل نشر التعليق.",
+        "verifyCta": "التحقق من البريد الإلكتروني"
+      },
+      "sort": {
+        "label": "نوع",
+        "oldestFirst": "الأقدم أولاً",
+        "newestFirst": "الأحدث أولاً"
+      },
+      "by": "بواسطة",
+      "unknownAuthor": "مجهول",
+      "reply": {
+        "action": "رد",
+        "label": "أضف ردا",
+        "placeholder": "أكتب الرد...",
+        "submit": "الرد على الرد",
+        "submitting": "إرسال...",
+        "success": "تم نشر الرد.",
+        "error": "غير قادر على نشر ردك الآن.",
+        "cancel": "يلغي",
+        "loginPrompt": "تسجيل الدخول للرد."
+      },
+      "manage": {
+        "edited": "تم تحريره",
+        "editAction": "يحرر",
+        "deleteAction": "يمسح",
+        "deleteConfirm": "هل تريد حذف هذا التعليق؟ سيؤدي هذا أيضًا إلى إزالة أي ردود أسفله.",
+        "deleteSuccess": "تم حذف التعليق.",
+        "deleteError": "غير قادر على حذف هذا التعليق الآن.",
+        "forbidden": "يمكنك فقط إدارة التعليقات الخاصة بك.",
+        "edit": {
+          "label": "تحرير التعليق",
+          "save": "يحفظ",
+          "saving": "توفير...",
+          "cancel": "يلغي",
+          "success": "تم تحديث التعليق.",
+          "error": "غير قادر على تحديث هذا التعليق الآن."
+        }
+      },
+      "report": {
+        "action": "تقرير",
+        "pending": "إعداد التقارير...",
+        "success": "تم الإبلاغ عن التعليق.",
+        "error": "غير قادر على الإبلاغ عن هذا التعليق الآن.",
+        "ownError": "لا يمكنك الإبلاغ عن تعليقك الخاص.",
+        "hidden": "تم إخفاء التعليق بعد الإبلاغ.",
+        "reported": "ذكرت"
+      },
+      "deepLink": {
+        "focused": "تعليق مرتبط",
+        "unavailable": "التعليق المرتبط لم يعد متاحا."
+      },
+      "loadMore": "تحميل المزيد من التعليقات",
+      "loading": "تحميل...",
+      "loadError": "غير قادر على تحميل المزيد من التعليقات الآن."
+    },
+    "share": {
+      "title": "شارك هذه الكتلة",
+      "shareOn": "شارك على:",
+      "nativeText": "تحقق من هذه الكتلة: {title}",
+      "alt": {
+        "facebook": "شعار Facebook",
+        "reddit": "شعار Reddit",
+        "whatsapp": "شعار WhatsApp",
+        "twitter": "شعار Twitter"
+      }
+    },
+    "errors": {
+      "notFound": "لم يتم العثور على الكتلة أو أنها لا تنتمي إلى هذه الغرفة.",
+      "loadFailed": "حدث خطأ أثناء تحميل عرض الكتلة."
+    }
+  }
+}

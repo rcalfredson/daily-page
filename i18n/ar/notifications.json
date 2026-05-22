@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "إشعارات",
+      "openMenu": "فتح الإخطارات",
+      "loading": "جارٍ تحميل الإشعارات...",
+      "error": "غير قادر على تحميل الإخطارات الآن.",
+      "empty": "لا توجد إخطارات حتى الآن.",
+      "markRead": "مارك اقرأ",
+      "fallbackActor": "شخص ما",
+      "fallbackBlockTitle": "الكتلة الخاصة بك",
+      "item": {
+        "blockComment": "علق {actorUsername} على الكتلة الخاصة بك \"{blockTitle}\".",
+        "commentReply": "رد {actorUsername} على تعليقك على \"{blockTitle}\".",
+        "unknown": "إشعار"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "تعليق جديد على \"{blockTitle}\"",
+        "heading": "تعليق جديد على الكتلة الخاصة بك",
+        "headingWithName": "مرحبًا {username}،",
+        "body": "<strong>{actorUsername}</strong> علق على الكتلة الخاصة بك <strong>{blockTitle}</strong>.",
+        "cta": "عرض المحادثة على Daily Page",
+        "fallbackActor": "شخص ما",
+        "fallbackBlockTitle": "الكتلة الخاصة بك"
+      },
+      "commentReply": {
+        "subject": "رد جديد على \"{blockTitle}\"",
+        "heading": "رد جديد على تعليقك",
+        "headingWithName": "مرحبًا {username}،",
+        "body": "<strong>{actorUsername}</strong> رد على تعليقك على <strong>{blockTitle}</strong>.",
+        "cta": "عرض المحادثة على Daily Page",
+        "fallbackActor": "شخص ما",
+        "fallbackBlockTitle": "الكتلة الخاصة بك"
+      }
+    }
+  }
+}
