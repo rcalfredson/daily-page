@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "الكتل الخاصة بك",
+      "description": "تصفح وفرز جميع الكتل التي أنشأتها أو تعاونت فيها."
+    },
+    "header": {
+      "dashboardLink": "لوحة المعلومات الخاصة بك",
+      "profileLink": "الملف الشخصي لـ {username}",
+      "allBlocks": "جميع الكتل"
+    },
+    "empty": "لا توجد كتل حتى الآن.",
+    "pagination": {
+      "prev": "← السابق",
+      "next": "التالي →"
+    },
+    "titleUser": "كتل {username}"
+  }
+}

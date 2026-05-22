@@ -196,7 +196,7 @@ block content
           li.block-preview(lang=(block.lang || 'en'))
             div.content
               .title-row
-                a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
+                a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))= block.title
                 include partials/_draft_badge
               p(lang=(uiLang || 'en'))
                 | #{t('home.trendingBlocks.createdBy')} 
@@ -207,7 +207,7 @@ block content
                 |  #{t('home.trendingBlocks.on')} #{new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })}
               +translationAttribution(block)
               if block.contentHTML
-                div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
+                div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))!= block.contentHTML
             +readMoreIfTruncated(block, block.roomId)
             footer.block-footer
               include partials/_reaction_counts

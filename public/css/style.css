@@ -76,6 +76,28 @@ body {
   overflow-x: hidden;
 }
 
+html[dir="rtl"] body {
+  text-align: start;
+}
+
+html[dir="rtl"] .navbar-right {
+  justify-self: end;
+}
+
+html[dir="rtl"] .fa,
+html[dir="rtl"] .fas,
+html[dir="rtl"] .far,
+html[dir="rtl"] .fab,
+html[dir="rtl"] [data-feather],
+html[dir="rtl"] .fi {
+  direction: ltr;
+}
+
+[dir="ltr"],
+[dir="rtl"] {
+  unicode-bidi: isolate;
+}
+
 .with-margins {
   margin: 0 auto;
   width: 85%;

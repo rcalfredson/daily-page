@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "مسودة"
+    },
+    "deleteModal": {
+      "title": "هل تريد حذف الكتلة؟",
+      "message": "لا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "يمسح",
+      "cancel": "يلغي",
+      "closeAriaLabel": "يغلق"
+    },
+    "toasts": {
+      "deleteSuccess": "تم حذف الكتلة بنجاح!",
+      "deleteFailed": "فشل في حذف الكتلة."
+    }
+  }
+}

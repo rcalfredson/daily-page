@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(أنت)"
+    },
+    "meta": {
+      "title": "تحرير الكتلة - {blockTitle}",
+      "titleFallback": "تحرير الكتلة"
+    },
+    "errors": {
+      "imageUrlRequired": "الرجاء إدخال عنوان URL للصورة.",
+      "notFound": "لم يتم العثور على الكتلة أو أنها لا تنتمي إلى هذه الغرفة.",
+      "loadFailed": "حدث خطأ أثناء تحميل محرر الكتلة.",
+      "updateTitleFailed": "حدث خطأ أثناء تحديث العنوان."
+    },
+    "roomInfo": {
+      "label": "غرفة:"
+    },
+    "title": {
+      "placeholder": "أدخل عنوان الكتلة",
+      "editTooltip": "تحرير العنوان",
+      "lock": "قفل الكتلة",
+      "delete": "حذف الكتلة"
+    },
+    "description": {
+      "label": "وصف",
+      "editTooltip": "تحرير الوصف",
+      "placeholder": "أدخل الوصف",
+      "noDescriptionOwner": "لا يوجد وصف بعد ...",
+      "noDescriptionViewer": "لم يتم تقديم أي وصف...",
+      "save": "يحفظ",
+      "cancel": "يلغي",
+      "expand": "يوسع",
+      "collapse": "ينهار",
+      "updateError": "حدث خطأ أثناء تحديث الوصف."
+    },
+    "status": {
+      "lastBackup": "آخر نسخة احتياطية: {datetime}",
+      "lastBackupUnknown": "النسخ الاحتياطي الأخير: غير معروف"
+    },
+    "peers": {
+      "label": "أقرانهم:"
+    },
+    "toasts": {
+      "blockLocked": "لقد تم تأمين هذه الكتلة!"
+    },
+    "editor": {
+      "placeholder": "الصفحة الفارغة تنتظر صوتك؛ اكتب بلا خوف."
+    },
+    "loading": {
+      "label": "تحميل",
+      "quote": "دع العالم يحترق من خلالك. قم برمي ضوء المنشور، الأبيض الساخن، على الورق.<br>—راي برادبري"
+    },
+    "inactiveWarning": {
+      "message": "أنت لم تكتب أي شيء لمدة 5 دقائق. انقر فوق OK لمواصلة الجلسة؛ وإلا سيتم إعادة توجيهك إلى الأرشيف.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "رابط المشاركة",
+      "copyTooltip": "نسخ إلى الحافظة",
+      "copied": "منسوخ!"
+    },
+    "toolbar": {
+      "insertImage": "إدراج صورة",
+      "insertImageUrlPlaceholder": "أدخل عنوان URL للصورة",
+      "insertImageAltPlaceholder": "نص بديل (اختياري)",
+      "insertImageConfirm": "يتأكد",
+      "insertImageCancel": "يلغي"
+    },
+    "buttons": {
+      "downloadFile": "تنزيل الملف"
+    },
+    "lockModal": {
+      "messageLine1": "هل أنت متأكد أنك تريد قفل هذه الكتلة؟",
+      "messageLine2": "سيؤدي هذا إلى إنهاء الأمر ومنع المزيد من التحرير.",
+      "confirm": "قفل",
+      "cancel": "يلغي",
+      "successToast": "تم قفل الكتلة بنجاح.",
+      "errorToast": "خطأ في قفل الكتلة."
+    },
+    "tags": {
+      "headerWithTags": "العلامات:",
+      "headerNoTags": "لا توجد علامات حتى الآن! أضف بعضًا:",
+      "updateError": "حدث خطأ أثناء تحديث العلامات."
+    },
+    "fullBlock": {
+      "headingPrefix": "آسف؛ الكتلة \"{blockTitle}\" موجودة الآن",
+      "headingStatus": "مشغولة بالكامل.",
+      "retryPrefix": "لو سمحت",
+      "retryLink": "حاول كتلة مختلفة",
+      "retrySuffix": "أو أعود مرة أخرى.",
+      "consolationPrefix": "أثناء الانتظار، لا تتردد في القراءة",
+      "consolationBestOf": "بعض الكتل المفضلة لدينا",
+      "consolationMiddle": "أو للتصفح",
+      "consolationArchive": "الأرشيف."
+    }
+  }
+}

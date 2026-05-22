@@ -40,7 +40,7 @@
 
 .ui-lang-menu {
   position: absolute;
-  right: 0;
+  inset-inline-end: 0;
   top: calc(100% + 0.4rem);
   margin: 0;
   padding: 0.5rem;
@@ -73,6 +73,10 @@
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   transform-origin: top right;
+}
+
+html[dir="rtl"] .ui-lang-menu {
+  transform-origin: top left;
 }
 
 .ui-lang-option {

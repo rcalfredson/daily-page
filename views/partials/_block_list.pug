@@ -16,6 +16,7 @@ mixin blockList(blocks, period, label, room_id)
             a.block-title(
               href=`/rooms/${room_id}/blocks/${block._id}`
               lang=(block.lang || 'en')
+              dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr')
             )= block.title
             include ../partials/_draft_badge
 
@@ -29,7 +30,7 @@ mixin blockList(blocks, period, label, room_id)
           +translationAttribution(block)
 
           if block.contentHTML
-            div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
+            div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))!= block.contentHTML
 
           +readMoreIfTruncated(block, room_id)
 

@@ -14,8 +14,8 @@ block content
   include ../partials/_tag_section
   #block-page.hide
     - const contentLang = (block && block.lang) || 'en'
-    - const isRtl = ['ar','he','fa','ur'].includes(contentLang)
-    .editor-surface(lang=contentLang dir=(isRtl ? 'rtl' : null) data-content-lang=contentLang)
+    - const contentDir = textDirForLang ? textDirForLang(contentLang) : 'ltr'
+    .editor-surface(lang=contentLang dir=contentDir data-content-lang=contentLang)
       .text-wrapper
         .editor
           #block-meta
@@ -30,7 +30,7 @@ block content
                   value=block.title,
                   placeholder=t('blockEditor.title.placeholder'),
                   lang=contentLang,
-                  dir=(isRtl ? 'rtl' : null)
+                  dir=contentDir
                 )
                 button#edit-title-btn(data-tooltip=t('blockEditor.title.editTooltip'))
                   i(data-feather="edit")
@@ -60,7 +60,7 @@ block content
                   textarea#description-edit.hidden(
                     placeholder=t('blockEditor.description.placeholder')
                     lang=contentLang
-                    dir=(isRtl ? 'rtl' : null)
+                    dir=contentDir
                   )= block.description
                   // Save/Cancel buttons for editing mode
                   .edit-buttons.hidden
@@ -99,7 +99,7 @@ block content
                 div
                   button#insert-img-confirm(type="button")= t('blockEditor.toolbar.insertImageConfirm')
                   button#insert-img-cancel(type="button")= t('blockEditor.toolbar.insertImageCancel')
-          textarea#editor-content(lang=contentLang dir=(isRtl ? 'rtl' : null))= block.content
+          textarea#editor-content(lang=contentLang dir=contentDir)= block.content
         p#peerId= t('blockEditor.peers.label')
     .video-modal.hide
       .video-bar

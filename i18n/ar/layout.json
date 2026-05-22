@@ -1,0 +1,18 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "مرحبًا أيها المستخدم!",
+    "logout": "تسجيل الخروج",
+    "login": "تسجيل الدخول / الاشتراك",
+    "language": "لغة",
+    "openMenu": "فتح القائمة الرئيسية",
+    "closeMenu": "إغلاق القائمة الرئيسية",
+    "privacy": "سياسة الخصوصية",
+    "uiFallbackNotice": "{requested} لم تتم ترجمته بعد. يتم الآن عرض {current} في الوقت الحالي.",
+    "copyButton": {
+      "copy": "ينسخ",
+      "copied": "منسوخ!"
+    },
+    "copyright": "© {year}"
+  }
+}
