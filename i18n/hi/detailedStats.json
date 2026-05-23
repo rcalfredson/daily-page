@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "विस्तृत आँकड़े",
+      "description": "आपकी Daily Page गतिविधि का विस्तृत विवरण।"
+    },
+    "nav": {
+      "backToDashboard": "← डैशबोर्ड पर वापस जाएँ"
+    },
+    "header": {
+      "title": "📊 आपके आँकड़े अवलोकन 📊"
+    },
+    "cards": {
+      "totalBlocks": "बनाए गए कुल ब्लॉक 📝",
+      "collaborations": "सहयोग 🤝",
+      "votesGiven": "वोट दिए गए 👍",
+      "daysActive": "सक्रिय दिन 📆"
+    },
+    "chart": {
+      "datasetLabel": "आपके आँकड़े",
+      "labels": {
+        "blocksCreated": "ब्लॉक बनाए गए",
+        "collaborations": "सहयोग",
+        "votesGiven": "वोट दिए गए",
+        "daysActive": "सक्रिय दिन"
+      }
+    }
+  }
+}

@@ -1,19 +1,19 @@
 {
   "layout": {
     "siteName": "Daily Page",
-    "welcomeUser": "Benvenuto, utente!",
-    "logout": "Esci",
-    "login": "Accedi / Registrati",
-    "language": "Lingua",
-    "openMenu": "Apri menu principale",
-    "closeMenu": "Chiudi menu principale",
-    "privacy": "Informativa sulla privacy",
-    "uiFallbackNotice": "{requested} non e ancora tradotto. Per ora viene mostrato {current}.",
+    "welcomeUser": "आपका स्वागत है, उपयोगकर्ता!",
+    "logout": "लॉग आउट",
+    "login": "लॉगइन साइनअप",
+    "language": "भाषा",
+    "openMenu": "मुख्य मेनू खोलें",
+    "closeMenu": "मुख्य मेनू बंद करें",
+    "privacy": "गोपनीयता नीति",
+    "uiFallbackNotice": "{requested} का अभी तक अनुवाद नहीं किया गया है. अभी {current} दिखा रहा हूँ।",
     "copyButton": {
-      "copy": "Copia",
-      "copied": "Copiato!"
+      "copy": "प्रतिलिपि",
+      "copied": "नकल की गई!"
     },
-    "copyright": "© {year}",
+    "copyright": "©{year}",
     "languages": {
       "en": "English",
       "es": "Español",

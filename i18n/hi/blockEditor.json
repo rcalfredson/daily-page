@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(आप)"
+    },
+    "meta": {
+      "title": "ब्लॉक संपादित करें - {blockTitle}",
+      "titleFallback": "ब्लॉक संपादित करें"
+    },
+    "errors": {
+      "imageUrlRequired": "कृपया एक छवि URL दर्ज करें।",
+      "notFound": "ब्लॉक नहीं मिला या इस कमरे से संबंधित नहीं है.",
+      "loadFailed": "ब्लॉक संपादक को लोड करते समय एक त्रुटि उत्पन्न हुई.",
+      "updateTitleFailed": "शीर्षक अद्यतन करने में त्रुटि."
+    },
+    "roomInfo": {
+      "label": "कमरा:"
+    },
+    "title": {
+      "placeholder": "ब्लॉक शीर्षक दर्ज करें",
+      "editTooltip": "शीर्षक संपादित करें",
+      "lock": "लॉक ब्लॉक",
+      "delete": "ब्लॉक हटाएँ"
+    },
+    "description": {
+      "label": "विवरण",
+      "editTooltip": "संपादित करें] वर्णन",
+      "placeholder": "विवरण दर्ज करें",
+      "noDescriptionOwner": "अभी तक कोई विवरण नहीं...",
+      "noDescriptionViewer": "कोई विवरण नहीं दिया गया...",
+      "save": "बचाना",
+      "cancel": "रद्द करना",
+      "expand": "बढ़ाना",
+      "collapse": "गिर जाना",
+      "updateError": "विवरण अपडेट करने में त्रुटि."
+    },
+    "status": {
+      "lastBackup": "अंतिम बैकअप: {datetime}",
+      "lastBackupUnknown": "अंतिम बैकअप: अज्ञात"
+    },
+    "peers": {
+      "label": "समकक्ष लोग:"
+    },
+    "toasts": {
+      "blockLocked": "यह ब्लॉक लॉक कर दिया गया है!"
+    },
+    "editor": {
+      "placeholder": "कोरा पन्ना आपकी आवाज़ का इंतज़ार कर रहा है; निडर होकर लिखें."
+    },
+    "loading": {
+      "label": "लोड हो रहा है",
+      "quote": "दुनिया को अपने माध्यम से जलने दो। प्रिज्म को प्रकाशयुक्त, सफेद गर्म, कागज पर फेंकें।<br>—रे ब्रैडबरी"
+    },
+    "inactiveWarning": {
+      "message": "आपने 5 मिनट तक कुछ नहीं लिखा. सत्र जारी रखने के लिए ठीक क्लिक करें; अन्यथा, आपको संग्रह पर पुनः निर्देशित कर दिया जाएगा।",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "लिंक साझा करना",
+      "copyTooltip": "क्लिपबोर्ड पर कॉपी करें",
+      "copied": "नकल की गई!"
+    },
+    "toolbar": {
+      "insertImage": "चित्र डालें",
+      "insertImageUrlPlaceholder": "छवि दर्ज करें URL",
+      "insertImageAltPlaceholder": "वैकल्पिक पाठ (वैकल्पिक)",
+      "insertImageConfirm": "पुष्टि करना",
+      "insertImageCancel": "रद्द करना"
+    },
+    "buttons": {
+      "downloadFile": "डाउनलोड फ़ाइल"
+    },
+    "lockModal": {
+      "messageLine1": "क्या आप वाकई इस ब्लॉक को लॉक करना चाहते हैं?",
+      "messageLine2": "इससे इसे अंतिम रूप दिया जाएगा और आगे संपादन रोका जा सकेगा।",
+      "confirm": "ताला",
+      "cancel": "रद्द करना",
+      "successToast": "ब्लॉक सफलतापूर्वक लॉक हो गया.",
+      "errorToast": "ब्लॉक लॉक करने में त्रुटि."
+    },
+    "tags": {
+      "headerWithTags": "टैग:",
+      "headerNoTags": "अभी तक कोई टैग नहीं! कुछ जोड़े:",
+      "updateError": "टैग अपडेट करने में त्रुटि."
+    },
+    "fullBlock": {
+      "headingPrefix": "क्षमा मांगना; ब्लॉक \"{blockTitle}\" अब है",
+      "headingStatus": "पूरी तरह से कब्जा कर लिया.",
+      "retryPrefix": "कृपया",
+      "retryLink": "किसी भिन्न ब्लॉक का प्रयास करें",
+      "retrySuffix": "या दूसरी बार वापस आएँ।",
+      "consolationPrefix": "जब तक आप प्रतीक्षा करें, बेझिझक पढ़ें",
+      "consolationBestOf": "हमारे कुछ पसंदीदा ब्लॉक",
+      "consolationMiddle": "या ब्राउज़ करने के लिए",
+      "consolationArchive": "पुरालेख."
+    }
+  }
+}

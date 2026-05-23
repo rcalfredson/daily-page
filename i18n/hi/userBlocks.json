@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "आपके ब्लॉक",
+      "description": "आपके द्वारा बनाए गए या सहयोग किए गए सभी ब्लॉक ब्राउज़ करें और क्रमबद्ध करें।"
+    },
+    "header": {
+      "dashboardLink": "आपका डैशबोर्ड",
+      "profileLink": "{username} की प्रोफ़ाइल",
+      "allBlocks": "सभी ब्लॉक"
+    },
+    "empty": "अभी तक कोई ब्लॉक नहीं.",
+    "pagination": {
+      "prev": "← पिछला",
+      "next": "अगला →"
+    },
+    "titleUser": "{username} के ब्लॉक"
+  }
+}

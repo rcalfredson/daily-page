@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "वोट दें",
+    "downvote": "डाउनवोट",
+    "errors": {
+      "failed": "आपका वोट सहेजने में विफल."
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "reactions": {
+    "aria": "{emoji} प्रतिक्रियाएं: {count}",
+    "loginToReact": "प्रतिक्रिया देने के लिए लॉग इन करें",
+    "countsLabel": "प्रतिक्रियाओं"
+  }
+}

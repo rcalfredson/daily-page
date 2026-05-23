@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page - टैग अवलोकन",
+      "description": "समय के अनुसार त्वरित फ़िल्टर के साथ, Daily Page में उपयोग किए गए सभी टैग ब्राउज़ करें।"
+    },
+    "title": "टैग अवलोकन",
+    "intro": "Daily Page में प्रयुक्त सभी टैग देखें।",
+    "tagCloudTitle": "टैग क्लाउड",
+    "timeframe": {
+      "last24h": "पिछले 24 घंटे",
+      "last7d": "पिछले 7 दिन",
+      "last30d": "पिछले 30 दिन",
+      "all": "पूरे समय"
+    },
+    "error": {
+      "loading": "टैग अवलोकन लोड करने में त्रुटि"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": "| Daily Page",
+        "description": "ब्लॉक के साथ टैग किया गया"
+      },
+      "header": {
+        "label": "टैग:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "के साथ कुल ब्लॉक",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "के द्वारा बनाई गई:",
+        "inRoom": "में",
+        "unknownRoom": "अज्ञात कमरा",
+        "onDate": "पर"
+      },
+      "chart": {
+        "label": "समय के साथ बनाए गए ब्लॉक"
+      },
+      "empty": {
+        "message": "इस टैग के साथ अभी तक कोई ब्लॉक नहीं मिला. शायद आपको पहला बनाना चाहिए? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "टैग पेज लोड करने में त्रुटि"
+      }
+    }
+  }
+}
