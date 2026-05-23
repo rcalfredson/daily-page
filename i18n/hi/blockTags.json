@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "टैग:",
+      "noTags": "अभी तक कोई टैग नहीं! कुछ जोड़े:"
+    },
+    "input": {
+      "placeholder": "नया टैग",
+      "addButton": "जोड़ना"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

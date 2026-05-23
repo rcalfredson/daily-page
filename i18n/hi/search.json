@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "खोज",
+      "description": "सार्वजनिक ब्लॉक खोजें."
+    },
+    "title": "खोज",
+    "placeholder": "ब्लॉक खोजें...",
+    "hint": "खोजने के लिए कम से कम 2 अक्षर टाइप करें।",
+    "noResults": "कोई परिणाम नहीं मिला.",
+    "untitled": "शीर्षकहीन",
+    "votesTitle": "वोट",
+    "pageLabel": "पेज",
+    "filters": {
+      "inRoom": "कमरे में"
+    },
+    "buttons": {
+      "search": "खोज",
+      "prev": "पिछला",
+      "next": "अगला"
+    }
+  }
+}

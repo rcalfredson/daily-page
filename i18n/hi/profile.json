@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "{username} की प्रोफ़ाइल",
+      "descriptionUser": "{username} की हाल की गतिविधि, तारांकित कमरे और आँकड़े देखें।"
+    },
+    "profile": {
+      "profilePicAlt": "प्रोफ़ाइल फोटो",
+      "noBio": "(कोई जीवनी उपलब्ध नहीं है।)"
+    },
+    "activity": {
+      "title": "हाल की गतिविधि",
+      "updatedOn": "{date} पर अपडेट किया गया",
+      "none": "कोई हालिया गतिविधि नहीं।",
+      "viewAllBlocks": "सभी ब्लॉक देखें"
+    },
+    "starredRooms": {
+      "title": "तारांकित कमरे",
+      "none": "अभी तक कोई तारांकित कमरा नहीं है.",
+      "unnamedRoom": "अनाम कमरा"
+    },
+    "stats": {
+      "title": "उपयोगकर्ता आँकड़े",
+      "totalBlocks": "कुल निर्मित ब्लॉक",
+      "collaborations": "सहयोग",
+      "daysActive": "सक्रिय दिन"
+    }
+  }
+}

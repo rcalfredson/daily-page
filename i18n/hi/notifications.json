@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "सूचनाएं",
+      "openMenu": "सूचनाएं खोलें",
+      "loading": "सूचनाएं लोड हो रही हैं...",
+      "error": "अभी सूचनाएं लोड करने में असमर्थ.",
+      "empty": "अभी तक कोई सूचना नहीं.",
+      "markRead": "पढ़ा हुआ चिह्नित करें",
+      "fallbackActor": "कोई",
+      "fallbackBlockTitle": "आपका ब्लॉक",
+      "item": {
+        "blockComment": "{actorUsername} ने आपके ब्लॉक \"{blockTitle}\" पर टिप्पणी की।",
+        "commentReply": "{actorUsername} ने \"{blockTitle}\" पर आपकी टिप्पणी का उत्तर दिया।",
+        "unknown": "अधिसूचना"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "\"{blockTitle}\" पर नई टिप्पणी",
+        "heading": "आपके ब्लॉक पर नई टिप्पणी",
+        "headingWithName": "नमस्ते {username},",
+        "body": "<strong>{actorUsername}</strong> ने आपके ब्लॉक <strong>{blockTitle}</strong> पर टिप्पणी की।",
+        "cta": "Daily Page पर बातचीत देखें",
+        "fallbackActor": "कोई",
+        "fallbackBlockTitle": "आपका ब्लॉक"
+      },
+      "commentReply": {
+        "subject": "\"{blockTitle}\" पर नया उत्तर",
+        "heading": "आपकी टिप्पणी का नया उत्तर",
+        "headingWithName": "नमस्ते {username},",
+        "body": "<strong>{actorUsername}</strong> ने <strong>{blockTitle}</strong> पर आपकी टिप्पणी का उत्तर दिया।",
+        "cta": "Daily Page पर बातचीत देखें",
+        "fallbackActor": "कोई",
+        "fallbackBlockTitle": "आपका ब्लॉक"
+      }
+    }
+  }
+}
