@@ -1,4 +1,4 @@
-import SortedArray from '../lib/sortedArray';
+import SortedArray from '../lib/sortedArray.js';
 
 describe('SortedArray', () => {
   describe('get', () => {

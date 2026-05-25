@@ -1,9 +1,9 @@
 import { JSDOM } from 'jsdom';
 import { v4 } from 'uuid';
-import Controller from '../lib/controller';
-import Char from '../lib/char';
-import Identifier from '../lib/identifier';
-import BackendHelper from '../lib/backendHelper';
+import Controller from '../lib/controller.js';
+import Char from '../lib/char.js';
+import Identifier from '../lib/identifier.js';
+import BackendHelper from '../lib/backendHelper.js';
 
 describe("Controller", () => {
   const mockPeer = {
