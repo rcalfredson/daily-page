@@ -1000,14 +1000,24 @@ Cursors
   width: 2px;
   position: absolute;
   top: 0px;
+  z-index: 2;
+  pointer-events: none;
 }
 
-.flag {
-  top: -10px;
+.remote-cursor-flag-line {
+  height: 15px;
+  pointer-events: none;
+  position: relative;
+}
+
+.remote-cursor-flag-line .flag {
+  top: 0;
   font-size: 12px;
   left: 0px;
   position: absolute;
   line-height: 15px;
+  padding: 0 2px;
+  white-space: nowrap;
 }
 
 /********************
