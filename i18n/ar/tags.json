@@ -20,14 +20,14 @@
       "meta": {
         "titlePrefix": "#",
         "titleSuffix": "| Daily Page",
-        "description": "الكتل الموسومة ب"
+        "description": "منشورات تحمل الوسم"
       },
       "header": {
         "label": "العلامة:",
         "icon": "🏷️"
       },
       "stats": {
-        "totalBlocks": "مجموع الكتل مع",
+        "totalBlocks": "إجمالي المنشورات مع",
         "totalBlocksTagSeparator": ":"
       },
       "blockInfo": {
@@ -37,10 +37,10 @@
         "onDate": "على"
       },
       "chart": {
-        "label": "الكتل التي تم إنشاؤها مع مرور الوقت"
+        "label": "المنشورات التي تم إنشاؤها بمرور الوقت"
       },
       "empty": {
-        "message": "لم يتم العثور على كتل مع هذه العلامة حتى الآن. ربما يجب عليك إنشاء أول واحد؟ 🔥"
+        "message": "لا توجد منشورات بهذا الوسم حتى الآن. ربما عليك إنشاء الأول؟ 🔥"
       },
       "error": {
         "loadingTagPage": "حدث خطأ أثناء تحميل صفحة العلامات"

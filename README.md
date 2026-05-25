@@ -9,21 +9,21 @@ The reference instance lives at [dailypage.org](https://dailypage.org).
 Daily Page is built around a simple idea: each day deserves a place where people can write together, leave fragments, and gradually form a shared record. The app has gone through two shapes:
 
 - Legacy daily pages, where a date maps to a concatenated collaborative document.
-- Current room-based blocks, where each room can host many smaller writing blocks for a date/topic, with public browsing, comments, reactions, votes, translations, and archives.
+- Current room-based posts, where each room can host many smaller pieces of writing for a date/topic, with public browsing, comments, reactions, votes, translations, and archives.
 
 The long-term direction is less "private notes app" and more "small civic/cultural memory tool": lightweight enough for casual participation, structured enough to archive, search, translate, and curate later.
 
 ## Current Features
 
 - Real-time collaborative Markdown editing using a CRDT-derived model and PeerJS/WebRTC signaling.
-- Rooms and topical dashboards for browsing in-progress and locked writing blocks.
-- Automatic locking of inactive blocks after roughly seven days.
+- Rooms and topical dashboards for browsing in-progress and locked writing posts.
+- Automatic locking of inactive posts after roughly seven days.
 - Public archives by date, room, month, and year.
 - User accounts with JWT cookies, email verification, password reset, profile editing, writing streaks, and starred rooms.
-- Anonymous block creation/editing with short-lived edit tokens.
+- Anonymous post creation/editing with short-lived edit tokens.
 - Comments, comment notifications, reactions, votes, reports, and basic rate limiting.
 - Tags, text search, trending tags, featured content, and homepage activity modules.
-- Multilingual UI files under `i18n/`, language-prefixed routes, hreflang/SEO helpers, and block translation grouping.
+- Multilingual UI files under `i18n/`, language-prefixed routes, hreflang/SEO helpers, and post translation grouping.
 - Google Drive-backed content routes used by the reference instance for side collections such as baseball/music notes.
 - Optional S3 profile image uploads.
 - Optional Mailgun transactional email.
@@ -127,7 +127,7 @@ The app will connect to `daily-page-test` by default. Set `NODE_ENV=production` 
 
 ## Database Notes
 
-The app does not currently ship with a one-command seed for a complete demo instance. An empty database can boot, but pages such as the rooms directory and room dashboards become useful after inserting room metadata and creating blocks.
+The app does not currently ship with a one-command seed for a complete demo instance. An empty database can boot, but pages such as the rooms directory and room dashboards become useful after inserting room metadata and creating posts.
 
 At minimum, create documents in the `rooms` collection shaped like:
 
@@ -140,7 +140,7 @@ At minimum, create documents in the `rooms` collection shaped like:
 }
 ```
 
-Then visit `/rooms/general/blocks/new` to create blocks through the UI, or use the room-scoped block API. The block schema requires title, room, creator, language, group ID, and other fields; using the app/API is easier than hand-writing block documents.
+Then visit `/rooms/general/blocks/new` to create posts through the UI, or use the room-scoped block API. The block schema requires title, room, creator, language, group ID, and other fields; using the app/API is easier than hand-writing block documents.
 
 ## Environment Variables
 
@@ -219,13 +219,13 @@ For frontend work, run `npm run build` after changes to files in `lib/`, or use 
 
 ## Collaboration Model
 
-The editor traces back to Conclave's CRDT approach. Blocks are edited in Markdown, local edits become CRDT operations, and peers exchange updates through the collaboration layer. The server also exposes endpoints for persistence and session/peer discovery.
+The editor traces back to Conclave's CRDT approach. Posts are edited in Markdown, local edits become CRDT operations, and peers exchange updates through the collaboration layer. The server also exposes endpoints for persistence and session/peer discovery.
 
-When a block has been inactive for about seven days, a cron job marks it `locked`. Locked blocks are treated as archive/browsing material rather than active writing surfaces.
+When a post has been inactive for about seven days, a cron job marks it `locked`. Locked posts are treated as archive/browsing material rather than active writing surfaces.
 
 ## Internationalization
 
-Daily Page separates UI language from block content language. UI strings are stored in `i18n/`, routes can be language-prefixed, and block groups can contain translations in multiple languages. Room metadata also supports localized `name_i18n`, `description_i18n`, and `topic_i18n` maps.
+Daily Page separates UI language from post content language. UI strings are stored in `i18n/`, routes can be language-prefixed, and block groups can contain translations in multiple languages. Room metadata also supports localized `name_i18n`, `description_i18n`, and `topic_i18n` maps.
 
 Useful migration scripts:
 

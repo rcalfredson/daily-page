@@ -1,10 +1,10 @@
 {
   "createBlock": {
     "meta": {
-      "title": "Neuen Block erstellen — Daily Page",
-      "description": "Starte einen frischen kreativen Block mit optionalen Tags, Sprache und Sichtbarkeit."
+      "title": "Neuen Beitrag erstellen — Daily Page",
+      "description": "Starte einen frischen kreativen Beitrag mit optionalen Tags, Sprache und Sichtbarkeit."
     },
-    "heading": "Neuen Block erstellen",
+    "heading": "Neuen Beitrag erstellen",
     "roomInfo": {
       "roomLabel": "Raum:",
       "unavailable": "Rauminformationen nicht verfugbar.",
@@ -25,12 +25,12 @@
       "initialContent": {
         "label": "Anfangsinhalt (optional):",
         "help": "Beginne hier zu schreiben oder drucke auf \"Erstellen\", um auf der vollstandigen Editorseite weiterzumachen, wo du Bilder einbetten und in Echtzeit zusammenarbeiten kannst.",
-        "placeholder": "Starte deinen Block hier oder bearbeite ihn nach der Erstellung weiter..."
+        "placeholder": "Starte deinen Beitrag hier oder bearbeite ihn nach der Erstellung weiter..."
       },
       "visibility": {
         "label": "Sichtbarkeit:"
       },
-      "submit": "Block erstellen"
+      "submit": "Beitrag erstellen"
     },
     "visibility": {
       "public": {
@@ -42,7 +42,7 @@
         "label": "Privat",
         "title": "Nur fur angemeldete Benutzer. Sichtbar, nachdem die Bearbeitung abgeschlossen ist.",
         "inline": "Nur fur angemeldete Benutzer. Sichtbar, nachdem die Bearbeitung abgeschlossen ist.",
-        "tooltip": "Private Blocke sind wahrend der Arbeit nur per Einladung zuganglich und werden sichtbar, wenn du fertig bist."
+        "tooltip": "Private Beitrage sind wahrend der Arbeit nur per Einladung zuganglich und werden sichtbar, wenn du fertig bist."
       }
     },
     "advanced": {
@@ -78,9 +78,9 @@
         }
       },
       "translate": {
-        "label": "Vorhandenen Block ubersetzen (URL oder ID):",
-        "placeholder": "Block-URL oder ID einfugen (optional)",
-        "invalid": "Das sieht nicht wie eine gultige Block-URL oder ID aus.",
+        "label": "Vorhandenen Beitrag ubersetzen (URL oder ID):",
+        "placeholder": "Beitrag-URL oder ID einfugen (optional)",
+        "invalid": "Das sieht nicht wie eine gultige Beitrag-URL oder ID aus.",
         "fetchError": "Blockinformationen konnten nicht abgerufen werden."
       }
     },

@@ -1,8 +1,8 @@
 {
   "blockView": {
     "meta": {
-      "title": "Blok - {blockTitle}",
-      "titleFallback": "Blok"
+      "title": "Postingan - {blockTitle}",
+      "titleFallback": "Postingan"
     },
     "labels": {
       "room": "Ruang",
@@ -16,7 +16,7 @@
     },
     "buttons": {
       "edit": "Edit",
-      "deleteBlock": "Hapus Blok",
+      "deleteBlock": "Hapus Postingan",
       "share": "Bagikan",
       "flagContent": "Laporkan Konten"
     },
@@ -111,9 +111,9 @@
       "loadError": "Tidak dapat memuat komentar lainnya saat ini."
     },
     "share": {
-      "title": "Bagikan Blok ini",
+      "title": "Bagikan Postingan ini",
       "shareOn": "Bagikan di:",
-      "nativeText": "Lihat blok ini: {title}",
+      "nativeText": "Lihat postingan ini: {title}",
       "alt": {
         "facebook": "Logo Facebook",
         "reddit": "Logo Reddit",
@@ -122,8 +122,8 @@
       }
     },
     "errors": {
-      "notFound": "Blok tidak ditemukan atau bukan milik ruang ini.",
-      "loadFailed": "Kesalahan saat memuat tampilan blok."
+      "notFound": "Postingan tidak ditemukan atau bukan milik ruang ini.",
+      "loadFailed": "Kesalahan saat memuat tampilan postingan."
     }
   }
 }

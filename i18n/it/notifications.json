@@ -8,9 +8,9 @@
       "empty": "Ancora nessuna notifica.",
       "markRead": "Segna come letta",
       "fallbackActor": "Qualcuno",
-      "fallbackBlockTitle": "il tuo blocco",
+      "fallbackBlockTitle": "il tuo post",
       "item": {
-        "blockComment": "{actorUsername} ha commentato il tuo blocco \"{blockTitle}\".",
+        "blockComment": "{actorUsername} ha commentato il tuo post \"{blockTitle}\".",
         "commentReply": "{actorUsername} ha risposto al tuo commento su \"{blockTitle}\".",
         "unknown": "Notifica"
       }
@@ -18,12 +18,12 @@
     "email": {
       "blockComment": {
         "subject": "Nuovo commento su \"{blockTitle}\"",
-        "heading": "Nuovo commento sul tuo blocco",
+        "heading": "Nuovo commento sul tuo post",
         "headingWithName": "Ciao {username},",
-        "body": "<strong>{actorUsername}</strong> ha commentato il tuo blocco <strong>{blockTitle}</strong>.",
+        "body": "<strong>{actorUsername}</strong> ha commentato il tuo post <strong>{blockTitle}</strong>.",
         "cta": "Vedi la conversazione su Daily Page",
         "fallbackActor": "Qualcuno",
-        "fallbackBlockTitle": "il tuo blocco"
+        "fallbackBlockTitle": "il tuo post"
       },
       "commentReply": {
         "subject": "Nuova risposta su \"{blockTitle}\"",
@@ -32,7 +32,7 @@
         "body": "<strong>{actorUsername}</strong> ha risposto al tuo commento su <strong>{blockTitle}</strong>.",
         "cta": "Vedi la conversazione su Daily Page",
         "fallbackActor": "Qualcuno",
-        "fallbackBlockTitle": "il tuo blocco"
+        "fallbackBlockTitle": "il tuo post"
       }
     }
   }

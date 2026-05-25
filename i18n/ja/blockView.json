@@ -1,8 +1,8 @@
 {
   "blockView": {
     "meta": {
-      "title": "ブロック - {blockTitle}",
-      "titleFallback": "ブロック"
+      "title": "投稿 - {blockTitle}",
+      "titleFallback": "投稿"
     },
     "labels": {
       "room": "ルーム",
@@ -16,7 +16,7 @@
     },
     "buttons": {
       "edit": "編集",
-      "deleteBlock": "ブロックを削除",
+      "deleteBlock": "投稿を削除",
       "share": "共有",
       "flagContent": "コンテンツを報告"
     },
@@ -111,9 +111,9 @@
       "loadError": "現在これ以上コメントを読み込めません。"
     },
     "share": {
-      "title": "このブロックを共有",
+      "title": "この投稿を共有",
       "shareOn": "共有先:",
-      "nativeText": "このブロックを見てください: {title}",
+      "nativeText": "この投稿を見てください: {title}",
       "alt": {
         "facebook": "Facebook ロゴ",
         "reddit": "Reddit ロゴ",
@@ -122,8 +122,8 @@
       }
     },
     "errors": {
-      "notFound": "ブロックが見つからないか、このルームに属していません。",
-      "loadFailed": "ブロック表示の読み込み中にエラーが発生しました。"
+      "notFound": "投稿が見つからないか、このルームに属していません。",
+      "loadFailed": "投稿表示の読み込み中にエラーが発生しました。"
     }
   }
 }

@@ -4,23 +4,23 @@
       "you": "(आप)"
     },
     "meta": {
-      "title": "ब्लॉक संपादित करें - {blockTitle}",
-      "titleFallback": "ब्लॉक संपादित करें"
+      "title": "पोस्ट संपादित करें - {blockTitle}",
+      "titleFallback": "पोस्ट संपादित करें"
     },
     "errors": {
       "imageUrlRequired": "कृपया एक छवि URL दर्ज करें।",
-      "notFound": "ब्लॉक नहीं मिला या इस कमरे से संबंधित नहीं है.",
-      "loadFailed": "ब्लॉक संपादक को लोड करते समय एक त्रुटि उत्पन्न हुई.",
+      "notFound": "पोस्ट नहीं मिला या इस कमरे से संबंधित नहीं है.",
+      "loadFailed": "पोस्ट संपादक को लोड करते समय एक त्रुटि उत्पन्न हुई.",
       "updateTitleFailed": "शीर्षक अद्यतन करने में त्रुटि."
     },
     "roomInfo": {
       "label": "कमरा:"
     },
     "title": {
-      "placeholder": "ब्लॉक शीर्षक दर्ज करें",
+      "placeholder": "पोस्ट शीर्षक दर्ज करें",
       "editTooltip": "शीर्षक संपादित करें",
-      "lock": "लॉक ब्लॉक",
-      "delete": "ब्लॉक हटाएँ"
+      "lock": "लॉक पोस्ट",
+      "delete": "पोस्ट हटाएँ"
     },
     "description": {
       "label": "विवरण",
@@ -42,7 +42,7 @@
       "label": "समकक्ष लोग:"
     },
     "toasts": {
-      "blockLocked": "यह ब्लॉक लॉक कर दिया गया है!"
+      "blockLocked": "यह पोस्ट लॉक कर दिया गया है!"
     },
     "editor": {
       "placeholder": "कोरा पन्ना आपकी आवाज़ का इंतज़ार कर रहा है; निडर होकर लिखें."
@@ -71,12 +71,12 @@
       "downloadFile": "डाउनलोड फ़ाइल"
     },
     "lockModal": {
-      "messageLine1": "क्या आप वाकई इस ब्लॉक को लॉक करना चाहते हैं?",
+      "messageLine1": "क्या आप वाकई इस पोस्ट को लॉक करना चाहते हैं?",
       "messageLine2": "इससे इसे अंतिम रूप दिया जाएगा और आगे संपादन रोका जा सकेगा।",
       "confirm": "ताला",
       "cancel": "रद्द करना",
-      "successToast": "ब्लॉक सफलतापूर्वक लॉक हो गया.",
-      "errorToast": "ब्लॉक लॉक करने में त्रुटि."
+      "successToast": "पोस्ट सफलतापूर्वक लॉक हो गया.",
+      "errorToast": "पोस्ट लॉक करने में त्रुटि."
     },
     "tags": {
       "headerWithTags": "टैग:",
@@ -84,13 +84,13 @@
       "updateError": "टैग अपडेट करने में त्रुटि."
     },
     "fullBlock": {
-      "headingPrefix": "क्षमा मांगना; ब्लॉक \"{blockTitle}\" अब है",
+      "headingPrefix": "क्षमा मांगना; पोस्ट \"{blockTitle}\" अब है",
       "headingStatus": "पूरी तरह से कब्जा कर लिया.",
       "retryPrefix": "कृपया",
-      "retryLink": "किसी भिन्न ब्लॉक का प्रयास करें",
+      "retryLink": "किसी भिन्न पोस्ट का प्रयास करें",
       "retrySuffix": "या दूसरी बार वापस आएँ।",
       "consolationPrefix": "जब तक आप प्रतीक्षा करें, बेझिझक पढ़ें",
-      "consolationBestOf": "हमारे कुछ पसंदीदा ब्लॉक",
+      "consolationBestOf": "हमारे कुछ पसंदीदा पोस्ट",
       "consolationMiddle": "या ब्राउज़ करने के लिए",
       "consolationArchive": "पुरालेख."
     }

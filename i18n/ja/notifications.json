@@ -8,9 +8,9 @@
       "empty": "通知はまだありません。",
       "markRead": "既読にする",
       "fallbackActor": "誰か",
-      "fallbackBlockTitle": "あなたのブロック",
+      "fallbackBlockTitle": "あなたの投稿",
       "item": {
-        "blockComment": "{actorUsername} があなたのブロック「{blockTitle}」にコメントしました。",
+        "blockComment": "{actorUsername} があなたの投稿「{blockTitle}」にコメントしました。",
         "commentReply": "{actorUsername} が「{blockTitle}」であなたのコメントに返信しました。",
         "unknown": "通知"
       }
@@ -18,12 +18,12 @@
     "email": {
       "blockComment": {
         "subject": "「{blockTitle}」に新しいコメント",
-        "heading": "あなたのブロックに新しいコメント",
+        "heading": "あなたの投稿に新しいコメント",
         "headingWithName": "こんにちは {username} さん、",
-        "body": "<strong>{actorUsername}</strong> があなたのブロック <strong>{blockTitle}</strong> にコメントしました。",
+        "body": "<strong>{actorUsername}</strong> があなたの投稿 <strong>{blockTitle}</strong> にコメントしました。",
         "cta": "Daily Page で会話を見る",
         "fallbackActor": "誰か",
-        "fallbackBlockTitle": "あなたのブロック"
+        "fallbackBlockTitle": "あなたの投稿"
       },
       "commentReply": {
         "subject": "「{blockTitle}」に新しい返信",
@@ -32,7 +32,7 @@
         "body": "<strong>{actorUsername}</strong> が <strong>{blockTitle}</strong> であなたのコメントに返信しました。",
         "cta": "Daily Page で会話を見る",
         "fallbackActor": "誰か",
-        "fallbackBlockTitle": "あなたのブロック"
+        "fallbackBlockTitle": "あなたの投稿"
       }
     }
   }

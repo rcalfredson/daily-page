@@ -11,7 +11,7 @@
       "title": "📊 你的统计概览 📊"
     },
     "cards": {
-      "totalBlocks": "创建的块总数 📝",
+      "totalBlocks": "创建的帖子总数 📝",
       "collaborations": "协作 🤝",
       "votesGiven": "已投票数 👍",
       "daysActive": "活跃天数 📆"
@@ -19,7 +19,7 @@
     "chart": {
       "datasetLabel": "你的统计",
       "labels": {
-        "blocksCreated": "创建的块",
+        "blocksCreated": "创建的帖子",
         "collaborations": "协作",
         "votesGiven": "已投票数",
         "daysActive": "活跃天数"

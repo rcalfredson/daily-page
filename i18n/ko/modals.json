@@ -7,10 +7,10 @@
       "cta": "로그인"
     },
     "actions": {
-      "voteOnBlock": "블록에 투표",
+      "voteOnBlock": "게시물에 투표",
       "starRoom": "이 방에 별표",
       "reactToBlock": "이 게시물에 반응",
-      "commentOnBlock": "이 블록에 댓글 작성",
+      "commentOnBlock": "이 게시물에 댓글 작성",
       "reportComment": "이 댓글 신고"
     },
     "errors": {

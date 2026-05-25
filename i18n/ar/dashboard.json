@@ -16,7 +16,7 @@
       "title": "النشاط الأخير",
       "none": "لا يوجد نشاط حديث.",
       "updatedOn": "تم التحديث بتاريخ {date}",
-      "viewAllBlocks": "عرض جميع الكتل"
+      "viewAllBlocks": "عرض جميع المنشورات"
     },
     "streak": {
       "title": "خط الكتابة",
@@ -35,7 +35,7 @@
     },
     "stats": {
       "title": "احصائياتك",
-      "totalBlocks": "إجمالي الكتل التي تم إنشاؤها",
+      "totalBlocks": "إجمالي المنشورات التي تم إنشاؤها",
       "collaborations": "التعاون",
       "votesGiven": "الأصوات المعطاة",
       "daysActive": "الأيام النشطة",

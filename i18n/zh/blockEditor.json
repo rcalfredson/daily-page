@@ -4,23 +4,23 @@
       "you": "（你）"
     },
     "meta": {
-      "title": "编辑块 - {blockTitle}",
-      "titleFallback": "编辑块"
+      "title": "编辑帖子 - {blockTitle}",
+      "titleFallback": "编辑帖子"
     },
     "errors": {
       "imageUrlRequired": "请输入图片 URL。",
-      "notFound": "未找到块，或该块不属于此房间。",
-      "loadFailed": "加载块编辑器时出错。",
+      "notFound": "未找到帖子，或该帖子不属于此房间。",
+      "loadFailed": "加载帖子编辑器时出错。",
       "updateTitleFailed": "更新标题出错。"
     },
     "roomInfo": {
       "label": "房间："
     },
     "title": {
-      "placeholder": "输入块标题",
+      "placeholder": "输入帖子标题",
       "editTooltip": "编辑标题",
-      "lock": "锁定块",
-      "delete": "删除块"
+      "lock": "锁定帖子",
+      "delete": "删除帖子"
     },
     "description": {
       "label": "描述",
@@ -42,7 +42,7 @@
       "label": "协作者："
     },
     "toasts": {
-      "blockLocked": "此块已被锁定！"
+      "blockLocked": "此帖子已被锁定！"
     },
     "editor": {
       "placeholder": "空白页面正等待你的声音；勇敢地写吧。"
@@ -71,12 +71,12 @@
       "downloadFile": "下载文件"
     },
     "lockModal": {
-      "messageLine1": "确定要锁定此块吗？",
+      "messageLine1": "确定要锁定此帖子吗？",
       "messageLine2": "这会将其定稿并阻止进一步编辑。",
       "confirm": "锁定",
       "cancel": "取消",
-      "successToast": "块已成功锁定。",
-      "errorToast": "锁定块出错。"
+      "successToast": "帖子已成功锁定。",
+      "errorToast": "锁定帖子出错。"
     },
     "tags": {
       "headerWithTags": "标签：",
@@ -84,13 +84,13 @@
       "updateError": "更新标签出错。"
     },
     "fullBlock": {
-      "headingPrefix": "抱歉，块“{blockTitle}”现在",
+      "headingPrefix": "抱歉，帖子“{blockTitle}”现在",
       "headingStatus": "已满员。",
       "retryPrefix": "请",
-      "retryLink": "尝试另一个块",
+      "retryLink": "尝试另一个帖子",
       "retrySuffix": "或稍后再来。",
       "consolationPrefix": "等待时，你可以阅读",
-      "consolationBestOf": "我们最喜欢的一些块",
+      "consolationBestOf": "我们最喜欢的一些帖子",
       "consolationMiddle": "或浏览",
       "consolationArchive": "归档。"
     }

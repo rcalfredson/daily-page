@@ -2,27 +2,27 @@
   "roomDashboard": {
     "meta": {
       "title": "Daily Page — {roomName}",
-      "description": "Explorez les blocs récents et en cours dans {roomName}."
+      "description": "Explorez les publications récentes et en cours dans {roomName}."
     },
     "links": {
       "exploreLabel": "Explorer :",
-      "allBlocks": "🗂️ Tous les blocs",
+      "allBlocks": "🗂️ Toutes les publications",
       "browseByDate": "🗓️ Par date",
       "bestOf": "🏅 Le meilleur",
       "searchInRoom": "🔎 Recherche"
     },
     "actions": {
-      "createBlock": "Créer un bloc",
+      "createBlock": "Créer une publication",
       "starTitle": "Ajouter ce salon aux favoris",
       "unstarTitle": "Retirer ce salon des favoris"
     },
     "tabs": {
-      "locked": "Blocs verrouillés",
-      "inProgress": "Blocs en cours"
+      "locked": "Publications verrouillées",
+      "inProgress": "Publications en cours"
     },
     "sections": {
-      "lockedHeader": "Blocs verrouillés",
-      "inProgressHeader": "Blocs en cours"
+      "lockedHeader": "Publications verrouillées",
+      "inProgressHeader": "Publications en cours"
     },
     "editorial": {
       "heading": "Guides à la une",
@@ -35,9 +35,9 @@
     },
     "empty": {
       "noDescription": "Aucune description disponible.",
-      "noLocked": "Aucun bloc verrouillé pour le moment ! Les blocs se verrouillent automatiquement après 1 heure d'inactivité.",
-      "noInProgress": "Aucun bloc en cours pour le moment ! C'est le moment d'en commencer un.",
-      "noBlocks": "Aucun bloc pour le moment ! Créez le premier et laissez votre marque. 😎"
+      "noLocked": "Aucune publication verrouillée pour le moment ! Les publications se verrouillent automatiquement après 1 heure d’inactivité.",
+      "noInProgress": "Aucune publication en cours pour le moment ! Il est temps d’en commencer une.",
+      "noBlocks": "Aucune publication pour le moment ! Créez la première et laissez votre marque. 😎"
     }
   }
 }

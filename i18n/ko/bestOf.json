@@ -2,7 +2,7 @@
   "bestOf": {
     "meta": {
       "title": "Daily Page 베스트",
-      "description": "Daily Page에서 가장 많은 사랑을 받은 블록입니다. 웃기거나, 솔직하거나, 시적이거나, 그저 기묘한 글까지. 지난 하루, 주, 달, 그리고 전체 기간에 무엇이 돋보였는지 확인하세요.",
+      "description": "Daily Page에서 가장 많은 사랑을 받은 게시물입니다. 웃기거나, 솔직하거나, 시적이거나, 그저 기묘한 글까지. 지난 하루, 주, 달, 그리고 전체 기간에 무엇이 돋보였는지 확인하세요.",
       "titleRoom": "{roomName} 베스트",
       "descriptionRoom": "{roomName} 방에서 돋보이는 게시물을 발견하세요. 지난 24시간, 7일, 30일, 전체 기간 동안 독자들이 가장 사랑한 글입니다."
     },
@@ -20,7 +20,7 @@
       "inRoom": "방:",
       "onDate": "{date}에",
       "unknownRoom": "알 수 없는 방",
-      "noBlocks": "블록을 찾을 수 없습니다.",
+      "noBlocks": "게시물을 찾을 수 없습니다.",
       "viewRoom": "방 보기"
     }
   }

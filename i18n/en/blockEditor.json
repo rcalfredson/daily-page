@@ -4,23 +4,23 @@
       "you": "(You)"
     },
     "meta": {
-      "title": "Edit Block - {blockTitle}",
-      "titleFallback": "Edit Block"
+      "title": "Edit Post - {blockTitle}",
+      "titleFallback": "Edit Post"
     },
     "errors": {
       "imageUrlRequired": "Please enter an image URL.",
-      "notFound": "Block not found or does not belong to this room.",
-      "loadFailed": "An error occurred while loading the block editor.",
+      "notFound": "Post not found or does not belong to this room.",
+      "loadFailed": "An error occurred while loading the post editor.",
       "updateTitleFailed": "Error updating title."
     },
     "roomInfo": {
       "label": "Room:"
     },
     "title": {
-      "placeholder": "Enter block title",
+      "placeholder": "Enter post title",
       "editTooltip": "Edit Title",
-      "lock": "Lock Block",
-      "delete": "Delete Block"
+      "lock": "Lock Post",
+      "delete": "Delete Post"
     },
     "description": {
       "label": "Description",
@@ -42,7 +42,7 @@
       "label": "Peers:"
     },
     "toasts": {
-      "blockLocked": "This block has been locked!"
+      "blockLocked": "This post has been locked!"
     },
     "editor": {
       "placeholder": "The blank page is waiting for your voice; write fearlessly."
@@ -71,12 +71,12 @@
       "downloadFile": "Download file"
     },
     "lockModal": {
-      "messageLine1": "Are you sure you want to lock this block?",
+      "messageLine1": "Are you sure you want to lock this post?",
       "messageLine2": "This will finalize it and prevent further editing.",
       "confirm": "Lock",
       "cancel": "Cancel",
-      "successToast": "Block locked successfully.",
-      "errorToast": "Error locking block."
+      "successToast": "Post locked successfully.",
+      "errorToast": "Error locking post."
     },
     "tags": {
       "headerWithTags": "Tags:",
@@ -84,13 +84,13 @@
       "updateError": "Error updating tags."
     },
     "fullBlock": {
-      "headingPrefix": "Sorry; the block \"{blockTitle}\" is now",
+      "headingPrefix": "Sorry; the post \"{blockTitle}\" is now",
       "headingStatus": "fully occupied.",
       "retryPrefix": "Please",
-      "retryLink": "try a different block",
+      "retryLink": "try a different post",
       "retrySuffix": "or come back another time.",
       "consolationPrefix": "While you wait, feel free to read",
-      "consolationBestOf": "some of our favorite blocks",
+      "consolationBestOf": "some of our favorite posts",
       "consolationMiddle": "or to browse",
       "consolationArchive": "the archive."
     }

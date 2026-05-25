@@ -20,14 +20,14 @@
       "meta": {
         "titlePrefix": "#",
         "titleSuffix": " | Daily Page",
-        "description": "Blocks tagged with"
+        "description": "Posts tagged with"
       },
       "header": {
         "label": "Tag:",
         "icon": "🏷️"
       },
       "stats": {
-        "totalBlocks": "Total blocks with",
+        "totalBlocks": "Total posts with",
         "totalBlocksTagSeparator": ":"
       },
       "blockInfo": {
@@ -37,10 +37,10 @@
         "onDate": "on"
       },
       "chart": {
-        "label": "Blocks Created Over Time"
+        "label": "Posts Created Over Time"
       },
       "empty": {
-        "message": "No blocks found with this tag yet. Maybe you should create the first one? 🔥"
+        "message": "No posts found with this tag yet. Maybe you should create the first one? 🔥"
       },
       "error": {
         "loadingTagPage": "Error loading tag page"

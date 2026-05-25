@@ -4,23 +4,23 @@
       "you": "(Vous)"
     },
     "meta": {
-      "title": "Modifier le bloc - {blockTitle}",
-      "titleFallback": "Modifier le bloc"
+      "title": "Modifier le publication - {blockTitle}",
+      "titleFallback": "Modifier le publication"
     },
     "errors": {
       "imageUrlRequired": "Veuillez saisir l'URL d'une image.",
-      "notFound": "Bloc introuvable ou n'appartenant pas à ce salon.",
-      "loadFailed": "Une erreur est survenue lors du chargement de l'éditeur de bloc.",
+      "notFound": "Publication introuvable ou n'appartenant pas à ce salon.",
+      "loadFailed": "Une erreur est survenue lors du chargement de l'éditeur de publication.",
       "updateTitleFailed": "Erreur lors de la mise à jour du titre."
     },
     "roomInfo": {
       "label": "Salon :"
     },
     "title": {
-      "placeholder": "Saisissez le titre du bloc",
+      "placeholder": "Saisissez le titre du publication",
       "editTooltip": "Modifier le titre",
-      "lock": "Verrouiller le bloc",
-      "delete": "Supprimer le bloc"
+      "lock": "Verrouiller le publication",
+      "delete": "Supprimer le publication"
     },
     "description": {
       "label": "Description",
@@ -42,7 +42,7 @@
       "label": "Pairs :"
     },
     "toasts": {
-      "blockLocked": "Ce bloc a été verrouillé !"
+      "blockLocked": "Ce publication a été verrouillé !"
     },
     "editor": {
       "placeholder": "La page blanche attend votre voix ; écrivez sans crainte."
@@ -71,12 +71,12 @@
       "downloadFile": "Télécharger le fichier"
     },
     "lockModal": {
-      "messageLine1": "Voulez-vous vraiment verrouiller ce bloc ?",
+      "messageLine1": "Voulez-vous vraiment verrouiller ce publication ?",
       "messageLine2": "Cela le finalisera et empêchera toute modification ultérieure.",
       "confirm": "Verrouiller",
       "cancel": "Annuler",
-      "successToast": "Bloc verrouillé avec succès.",
-      "errorToast": "Erreur lors du verrouillage du bloc."
+      "successToast": "Publication verrouillé avec succès.",
+      "errorToast": "Erreur lors du verrouillage du publication."
     },
     "tags": {
       "headerWithTags": "Tags :",
@@ -84,13 +84,13 @@
       "updateError": "Erreur lors de la mise à jour des tags."
     },
     "fullBlock": {
-      "headingPrefix": "Désolé ; le bloc \"{blockTitle}\" est maintenant",
+      "headingPrefix": "Désolé ; le publication \"{blockTitle}\" est maintenant",
       "headingStatus": "complet.",
       "retryPrefix": "Veuillez",
-      "retryLink": "essayer un autre bloc",
+      "retryLink": "essayer un autre publication",
       "retrySuffix": "ou revenir plus tard.",
       "consolationPrefix": "Pendant votre attente, vous pouvez lire",
-      "consolationBestOf": "quelques-uns de nos blocs préférés",
+      "consolationBestOf": "quelques-uns de nos publications préférés",
       "consolationMiddle": "ou parcourir",
       "consolationArchive": "les archives."
     }

@@ -11,7 +11,7 @@
       "title": "📊 Ringkasan Statistikmu 📊"
     },
     "cards": {
-      "totalBlocks": "Total Blok Dibuat 📝",
+      "totalBlocks": "Total postingan yang dibuat 📝",
       "collaborations": "Kolaborasi 🤝",
       "votesGiven": "Suara Diberikan 👍",
       "daysActive": "Hari Aktif 📆"
@@ -19,7 +19,7 @@
     "chart": {
       "datasetLabel": "Statistikmu",
       "labels": {
-        "blocksCreated": "Blok Dibuat",
+        "blocksCreated": "Postingan dibuat",
         "collaborations": "Kolaborasi",
         "votesGiven": "Suara Diberikan",
         "daysActive": "Hari Aktif"

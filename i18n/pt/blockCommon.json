@@ -4,15 +4,15 @@
       "draft": "Rascunho"
     },
     "deleteModal": {
-      "title": "Excluir Bloco?",
+      "title": "Excluir Post?",
       "message": "Esta ação não pode ser desfeita.",
       "confirm": "Excluir",
       "cancel": "Cancelar",
       "closeAriaLabel": "Fechar"
     },
     "toasts": {
-      "deleteSuccess": "Bloco excluído com sucesso!",
-      "deleteFailed": "Falha ao excluir bloco."
+      "deleteSuccess": "Post excluído com sucesso!",
+      "deleteFailed": "Falha ao excluir post."
     }
   }
 }

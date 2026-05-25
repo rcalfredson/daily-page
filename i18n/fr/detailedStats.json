@@ -11,7 +11,7 @@
       "title": "📊 Aperçu de vos statistiques 📊"
     },
     "cards": {
-      "totalBlocks": "Total de blocs créés 📝",
+      "totalBlocks": "Total de publications créées 📝",
       "collaborations": "Collaborations 🤝",
       "votesGiven": "Votes donnés 👍",
       "daysActive": "Jours actifs 📆"
@@ -19,7 +19,7 @@
     "chart": {
       "datasetLabel": "Vos statistiques",
       "labels": {
-        "blocksCreated": "Blocs créés",
+        "blocksCreated": "Publications créées",
         "collaborations": "Collaborations",
         "votesGiven": "Votes donnés",
         "daysActive": "Jours actifs"

@@ -12,7 +12,7 @@
       "title": "Actividad reciente",
       "updatedOn": "Actualizado el {date}",
       "none": "No hay actividad reciente.",
-      "viewAllBlocks": "Ver todos los bloques"
+      "viewAllBlocks": "Ver todos los posts"
     },
     "starredRooms": {
       "title": "Salas favoritas",
@@ -21,7 +21,7 @@
     },
     "stats": {
       "title": "Estadísticas",
-      "totalBlocks": "Bloques creados",
+      "totalBlocks": "Total de posts creados",
       "collaborations": "Colaboraciones",
       "daysActive": "Días activos"
     }

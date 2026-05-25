@@ -2,10 +2,10 @@
   "search": {
     "meta": {
       "title": "검색",
-      "description": "공개 블록을 검색하세요."
+      "description": "공개 게시물을 검색하세요."
     },
     "title": "검색",
-    "placeholder": "블록 검색...",
+    "placeholder": "게시물 검색...",
     "hint": "검색하려면 최소 2자를 입력하세요.",
     "noResults": "검색 결과가 없습니다.",
     "untitled": "제목 없음",

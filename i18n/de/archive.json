@@ -18,8 +18,8 @@
     "backToRoom": "← Zuruck zum Raum-Dashboard",
     "calendar": {
       "meta": {
-        "description": "Sieh alle kreativen Blocke aus {month} {year} - von schnellen Gedanken bis zu tiefen Reflexionen. Klicke auf ein Datum, um zu entdecken, was geteilt wurde.",
-        "descriptionRoom": "Sieh die kreative Aktivitat in {roomName} im {month} {year}. Wahle ein Datum, um die an diesem Tag geteilten Blocke zu entdecken."
+        "description": "Sieh alle kreativen Beitrage aus {month} {year} - von schnellen Gedanken bis zu tiefen Reflexionen. Klicke auf ein Datum, um zu entdecken, was geteilt wurde.",
+        "descriptionRoom": "Sieh die kreative Aktivitat in {roomName} im {month} {year}. Wahle ein Datum, um die an diesem Tag geteilten Beitrage zu entdecken."
       },
       "title": "📆 Archiv fur {month} {year}",
       "prevLabel": "Archiv fur {month} {year}",
@@ -29,7 +29,7 @@
       "meta": {
         "titleSite": "Archiv fur {date}",
         "titleRoom": "{roomName} — Archiv fur {date}",
-        "descriptionSite": "Entdecke die am {date} geschriebenen Blocke - von stillen Notizen bis zu wilden Gestandnissen.",
+        "descriptionSite": "Entdecke die am {date} geschriebenen Beitrage - von stillen Notizen bis zu wilden Gestandnissen.",
         "descriptionRoom": "Am {date} haben Schreibende im Raum {roomName} ihre Spuren hinterlassen - scrolle durch Gedanken, Ideen und Ausdrucksformen dieses Tages."
       },
       "heading": "Archiv fur {date}",
@@ -47,11 +47,11 @@
     },
     "index": {
       "meta": {
-        "titleRoom": "{roomName} — Alle Blocke",
-        "descriptionRoom": "Durchsuche jeden Block, der je im Raum {roomName} gepostet wurde. Sortiere nach Datum, Titel oder Stimmen, um seine Geschichte zu erkunden."
+        "titleRoom": "{roomName} — Alle Beitrage",
+        "descriptionRoom": "Durchsuche jeden Beitrag, der je im Raum {roomName} gepostet wurde. Sortiere nach Datum, Titel oder Stimmen, um seine Geschichte zu erkunden."
       },
       "header": {
-        "allBlocks": "— Alle Blocke"
+        "allBlocks": "— Alle Beitrage"
       },
       "sort": {
         "label": "Sortieren nach",

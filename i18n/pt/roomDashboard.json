@@ -2,27 +2,27 @@
   "roomDashboard": {
     "meta": {
       "title": "Daily Page — {roomName}",
-      "description": "Explore blocos recentes e em andamento em {roomName}."
+      "description": "Explore posts recentes e em andamento em {roomName}."
     },
     "links": {
       "exploreLabel": "Explorar:",
-      "allBlocks": "🗂️ Todos os blocos",
+      "allBlocks": "🗂️ Todos os posts",
       "browseByDate": "🗓️ Por data",
       "bestOf": "🏅 Melhores",
       "searchInRoom": "🔎 Buscar"
     },
     "actions": {
-      "createBlock": "Criar um Bloco",
+      "createBlock": "Criar um post",
       "starTitle": "Favoritar esta sala",
       "unstarTitle": "Remover esta sala dos favoritos"
     },
     "tabs": {
-      "locked": "Blocos Bloqueados",
-      "inProgress": "Blocos em Andamento"
+      "locked": "Posts bloqueados",
+      "inProgress": "Posts em andamento"
     },
     "sections": {
-      "lockedHeader": "Blocos bloqueados",
-      "inProgressHeader": "Blocos em andamento"
+      "lockedHeader": "Posts bloqueados",
+      "inProgressHeader": "Posts em andamento"
     },
     "editorial": {
       "heading": "Guias em destaque",
@@ -35,9 +35,9 @@
     },
     "empty": {
       "noDescription": "Nenhuma descrição disponível.",
-      "noLocked": "Ainda não há blocos bloqueados! Os blocos são bloqueados automaticamente após 1 hora de inatividade.",
-      "noInProgress": "Ainda não há blocos em andamento! Hora de começar um.",
-      "noBlocks": "Ainda não há blocos! Crie o primeiro e deixe sua marca. 😎"
+      "noLocked": "Ainda não há posts bloqueados! Os posts são bloqueados automaticamente após 1 hora de inatividade.",
+      "noInProgress": "Ainda não há posts em andamento! Hora de começar um.",
+      "noBlocks": "Ainda não há posts! Crie o primeiro e deixe sua marca. 😎"
     }
   }
 }

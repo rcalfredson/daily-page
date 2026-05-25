@@ -4,23 +4,23 @@
       "you": "(Tú)"
     },
     "meta": {
-      "title": "Editar bloque - {blockTitle}",
-      "titleFallback": "Editar bloque"
+      "title": "Editar post - {blockTitle}",
+      "titleFallback": "Editar post"
     },
     "errors": {
       "imageUrlRequired": "Por favor, ingresa una URL de imagen.",
-      "notFound": "No se encontró el bloque o no pertenece a esta sala.",
-      "loadFailed": "Ocurrió un error al cargar el editor del bloque.",
+      "notFound": "No se encontró el post o no pertenece a esta sala.",
+      "loadFailed": "Ocurrió un error al cargar el editor del post.",
       "updateTitleFailed": "Error al actualizar el título."
     },
     "roomInfo": {
       "label": "Sala:"
     },
     "title": {
-      "placeholder": "Escribe el título del bloque",
+      "placeholder": "Escribe el título del post",
       "editTooltip": "Editar título",
-      "lock": "Bloquear bloque",
-      "delete": "Borrar bloque"
+      "lock": "Bloquear post",
+      "delete": "Borrar post"
     },
     "description": {
       "label": "Descripción",
@@ -42,7 +42,7 @@
       "label": "Participantes:"
     },
     "toasts": {
-      "blockLocked": "¡Este bloque ha sido bloqueado!"
+      "blockLocked": "¡Este post ha sido bloqueado!"
     },
     "editor": {
       "placeholder": "La página en blanco te espera; escribe sin miedo."
@@ -71,12 +71,12 @@
       "downloadFile": "Descargar archivo"
     },
     "lockModal": {
-      "messageLine1": "¿Seguro que quieres bloquear este bloque?",
+      "messageLine1": "¿Seguro que quieres bloquear este post?",
       "messageLine2": "Esto lo finalizará y evitará más ediciones.",
       "confirm": "Bloquear",
       "cancel": "Cancelar",
-      "successToast": "Bloque bloqueado correctamente.",
-      "errorToast": "Error al bloquear el bloque."
+      "successToast": "Post bloqueado correctamente.",
+      "errorToast": "Error al bloquear el post."
     },
     "tags": {
       "headerWithTags": "Etiquetas:",
@@ -84,13 +84,13 @@
       "updateError": "Error al actualizar las etiquetas."
     },
     "fullBlock": {
-      "headingPrefix": "Lo sentimos; el bloque \"{blockTitle}\" está ahora",
+      "headingPrefix": "Lo sentimos; el post \"{blockTitle}\" está ahora",
       "headingStatus": "completamente ocupado.",
       "retryPrefix": "Por favor,",
-      "retryLink": "prueba con otro bloque",
+      "retryLink": "prueba con otro post",
       "retrySuffix": "o vuelve más tarde.",
       "consolationPrefix": "Mientras esperas, puedes leer",
-      "consolationBestOf": "algunos de nuestros bloques favoritos",
+      "consolationBestOf": "algunos de nuestros posts favoritos",
       "consolationMiddle": "o explorar",
       "consolationArchive": "el archivo."
     }

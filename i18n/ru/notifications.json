@@ -8,9 +8,9 @@
       "empty": "Уведомлений пока нет.",
       "markRead": "Отметить как прочитанное",
       "fallbackActor": "Кто-то",
-      "fallbackBlockTitle": "ваш блок",
+      "fallbackBlockTitle": "ваша публикация",
       "item": {
-        "blockComment": "{actorUsername} прокомментировал(а) ваш блок \"{blockTitle}\".",
+        "blockComment": "{actorUsername} прокомментировал(а) вашу публикацию \"{blockTitle}\".",
         "commentReply": "{actorUsername} ответил(а) на ваш комментарий в \"{blockTitle}\".",
         "unknown": "Уведомление"
       }
@@ -18,12 +18,12 @@
     "email": {
       "blockComment": {
         "subject": "Новый комментарий к \"{blockTitle}\"",
-        "heading": "Новый комментарий к вашему блоку",
+        "heading": "Новый комментарий к вашей публикации",
         "headingWithName": "Здравствуйте, {username}!",
-        "body": "<strong>{actorUsername}</strong> прокомментировал(а) ваш блок <strong>{blockTitle}</strong>.",
+        "body": "<strong>{actorUsername}</strong> прокомментировал(а) вашу публикацию <strong>{blockTitle}</strong>.",
         "cta": "Открыть разговор на Daily Page",
         "fallbackActor": "Кто-то",
-        "fallbackBlockTitle": "ваш блок"
+        "fallbackBlockTitle": "ваша публикация"
       },
       "commentReply": {
         "subject": "Новый ответ в \"{blockTitle}\"",
@@ -32,7 +32,7 @@
         "body": "<strong>{actorUsername}</strong> ответил(а) на ваш комментарий в <strong>{blockTitle}</strong>.",
         "cta": "Открыть разговор на Daily Page",
         "fallbackActor": "Кто-то",
-        "fallbackBlockTitle": "ваш блок"
+        "fallbackBlockTitle": "ваша публикация"
       }
     }
   }

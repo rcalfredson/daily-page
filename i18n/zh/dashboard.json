@@ -16,7 +16,7 @@
       "title": "最近活动",
       "none": "暂无最近活动。",
       "updatedOn": "更新于 {date}",
-      "viewAllBlocks": "查看全部块"
+      "viewAllBlocks": "查看全部帖子"
     },
     "streak": {
       "title": "写作连续记录",
@@ -30,7 +30,7 @@
     },
     "stats": {
       "title": "你的统计",
-      "totalBlocks": "创建的块总数",
+      "totalBlocks": "创建的帖子总数",
       "collaborations": "协作",
       "votesGiven": "已投票数",
       "daysActive": "活跃天数",

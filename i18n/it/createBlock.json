@@ -1,10 +1,10 @@
 {
   "createBlock": {
     "meta": {
-      "title": "Crea un nuovo blocco - Daily Page",
-      "description": "Inizia un nuovo blocco creativo con tag, lingua e visibilita opzionali."
+      "title": "Crea un nuovo post - Daily Page",
+      "description": "Inizia un nuovo post creativo con tag, lingua e visibilita opzionali."
     },
-    "heading": "Crea un nuovo blocco",
+    "heading": "Crea un nuovo post",
     "roomInfo": {
       "roomLabel": "Stanza:",
       "unavailable": "Informazioni sulla stanza non disponibili.",
@@ -25,12 +25,12 @@
       "initialContent": {
         "label": "Contenuto iniziale (opzionale):",
         "help": "Inizia a scrivere qui oppure premi Crea per continuare nella pagina completa dell'editor, dove puoi incorporare immagini e collaborare in tempo reale.",
-        "placeholder": "Inizia il blocco qui, oppure continua a modificarlo dopo la creazione..."
+        "placeholder": "Inizia il post qui, oppure continua a modificarlo dopo la creazione..."
       },
       "visibility": {
         "label": "Visibilita:"
       },
-      "submit": "Crea blocco"
+      "submit": "Crea post"
     },
     "visibility": {
       "public": {
@@ -42,7 +42,7 @@
         "label": "Privato",
         "title": "Solo per utenti registrati. Visibile al termine della modifica.",
         "inline": "Solo per utenti registrati. Visibile al termine della modifica.",
-        "tooltip": "I blocchi privati sono solo su invito mentre lavori e diventano visibili quando hai finito."
+        "tooltip": "I post privati sono solo su invito mentre lavori e diventano visibili quando hai finito."
       }
     },
     "advanced": {
@@ -78,10 +78,10 @@
         }
       },
       "translate": {
-        "label": "Traduci blocco esistente (URL o ID):",
-        "placeholder": "Incolla un URL o ID del blocco (opzionale)",
-        "invalid": "Non sembra un URL o ID di blocco valido.",
-        "fetchError": "Impossibile recuperare le informazioni del blocco."
+        "label": "Traduci post esistente (URL o ID):",
+        "placeholder": "Incolla un URL o ID del post (opzionale)",
+        "invalid": "Non sembra un URL o ID di post valido.",
+        "fetchError": "Impossibile recuperare le informazioni del post."
       }
     },
     "messages": {

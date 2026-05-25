@@ -2,10 +2,10 @@
   "search": {
     "meta": {
       "title": "Buscar",
-      "description": "Buscar blocos públicos."
+      "description": "Buscar posts públicos."
     },
     "title": "Buscar",
-    "placeholder": "Buscar blocos...",
+    "placeholder": "Buscar posts...",
     "hint": "Digite pelo menos 2 caracteres para buscar.",
     "noResults": "Nenhum resultado encontrado.",
     "untitled": "Sem título",

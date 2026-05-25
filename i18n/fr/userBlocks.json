@@ -1,19 +1,19 @@
 {
   "userBlocks": {
     "meta": {
-      "title": "Vos blocs",
-      "description": "Parcourez et triez tous les blocs que vous avez créés ou auxquels vous avez collaboré."
+      "title": "Vos publications",
+      "description": "Parcourez et triez toutes les publications que vous avez créées ou auxquelles vous avez collaboré."
     },
     "header": {
       "dashboardLink": "Votre tableau de bord",
       "profileLink": "Profil de {username}",
-      "allBlocks": "Tous les blocs"
+      "allBlocks": "Toutes les publications"
     },
-    "empty": "Aucun bloc pour le moment.",
+    "empty": "Aucune publication pour le moment.",
     "pagination": {
       "prev": "← Précédent",
       "next": "Suivant →"
     },
-    "titleUser": "Blocs de {username}"
+    "titleUser": "Publications de {username}"
   }
 }

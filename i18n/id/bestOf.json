@@ -2,7 +2,7 @@
   "bestOf": {
     "meta": {
       "title": "Terbaik di Daily Page",
-      "description": "Blok yang paling disukai di Daily Page—lucu, jujur, puitis, atau sekadar aneh. Lihat yang menonjol selama hari, minggu, bulan terakhir, dan seterusnya.",
+      "description": "Postingan yang paling disukai di Daily Page—lucu, jujur, puitis, atau sekadar aneh. Lihat yang menonjol selama hari, minggu, bulan terakhir, dan seterusnya.",
       "titleRoom": "Terbaik dari {roomName}",
       "descriptionRoom": "Temukan posting menonjol dari ruang {roomName}—yang paling disukai pembaca selama 24 jam, 7 hari, 30 hari terakhir, dan sepanjang waktu."
     },
@@ -20,7 +20,7 @@
       "inRoom": "di",
       "onDate": "pada {date}",
       "unknownRoom": "Ruang Tidak Dikenal",
-      "noBlocks": "Tidak ada blok ditemukan.",
+      "noBlocks": "Tidak ada postingan ditemukan.",
       "viewRoom": "Lihat ruang"
     }
   }

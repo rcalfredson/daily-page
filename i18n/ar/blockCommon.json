@@ -4,15 +4,15 @@
       "draft": "مسودة"
     },
     "deleteModal": {
-      "title": "هل تريد حذف الكتلة؟",
+      "title": "هل تريد حذف المنشور؟",
       "message": "لا يمكن التراجع عن هذا الإجراء.",
       "confirm": "يمسح",
       "cancel": "يلغي",
       "closeAriaLabel": "يغلق"
     },
     "toasts": {
-      "deleteSuccess": "تم حذف الكتلة بنجاح!",
-      "deleteFailed": "فشل في حذف الكتلة."
+      "deleteSuccess": "تم حذف المنشور بنجاح!",
+      "deleteFailed": "فشل في حذف المنشور."
     }
   }
 }

@@ -16,7 +16,7 @@
       "title": "Actividad reciente",
       "none": "No hay actividad reciente.",
       "updatedOn": "Actualizado el {date}",
-      "viewAllBlocks": "Ver todos los bloques"
+      "viewAllBlocks": "Ver todos los posts"
     },
     "streak": {
       "title": "Racha de escritura",
@@ -30,7 +30,7 @@
     },
     "stats": {
       "title": "Tus estadísticas",
-      "totalBlocks": "Bloques creados",
+      "totalBlocks": "Total de posts creados",
       "collaborations": "Colaboraciones",
       "votesGiven": "Votos emitidos",
       "daysActive": "Días activo",

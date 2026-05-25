@@ -2,10 +2,10 @@
   "search": {
     "meta": {
       "title": "Suche",
-      "description": "Offentliche Blocke durchsuchen."
+      "description": "Offentliche Beitrage suchen."
     },
     "title": "Suche",
-    "placeholder": "Blocke suchen...",
+    "placeholder": "Beitrage suchen...",
     "hint": "Gib mindestens 2 Zeichen ein, um zu suchen.",
     "noResults": "Keine Ergebnisse gefunden.",
     "untitled": "Ohne Titel",

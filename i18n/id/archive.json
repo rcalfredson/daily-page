@@ -18,8 +18,8 @@
     "backToRoom": "← Kembali ke Dasbor Ruang",
     "calendar": {
       "meta": {
-        "description": "Lihat semua blok kreatif yang diposting pada {month} {year}—dari pikiran singkat hingga refleksi mendalam. Klik tanggal mana pun untuk menjelajahi apa yang dibagikan.",
-        "descriptionRoom": "Lihat aktivitas kreatif di {roomName} selama {month} {year}. Pilih tanggal untuk menjelajahi blok yang dibagikan hari itu."
+        "description": "Lihat semua postingan kreatif yang diterbitkan pada {month} {year}, dari pikiran singkat hingga refleksi mendalam. Klik tanggal mana pun untuk menjelajahi yang dibagikan.",
+        "descriptionRoom": "Lihat aktivitas kreatif di {roomName} selama {month} {year}. Pilih tanggal untuk menjelajahi postingan yang dibagikan hari itu."
       },
       "title": "📆 Arsip untuk {month} {year}",
       "prevLabel": "Arsip untuk {month} {year}",
@@ -29,7 +29,7 @@
       "meta": {
         "titleSite": "Arsip untuk {date}",
         "titleRoom": "{roomName} — Arsip untuk {date}",
-        "descriptionSite": "Jelajahi blok yang ditulis pada {date}—dari catatan tenang hingga pengakuan liar.",
+        "descriptionSite": "Jelajahi postingan yang ditulis pada {date}, dari catatan tenang hingga pengakuan liar.",
         "descriptionRoom": "Pada {date}, para penulis di ruang {roomName} meninggalkan jejak mereka—gulir melalui refleksi, ide, dan ungkapan yang dibagikan hari itu."
       },
       "heading": "Arsip untuk {date}",
@@ -47,11 +47,11 @@
     },
     "index": {
       "meta": {
-        "titleRoom": "{roomName} — Semua Blok",
-        "descriptionRoom": "Telusuri setiap blok yang pernah diposting di ruang {roomName}. Urutkan berdasarkan tanggal, judul, atau suara untuk menjelajahi riwayatnya."
+        "titleRoom": "{roomName} — Semua Postingan",
+        "descriptionRoom": "Jelajahi setiap postingan yang pernah diterbitkan di ruang {roomName}. Urutkan berdasarkan tanggal, judul, atau suara untuk menelusuri sejarahnya."
       },
       "header": {
-        "allBlocks": "— Semua Blok"
+        "allBlocks": "— Semua Postingan"
       },
       "sort": {
         "label": "Urutkan berdasarkan",

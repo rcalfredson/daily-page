@@ -1,8 +1,8 @@
 {
   "blockView": {
     "meta": {
-      "title": "Bloque - {blockTitle}",
-      "titleFallback": "Bloque"
+      "title": "Post - {blockTitle}",
+      "titleFallback": "Post"
     },
     "labels": {
       "room": "Sala",
@@ -16,7 +16,7 @@
     },
     "buttons": {
       "edit": "Editar",
-      "deleteBlock": "Borrar bloque",
+      "deleteBlock": "Borrar post",
       "share": "Compartir",
       "flagContent": "Reportar contenido"
     },
@@ -111,9 +111,9 @@
       "loadError": "No se pueden cargar más comentarios en este momento."
     },
     "share": {
-      "title": "Comparte este bloque",
+      "title": "Comparte este post",
       "shareOn": "Compartir en:",
-      "nativeText": "Mira este bloque: {title}",
+      "nativeText": "Mira este post: {title}",
       "alt": {
         "facebook": "Logo de Facebook",
         "reddit": "Logo de Reddit",
@@ -122,8 +122,8 @@
       }
     },
     "errors": {
-      "notFound": "Bloque no encontrado o no pertenece a esta sala.",
-      "loadFailed": "Error al cargar la vista del bloque."
+      "notFound": "Post no encontrado o no pertenece a esta sala.",
+      "loadFailed": "Error al cargar la vista del post."
     }
   }
 }

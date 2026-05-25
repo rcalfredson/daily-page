@@ -2,10 +2,10 @@
   "search": {
     "meta": {
       "title": "検索",
-      "description": "公開ブロックを検索します。"
+      "description": "公開投稿を検索します。"
     },
     "title": "検索",
-    "placeholder": "ブロックを検索...",
+    "placeholder": "投稿を検索...",
     "hint": "検索するには2文字以上入力してください。",
     "noResults": "結果が見つかりません。",
     "untitled": "無題",

@@ -1,19 +1,19 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - 최근 24시간 인기 블록",
-      "description": "Daily Page는 누구나 창의적인 생각, 기억, 실험을 한 블록씩 올릴 수 있는 미니멀한 독립 글쓰기 사이트입니다. 새로운 아이디어를 탐색하고, 방에 참여하고, 당신의 목소리를 더하세요."
+      "title": "Daily Page - 최근 24시간 인기 게시물",
+      "description": "Daily Page는 누구나 창의적인 생각, 기억, 실험을 게시할 수 있는 미니멀한 독립 글쓰기 사이트입니다. 새로운 아이디어를 탐색하고, 방에 참여하고, 당신의 목소리를 더하세요."
     },
     "hero": {
       "eyebrow": "쓰고, 읽고, 다시 돌아오기 좋은 조용한 공간",
       "title": "Daily Page에 오신 것을 환영합니다!",
-      "subtitle": "최근 24시간 동안 가장 인기 있는 블록을 둘러보세요.",
+      "subtitle": "최근 24시간 동안 가장 인기 있는 게시물을 둘러보세요.",
       "ctaPrefix": "영감이 떠오르나요?",
       "cta": "방에 참여하고",
-      "ctaSuffix": "나만의 블록을 만들어 보세요!"
+      "ctaSuffix": "나만의 게시물을 만들어 보세요!"
     },
     "stats": {
-      "blocks": "블록",
+      "blocks": "게시물",
       "rooms": "방",
       "tags": "태그",
       "collabsToday": "오늘의 협업"
@@ -28,11 +28,11 @@
         "more": "토론 검색",
         "commentVerb": "에 댓글을 남김",
         "replyVerb": "에 답글을 남김",
-        "empty": "아직 최근 댓글이 없습니다. 다음 대화는 당신의 블록에서 시작될 수 있습니다."
+        "empty": "아직 최근 댓글이 없습니다. 다음 대화는 당신의 게시물에서 시작될 수 있습니다."
       },
       "reactions": {
         "title": "최근 반응",
-        "more": "인기 블록 보기",
+        "more": "인기 게시물 보기",
         "empty": "아직 최근 반응이 없습니다. 좋은 글이 곧 이곳을 깨울 수 있습니다.",
         "types": {
           "heart": "에 하트를 보냄",
@@ -44,30 +44,30 @@
     },
     "featured": {
       "roomRibbon": "★ 추천 방",
-      "roomInfoDays": "지난 {days}일 활동: 블록 {blocks}개, 투표 {votes}개.",
-      "roomInfo24h": "최근 24시간 활동: 블록 {blocks}개, 투표 {votes}개.",
+      "roomInfoDays": "지난 {days}일 활동: 게시물 {blocks}개, 투표 {votes}개.",
+      "roomInfo24h": "최근 24시간 활동: 게시물 {blocks}개, 투표 {votes}개.",
       "checkItOut": "확인하기",
-      "blockRibbon": "★ 추천 블록",
+      "blockRibbon": "★ 추천 게시물",
       "votes": "투표 {n}개",
       "noContent": "(제공된 내용 없음...)",
-      "viewBlock": "블록 보기"
+      "viewBlock": "게시물 보기"
     },
     "trendingTags": {
       "title": "인기 태그",
       "suffixDays": "(최근 {days}일)",
       "suffixAllTime": "(전체 기간)",
-      "blocks": "블록 {n}개",
+      "blocks": "게시물 {n}개",
       "votes": "투표 {n}개",
       "empty": "아직 인기 태그가 없습니다. 멋진 것에 첫 태그를 달아 보세요!"
     },
     "trendingBlocks": {
-      "title": "인기 블록",
+      "title": "인기 게시물",
       "suffixDays": "(최근 {days}일)",
       "createdBy": "작성자:",
       "in": "방:",
       "on": "일시",
       "unknownRoom": "알 수 없는 방",
-      "empty24h": "최근 24시간 동안 블록이 없습니다. 곧 다시 확인해 보세요!"
+      "empty24h": "최근 24시간 동안 게시물이 없습니다. 곧 다시 확인해 보세요!"
     }
   }
 }

@@ -1,10 +1,10 @@
 {
   "createBlock": {
     "meta": {
-      "title": "Criar um Novo Bloco — Daily Page",
-      "description": "Comece um novo bloco criativo com tags, idioma e visibilidade opcionais."
+      "title": "Criar um Novo Post — Daily Page",
+      "description": "Comece um novo post criativo com tags, idioma e visibilidade opcionais."
     },
-    "heading": "Criar um Novo Bloco",
+    "heading": "Criar um Novo Post",
     "roomInfo": {
       "roomLabel": "Sala:",
       "unavailable": "Informações da sala não disponíveis.",
@@ -25,12 +25,12 @@
       "initialContent": {
         "label": "Conteúdo Inicial (opcional):",
         "help": "Comece a escrever aqui ou pressione “Criar” para continuar na página completa do editor, onde você pode incorporar imagens e colaborar em tempo real.",
-        "placeholder": "Comece seu bloco aqui ou continue editando após a criação..."
+        "placeholder": "Comece seu post aqui ou continue editando após a criação..."
       },
       "visibility": {
         "label": "Visibilidade:"
       },
-      "submit": "Criar Bloco"
+      "submit": "Criar Post"
     },
     "visibility": {
       "public": {
@@ -42,7 +42,7 @@
         "label": "Privado",
         "title": "Apenas para usuários logados. Visível após a conclusão da edição.",
         "inline": "Apenas para usuários logados. Visível após a conclusão da edição.",
-        "tooltip": "Blocos privados são somente por convite enquanto você trabalha e ficam visíveis quando você termina."
+        "tooltip": "Posts privados são somente por convite enquanto você trabalha e ficam visíveis quando você termina."
       }
     },
     "advanced": {
@@ -78,10 +78,10 @@
         }
       },
       "translate": {
-        "label": "Traduzir bloco existente (URL ou ID):",
-        "placeholder": "Cole uma URL ou ID de bloco (opcional)",
-        "invalid": "Isso não parece uma URL ou ID de bloco válido.",
-        "fetchError": "Não foi possível buscar informações do bloco."
+        "label": "Traduzir post existente (URL ou ID):",
+        "placeholder": "Cole uma URL ou ID de post (opcional)",
+        "invalid": "Isso não parece uma URL ou ID de post válido.",
+        "fetchError": "Não foi possível buscar informações do post."
       }
     },
     "messages": {

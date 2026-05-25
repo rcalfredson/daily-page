@@ -2,7 +2,7 @@
   "bestOf": {
     "meta": {
       "title": "Daily Page ベスト",
-      "description": "Daily Page で最も愛されたブロック。面白いもの、正直なもの、詩的なもの、ただ奇妙なものまで。過去1日、1週間、1か月、そしてそれ以上で目立ったものを見てみましょう。",
+      "description": "Daily Page で最も愛された投稿。面白いもの、正直なもの、詩的なもの、ただ奇妙なものまで。過去1日、1週間、1か月、そしてそれ以上で目立ったものを見てみましょう。",
       "titleRoom": "{roomName} ベスト",
       "descriptionRoom": "{roomName} ルームの注目投稿を見つけましょう。過去24時間、7日、30日、全期間で読者に最も愛された投稿です。"
     },
@@ -20,7 +20,7 @@
       "inRoom": "内",
       "onDate": "{date}",
       "unknownRoom": "不明なルーム",
-      "noBlocks": "ブロックが見つかりません。",
+      "noBlocks": "投稿が見つかりません。",
       "viewRoom": "ルームを見る"
     }
   }

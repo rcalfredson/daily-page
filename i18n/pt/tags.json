@@ -20,14 +20,14 @@
       "meta": {
         "titlePrefix": "#",
         "titleSuffix": " | Daily Page",
-        "description": "Blocos marcados com"
+        "description": "Posts com a tag"
       },
       "header": {
         "label": "Tag:",
         "icon": "🏷️"
       },
       "stats": {
-        "totalBlocks": "Total de blocos com",
+        "totalBlocks": "Total de posts com",
         "totalBlocksTagSeparator": ":"
       },
       "blockInfo": {
@@ -37,10 +37,10 @@
         "onDate": "em"
       },
       "chart": {
-        "label": "Blocos Criados ao Longo do Tempo"
+        "label": "Posts criados ao longo do tempo"
       },
       "empty": {
-        "message": "Ainda não há blocos com esta tag. Talvez você deva criar o primeiro? 🔥"
+        "message": "Ainda não há posts com esta tag. Talvez você deva criar o primeiro? 🔥"
       },
       "error": {
         "loadingTagPage": "Erro ao carregar a página da tag"

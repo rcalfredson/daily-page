@@ -18,8 +18,8 @@
     "backToRoom": "← ルームダッシュボードへ戻る",
     "calendar": {
       "meta": {
-        "description": "{year}年{month}に投稿されたすべてのクリエイティブブロックを表示します。短い思いつきから深い省察まで、任意の日付をクリックして共有内容を探索できます。",
-        "descriptionRoom": "{year}年{month}の {roomName} での創作活動を表示します。日付を選んで、その日に共有されたブロックを探索しましょう。"
+        "description": "{year}年{month}に投稿されたすべてのクリエイティブ投稿を表示します。短い思いつきから深い省察まで、任意の日付をクリックして共有内容を探索できます。",
+        "descriptionRoom": "{year}年{month}の {roomName} での創作活動を表示します。日付を選んで、その日に共有された投稿を探索しましょう。"
       },
       "title": "📆 {year}年{month}のアーカイブ",
       "prevLabel": "{year}年{month}のアーカイブ",
@@ -29,7 +29,7 @@
       "meta": {
         "titleSite": "{date} のアーカイブ",
         "titleRoom": "{roomName} — {date} のアーカイブ",
-        "descriptionSite": "{date} に書かれたブロックを探索しましょう。静かなメモから大胆な告白まで。",
+        "descriptionSite": "{date} に書かれた投稿を探索しましょう。静かなメモから大胆な告白まで。",
         "descriptionRoom": "{date}、{roomName} ルームの書き手たちは足跡を残しました。その日に共有された省察、アイデア、表現をスクロールしてみましょう。"
       },
       "heading": "{date} のアーカイブ",
@@ -47,11 +47,11 @@
     },
     "index": {
       "meta": {
-        "titleRoom": "{roomName} — すべてのブロック",
-        "descriptionRoom": "{roomName} ルームに投稿されたすべてのブロックを閲覧できます。日付、タイトル、投票数で並べ替えて履歴を探索しましょう。"
+        "titleRoom": "{roomName} — すべての投稿",
+        "descriptionRoom": "{roomName} ルームに投稿されたすべての投稿を閲覧できます。日付、タイトル、投票数で並べ替えて履歴を探索しましょう。"
       },
       "header": {
-        "allBlocks": "— すべてのブロック"
+        "allBlocks": "— すべての投稿"
       },
       "sort": {
         "label": "並べ替え",

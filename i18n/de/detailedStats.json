@@ -11,7 +11,7 @@
       "title": "📊 Deine Statistikubersicht 📊"
     },
     "cards": {
-      "totalBlocks": "Erstellte Blocke insgesamt 📝",
+      "totalBlocks": "Erstellte Beitrage insgesamt 📝",
       "collaborations": "Zusammenarbeiten 🤝",
       "votesGiven": "Abgegebene Stimmen 👍",
       "daysActive": "Aktive Tage 📆"
@@ -19,7 +19,7 @@
     "chart": {
       "datasetLabel": "Deine Statistiken",
       "labels": {
-        "blocksCreated": "Erstellte Blocke",
+        "blocksCreated": "Erstellte Beitrage",
         "collaborations": "Zusammenarbeiten",
         "votesGiven": "Abgegebene Stimmen",
         "daysActive": "Aktive Tage"

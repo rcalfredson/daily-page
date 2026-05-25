@@ -2,10 +2,10 @@
   "search": {
     "meta": {
       "title": "Cerca",
-      "description": "Cerca nei blocchi pubblici."
+      "description": "Cerca nei post pubblici."
     },
     "title": "Cerca",
-    "placeholder": "Cerca blocchi...",
+    "placeholder": "Cerca post...",
     "hint": "Digita almeno 2 caratteri per cercare.",
     "noResults": "Nessun risultato trovato.",
     "untitled": "Senza titolo",

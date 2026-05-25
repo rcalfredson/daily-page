@@ -1,19 +1,19 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Principais Blocos nas últimas 24 Horas",
-      "description": "Daily Page é um site minimalista e independente de escrita onde qualquer pessoa pode publicar pensamentos criativos, memórias ou experimentos, um bloco por vez. Explore novas ideias, entre em salas e contribua com sua voz."
+      "title": "Daily Page - Posts populares das últimas 24 horas",
+      "description": "Daily Page é um site minimalista e independente de escrita onde qualquer pessoa pode publicar pensamentos criativos, memórias ou experimentos, um post por vez. Explore novas ideias, entre em salas e contribua com sua voz."
     },
     "hero": {
       "eyebrow": "Um lugar tranquilo para escrever, ler e voltar",
       "title": "Boas-vindas ao Daily Page!",
-      "subtitle": "Explore os blocos mais populares das últimas 24 horas.",
+      "subtitle": "Explore os posts mais populares das últimas 24 horas.",
       "ctaPrefix": "Sentindo inspiração?",
       "cta": "Entre em uma sala",
       "ctaSuffix": "e crie seu próprio bloco!"
     },
     "stats": {
-      "blocks": "Blocos",
+      "blocks": "Posts",
       "rooms": "Salas",
       "tags": "Tags",
       "collabsToday": "Colaborações Hoje"
@@ -32,7 +32,7 @@
       },
       "reactions": {
         "title": "Reações recentes",
-        "more": "Navegar pelos blocos principais",
+        "more": "Navegar pelos posts populares",
         "empty": "Ainda não há reações recentes. Um bom post pode acordar isso rapidamente.",
         "types": {
           "heart": "curtiu",
@@ -44,30 +44,30 @@
     },
     "featured": {
       "roomRibbon": "★ Sala em Destaque",
-      "roomInfoDays": "Atividade nos últimos {days} dias: {blocks} blocos, {votes} votos.",
-      "roomInfo24h": "Atividade nas últimas 24 horas: {blocks} blocos, {votes} votos.",
+      "roomInfoDays": "Atividade nos últimos {days} dias: {blocks} posts, {votes} votos.",
+      "roomInfo24h": "Atividade nas últimas 24 horas: {blocks} posts, {votes} votos.",
       "checkItOut": "Confira",
-      "blockRibbon": "★ Bloco em Destaque",
+      "blockRibbon": "★ Post em Destaque",
       "votes": "{n} votos",
       "noContent": "(Nenhum conteúdo fornecido...)",
-      "viewBlock": "Ver Bloco"
+      "viewBlock": "Ver Post"
     },
     "trendingTags": {
       "title": "Tags em Alta",
       "suffixDays": "(últimos {days} dias)",
       "suffixAllTime": "(todos os tempos)",
-      "blocks": "{n} blocos",
+      "blocks": "{n} posts",
       "votes": "{n} votos",
       "empty": "Ainda não há tags em alta. Seja o primeiro a marcar algo legal!"
     },
     "trendingBlocks": {
-      "title": "Blocos em Alta",
+      "title": "Posts em Alta",
       "suffixDays": "(últimos {days} dias)",
       "createdBy": "Criado por:",
       "in": "em",
       "on": "em",
       "unknownRoom": "Sala Desconhecida",
-      "empty24h": "Ainda não há blocos nas últimas 24 horas. Volte em breve, compa!"
+      "empty24h": "Ainda não há posts nas últimas 24 horas. Volte em breve, compa!"
     }
   }
 }

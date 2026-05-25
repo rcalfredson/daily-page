@@ -18,8 +18,8 @@
     "backToRoom": "← Retour au tableau de bord du salon",
     "calendar": {
       "meta": {
-        "description": "Consultez tous les blocs créatifs publiés en {month} {year}, des pensées rapides aux réflexions profondes. Cliquez sur une date pour explorer ce qui a été partagé.",
-        "descriptionRoom": "Consultez l'activité créative de {roomName} en {month} {year}. Choisissez une date pour explorer les blocs partagés ce jour-là."
+        "description": "Voir toutes les publications créatives publiées en {month} {year}, des pensées rapides aux réflexions profondes. Cliquez sur une date pour explorer ce qui a été partagé.",
+        "descriptionRoom": "Voir l’activité créative dans le salon {roomName} pendant {month} {year}. Choisissez une date pour explorer les publications partagées ce jour-là."
       },
       "title": "📆 Archives de {month} {year}",
       "prevLabel": "Archives de {month} {year}",
@@ -29,7 +29,7 @@
       "meta": {
         "titleSite": "Archives du {date}",
         "titleRoom": "{roomName} — Archives du {date}",
-        "descriptionSite": "Explorez les blocs écrits le {date}, des notes discrètes aux confessions les plus vives.",
+        "descriptionSite": "Explorez les publications écrites le {date}, des notes calmes aux confessions les plus libres.",
         "descriptionRoom": "Le {date}, les auteurs du salon {roomName} ont laissé leur trace : parcourez les réflexions, idées et expressions partagées ce jour-là."
       },
       "heading": "Archives du {date}",
@@ -47,11 +47,11 @@
     },
     "index": {
       "meta": {
-        "titleRoom": "{roomName} — Tous les blocs",
-        "descriptionRoom": "Parcourez tous les blocs publiés dans le salon {roomName}. Triez par date, titre ou votes pour explorer son histoire."
+        "titleRoom": "{roomName} — Toutes les publications",
+        "descriptionRoom": "Parcourez toutes les publications publiées dans le salon {roomName}. Triez par date, titre ou votes pour explorer son histoire."
       },
       "header": {
-        "allBlocks": "— Tous les blocs"
+        "allBlocks": "— Toutes les publications"
       },
       "sort": {
         "label": "Trier par",

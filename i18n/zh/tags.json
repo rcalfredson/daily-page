@@ -20,14 +20,14 @@
       "meta": {
         "titlePrefix": "#",
         "titleSuffix": " | Daily Page",
-        "description": "带有此标签的块："
+        "description": "带有此标签的帖子："
       },
       "header": {
         "label": "标签：",
         "icon": "🏷️"
       },
       "stats": {
-        "totalBlocks": "包含此标签的块总数",
+        "totalBlocks": "包含此标签的帖子总数",
         "totalBlocksTagSeparator": "："
       },
       "blockInfo": {
@@ -37,10 +37,10 @@
         "onDate": "于"
       },
       "chart": {
-        "label": "随时间创建的块"
+        "label": "随时间创建的帖子"
       },
       "empty": {
-        "message": "还没有找到带此标签的块。也许你该创建第一个？🔥"
+        "message": "还没有找到带此标签的帖子。也许你该创建第一个？🔥"
       },
       "error": {
         "loadingTagPage": "加载标签页面出错"

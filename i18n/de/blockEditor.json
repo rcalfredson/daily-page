@@ -4,13 +4,13 @@
       "you": "(Du)"
     },
     "meta": {
-      "title": "Block bearbeiten - {blockTitle}",
-      "titleFallback": "Block bearbeiten"
+      "title": "Beitrag bearbeiten - {blockTitle}",
+      "titleFallback": "Beitrag bearbeiten"
     },
     "errors": {
       "imageUrlRequired": "Bitte gib eine Bild-URL ein.",
-      "notFound": "Block nicht gefunden oder gehort nicht zu diesem Raum.",
-      "loadFailed": "Beim Laden des Block-Editors ist ein Fehler aufgetreten.",
+      "notFound": "Beitrag nicht gefunden oder gehort nicht zu diesem Raum.",
+      "loadFailed": "Beim Laden des Beitrag-Editors ist ein Fehler aufgetreten.",
       "updateTitleFailed": "Fehler beim Aktualisieren des Titels."
     },
     "roomInfo": {
@@ -19,8 +19,8 @@
     "title": {
       "placeholder": "Blocktitel eingeben",
       "editTooltip": "Titel bearbeiten",
-      "lock": "Block sperren",
-      "delete": "Block loschen"
+      "lock": "Beitrag sperren",
+      "delete": "Beitrag loschen"
     },
     "description": {
       "label": "Beschreibung",
@@ -42,7 +42,7 @@
       "label": "Mitwirkende:"
     },
     "toasts": {
-      "blockLocked": "Dieser Block wurde gesperrt!"
+      "blockLocked": "Dieser Beitrag wurde gesperrt!"
     },
     "editor": {
       "placeholder": "Die leere Seite wartet auf deine Stimme; schreibe furchtlos."
@@ -71,12 +71,12 @@
       "downloadFile": "Datei herunterladen"
     },
     "lockModal": {
-      "messageLine1": "Mochtest du diesen Block wirklich sperren?",
+      "messageLine1": "Mochtest du diesen Beitrag wirklich sperren?",
       "messageLine2": "Damit wird er abgeschlossen und weitere Bearbeitung verhindert.",
       "confirm": "Sperren",
       "cancel": "Abbrechen",
-      "successToast": "Block erfolgreich gesperrt.",
-      "errorToast": "Fehler beim Sperren des Blocks."
+      "successToast": "Beitrag erfolgreich gesperrt.",
+      "errorToast": "Fehler beim Sperren des Beitrags."
     },
     "tags": {
       "headerWithTags": "Tags:",
@@ -84,10 +84,10 @@
       "updateError": "Fehler beim Aktualisieren der Tags."
     },
     "fullBlock": {
-      "headingPrefix": "Tut uns leid; der Block \"{blockTitle}\" ist jetzt",
+      "headingPrefix": "Tut uns leid; der Beitrag \"{blockTitle}\" ist jetzt",
       "headingStatus": "voll belegt.",
       "retryPrefix": "Bitte",
-      "retryLink": "versuche einen anderen Block",
+      "retryLink": "versuche einen anderen Beitrag",
       "retrySuffix": "oder komm ein anderes Mal wieder.",
       "consolationPrefix": "Wahrend du wartest, lies gern",
       "consolationBestOf": "einige unserer Lieblingsblocke",

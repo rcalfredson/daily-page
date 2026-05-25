@@ -20,14 +20,14 @@
       "meta": {
         "titlePrefix": "#",
         "titleSuffix": " | Daily Page",
-        "description": "タグ付きブロック:"
+        "description": "タグ付き投稿:"
       },
       "header": {
         "label": "タグ:",
         "icon": "🏷️"
       },
       "stats": {
-        "totalBlocks": "このタグの総ブロック数",
+        "totalBlocks": "このタグの総投稿数",
         "totalBlocksTagSeparator": ":"
       },
       "blockInfo": {
@@ -37,10 +37,10 @@
         "onDate": "日付"
       },
       "chart": {
-        "label": "作成されたブロックの推移"
+        "label": "作成された投稿の推移"
       },
       "empty": {
-        "message": "このタグのブロックはまだありません。最初のひとつを作ってみませんか？🔥"
+        "message": "このタグの投稿はまだありません。最初のひとつを作ってみませんか？🔥"
       },
       "error": {
         "loadingTagPage": "タグページの読み込み中にエラーが発生しました"

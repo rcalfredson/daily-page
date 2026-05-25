@@ -4,23 +4,23 @@
       "you": "(Você)"
     },
     "meta": {
-      "title": "Editar Bloco - {blockTitle}",
-      "titleFallback": "Editar Bloco"
+      "title": "Editar Post - {blockTitle}",
+      "titleFallback": "Editar Post"
     },
     "errors": {
       "imageUrlRequired": "Digite uma URL de imagem.",
-      "notFound": "Bloco não encontrado ou não pertence a esta sala.",
-      "loadFailed": "Ocorreu um erro ao carregar o editor de blocos.",
+      "notFound": "Post não encontrado ou não pertence a esta sala.",
+      "loadFailed": "Ocorreu um erro ao carregar o editor de posts.",
       "updateTitleFailed": "Erro ao atualizar o título."
     },
     "roomInfo": {
       "label": "Sala:"
     },
     "title": {
-      "placeholder": "Digite o título do bloco",
+      "placeholder": "Digite o título do post",
       "editTooltip": "Editar Título",
-      "lock": "Bloquear Bloco",
-      "delete": "Excluir Bloco"
+      "lock": "Bloquear Post",
+      "delete": "Excluir Post"
     },
     "description": {
       "label": "Descrição",
@@ -42,7 +42,7 @@
       "label": "Pares:"
     },
     "toasts": {
-      "blockLocked": "Este bloco foi bloqueado!"
+      "blockLocked": "Este post foi bloqueado!"
     },
     "editor": {
       "placeholder": "A página em branco espera sua voz; escreva sem medo."
@@ -71,12 +71,12 @@
       "downloadFile": "Baixar arquivo"
     },
     "lockModal": {
-      "messageLine1": "Tem certeza de que deseja bloquear este bloco?",
+      "messageLine1": "Tem certeza de que deseja bloquear este post?",
       "messageLine2": "Isso irá finalizá-lo e impedir novas edições.",
       "confirm": "Bloquear",
       "cancel": "Cancelar",
-      "successToast": "Bloco bloqueado com sucesso.",
-      "errorToast": "Erro ao bloquear bloco."
+      "successToast": "Post bloqueado com sucesso.",
+      "errorToast": "Erro ao bloquear post."
     },
     "tags": {
       "headerWithTags": "Tags:",
@@ -84,13 +84,13 @@
       "updateError": "Erro ao atualizar tags."
     },
     "fullBlock": {
-      "headingPrefix": "Desculpe; o bloco \"{blockTitle}\" agora está",
+      "headingPrefix": "Desculpe; o post \"{blockTitle}\" agora está",
       "headingStatus": "totalmente ocupado.",
       "retryPrefix": "Por favor,",
-      "retryLink": "tente um bloco diferente",
+      "retryLink": "tente um post diferente",
       "retrySuffix": "ou volte em outra hora.",
       "consolationPrefix": "Enquanto espera, fique à vontade para ler",
-      "consolationBestOf": "alguns dos nossos blocos favoritos",
+      "consolationBestOf": "alguns dos nossos posts favoritos",
       "consolationMiddle": "ou navegar pelo",
       "consolationArchive": "arquivo."
     }

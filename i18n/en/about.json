@@ -19,24 +19,24 @@
           "text": "are topic-silos (think “subreddit, but friendlier”)."
         },
         "blocks": {
-          "label": "Blocks",
-          "text": "are collaborative posts—anyone (even “anonymous”) can create one, edit it until it’s locked, and vote on others."
+          "label": "Posts",
+          "text": "are collaborative writing spaces—anyone (even “anonymous”) can create one, edit it until it’s locked, and vote on others."
         },
         "privacy": {
           "label": "Privacy & Sharing",
-          "text": "Public blocks live in the room’s feed. Private blocks hide until locked, but you get a share-link to invite friends."
+          "text": "means public posts live in the room’s feed. Private posts hide until locked, but you get a share-link to invite friends."
         },
         "markdown": {
           "label": "Markdown & Media",
-          "text": "You write in markdown, embed images, and co-edit like in Google Docs."
+          "text": "lets you write in markdown, embed images, and co-edit like in Google Docs."
         },
         "trends": {
           "label": "Trends & Tags",
-          "text": "Tag your block, track tag trends, and discover top content (7 d / 30 d / all-time)."
+          "text": "let you tag your post, track tag trends, and discover top content (7 d / 30 d / all-time)."
         },
         "streaks": {
           "label": "Streaks",
-          "text": "Keep your daily writing streak alive—your best incentive to show up each day."
+          "text": "keep your daily writing streak alive—your best incentive to show up each day."
         }
       }
     },

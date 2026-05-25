@@ -11,7 +11,7 @@
       "title": "📊 نظرة عامة على الإحصائيات الخاصة بك 📊"
     },
     "cards": {
-      "totalBlocks": "إجمالي الكتل التي تم إنشاؤها 📝",
+      "totalBlocks": "إجمالي المنشورات التي تم إنشاؤها 📝",
       "collaborations": "التعاون 🤝",
       "votesGiven": "تم التصويت 👍",
       "daysActive": "أيام النشاط 📆"
@@ -19,7 +19,7 @@
     "chart": {
       "datasetLabel": "احصائياتك",
       "labels": {
-        "blocksCreated": "تم إنشاء الكتل",
+        "blocksCreated": "تم إنشاء المنشورات",
         "collaborations": "التعاون",
         "votesGiven": "الأصوات المعطاة",
         "daysActive": "الأيام النشطة"

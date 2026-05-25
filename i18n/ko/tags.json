@@ -20,14 +20,14 @@
       "meta": {
         "titlePrefix": "#",
         "titleSuffix": " | Daily Page",
-        "description": "다음 태그가 달린 블록"
+        "description": "다음 태그가 달린 게시물"
       },
       "header": {
         "label": "태그:",
         "icon": "🏷️"
       },
       "stats": {
-        "totalBlocks": "전체 블록 수",
+        "totalBlocks": "전체 게시물 수",
         "totalBlocksTagSeparator": ":"
       },
       "blockInfo": {
@@ -37,10 +37,10 @@
         "onDate": "일시"
       },
       "chart": {
-        "label": "시간에 따른 생성 블록"
+        "label": "시간에 따른 생성 게시물"
       },
       "empty": {
-        "message": "아직 이 태그가 달린 블록이 없습니다. 첫 블록을 만들어 보는 건 어떨까요? 🔥"
+        "message": "아직 이 태그가 달린 게시물이 없습니다. 첫 게시물을 만들어 보는 건 어떨까요? 🔥"
       },
       "error": {
         "loadingTagPage": "태그 페이지 로딩 오류"

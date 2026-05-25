@@ -12,7 +12,7 @@
       "title": "Recent Activity",
       "updatedOn": "Updated on {date}",
       "none": "No recent activity.",
-      "viewAllBlocks": "View All Blocks"
+      "viewAllBlocks": "View All Posts"
     },
     "starredRooms": {
       "title": "Starred Rooms",
@@ -21,7 +21,7 @@
     },
     "stats": {
       "title": "User Stats",
-      "totalBlocks": "Total Blocks Created",
+      "totalBlocks": "Total Posts Created",
       "collaborations": "Collaborations",
       "daysActive": "Days Active"
     }

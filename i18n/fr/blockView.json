@@ -1,8 +1,8 @@
 {
   "blockView": {
     "meta": {
-      "title": "Bloc - {blockTitle}",
-      "titleFallback": "Bloc"
+      "title": "Publication - {blockTitle}",
+      "titleFallback": "Publication"
     },
     "labels": {
       "room": "Salon",
@@ -16,7 +16,7 @@
     },
     "buttons": {
       "edit": "Modifier",
-      "deleteBlock": "Supprimer le bloc",
+      "deleteBlock": "Supprimer le publication",
       "share": "Partager",
       "flagContent": "Signaler le contenu"
     },
@@ -111,9 +111,9 @@
       "loadError": "Impossible de charger plus de commentaires pour le moment."
     },
     "share": {
-      "title": "Partager ce bloc",
+      "title": "Partager ce publication",
       "shareOn": "Partager sur :",
-      "nativeText": "Découvrez ce bloc : {title}",
+      "nativeText": "Découvrez ce publication : {title}",
       "alt": {
         "facebook": "Logo Facebook",
         "reddit": "Logo Reddit",
@@ -122,8 +122,8 @@
       }
     },
     "errors": {
-      "notFound": "Bloc introuvable ou n'appartenant pas à ce salon.",
-      "loadFailed": "Erreur lors du chargement de la vue du bloc."
+      "notFound": "Publication introuvable ou n'appartenant pas à ce salon.",
+      "loadFailed": "Erreur lors du chargement de la vue du publication."
     }
   }
 }

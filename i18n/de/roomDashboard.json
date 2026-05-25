@@ -2,27 +2,27 @@
   "roomDashboard": {
     "meta": {
       "title": "Daily Page — {roomName}",
-      "description": "Entdecke neue und laufende Blocke in {roomName}."
+      "description": "Entdecke neue und laufende Beitrage in {roomName}."
     },
     "links": {
       "exploreLabel": "Entdecken:",
-      "allBlocks": "🗂️ Alle Blocke",
+      "allBlocks": "🗂️ Alle Beitrage",
       "browseByDate": "🗓️ Nach Datum",
       "bestOf": "🏅 Das Beste",
       "searchInRoom": "🔎 Suche"
     },
     "actions": {
-      "createBlock": "Block erstellen",
+      "createBlock": "Beitrag erstellen",
       "starTitle": "Diesen Raum markieren",
       "unstarTitle": "Markierung fur diesen Raum entfernen"
     },
     "tabs": {
-      "locked": "Gesperrte Blocke",
-      "inProgress": "Blocke in Arbeit"
+      "locked": "Gesperrte Beitrage",
+      "inProgress": "Beitrage in Arbeit"
     },
     "sections": {
-      "lockedHeader": "Gesperrte Blocke",
-      "inProgressHeader": "Blocke in Arbeit"
+      "lockedHeader": "Gesperrte Beitrage",
+      "inProgressHeader": "Beitrage in Arbeit"
     },
     "editorial": {
       "heading": "Hervorgehobene Leitfaden",
@@ -35,9 +35,9 @@
     },
     "empty": {
       "noDescription": "Keine Beschreibung verfugbar.",
-      "noLocked": "Noch keine gesperrten Blocke! Blocke werden nach 1 Stunde Inaktivitat automatisch gesperrt.",
-      "noInProgress": "Noch keine Blocke in Arbeit! Zeit, einen zu starten.",
-      "noBlocks": "Noch keine Blocke! Erstelle den ersten und hinterlasse deine Spur. 😎"
+      "noLocked": "Noch keine gesperrten Beitrage! Beitrage werden nach 1 Stunde Inaktivitat automatisch gesperrt.",
+      "noInProgress": "Noch keine Beitrage in Arbeit! Zeit, einen zu starten.",
+      "noBlocks": "Noch keine Beitrage! Erstelle den ersten und hinterlasse deine Spur. 😎"
     }
   }
 }

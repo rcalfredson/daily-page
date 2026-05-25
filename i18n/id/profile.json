@@ -12,7 +12,7 @@
       "title": "Aktivitas Terbaru",
       "updatedOn": "Diperbarui pada {date}",
       "none": "Tidak ada aktivitas terbaru.",
-      "viewAllBlocks": "Lihat Semua Blok"
+      "viewAllBlocks": "Lihat semua postingan"
     },
     "starredRooms": {
       "title": "Ruang Berbintang",
@@ -21,7 +21,7 @@
     },
     "stats": {
       "title": "Statistik Pengguna",
-      "totalBlocks": "Total Blok Dibuat",
+      "totalBlocks": "Total postingan yang dibuat",
       "collaborations": "Kolaborasi",
       "daysActive": "Hari Aktif"
     }

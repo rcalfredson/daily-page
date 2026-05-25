@@ -1,8 +1,8 @@
 {
   "blockView": {
     "meta": {
-      "title": "Block - {blockTitle}",
-      "titleFallback": "Block"
+      "title": "Beitrag - {blockTitle}",
+      "titleFallback": "Beitrag"
     },
     "labels": {
       "room": "Raum",
@@ -16,7 +16,7 @@
     },
     "buttons": {
       "edit": "Bearbeiten",
-      "deleteBlock": "Block loschen",
+      "deleteBlock": "Beitrag loschen",
       "share": "Teilen",
       "flagContent": "Inhalt melden"
     },
@@ -111,9 +111,9 @@
       "loadError": "Weitere Kommentare konnen gerade nicht geladen werden."
     },
     "share": {
-      "title": "Diesen Block teilen",
+      "title": "Diesen Beitrag teilen",
       "shareOn": "Teilen auf:",
-      "nativeText": "Sieh dir diesen Block an: {title}",
+      "nativeText": "Sieh dir diesen Beitrag an: {title}",
       "alt": {
         "facebook": "Facebook-Logo",
         "reddit": "Reddit-Logo",
@@ -122,7 +122,7 @@
       }
     },
     "errors": {
-      "notFound": "Block nicht gefunden oder gehort nicht zu diesem Raum.",
+      "notFound": "Beitrag nicht gefunden oder gehort nicht zu diesem Raum.",
       "loadFailed": "Fehler beim Laden der Blockansicht."
     }
   }

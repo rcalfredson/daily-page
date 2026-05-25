@@ -19,12 +19,12 @@
           "text": "sind Themenbereiche (denk an \"Subreddit, aber freundlicher\")."
         },
         "blocks": {
-          "label": "Blocke",
-          "text": "sind kollaborative Beitrage - jede Person, sogar anonym, kann einen erstellen, ihn bis zur Sperrung bearbeiten und fur andere abstimmen."
+          "label": "Beitrage",
+          "text": "sind kollaborative Schreibraume - jede Person, sogar anonym, kann einen erstellen, ihn bis zur Sperrung bearbeiten und fur andere abstimmen."
         },
         "privacy": {
           "label": "Datenschutz und Teilen",
-          "text": "Offentliche Blocke erscheinen im Feed des Raums. Private Blocke bleiben bis zur Sperrung verborgen, aber du erhaltst einen Link zum Teilen, um Freunde einzuladen."
+          "text": "Offentliche Beitrage erscheinen im Feed des Raums. Private Beitrage bleiben bis zur Sperrung verborgen, aber du erhaltst einen Link zum Teilen, um Freunde einzuladen."
         },
         "markdown": {
           "label": "Markdown und Medien",
@@ -32,7 +32,7 @@
         },
         "trends": {
           "label": "Trends und Tags",
-          "text": "Tagge deinen Block, verfolge Tag-Trends und entdecke Top-Inhalte (7 T / 30 T / gesamte Zeit)."
+          "text": "Tagge deinen Beitrag, verfolge Tag-Trends und entdecke Top-Inhalte (7 T / 30 T / gesamte Zeit)."
         },
         "streaks": {
           "label": "Serien",

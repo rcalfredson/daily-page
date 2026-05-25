@@ -12,7 +12,7 @@
       "title": "최근 활동",
       "updatedOn": "{date}에 업데이트됨",
       "none": "최근 활동이 없습니다.",
-      "viewAllBlocks": "모든 블록 보기"
+      "viewAllBlocks": "모든 게시물 보기"
     },
     "starredRooms": {
       "title": "별표한 방",
@@ -21,7 +21,7 @@
     },
     "stats": {
       "title": "사용자 통계",
-      "totalBlocks": "생성한 전체 블록",
+      "totalBlocks": "생성한 전체 게시물",
       "collaborations": "협업",
       "daysActive": "활동한 날"
     }

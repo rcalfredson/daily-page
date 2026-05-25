@@ -2,27 +2,27 @@
   "roomDashboard": {
     "meta": {
       "title": "Daily Page — {roomName}",
-      "description": "Explora los bloques recientes y en progreso en {roomName}."
+      "description": "Explora los posts recientes y en progreso en {roomName}."
     },
     "links": {
       "exploreLabel": "Explorar:",
-      "allBlocks": "🗂️ Todos los bloques",
+      "allBlocks": "🗂️ Todos los posts",
       "browseByDate": "🗓️ Por fecha",
       "bestOf": "🏅 Lo mejor",
       "searchInRoom": "🔎 Buscar"
     },
     "actions": {
-      "createBlock": "Crear un bloque",
+      "createBlock": "Crear un post",
       "starTitle": "Marcar esta sala como favorita",
       "unstarTitle": "Quitar de favoritos"
     },
     "tabs": {
-      "locked": "Bloques bloqueados",
-      "inProgress": "En progreso"
+      "locked": "Posts bloqueados",
+      "inProgress": "Posts en progreso"
     },
     "sections": {
-      "lockedHeader": "Bloques bloqueados",
-      "inProgressHeader": "Bloques en progreso"
+      "lockedHeader": "Posts bloqueados",
+      "inProgressHeader": "Posts en progreso"
     },
     "editorial": {
       "heading": "Guías destacadas",
@@ -35,9 +35,9 @@
     },
     "empty": {
       "noDescription": "Sin descripción por ahora.",
-      "noLocked": "¡Aún no hay bloqueados! Los bloques se bloquean tras 1 hora sin actividad.",
-      "noInProgress": "¡Aún no hay en progreso! Manos a la obra.",
-      "noBlocks": "¡Todavía no hay bloques! Crea el primero y deja huella. 😎"
+      "noLocked": "¡Aún no hay posts bloqueados! Los posts se bloquean tras 1 hora sin actividad.",
+      "noInProgress": "¡Aún no hay posts en progreso! Hora de empezar uno.",
+      "noBlocks": "¡Todavía no hay posts! Crea el primero y deja huella. 😎"
     }
   }
 }

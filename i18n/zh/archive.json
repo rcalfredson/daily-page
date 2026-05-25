@@ -18,8 +18,8 @@
     "backToRoom": "← 返回房间仪表板",
     "calendar": {
       "meta": {
-        "description": "查看 {year} 年 {month} 发布的所有创作块，从简短想法到深度反思。点击任意日期探索当天分享的内容。",
-        "descriptionRoom": "查看 {roomName} 在 {year} 年 {month} 的创作活动。选择日期探索当天分享的块。"
+        "description": "查看 {year} 年 {month} 发布的所有创作帖子，从简短想法到深度反思。点击任意日期探索当天分享的内容。",
+        "descriptionRoom": "查看 {roomName} 在 {year} 年 {month} 的创作活动。选择日期探索当天分享的帖子。"
       },
       "title": "📆 {year} 年 {month}归档",
       "prevLabel": "{year} 年 {month}归档",
@@ -29,7 +29,7 @@
       "meta": {
         "titleSite": "{date} 的归档",
         "titleRoom": "{roomName} — {date} 的归档",
-        "descriptionSite": "探索 {date} 写下的块，从安静笔记到大胆告白。",
+        "descriptionSite": "探索 {date} 写下的帖子，从安静笔记到大胆告白。",
         "descriptionRoom": "{date}，{roomName} 房间中的写作者留下了他们的印记。向下浏览当天分享的反思、想法与表达。"
       },
       "heading": "{date} 的归档",
@@ -47,11 +47,11 @@
     },
     "index": {
       "meta": {
-        "titleRoom": "{roomName} — 全部块",
-        "descriptionRoom": "浏览 {roomName} 房间中发布过的每一个块。按日期、标题或票数排序，探索它的历史。"
+        "titleRoom": "{roomName} — 全部帖子",
+        "descriptionRoom": "浏览 {roomName} 房间中发布过的每一个帖子。按日期、标题或票数排序，探索它的历史。"
       },
       "header": {
-        "allBlocks": "— 全部块"
+        "allBlocks": "— 全部帖子"
       },
       "sort": {
         "label": "排序方式",

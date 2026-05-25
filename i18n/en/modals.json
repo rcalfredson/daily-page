@@ -7,10 +7,10 @@
       "cta": "Log In"
     },
     "actions": {
-      "voteOnBlock": "vote on a block",
+      "voteOnBlock": "vote on a post",
       "starRoom": "star this room",
       "reactToBlock": "react to this post",
-      "commentOnBlock": "comment on this block",
+      "commentOnBlock": "comment on this post",
       "reportComment": "report this comment"
     },
     "errors": {

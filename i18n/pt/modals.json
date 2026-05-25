@@ -7,10 +7,10 @@
       "cta": "Entrar"
     },
     "actions": {
-      "voteOnBlock": "votar em um bloco",
+      "voteOnBlock": "votar em um post",
       "starRoom": "favoritar esta sala",
       "reactToBlock": "reagir a este post",
-      "commentOnBlock": "comentar neste bloco",
+      "commentOnBlock": "comentar neste post",
       "reportComment": "denunciar este comentário"
     },
     "errors": {

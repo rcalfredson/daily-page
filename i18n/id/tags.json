@@ -20,14 +20,14 @@
       "meta": {
         "titlePrefix": "#",
         "titleSuffix": " | Daily Page",
-        "description": "Blok yang diberi tag"
+        "description": "Postingan dengan tag"
       },
       "header": {
         "label": "Tag:",
         "icon": "🏷️"
       },
       "stats": {
-        "totalBlocks": "Total blok dengan",
+        "totalBlocks": "Total postingan dengan",
         "totalBlocksTagSeparator": ":"
       },
       "blockInfo": {
@@ -37,10 +37,10 @@
         "onDate": "pada"
       },
       "chart": {
-        "label": "Blok Dibuat dari Waktu ke Waktu"
+        "label": "Postingan Dibuat Seiring Waktu"
       },
       "empty": {
-        "message": "Belum ada blok dengan tag ini. Mungkin kamu harus membuat yang pertama? 🔥"
+        "message": "Belum ada postingan dengan tag ini. Mungkin kamu harus membuat yang pertama? 🔥"
       },
       "error": {
         "loadingTagPage": "Kesalahan saat memuat halaman tag"
