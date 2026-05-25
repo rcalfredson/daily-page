@@ -9,7 +9,7 @@ describe("Controller", () => {
   const mockPeer = {
     id: 8,
     on: function () { },
-    connect: function (id) {
+    connect: function () {
       return {
         on: function () { return },
         send: function () { return }
@@ -32,7 +32,7 @@ describe("Controller", () => {
 
   const mockEditor = {
     bindChangeEvent: function () { },
-    updateView: function (text) { },
+    updateView: function () { },
     onDownload: function () { },
     replaceText: function () { },
     insertText: function () { },
@@ -44,13 +44,15 @@ describe("Controller", () => {
   };
 
   const host = "https://localhost:3000";
+  const roomId = "room-id";
+  const blockId = "block-id";
   const siteId = v4();
   const targetPeerId = v4();
 
   describe('attachEvents', () => {
     const mockWin = new JSDOM(`<!DOCTYPE html><p id="peerId"><p class="copy-container"></p><p class='video-modal'></p>`).window;
     const mockDoc = mockWin.document;
-    const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+    const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
 
     it('calls bindCopyEvent', () => {
       spyOn(controller, 'bindCopyEvent');
@@ -59,97 +61,43 @@ describe("Controller", () => {
     });
   });
 
-  describe("updateShareLink", () => {
-    let controller, mockDoc, mockWin, link;
-
-    beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html>
-        <a id="myLink"></a>
-        <p id='myLinkInput'></p>
-        <p id="peerId"></p>
-        <p class="copy-container"></p>
-        <p class='video-modal'></p>`).window;
-      mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
-      link = mockDoc.querySelector("#myLink").textContent;
-    });
-
-    it("sets the link input's text content", () => {
-      controller.updateShareLink(targetPeerId, mockDoc);
-      const updatedLink = mockDoc.querySelector("#myLinkInput").textContent;
-      expect(updatedLink).toEqual(host + "?" + targetPeerId);
-    });
-
-    it("sets the link's href attribute", () => {
-      controller.updateShareLink(targetPeerId, mockDoc);
-      const href = mockDoc.querySelector("#myLink").getAttribute('href');
-      expect(href).toEqual(host + "?" + targetPeerId);
-    });
-  });
-
-  describe('updatePageURL', () => {
-    const mockWin = new JSDOM(`<!DOCTYPE html><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
-    mockWin.history.pushState = function (one, two, three) { };
-    const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockWin.document, mockWin);
-
-    it('sets its urlId', () => {
-      expect(controller.urlId).toEqual(targetPeerId);
-      controller.updatePageURL(12345, mockWin);
-      expect(controller.urlId).toEqual(12345);
-    });
-
-    it('creates a new URL from the id passed in', () => {
-      spyOn(mockWin.history, 'pushState');
-      controller.updatePageURL(12345, mockWin);
-      expect(mockWin.history.pushState).toHaveBeenCalledWith({}, '', host + '?12345');
-    });
-
-    it('redirects the window to the new url', () => {
-      spyOn(mockWin.history, 'pushState');
-      controller.updatePageURL(12345, mockWin);
-      expect(mockWin.history.pushState).toHaveBeenCalled();
-    });
-  });
-
   describe('updateRootUrl', () => {
-    const mockWin = new JSDOM(`<!DOCTYPE html><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
-    mockWin.history.pushState = function (one, two, three) { };
-    const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockWin.document, mockWin);
+    const mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
+    mockWin.history.pushState = function () { };
+    const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockWin.document, mockWin);
 
-    it('calls updatePageURL with the id passed in if urlId is 0', () => {
-      spyOn(controller, 'updatePageURL');
-      controller.urlId = 0;
-      controller.updateRootUrl(123, mockWin);
-      expect(controller.updatePageURL).toHaveBeenCalledWith(123, mockWin);
+    it('sets the target peer id when the current target is 0', () => {
+      controller.targetPeerId = 0;
+      controller.updateRootUrl(123);
+      expect(controller.targetPeerId).toEqual(123);
     });
 
-    it('does not call updatePageURL otherwise', () => {
-      spyOn(controller, 'updatePageURL');
-      controller.urlId = 12345
-      controller.updateRootUrl(123, mockWin);
-      expect(controller.updatePageURL).not.toHaveBeenCalled();
+    it('does not change the target peer id otherwise', () => {
+      controller.targetPeerId = 12345;
+      controller.updateRootUrl(123);
+      expect(controller.targetPeerId).toEqual(12345);
     });
   });
 
   describe('unhideEditor', () => {
-    const mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
+    const mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
     const mockDoc = mockWin.document;
-    const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockWin.document, mockWin);
+    const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockWin.document, mockWin);
 
     it('removes the hide class from the editor element', () => {
-      mockDoc.getElementById('conclave').classList.add('hide');
+      mockDoc.getElementById('block-page').classList.add('hide');
       controller.unhideEditor(mockDoc);
-      expect(mockDoc.getElementById('conclave').classList.length).toEqual(0);
+      expect(mockDoc.getElementById('block-page').classList.length).toEqual(0);
     });
   });
 
   describe("populateCRDT", () => {
     let controller, initialStruct, expectedStruct;
-    const mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
+    const mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
     const mockDoc = mockWin.document;
 
     beforeEach(() => {
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       initialStruct = [[{
         position: [{ digit: 3, siteId: 4 }],
         counter: 1,
@@ -174,11 +122,11 @@ describe("Controller", () => {
 
   describe("populateVersionVector", () => {
     let controller, initialVersions;
-    const mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
+    const mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
     const mockDoc = mockWin.document;
 
     beforeEach(() => {
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
 
       initialVersions = [{
         siteId: 2,
@@ -204,13 +152,11 @@ describe("Controller", () => {
   });
 
   describe("addToNetwork", () => {
-    const mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
+    const mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
     const mockDoc = mockWin.document;
-    const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+    const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
     controller.broadcast.peer = mockPeer;
     controller.network.push({ peerId: "b", siteId: '10' });
-    const connList = mockDoc.querySelector("#peerId").textContent;
-
     it("doesn't do anything if the id is already in the network list", () => {
       spyOn(controller.broadcast, "addToNetwork");
       controller.addToNetwork("b", '10', mockDoc);
@@ -236,13 +182,13 @@ describe("Controller", () => {
   });
 
   describe("removeFromNetwork", () => {
-    const mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
+    const mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
     const mockDoc = mockWin.document;
     let controller;
 
 
     beforeEach(() => {
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       controller.broadcast.peer = mockPeer;
       controller.network.push({ peerId: 'b', siteId: '10' });
       controller.addToListOfPeers('10', "b", mockDoc);
@@ -276,9 +222,9 @@ describe("Controller", () => {
 
   describe('makeOwnName', () => {
     it('adds a peer flag to the list', () => {
-      const mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
+      const mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
       const mockDoc = mockWin.document;
-      const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
 
       const childrenBefore = mockDoc.querySelector('#peerId').children.length;
       controller.makeOwnName(mockDoc);
@@ -290,9 +236,9 @@ describe("Controller", () => {
     let controller, mockDoc, mockWin, connList;
 
     beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
+      mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       connList = mockDoc.querySelector("#peerId").textContent;
     })
 
@@ -307,7 +253,7 @@ describe("Controller", () => {
     it('returns the peer list item element with the id passed in', () => {
       const mockWin = new JSDOM(`<!DOCTYPE html><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
       const mockDoc = mockWin.document;
-      const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       controller.addToListOfPeers(siteId, 123, mockDoc);
       const retVal = controller.getPeerElemById(123, mockDoc);
       expect(retVal.tagName).toEqual('LI');
@@ -318,7 +264,7 @@ describe("Controller", () => {
     it('returns the peer flag with the id passed in', () => {
       const mockWin = new JSDOM(`<!DOCTYPE html><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
       const mockDoc = mockWin.document;
-      const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       controller.addToListOfPeers(siteId, 123, mockDoc);
       const retVal = controller.getPeerFlagById(123, mockDoc);
       expect(retVal.tagName).toEqual('SPAN');
@@ -329,7 +275,7 @@ describe("Controller", () => {
     it('adds the being called class to the peer flag with the id passed in', () => {
       const mockWin = new JSDOM(`<!DOCTYPE html><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
       const mockDoc = mockWin.document;
-      const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       controller.addToListOfPeers(siteId, 123, mockDoc);
       expect(mockDoc.getElementById(123).classList.length).toEqual(0);
       controller.addBeingCalledClass(123, mockDoc);
@@ -341,7 +287,7 @@ describe("Controller", () => {
     it('adds the calling class to the peer flag with the id passed in', () => {
       const mockWin = new JSDOM(`<!DOCTYPE html><p id="peerId"></p><p class='video-modal'></p><p class="copy-container"></p>`).window;
       const mockDoc = mockWin.document;
-      const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       controller.addToListOfPeers(siteId, 123, mockDoc);
       expect(mockDoc.getElementById(123).classList.length).toEqual(0);
       controller.addCallingClass(123, mockDoc);
@@ -353,7 +299,7 @@ describe("Controller", () => {
     const mockWin = new JSDOM(`<!DOCTYPE html><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
     const mockDoc = mockWin.document;
     mockDoc.querySelector('video').play = function () { };
-    const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+    const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
 
     it('answers the call from the peer passed in', () => {
       spyOn(controller, 'answerCall');
@@ -383,7 +329,7 @@ describe("Controller", () => {
       mockWin = new JSDOM(`<!DOCTYPE html><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
       mockDoc.querySelector('video').play = function () { };
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
     });
 
     it('sets a click event on the minimize element', () => {
@@ -407,7 +353,7 @@ describe("Controller", () => {
       mockWin = new JSDOM(`<!DOCTYPE html><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
       mockDoc.querySelector('video').play = function () { };
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       controller.addToListOfPeers(siteId, 123, mockDoc);
       peer = mockDoc.getElementById(123);
       peer.classList = 'calling beingcalled';
@@ -435,7 +381,7 @@ describe("Controller", () => {
       mockWin = new JSDOM(`<!DOCTYPE html><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
       mockDoc.querySelector('video').play = function () { };
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       controller.addToListOfPeers(siteId, 123, mockDoc);
       modal = mockDoc.querySelector('.video-modal');
       peer = mockDoc.getElementById(123);
@@ -474,7 +420,7 @@ describe("Controller", () => {
   describe("removeFromListOfPeers", () => {
     const mockWin = new JSDOM(`<!DOCTYPE html><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
     const mockDoc = mockWin.document;
-    const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+    const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
     controller.addToListOfPeers(siteId, 123, mockDoc);
 
     it("removes the connection list element from the list", () => {
@@ -488,29 +434,39 @@ describe("Controller", () => {
   describe("findNewTarget", () => {
     const mockWin = new JSDOM(`<!DOCTYPE html><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
     const mockDoc = mockWin.document;
-    const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+    const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
 
-    it("filters its own id out and throws an error if possible network list is empty", () => {
-      controller.network.push(8);
-      expect(controller.findNewTarget).toThrowError();
+    it("unhides the editor when no alternate peers are available", async () => {
+      spyOn(BackendHelper, "getPeers").and.returnValue(Promise.resolve([mockPeer.id]));
+      spyOn(controller, "unhideEditorWhenReady");
+      spyOn(controller, "useBackupContent");
+
+      controller.findNewTarget();
+      await Promise.resolve();
+
+      expect(controller.unhideEditorWhenReady).toHaveBeenCalled();
+      expect(controller.useBackupContent).toHaveBeenCalled();
     });
 
-    it("calls broadcast.connectToNewTarget with a random peer on the list", () => {
-      controller.network.push({ peerId: 'a', siteId: '10' });
-      controller.network.push({ peerId: 'b', siteId: '11' });
-      controller.broadcast.connections = ['a', 'b'];
+    it("requests a connection with a random peer returned by the backend", async () => {
+      spyOn(BackendHelper, "getPeers").and.returnValue(Promise.resolve(['a', 'b']));
+      spyOn(controller, "useBackupContent");
+      spyOn(controller.broadcast, "bindServerEvents");
       spyOn(controller.broadcast, "requestConnection");
-      controller.findNewTarget('c');
+
+      controller.findNewTarget();
+      await new Promise(resolve => setTimeout(resolve, 0));
+
       const args = controller.broadcast.requestConnection.calls.allArgs();
       expect(String(args).includes('a') || String(args).includes('b')).toBeTruthy();
     });
   });
 
   describe("handleSync", () => {
-    const mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
-    mockWin.history.pushState = function (one, two, three) { };
+    const mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+    mockWin.history.pushState = function () { };
     const mockDoc = mockWin.document;
-    const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+    const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
     controller.broadcast.peer = mockPeer;
     const syncObj = {
       initialStruct: [[{
@@ -643,10 +599,10 @@ describe("Controller", () => {
   describe('syncCompleted', () => {
     let mockWin, mockDoc, controller;
     beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
-      mockWin.history.pushState = function (one, two, three) { };
+      mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+      mockWin.history.pushState = function () { };
       mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       controller.broadcast.peer = mockPeer;
     });
 
@@ -661,9 +617,9 @@ describe("Controller", () => {
     let mockWin, mockDoc, controller, mockOperation;
 
     beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+      mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       mockOperation = {};
 
       spyOn(controller.vector, "hasBeenApplied");
@@ -712,12 +668,12 @@ describe("Controller", () => {
   });
 
   describe("processDeletionBuffer", () => {
-    let controller, op1, op2, version1, version2, mockWin, mockDoc;
+    let controller, op1, op2, mockWin, mockDoc;
 
     beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+      mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
 
       op1 = { type: 'delete', char: { siteId: 1, counter: 1 } };
       op2 = { type: 'delete', char: { siteId: 3, counter: 5 } };
@@ -769,9 +725,9 @@ describe("Controller", () => {
     let controller, operation, mockWin, mockDoc;
 
     beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+      mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       operation = { type: "delete", char: { siteId: 1, counter: 1 } };
 
       spyOn(controller.vector, "hasBeenApplied");
@@ -789,12 +745,12 @@ describe("Controller", () => {
   });
 
   describe("applyOperation", () => {
-    let controller, operation, mockWin, mockDoc;
+    let controller, mockWin, mockDoc;
 
     beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+      mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
 
       spyOn(controller.crdt, "handleRemoteInsert");
       spyOn(controller.crdt, "handleRemoteDelete");
@@ -849,9 +805,10 @@ describe("Controller", () => {
     let controller, mockDoc, mockWin;
 
     beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+      mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller.isReadyForLocalEdits = true;
 
       spyOn(controller.crdt, "handleLocalDelete");
     })
@@ -865,18 +822,15 @@ describe("Controller", () => {
   });
 
   describe("localInsert", () => {
-    const mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+    const mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
     const mockDoc = mockWin.document;
-    const controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+    const controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
 
     it("calls crdt.handleLocalInsert with the character object and index passed in", () => {
-      const identifier1 = new Identifier(4, 5);
-      const identifier2 = new Identifier(6, 7);
-      const chars = [new Char("a", 1, 0, [identifier1, identifier2])];
-
+      controller.isReadyForLocalEdits = true;
       spyOn(controller.crdt, "handleLocalInsert");
-      controller.localInsert(chars, { line: 0, ch: 5 });
-      expect(controller.crdt.handleLocalInsert).toHaveBeenCalledWith(chars[0], { line: 0, ch: 6 });
+      controller.localInsert("a", { line: 0, ch: 5 });
+      expect(controller.crdt.handleLocalInsert).toHaveBeenCalledWith("a", { line: 0, ch: 6 });
     });
   });
 
@@ -884,9 +838,9 @@ describe("Controller", () => {
     let controller, newChar, mockWin, mockDoc;
 
     beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+      mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
 
       const identifier1 = new Identifier(4, 5);
       const identifier2 = new Identifier(6, 7);
@@ -916,9 +870,9 @@ describe("Controller", () => {
     let controller, newChar, mockDoc, mockWin;
 
     beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+      mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
 
       const identifier1 = new Identifier(4, 5);
       const identifier2 = new Identifier(6, 7);
@@ -929,11 +883,12 @@ describe("Controller", () => {
     });
 
     it("calls broadcast.send with the correct operation", () => {
-      controller.broadcastDeletion(newChar);
+      const version = { siteId: 1, counter: 2 };
+      controller.broadcastDeletion(newChar, version);
       const operation = {
         type: 'delete',
         char: newChar,
-        version: undefined,
+        version: version,
       }
       expect(controller.broadcast.send).toHaveBeenCalledWith(operation);
     });
@@ -943,9 +898,9 @@ describe("Controller", () => {
     let controller, mockDoc, mockWin;
 
     beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+      mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       spyOn(controller.editor, "insertText");
     })
 
@@ -959,9 +914,9 @@ describe("Controller", () => {
     let controller, mockDoc, mockWin;
 
     beforeEach(() => {
-      mockWin = new JSDOM(`<!DOCTYPE html><p id='conclave'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
+      mockWin = new JSDOM(`<!DOCTYPE html><p id='block-page'></p><p class='minimize'></p><p class='exit'></p><p class='video-bar'></p><p id="peerId"></p><p class='video-modal'><video /></p><p class="copy-container"></p>`).window;
       mockDoc = mockWin.document;
-      controller = new Controller(targetPeerId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
+      controller = new Controller(targetPeerId, roomId, blockId, host, mockPeer, mockBroadcast, mockEditor, mockDoc, mockWin);
       spyOn(controller.editor, "deleteText");
     })
 

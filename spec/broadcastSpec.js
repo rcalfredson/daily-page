@@ -1,6 +1,5 @@
 import Broadcast from '../lib/broadcast.js';
 import { v4 } from 'uuid';
-import { JSDOM } from 'jsdom';
 
 describe('Broadcast', () => {
   const mockController = {
@@ -20,11 +19,12 @@ describe('Broadcast', () => {
     addToNetwork: function () { },
     removeFromNetwork: function () { },
     updateRootUrl: function () { },
+    unhideEditorWhenReady: function () { },
     closeVideo: function () { },
     answerCall: function () { }
   };
 
-  const targetId = v5();
+  const targetId = v4();
 
   describe('constructor', () => {
     const broadcast = new Broadcast(12345);
@@ -107,7 +107,7 @@ describe('Broadcast', () => {
   describe('bindServerEvents', () => {
     const broadcast = new Broadcast(12345);
     broadcast.controller = mockController;
-    broadcast.startPeerHeartBeat = function (peer) { };
+    broadcast.startPeerHeartBeat = function () { };
 
     it("set this.peer to the peer passed in from the controller", () => {
       expect(broadcast.peer).toBeNull();
@@ -257,13 +257,13 @@ describe('Broadcast', () => {
     const bc = new Broadcast(123);
 
     it('pushes the connection into the outgoing connections if not already there', () => {
-      bc.isAlreadyConnectedOut = function (conn) { return false }
+      bc.isAlreadyConnectedOut = function () { return false }
       bc.addToOutConns(5);
       expect(bc.outConns).toContain(5);
     });
 
     it('does not push the connection into the list if it is already there', () => {
-      bc.isAlreadyConnectedOut = function (conn) { return true }
+      bc.isAlreadyConnectedOut = function () { return true }
       bc.addToOutConns(6);
       expect(bc.outConns).not.toContain(6);
     });
@@ -273,13 +273,13 @@ describe('Broadcast', () => {
     const bc = new Broadcast(123);
 
     it('pushes the connection into the incoming connections if not already there', () => {
-      bc.isAlreadyConnectedIn = function (conn) { return false }
+      bc.isAlreadyConnectedIn = function () { return false }
       bc.addToInConns(5);
       expect(bc.inConns).toContain(5);
     });
 
     it('does not push the connection into the list if it is already there', () => {
-      bc.isAlreadyConnectedIn = function (conn) { return true }
+      bc.isAlreadyConnectedIn = function () { return true }
       bc.addToInConns(6);
       expect(bc.inConns).not.toContain(6);
     });
@@ -399,8 +399,13 @@ describe('Broadcast', () => {
     const bc = new Broadcast(12345);
     bc.controller = mockController;
     bc.peer = {
-      connect: function (id) { return { id: id, on: function () { } } }
+      connect: function (id) { return { peer: id, on: function () { } } }
     };
+
+    beforeEach(() => {
+      bc.inConns = [];
+      bc.outConns = [];
+    });
 
     it('calls addToOutConns with the connection back', () => {
       spyOn(bc, 'addToOutConns');
