@@ -449,7 +449,7 @@ router.get(
       res.render('users/blocks', {
         title: isOwnProfile
           ? t('userBlocks.meta.title')
-          : t('userBlocks.meta.titleUser', { username }),
+          : t('userBlocks.titleUser', { username }),
         description: t('userBlocks.meta.description'),
         username,
         blocks,
