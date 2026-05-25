@@ -1,10 +1,10 @@
 {
   "createBlock": {
     "meta": {
-      "title": "Créer un nouveau bloc — Daily Page",
-      "description": "Commencez un nouveau bloc créatif avec tags, langue et visibilité facultatifs."
+      "title": "Créer un nouveau publication — Daily Page",
+      "description": "Commencez un nouveau publication créatif avec tags, langue et visibilité facultatifs."
     },
-    "heading": "Créer un nouveau bloc",
+    "heading": "Créer un nouveau publication",
     "roomInfo": {
       "roomLabel": "Salon :",
       "unavailable": "Informations du salon indisponibles.",
@@ -25,12 +25,12 @@
       "initialContent": {
         "label": "Contenu initial (facultatif) :",
         "help": "Commencez à écrire ici ou appuyez sur Créer pour continuer dans l'éditeur complet, où vous pourrez intégrer des images et collaborer en temps réel.",
-        "placeholder": "Commencez votre bloc ici, ou poursuivez la modification après sa création..."
+        "placeholder": "Commencez votre publication ici, ou poursuivez la modification après sa création..."
       },
       "visibility": {
         "label": "Visibilité :"
       },
-      "submit": "Créer le bloc"
+      "submit": "Créer le publication"
     },
     "visibility": {
       "public": {
@@ -42,7 +42,7 @@
         "label": "Privé",
         "title": "Réservé aux utilisateurs connectés. Visible une fois l'édition terminée.",
         "inline": "Réservé aux utilisateurs connectés. Visible une fois l'édition terminée.",
-        "tooltip": "Les blocs privés sont accessibles uniquement sur invitation pendant votre travail et deviennent visibles lorsque vous avez terminé."
+        "tooltip": "Les publications privés sont accessibles uniquement sur invitation pendant votre travail et deviennent visibles lorsque vous avez terminé."
       }
     },
     "advanced": {
@@ -78,10 +78,10 @@
         }
       },
       "translate": {
-        "label": "Traduire un bloc existant (URL ou ID) :",
-        "placeholder": "Collez une URL ou un ID de bloc (facultatif)",
-        "invalid": "Cela ne ressemble pas à une URL ou un ID de bloc valide.",
-        "fetchError": "Impossible de récupérer les informations du bloc."
+        "label": "Traduire un publication existant (URL ou ID) :",
+        "placeholder": "Collez une URL ou un ID de publication (facultatif)",
+        "invalid": "Cela ne ressemble pas à une URL ou un ID de publication valide.",
+        "fetchError": "Impossible de récupérer les informations du publication."
       }
     },
     "messages": {

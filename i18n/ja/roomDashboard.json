@@ -2,27 +2,27 @@
   "roomDashboard": {
     "meta": {
       "title": "Daily Page — {roomName}",
-      "description": "{roomName} の最近のブロックと進行中のブロックを探索しましょう。"
+      "description": "{roomName} の最近の投稿と進行中の投稿を探索しましょう。"
     },
     "links": {
       "exploreLabel": "探索:",
-      "allBlocks": "🗂️ すべてのブロック",
+      "allBlocks": "🗂️ すべての投稿",
       "browseByDate": "🗓️ 日付別",
       "bestOf": "🏅 ベスト",
       "searchInRoom": "🔎 検索"
     },
     "actions": {
-      "createBlock": "ブロックを作成",
+      "createBlock": "投稿を作成",
       "starTitle": "このルームにスターを付ける",
       "unstarTitle": "このルームのスターを外す"
     },
     "tabs": {
-      "locked": "ロック済みブロック",
-      "inProgress": "進行中のブロック"
+      "locked": "ロック済み投稿",
+      "inProgress": "進行中の投稿"
     },
     "sections": {
-      "lockedHeader": "ロック済みブロック",
-      "inProgressHeader": "進行中のブロック"
+      "lockedHeader": "ロック済み投稿",
+      "inProgressHeader": "進行中の投稿"
     },
     "editorial": {
       "heading": "注目ガイド",
@@ -35,9 +35,9 @@
     },
     "empty": {
       "noDescription": "説明はありません。",
-      "noLocked": "ロック済みブロックはまだありません。ブロックは1時間操作がないと自動でロックされます。",
-      "noInProgress": "進行中のブロックはまだありません。ひとつ始める時間です。",
-      "noBlocks": "ブロックはまだありません。最初のひとつを作って足跡を残しましょう。😎"
+      "noLocked": "ロック済み投稿はまだありません。投稿は1時間操作がないと自動でロックされます。",
+      "noInProgress": "進行中の投稿はまだありません。ひとつ始める時間です。",
+      "noBlocks": "投稿はまだありません。最初のひとつを作って足跡を残しましょう。😎"
     }
   }
 }

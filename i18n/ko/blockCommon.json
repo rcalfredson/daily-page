@@ -4,15 +4,15 @@
       "draft": "초안"
     },
     "deleteModal": {
-      "title": "블록을 삭제할까요?",
+      "title": "게시물을 삭제할까요?",
       "message": "이 작업은 되돌릴 수 없습니다.",
       "confirm": "삭제",
       "cancel": "취소",
       "closeAriaLabel": "닫기"
     },
     "toasts": {
-      "deleteSuccess": "블록이 성공적으로 삭제되었습니다!",
-      "deleteFailed": "블록을 삭제하지 못했습니다."
+      "deleteSuccess": "게시물이 성공적으로 삭제되었습니다!",
+      "deleteFailed": "게시물을 삭제하지 못했습니다."
     }
   }
 }

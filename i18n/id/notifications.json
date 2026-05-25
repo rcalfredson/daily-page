@@ -8,9 +8,9 @@
       "empty": "Belum ada notifikasi.",
       "markRead": "Tandai dibaca",
       "fallbackActor": "Seseorang",
-      "fallbackBlockTitle": "blokmu",
+      "fallbackBlockTitle": "postinganmu",
       "item": {
-        "blockComment": "{actorUsername} mengomentari blokmu \"{blockTitle}\".",
+        "blockComment": "{actorUsername} mengomentari postinganmu \"{blockTitle}\".",
         "commentReply": "{actorUsername} membalas komentarmu di \"{blockTitle}\".",
         "unknown": "Notifikasi"
       }
@@ -18,12 +18,12 @@
     "email": {
       "blockComment": {
         "subject": "Komentar baru di \"{blockTitle}\"",
-        "heading": "Komentar baru di blokmu",
+        "heading": "Komentar baru di postinganmu",
         "headingWithName": "Hai {username},",
-        "body": "<strong>{actorUsername}</strong> mengomentari blokmu <strong>{blockTitle}</strong>.",
+        "body": "<strong>{actorUsername}</strong> mengomentari postinganmu <strong>{blockTitle}</strong>.",
         "cta": "Lihat percakapan di Daily Page",
         "fallbackActor": "Seseorang",
-        "fallbackBlockTitle": "blokmu"
+        "fallbackBlockTitle": "postinganmu"
       },
       "commentReply": {
         "subject": "Balasan baru di \"{blockTitle}\"",
@@ -32,7 +32,7 @@
         "body": "<strong>{actorUsername}</strong> membalas komentarmu di <strong>{blockTitle}</strong>.",
         "cta": "Lihat percakapan di Daily Page",
         "fallbackActor": "Seseorang",
-        "fallbackBlockTitle": "blokmu"
+        "fallbackBlockTitle": "postinganmu"
       }
     }
   }

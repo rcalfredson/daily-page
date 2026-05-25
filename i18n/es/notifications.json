@@ -8,9 +8,9 @@
       "empty": "Todavía no tienes notificaciones.",
       "markRead": "Marcar como leída",
       "fallbackActor": "Alguien",
-      "fallbackBlockTitle": "tu bloque",
+      "fallbackBlockTitle": "tu post",
       "item": {
-        "blockComment": "{actorUsername} comentó en tu bloque \"{blockTitle}\".",
+        "blockComment": "{actorUsername} comentó en tu post \"{blockTitle}\".",
         "commentReply": "{actorUsername} respondió a tu comentario en \"{blockTitle}\".",
         "unknown": "Notificación"
       }
@@ -18,12 +18,12 @@
     "email": {
       "blockComment": {
         "subject": "Nuevo comentario en \"{blockTitle}\"",
-        "heading": "Nuevo comentario en tu bloque",
+        "heading": "Nuevo comentario en tu post",
         "headingWithName": "Hola {username},",
-        "body": "<strong>{actorUsername}</strong> comentó en tu bloque <strong>{blockTitle}</strong>.",
+        "body": "<strong>{actorUsername}</strong> comentó en tu post <strong>{blockTitle}</strong>.",
         "cta": "Ver la conversación en Daily Page",
         "fallbackActor": "Alguien",
-        "fallbackBlockTitle": "tu bloque"
+        "fallbackBlockTitle": "tu post"
       },
       "commentReply": {
         "subject": "Nueva respuesta en \"{blockTitle}\"",
@@ -32,7 +32,7 @@
         "body": "<strong>{actorUsername}</strong> respondió a tu comentario en <strong>{blockTitle}</strong>.",
         "cta": "Ver la conversación en Daily Page",
         "fallbackActor": "Alguien",
-        "fallbackBlockTitle": "tu bloque"
+        "fallbackBlockTitle": "tu post"
       }
     }
   }

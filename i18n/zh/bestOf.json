@@ -2,7 +2,7 @@
   "bestOf": {
     "meta": {
       "title": "Daily Page 精选",
-      "description": "Daily Page 上最受喜爱的块：有趣、真诚、诗意，或者只是特别奇妙。看看过去一天、一周、一个月以及更久以来脱颖而出的内容。",
+      "description": "Daily Page 上最受喜爱的帖子：有趣、真诚、诗意，或者只是特别奇妙。看看过去一天、一周、一个月以及更久以来脱颖而出的内容。",
       "titleRoom": "{roomName} 精选",
       "descriptionRoom": "发现 {roomName} 房间中的精彩帖子，也就是过去 24 小时、7 天、30 天和全部时间里最受读者喜爱的内容。"
     },
@@ -20,7 +20,7 @@
       "inRoom": "在",
       "onDate": "于 {date}",
       "unknownRoom": "未知房间",
-      "noBlocks": "未找到块。",
+      "noBlocks": "未找到帖子。",
       "viewRoom": "查看房间"
     }
   }

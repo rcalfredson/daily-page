@@ -1,8 +1,8 @@
 {
   "blockView": {
     "meta": {
-      "title": "블록 - {blockTitle}",
-      "titleFallback": "블록"
+      "title": "게시물 - {blockTitle}",
+      "titleFallback": "게시물"
     },
     "labels": {
       "room": "방",
@@ -16,7 +16,7 @@
     },
     "buttons": {
       "edit": "편집",
-      "deleteBlock": "블록 삭제",
+      "deleteBlock": "게시물 삭제",
       "share": "공유",
       "flagContent": "콘텐츠 신고"
     },
@@ -111,9 +111,9 @@
       "loadError": "지금 더 많은 댓글을 불러올 수 없습니다."
     },
     "share": {
-      "title": "이 블록 공유",
+      "title": "이 게시물 공유",
       "shareOn": "공유 위치:",
-      "nativeText": "이 블록을 확인해 보세요: {title}",
+      "nativeText": "이 게시물을 확인해 보세요: {title}",
       "alt": {
         "facebook": "Facebook 로고",
         "reddit": "Reddit 로고",
@@ -122,8 +122,8 @@
       }
     },
     "errors": {
-      "notFound": "블록을 찾을 수 없거나 이 방에 속하지 않습니다.",
-      "loadFailed": "블록 보기를 불러오는 중 오류가 발생했습니다."
+      "notFound": "게시물을 찾을 수 없거나 이 방에 속하지 않습니다.",
+      "loadFailed": "게시물 보기를 불러오는 중 오류가 발생했습니다."
     }
   }
 }

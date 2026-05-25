@@ -8,9 +8,9 @@
       "empty": "Noch keine Benachrichtigungen.",
       "markRead": "Als gelesen markieren",
       "fallbackActor": "Jemand",
-      "fallbackBlockTitle": "dein Block",
+      "fallbackBlockTitle": "dein Beitrag",
       "item": {
-        "blockComment": "{actorUsername} hat deinen Block \"{blockTitle}\" kommentiert.",
+        "blockComment": "{actorUsername} hat deinen Beitrag \"{blockTitle}\" kommentiert.",
         "commentReply": "{actorUsername} hat auf deinen Kommentar zu \"{blockTitle}\" geantwortet.",
         "unknown": "Benachrichtigung"
       }
@@ -18,12 +18,12 @@
     "email": {
       "blockComment": {
         "subject": "Neu comment on \"{blockTitle}\"",
-        "heading": "Neuer Kommentar zu deinem Block",
+        "heading": "Neuer Kommentar zu deinem Beitrag",
         "headingWithName": "Hallo {username},",
-        "body": "<strong>{actorUsername}</strong> hat deinen Block <strong>{blockTitle}</strong> kommentiert.",
+        "body": "<strong>{actorUsername}</strong> hat deinen Beitrag <strong>{blockTitle}</strong> kommentiert.",
         "cta": "Gesprach auf Daily Page ansehen",
         "fallbackActor": "Jemand",
-        "fallbackBlockTitle": "dein Block"
+        "fallbackBlockTitle": "dein Beitrag"
       },
       "commentReply": {
         "subject": "Neu reply on \"{blockTitle}\"",
@@ -32,7 +32,7 @@
         "body": "<strong>{actorUsername}</strong> hat auf deinen Kommentar zu <strong>{blockTitle}</strong> geantwortet.",
         "cta": "Gesprach auf Daily Page ansehen",
         "fallbackActor": "Jemand",
-        "fallbackBlockTitle": "dein Block"
+        "fallbackBlockTitle": "dein Beitrag"
       }
     }
   }

@@ -4,23 +4,23 @@
       "you": "(Tu)"
     },
     "meta": {
-      "title": "Modifica blocco - {blockTitle}",
-      "titleFallback": "Modifica blocco"
+      "title": "Modifica post - {blockTitle}",
+      "titleFallback": "Modifica post"
     },
     "errors": {
       "imageUrlRequired": "Inserisci l'URL di un'immagine.",
-      "notFound": "Blocco non trovato o non appartenente a questa stanza.",
-      "loadFailed": "Si e verificato un errore durante il caricamento dell'editor del blocco.",
+      "notFound": "Post non trovato o non appartenente a questa stanza.",
+      "loadFailed": "Si e verificato un errore durante il caricamento dell'editor del post.",
       "updateTitleFailed": "Errore durante l'aggiornamento del titolo."
     },
     "roomInfo": {
       "label": "Stanza:"
     },
     "title": {
-      "placeholder": "Inserisci il titolo del blocco",
+      "placeholder": "Inserisci il titolo del post",
       "editTooltip": "Modifica titolo",
-      "lock": "Blocca blocco",
-      "delete": "Elimina blocco"
+      "lock": "Blocca post",
+      "delete": "Elimina post"
     },
     "description": {
       "label": "Descrizione",
@@ -42,7 +42,7 @@
       "label": "Partecipanti:"
     },
     "toasts": {
-      "blockLocked": "Questo blocco e stato bloccato!"
+      "blockLocked": "Questo post e stato bloccato!"
     },
     "editor": {
       "placeholder": "La pagina bianca aspetta la tua voce; scrivi senza paura."
@@ -71,12 +71,12 @@
       "downloadFile": "Scarica file"
     },
     "lockModal": {
-      "messageLine1": "Vuoi davvero bloccare questo blocco?",
+      "messageLine1": "Vuoi davvero bloccare questo post?",
       "messageLine2": "Questo lo rendera definitivo e impedira ulteriori modifiche.",
       "confirm": "Blocca",
       "cancel": "Annulla",
-      "successToast": "Blocco bloccato con successo.",
-      "errorToast": "Errore durante il blocco del blocco."
+      "successToast": "Post bloccato con successo.",
+      "errorToast": "Errore durante il blocco del post."
     },
     "tags": {
       "headerWithTags": "Tag:",
@@ -84,13 +84,13 @@
       "updateError": "Errore durante l'aggiornamento dei tag."
     },
     "fullBlock": {
-      "headingPrefix": "Spiacenti; il blocco \"{blockTitle}\" ora e",
+      "headingPrefix": "Spiacenti; il post \"{blockTitle}\" ora e",
       "headingStatus": "completamente occupato.",
       "retryPrefix": "Per favore",
-      "retryLink": "prova un blocco diverso",
+      "retryLink": "prova un post diverso",
       "retrySuffix": "oppure torna un'altra volta.",
       "consolationPrefix": "Mentre aspetti, puoi leggere",
-      "consolationBestOf": "alcuni dei nostri blocchi preferiti",
+      "consolationBestOf": "alcuni dei nostri post preferiti",
       "consolationMiddle": "oppure sfogliare",
       "consolationArchive": "l'archivio."
     }

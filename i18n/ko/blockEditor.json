@@ -4,23 +4,23 @@
       "you": "(나)"
     },
     "meta": {
-      "title": "블록 편집 - {blockTitle}",
-      "titleFallback": "블록 편집"
+      "title": "게시물 편집 - {blockTitle}",
+      "titleFallback": "게시물 편집"
     },
     "errors": {
       "imageUrlRequired": "이미지 URL을 입력하세요.",
-      "notFound": "블록을 찾을 수 없거나 이 방에 속하지 않습니다.",
-      "loadFailed": "블록 편집기를 불러오는 중 오류가 발생했습니다.",
+      "notFound": "게시물을 찾을 수 없거나 이 방에 속하지 않습니다.",
+      "loadFailed": "게시물 편집기를 불러오는 중 오류가 발생했습니다.",
       "updateTitleFailed": "제목 업데이트 오류."
     },
     "roomInfo": {
       "label": "방:"
     },
     "title": {
-      "placeholder": "블록 제목 입력",
+      "placeholder": "게시물 제목 입력",
       "editTooltip": "제목 편집",
-      "lock": "블록 잠금",
-      "delete": "블록 삭제"
+      "lock": "게시물 잠금",
+      "delete": "게시물 삭제"
     },
     "description": {
       "label": "설명",
@@ -42,7 +42,7 @@
       "label": "참여자:"
     },
     "toasts": {
-      "blockLocked": "이 블록은 잠겼습니다!"
+      "blockLocked": "이 게시물은 잠겼습니다!"
     },
     "editor": {
       "placeholder": "빈 페이지가 당신의 목소리를 기다립니다. 두려움 없이 쓰세요."
@@ -71,12 +71,12 @@
       "downloadFile": "파일 다운로드"
     },
     "lockModal": {
-      "messageLine1": "이 블록을 잠그시겠습니까?",
+      "messageLine1": "이 게시물을 잠그시겠습니까?",
       "messageLine2": "잠그면 최종 확정되어 더 이상 편집할 수 없습니다.",
       "confirm": "잠금",
       "cancel": "취소",
-      "successToast": "블록이 성공적으로 잠겼습니다.",
-      "errorToast": "블록 잠금 오류."
+      "successToast": "게시물이 성공적으로 잠겼습니다.",
+      "errorToast": "게시물 잠금 오류."
     },
     "tags": {
       "headerWithTags": "태그:",
@@ -84,13 +84,13 @@
       "updateError": "태그 업데이트 오류."
     },
     "fullBlock": {
-      "headingPrefix": "죄송합니다. \"{blockTitle}\" 블록은 현재",
+      "headingPrefix": "죄송합니다. \"{blockTitle}\" 게시물은 현재",
       "headingStatus": "가득 찼습니다.",
-      "retryPrefix": "다른 블록을",
+      "retryPrefix": "다른 게시물을",
       "retryLink": "시도해 보거나",
       "retrySuffix": "나중에 다시 방문하세요.",
       "consolationPrefix": "기다리는 동안",
-      "consolationBestOf": "추천 블록",
+      "consolationBestOf": "추천 게시물",
       "consolationMiddle": "또는",
       "consolationArchive": "아카이브를 둘러보세요."
     }

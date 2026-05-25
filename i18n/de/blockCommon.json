@@ -4,15 +4,15 @@
       "draft": "Entwurf"
     },
     "deleteModal": {
-      "title": "Block loschen?",
+      "title": "Beitrag loschen?",
       "message": "Diese Aktion kann nicht ruckgangig gemacht werden.",
       "confirm": "Loschen",
       "cancel": "Abbrechen",
       "closeAriaLabel": "Schliessen"
     },
     "toasts": {
-      "deleteSuccess": "Block erfolgreich geloscht!",
-      "deleteFailed": "Block konnte nicht geloscht werden."
+      "deleteSuccess": "Beitrag erfolgreich geloscht!",
+      "deleteFailed": "Beitrag konnte nicht geloscht werden."
     }
   }
 }

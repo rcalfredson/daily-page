@@ -16,7 +16,7 @@
       "title": "최근 활동",
       "none": "최근 활동이 없습니다.",
       "updatedOn": "{date}에 업데이트됨",
-      "viewAllBlocks": "모든 블록 보기"
+      "viewAllBlocks": "모든 게시물 보기"
     },
     "streak": {
       "title": "글쓰기 연속 기록",
@@ -35,7 +35,7 @@
     },
     "stats": {
       "title": "내 통계",
-      "totalBlocks": "생성한 전체 블록",
+      "totalBlocks": "생성한 전체 게시물",
       "collaborations": "협업",
       "votesGiven": "투표한 수",
       "daysActive": "활동한 날",

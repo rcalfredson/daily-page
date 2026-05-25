@@ -12,7 +12,7 @@
       "title": "हाल की गतिविधि",
       "updatedOn": "{date} पर अपडेट किया गया",
       "none": "कोई हालिया गतिविधि नहीं।",
-      "viewAllBlocks": "सभी ब्लॉक देखें"
+      "viewAllBlocks": "सभी पोस्ट देखें"
     },
     "starredRooms": {
       "title": "तारांकित कमरे",
@@ -21,7 +21,7 @@
     },
     "stats": {
       "title": "उपयोगकर्ता आँकड़े",
-      "totalBlocks": "कुल निर्मित ब्लॉक",
+      "totalBlocks": "कुल निर्मित पोस्ट",
       "collaborations": "सहयोग",
       "daysActive": "सक्रिय दिन"
     }

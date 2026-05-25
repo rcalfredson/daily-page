@@ -1,19 +1,19 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Blocchi migliori nelle ultime 24 ore",
-      "description": "Daily Page e un sito di scrittura minimale e indipendente dove chiunque puo pubblicare pensieri creativi, ricordi o esperimenti, un blocco alla volta. Esplora nuove idee, entra nelle stanze e fai sentire la tua voce."
+      "title": "Daily Page - Post popolari nelle ultime 24 ore",
+      "description": "Daily Page e un sito di scrittura minimale e indipendente dove chiunque puo pubblicare pensieri creativi, ricordi o esperimenti, un post alla volta. Esplora nuove idee, entra nelle stanze e fai sentire la tua voce."
     },
     "hero": {
       "eyebrow": "Un posto tranquillo per scrivere, leggere e tornare",
       "title": "Benvenuto su Daily Page!",
-      "subtitle": "Esplora i blocchi piu popolari delle ultime 24 ore.",
+      "subtitle": "Esplora i post piu popolari delle ultime 24 ore.",
       "ctaPrefix": "Ti senti ispirato?",
       "cta": "Entra in una stanza",
       "ctaSuffix": "e crea il tuo blocco!"
     },
     "stats": {
-      "blocks": "Blocchi",
+      "blocks": "Post",
       "rooms": "Stanze",
       "tags": "Tag",
       "collabsToday": "Collaborazioni oggi"
@@ -32,7 +32,7 @@
       },
       "reactions": {
         "title": "Reazioni recenti",
-        "more": "Sfoglia i blocchi migliori",
+        "more": "Sfoglia i post popolari",
         "empty": "Ancora nessuna reazione recente. Un buon post potrebbe ravvivare tutto in fretta.",
         "types": {
           "heart": "ha messo un cuore a",
@@ -44,30 +44,30 @@
     },
     "featured": {
       "roomRibbon": "★ Stanza in evidenza",
-      "roomInfoDays": "Attivita negli ultimi {days} giorni: {blocks} blocchi, {votes} voti.",
-      "roomInfo24h": "Attivita nelle ultime 24 ore: {blocks} blocchi, {votes} voti.",
+      "roomInfoDays": "Attivita negli ultimi {days} giorni: {blocks} post, {votes} voti.",
+      "roomInfo24h": "Attivita nelle ultime 24 ore: {blocks} post, {votes} voti.",
       "checkItOut": "Dai un'occhiata",
-      "blockRibbon": "★ Blocco in evidenza",
+      "blockRibbon": "★ Post in evidenza",
       "votes": "{n} voti",
       "noContent": "(Nessun contenuto fornito...)",
-      "viewBlock": "Vedi blocco"
+      "viewBlock": "Vedi post"
     },
     "trendingTags": {
       "title": "Tag di tendenza",
       "suffixDays": "(ultimi {days} giorni)",
       "suffixAllTime": "(sempre)",
-      "blocks": "{n} blocchi",
+      "blocks": "{n} post",
       "votes": "{n} voti",
       "empty": "Ancora nessun tag di tendenza. Sii il primo a taggare qualcosa di interessante!"
     },
     "trendingBlocks": {
-      "title": "Blocchi di tendenza",
+      "title": "Post di tendenza",
       "suffixDays": "(ultimi {days} giorni)",
       "createdBy": "Creato da:",
       "in": "in",
       "on": "il",
       "unknownRoom": "Stanza sconosciuta",
-      "empty24h": "Ancora nessun blocco nelle ultime 24 ore. Torna presto, compa!"
+      "empty24h": "Ancora nessun post nelle ultime 24 ore. Torna presto, compa!"
     }
   }
 }

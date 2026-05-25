@@ -1,8 +1,8 @@
 {
   "blockView": {
     "meta": {
-      "title": "كتلة - {blockTitle}",
-      "titleFallback": "كتلة"
+      "title": "منشور - {blockTitle}",
+      "titleFallback": "منشور"
     },
     "labels": {
       "room": "غرفة",
@@ -16,7 +16,7 @@
     },
     "buttons": {
       "edit": "يحرر",
-      "deleteBlock": "حذف الكتلة",
+      "deleteBlock": "حذف المنشور",
       "share": "يشارك",
       "flagContent": "الإبلاغ عن المحتوى"
     },
@@ -111,9 +111,9 @@
       "loadError": "غير قادر على تحميل المزيد من التعليقات الآن."
     },
     "share": {
-      "title": "شارك هذه الكتلة",
+      "title": "شارك هذه المنشور",
       "shareOn": "شارك على:",
-      "nativeText": "تحقق من هذه الكتلة: {title}",
+      "nativeText": "تحقق من هذه المنشور: {title}",
       "alt": {
         "facebook": "شعار Facebook",
         "reddit": "شعار Reddit",
@@ -122,8 +122,8 @@
       }
     },
     "errors": {
-      "notFound": "لم يتم العثور على الكتلة أو أنها لا تنتمي إلى هذه الغرفة.",
-      "loadFailed": "حدث خطأ أثناء تحميل عرض الكتلة."
+      "notFound": "لم يتم العثور على المنشور أو أنها لا تنتمي إلى هذه الغرفة.",
+      "loadFailed": "حدث خطأ أثناء تحميل عرض المنشور."
     }
   }
 }

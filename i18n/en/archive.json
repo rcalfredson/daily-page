@@ -18,8 +18,8 @@
     "backToRoom": "← Back to Room Dashboard",
     "calendar": {
       "meta": {
-        "description": "View all creative blocks posted in {month} {year}—from quick thoughts to deep reflections. Click any date to explore what was shared.",
-        "descriptionRoom": "View the creative activity in {roomName} during {month} {year}. Pick a date to explore the blocks shared that day."
+        "description": "View all creative posts published in {month} {year}—from quick thoughts to deep reflections. Click any date to explore what was shared.",
+        "descriptionRoom": "View the creative activity in {roomName} during {month} {year}. Pick a date to explore the posts shared that day."
       },
       "title": "📆 Archive for {month} {year}",
       "prevLabel": "Archive for {month} {year}",
@@ -29,7 +29,7 @@
       "meta": {
         "titleSite": "Archive for {date}",
         "titleRoom": "{roomName} — Archive for {date}",
-        "descriptionSite": "Explore the blocks written on {date}—from quiet notes to wild confessions.",
+        "descriptionSite": "Explore the posts written on {date}—from quiet notes to wild confessions.",
         "descriptionRoom": "On {date}, writers in the {roomName} room left their mark—scroll through reflections, ideas, and expressions shared that day."
       },
       "heading": "Archive for {date}",
@@ -47,11 +47,11 @@
     },
     "index": {
       "meta": {
-        "titleRoom": "{roomName} — All Blocks",
-        "descriptionRoom": "Browse every block ever posted in the {roomName} room. Sort by date, title, or votes to explore its history."
+        "titleRoom": "{roomName} — All Posts",
+        "descriptionRoom": "Browse every post ever published in the {roomName} room. Sort by date, title, or votes to explore its history."
       },
       "header": {
-        "allBlocks": "— All Blocks"
+        "allBlocks": "— All Posts"
       },
       "sort": {
         "label": "Sort by",

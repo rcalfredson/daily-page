@@ -1,19 +1,19 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Top Blocks in the last 24 Hours",
-      "description": "Daily Page is a minimalist, indie writing site where anyone can post creative thoughts, memories, or experiments—one block at a time. Explore new ideas, join rooms, and contribute your voice."
+      "title": "Daily Page - Popular Posts from the Last 24 Hours",
+      "description": "Daily Page is a minimalist, indie writing site where anyone can post creative thoughts, memories, or experiments—one post at a time. Explore new ideas, join rooms, and contribute your voice."
     },
     "hero": {
       "eyebrow": "A quiet place for writing, reading, and returning",
       "title": "Welcome to Daily Page!",
-      "subtitle": "Explore the most popular blocks from the last 24 hours.",
+      "subtitle": "Explore the most popular posts from the last 24 hours.",
       "ctaPrefix": "Feeling inspired?",
       "cta": "Join a room",
-      "ctaSuffix": "and create your own block!"
+      "ctaSuffix": "and create your own post!"
     },
     "stats": {
-      "blocks": "Blocks",
+      "blocks": "Posts",
       "rooms": "Rooms",
       "tags": "Tags",
       "collabsToday": "Collaborations Today"
@@ -28,11 +28,11 @@
         "more": "Search discussions",
         "commentVerb": "commented on",
         "replyVerb": "replied on",
-        "empty": "No recent comments yet. The next conversation can start with your block."
+        "empty": "No recent comments yet. The next conversation can start with your post."
       },
       "reactions": {
         "title": "Recent reactions",
-        "more": "Browse top blocks",
+        "more": "Browse popular posts",
         "empty": "No recent reactions yet. A good post could wake this up quickly.",
         "types": {
           "heart": "hearted",
@@ -44,30 +44,30 @@
     },
     "featured": {
       "roomRibbon": "★ Featured Room",
-      "roomInfoDays": "Activity over the past {days} days: {blocks} blocks, {votes} votes.",
-      "roomInfo24h": "Activity over the last 24 hours: {blocks} blocks, {votes} votes.",
+      "roomInfoDays": "Activity over the past {days} days: {blocks} posts, {votes} votes.",
+      "roomInfo24h": "Activity over the last 24 hours: {blocks} posts, {votes} votes.",
       "checkItOut": "Check it out",
-      "blockRibbon": "★ Featured Block",
+      "blockRibbon": "★ Featured Post",
       "votes": "{n} votes",
       "noContent": "(No content provided...)",
-      "viewBlock": "View Block"
+      "viewBlock": "View Post"
     },
     "trendingTags": {
       "title": "Trending Tags",
       "suffixDays": "(last {days} days)",
       "suffixAllTime": "(all-time)",
-      "blocks": "{n} blocks",
+      "blocks": "{n} posts",
       "votes": "{n} votes",
       "empty": "No trending tags yet. Be the first to tag something cool!"
     },
     "trendingBlocks": {
-      "title": "Trending Blocks",
+      "title": "Trending Posts",
       "suffixDays": "(last {days} days)",
       "createdBy": "Created by:",
       "in": "in",
       "on": "on",
       "unknownRoom": "Unknown Room",
-      "empty24h": "No blocks yet in the last 24 hours. Check back soon, compa!"
+      "empty24h": "No posts yet in the last 24 hours. Check back soon, compa!"
     }
   }
 }

@@ -1,10 +1,10 @@
 {
   "createBlock": {
     "meta": {
-      "title": "Create a New Block — Daily Page",
-      "description": "Start a fresh creative block with optional tags, language, and visibility."
+      "title": "Create a New Post — Daily Page",
+      "description": "Start a fresh creative post with optional tags, language, and visibility."
     },
-    "heading": "Create a New Block",
+    "heading": "Create a New Post",
     "roomInfo": {
       "roomLabel": "Room:",
       "unavailable": "Room information not available.",
@@ -25,12 +25,12 @@
       "initialContent": {
         "label": "Initial Content (optional):",
         "help": "Start writing here or press “Create” to continue on the full editor page, where you can embed images and collaborate in real time.",
-        "placeholder": "Start your block here, or continue editing after creation…"
+        "placeholder": "Start your post here, or continue editing after creation…"
       },
       "visibility": {
         "label": "Visibility:"
       },
-      "submit": "Create Block"
+      "submit": "Create Post"
     },
     "visibility": {
       "public": {
@@ -42,7 +42,7 @@
         "label": "Private",
         "title": "Only for logged-in users. Visible after editing is complete.",
         "inline": "Only for logged-in users. Visible after editing is complete.",
-        "tooltip": "Private blocks are invite-only while you work, and become visible when you’re done."
+        "tooltip": "Private posts are invite-only while you work, and become visible when you’re done."
       }
     },
     "advanced": {
@@ -78,10 +78,10 @@
         }
       },
       "translate": {
-        "label": "Translate existing block (URL or ID):",
-        "placeholder": "Paste a block URL or ID (optional)",
-        "invalid": "That doesn’t look like a valid block URL or ID.",
-        "fetchError": "Could not fetch block info."
+        "label": "Translate existing post (URL or ID):",
+        "placeholder": "Paste a post URL or ID (optional)",
+        "invalid": "That doesn’t look like a valid post URL or ID.",
+        "fetchError": "Could not fetch post info."
       }
     },
     "messages": {

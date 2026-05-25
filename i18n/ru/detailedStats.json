@@ -11,7 +11,7 @@
       "title": "📊 Обзор вашей статистики 📊"
     },
     "cards": {
-      "totalBlocks": "Всего создано блоков 📝",
+      "totalBlocks": "Всего создано публикаций 📝",
       "collaborations": "Совместные работы 🤝",
       "votesGiven": "Отдано голосов 👍",
       "daysActive": "Активных дней 📆"
@@ -19,7 +19,7 @@
     "chart": {
       "datasetLabel": "Ваша статистика",
       "labels": {
-        "blocksCreated": "Созданные блоки",
+        "blocksCreated": "Созданные публикации",
         "collaborations": "Совместные работы",
         "votesGiven": "Отдано голосов",
         "daysActive": "Активных дней"

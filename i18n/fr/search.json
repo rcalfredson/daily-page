@@ -2,10 +2,10 @@
   "search": {
     "meta": {
       "title": "Recherche",
-      "description": "Rechercher dans les blocs publics."
+      "description": "Rechercher dans les publications publiques."
     },
     "title": "Recherche",
-    "placeholder": "Rechercher des blocs...",
+    "placeholder": "Rechercher des publications...",
     "hint": "Saisissez au moins 2 caractères pour rechercher.",
     "noResults": "Aucun résultat trouvé.",
     "untitled": "Sans titre",

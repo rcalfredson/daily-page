@@ -1,19 +1,19 @@
 {
   "userBlocks": {
     "meta": {
-      "title": "あなたのブロック",
-      "description": "作成または共同編集したすべてのブロックを閲覧・並べ替えできます。"
+      "title": "あなたの投稿",
+      "description": "作成または共同編集したすべての投稿を閲覧・並べ替えできます。"
     },
     "header": {
       "dashboardLink": "あなたのダッシュボード",
       "profileLink": "{username} のプロフィール",
-      "allBlocks": "すべてのブロック"
+      "allBlocks": "すべての投稿"
     },
-    "empty": "ブロックはまだありません。",
+    "empty": "投稿はまだありません。",
     "pagination": {
       "prev": "← 前へ",
       "next": "次へ →"
     },
-    "titleUser": "{username} のブロック"
+    "titleUser": "{username} の投稿"
   }
 }

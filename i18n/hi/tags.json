@@ -20,14 +20,14 @@
       "meta": {
         "titlePrefix": "#",
         "titleSuffix": "| Daily Page",
-        "description": "ब्लॉक के साथ टैग किया गया"
+        "description": "इस टैग वाली पोस्ट"
       },
       "header": {
         "label": "टैग:",
         "icon": "🏷️"
       },
       "stats": {
-        "totalBlocks": "के साथ कुल ब्लॉक",
+        "totalBlocks": "इस टैग वाली कुल पोस्ट",
         "totalBlocksTagSeparator": ":"
       },
       "blockInfo": {
@@ -37,10 +37,10 @@
         "onDate": "पर"
       },
       "chart": {
-        "label": "समय के साथ बनाए गए ब्लॉक"
+        "label": "समय के साथ बनाई गई पोस्ट"
       },
       "empty": {
-        "message": "इस टैग के साथ अभी तक कोई ब्लॉक नहीं मिला. शायद आपको पहला बनाना चाहिए? 🔥"
+        "message": "इस टैग वाली कोई पोस्ट अभी तक नहीं है। शायद पहली पोस्ट आपको बनानी चाहिए? 🔥"
       },
       "error": {
         "loadingTagPage": "टैग पेज लोड करने में त्रुटि"

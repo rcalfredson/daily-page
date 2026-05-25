@@ -20,14 +20,14 @@
       "meta": {
         "titlePrefix": "#",
         "titleSuffix": " | Daily Page",
-        "description": "Bloques con la etiqueta"
+        "description": "Posts con la etiqueta"
       },
       "header": {
         "label": "Etiqueta:",
         "icon": "🏷️"
       },
       "stats": {
-        "totalBlocks": "Bloques totales con",
+        "totalBlocks": "Total de posts con",
         "totalBlocksTagSeparator": ":"
       },
       "blockInfo": {
@@ -37,10 +37,10 @@
         "onDate": "el"
       },
       "chart": {
-        "label": "Bloques creados a lo largo del tiempo"
+        "label": "Posts creados con el tiempo"
       },
       "empty": {
-        "message": "Todavía no hay bloques con esta etiqueta. ¿Por qué no creas el primero, viejón? 🔥"
+        "message": "Todavía no hay posts con esta etiqueta. ¿Quizá deberías crear el primero? 🔥"
       },
       "error": {
         "loadingTagPage": "Error al cargar la página de etiqueta"

@@ -7,10 +7,10 @@
       "cta": "Masuk"
     },
     "actions": {
-      "voteOnBlock": "memberi suara pada blok",
+      "voteOnBlock": "memberi suara pada postingan",
       "starRoom": "memberi bintang pada ruang ini",
       "reactToBlock": "bereaksi pada posting ini",
-      "commentOnBlock": "mengomentari blok ini",
+      "commentOnBlock": "mengomentari postingan ini",
       "reportComment": "melaporkan komentar ini"
     },
     "errors": {

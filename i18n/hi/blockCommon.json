@@ -4,15 +4,15 @@
       "draft": "मसौदा"
     },
     "deleteModal": {
-      "title": "ब्लॉक हटाएं?",
+      "title": "पोस्ट हटाएं?",
       "message": "इस एक्शन को वापस नहीं किया जा सकता।",
       "confirm": "मिटाना",
       "cancel": "रद्द करना",
       "closeAriaLabel": "बंद करना"
     },
     "toasts": {
-      "deleteSuccess": "ब्लॉक सफलतापूर्वक हटा दिया गया!",
-      "deleteFailed": "ब्लॉक हटाने में विफल."
+      "deleteSuccess": "पोस्ट सफलतापूर्वक हटा दिया गया!",
+      "deleteFailed": "पोस्ट हटाने में विफल."
     }
   }
 }

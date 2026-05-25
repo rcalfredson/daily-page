@@ -7,10 +7,10 @@
       "cta": "Se connecter"
     },
     "actions": {
-      "voteOnBlock": "voter pour un bloc",
+      "voteOnBlock": "voter pour un publication",
       "starRoom": "mettre ce salon en favori",
       "reactToBlock": "réagir à cette publication",
-      "commentOnBlock": "commenter ce bloc",
+      "commentOnBlock": "commenter ce publication",
       "reportComment": "signaler ce commentaire"
     },
     "errors": {

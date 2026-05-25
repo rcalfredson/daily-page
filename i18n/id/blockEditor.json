@@ -4,23 +4,23 @@
       "you": "(Kamu)"
     },
     "meta": {
-      "title": "Edit Blok - {blockTitle}",
-      "titleFallback": "Edit Blok"
+      "title": "Edit Postingan - {blockTitle}",
+      "titleFallback": "Edit Postingan"
     },
     "errors": {
       "imageUrlRequired": "Masukkan URL gambar.",
-      "notFound": "Blok tidak ditemukan atau bukan milik ruang ini.",
-      "loadFailed": "Terjadi kesalahan saat memuat editor blok.",
+      "notFound": "Postingan tidak ditemukan atau bukan milik ruang ini.",
+      "loadFailed": "Terjadi kesalahan saat memuat editor postingan.",
       "updateTitleFailed": "Kesalahan saat memperbarui judul."
     },
     "roomInfo": {
       "label": "Ruang:"
     },
     "title": {
-      "placeholder": "Masukkan judul blok",
+      "placeholder": "Masukkan judul postingan",
       "editTooltip": "Edit Judul",
-      "lock": "Kunci Blok",
-      "delete": "Hapus Blok"
+      "lock": "Kunci Postingan",
+      "delete": "Hapus Postingan"
     },
     "description": {
       "label": "Deskripsi",
@@ -42,7 +42,7 @@
       "label": "Rekan:"
     },
     "toasts": {
-      "blockLocked": "Blok ini telah dikunci!"
+      "blockLocked": "Postingan ini telah dikunci!"
     },
     "editor": {
       "placeholder": "Halaman kosong menunggu suaramu; menulislah tanpa takut."
@@ -71,12 +71,12 @@
       "downloadFile": "Unduh file"
     },
     "lockModal": {
-      "messageLine1": "Yakin ingin mengunci blok ini?",
+      "messageLine1": "Yakin ingin mengunci postingan ini?",
       "messageLine2": "Ini akan memfinalkannya dan mencegah pengeditan lebih lanjut.",
       "confirm": "Kunci",
       "cancel": "Batal",
-      "successToast": "Blok berhasil dikunci.",
-      "errorToast": "Kesalahan saat mengunci blok."
+      "successToast": "Postingan berhasil dikunci.",
+      "errorToast": "Kesalahan saat mengunci postingan."
     },
     "tags": {
       "headerWithTags": "Tag:",
@@ -84,13 +84,13 @@
       "updateError": "Kesalahan saat memperbarui tag."
     },
     "fullBlock": {
-      "headingPrefix": "Maaf; blok \"{blockTitle}\" sekarang",
+      "headingPrefix": "Maaf; postingan \"{blockTitle}\" sekarang",
       "headingStatus": "sudah penuh.",
       "retryPrefix": "Silakan",
-      "retryLink": "coba blok lain",
+      "retryLink": "coba postingan lain",
       "retrySuffix": "atau kembali lain waktu.",
       "consolationPrefix": "Sambil menunggu, silakan baca",
-      "consolationBestOf": "beberapa blok favorit kami",
+      "consolationBestOf": "beberapa postingan favorit kami",
       "consolationMiddle": "atau telusuri",
       "consolationArchive": "arsip."
     }

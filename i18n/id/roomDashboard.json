@@ -2,27 +2,27 @@
   "roomDashboard": {
     "meta": {
       "title": "Daily Page — {roomName}",
-      "description": "Jelajahi blok terbaru dan yang sedang dikerjakan di {roomName}."
+      "description": "Jelajahi postingan terbaru dan yang sedang dikerjakan di {roomName}."
     },
     "links": {
       "exploreLabel": "Jelajahi:",
-      "allBlocks": "🗂️ Semua blok",
+      "allBlocks": "🗂️ Semua postingan",
       "browseByDate": "🗓️ Berdasarkan tanggal",
       "bestOf": "🏅 Terbaik",
       "searchInRoom": "🔎 Cari"
     },
     "actions": {
-      "createBlock": "Buat Blok",
+      "createBlock": "Buat Postingan",
       "starTitle": "Beri bintang pada ruang ini",
       "unstarTitle": "Hapus bintang dari ruang ini"
     },
     "tabs": {
-      "locked": "Blok Terkunci",
-      "inProgress": "Blok Sedang Dikerjakan"
+      "locked": "Postingan terkunci",
+      "inProgress": "Postingan sedang dikerjakan"
     },
     "sections": {
-      "lockedHeader": "Blok terkunci",
-      "inProgressHeader": "Blok sedang dikerjakan"
+      "lockedHeader": "Postingan terkunci",
+      "inProgressHeader": "Postingan sedang dikerjakan"
     },
     "editorial": {
       "heading": "Panduan unggulan",
@@ -35,9 +35,9 @@
     },
     "empty": {
       "noDescription": "Tidak ada deskripsi.",
-      "noLocked": "Belum ada blok terkunci! Blok terkunci otomatis setelah 1 jam tidak aktif.",
-      "noInProgress": "Belum ada blok yang sedang dikerjakan! Saatnya memulai satu.",
-      "noBlocks": "Belum ada blok! Buat yang pertama dan tinggalkan jejakmu. 😎"
+      "noLocked": "Belum ada postingan terkunci! Postingan terkunci otomatis setelah 1 jam tidak aktif.",
+      "noInProgress": "Belum ada postingan yang sedang dikerjakan! Saatnya memulai satu.",
+      "noBlocks": "Belum ada postingan! Buat yang pertama dan tinggalkan jejakmu. 😎"
     }
   }
 }

@@ -4,23 +4,23 @@
       "you": "(أنت)"
     },
     "meta": {
-      "title": "تحرير الكتلة - {blockTitle}",
-      "titleFallback": "تحرير الكتلة"
+      "title": "تحرير المنشور - {blockTitle}",
+      "titleFallback": "تحرير المنشور"
     },
     "errors": {
       "imageUrlRequired": "الرجاء إدخال عنوان URL للصورة.",
-      "notFound": "لم يتم العثور على الكتلة أو أنها لا تنتمي إلى هذه الغرفة.",
-      "loadFailed": "حدث خطأ أثناء تحميل محرر الكتلة.",
+      "notFound": "لم يتم العثور على المنشور أو أنها لا تنتمي إلى هذه الغرفة.",
+      "loadFailed": "حدث خطأ أثناء تحميل محرر المنشور.",
       "updateTitleFailed": "حدث خطأ أثناء تحديث العنوان."
     },
     "roomInfo": {
       "label": "غرفة:"
     },
     "title": {
-      "placeholder": "أدخل عنوان الكتلة",
+      "placeholder": "أدخل عنوان المنشور",
       "editTooltip": "تحرير العنوان",
-      "lock": "قفل الكتلة",
-      "delete": "حذف الكتلة"
+      "lock": "قفل المنشور",
+      "delete": "حذف المنشور"
     },
     "description": {
       "label": "وصف",
@@ -42,7 +42,7 @@
       "label": "أقرانهم:"
     },
     "toasts": {
-      "blockLocked": "لقد تم تأمين هذه الكتلة!"
+      "blockLocked": "لقد تم تأمين هذه المنشور!"
     },
     "editor": {
       "placeholder": "الصفحة الفارغة تنتظر صوتك؛ اكتب بلا خوف."
@@ -71,12 +71,12 @@
       "downloadFile": "تنزيل الملف"
     },
     "lockModal": {
-      "messageLine1": "هل أنت متأكد أنك تريد قفل هذه الكتلة؟",
+      "messageLine1": "هل أنت متأكد أنك تريد قفل هذه المنشور؟",
       "messageLine2": "سيؤدي هذا إلى إنهاء الأمر ومنع المزيد من التحرير.",
       "confirm": "قفل",
       "cancel": "يلغي",
-      "successToast": "تم قفل الكتلة بنجاح.",
-      "errorToast": "خطأ في قفل الكتلة."
+      "successToast": "تم قفل المنشور بنجاح.",
+      "errorToast": "خطأ في قفل المنشور."
     },
     "tags": {
       "headerWithTags": "العلامات:",
@@ -84,13 +84,13 @@
       "updateError": "حدث خطأ أثناء تحديث العلامات."
     },
     "fullBlock": {
-      "headingPrefix": "آسف؛ الكتلة \"{blockTitle}\" موجودة الآن",
+      "headingPrefix": "آسف؛ المنشور \"{blockTitle}\" موجودة الآن",
       "headingStatus": "مشغولة بالكامل.",
       "retryPrefix": "لو سمحت",
-      "retryLink": "حاول كتلة مختلفة",
+      "retryLink": "حاول منشور مختلفة",
       "retrySuffix": "أو أعود مرة أخرى.",
       "consolationPrefix": "أثناء الانتظار، لا تتردد في القراءة",
-      "consolationBestOf": "بعض الكتل المفضلة لدينا",
+      "consolationBestOf": "بعض المنشورات المفضلة لدينا",
       "consolationMiddle": "أو للتصفح",
       "consolationArchive": "الأرشيف."
     }

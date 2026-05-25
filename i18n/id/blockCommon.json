@@ -4,15 +4,15 @@
       "draft": "Draf"
     },
     "deleteModal": {
-      "title": "Hapus Blok?",
+      "title": "Hapus Postingan?",
       "message": "Tindakan ini tidak dapat dibatalkan.",
       "confirm": "Hapus",
       "cancel": "Batal",
       "closeAriaLabel": "Tutup"
     },
     "toasts": {
-      "deleteSuccess": "Blok berhasil dihapus!",
-      "deleteFailed": "Gagal menghapus blok."
+      "deleteSuccess": "Postingan berhasil dihapus!",
+      "deleteFailed": "Gagal menghapus postingan."
     }
   }
 }

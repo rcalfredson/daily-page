@@ -1,10 +1,10 @@
 {
   "createBlock": {
     "meta": {
-      "title": "새 블록 만들기 — Daily Page",
-      "description": "선택적 태그, 언어, 공개 범위와 함께 새 창작 블록을 시작하세요."
+      "title": "새 게시물 만들기 — Daily Page",
+      "description": "선택적 태그, 언어, 공개 범위와 함께 새 창작 게시물을 시작하세요."
     },
-    "heading": "새 블록 만들기",
+    "heading": "새 게시물 만들기",
     "roomInfo": {
       "roomLabel": "방:",
       "unavailable": "방 정보를 사용할 수 없습니다.",
@@ -25,12 +25,12 @@
       "initialContent": {
         "label": "초기 내용(선택 사항):",
         "help": "여기서 글을 시작하거나 '만들기'를 눌러 전체 편집기 페이지에서 계속하세요. 이미지를 삽입하고 실시간으로 협업할 수 있습니다.",
-        "placeholder": "여기서 블록을 시작하거나 만든 뒤 계속 편집하세요..."
+        "placeholder": "여기서 게시물을 시작하거나 만든 뒤 계속 편집하세요..."
       },
       "visibility": {
         "label": "공개 범위:"
       },
-      "submit": "블록 만들기"
+      "submit": "게시물 만들기"
     },
     "visibility": {
       "public": {
@@ -42,7 +42,7 @@
         "label": "비공개",
         "title": "로그인한 사용자만 이용할 수 있습니다. 편집이 완료되면 표시됩니다.",
         "inline": "로그인한 사용자만 이용할 수 있습니다. 편집이 완료되면 표시됩니다.",
-        "tooltip": "비공개 블록은 작업 중 초대받은 사람만 볼 수 있고, 완료되면 표시됩니다."
+        "tooltip": "비공개 게시물은 작업 중 초대받은 사람만 볼 수 있고, 완료되면 표시됩니다."
       }
     },
     "advanced": {
@@ -78,10 +78,10 @@
         }
       },
       "translate": {
-        "label": "기존 블록 번역(URL 또는 ID):",
-        "placeholder": "블록 URL 또는 ID 붙여넣기(선택 사항)",
-        "invalid": "유효한 블록 URL 또는 ID처럼 보이지 않습니다.",
-        "fetchError": "블록 정보를 가져올 수 없습니다."
+        "label": "기존 게시물 번역(URL 또는 ID):",
+        "placeholder": "게시물 URL 또는 ID 붙여넣기(선택 사항)",
+        "invalid": "유효한 게시물 URL 또는 ID처럼 보이지 않습니다.",
+        "fetchError": "게시물 정보를 가져올 수 없습니다."
       }
     },
     "messages": {

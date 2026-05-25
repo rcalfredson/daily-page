@@ -20,14 +20,14 @@
       "meta": {
         "titlePrefix": "#",
         "titleSuffix": " | Daily Page",
-        "description": "Блоки с тегом"
+        "description": "Публикации с тегом"
       },
       "header": {
         "label": "Тег:",
         "icon": "🏷️"
       },
       "stats": {
-        "totalBlocks": "Всего блоков с тегом",
+        "totalBlocks": "Всего публикаций с тегом",
         "totalBlocksTagSeparator": ":"
       },
       "blockInfo": {
@@ -37,10 +37,10 @@
         "onDate": "в"
       },
       "chart": {
-        "label": "Создание блоков со временем"
+        "label": "Создание публикаций со временем"
       },
       "empty": {
-        "message": "Блоков с этим тегом пока нет. Может быть, именно вам стоит создать первый? 🔥"
+        "message": "Публикаций с этим тегом пока нет. Может, создадите первую? 🔥"
       },
       "error": {
         "loadingTagPage": "Ошибка при загрузке страницы тега"

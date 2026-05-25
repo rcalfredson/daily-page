@@ -18,8 +18,8 @@
     "backToRoom": "← 방 대시보드로 돌아가기",
     "calendar": {
       "meta": {
-        "description": "{year}년 {month}에 게시된 모든 창작 블록을 확인하세요. 짧은 생각부터 깊은 성찰까지, 날짜를 클릭해 공유된 내용을 둘러보세요.",
-        "descriptionRoom": "{year}년 {month} 동안 {roomName} 방의 창작 활동을 확인하세요. 날짜를 선택해 그날 공유된 블록을 탐색할 수 있습니다."
+        "description": "{year}년 {month}에 게시된 모든 창작 게시물을 확인하세요. 짧은 생각부터 깊은 성찰까지, 날짜를 클릭해 공유된 내용을 둘러보세요.",
+        "descriptionRoom": "{year}년 {month} 동안 {roomName} 방의 창작 활동을 확인하세요. 날짜를 선택해 그날 공유된 게시물을 탐색할 수 있습니다."
       },
       "title": "📆 {year}년 {month} 아카이브",
       "prevLabel": "{year}년 {month} 아카이브",
@@ -29,7 +29,7 @@
       "meta": {
         "titleSite": "{date} 아카이브",
         "titleRoom": "{roomName} — {date} 아카이브",
-        "descriptionSite": "{date}에 작성된 블록을 둘러보세요. 조용한 메모부터 대담한 고백까지 있습니다.",
+        "descriptionSite": "{date}에 작성된 게시물을 둘러보세요. 조용한 메모부터 대담한 고백까지 있습니다.",
         "descriptionRoom": "{date}, {roomName} 방의 작가들이 흔적을 남겼습니다. 그날 공유된 성찰, 아이디어, 표현을 훑어보세요."
       },
       "heading": "{date} 아카이브",
@@ -47,11 +47,11 @@
     },
     "index": {
       "meta": {
-        "titleRoom": "{roomName} — 모든 블록",
-        "descriptionRoom": "{roomName} 방에 게시된 모든 블록을 둘러보세요. 날짜, 제목, 투표순으로 정렬해 기록을 탐색할 수 있습니다."
+        "titleRoom": "{roomName} — 모든 게시물",
+        "descriptionRoom": "{roomName} 방에 게시된 모든 게시물을 둘러보세요. 날짜, 제목, 투표순으로 정렬해 기록을 탐색할 수 있습니다."
       },
       "header": {
-        "allBlocks": "— 모든 블록"
+        "allBlocks": "— 모든 게시물"
       },
       "sort": {
         "label": "정렬 기준",

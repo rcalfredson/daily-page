@@ -20,14 +20,14 @@
       "meta": {
         "titlePrefix": "#",
         "titleSuffix": " | Daily Page",
-        "description": "Blocke mit Tag"
+        "description": "Beitrage mit dem Tag"
       },
       "header": {
         "label": "Tag:",
         "icon": "🏷️"
       },
       "stats": {
-        "totalBlocks": "Blocke insgesamt mit",
+        "totalBlocks": "Beitrage insgesamt mit",
         "totalBlocksTagSeparator": ":"
       },
       "blockInfo": {
@@ -37,10 +37,10 @@
         "onDate": "am"
       },
       "chart": {
-        "label": "Erstellte Blocke im Zeitverlauf"
+        "label": "Erstellte Beitrage im Zeitverlauf"
       },
       "empty": {
-        "message": "Noch keine Blocke mit diesem Tag gefunden. Vielleicht solltest du den ersten erstellen? 🔥"
+        "message": "Noch keine Beitrage mit diesem Tag. Vielleicht erstellst du den ersten? 🔥"
       },
       "error": {
         "loadingTagPage": "Fehler beim Laden der Tag-Seite"

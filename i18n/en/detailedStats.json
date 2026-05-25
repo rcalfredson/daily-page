@@ -11,7 +11,7 @@
       "title": "📊 Your Stats Overview 📊"
     },
     "cards": {
-      "totalBlocks": "Total Blocks Created 📝",
+      "totalBlocks": "Total Posts Created 📝",
       "collaborations": "Collaborations 🤝",
       "votesGiven": "Votes Given 👍",
       "daysActive": "Days Active 📆"
@@ -19,7 +19,7 @@
     "chart": {
       "datasetLabel": "Your Stats",
       "labels": {
-        "blocksCreated": "Blocks Created",
+        "blocksCreated": "Posts Created",
         "collaborations": "Collaborations",
         "votesGiven": "Votes Given",
         "daysActive": "Days Active"

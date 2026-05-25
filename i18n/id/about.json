@@ -19,12 +19,12 @@
           "text": "adalah silo topik (bayangkan “subreddit, tetapi lebih ramah”)."
         },
         "blocks": {
-          "label": "Blok",
-          "text": "adalah posting kolaboratif—siapa pun (bahkan “anonim”) dapat membuatnya, mengeditnya sampai terkunci, dan memberi suara pada karya orang lain."
+          "label": "Postingan",
+          "text": "adalah ruang menulis kolaboratif—siapa pun (bahkan “anonim”) dapat membuatnya, mengeditnya sampai terkunci, dan memberi suara pada karya orang lain."
         },
         "privacy": {
           "label": "Privasi & Berbagi",
-          "text": "Blok publik tampil di feed ruang. Blok privat tersembunyi sampai terkunci, tetapi kamu mendapat tautan berbagi untuk mengundang teman."
+          "text": "Postingan publik tampil di feed ruang. Postingan privat tersembunyi sampai terkunci, tetapi kamu mendapat tautan berbagi untuk mengundang teman."
         },
         "markdown": {
           "label": "Markdown & Media",
@@ -32,7 +32,7 @@
         },
         "trends": {
           "label": "Tren & Tag",
-          "text": "Tandai blokmu, pantau tren tag, dan temukan konten teratas (7 h / 30 h / sepanjang waktu)."
+          "text": "Tandai postinganmu, pantau tren tag, dan temukan konten teratas (7 h / 30 h / sepanjang waktu)."
         },
         "streaks": {
           "label": "Runtunan",

@@ -7,10 +7,10 @@
       "cta": "تسجيل الدخول"
     },
     "actions": {
-      "voteOnBlock": "التصويت على كتلة",
+      "voteOnBlock": "التصويت على منشور",
       "starRoom": "نجمة هذه الغرفة",
       "reactToBlock": "الرد على هذا المنصب",
-      "commentOnBlock": "التعليق على هذه الكتلة",
+      "commentOnBlock": "التعليق على هذه المنشور",
       "reportComment": "الإبلاغ عن هذا التعليق"
     },
     "errors": {

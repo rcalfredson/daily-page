@@ -2,10 +2,10 @@
   "search": {
     "meta": {
       "title": "搜索",
-      "description": "搜索公开块。"
+      "description": "搜索公开帖子。"
     },
     "title": "搜索",
-    "placeholder": "搜索块...",
+    "placeholder": "搜索帖子...",
     "hint": "输入至少 2 个字符以搜索。",
     "noResults": "未找到结果。",
     "untitled": "无标题",

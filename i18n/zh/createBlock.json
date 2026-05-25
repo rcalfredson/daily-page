@@ -1,10 +1,10 @@
 {
   "createBlock": {
     "meta": {
-      "title": "创建新块 — Daily Page",
-      "description": "创建一个新的创作块，可选择标签、语言和可见性。"
+      "title": "创建新帖子 — Daily Page",
+      "description": "创建一个新的创作帖子，可选择标签、语言和可见性。"
     },
-    "heading": "创建新块",
+    "heading": "创建新帖子",
     "roomInfo": {
       "roomLabel": "房间：",
       "unavailable": "房间信息不可用。",
@@ -25,12 +25,12 @@
       "initialContent": {
         "label": "初始内容（可选）：",
         "help": "在这里开始写作，或按“创建”继续到完整编辑器页面，在那里你可以嵌入图片并实时协作。",
-        "placeholder": "在这里开始你的块，或创建后继续编辑……"
+        "placeholder": "在这里开始你的帖子，或创建后继续编辑……"
       },
       "visibility": {
         "label": "可见性："
       },
-      "submit": "创建块"
+      "submit": "创建帖子"
     },
     "visibility": {
       "public": {
@@ -42,7 +42,7 @@
         "label": "私密",
         "title": "仅限已登录用户。编辑完成后可见。",
         "inline": "仅限已登录用户。编辑完成后可见。",
-        "tooltip": "私密块在编辑时仅限邀请，完成后会变为可见。"
+        "tooltip": "私密帖子在编辑时仅限邀请，完成后会变为可见。"
       }
     },
     "advanced": {
@@ -78,10 +78,10 @@
         }
       },
       "translate": {
-        "label": "翻译现有块（URL 或 ID）：",
-        "placeholder": "粘贴块 URL 或 ID（可选）",
-        "invalid": "这看起来不像有效的块 URL 或 ID。",
-        "fetchError": "无法获取块信息。"
+        "label": "翻译现有帖子（URL 或 ID）：",
+        "placeholder": "粘贴帖子 URL 或 ID（可选）",
+        "invalid": "这看起来不像有效的帖子 URL 或 ID。",
+        "fetchError": "无法获取帖子信息。"
       }
     },
     "messages": {

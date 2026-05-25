@@ -2,27 +2,27 @@
   "roomDashboard": {
     "meta": {
       "title": "Daily Page — {roomName}",
-      "description": "Explore recent and in-progress blocks in {roomName}."
+      "description": "Explore recent and in-progress posts in {roomName}."
     },
     "links": {
       "exploreLabel": "Explore:",
-      "allBlocks": "🗂️ All blocks",
+      "allBlocks": "🗂️ All posts",
       "browseByDate": "🗓️ By date",
       "bestOf": "🏅 Best of",
       "searchInRoom": "🔎 Search"
     },
     "actions": {
-      "createBlock": "Create a Block",
+      "createBlock": "Create a Post",
       "starTitle": "Star this room",
       "unstarTitle": "Unstar this room"
     },
     "tabs": {
-      "locked": "Locked Blocks",
-      "inProgress": "In-Progress Blocks"
+      "locked": "Locked Posts",
+      "inProgress": "In-Progress Posts"
     },
     "sections": {
-      "lockedHeader": "Locked blocks",
-      "inProgressHeader": "In-progress blocks"
+      "lockedHeader": "Locked posts",
+      "inProgressHeader": "In-progress posts"
     },
     "editorial": {
       "heading": "Featured guides",
@@ -35,9 +35,9 @@
     },
     "empty": {
       "noDescription": "No description available.",
-      "noLocked": "No locked blocks yet! Blocks auto-lock after 1 hour of inactivity.",
-      "noInProgress": "No in-progress blocks yet! Time to start one.",
-      "noBlocks": "No blocks yet! Create the first and leave your mark. 😎"
+      "noLocked": "No locked posts yet! Posts auto-lock after 1 hour of inactivity.",
+      "noInProgress": "No in-progress posts yet! Time to start one.",
+      "noBlocks": "No posts yet! Create the first and leave your mark. 😎"
     }
   }
 }

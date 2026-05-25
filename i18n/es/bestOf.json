@@ -2,7 +2,7 @@
   "bestOf": {
     "meta": {
       "title": "Lo mejor de Daily Page",
-      "description": "Los bloques más queridos de Daily Page—graciosos, honestos, poéticos o sencillamente raros. Mira qué destacó en el día, la semana, el mes y más allá.",
+      "description": "Los posts más queridos de Daily Page—graciosos, honestos, poéticos o sencillamente raros. Mira qué destacó en el día, la semana, el mes y más allá.",
       "titleRoom": "Lo mejor de {roomName}",
       "descriptionRoom": "Descubre los posts destacados de la sala {roomName}: los más queridos en las últimas 24 horas, 7 días, 30 días y de todos los tiempos."
     },
@@ -20,7 +20,7 @@
       "inRoom": "en",
       "onDate": "el {date}",
       "unknownRoom": "Sala desconocida",
-      "noBlocks": "No se encontraron bloques.",
+      "noBlocks": "No se encontraron posts.",
       "viewRoom": "Ver sala"
     }
   }

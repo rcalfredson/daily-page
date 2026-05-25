@@ -2,27 +2,27 @@
   "roomDashboard": {
     "meta": {
       "title": "Daily Page - {roomName}",
-      "description": "Esplora i blocchi recenti e in corso in {roomName}."
+      "description": "Esplora i post recenti e in corso in {roomName}."
     },
     "links": {
       "exploreLabel": "Esplora:",
-      "allBlocks": "🗂️ Tutti i blocchi",
+      "allBlocks": "🗂️ Tutti i post",
       "browseByDate": "🗓️ Per data",
       "bestOf": "🏅 Il meglio",
       "searchInRoom": "🔎 Cerca"
     },
     "actions": {
-      "createBlock": "Crea un blocco",
+      "createBlock": "Crea un post",
       "starTitle": "Aggiungi questa stanza ai preferiti",
       "unstarTitle": "Rimuovi questa stanza dai preferiti"
     },
     "tabs": {
-      "locked": "Blocchi bloccati",
-      "inProgress": "Blocchi in corso"
+      "locked": "Post bloccati",
+      "inProgress": "Post in corso"
     },
     "sections": {
-      "lockedHeader": "Blocchi bloccati",
-      "inProgressHeader": "Blocchi in corso"
+      "lockedHeader": "Post bloccati",
+      "inProgressHeader": "Post in corso"
     },
     "editorial": {
       "heading": "Guide in evidenza",
@@ -35,9 +35,9 @@
     },
     "empty": {
       "noDescription": "Nessuna descrizione disponibile.",
-      "noLocked": "Ancora nessun blocco bloccato! I blocchi si bloccano automaticamente dopo 1 ora di inattivita.",
-      "noInProgress": "Ancora nessun blocco in corso! E il momento di iniziarne uno.",
-      "noBlocks": "Ancora nessun blocco! Crea il primo e lascia il segno. 😎"
+      "noLocked": "Ancora nessun post bloccato! I post si bloccano automaticamente dopo 1 ora di inattivita.",
+      "noInProgress": "Ancora nessun post in corso! E ora di iniziarne uno.",
+      "noBlocks": "Ancora nessun post! Crea il primo e lascia il segno. 😎"
     }
   }
 }

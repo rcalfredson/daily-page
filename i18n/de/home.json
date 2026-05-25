@@ -1,19 +1,19 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Top-Blocke der letzten 24 Stunden",
-      "description": "Daily Page ist eine minimalistische, unabhangige Schreibseite, auf der jede Person kreative Gedanken, Erinnerungen oder Experimente veroffentlichen kann - Block fur Block. Entdecke neue Ideen, tritt Raumen bei und bring deine Stimme ein."
+      "title": "Daily Page - Beliebte Beitrage der letzten 24 Stunden",
+      "description": "Daily Page ist eine minimalistische, unabhangige Schreibseite, auf der jede Person kreative Gedanken, Erinnerungen oder Experimente veroffentlichen kann - Beitrag fur Beitrag. Entdecke neue Ideen, tritt Raumen bei und bring deine Stimme ein."
     },
     "hero": {
       "eyebrow": "Ein ruhiger Ort zum Schreiben, Lesen und Wiederkommen",
       "title": "Willkommen bei Daily Page!",
-      "subtitle": "Entdecke die beliebtesten Blocke der letzten 24 Stunden.",
+      "subtitle": "Entdecke die beliebtesten Beitrage der letzten 24 Stunden.",
       "ctaPrefix": "Inspiriert?",
       "cta": "Einem Raum beitreten",
-      "ctaSuffix": "und erstelle deinen eigenen Block!"
+      "ctaSuffix": "und erstelle deinen eigenen Beitrag!"
     },
     "stats": {
-      "blocks": "Blocke",
+      "blocks": "Beitrage",
       "rooms": "Raume",
       "tags": "Tags",
       "collabsToday": "Zusammenarbeiten heute"
@@ -28,11 +28,11 @@
         "more": "Diskussionen durchsuchen",
         "commentVerb": "kommentierte",
         "replyVerb": "antwortete auf",
-        "empty": "Noch keine neuen Kommentare. Das nachste Gesprach kann mit deinem Block beginnen."
+        "empty": "Noch keine neuen Kommentare. Das nachste Gesprach kann mit deinem Beitrag beginnen."
       },
       "reactions": {
         "title": "Neue Reaktionen",
-        "more": "Top-Blocke durchsuchen",
+        "more": "Beliebte Beitrage durchsuchen",
         "empty": "Noch keine neuen Reaktionen. Ein guter Beitrag konnte das schnell beleben.",
         "types": {
           "heart": "gab ein Herz fur",
@@ -44,30 +44,30 @@
     },
     "featured": {
       "roomRibbon": "★ Hervorgehobener Raum",
-      "roomInfoDays": "Aktivitat in den letzten {days} Tagen: {blocks} Blocke, {votes} Stimmen.",
-      "roomInfo24h": "Aktivitat in den letzten 24 Stunden: {blocks} Blocke, {votes} Stimmen.",
+      "roomInfoDays": "Aktivitat in den letzten {days} Tagen: {blocks} Beitrage, {votes} Stimmen.",
+      "roomInfo24h": "Aktivitat in den letzten 24 Stunden: {blocks} Beitrage, {votes} Stimmen.",
       "checkItOut": "Ansehen",
-      "blockRibbon": "★ Hervorgehobener Block",
+      "blockRibbon": "★ Hervorgehobener Beitrag",
       "votes": "{n} Stimmen",
       "noContent": "(Kein Inhalt angegeben...)",
-      "viewBlock": "Block anzeigen"
+      "viewBlock": "Beitrag anzeigen"
     },
     "trendingTags": {
       "title": "Trend-Tags",
       "suffixDays": "(letzte {days} Tage)",
       "suffixAllTime": "(gesamte Zeit)",
-      "blocks": "{n} Blocke",
+      "blocks": "{n} Beitrage",
       "votes": "{n} Stimmen",
       "empty": "Noch keine Trend-Tags. Sei die erste Person, die etwas Cooles taggt!"
     },
     "trendingBlocks": {
-      "title": "Trend-Blocke",
+      "title": "Trend-Beitrage",
       "suffixDays": "(letzte {days} Tage)",
       "createdBy": "Erstellt von:",
       "in": "in",
       "on": "am",
       "unknownRoom": "Unbekannter Raum",
-      "empty24h": "Noch keine Blocke in den letzten 24 Stunden. Schau bald wieder vorbei!"
+      "empty24h": "Noch keine Beitrage in den letzten 24 Stunden. Schau bald wieder vorbei!"
     }
   }
 }

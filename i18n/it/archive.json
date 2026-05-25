@@ -18,8 +18,8 @@
     "backToRoom": "← Torna alla dashboard della stanza",
     "calendar": {
       "meta": {
-        "description": "Vedi tutti i blocchi creativi pubblicati in {month} {year}, dai pensieri rapidi alle riflessioni profonde. Clicca una data per esplorare cio che e stato condiviso.",
-        "descriptionRoom": "Vedi l'attivita creativa in {roomName} durante {month} {year}. Scegli una data per esplorare i blocchi condivisi quel giorno."
+        "description": "Vedi tutti i post creativi pubblicati in {month} {year}, dai pensieri rapidi alle riflessioni profonde. Clicca una data per esplorare cio che e stato condiviso.",
+        "descriptionRoom": "Vedi l'attivita creativa in {roomName} durante {month} {year}. Scegli una data per esplorare i post condivisi quel giorno."
       },
       "title": "📆 Archivio per {month} {year}",
       "prevLabel": "Archivio per {month} {year}",
@@ -29,7 +29,7 @@
       "meta": {
         "titleSite": "Archivio per {date}",
         "titleRoom": "{roomName} - Archivio per {date}",
-        "descriptionSite": "Esplora i blocchi scritti il {date}, dalle note tranquille alle confessioni piu sfrenate.",
+        "descriptionSite": "Esplora i post scritti il {date}, dalle note tranquille alle confessioni piu sfrenate.",
         "descriptionRoom": "Il {date}, gli scrittori nella stanza {roomName} hanno lasciato il segno: scorri riflessioni, idee ed espressioni condivise quel giorno."
       },
       "heading": "Archivio per {date}",
@@ -47,11 +47,11 @@
     },
     "index": {
       "meta": {
-        "titleRoom": "{roomName} - Tutti i blocchi",
-        "descriptionRoom": "Sfoglia ogni blocco mai pubblicato nella stanza {roomName}. Ordina per data, titolo o voti per esplorarne la storia."
+        "titleRoom": "{roomName} - Tutti i post",
+        "descriptionRoom": "Sfoglia tutti i post pubblicati nella stanza {roomName}. Ordina per data, titolo o voti per esplorarne la storia."
       },
       "header": {
-        "allBlocks": "- Tutti i blocchi"
+        "allBlocks": "- Tutti i post"
       },
       "sort": {
         "label": "Ordina per",

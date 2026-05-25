@@ -1,19 +1,19 @@
 {
   "userBlocks": {
     "meta": {
-      "title": "الكتل الخاصة بك",
-      "description": "تصفح وفرز جميع الكتل التي أنشأتها أو تعاونت فيها."
+      "title": "منشوراتك",
+      "description": "تصفح وفرز كل المنشورات التي أنشأتها أو تعاونت عليها."
     },
     "header": {
       "dashboardLink": "لوحة المعلومات الخاصة بك",
       "profileLink": "الملف الشخصي لـ {username}",
-      "allBlocks": "جميع الكتل"
+      "allBlocks": "كل المنشورات"
     },
-    "empty": "لا توجد كتل حتى الآن.",
+    "empty": "لا توجد منشورات بعد.",
     "pagination": {
       "prev": "← السابق",
       "next": "التالي →"
     },
-    "titleUser": "كتل {username}"
+    "titleUser": "منشورات {username}"
   }
 }

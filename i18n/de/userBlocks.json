@@ -1,19 +1,19 @@
 {
   "userBlocks": {
     "meta": {
-      "title": "Deine Blocke",
-      "description": "Durchsuche und sortiere alle Blocke, die du erstellt oder an denen du mitgearbeitet hast."
+      "title": "Deine Beitrage",
+      "description": "Durchsuche und sortiere alle Beitrage, die du erstellt oder an denen du mitgearbeitet hast."
     },
     "header": {
       "dashboardLink": "Dein Dashboard",
       "profileLink": "Profil von {username}",
-      "allBlocks": "Alle Blocke"
+      "allBlocks": "Alle Beitrage"
     },
-    "empty": "Noch keine Blocke.",
+    "empty": "Noch keine Beitrage.",
     "pagination": {
       "prev": "← Zuruck",
       "next": "Weiter →"
     },
-    "titleUser": "Blocke von {username}"
+    "titleUser": "Beitrage von {username}"
   }
 }

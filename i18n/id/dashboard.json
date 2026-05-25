@@ -16,7 +16,7 @@
       "title": "Aktivitas Terbaru",
       "none": "Tidak ada aktivitas terbaru.",
       "updatedOn": "Diperbarui pada {date}",
-      "viewAllBlocks": "Lihat Semua Blok"
+      "viewAllBlocks": "Lihat semua postingan"
     },
     "streak": {
       "title": "Runtunan Menulis",
@@ -30,7 +30,7 @@
     },
     "stats": {
       "title": "Statistikmu",
-      "totalBlocks": "Total Blok Dibuat",
+      "totalBlocks": "Total postingan yang dibuat",
       "collaborations": "Kolaborasi",
       "votesGiven": "Suara Diberikan",
       "daysActive": "Hari Aktif",

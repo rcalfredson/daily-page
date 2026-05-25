@@ -8,9 +8,9 @@
       "empty": "暂无通知。",
       "markRead": "标为已读",
       "fallbackActor": "有人",
-      "fallbackBlockTitle": "你的块",
+      "fallbackBlockTitle": "你的帖子",
       "item": {
-        "blockComment": "{actorUsername} 评论了你的块“{blockTitle}”。",
+        "blockComment": "{actorUsername} 评论了你的帖子“{blockTitle}”。",
         "commentReply": "{actorUsername} 回复了你在“{blockTitle}”上的评论。",
         "unknown": "通知"
       }
@@ -18,12 +18,12 @@
     "email": {
       "blockComment": {
         "subject": "“{blockTitle}”有新评论",
-        "heading": "你的块有新评论",
+        "heading": "你的帖子有新评论",
         "headingWithName": "{username}，你好，",
-        "body": "<strong>{actorUsername}</strong> 评论了你的块 <strong>{blockTitle}</strong>。",
+        "body": "<strong>{actorUsername}</strong> 评论了你的帖子 <strong>{blockTitle}</strong>。",
         "cta": "在 Daily Page 上查看对话",
         "fallbackActor": "有人",
-        "fallbackBlockTitle": "你的块"
+        "fallbackBlockTitle": "你的帖子"
       },
       "commentReply": {
         "subject": "“{blockTitle}”有新回复",
@@ -32,7 +32,7 @@
         "body": "<strong>{actorUsername}</strong> 回复了你在 <strong>{blockTitle}</strong> 上的评论。",
         "cta": "在 Daily Page 上查看对话",
         "fallbackActor": "有人",
-        "fallbackBlockTitle": "你的块"
+        "fallbackBlockTitle": "你的帖子"
       }
     }
   }

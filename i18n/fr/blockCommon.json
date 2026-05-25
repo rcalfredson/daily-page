@@ -4,15 +4,15 @@
       "draft": "Brouillon"
     },
     "deleteModal": {
-      "title": "Supprimer le bloc ?",
+      "title": "Supprimer le publication ?",
       "message": "Cette action est irréversible.",
       "confirm": "Supprimer",
       "cancel": "Annuler",
       "closeAriaLabel": "Fermer"
     },
     "toasts": {
-      "deleteSuccess": "Bloc supprimé avec succès !",
-      "deleteFailed": "Impossible de supprimer le bloc."
+      "deleteSuccess": "Publication supprimé avec succès !",
+      "deleteFailed": "Impossible de supprimer le publication."
     }
   }
 }

@@ -7,10 +7,10 @@
       "cta": "Anmelden"
     },
     "actions": {
-      "voteOnBlock": "fur einen Block abzustimmen",
+      "voteOnBlock": "fur einen Beitrag abzustimmen",
       "starRoom": "diesen Raum zu markieren",
       "reactToBlock": "auf diesen Beitrag zu reagieren",
-      "commentOnBlock": "diesen Block zu kommentieren",
+      "commentOnBlock": "diesen Beitrag zu kommentieren",
       "reportComment": "diesen Kommentar zu melden"
     },
     "errors": {

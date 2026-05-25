@@ -1,23 +1,23 @@
 {
-    "search": {
-        "meta": {
-            "title": "Cari",
-            "description": "Cari blok publik."
-        },
-        "title": "Cari",
-        "placeholder": "Cari blok...",
-        "hint": "Ketik setidaknya 2 karakter untuk mencari.",
-        "noResults": "Tidak ada hasil ditemukan.",
-        "untitled": "Tanpa judul",
-        "votesTitle": "Suara",
-        "pageLabel": "Halaman",
-        "filters": {
-            "inRoom": "Di ruang"
-        },
-        "buttons": {
-            "search": "Cari",
-            "prev": "Sebelumnya",
-            "next": "Berikutnya"
-        }
+  "search": {
+    "meta": {
+      "title": "Cari",
+      "description": "Cari postingan publik."
+    },
+    "title": "Cari",
+    "placeholder": "Cari postingan...",
+    "hint": "Ketik setidaknya 2 karakter untuk mencari.",
+    "noResults": "Tidak ada hasil ditemukan.",
+    "untitled": "Tanpa judul",
+    "votesTitle": "Suara",
+    "pageLabel": "Halaman",
+    "filters": {
+      "inRoom": "Di ruang"
+    },
+    "buttons": {
+      "search": "Cari",
+      "prev": "Sebelumnya",
+      "next": "Berikutnya"
     }
+  }
 }

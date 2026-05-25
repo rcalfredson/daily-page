@@ -1,8 +1,8 @@
 {
   "blockView": {
     "meta": {
-      "title": "Block - {blockTitle}",
-      "titleFallback": "Block"
+      "title": "Post - {blockTitle}",
+      "titleFallback": "Post"
     },
     "labels": {
       "room": "Room",
@@ -16,7 +16,7 @@
     },
     "buttons": {
       "edit": "Edit",
-      "deleteBlock": "Delete Block",
+      "deleteBlock": "Delete Post",
       "share": "Share",
       "flagContent": "Flag Content"
     },
@@ -111,9 +111,9 @@
       "loadError": "Unable to load more comments right now."
     },
     "share": {
-      "title": "Share this Block",
+      "title": "Share this Post",
       "shareOn": "Share on:",
-      "nativeText": "Check out this block: {title}",
+      "nativeText": "Check out this post: {title}",
       "alt": {
         "facebook": "Facebook logo",
         "reddit": "Reddit logo",
@@ -122,8 +122,8 @@
       }
     },
     "errors": {
-      "notFound": "Block not found or does not belong to this room.",
-      "loadFailed": "Error loading block view."
+      "notFound": "Post not found or does not belong to this room.",
+      "loadFailed": "Error loading post view."
     }
   }
 }

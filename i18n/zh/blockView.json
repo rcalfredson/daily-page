@@ -1,8 +1,8 @@
 {
   "blockView": {
     "meta": {
-      "title": "块 - {blockTitle}",
-      "titleFallback": "块"
+      "title": "帖子 - {blockTitle}",
+      "titleFallback": "帖子"
     },
     "labels": {
       "room": "房间",
@@ -16,7 +16,7 @@
     },
     "buttons": {
       "edit": "编辑",
-      "deleteBlock": "删除块",
+      "deleteBlock": "删除帖子",
       "share": "分享",
       "flagContent": "举报内容"
     },
@@ -111,9 +111,9 @@
       "loadError": "现在无法加载更多评论。"
     },
     "share": {
-      "title": "分享此块",
+      "title": "分享此帖子",
       "shareOn": "分享到：",
-      "nativeText": "看看这个块：{title}",
+      "nativeText": "看看这个帖子：{title}",
       "alt": {
         "facebook": "Facebook 标志",
         "reddit": "Reddit 标志",
@@ -122,8 +122,8 @@
       }
     },
     "errors": {
-      "notFound": "未找到块，或该块不属于此房间。",
-      "loadFailed": "加载块视图出错。"
+      "notFound": "未找到帖子，或该帖子不属于此房间。",
+      "loadFailed": "加载帖子视图出错。"
     }
   }
 }

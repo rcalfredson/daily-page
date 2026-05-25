@@ -4,15 +4,15 @@
       "draft": "下書き"
     },
     "deleteModal": {
-      "title": "ブロックを削除しますか？",
+      "title": "投稿を削除しますか？",
       "message": "この操作は元に戻せません。",
       "confirm": "削除",
       "cancel": "キャンセル",
       "closeAriaLabel": "閉じる"
     },
     "toasts": {
-      "deleteSuccess": "ブロックを削除しました。",
-      "deleteFailed": "ブロックの削除に失敗しました。"
+      "deleteSuccess": "投稿を削除しました。",
+      "deleteFailed": "投稿の削除に失敗しました。"
     }
   }
 }

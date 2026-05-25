@@ -7,10 +7,10 @@
       "cta": "登录"
     },
     "actions": {
-      "voteOnBlock": "为块投票",
+      "voteOnBlock": "为帖子投票",
       "starRoom": "收藏这个房间",
       "reactToBlock": "回应这篇帖子",
-      "commentOnBlock": "评论这个块",
+      "commentOnBlock": "评论这个帖子",
       "reportComment": "举报这条评论"
     },
     "errors": {

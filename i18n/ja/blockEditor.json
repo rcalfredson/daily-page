@@ -4,23 +4,23 @@
       "you": "（あなた）"
     },
     "meta": {
-      "title": "ブロックを編集 - {blockTitle}",
-      "titleFallback": "ブロックを編集"
+      "title": "投稿を編集 - {blockTitle}",
+      "titleFallback": "投稿を編集"
     },
     "errors": {
       "imageUrlRequired": "画像 URL を入力してください。",
-      "notFound": "ブロックが見つからないか、このルームに属していません。",
-      "loadFailed": "ブロックエディターの読み込み中にエラーが発生しました。",
+      "notFound": "投稿が見つからないか、このルームに属していません。",
+      "loadFailed": "投稿エディターの読み込み中にエラーが発生しました。",
       "updateTitleFailed": "タイトルの更新中にエラーが発生しました。"
     },
     "roomInfo": {
       "label": "ルーム:"
     },
     "title": {
-      "placeholder": "ブロックタイトルを入力",
+      "placeholder": "投稿タイトルを入力",
       "editTooltip": "タイトルを編集",
-      "lock": "ブロックをロック",
-      "delete": "ブロックを削除"
+      "lock": "投稿をロック",
+      "delete": "投稿を削除"
     },
     "description": {
       "label": "説明",
@@ -42,7 +42,7 @@
       "label": "参加者:"
     },
     "toasts": {
-      "blockLocked": "このブロックはロックされました。"
+      "blockLocked": "この投稿はロックされました。"
     },
     "editor": {
       "placeholder": "白紙のページがあなたの声を待っています。恐れずに書きましょう。"
@@ -71,12 +71,12 @@
       "downloadFile": "ファイルをダウンロード"
     },
     "lockModal": {
-      "messageLine1": "このブロックをロックしてもよろしいですか？",
+      "messageLine1": "この投稿をロックしてもよろしいですか？",
       "messageLine2": "これにより内容が確定し、以後の編集はできなくなります。",
       "confirm": "ロック",
       "cancel": "キャンセル",
-      "successToast": "ブロックをロックしました。",
-      "errorToast": "ブロックのロック中にエラーが発生しました。"
+      "successToast": "投稿をロックしました。",
+      "errorToast": "投稿のロック中にエラーが発生しました。"
     },
     "tags": {
       "headerWithTags": "タグ:",
@@ -84,13 +84,13 @@
       "updateError": "タグの更新中にエラーが発生しました。"
     },
     "fullBlock": {
-      "headingPrefix": "申し訳ありません。ブロック「{blockTitle}」は現在",
+      "headingPrefix": "申し訳ありません。投稿「{blockTitle}」は現在",
       "headingStatus": "満員です。",
       "retryPrefix": "どうぞ",
-      "retryLink": "別のブロックをお試しください",
+      "retryLink": "別の投稿をお試しください",
       "retrySuffix": "または時間をおいて戻ってきてください。",
       "consolationPrefix": "待っている間、よければ",
-      "consolationBestOf": "おすすめのブロック",
+      "consolationBestOf": "おすすめの投稿",
       "consolationMiddle": "または",
       "consolationArchive": "アーカイブを眺めてみてください。"
     }

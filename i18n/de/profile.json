@@ -12,7 +12,7 @@
       "title": "Letzte Aktivitat",
       "updatedOn": "Aktualisiert am {date}",
       "none": "Keine neue Aktivitat.",
-      "viewAllBlocks": "Alle Blocke anzeigen"
+      "viewAllBlocks": "Alle Beitrage anzeigen"
     },
     "starredRooms": {
       "title": "Markierte Raume",
@@ -21,7 +21,7 @@
     },
     "stats": {
       "title": "Benutzerstatistiken",
-      "totalBlocks": "Erstellte Blocke insgesamt",
+      "totalBlocks": "Erstellte Beitrage insgesamt",
       "collaborations": "Zusammenarbeiten",
       "daysActive": "Aktive Tage"
     }

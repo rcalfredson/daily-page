@@ -18,8 +18,8 @@
     "backToRoom": "← Voltar ao Painel da Sala",
     "calendar": {
       "meta": {
-        "description": "Veja todos os blocos criativos publicados em {month} de {year}, de pensamentos rápidos a reflexões profundas. Clique em qualquer data para explorar o que foi compartilhado.",
-        "descriptionRoom": "Veja a atividade criativa em {roomName} durante {month} de {year}. Escolha uma data para explorar os blocos compartilhados naquele dia."
+        "description": "Veja todos os posts criativos publicados em {month} de {year}, de pensamentos rápidos a reflexões profundas. Clique em qualquer data para explorar o que foi compartilhado.",
+        "descriptionRoom": "Veja a atividade criativa em {roomName} durante {month} de {year}. Escolha uma data para explorar os posts compartilhados naquele dia."
       },
       "title": "📆 Arquivo de {month} de {year}",
       "prevLabel": "Arquivo de {month} de {year}",
@@ -29,7 +29,7 @@
       "meta": {
         "titleSite": "Arquivo de {date}",
         "titleRoom": "{roomName} — Arquivo de {date}",
-        "descriptionSite": "Explore os blocos escritos em {date}, de notas silenciosas a confissões intensas.",
+        "descriptionSite": "Explore os posts escritos em {date}, de notas silenciosas a confissões intensas.",
         "descriptionRoom": "Em {date}, escritores na sala {roomName} deixaram sua marca: percorra reflexões, ideias e expressões compartilhadas naquele dia."
       },
       "heading": "Arquivo de {date}",
@@ -47,11 +47,11 @@
     },
     "index": {
       "meta": {
-        "titleRoom": "{roomName} — Todos os Blocos",
-        "descriptionRoom": "Navegue por todos os blocos já publicados na sala {roomName}. Ordene por data, título ou votos para explorar sua história."
+        "titleRoom": "{roomName} — Todos os posts",
+        "descriptionRoom": "Navegue por todos os posts já publicados na sala {roomName}. Ordene por data, título ou votos para explorar sua história."
       },
       "header": {
-        "allBlocks": "— Todos os Blocos"
+        "allBlocks": "— Todos os posts"
       },
       "sort": {
         "label": "Ordenar por",

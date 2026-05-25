@@ -7,10 +7,10 @@
       "cta": "लॉग इन करें"
     },
     "actions": {
-      "voteOnBlock": "किसी ब्लॉक पर वोट करें",
+      "voteOnBlock": "किसी पोस्ट पर वोट करें",
       "starRoom": "इस कमरे को तारांकित करें",
       "reactToBlock": "इस पोस्ट पर प्रतिक्रिया दें",
-      "commentOnBlock": "इस ब्लॉक पर टिप्पणी करें",
+      "commentOnBlock": "इस पोस्ट पर टिप्पणी करें",
       "reportComment": "इस टिप्पणी की रिपोर्ट करें"
     },
     "errors": {

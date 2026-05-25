@@ -1,10 +1,10 @@
 {
   "createBlock": {
     "meta": {
-      "title": "Buat Blok Baru — Daily Page",
-      "description": "Mulai blok kreatif baru dengan tag, bahasa, dan visibilitas opsional."
+      "title": "Buat Postingan Baru — Daily Page",
+      "description": "Mulai postingan kreatif baru dengan tag, bahasa, dan visibilitas opsional."
     },
-    "heading": "Buat Blok Baru",
+    "heading": "Buat Postingan Baru",
     "roomInfo": {
       "roomLabel": "Ruang:",
       "unavailable": "Informasi ruang tidak tersedia.",
@@ -25,12 +25,12 @@
       "initialContent": {
         "label": "Konten Awal (opsional):",
         "help": "Mulai menulis di sini atau tekan “Buat” untuk melanjutkan di halaman editor penuh, tempat kamu bisa menyematkan gambar dan berkolaborasi secara real time.",
-        "placeholder": "Mulai blokmu di sini, atau lanjutkan mengedit setelah dibuat…"
+        "placeholder": "Mulai postinganmu di sini, atau lanjutkan mengedit setelah dibuat…"
       },
       "visibility": {
         "label": "Visibilitas:"
       },
-      "submit": "Buat Blok"
+      "submit": "Buat Postingan"
     },
     "visibility": {
       "public": {
@@ -42,7 +42,7 @@
         "label": "Privat",
         "title": "Hanya untuk pengguna yang masuk. Terlihat setelah pengeditan selesai.",
         "inline": "Hanya untuk pengguna yang masuk. Terlihat setelah pengeditan selesai.",
-        "tooltip": "Blok privat hanya dapat diakses lewat undangan saat kamu bekerja, dan menjadi terlihat saat kamu selesai."
+        "tooltip": "Postingan privat hanya dapat diakses lewat undangan saat kamu bekerja, dan menjadi terlihat saat kamu selesai."
       }
     },
     "advanced": {
@@ -78,10 +78,10 @@
         }
       },
       "translate": {
-        "label": "Terjemahkan blok yang sudah ada (URL atau ID):",
-        "placeholder": "Tempel URL blok atau ID (opsional)",
-        "invalid": "Itu tidak terlihat seperti URL atau ID blok yang valid.",
-        "fetchError": "Tidak dapat mengambil info blok."
+        "label": "Terjemahkan postingan yang sudah ada (URL atau ID):",
+        "placeholder": "Tempel URL postingan atau ID (opsional)",
+        "invalid": "Itu tidak terlihat seperti URL atau ID postingan yang valid.",
+        "fetchError": "Tidak dapat mengambil info postingan."
       }
     },
     "messages": {

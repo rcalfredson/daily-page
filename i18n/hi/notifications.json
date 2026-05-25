@@ -8,9 +8,9 @@
       "empty": "अभी तक कोई सूचना नहीं.",
       "markRead": "पढ़ा हुआ चिह्नित करें",
       "fallbackActor": "कोई",
-      "fallbackBlockTitle": "आपका ब्लॉक",
+      "fallbackBlockTitle": "आपका पोस्ट",
       "item": {
-        "blockComment": "{actorUsername} ने आपके ब्लॉक \"{blockTitle}\" पर टिप्पणी की।",
+        "blockComment": "{actorUsername} ने आपके पोस्ट \"{blockTitle}\" पर टिप्पणी की।",
         "commentReply": "{actorUsername} ने \"{blockTitle}\" पर आपकी टिप्पणी का उत्तर दिया।",
         "unknown": "अधिसूचना"
       }
@@ -18,12 +18,12 @@
     "email": {
       "blockComment": {
         "subject": "\"{blockTitle}\" पर नई टिप्पणी",
-        "heading": "आपके ब्लॉक पर नई टिप्पणी",
+        "heading": "आपके पोस्ट पर नई टिप्पणी",
         "headingWithName": "नमस्ते {username},",
-        "body": "<strong>{actorUsername}</strong> ने आपके ब्लॉक <strong>{blockTitle}</strong> पर टिप्पणी की।",
+        "body": "<strong>{actorUsername}</strong> ने आपके पोस्ट <strong>{blockTitle}</strong> पर टिप्पणी की।",
         "cta": "Daily Page पर बातचीत देखें",
         "fallbackActor": "कोई",
-        "fallbackBlockTitle": "आपका ब्लॉक"
+        "fallbackBlockTitle": "आपका पोस्ट"
       },
       "commentReply": {
         "subject": "\"{blockTitle}\" पर नया उत्तर",
@@ -32,7 +32,7 @@
         "body": "<strong>{actorUsername}</strong> ने <strong>{blockTitle}</strong> पर आपकी टिप्पणी का उत्तर दिया।",
         "cta": "Daily Page पर बातचीत देखें",
         "fallbackActor": "कोई",
-        "fallbackBlockTitle": "आपका ब्लॉक"
+        "fallbackBlockTitle": "आपका पोस्ट"
       }
     }
   }

@@ -16,7 +16,7 @@
       "title": "Recent Activity",
       "none": "No recent activity.",
       "updatedOn": "Updated on {date}",
-      "viewAllBlocks": "View All Blocks"
+      "viewAllBlocks": "View All Posts"
     },
     "streak": {
       "title": "Writing Streak",
@@ -35,7 +35,7 @@
     },
     "stats": {
       "title": "Your Stats",
-      "totalBlocks": "Total Blocks Created",
+      "totalBlocks": "Total Posts Created",
       "collaborations": "Collaborations",
       "votesGiven": "Votes Given",
       "daysActive": "Days Active",

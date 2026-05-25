@@ -19,12 +19,12 @@
           "text": "são silos de tópicos (pense em “subreddit, mas mais amigável”)."
         },
         "blocks": {
-          "label": "Blocos",
-          "text": "são posts colaborativos: qualquer pessoa (até “anônima”) pode criar um, editá-lo até que seja bloqueado e votar nos outros."
+          "label": "Posts",
+          "text": "são espaços de escrita colaborativa: qualquer pessoa (até “anônima”) pode criar um, editá-lo até que seja bloqueado e votar nos outros."
         },
         "privacy": {
           "label": "Privacidade e Compartilhamento",
-          "text": "Blocos públicos ficam no feed da sala. Blocos privados ficam ocultos até serem bloqueados, mas você recebe um link de compartilhamento para convidar amigos."
+          "text": "Posts públicos ficam no feed da sala. Posts privados ficam ocultos até serem bloqueados, mas você recebe um link de compartilhamento para convidar amigos."
         },
         "markdown": {
           "label": "Markdown e Mídia",
@@ -32,7 +32,7 @@
         },
         "trends": {
           "label": "Tendências e Tags",
-          "text": "Marque seu bloco, acompanhe tendências de tags e descubra os melhores conteúdos (7 dias / 30 dias / todos os tempos)."
+          "text": "Marque seu post, acompanhe tendências de tags e descubra os melhores conteúdos (7 dias / 30 dias / todos os tempos)."
         },
         "streaks": {
           "label": "Sequências",

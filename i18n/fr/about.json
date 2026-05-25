@@ -19,12 +19,12 @@
           "text": "sont des espaces thématiques (pensez à un subreddit, mais plus accueillant)."
         },
         "blocks": {
-          "label": "Blocs",
-          "text": "sont des publications collaboratives : n'importe qui, même en anonyme, peut en créer une, la modifier jusqu'à son verrouillage et voter pour les autres."
+          "label": "Publications",
+          "text": "sont des espaces d’écriture collaborative : n'importe qui, même en anonyme, peut en créer un, le modifier jusqu'à son verrouillage et voter pour les autres."
         },
         "privacy": {
           "label": "Confidentialité et partage",
-          "text": "Les blocs publics apparaissent dans le fil du salon. Les blocs privés restent masqués jusqu'à leur verrouillage, mais vous recevez un lien de partage pour inviter des amis."
+          "text": "Les publications publiques apparaissent dans le fil du salon. Les publications privées restent masquées jusqu'à leur verrouillage, mais vous recevez un lien de partage pour inviter des amis."
         },
         "markdown": {
           "label": "Markdown et médias",
@@ -32,7 +32,7 @@
         },
         "trends": {
           "label": "Tendances et tags",
-          "text": "Ajoutez des tags à votre bloc, suivez les tendances et découvrez les meilleurs contenus (7 j / 30 j / depuis toujours)."
+          "text": "Ajoutez des tags à votre publication, suivez les tendances et découvrez les meilleurs contenus (7 j / 30 j / depuis toujours)."
         },
         "streaks": {
           "label": "Séries",

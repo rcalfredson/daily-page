@@ -16,7 +16,7 @@
       "title": "हाल की गतिविधि",
       "none": "कोई हालिया गतिविधि नहीं।",
       "updatedOn": "{date} पर अपडेट किया गया",
-      "viewAllBlocks": "सभी ब्लॉक देखें"
+      "viewAllBlocks": "सभी पोस्ट देखें"
     },
     "streak": {
       "title": "लेखन का सिलसिला",
@@ -35,7 +35,7 @@
     },
     "stats": {
       "title": "आपके आँकड़े",
-      "totalBlocks": "कुल निर्मित ब्लॉक",
+      "totalBlocks": "कुल निर्मित पोस्ट",
       "collaborations": "सहयोग",
       "votesGiven": "वोट दिए गए",
       "daysActive": "सक्रिय दिन",

@@ -7,10 +7,10 @@
       "cta": "ログイン"
     },
     "actions": {
-      "voteOnBlock": "ブロックに投票",
+      "voteOnBlock": "投稿に投票",
       "starRoom": "このルームにスターを付ける",
       "reactToBlock": "この投稿にリアクション",
-      "commentOnBlock": "このブロックにコメント",
+      "commentOnBlock": "この投稿にコメント",
       "reportComment": "このコメントを報告"
     },
     "errors": {
