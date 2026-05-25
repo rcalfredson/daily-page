@@ -1,5 +1,28 @@
 /* Styles for the "Create New Block" form */
 
+.with-margins {
+  max-width: 640px;
+}
+
+.with-margins > h1,
+.with-margins > h2,
+.with-margins > p {
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.with-margins > h1 {
+  font-size: 3rem;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.with-margins > h2 {
+  font-size: 2.25rem;
+  line-height: 1.15;
+}
+
 a {
   text-decoration-style: dotted;
   text-decoration-line: underline;
@@ -8,6 +31,7 @@ a {
 
 #block-form {
   max-width: 600px;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 20px;
   background: #f9f9f9;
@@ -16,20 +40,19 @@ a {
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 1.25rem;
 }
 
-label {
+#block-form label {
   font-weight: bold;
   display: block;
-  margin-bottom: 5px;
   float: unset;
   padding: unset;
   border: unset;
   border-radius: unset;
-  margin: unset;
+  margin: 0 0 0.35rem;
   font-size: unset;
-  line-height: unset;
+  line-height: 1.25;
   color: unset;
   background-color: unset;
 }
@@ -37,6 +60,7 @@ label {
 input[type="text"],
 textarea {
   width: 100%;
+  box-sizing: border-box;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -46,11 +70,19 @@ textarea {
 textarea {
   min-height: 80px;
   font-family: inherit;
+  resize: vertical;
 }
 
 .visibility-options {
-  display: flex;
-  gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem 1rem;
+  align-items: start;
+  margin-top: 0.35rem;
+}
+
+.visibility-options .option {
+  min-width: 0;
 }
 
 .disabled {
@@ -73,8 +105,10 @@ textarea {
   background-color: #0056b3;
 }
 
-#room-name, #room-description {
-  margin-left: 10px;
+#room-name,
+#room-description {
+  margin-top: 0;
+  margin-bottom: 1rem;
 }
 
 #advanced-settings {
@@ -97,6 +131,29 @@ textarea {
 }
 
 @media (max-width: 480px) {
+  .with-margins {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .with-margins > h1,
+  .with-margins > h2,
+  .with-margins > p {
+    max-width: 100%;
+  }
+
+  .with-margins > h1 {
+    font-size: 2rem;
+  }
+
+  .with-margins > h2 {
+    font-size: 1.55rem;
+  }
+
+  #block-form {
+    padding: 16px;
+  }
+
   input#title {
     max-width: 100%;
     text-overflow: ellipsis;
@@ -108,7 +165,8 @@ textarea {
     display: block;
     font-size: 12px;
     color: #555;
-    margin-top: 5px;
+    line-height: 1.25;
+    margin-top: 0.35rem;
   }
 }
 
@@ -139,23 +197,59 @@ textarea {
 
 .visibility-options .option label {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
+  gap: 0.45rem;
+  width: 100%;
+  min-height: 2.35rem;
+  margin-bottom: 0;
+  line-height: 1.15;
 }
 
 .visibility-options .option label input[type="radio"] {
-  margin-right: 5px;
+  flex: 0 0 auto;
+  margin: 0.15rem 0 0;
 }
 
 .visibility-options .option label i {
-  margin-left: 5px;
+  flex: 0 0 auto;
+  margin: 0.04rem 0 0 0.3rem;
   font-size: 1.2em;
   line-height: 1;
-  vertical-align: middle;
+}
+
+.visibility-label-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.visibility-options .option label .info-icon {
+  margin-left: 0.45rem;
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+  .visibility-options .option label {
+    flex-wrap: wrap;
+    align-content: flex-start;
+  }
+
+  .visibility-options .option label .info-icon {
+    margin-left: calc(1.2em + 0.75rem);
+  }
 }
 
 @media (max-width: 480px) {
   .form-help {
     font-size: 12px;
     line-height: 1.3;
+  }
+}
+
+@media (max-width: 360px) {
+  .visibility-options {
+    grid-template-columns: 1fr;
+  }
+
+  .visibility-options .option label {
+    min-height: unset;
   }
 }
