@@ -8,7 +8,8 @@
   },
   "type": "module",
   "scripts": {
-    "pretest": "eslint --fix app.js server/ lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js",
+    "lint": "eslint app.js server/ lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js spec/",
+    "pretest": "eslint --fix lib/backendHelper.js lib/clearSelection.js lib/dateHelper.js",
     "test": "jasmine",
     "start": "node --trace-deprecation app.js",
     "build": "esbuild lib/main.js --bundle --platform=browser --format=iife --outfile=public/js/bundle.js && esbuild lib/clearSelection.js --bundle --platform=browser --format=iife --outfile=public/js/clearSelection.js && esbuild lib/iPod.js --bundle --platform=browser --format=iife --outfile=public/js/iPod.js",
