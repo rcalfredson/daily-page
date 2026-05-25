@@ -38,11 +38,11 @@
         "title": "Editable by anyone in real-time. No login needed.",
         "inline": "Editable by anyone in real-time. No login needed."
       },
-      "private": {
-        "label": "Private",
-        "title": "Only for logged-in users. Visible after editing is complete.",
-        "inline": "Only for logged-in users. Visible after editing is complete.",
-        "tooltip": "Private posts are invite-only while you work, and become visible when you’re done."
+      "unlisted": {
+        "label": "Unlisted Draft",
+        "title": "Hidden from public browsing while editable. Visible after locking.",
+        "inline": "Hidden from public browsing while editable. Visible after locking.",
+        "tooltip": "Unlisted drafts are hidden from public browsing while editable. Anyone with the link can collaborate, and the post becomes public when locked."
       }
     },
     "advanced": {

@@ -18,6 +18,13 @@
       "updatedOn": "Updated on {date}",
       "viewAllBlocks": "View All Posts"
     },
+    "drafts": {
+      "title": "Continue Writing",
+      "none": "No open drafts.",
+      "updatedOn": "Updated on {date}",
+      "unlisted": "Unlisted",
+      "viewAll": "View All Posts"
+    },
     "streak": {
       "title": "Writing Streak",
       "line": "{days} days in a row! Keep going!"

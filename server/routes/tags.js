@@ -1,6 +1,11 @@
 import express from 'express';
 import Block from '../db/models/Block.js';
-import { findByTagWithLangPref, getAllTagsWithCounts, getTagTrendData } from '../db/blockService.js';
+import {
+  findByTagWithLangPref,
+  getAllTagsWithCounts,
+  getTagTrendData,
+  publiclyVisibleBlockMatch
+} from '../db/blockService.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
 import { addI18n } from '../services/i18n.js';
@@ -106,7 +111,7 @@ router.get(
       );
 
       const totalBlocks = await Block
-        .distinct("groupId", { tags: tagName })
+        .distinct("groupId", publiclyVisibleBlockMatch({ tags: tagName }))
         .then(arr => arr.length);
 
       const totalPages = Math.ceil(totalBlocks / limit);

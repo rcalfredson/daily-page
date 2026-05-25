@@ -7,7 +7,7 @@ import {
   createBlock,
   updateBlock,
   deleteBlock,
-  getTranslations,
+  getPublicTranslations,
   findByRoomWithLangPref,
   findByDateWithLangPref
 } from '../../db/blockService.js';
@@ -29,6 +29,11 @@ function getValidationMessage(error, fallbackMessage) {
     return error.message;
   }
   return fallbackMessage;
+}
+
+function normalizeVisibility(value, user) {
+  if (!user) return 'public';
+  return value === 'unlisted' ? 'unlisted' : 'public';
 }
 
 const useBlockAPI = (app) => {
@@ -117,7 +122,7 @@ const useBlockAPI = (app) => {
       description,
       content: content || '',
       tags,
-      visibility: req.user ? visibility : 'public',
+      visibility: normalizeVisibility(visibility, req.user),
       creator: req.user?.username || 'anonymous',
       userId: req.user?.id || null,
       roomId: room_id,
@@ -204,11 +209,12 @@ const useBlockAPI = (app) => {
 
     try {
       const block = await getBlockById(block_id);
-      const translations = await getTranslations(block.groupId);
 
       if (!block) {
         return res.status(404).json({ error: 'Block not found.' });
       }
+
+      const translations = await getPublicTranslations(block.groupId);
 
       res.status(200).json({ block, translations });
     } catch (error) {

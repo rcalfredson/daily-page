@@ -1,4 +1,5 @@
 import Block from './models/Block.js';
+import { isPubliclyVisibleBlock, publiclyVisibleBlockMatch } from './blockService.js';
 
 const REFERENCE_BLOCK_FIELDS = [
   '_id',
@@ -78,10 +79,7 @@ async function fetchReferenceBlocks(referenceIds) {
 async function fetchPreferredTranslations(groupIds, lang, roomId) {
   if (!groupIds.length || !lang) return [];
   return Block.find({
-    groupId: { $in: groupIds },
-    lang,
-    roomId,
-    visibility: 'public'
+    ...publiclyVisibleBlockMatch({ groupId: { $in: groupIds }, lang, roomId })
   })
     .select(REFERENCE_BLOCK_FIELDS)
     .lean();
@@ -90,11 +88,12 @@ async function fetchPreferredTranslations(groupIds, lang, roomId) {
 async function fetchClusterBlocks(clusterKey, roomId, lang, currentBlockId) {
   if (!clusterKey || !roomId || !lang) return [];
   return Block.find({
-    roomId,
-    lang,
-    visibility: 'public',
-    'editorial.clusterKey': clusterKey,
-    _id: { $ne: currentBlockId }
+    ...publiclyVisibleBlockMatch({
+      roomId,
+      lang,
+      'editorial.clusterKey': clusterKey,
+      _id: { $ne: currentBlockId }
+    })
   })
     .select(REFERENCE_BLOCK_FIELDS)
     .lean();
@@ -141,7 +140,7 @@ export async function getBlockEditorialContext(block, options = {}) {
   const referenceBlocksById = new Map(rawReferenceBlocks.map((item) => [toId(item._id), item]));
   const translationGroupIds = uniqueIds(
     rawReferenceBlocks
-      .filter((item) => item.roomId === roomId && item.visibility === 'public' && item.lang !== lang)
+      .filter((item) => item.roomId === roomId && isPubliclyVisibleBlock(item) && item.lang !== lang)
       .map((item) => item.groupId)
   );
 
@@ -152,7 +151,7 @@ export async function getBlockEditorialContext(block, options = {}) {
 
   function resolveReference(id) {
     const rawBlock = referenceBlocksById.get(toId(id));
-    if (!rawBlock || rawBlock.roomId !== roomId || rawBlock.visibility !== 'public') return null;
+    if (!rawBlock || rawBlock.roomId !== roomId || !isPubliclyVisibleBlock(rawBlock)) return null;
     if (rawBlock.lang === lang) return rawBlock;
     return preferredTranslationsByGroup.get(rawBlock.groupId) || null;
   }

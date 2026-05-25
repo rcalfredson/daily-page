@@ -12,6 +12,10 @@ function makeQueryResult(result) {
   };
 }
 
+function baseFilter(filter) {
+  return filter?.$and?.[0] || filter;
+}
+
 describe('getBlockEditorialContext', () => {
   afterEach(() => {
     if (Block.find.calls) {
@@ -29,7 +33,9 @@ describe('getBlockEditorialContext', () => {
 
   it('builds a restrained editorial view model from curated references', async () => {
     spyOn(Block, 'find').and.callFake((filter) => {
-      if (filter._id?.$in) {
+      const query = baseFilter(filter);
+
+      if (query._id?.$in) {
         return makeQueryResult([
           {
             _id: '507f1f77bcf86cd799439011',
@@ -55,7 +61,7 @@ describe('getBlockEditorialContext', () => {
             roomId: 'physics',
             lang: 'en',
             groupId: 'hidden-group',
-            visibility: 'private',
+            visibility: 'unlisted',
             editorial: { role: 'texture', sequence: 4 }
           },
           {
@@ -70,7 +76,7 @@ describe('getBlockEditorialContext', () => {
         ]);
       }
 
-      if (filter.groupId?.$in) {
+      if (query.groupId?.$in) {
         return makeQueryResult([
           {
             _id: '507f1f77bcf86cd799439022',
@@ -84,7 +90,7 @@ describe('getBlockEditorialContext', () => {
         ]);
       }
 
-      if (filter['editorial.clusterKey'] === 'momentum-basics') {
+      if (query['editorial.clusterKey'] === 'momentum-basics') {
         return makeQueryResult([
           {
             _id: '507f1f77bcf86cd799439031',
@@ -189,7 +195,9 @@ describe('getBlockEditorialContext', () => {
 
   it('falls back to the pillar title when no guide title is available', async () => {
     spyOn(Block, 'find').and.callFake((filter) => {
-      if (filter._id?.$in) {
+      const query = baseFilter(filter);
+
+      if (query._id?.$in) {
         return makeQueryResult([
           {
             _id: '507f1f77bcf86cd799439211',
@@ -203,7 +211,7 @@ describe('getBlockEditorialContext', () => {
         ]);
       }
 
-      if (filter['editorial.clusterKey'] === 'forces-path') {
+      if (query['editorial.clusterKey'] === 'forces-path') {
         return makeQueryResult([
           {
             _id: '507f1f77bcf86cd799439212',

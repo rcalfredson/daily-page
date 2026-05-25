@@ -16,6 +16,32 @@ const TTL = {
 // optional: spread expirations so you don't get synchronized misses
 const JITTER = 10 * 1000; // up to 10s extra
 
+export const PUBLIC_BLOCK_VISIBILITY_MATCH = Object.freeze({
+  $or: [
+    { visibility: 'public' },
+    { visibility: 'unlisted', status: 'locked' }
+  ]
+});
+
+export function publiclyVisibleBlockMatch(match = {}) {
+  if (!match || Object.keys(match).length === 0) {
+    return { ...PUBLIC_BLOCK_VISIBILITY_MATCH };
+  }
+
+  return {
+    $and: [
+      match,
+      PUBLIC_BLOCK_VISIBILITY_MATCH
+    ]
+  };
+}
+
+export function isPubliclyVisibleBlock(block) {
+  return block?.visibility === 'public' || (
+    block?.visibility === 'unlisted' && block?.status === 'locked'
+  );
+}
+
 // Create a new block
 export async function createBlock(data) {
   if (!data.groupId) data.groupId = new mongoose.Types.ObjectId().toString();
@@ -39,8 +65,18 @@ export async function getTranslationByGroupAndLang(groupId, lang) {
   return await Block.findOne({ groupId, lang }).select('_id lang title roomId status');
 }
 
+export async function getPublicTranslationByGroupAndLang(groupId, lang) {
+  if (!groupId || !lang) return null;
+  return await Block.findOne(publiclyVisibleBlockMatch({ groupId, lang }))
+    .select('_id lang title roomId status');
+}
+
 export async function getTranslations(groupId) {
   return await Block.find({ groupId }).select('lang _id title roomId');
+}
+
+export async function getPublicTranslations(groupId) {
+  return await Block.find(publiclyVisibleBlockMatch({ groupId })).select('lang _id title roomId');
 }
 
 export async function getGlobalBlockStats() {
@@ -48,12 +84,14 @@ export async function getGlobalBlockStats() {
     `global-block-stats`,
     async () => {
       // Total blocks globales
-      const totalBlocks = await Block.countDocuments({});
+      const totalBlocks = await Block.countDocuments(publiclyVisibleBlockMatch());
 
       // Colaboraciones en las últimas 24 horas (en lugar del día UTC)
       const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-      const blocksLast24Hours = await Block.find({ createdAt: { $gte: last24Hours } })
+      const blocksLast24Hours = await Block.find(
+        publiclyVisibleBlockMatch({ createdAt: { $gte: last24Hours } })
+      )
         .select('collaborators')
         .lean();
 
@@ -74,6 +112,7 @@ export async function getGlobalBlockStats() {
 export async function getTotalTags() {
   return await cache.get('total-tags', async () => {
     const result = await Block.aggregate([
+      { $match: publiclyVisibleBlockMatch() },
       { $unwind: '$tags' },
       { $group: { _id: '$tags' } },
       { $count: 'totalTags' }
@@ -86,7 +125,7 @@ export async function getAllTagsWithCounts(timeframe = 'all') {
   return await cache.get(
     `all-tags-with-counts-${timeframe}`,
     async () => {
-      const pipeline = [{ $unwind: '$tags' }];
+      const matchStage = {};
 
       if (timeframe !== 'all') {
         const now = new Date();
@@ -105,9 +144,14 @@ export async function getAllTagsWithCounts(timeframe = 'all') {
             cutoff = null;
         }
         if (cutoff) {
-          pipeline.unshift({ $match: { createdAt: { $gte: cutoff } } });
+          matchStage.createdAt = { $gte: cutoff };
         }
       }
+
+      const pipeline = [
+        { $match: publiclyVisibleBlockMatch(matchStage) },
+        { $unwind: '$tags' }
+      ];
 
       pipeline.push(
         { $group: { _id: '$tags', totalBlocks: { $sum: 1 } } },
@@ -125,7 +169,7 @@ export async function getAllTagsWithCounts(timeframe = 'all') {
 export async function getTagTrendData(tagName, defaultDays = 30, opts = {}) {
   const { dedupeGroups = true } = opts;
   // Obtener los primeros 20 bloques por fecha ascendente (los más antiguos primero)
-  const blocks = await Block.find({ tags: tagName })
+  const blocks = await Block.find(publiclyVisibleBlockMatch({ tags: tagName }))
     .sort({ createdAt: 1 })
     .limit(20)
     .select('createdAt')
@@ -147,7 +191,7 @@ export async function getTagTrendData(tagName, defaultDays = 30, opts = {}) {
   const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   const pipeline = dedupeGroups
     ? [
-      { $match: { tags: tagName, createdAt: { $gte: cutoff } } },
+      { $match: publiclyVisibleBlockMatch({ tags: tagName, createdAt: { $gte: cutoff } }) },
       {
         $project: {
           day: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'UTC' } },
@@ -161,7 +205,7 @@ export async function getTagTrendData(tagName, defaultDays = 30, opts = {}) {
       { $sort: { _id: 1 } },
     ]
     : [
-      { $match: { tags: tagName, createdAt: { $gte: cutoff } } },
+      { $match: publiclyVisibleBlockMatch({ tags: tagName, createdAt: { $gte: cutoff } }) },
       { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'UTC' } }, count: { $sum: 1 } } },
       { $sort: { _id: 1 } },
     ];
@@ -194,7 +238,7 @@ export async function getRandomBlockFromLastYear(options = {}) {
 
   // 1) Try preferred language
   const preferred = await Block.aggregate([
-    { $match: { createdAt: { $gte: start, $lte: end }, lang: preferredLang } },
+    { $match: publiclyVisibleBlockMatch({ createdAt: { $gte: start, $lte: end }, lang: preferredLang }) },
     { $sample: { size: 1 } },
   ]).exec();
 
@@ -202,7 +246,7 @@ export async function getRandomBlockFromLastYear(options = {}) {
 
   // 2) Fallback: any language
   const anyLang = await Block.aggregate([
-    { $match: { createdAt: { $gte: start, $lte: end } } },
+    { $match: publiclyVisibleBlockMatch({ createdAt: { $gte: start, $lte: end } }) },
     { $sample: { size: 1 } },
   ]).exec();
 
@@ -266,7 +310,7 @@ export async function getFeaturedRoomWithFallback() {
       for (let days of intervals) {
         const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
         const pipeline = [
-          { $match: { createdAt: { $gte: cutoff } } },
+          { $match: publiclyVisibleBlockMatch({ createdAt: { $gte: cutoff } }) },
           { $group: { _id: '$roomId', totalRoomVotes: { $sum: '$voteCount' }, blockCount: { $sum: 1 } } },
           { $sort: { totalRoomVotes: -1 } },
           { $limit: 1 },
@@ -289,6 +333,7 @@ export async function getFeaturedRoomWithFallback() {
 export async function getRecentActivityByUser(username, options = {}) {
   const days = options.days || 7;
   const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const publicOnly = options.publicOnly === true;
 
   const query = {
     updatedAt: { $gte: cutoff },
@@ -297,11 +342,12 @@ export async function getRecentActivityByUser(username, options = {}) {
       { collaborators: username }
     ]
   };
+  const findQuery = publicOnly ? publiclyVisibleBlockMatch(query) : query;
 
   return await cache.get(
-    `recent-activity-${username}-${days}d-${options.limit || 10}`,
+    `recent-activity-${username}-${days}d-${options.limit || 10}-${publicOnly ? 'public' : 'all'}`,
     async () => {
-      const activities = await Block.find(query)
+      const activities = await Block.find(findQuery)
         .sort({ updatedAt: -1 })
         .limit(options.limit || 10)
         .lean();
@@ -395,7 +441,6 @@ export async function getTopBlocksWithFallback(options = {}) {
 // Fallback para bloques por room (locked o in-progress)
 export async function getBlocksByRoomWithFallback({
   roomId,
-  userId = null,
   status = null,
   limit = 20,
   preferredLang = 'en'
@@ -460,7 +505,7 @@ export async function getTrendingTagsWithFallback(options = {}) {
   const BAND_FETCH = Math.max(target * 5, 50);
 
   const makePipeline = (startDate, endDate, bandLimit) => {
-    const stageMatch = { createdAt: { $gte: startDate, $lte: endDate } };
+    const stageMatch = publiclyVisibleBlockMatch({ createdAt: { $gte: startDate, $lte: endDate } });
     const stageAfterGroupMatch =
       minCount > 1 ? [{ $match: { totalBlocks: { $gte: minCount } } }] : [];
     const stageSort = { [sortBy]: -1, totalVotes: -1, totalBlocks: -1, _id: 1 };
@@ -555,11 +600,17 @@ export async function findByUserWithLangPref({
   sortBy = 'createdAt',
   sortDir = -1,
   skip = 0,
-  limit = 20
+  limit = 20,
+  publicOnly = true,
+  extraMatch = null
 }) {
-  const matchStage = {
+  const userMatch = {
     $or: [{ creator: username }, { collaborators: username }]
   };
+  const scopedMatch = extraMatch
+    ? { $and: [userMatch, extraMatch] }
+    : userMatch;
+  const matchStage = publicOnly ? publiclyVisibleBlockMatch(scopedMatch) : scopedMatch;
 
   const sortStage = { [sortBy]: sortDir };
   if (sortBy !== 'createdAt') {
@@ -603,12 +654,35 @@ export async function findByUserWithLangPref({
   return await Block.aggregate(pipeline).exec();
 }
 
+export async function findDraftsByUser({
+  username,
+  preferredLang = 'en',
+  limit = 5
+}) {
+  if (!username) return [];
+
+  return await findByUserWithLangPref({
+    username,
+    preferredLang,
+    sortBy: 'updatedAt',
+    sortDir: -1,
+    limit,
+    publicOnly: false,
+    extraMatch: {
+      creator: username,
+      status: 'in-progress'
+    }
+  });
+}
+
 // Get all blocks created on a specific date (with caching)
 export async function getBlocksByDate(date) {
   return await cache.get(
     `blocks-by-date-${date}`,
     async () => {
-      const blocks = await Block.find({ createdAt: { $gte: new Date(date), $lt: new Date(date + 'T23:59:59.999Z') } })
+      const blocks = await Block.find(publiclyVisibleBlockMatch({
+        createdAt: { $gte: new Date(date), $lt: new Date(date + 'T23:59:59.999Z') }
+      }))
         .sort({ createdAt: 1 }) // Sort oldest to newest
         .lean(); // Convert Mongoose objects to plain JSON
 
@@ -629,11 +703,12 @@ export async function getBlockDatesByYearMonth(year, month, roomId = null) {
   };
 
   if (roomId) query.roomId = roomId;
+  const visibleQuery = publiclyVisibleBlockMatch(query);
 
   return await cache.get(
     `block-dates-${year}-${month}-${roomId || 'global'}`,
     async () => {
-      const blocks = await Block.find(query, { createdAt: 1 }).sort({ createdAt: -1 }).lean();
+      const blocks = await Block.find(visibleQuery, { createdAt: 1 }).sort({ createdAt: -1 }).lean();
       const uniqueDates = [...new Set(blocks.map(block => block.createdAt.toISOString().split('T')[0]))];
       return uniqueDates;
     },
@@ -645,10 +720,11 @@ export async function getBlockDatesByYearMonth(year, month, roomId = null) {
 // Get all year/month combinations with blocks (cached)
 export async function getAllBlockYearMonthCombos(roomId = null) {
   const pipeline = [
+    { $match: publiclyVisibleBlockMatch() },
     { $project: { year: { $year: '$createdAt' }, month: { $month: '$createdAt' }, roomId: 1 } }
   ];
 
-  if (roomId) pipeline.unshift({ $match: { roomId } });
+  if (roomId) pipeline[0] = { $match: publiclyVisibleBlockMatch({ roomId }) };
 
   pipeline.push(
     { $group: { _id: { year: '$year', month: '$month' } } },
@@ -677,7 +753,7 @@ export async function findByRoomWithLangPref({
   skip = 0,
   limit = 20
 }) {
-  const matchStage = { roomId };
+  const matchStage = publiclyVisibleBlockMatch({ roomId });
   const sortStage = { [sortBy]: sortDir };
   if (sortBy !== 'createdAt') {
     sortStage.createdAt = -1;
@@ -749,7 +825,7 @@ export async function findByDateWithLangPref({
   }
 
   const pipeline = [
-    { $match: { createdAt: { $gte: start, $lt: end } } },
+    { $match: publiclyVisibleBlockMatch({ createdAt: { $gte: start, $lt: end } }) },
     { $sort: sortStage },
     { $group: { _id: '$groupId', docs: { $push: '$$ROOT' } } },
     {
@@ -785,7 +861,7 @@ export async function findByDateWithLangPref({
 }
 
 async function findTopGlobalWithLangPref({ preferredLang, lockedOnly, limit, startDate, endDate }) {
-  const match = { createdAt: { $gte: startDate, $lt: endDate } };
+  const match = publiclyVisibleBlockMatch({ createdAt: { $gte: startDate, $lt: endDate } });
   if (lockedOnly) match.status = 'locked';
 
   return Block.aggregate([
@@ -828,7 +904,7 @@ export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy 
     sortStage.createdAt = -1;
   }
   return Block.aggregate([
-    { $match: { tags: tag } },
+    { $match: publiclyVisibleBlockMatch({ tags: tag }) },
     { $sort: sortStage },
     { $group: { _id: "$groupId", docs: { $push: "$$ROOT" } } },
     {
@@ -866,7 +942,7 @@ export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy 
 export async function getBlocksByRoom(roomId, options = {}) {
   const { status, startDate, endDate, lang, sortBy = 'createdAt' } = options;
 
-  const query = { roomId };
+  const query = publiclyVisibleBlockMatch({ roomId });
   if (status) query.status = status;
   if (lang) query.lang = lang;
 

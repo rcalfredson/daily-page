@@ -12,6 +12,10 @@ function makeQueryResult(result) {
   };
 }
 
+function baseFilter(filter) {
+  return filter?.$and?.[0] || filter;
+}
+
 describe('getRoomEditorialClusters', () => {
   afterEach(() => {
     if (Block.find.calls) {
@@ -30,9 +34,14 @@ describe('getRoomEditorialClusters', () => {
 
   it('surfaces one preferred-language entry point per cluster and prioritizes pillars', async () => {
     spyOn(Block, 'find').and.callFake((filter) => {
-      expect(filter.roomId).toBe('physics');
-      expect(filter.status).toBe('locked');
-      expect(filter.visibility).toBe('public');
+      const query = baseFilter(filter);
+
+      expect(query.roomId).toBe('physics');
+      expect(query.status).toBe('locked');
+      expect(filter.$and?.[1]?.$or).toEqual([
+        { visibility: 'public' },
+        { visibility: 'unlisted', status: 'locked' }
+      ]);
 
       return makeQueryResult([
         {

@@ -206,8 +206,46 @@
   /* separates it from the streak section below */
 }
 
+.draft-list {
+  margin: 0;
+  padding: 0;
+}
+
+.draft-item {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed #eaeaea;
+}
+
+.draft-item:last-child {
+  border-bottom: none;
+}
+
+.draft-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.draft-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.4rem;
+  padding: 0 0.45rem;
+  border: 1px solid #d7dde4;
+  border-radius: 4px;
+  background: #f4f7fa;
+  color: #4f5b67;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
 /* Heading styling */
-.activity-section h3 {
+.activity-section h3,
+.drafts-section h3 {
   margin-bottom: 1rem;
   font-size: 1.25rem;
   color: #333;

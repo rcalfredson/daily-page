@@ -202,6 +202,8 @@ npm test                   Run Jasmine specs
 npm run lint               Run ESLint over app/server/lib/spec paths
 npm run room-i18n:export   Export room i18n source data
 npm run room-i18n:migrate  Populate localized room metadata
+npm run visibility:migrate-unlisted -- --write
+                           Migrate legacy visibility=private posts to unlisted
 ```
 
 Note: `npm test` runs `pretest`, and `pretest` currently invokes ESLint with `--fix` on a small set of files. Be aware of that before running tests in a dirty worktree.
@@ -221,7 +223,7 @@ For frontend work, run `npm run build` after changes to files in `lib/`, or use 
 
 The editor traces back to Conclave's CRDT approach. Posts are edited in Markdown, local edits become CRDT operations, and peers exchange updates through the collaboration layer. The server also exposes endpoints for persistence and session/peer discovery.
 
-When a post has been inactive for about seven days, a cron job marks it `locked`. Locked posts are treated as archive/browsing material rather than active writing surfaces.
+When a post has been inactive for about seven days, a cron job marks it `locked`. Locked posts are treated as archive/browsing material rather than active writing surfaces. `public` posts appear in public browsing while editable; `unlisted` drafts stay out of public browsing until they lock.
 
 ## Internationalization
 

@@ -55,12 +55,12 @@ block content
           span.visibility-description.hidden-on-desktop= t('createBlock.visibility.public.inline')
         .option
           - const disabledClass = !user ? 'disabled' : ''
-          label(for='private-option' title=t('createBlock.visibility.private.title') class=disabledClass)
-            input#private-option(type='radio' name='visibility' value='private' disabled=!user)
-            | #{t('createBlock.visibility.private.label')} 
+          label(for='unlisted-option' title=t('createBlock.visibility.unlisted.title') class=disabledClass)
+            input#unlisted-option(type='radio' name='visibility' value='unlisted' disabled=!user)
+            | #{t('createBlock.visibility.unlisted.label')} 
             i.fas.fa-lock
-            i.far.fa-question-circle.info-icon(onclick="toggleTooltip(event, 'private')")
-          span.visibility-description.hidden-on-desktop= t('createBlock.visibility.private.inline')
+            i.far.fa-question-circle.info-icon(onclick="toggleTooltip(event, 'unlisted')")
+          span.visibility-description.hidden-on-desktop= t('createBlock.visibility.unlisted.inline')
 
     details#advanced-settings(style='margin-top:1rem')
       summary(style='cursor:pointer; font-weight:bold')= t('createBlock.advanced.summary')
