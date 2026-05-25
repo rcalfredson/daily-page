@@ -58,11 +58,15 @@
 }
 
 .tag-add {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .tag-add input#new-tag {
+  width: 100%;
+  box-sizing: border-box;
   border: 1px solid #bbb;
   border-radius: 20px;
   padding: 5px 10px;
@@ -77,13 +81,29 @@
 
 .tag-add button#add-tag-btn {
   margin: unset;
-  margin-left: 5px;
   background-color: var(--highlight-color);
   color: #fff;
   border: none;
   padding: 5px 10px;
-  line-height: unset;
+  line-height: 1.2;
   border-radius: 15px;
   cursor: pointer;
   font-size: 0.9rem;
+}
+
+@media (max-width: 360px) {
+  .tag-add {
+    grid-template-columns: 1fr;
+  }
+
+  .tag-add button#add-tag-btn {
+    justify-self: start;
+  }
+}
+
+@media (min-width: 361px) {
+  .tag-add button#add-tag-btn {
+    align-self: stretch;
+    border-radius: 20px;
+  }
 }
