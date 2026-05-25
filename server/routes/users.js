@@ -6,7 +6,12 @@ import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
 import { addI18n } from '../services/i18n.js';
 import { getUiLang, getPreferredContentLang } from '../services/localeContext.js';
 import { findUserById, findUserByUsername } from "../db/userService.js";
-import { findByUserWithLangPref, getRecentActivityByUser } from '../db/blockService.js';
+import {
+  findDraftsByUser,
+  findByUserWithLangPref,
+  getRecentActivityByUser,
+  publiclyVisibleBlockMatch
+} from '../db/blockService.js';
 import Block from '../db/models/Block.js';
 import { getRoomMetadata } from "../db/roomService.js";
 
@@ -122,7 +127,14 @@ router.get(
         return res.status(404).render('error', { title: 'User not found', message: 'User not found' });
       }
 
-      const recentActivity = await getRecentActivityByUser(profileUsername, { days: 7, limit: 10 });
+      const isOwnProfile = !!(req.user && req.user.username === profileUsername);
+      const publicOnly = !isOwnProfile;
+
+      const recentActivity = await getRecentActivityByUser(profileUsername, {
+        days: 7,
+        limit: 10,
+        publicOnly
+      });
 
       const starredRoomsPreview = await Promise.all(
         (profileUser.starredRooms || []).slice(0, 3).map(async (roomId) => {
@@ -134,17 +146,26 @@ router.get(
         })
       );
 
-      const totalBlocks = await Block.countDocuments({ creator: profileUsername });
-      const totalCollaborations = await Block.countDocuments({ collaborators: profileUsername });
+      const totalBlocksQuery = publicOnly
+        ? publiclyVisibleBlockMatch({ creator: profileUsername })
+        : { creator: profileUsername };
+      const totalCollaborationsQuery = publicOnly
+        ? publiclyVisibleBlockMatch({ collaborators: profileUsername })
+        : { collaborators: profileUsername };
+
+      const totalBlocks = await Block.countDocuments(totalBlocksQuery);
+      const totalCollaborations = await Block.countDocuments(totalCollaborationsQuery);
 
       const daysActiveAgg = await Block.aggregate([
-        { $match: { $or: [{ creator: profileUsername }, { collaborators: profileUsername }] } },
+        {
+          $match: publicOnly
+            ? publiclyVisibleBlockMatch({ $or: [{ creator: profileUsername }, { collaborators: profileUsername }] })
+            : { $or: [{ creator: profileUsername }, { collaborators: profileUsername }] }
+        },
         { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } } } },
         { $count: "activeDays" }
       ]);
       const daysActive = daysActiveAgg[0]?.activeDays || 0;
-
-      const isOwnProfile = !!(req.user && req.user.username === profileUsername);
 
       res.render('profile', {
         title: t('profile.meta.titleUser', { username: profileUsername }),
@@ -176,7 +197,14 @@ router.get(
       const username = req.user.username;
       const userId = req.user.id;
 
-      const recentActivity = await getRecentActivityByUser(username, { days: 7, limit: 10 });
+      const [recentActivity, draftBlocks] = await Promise.all([
+        getRecentActivityByUser(username, { days: 7, limit: 10 }),
+        findDraftsByUser({
+          username,
+          preferredLang: getPreferredContentLang(res),
+          limit: 5
+        })
+      ]);
       const dbUser = await findUserById(userId);
       const starredRooms = dbUser.starredRooms || [];
 
@@ -209,6 +237,7 @@ router.get(
         uiLang,
         user: req.user,
         recentActivity,
+        draftBlocks,
         streakLength: req.user.streakLength,
         starredRooms: starredRoomsPreview,
         totalStarredRooms: starredRooms.length,
@@ -368,7 +397,8 @@ router.get(
         sortBy: sortKey,
         sortDir,
         skip: (page - 1) * limit,
-        limit
+        limit,
+        publicOnly: false
       });
 
       const [{ total = 0 } = {}] = await Block.aggregate([
@@ -427,6 +457,7 @@ router.get(
 
       const dirStr = req.query.dir === 'asc' ? 'asc' : 'desc';
       const sortDir = dirStr === 'asc' ? 1 : -1;
+      const isOwnProfile = !!(req.user && req.user.username === username);
 
       const blocks = await findByUserWithLangPref({
         username,
@@ -434,17 +465,20 @@ router.get(
         sortBy: sortKey,
         sortDir,
         skip: (page - 1) * limit,
-        limit
+        limit,
+        publicOnly: !isOwnProfile
       });
+      const userBlocksMatch = isOwnProfile
+        ? { $or: [{ creator: username }, { collaborators: username }] }
+        : publiclyVisibleBlockMatch({ $or: [{ creator: username }, { collaborators: username }] });
 
       const [{ total = 0 } = {}] = await Block.aggregate([
-        { $match: { $or: [{ creator: username }, { collaborators: username }] } },
+        { $match: userBlocksMatch },
         { $group: { _id: "$groupId" } },
         { $count: "total" }
       ]);
 
       const totalPages = Math.max(1, Math.ceil(total / limit));
-      const isOwnProfile = !!(req.user && req.user.username === username);
 
       res.render('users/blocks', {
         title: isOwnProfile

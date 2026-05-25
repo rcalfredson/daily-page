@@ -24,7 +24,7 @@
         },
         "privacy": {
           "label": "Privacy & Sharing",
-          "text": "means public posts live in the room’s feed. Private posts hide until locked, but you get a share-link to invite friends."
+          "text": "means public posts live in the room’s feed. Unlisted drafts hide until locked, but you get a share-link to invite friends."
         },
         "markdown": {
           "label": "Markdown & Media",

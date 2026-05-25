@@ -1,4 +1,5 @@
 import Block from './models/Block.js';
+import { publiclyVisibleBlockMatch } from './blockService.js';
 
 function clampInt(val, def, min, max) {
   const n = Number.parseInt(val, 10);
@@ -7,10 +8,7 @@ function clampInt(val, def, min, max) {
 }
 
 export async function countSearchGroups({ q, roomId = null }) {
-  const matchStage = {
-    visibility: 'public',
-    $text: { $search: q },
-  };
+  const matchStage = publiclyVisibleBlockMatch({ $text: { $search: q } });
   if (roomId) matchStage.roomId = roomId;
 
   const pipeline = [
@@ -33,10 +31,7 @@ export async function searchBlocks({
   const safeSkip = clampInt(skip, 0, 0, 10000);
   const safeLimit = clampInt(limit, 20, 1, 50);
 
-  const matchStage = {
-    visibility: 'public',
-    $text: { $search: q },
-  };
+  const matchStage = publiclyVisibleBlockMatch({ $text: { $search: q } });
   if (roomId) matchStage.roomId = roomId;
 
   // Strategy:

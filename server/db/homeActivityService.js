@@ -4,6 +4,7 @@ import BlockComment from './models/BlockComment.js';
 import BlockReaction from './models/BlockReaction.js';
 import Room from './models/Room.js';
 import User from './models/User.js';
+import { publiclyVisibleBlockMatch } from './blockService.js';
 import { toRoomI18nDTO } from './roomService.js';
 import { canonicalCommentPath } from '../utils/canonical.js';
 
@@ -42,8 +43,7 @@ async function getPublicBlocksById(blockIds = []) {
   }
 
   const blocks = await Block.find({
-    _id: { $in: ids },
-    visibility: 'public'
+    ...publiclyVisibleBlockMatch({ _id: { $in: ids } })
   })
     .select({
       _id: 1,

@@ -4,7 +4,8 @@ import {
   findByRoomWithLangPref,
   getAllBlockYearMonthCombos,
   getBlockDatesByYearMonth,
-  getTopBlocksByTimeframe
+  getTopBlocksByTimeframe,
+  publiclyVisibleBlockMatch
 } from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import DateHelper from '../../lib/dateHelper.js';
@@ -252,9 +253,9 @@ router.get(
 
       const userId = req.user?.id || null;
 
-      const blocks = await Block.find({
+      const blocks = await Block.find(publiclyVisibleBlockMatch({
         createdAt: { $gte: start, $lt: end }
-      })
+      }))
         .sort({ voteCount: -1, createdAt: 1 })
         .skip(skip)
         .limit(limit)
@@ -262,9 +263,9 @@ router.get(
 
       const lightBlocks = blocks.map(b => toBlockPreviewDTO(b, { userId }));
 
-      const totalBlocks = await Block.countDocuments({
+      const totalBlocks = await Block.countDocuments(publiclyVisibleBlockMatch({
         createdAt: { $gte: start, $lt: end }
-      });
+      }));
 
       const dateISO = `${year}-${month}-${day}`;
       const { prevDate, nextDate } = await getDateNav(null, dateISO, Block);
@@ -336,7 +337,7 @@ router.get(
     });
 
     const total = await Block
-      .distinct('groupId', { roomId })
+      .distinct('groupId', publiclyVisibleBlockMatch({ roomId }))
       .then(arr => arr.length);
 
     const pageTitle = t('archive.index.meta.titleRoom', { roomName: roomDisplayName });
@@ -482,10 +483,10 @@ router.get(
 
       const userId = req.user?.id || null;
 
-      const blocks = await Block.find({
+      const blocks = await Block.find(publiclyVisibleBlockMatch({
         roomId,
         createdAt: { $gte: start, $lt: end }
-      })
+      }))
         .sort({ voteCount: -1 })
         .skip(skip)
         .limit(limit)
@@ -493,10 +494,10 @@ router.get(
 
       const lightBlocks = blocks.map(b => toBlockPreviewDTO(b, { userId }));
 
-      const totalBlocks = await Block.countDocuments({
+      const totalBlocks = await Block.countDocuments(publiclyVisibleBlockMatch({
         roomId,
         createdAt: { $gte: start, $lt: end }
-      });
+      }));
 
       const dateISO = `${year}-${month}-${day}`;
       const { prevDate, nextDate } = await getDateNav(roomId, dateISO, Block);

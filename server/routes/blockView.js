@@ -1,8 +1,8 @@
 import express from 'express';
 import {
   getBlockById,
-  getTranslations,
-  getTranslationByGroupAndLang
+  getPublicTranslations,
+  getPublicTranslationByGroupAndLang
 } from '../db/blockService.js';
 import { getBlockEditorialContext } from '../db/blockEditorialContextService.js';
 import {
@@ -48,7 +48,7 @@ router.get(
       if (!block || block.roomId !== req.params.room_id) return null;
       return block;
     },
-    getTranslation: getTranslationByGroupAndLang,
+    getTranslation: getPublicTranslationByGroupAndLang,
     canonicalPathForBlock: canonicalBlockPath,
   }),
   async (req, res) => {
@@ -72,7 +72,7 @@ router.get(
 
       block.contentHTML = renderMarkdownContent(block.content, { emptyHtml: '' });
       const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
-      const translations = await getTranslations(block.groupId);
+      const translations = await getPublicTranslations(block.groupId);
 
       const [reactionCounts, commentsData, focusedCommentData, dbUser, authorUser, editorialContext] = await Promise.all([
         getReactionCounts(block_id),

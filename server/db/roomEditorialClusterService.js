@@ -1,4 +1,5 @@
 import Block from './models/Block.js';
+import { publiclyVisibleBlockMatch } from './blockService.js';
 
 const ROOM_EDITORIAL_FIELDS = [
   '_id',
@@ -120,12 +121,11 @@ export async function getRoomEditorialClusters(options = {}) {
 
   if (!roomId) return [];
 
-  const rawBlocks = await Block.find({
+  const rawBlocks = await Block.find(publiclyVisibleBlockMatch({
     roomId,
     status: 'locked',
-    visibility: 'public',
     'editorial.clusterKey': { $exists: true, $ne: null }
-  })
+  }))
     .select(ROOM_EDITORIAL_FIELDS)
     .lean();
 
@@ -170,7 +170,11 @@ export async function getRoomEditorialClusters(options = {}) {
     .filter(Boolean)
     .sort(compareClusterSummaries)
     .slice(0, maxClusters)
-    .map(({ sortBlock, ...cluster }) => cluster);
+    .map((cluster) => {
+      const publicCluster = { ...cluster };
+      delete publicCluster.sortBlock;
+      return publicCluster;
+    });
 
   return clusters;
 }

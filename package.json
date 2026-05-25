@@ -18,7 +18,8 @@
     "perform": "babel-node performance/script.js",
     "perform-linear": "babel-node performance/scriptLinear.js",
     "room-i18n:export": "node scripts/migrations/exportRoomI18nSource.js",
-    "room-i18n:migrate": "node scripts/migrations/populateRoomI18n.js"
+    "room-i18n:migrate": "node scripts/migrations/populateRoomI18n.js",
+    "visibility:migrate-unlisted": "node scripts/migrations/migratePrivateVisibilityToUnlisted.js"
   },
   "repository": {
     "type": "git",

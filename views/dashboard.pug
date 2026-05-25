@@ -44,6 +44,22 @@ block content
           button#cancel-bio-btn.btn= t('dashboard.profile.cancel')
 
     .dashboard-main
+      .drafts-section.dashboard-card
+        h3= t('dashboard.drafts.title')
+        if draftBlocks && draftBlocks.length
+          ul.draft-list
+            each draft in draftBlocks
+              li.draft-item
+                a(href=`/rooms/${draft.roomId}/blocks/${draft._id}/edit`)= draft.title
+                .draft-meta
+                  - const updated = new Date(draft.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+                  span= t('dashboard.drafts.updatedOn', { date: updated })
+                  if draft.visibility === 'unlisted'
+                    span.draft-pill= t('dashboard.drafts.unlisted')
+        else
+          p= t('dashboard.drafts.none')
+        a(href=uiPath("/dashboard/blocks")).btn.stats-btn= t('dashboard.drafts.viewAll')
+
       .activity-section.dashboard-card
         h3= t('dashboard.activity.title')
         if recentActivity.length

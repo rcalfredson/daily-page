@@ -38,7 +38,13 @@ export async function getDateNav(roomId, dateISO, Model) {
   const cached = getCache(dateNavCache, cacheKey);
   if (cached) return cached;
 
-  const baseQuery = roomId ? { roomId } : {};
+  const baseQuery = {
+    ...(roomId ? { roomId } : {}),
+    $or: [
+      { visibility: 'public' },
+      { visibility: 'unlisted', status: 'locked' }
+    ]
+  };
   const prev = await Model.findOne({
     ...baseQuery,
     createdAt: { $lt: new Date(dateISO + 'T00:00:00Z') }
