@@ -4,6 +4,7 @@ import Editor from '../lib/editor';
 
 describe("Editor", () => {
   const mockMDE = {
+    value: function() {},
     codemirror: {
       setOption: function() {}
     }
@@ -16,6 +17,25 @@ describe("Editor", () => {
   describe("constructor", () => {
     it("sets the mde passed in to the.mde", () => {
       expect(editor.mde).toEqual(mockMDE);
+    });
+  });
+
+  describe("editing state helpers", () => {
+    it("sets CodeMirror readOnly while waiting for hydration", () => {
+      spyOn(editor.mde.codemirror, "setOption");
+      editor.setReadOnly(true);
+      expect(editor.mde.codemirror.setOption).toHaveBeenCalledWith('readOnly', 'nocursor');
+    });
+
+    it("restores CodeMirror editability after hydration", () => {
+      spyOn(editor.mde.codemirror, "setOption");
+      editor.setReadOnly(false);
+      expect(editor.mde.codemirror.setOption).toHaveBeenCalledWith('readOnly', false);
+    });
+
+    it("returns the source editor value for persistence", () => {
+      spyOn(editor.mde, "value").and.returnValue("source markdown");
+      expect(editor.getText()).toEqual("source markdown");
     });
   });
 

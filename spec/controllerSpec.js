@@ -3,6 +3,7 @@ import { v4 } from 'uuid';
 import Controller from '../lib/controller';
 import Char from '../lib/char';
 import Identifier from '../lib/identifier';
+import BackendHelper from '../lib/backendHelper';
 
 describe("Controller", () => {
   const mockPeer = {
@@ -37,7 +38,9 @@ describe("Controller", () => {
     insertText: function () { },
     deleteText: function () { },
     removeCursor: function () { },
-    bindButtons: function () { }
+    bindButtons: function () { },
+    setReadOnly: function () { },
+    getText: function () { }
   };
 
   const host = "https://localhost:3000";
@@ -568,6 +571,72 @@ describe("Controller", () => {
       expect(controller.addToNetwork).toHaveBeenCalledWith('1', '3', mockDoc);
       expect(controller.addToNetwork).toHaveBeenCalledWith('2', '4', mockDoc);
       expect(controller.addToNetwork).toHaveBeenCalledWith('3', '5', mockDoc);
+    });
+  });
+
+  describe("backup hydration", () => {
+    let mockWin, mockDoc, controller, resolveBackup;
+
+    const syncObj = {
+      initialStruct: [[{
+        position: [{ digit: 3, siteId: 4 }],
+        counter: 1,
+        siteId: 5,
+        value: "a"
+      }]],
+      initialVersions: [],
+      peerId: '7',
+      siteId: '10',
+      network: []
+    };
+
+    beforeEach(() => {
+      spyOn(Controller.prototype, 'setTimedActions');
+      mockWin = new JSDOM(`<!DOCTYPE html><div id='block-page'></div><p id="peerId"></p><p class="copy-container"></p>`).window;
+      mockDoc = mockWin.document;
+      controller = new Controller(
+        'target-peer',
+        'room-id',
+        'block-id',
+        host,
+        mockPeer,
+        mockBroadcast,
+        mockEditor,
+        mockDoc,
+        mockWin
+      );
+      controller.broadcast.peer = mockPeer;
+
+      spyOn(BackendHelper, 'getBlock').and.returnValue(new Promise(resolve => {
+        resolveBackup = resolve;
+      }));
+    });
+
+    it("does not apply a delayed DB backup after peer sync initializes the CRDT", async () => {
+      spyOn(controller, "localInsert").and.callThrough();
+      spyOn(controller.editor, "replaceText");
+
+      controller.useBackupContent();
+      controller.handleSync(syncObj, mockDoc, mockWin);
+
+      resolveBackup({ block: { content: "stale backup" } });
+      await Promise.resolve();
+
+      expect(controller.localInsert).not.toHaveBeenCalled();
+      expect(controller.editor.replaceText).toHaveBeenCalledTimes(1);
+      expect(controller.crdt.toText()).toEqual("a");
+    });
+
+    it("backs up the source editor value instead of rendered CodeMirror DOM", async () => {
+      spyOn(controller, "checkBlockStatus").and.returnValue(Promise.resolve(false));
+      spyOn(controller, "firstPeerId").and.returnValue(mockPeer.id);
+      spyOn(controller, "myPeerId").and.returnValue(mockPeer.id);
+      spyOn(controller.editor, "getText").and.returnValue("source markdown");
+      spyOn(BackendHelper, "syncBlockContent").and.returnValue(Promise.resolve());
+
+      await controller.backupChanges();
+
+      expect(BackendHelper.syncBlockContent).toHaveBeenCalledWith('block-id', "source markdown");
     });
   });
 
