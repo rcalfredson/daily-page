@@ -1,5 +1,5 @@
-import Char from '../lib/char';
-import Identifier from "../lib/identifier";
+import Char from '../lib/char.js';
+import Identifier from "../lib/identifier.js";
 
 describe("Char", () => {
   describe("compareTo", () => {

@@ -1,4 +1,4 @@
-import VersionVector from "../lib/VersionVector";
+import VersionVector from "../lib/versionVector.js";
 
 describe("VersionVector", () => {
   describe('constructor', () => {

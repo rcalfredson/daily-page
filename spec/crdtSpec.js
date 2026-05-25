@@ -1,7 +1,7 @@
-import CRDT from '../lib/crdt';
-import Char from '../lib/char';
-import Identifier from '../lib/identifier';
-import VersionVector from '../lib/versionVector';
+import CRDT from '../lib/crdt.js';
+import Char from '../lib/char.js';
+import Identifier from '../lib/identifier.js';
+import VersionVector from '../lib/versionVector.js';
 
 describe("CRDT", () => {
   const siteId = Math.floor(Math.random() * 1000);

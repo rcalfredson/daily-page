@@ -110,7 +110,7 @@ export default [
       "import/extensions": [
         "error",
         "ignorePackages",
-        { ".js": "never" },
+        { ".js": "always" },
       ],
     },
   },

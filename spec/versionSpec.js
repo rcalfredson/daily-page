@@ -1,4 +1,4 @@
-import Version from '../lib/version';
+import Version from '../lib/version.js';
 
 describe('Version', () => {
   let siteId, version;

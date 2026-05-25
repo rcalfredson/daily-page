@@ -1,4 +1,4 @@
-import Identifier from '../lib/identifier';
+import Identifier from '../lib/identifier.js';
 
 describe("Identifier", () => {
   describe("compareTo", () => {

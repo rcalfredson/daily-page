@@ -1,4 +1,4 @@
-import Broadcast from '../lib/broadcast';
+import Broadcast from '../lib/broadcast.js';
 import { v4 } from 'uuid';
 import { JSDOM } from 'jsdom';
 
