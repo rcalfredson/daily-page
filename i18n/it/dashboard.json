@@ -45,6 +45,13 @@
       "title": "Sicurezza dell'account",
       "summary": "Cambia la password e gestisci l'autenticazione a due fattori.",
       "manage": "Gestisci sicurezza"
+    },
+    "drafts": {
+      "title": "Continua a scrivere",
+      "none": "Nessuna bozza aperta.",
+      "updatedOn": "Aggiornato il {date}",
+      "unlisted": "Non elencato",
+      "viewAll": "Vedi tutti i post"
     }
   }
 }

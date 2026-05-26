@@ -45,6 +45,13 @@
       "title": "账户安全",
       "summary": "更改密码并管理双重认证。",
       "manage": "管理安全设置"
+    },
+    "drafts": {
+      "title": "继续写作",
+      "none": "没有打开的草稿。",
+      "updatedOn": "更新于 {date}",
+      "unlisted": "未列出",
+      "viewAll": "查看全部帖子"
     }
   }
 }

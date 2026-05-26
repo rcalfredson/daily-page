@@ -45,6 +45,13 @@
       "uploadFailed": "프로필 사진 업로드에 실패했습니다. 다시 시도하세요.",
       "uploadUnexpected": "예기치 않은 오류가 발생했습니다. 다시 시도하세요.",
       "bioUpdateFailed": "소개 업데이트 오류. 다시 시도하세요."
+    },
+    "drafts": {
+      "title": "계속 쓰기",
+      "none": "열린 초안이 없습니다.",
+      "updatedOn": "{date}에 업데이트됨",
+      "unlisted": "목록에 없음",
+      "viewAll": "모든 게시물 보기"
     }
   }
 }

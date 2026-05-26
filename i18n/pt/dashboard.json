@@ -45,6 +45,13 @@
       "title": "Segurança da conta",
       "summary": "Altere sua senha e gerencie a autenticação de dois fatores.",
       "manage": "Gerenciar segurança"
+    },
+    "drafts": {
+      "title": "Continuar escrevendo",
+      "none": "Nenhum rascunho aberto.",
+      "updatedOn": "Atualizado em {date}",
+      "unlisted": "Não listado",
+      "viewAll": "Ver todos os posts"
     }
   }
 }
