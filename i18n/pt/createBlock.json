@@ -38,11 +38,11 @@
         "title": "Editável por qualquer pessoa em tempo real. Não precisa fazer login.",
         "inline": "Editável por qualquer pessoa em tempo real. Não precisa fazer login."
       },
-      "private": {
-        "label": "Privado",
-        "title": "Apenas para usuários logados. Visível após a conclusão da edição.",
-        "inline": "Apenas para usuários logados. Visível após a conclusão da edição.",
-        "tooltip": "Posts privados são somente por convite enquanto você trabalha e ficam visíveis quando você termina."
+      "unlisted": {
+        "label": "Rascunho não listado",
+        "title": "Oculto da navegação pública enquanto editável. Visível após o bloqueio.",
+        "inline": "Oculto da navegação pública enquanto editável. Visível após o bloqueio.",
+        "tooltip": "Rascunhos não listados ficam ocultos da navegação pública enquanto editáveis. Qualquer pessoa com o link pode colaborar, e o post se torna público quando é bloqueado."
       }
     },
     "advanced": {

@@ -45,6 +45,13 @@
       "title": "Kontosicherheit",
       "summary": "Ändere dein Passwort und verwalte die Zwei-Faktor-Authentifizierung.",
       "manage": "Sicherheit verwalten"
+    },
+    "drafts": {
+      "title": "Weiterschreiben",
+      "none": "Keine offenen Entwurfe.",
+      "updatedOn": "Aktualisiert am {date}",
+      "unlisted": "Nicht gelistet",
+      "viewAll": "Alle Beitrage anzeigen"
     }
   }
 }

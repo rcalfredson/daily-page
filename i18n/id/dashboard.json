@@ -45,6 +45,13 @@
       "title": "Keamanan Akun",
       "summary": "Ubah kata sandi Anda dan kelola autentikasi dua faktor.",
       "manage": "Kelola Keamanan"
+    },
+    "drafts": {
+      "title": "Lanjut menulis",
+      "none": "Tidak ada draf terbuka.",
+      "updatedOn": "Diperbarui pada {date}",
+      "unlisted": "Tidak terdaftar",
+      "viewAll": "Lihat semua postingan"
     }
   }
 }

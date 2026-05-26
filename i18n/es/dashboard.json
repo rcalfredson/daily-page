@@ -45,6 +45,13 @@
       "title": "Seguridad de la cuenta",
       "summary": "Cambia tu contraseña y administra la autenticación de dos factores.",
       "manage": "Administrar seguridad"
+    },
+    "drafts": {
+      "title": "Continuar escribiendo",
+      "none": "No hay borradores abiertos.",
+      "updatedOn": "Actualizado el {date}",
+      "unlisted": "No listado",
+      "viewAll": "Ver todos los posts"
     }
   }
 }

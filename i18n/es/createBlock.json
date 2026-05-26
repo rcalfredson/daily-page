@@ -38,11 +38,11 @@
         "title": "Editable por cualquiera en tiempo real. No hace falta login.",
         "inline": "Editable por cualquiera en tiempo real. No hace falta login."
       },
-      "private": {
-        "label": "Privado",
-        "title": "Solo para usuarios con sesión iniciada. Visible al terminar la edición.",
-        "inline": "Solo para usuarios con sesión iniciada. Visible al terminar la edición.",
-        "tooltip": "Los posts privados son solo con invitación mientras trabajas y se hacen visibles al terminar."
+      "unlisted": {
+        "label": "Borrador no listado",
+        "title": "Oculto de la navegación pública mientras se puede editar. Visible después del bloqueo.",
+        "inline": "Oculto de la navegación pública mientras se puede editar. Visible después del bloqueo.",
+        "tooltip": "Los borradores no listados quedan ocultos de la navegación pública mientras se pueden editar. Cualquiera con el enlace puede colaborar, y el post se hace público cuando se bloquea."
       }
     },
     "advanced": {

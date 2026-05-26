@@ -38,11 +38,11 @@
         "title": "Dapat diedit siapa pun secara real time. Tidak perlu masuk.",
         "inline": "Dapat diedit siapa pun secara real time. Tidak perlu masuk."
       },
-      "private": {
-        "label": "Privat",
-        "title": "Hanya untuk pengguna yang masuk. Terlihat setelah pengeditan selesai.",
-        "inline": "Hanya untuk pengguna yang masuk. Terlihat setelah pengeditan selesai.",
-        "tooltip": "Postingan privat hanya dapat diakses lewat undangan saat kamu bekerja, dan menjadi terlihat saat kamu selesai."
+      "unlisted": {
+        "label": "Draf tidak terdaftar",
+        "title": "Tersembunyi dari penelusuran publik saat masih dapat diedit. Terlihat setelah dikunci.",
+        "inline": "Tersembunyi dari penelusuran publik saat masih dapat diedit. Terlihat setelah dikunci.",
+        "tooltip": "Draf tidak terdaftar tersembunyi dari penelusuran publik saat masih dapat diedit. Siapa pun yang memiliki tautan dapat berkolaborasi, dan postingan menjadi publik setelah dikunci."
       }
     },
     "advanced": {

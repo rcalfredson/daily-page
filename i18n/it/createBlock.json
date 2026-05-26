@@ -38,11 +38,11 @@
         "title": "Modificabile da chiunque in tempo reale. Nessun accesso richiesto.",
         "inline": "Modificabile da chiunque in tempo reale. Nessun accesso richiesto."
       },
-      "private": {
-        "label": "Privato",
-        "title": "Solo per utenti registrati. Visibile al termine della modifica.",
-        "inline": "Solo per utenti registrati. Visibile al termine della modifica.",
-        "tooltip": "I post privati sono solo su invito mentre lavori e diventano visibili quando hai finito."
+      "unlisted": {
+        "label": "Bozza non elencata",
+        "title": "Nascosta dalla navigazione pubblica durante la modifica. Visibile dopo il blocco.",
+        "inline": "Nascosta dalla navigazione pubblica durante la modifica. Visibile dopo il blocco.",
+        "tooltip": "Le bozze non elencate sono nascoste dalla navigazione pubblica durante la modifica. Chiunque abbia il link puo collaborare e il post diventa pubblico quando viene bloccato."
       }
     },
     "advanced": {

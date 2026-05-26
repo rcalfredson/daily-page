@@ -24,7 +24,7 @@
         },
         "privacy": {
           "label": "Confidentialité et partage",
-          "text": "Les publications publiques apparaissent dans le fil du salon. Les publications privées restent masquées jusqu'à leur verrouillage, mais vous recevez un lien de partage pour inviter des amis."
+          "text": "Les publications publiques apparaissent dans le fil du salon. Les brouillons non répertoriés restent masqués jusqu’à leur verrouillage, mais vous recevez un lien de partage pour inviter des amis."
         },
         "markdown": {
           "label": "Markdown et médias",

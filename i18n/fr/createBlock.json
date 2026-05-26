@@ -38,11 +38,11 @@
         "title": "Modifiable par tout le monde en temps réel. Aucune connexion requise.",
         "inline": "Modifiable par tout le monde en temps réel. Aucune connexion requise."
       },
-      "private": {
-        "label": "Privé",
-        "title": "Réservé aux utilisateurs connectés. Visible une fois l'édition terminée.",
-        "inline": "Réservé aux utilisateurs connectés. Visible une fois l'édition terminée.",
-        "tooltip": "Les publications privés sont accessibles uniquement sur invitation pendant votre travail et deviennent visibles lorsque vous avez terminé."
+      "unlisted": {
+        "label": "Brouillon non répertorié",
+        "title": "Masqué de la navigation publique pendant l’édition. Visible après verrouillage.",
+        "inline": "Masqué de la navigation publique pendant l’édition. Visible après verrouillage.",
+        "tooltip": "Les brouillons non répertoriés sont masqués de la navigation publique pendant l’édition. Toute personne disposant du lien peut collaborer, et la publication devient publique lorsqu’elle est verrouillée."
       }
     },
     "advanced": {

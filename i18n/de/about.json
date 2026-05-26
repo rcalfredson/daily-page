@@ -24,7 +24,7 @@
         },
         "privacy": {
           "label": "Datenschutz und Teilen",
-          "text": "Offentliche Beitrage erscheinen im Feed des Raums. Private Beitrage bleiben bis zur Sperrung verborgen, aber du erhaltst einen Link zum Teilen, um Freunde einzuladen."
+          "text": "Offentliche Beitrage erscheinen im Feed des Raums. Nicht gelistete Entwurfe bleiben bis zur Sperrung verborgen, aber du erhaltst einen Link zum Teilen, um Freunde einzuladen."
         },
         "markdown": {
           "label": "Markdown und Medien",

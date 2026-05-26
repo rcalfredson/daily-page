@@ -24,7 +24,7 @@
         },
         "privacy": {
           "label": "Privasi & Berbagi",
-          "text": "Postingan publik tampil di feed ruang. Postingan privat tersembunyi sampai terkunci, tetapi kamu mendapat tautan berbagi untuk mengundang teman."
+          "text": "Postingan publik tampil di feed ruang. Draf tidak terdaftar tersembunyi sampai terkunci, tetapi kamu mendapat tautan berbagi untuk mengundang teman."
         },
         "markdown": {
           "label": "Markdown & Media",

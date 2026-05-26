@@ -45,6 +45,13 @@
       "title": "Sécurité du compte",
       "summary": "Changez votre mot de passe et gérez l'authentification à deux facteurs.",
       "manage": "Gérer la sécurité"
+    },
+    "drafts": {
+      "title": "Continuer à écrire",
+      "none": "Aucun brouillon ouvert.",
+      "updatedOn": "Mis à jour le {date}",
+      "unlisted": "Non répertorié",
+      "viewAll": "Voir toutes les publications"
     }
   }
 }

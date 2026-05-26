@@ -24,7 +24,7 @@
         },
         "privacy": {
           "label": "Privacy e condivisione",
-          "text": "I post pubblici appaiono nel feed della stanza. I post privati restano nascosti finche non vengono bloccati, ma ricevi un link di condivisione per invitare amici."
+          "text": "I post pubblici appaiono nel feed della stanza. Le bozze non elencate restano nascoste finche non vengono bloccate, ma ricevi un link di condivisione per invitare amici."
         },
         "markdown": {
           "label": "Markdown e media",

@@ -38,11 +38,11 @@
         "title": "Von allen in Echtzeit bearbeitbar. Keine Anmeldung erforderlich.",
         "inline": "Von allen in Echtzeit bearbeitbar. Keine Anmeldung erforderlich."
       },
-      "private": {
-        "label": "Privat",
-        "title": "Nur fur angemeldete Benutzer. Sichtbar, nachdem die Bearbeitung abgeschlossen ist.",
-        "inline": "Nur fur angemeldete Benutzer. Sichtbar, nachdem die Bearbeitung abgeschlossen ist.",
-        "tooltip": "Private Beitrage sind wahrend der Arbeit nur per Einladung zuganglich und werden sichtbar, wenn du fertig bist."
+      "unlisted": {
+        "label": "Nicht gelisteter Entwurf",
+        "title": "Wahrend der Bearbeitung nicht in offentlichen Ubersichten sichtbar. Nach dem Sperren sichtbar.",
+        "inline": "Wahrend der Bearbeitung nicht in offentlichen Ubersichten sichtbar. Nach dem Sperren sichtbar.",
+        "tooltip": "Nicht gelistete Entwurfe sind wahrend der Bearbeitung nicht in offentlichen Ubersichten sichtbar. Alle mit dem Link konnen mitarbeiten, und der Beitrag wird nach dem Sperren offentlich."
       }
     },
     "advanced": {
