@@ -6,6 +6,56 @@
   --highlight-color: #007bff;
   --border-color: #ddd;
   --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --editor-panel-bg: #fbfcff;
+  --editor-soft-border: #dbe7f6;
+  --editor-text-muted: #60708a;
+}
+
+#block-page,
+#block-page *,
+#block-page *::before,
+#block-page *::after {
+  box-sizing: border-box;
+}
+
+#block-page {
+  width: 100%;
+  min-width: 0;
+}
+
+.editor-surface {
+  width: 100%;
+  min-width: 0;
+}
+
+.text-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.editor {
+  width: min(100%, 980px);
+  max-width: 980px;
+  min-width: 0;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+  border: 1px solid var(--editor-soft-border);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(251, 252, 255, 0.98)),
+    var(--editor-panel-bg);
+  box-shadow: 0 18px 50px rgba(35, 83, 138, 0.08);
+}
+
+#block-meta,
+.header,
+.toolbar.sticky,
+.EasyMDEContainer,
+#peerId {
+  min-width: 0;
 }
 
 /* Room description collapsible */
@@ -35,8 +85,9 @@
 
 .room-info {
   font-size: 1rem;
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.75rem;
   color: var(--highlight-color);
+  overflow-wrap: anywhere;
 }
 
 .room-link {
@@ -68,6 +119,7 @@ textarea {
   font-size: 1rem;
   line-height: 1.5;
   box-shadow: var(--box-shadow);
+  max-width: 100%;
 }
 
 .markdown-img-preview {
@@ -83,9 +135,11 @@ textarea {
 
 /* Peers info */
 #peerId {
-  margin-top: 1rem;
+  width: min(100%, 980px);
+  margin: 0.9rem auto 0;
   font-size: 0.9rem;
-  color: var(--text-color);
+  color: var(--editor-text-muted);
+  overflow-wrap: anywhere;
 }
 
 /* Toolbar - Sticky */
@@ -93,20 +147,20 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: var(--primary-bg);
-  border-bottom: none;
+  background-color: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--editor-soft-border);
+  border-radius: 8px 8px 0 0;
   transition: top 0.3s ease;
   padding: 8px;
-  margin-bottom: 0px;
+  margin: 0;
   display: flex;
   gap: 10px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .toolbar.sticky.scrolled {
-  border-bottom: 1px solid var(--border-color);
-  border-left: 1px solid var(--border-color);
-  border-right: 1px solid var(--border-color);
+  border-color: var(--border-color);
 }
 
 button#open-insert-img-btn {
@@ -142,7 +196,8 @@ button#open-insert-img-btn i {
   flex-direction: column;
   gap: 20px;
   z-index: 999;
-  max-width: 320px;
+  width: min(320px, calc(100vw - 2rem));
+  max-width: calc(100vw - 2rem);
 }
 
 #insert-img-tooltip.hidden {
@@ -151,8 +206,7 @@ button#open-insert-img-btn i {
 
 /* Tooltip Input Fields */
 #insert-img-tooltip input[type="text"] {
-  width: calc(100% - 16px);
-  ;
+  width: 100%;
   padding: 10px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -211,12 +265,15 @@ button#open-insert-img-btn i {
 #block-title-container {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
-  font-size: 1.5rem;
+  font-size: clamp(1.3rem, 3vw, 1.5rem);
   font-weight: bold;
   color: var(--text-color);
   cursor: pointer;
   transition: border 0.3s ease-in-out;
+  min-width: 0;
+  margin: 0.3rem 0 0.75rem;
 }
 
 #edit-title-btn {
@@ -239,12 +296,13 @@ button#open-insert-img-btn i {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-left: 20px;
+  margin-left: auto;
 }
 
 .block-action-buttons button {
-  white-space: nowrap;
-  flex-shrink: 0;
+  min-height: 36px;
+  white-space: normal;
+  flex-shrink: 1;
 }
 
 #lock-block-btn {
@@ -256,8 +314,8 @@ button#open-insert-img-btn i {
   display: inline-block;
   width: auto;
   min-width: 50px;
-  max-width: 300px;
-  font-size: 1.5rem;
+  max-width: min(300px, 100%);
+  font-size: clamp(1.3rem, 3vw, 1.5rem);
   font-family: 'Rubik-Regular';
   color: var(--text-color);
   border: 1px solid var(--border-color);
@@ -272,6 +330,8 @@ button#open-insert-img-btn i {
 
 #block-title, #block-title-input {
   transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .fade-out {
@@ -287,17 +347,17 @@ button#open-insert-img-btn i {
   transform: scale(1);
 }
 
-/* Remove hard border and shadow from the card */
 .block-description-card {
   background-color: #fff;
-  border: none;
-  box-shadow: none;
-  padding-top: 1rem;
+  border: 1px solid var(--editor-soft-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(35, 83, 138, 0.05);
+  padding: 2.4rem clamp(0.8rem, 2.5vw, 1rem) 0.4rem;
   position: relative;
   margin: 1rem 0;
+  min-width: 0;
 }
 
-/* Edit button styling in the upper right */
 .description-edit-button {
   position: absolute;
   top: 10px;
@@ -305,35 +365,34 @@ button#open-insert-img-btn i {
   background: none;
   border: none;
   cursor: pointer;
+  color: var(--highlight-color);
 }
 
 /* Ensure the textarea doesn't overlap the edit button */
 #description-edit {
   font-family: 'Rubik-Light', sans-serif;
-  /* New typeface for the textarea */
   margin-top: 15px;
 }
 
 .description-body {
-  width: 95%;
+  width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .description-label {
   position: absolute;
   top: 10px;
-  left: 0px;
+  left: clamp(0.8rem, 2.5vw, 1rem);
   font-size: 0.75rem;
   color: #aaa;
-  /* Light grey */
   text-transform: uppercase;
   pointer-events: none;
-  /* So it doesn't interfere with clicks */
 }
 
 /* Description body styling with fade-out */
 .description-body.collapsed {
   max-height: 150px;
-  /* Adjust as needed */
   overflow: hidden;
   position: relative;
 }
@@ -344,9 +403,8 @@ button#open-insert-img-btn i {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 95%;
+  width: 100%;
   height: 30px;
-  /* Height of the fade effect */
   background: linear-gradient(transparent, var(--primary-bg));
   pointer-events: none;
 }
@@ -362,14 +420,17 @@ button#open-insert-img-btn i {
 
 /* Style and position Save/Cancel buttons */
 .edit-buttons {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 8px;
 }
 
 .edit-buttons button {
   padding: 6px 12px;
   border-radius: 4px;
-  margin-left: 8px;
+  margin-left: 0;
   border: none;
   font-size: 0.9rem;
   cursor: pointer;
@@ -425,6 +486,130 @@ button#open-insert-img-btn i {
   max-width: 400px;
   width: 80%;
   text-align: center;
+}
+
+.header {
+  gap: 0.5rem 1rem;
+  margin: 0.75rem 0 0;
+}
+
+.sharing-link {
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
+  margin-left: 0;
+  overflow-wrap: anywhere;
+}
+
+#sync-infobox {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: var(--editor-text-muted);
+}
+
+.EasyMDEContainer {
+  width: 100%;
+  max-width: 100%;
+}
+
+.EasyMDEContainer .CodeMirror {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--editor-soft-border);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 12px 32px rgba(17, 117, 232, 0.08);
+}
+
+.EasyMDEContainer .CodeMirror-focused {
+  border-color: rgba(17, 117, 232, 0.45);
+  box-shadow: 0 14px 36px rgba(17, 117, 232, 0.16);
+}
+
+.EasyMDEContainer .CodeMirror-scroll,
+.EasyMDEContainer .CodeMirror-sizer,
+.EasyMDEContainer .CodeMirror-lines,
+.EasyMDEContainer .CodeMirror-code {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.EasyMDEContainer .CodeMirror-scroll {
+  overflow-x: hidden !important;
+}
+
+.EasyMDEContainer .CodeMirror pre {
+  max-width: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+@media (max-width: 640px) {
+  .editor {
+    width: 100%;
+    padding: 0.85rem;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  #block-title-container {
+    align-items: flex-start;
+  }
+
+  .block-action-buttons {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .block-action-buttons button {
+    flex: 1 1 9rem;
+  }
+
+  .toolbar.sticky {
+    top: 0;
+  }
+
+  .EasyMDEContainer .CodeMirror pre {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  .editor {
+    padding: 0.65rem;
+  }
+
+  .room-info,
+  #sync-infobox,
+  #peerId {
+    font-size: 0.86rem;
+  }
+
+  .block-description-card {
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+  }
+
+  .description-label {
+    left: 0.7rem;
+  }
+
+  #insert-img-tooltip {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  #insert-img-tooltip div {
+    flex-direction: column;
+  }
+
+  .EasyMDEContainer .CodeMirror pre {
+    font-size: 16px;
+  }
 }
 
 .modal-message {
