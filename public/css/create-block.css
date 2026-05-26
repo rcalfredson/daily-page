@@ -43,7 +43,7 @@ a {
   margin-bottom: 1.25rem;
 }
 
-#block-form label {
+#block-form label:not(.visibility-card) {
   font-weight: bold;
   display: block;
   float: unset;
@@ -73,20 +73,113 @@ textarea {
   resize: vertical;
 }
 
+.disabled {
+  color: gray;
+}
+
+.visibility-field {
+  border: 0;
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.visibility-legend {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 0.6rem;
+  font-weight: bold;
+  line-height: 1.25;
+}
+
 .visibility-options {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem 1rem;
-  align-items: start;
-  margin-top: 0.35rem;
+  gap: 0.75rem;
+  align-items: stretch;
 }
 
-.visibility-options .option {
+.visibility-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem;
   min-width: 0;
+  min-height: 8rem;
+  box-sizing: border-box;
+  padding: 0.9rem;
+  border: 1px solid #d7dde4;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
 }
 
-.disabled {
-  color: gray;
+.visibility-card:hover {
+  border-color: #a9c7ed;
+  box-shadow: 0 4px 14px rgba(17, 87, 170, 0.08);
+}
+
+.visibility-card.disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.visibility-card input[type="radio"] {
+  margin: 0.2rem 0 0;
+}
+
+.visibility-card input[type="radio"]:checked + .visibility-card-body {
+  color: #123a63;
+}
+
+.visibility-card:has(input[type="radio"]:checked) {
+  border-color: #2d8cff;
+  background: #f7fbff;
+  box-shadow: 0 0 0 2px rgba(45, 140, 255, 0.16);
+}
+
+.visibility-card-body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.visibility-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  min-width: 0;
+  font-weight: bold;
+  line-height: 1.15;
+}
+
+.visibility-label-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.visibility-card-header i {
+  flex: 0 0 auto;
+  margin-top: 0.02rem;
+  font-size: 1.15em;
+  line-height: 1;
+}
+
+.visibility-card-icons {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 0.45rem;
+  align-items: flex-start;
+}
+
+.visibility-description {
+  display: block;
+  color: #5e6670;
+  font-size: 0.85rem;
+  line-height: 1.32;
 }
 
 .btn-primary {
@@ -162,17 +255,8 @@ textarea {
   }
 
   .visibility-description {
-    display: block;
     font-size: 12px;
-    color: #555;
     line-height: 1.25;
-    margin-top: 0.35rem;
-  }
-}
-
-@media (min-width: 481px) {
-  .visibility-description {
-    display: none;
   }
 }
 
@@ -190,51 +274,8 @@ textarea {
 }
 
 .info-icon {
-  margin-left: 5px;
   cursor: pointer;
-  font-size: 1.2em;
-}
-
-.visibility-options .option label {
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 0.45rem;
-  width: 100%;
-  min-height: 2.35rem;
-  margin-bottom: 0;
-  line-height: 1.15;
-}
-
-.visibility-options .option label input[type="radio"] {
-  flex: 0 0 auto;
-  margin: 0.15rem 0 0;
-}
-
-.visibility-options .option label i {
-  flex: 0 0 auto;
-  margin: 0.04rem 0 0 0.3rem;
-  font-size: 1.2em;
-  line-height: 1;
-}
-
-.visibility-label-text {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.visibility-options .option label .info-icon {
-  margin-left: 0.45rem;
-}
-
-@media (min-width: 361px) and (max-width: 480px) {
-  .visibility-options .option label {
-    flex-wrap: wrap;
-    align-content: flex-start;
-  }
-
-  .visibility-options .option label .info-icon {
-    margin-left: calc(1.2em + 0.75rem);
-  }
+  font-size: 1.15em;
 }
 
 @media (max-width: 480px) {
@@ -244,12 +285,12 @@ textarea {
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 430px) {
   .visibility-options {
     grid-template-columns: 1fr;
   }
 
-  .visibility-options .option label {
+  .visibility-card {
     min-height: unset;
   }
 }
