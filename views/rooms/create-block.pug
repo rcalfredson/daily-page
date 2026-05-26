@@ -44,23 +44,26 @@ block content
       include ../partials/_tag_section
       input#hidden-tags(type='hidden' name='tags')
       +tagSection([], true)
-    .form-group
-      label= t('createBlock.form.visibility.label')
+    fieldset.form-group.visibility-field
+      legend.visibility-legend= t('createBlock.form.visibility.label')
       .visibility-options
-        .option
-          label(for='public-option' title=t('createBlock.visibility.public.title'))
-            input#public-option(type='radio' name='visibility' value='public' checked)
-            span.visibility-label-text= t('createBlock.visibility.public.label')
-            i.fas.fa-eye
-          span.visibility-description.hidden-on-desktop= t('createBlock.visibility.public.inline')
-        .option
-          - const disabledClass = !user ? 'disabled' : ''
-          label(for='unlisted-option' title=t('createBlock.visibility.unlisted.title') class=disabledClass)
-            input#unlisted-option(type='radio' name='visibility' value='unlisted' disabled=!user)
-            span.visibility-label-text= t('createBlock.visibility.unlisted.label')
-            i.fas.fa-lock
-            i.far.fa-question-circle.info-icon(onclick="toggleTooltip(event, 'unlisted')")
-          span.visibility-description.hidden-on-desktop= t('createBlock.visibility.unlisted.inline')
+        label.visibility-card(for='public-option' title=t('createBlock.visibility.public.title'))
+          input#public-option(type='radio' name='visibility' value='public' checked)
+          span.visibility-card-body
+            span.visibility-card-header
+              span.visibility-label-text= t('createBlock.visibility.public.label')
+              i.fas.fa-eye(aria-hidden='true')
+            span.visibility-description= t('createBlock.visibility.public.inline')
+        - const disabledClass = !user ? 'disabled' : ''
+        label.visibility-card(class=disabledClass for='unlisted-option' title=t('createBlock.visibility.unlisted.title'))
+          input#unlisted-option(type='radio' name='visibility' value='unlisted' disabled=!user)
+          span.visibility-card-body
+            span.visibility-card-header
+              span.visibility-label-text= t('createBlock.visibility.unlisted.label')
+              span.visibility-card-icons
+                i.fas.fa-lock(aria-hidden='true')
+                i.far.fa-question-circle.info-icon(onclick="toggleTooltip(event, 'unlisted')" aria-hidden='true')
+            span.visibility-description= t('createBlock.visibility.unlisted.inline')
 
     details#advanced-settings(style='margin-top:1rem')
       summary(style='cursor:pointer; font-weight:bold')= t('createBlock.advanced.summary')
