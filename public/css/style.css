@@ -69,11 +69,19 @@ General
   --z-popover: 930;    /* language switcher + its dropdown */
 }
 
+html {
+  min-height: 100%;
+}
+
 body {
   font-family: "Rubik-Light";
   background-color: #ffffff;
   margin: 0;
   overflow-x: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
 
 html[dir="rtl"] body {
@@ -99,6 +107,7 @@ html[dir="rtl"] .fi {
 }
 
 .with-margins {
+  flex: 1 0 auto;
   margin: 0 auto;
   width: 85%;
   box-sizing: border-box;
