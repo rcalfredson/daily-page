@@ -1,8 +1,49 @@
 import Session from './models/Session.js';
 import Room from './models/Room.js';
 
+export const PEER_TTL_MS = 5 * 60 * 1000;
+
 let recentlyActiveCache = null;
 let recentlyActiveCacheExpiration = 0;
+
+function isFreshPeer(timestamp, now = new Date()) {
+  return now - new Date(timestamp) <= PEER_TTL_MS;
+}
+
+function splitPeersByFreshness(peers = {}, now = new Date()) {
+  const activePeers = {};
+  const expiredPeerIds = [];
+
+  for (const [peerId, timestamp] of Object.entries(peers || {})) {
+    if (isFreshPeer(timestamp, now)) {
+      activePeers[peerId] = timestamp;
+    } else {
+      expiredPeerIds.push(peerId);
+    }
+  }
+
+  return { activePeers, expiredPeerIds };
+}
+
+async function pruneExpiredPeersForSession(session, now = new Date()) {
+  if (!session) return {};
+
+  const { activePeers, expiredPeerIds } = splitPeersByFreshness(session.peers, now);
+  if (!expiredPeerIds.length) return activePeers;
+
+  if (Object.keys(activePeers).length > 0) {
+    const unsetFields = expiredPeerIds.reduce((fields, peerId) => {
+      fields[`peers.${peerId}`] = '';
+      return fields;
+    }, {});
+
+    await Session.updateOne({ _id: session._id }, { $unset: unsetFields });
+  } else {
+    await Session.deleteOne({ _id: session._id });
+  }
+
+  return activePeers;
+}
 
 /**
  * Return the peer IDs for a given block (or all blocks).
@@ -12,9 +53,11 @@ let recentlyActiveCacheExpiration = 0;
  */
 export async function getPeerIDs(blockId = null, withTime = false) {
   if (blockId) {
-    let session = await Session.findOne({ _id: blockId });
-    if (!session) return {};
-    return withTime ? session.peers : Object.keys(session.peers || {});
+    const session = await Session.findOne({ _id: blockId });
+    if (!session) return withTime ? {} : [];
+
+    const activePeers = await pruneExpiredPeersForSession(session);
+    return withTime ? activePeers : Object.keys(activePeers);
   }
 
   // Fetch all sessions (blocks) if no specific block is requested
@@ -22,7 +65,8 @@ export async function getPeerIDs(blockId = null, withTime = false) {
   const result = {};
 
   for (const session of sessions) {
-    result[session._id] = withTime ? session.peers : Object.keys(session.peers || {});
+    const activePeers = await pruneExpiredPeersForSession(session);
+    result[session._id] = withTime ? activePeers : Object.keys(activePeers);
   }
   return result;
 }
@@ -31,7 +75,6 @@ export async function getPeerIDs(blockId = null, withTime = false) {
  * Removes expired peers and deletes sessions for blocks older than 24 hours.
  */
 export async function cleanUpExpiredSessions() {
-  const maxPeerAge = 24 * 60 * 60 * 1000; // 24 hours
   const now = new Date();
 
   // Grab all session docs
@@ -42,11 +85,7 @@ export async function cleanUpExpiredSessions() {
   for (const session of sessions) {
     const updatedPeers = {};
 
-    for (const [peer, timestamp] of Object.entries(session.peers || {})) {
-      if (now - new Date(timestamp) <= maxPeerAge) {
-        updatedPeers[peer] = timestamp;
-      }
-    }
+    Object.assign(updatedPeers, splitPeersByFreshness(session.peers, now).activePeers);
 
     if (Object.keys(updatedPeers).length > 0) {
       // Session still has active peers, so update it
@@ -129,7 +168,11 @@ export async function getRecentlyActiveRooms(limit = 5) {
         roomActivity[session.roomId] = new Set();
       }
 
-      Object.keys(session.peers).forEach(peer => roomActivity[session.roomId].add(peer));
+      const { activePeers } = splitPeersByFreshness(session.peers);
+      const activePeerIds = Object.keys(activePeers);
+      if (!activePeerIds.length) continue;
+
+      activePeerIds.forEach(peer => roomActivity[session.roomId].add(peer));
     }
 
     // Convert to array and sort by most active users
@@ -168,7 +211,8 @@ export async function getActiveUsers(roomId) {
     
     const uniqueUsers = new Set();
     sessions.forEach(session => {
-      Object.keys(session.peers || {}).forEach(peer => uniqueUsers.add(peer));
+      const { activePeers } = splitPeersByFreshness(session.peers);
+      Object.keys(activePeers).forEach(peer => uniqueUsers.add(peer));
     });
 
     return uniqueUsers.size;

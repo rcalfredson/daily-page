@@ -594,6 +594,39 @@ describe("Controller", () => {
 
       expect(BackendHelper.syncBlockContent).toHaveBeenCalledWith('block-id', "source markdown");
     });
+
+    it("marks the collaborator separately from content backup after a local edit", async () => {
+      spyOn(controller, "checkBlockStatus").and.returnValue(Promise.resolve(false));
+      spyOn(controller, "firstPeerId").and.returnValue(mockPeer.id);
+      spyOn(controller, "myPeerId").and.returnValue(mockPeer.id);
+      spyOn(controller.editor, "getText").and.returnValue("changed markdown");
+      spyOn(BackendHelper, "syncBlockContent").and.returnValue(Promise.resolve());
+      spyOn(BackendHelper, "markBlockCollaborator").and.returnValue(Promise.resolve());
+
+      controller.markLocalUserEdit();
+      await Promise.resolve();
+      await controller.backupChanges();
+      await Promise.resolve();
+
+      expect(BackendHelper.markBlockCollaborator).toHaveBeenCalledWith('block-id');
+      expect(BackendHelper.syncBlockContent).toHaveBeenCalledWith('block-id', "changed markdown");
+      expect(controller.hasMarkedCollaborator).toBeTrue();
+    });
+
+    it("marks the collaborator even when this peer is not responsible for backups", async () => {
+      spyOn(controller, "checkBlockStatus").and.returnValue(Promise.resolve(false));
+      spyOn(controller, "firstPeerId").and.returnValue('another-peer');
+      spyOn(controller, "myPeerId").and.returnValue(mockPeer.id);
+      spyOn(BackendHelper, "syncBlockContent").and.returnValue(Promise.resolve());
+      spyOn(BackendHelper, "markBlockCollaborator").and.returnValue(Promise.resolve());
+
+      controller.markLocalUserEdit();
+      await Promise.resolve();
+      await controller.backupChanges();
+
+      expect(BackendHelper.markBlockCollaborator).toHaveBeenCalledWith('block-id');
+      expect(BackendHelper.syncBlockContent).not.toHaveBeenCalled();
+    });
   });
 
   describe('syncCompleted', () => {

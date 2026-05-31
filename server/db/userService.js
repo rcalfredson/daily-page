@@ -32,7 +32,7 @@ export async function updateUserProfile(userId, updates) {
       ...updates,
       updatedAt: new Date(),
     },
-    { new: true } // return the updated doc
+    { returnDocument: 'after' }
   );
 
   // If there's no matching user, updatedUser will be null

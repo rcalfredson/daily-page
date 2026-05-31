@@ -13,5 +13,5 @@ export async function getFlagsByBlock(blockId) {
 
 // (Optional) Update flag status
 export async function updateFlagStatus(flagId, status) {
-  return Flag.findByIdAndUpdate(flagId, { status }, { new: true });
+  return Flag.findByIdAndUpdate(flagId, { status }, { returnDocument: 'after' });
 }

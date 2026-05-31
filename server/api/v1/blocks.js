@@ -20,6 +20,7 @@ import { updateUserStreak } from '../../db/userService.js';
 import optionalAuth from '../../middleware/optionalAuth.js';
 import { refreshAuthToken } from '../../utils/jwtHelper.js';
 import { normalizeEditorialInput } from '../../db/editorial.js';
+import { generateAnonymousId } from '../../utils/anonymousId.js';
 
 const roomScopedRouter = Router({ mergeParams: true });
 const globalRouter = Router();
@@ -248,6 +249,38 @@ const useBlockAPI = (app) => {
   });
 
   /** 🌍 Single Block Endpoints (Now inside Global Router) **/
+
+  globalRouter.post('/:block_id/collaborators', optionalAuth, async (req, res) => {
+    const { block_id } = req.params;
+
+    try {
+      const block = await getBlockById(block_id);
+      if (!block) {
+        return res.status(404).json({ error: 'Block not found.' });
+      }
+
+      const collaboratorId = req.user
+        ? req.user.username
+        : (req.cookies.anonymousId || generateAnonymousId());
+
+      if (!req.user && !req.cookies.anonymousId) {
+        res.cookie('anonymousId', collaboratorId, {
+          maxAge: 24 * 60 * 60 * 1000
+        });
+      }
+
+      if (collaboratorId !== block.creator) {
+        await updateBlock(block_id, {
+          $addToSet: { collaborators: collaboratorId }
+        });
+      }
+
+      res.status(200).json({ message: 'Block collaborator updated successfully.' });
+    } catch (error) {
+      console.error('Error updating block collaborator:', error.message);
+      res.status(500).json({ error: 'Failed to update block collaborator.' });
+    }
+  });
 
   // 📌 Update the **content** of a block (Anyone can do this!)
   globalRouter.post('/:block_id/content', async (req, res) => {
