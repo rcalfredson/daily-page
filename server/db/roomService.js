@@ -1,6 +1,9 @@
 import Room from './models/Room.js';
+import * as cache from '../services/cache.js';
 
 let cachedTopicsByLang = new Map();
+
+const ROOM_STALE_TTL = 30 * 60 * 1000;
 
 function resolveRoomField(room, field, lang) {
   const map = room?.[`${field}_i18n`];
@@ -37,10 +40,17 @@ export function toRoomI18nDTO(room, lang) {
  */
 export async function getRoomMetadata(roomId, lang = null) {
   try {
-    const doc = await Room.findOne({ _id: roomId });
-    const obj = doc?.toObject();
-    if (!obj) return null;
-    return lang ? toRoomI18nDTO(obj, lang) : obj;
+    return await cache.get(
+      `room-metadata-${roomId}-${lang || 'raw'}`,
+      async () => {
+        const doc = await Room.findOne({ _id: roomId });
+        const obj = doc?.toObject();
+        if (!obj) return null;
+        return lang ? toRoomI18nDTO(obj, lang) : obj;
+      },
+      [],
+      { ttlMs: 10 * 60 * 1000, staleTtlMs: ROOM_STALE_TTL }
+    );
   } catch (error) {
     console.error(`Error fetching room metadata for ID: ${roomId}`, error.message);
     throw error;
@@ -61,7 +71,12 @@ export async function getAllRooms(lang = null) {
 }
 
 export async function getTotalRooms() {
-  return await Room.countDocuments({});
+  return await cache.get(
+    'total-rooms',
+    () => Room.countDocuments({}),
+    [],
+    { ttlMs: 10 * 60 * 1000, staleTtlMs: ROOM_STALE_TTL }
+  );
 }
 
 /**

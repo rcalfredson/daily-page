@@ -10,20 +10,28 @@ import {
   getGlobalBlockStats,
   getTotalTags,
   getFeaturedRoomWithFallback,
+  getFeaturedBlockWithFallback,
 } from '../db/blockService.js';
 import { getTotalRooms } from '../db/roomService.js';
+import {
+  getRecentCommentActivity,
+  getRecentReactionActivity
+} from '../db/homeActivityService.js';
 
 const HOME_LANGS = ['en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi'];
 
 async function warmHomeCache({ preferredLang }) {
   // Settled so one failure doesn’t prevent other keys from warming
   await Promise.allSettled([
+    getFeaturedBlockWithFallback({ preferredLang }),
     getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' }),
     getFeaturedRoomWithFallback(),
     getGlobalBlockStats(),
     getTotalTags(),
     getTotalRooms(),
     getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang }),
+    getRecentCommentActivity({ limit: 5, lang: preferredLang }),
+    getRecentReactionActivity({ limit: 5, lang: preferredLang }),
   ]);
 }
 

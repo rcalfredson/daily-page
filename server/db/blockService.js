@@ -10,11 +10,13 @@ const TTL = {
   trendingTags: 120 * 1000,        // 2 min
   totalTags: 10 * 60 * 1000,       // 10 min
   featuredRoom: 60 * 1000,         // 60s
+  featuredBlock: 60 * 1000,        // 60s
   topBlocks: 60 * 1000             // 60s
 };
 
 // optional: spread expirations so you don't get synchronized misses
 const JITTER = 10 * 1000; // up to 10s extra
+const HOME_STALE_TTL = 30 * 60 * 1000;
 
 export const PUBLIC_BLOCK_VISIBILITY_MATCH = Object.freeze({
   $or: [
@@ -105,7 +107,7 @@ export async function getGlobalBlockStats() {
       return { totalBlocks, collaborationsToday: collaborationsLast24Hours };
     },
     [],
-    { ttlMs: TTL.globalBlockStats, jitterMs: JITTER }
+    { ttlMs: TTL.globalBlockStats, jitterMs: JITTER, staleTtlMs: HOME_STALE_TTL }
   );
 }
 
@@ -118,7 +120,7 @@ export async function getTotalTags() {
       { $count: 'totalTags' }
     ]);
     return result?.[0]?.totalTags ?? 0;
-  }, [], { ttlMs: TTL.totalTags, jitterMs: JITTER });
+  }, [], { ttlMs: TTL.totalTags, jitterMs: JITTER, staleTtlMs: HOME_STALE_TTL });
 }
 
 export async function getAllTagsWithCounts(timeframe = 'all') {
@@ -215,20 +217,27 @@ export async function getTagTrendData(tagName, defaultDays = 30, opts = {}) {
 export async function getFeaturedBlockWithFallback(options = {}) {
   const { preferredLang = 'en' } = options;
 
-  // “Featured” becomes: random block from last year (prefer lang if possible)
-  const { block, period } = await getRandomBlockFromLastYear({ preferredLang });
+  return await cache.get(
+    `featured-block-with-fallback-${preferredLang}`,
+    async () => {
+      // “Featured” becomes: random block from last year (prefer lang if possible)
+      const { block, period } = await getRandomBlockFromLastYear({ preferredLang });
 
-  // If absolutely nothing exists (very early dev), fall back to old logic
-  if (!block) {
-    const { blocks, period: p2 } = await getTopBlocksWithFallback({
-      lockedOnly: false,
-      limit: 1,
-      preferredLang,
-    });
-    return { featuredBlock: blocks[0] || null, period: p2 };
-  }
+      // If absolutely nothing exists (very early dev), fall back to old logic
+      if (!block) {
+        const { blocks, period: p2 } = await getTopBlocksWithFallback({
+          lockedOnly: false,
+          limit: 1,
+          preferredLang,
+        });
+        return { featuredBlock: blocks[0] || null, period: p2 };
+      }
 
-  return { featuredBlock: block, period };
+      return { featuredBlock: block, period };
+    },
+    [],
+    { ttlMs: TTL.featuredBlock, jitterMs: JITTER, staleTtlMs: HOME_STALE_TTL }
+  );
 }
 
 export async function getRandomBlockFromLastYear(options = {}) {
@@ -414,7 +423,7 @@ export async function getTopBlocksWithFallback(options = {}) {
         });
       },
       [],
-      { ttlMs: TTL.topBlocks, jitterMs: JITTER }
+      { ttlMs: TTL.topBlocks, jitterMs: JITTER, staleTtlMs: HOME_STALE_TTL }
     );
 
     if (Array.isArray(bandBlocks) && bandBlocks.length > 0) {
@@ -552,7 +561,7 @@ export async function getTrendingTagsWithFallback(options = {}) {
       cacheKey,
       async () => Block.aggregate(makePipeline(startDate, endDate, BAND_FETCH)).exec(),
       [],
-      { ttlMs: TTL.trendingTags, jitterMs: JITTER }
+      { ttlMs: TTL.trendingTags, jitterMs: JITTER, staleTtlMs: HOME_STALE_TTL }
     );
 
     if (Array.isArray(bandTags) && bandTags.length > 0) {
