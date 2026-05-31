@@ -7,6 +7,7 @@ import User from './models/User.js';
 import { publiclyVisibleBlockMatch } from './blockService.js';
 import { toRoomI18nDTO } from './roomService.js';
 import { canonicalCommentPath } from '../utils/canonical.js';
+import * as cache from '../services/cache.js';
 
 const REACTION_EMOJI_BY_TYPE = {
   heart: '❤️',
@@ -14,6 +15,9 @@ const REACTION_EMOJI_BY_TYPE = {
   wow: '😮',
   laugh: '😂'
 };
+
+const ACTIVITY_TTL = 30 * 1000;
+const ACTIVITY_STALE_TTL = 10 * 60 * 1000;
 
 function clampLimit(limit, fallback = 5, max = 8) {
   return Math.max(1, Math.min(Number(limit) || fallback, max));
@@ -114,6 +118,15 @@ function serializeRoom(roomMap, roomId) {
 
 export async function getRecentCommentActivity({ limit = 5, lang = 'en' } = {}) {
   const safeLimit = clampLimit(limit);
+  return await cache.get(
+    `recent-comment-activity-${safeLimit}-${lang}`,
+    () => getRecentCommentActivityFresh({ safeLimit, lang }),
+    [],
+    { ttlMs: ACTIVITY_TTL, staleTtlMs: ACTIVITY_STALE_TTL }
+  );
+}
+
+async function getRecentCommentActivityFresh({ safeLimit, lang }) {
   const rawComments = await BlockComment.find({
     status: 'visible',
     deletedAt: null
@@ -171,6 +184,15 @@ export async function getRecentCommentActivity({ limit = 5, lang = 'en' } = {}) 
 
 export async function getRecentReactionActivity({ limit = 5, lang = 'en' } = {}) {
   const safeLimit = clampLimit(limit);
+  return await cache.get(
+    `recent-reaction-activity-${safeLimit}-${lang}`,
+    () => getRecentReactionActivityFresh({ safeLimit, lang }),
+    [],
+    { ttlMs: ACTIVITY_TTL, staleTtlMs: ACTIVITY_STALE_TTL }
+  );
+}
+
+async function getRecentReactionActivityFresh({ safeLimit, lang }) {
   const rawReactions = await BlockReaction.find({})
     .sort({ createdAt: -1, _id: -1 })
     .limit(safeLimit * 8)
