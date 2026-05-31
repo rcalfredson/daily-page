@@ -17,6 +17,13 @@ import { getRoomMetadata } from "../db/roomService.js";
 
 const router = express.Router();
 
+function collaboratorOnlyMatch(username) {
+  return {
+    collaborators: username,
+    creator: { $ne: username }
+  };
+}
+
 router.get(
   '/signup',
   addI18n(['signup']),
@@ -150,8 +157,8 @@ router.get(
         ? publiclyVisibleBlockMatch({ creator: profileUsername })
         : { creator: profileUsername };
       const totalCollaborationsQuery = publicOnly
-        ? publiclyVisibleBlockMatch({ collaborators: profileUsername })
-        : { collaborators: profileUsername };
+        ? publiclyVisibleBlockMatch(collaboratorOnlyMatch(profileUsername))
+        : collaboratorOnlyMatch(profileUsername);
 
       const totalBlocks = await Block.countDocuments(totalBlocksQuery);
       const totalCollaborations = await Block.countDocuments(totalCollaborationsQuery);
@@ -220,7 +227,7 @@ router.get(
 
       // 🔥 Obtener estadísticas básicas del usuario
       const totalBlocks = await Block.countDocuments({ creator: username });
-      const totalCollaborations = await Block.countDocuments({ collaborators: username });
+      const totalCollaborations = await Block.countDocuments(collaboratorOnlyMatch(username));
       const totalVotesGiven = await Block.countDocuments({ 'votes.userId': userId });
 
       const activeDaysAgg = await Block.aggregate([
@@ -302,7 +309,7 @@ router.get(
       const username = req.user.username;
 
       const totalBlocks = await Block.countDocuments({ creator: username });
-      const totalCollaborations = await Block.countDocuments({ collaborators: username });
+      const totalCollaborations = await Block.countDocuments(collaboratorOnlyMatch(username));
       const totalVotesGiven = await Block.countDocuments({ 'votes.userId': userId });
 
       const activeDaysAgg = await Block.aggregate([
