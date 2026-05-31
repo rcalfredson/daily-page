@@ -1008,7 +1008,7 @@ export const saveVote = async (blockId, userId, action) => {
 // Update a block by ID
 export async function updateBlock(blockId, updates) {
   return await Block.findByIdAndUpdate(blockId, updates, {
-    new: true,
+    returnDocument: 'after',
     runValidators: true,
     context: 'query'
   });

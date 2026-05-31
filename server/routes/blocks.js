@@ -89,15 +89,10 @@ router.get(
         ? user.username
         : (req.cookies.anonymousId || generateAnonymousId());
 
-      if (!block.collaborators.includes(collaboratorId)) {
-        block.collaborators.push(collaboratorId);
-        await block.save();
-
-        if (!user && !req.cookies.anonymousId) {
-          res.cookie('anonymousId', collaboratorId, {
-            maxAge: 24 * 60 * 60 * 1000
-          });
-        }
+      if (!user && !req.cookies.anonymousId) {
+        res.cookie('anonymousId', collaboratorId, {
+          maxAge: 24 * 60 * 60 * 1000
+        });
       }
 
       const peerIDs = await getPeerIDs(block_id);
