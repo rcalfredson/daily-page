@@ -19,6 +19,7 @@
     "perform-linear": "babel-node performance/scriptLinear.js",
     "room-i18n:export": "node scripts/migrations/exportRoomI18nSource.js",
     "room-i18n:migrate": "node scripts/migrations/populateRoomI18n.js",
+    "collaborators:cleanup": "node scripts/migrations/cleanBlockCollaborators.js",
     "visibility:migrate-unlisted": "node scripts/migrations/migratePrivateVisibilityToUnlisted.js"
   },
   "repository": {
