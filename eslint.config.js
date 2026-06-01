@@ -118,7 +118,6 @@ export default [
     files: [
       "app.js",
       "config/**/*.js",
-      "mp3ToGoogleDoc.js",
       "performance/**/*.js",
       "scripts/**/*.js",
       "server/**/*.js",

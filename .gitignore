@@ -4,6 +4,7 @@
 /public/js/iPod.js
 /build
 .env
+.codex
 debug.js
 credentials.json
 .DS_Store
