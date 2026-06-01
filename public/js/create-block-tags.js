@@ -33,6 +33,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function focusNewTagInput() {
+    document.getElementById('new-tag')?.focus();
+  }
+
+  function addTag() {
+    const newTagInput = document.getElementById('new-tag');
+    const newTag = newTagInput?.value.trim();
+    if (!newTag) {
+      focusNewTagInput();
+      return;
+    }
+
+    const newPill = document.createElement('span');
+    newPill.classList.add('tag-pill');
+    newPill.textContent = newTag;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.classList.add('tag-remove');
+    removeBtn.setAttribute('data-tag', newTag);
+    // Leading space preserved as before
+    removeBtn.textContent = ' ' + t('blockTags.buttons.removeTag');
+    newPill.appendChild(removeBtn);
+
+    const tagAdd = document.querySelector('.tag-add');
+    if (tagAdd) {
+      tagContainer.insertBefore(newPill, tagAdd);
+    } else {
+      tagContainer.appendChild(newPill);
+    }
+
+    newTagInput.value = '';
+    updateHiddenTags();
+    focusNewTagInput();
+  }
+
   tagContainer.addEventListener('click', (e) => {
     if (e.target && e.target.classList.contains('tag-remove')) {
       e.preventDefault();
@@ -46,32 +82,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (addTagBtn) {
     addTagBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      const newTagInput = document.getElementById('new-tag');
-      const newTag = newTagInput.value.trim();
-      if (!newTag) return;
-
-      const newPill = document.createElement('span');
-      newPill.classList.add('tag-pill');
-      newPill.textContent = newTag;
-
-      const removeBtn = document.createElement('button');
-      removeBtn.classList.add('tag-remove');
-      removeBtn.setAttribute('data-tag', newTag);
-      // Leading space preserved as before
-      removeBtn.textContent = ' ' + t('blockTags.buttons.removeTag');
-      newPill.appendChild(removeBtn);
-
-      const tagAdd = document.querySelector('.tag-add');
-      if (tagAdd) {
-        tagContainer.insertBefore(newPill, tagAdd);
-      } else {
-        tagContainer.appendChild(newPill);
-      }
-
-      newTagInput.value = '';
-      updateHiddenTags();
+      addTag();
     });
   }
+
+  document.getElementById('new-tag')?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    addTag();
+  });
 
   // inits
   updateTagHeader();

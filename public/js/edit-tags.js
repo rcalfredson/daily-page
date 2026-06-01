@@ -34,6 +34,46 @@ document.addEventListener('DOMContentLoaded', () => {
         : safeLabel('blockTags.header.noTags', 'No tags');
   }
 
+  function focusNewTagInput() {
+    document.getElementById('new-tag')?.focus();
+  }
+
+  function addTag() {
+    const newTagInput = document.getElementById('new-tag');
+    const newTag = newTagInput?.value.trim();
+    if (!newTag) {
+      focusNewTagInput();
+      return;
+    }
+
+    const newPill = document.createElement('span');
+    newPill.classList.add('tag-pill');
+    newPill.textContent = newTag;
+
+    // Only add remove button when manager UI exists
+    if (canManageTags) {
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.classList.add('tag-remove');
+      removeBtn.setAttribute('data-tag', newTag);
+
+      // preserve leading space behavior
+      const rm = safeLabel('blockTags.buttons.removeTag', 'x');
+      removeBtn.textContent = ' ' + rm;
+
+      newPill.appendChild(removeBtn);
+    }
+
+    const tagAdd = document.querySelector('.tag-add');
+    if (tagAdd) tagContainer.insertBefore(newPill, tagAdd);
+    else tagContainer.appendChild(newPill);
+
+    newTagInput.value = '';
+    updateTagHeader();
+    updateTagsOnBackend();
+    focusNewTagInput();
+  }
+
   tagContainer.addEventListener('click', (e) => {
     if (e.target && e.target.classList.contains('tag-remove')) {
       const pill = e.target.parentElement;
@@ -44,37 +84,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   if (addTagBtn) {
-    addTagBtn.addEventListener('click', () => {
-      const newTagInput = document.getElementById('new-tag');
-      const newTag = newTagInput?.value.trim();
-      if (!newTag) return;
-
-      const newPill = document.createElement('span');
-      newPill.classList.add('tag-pill');
-      newPill.textContent = newTag;
-
-      // Only add remove button when manager UI exists
-      if (canManageTags) {
-        const removeBtn = document.createElement('button');
-        removeBtn.classList.add('tag-remove');
-        removeBtn.setAttribute('data-tag', newTag);
-
-        // preserve leading space behavior
-        const rm = safeLabel('blockTags.buttons.removeTag', 'x');
-        removeBtn.textContent = ' ' + rm;
-
-        newPill.appendChild(removeBtn);
-      }
-
-      const tagAdd = document.querySelector('.tag-add');
-      if (tagAdd) tagContainer.insertBefore(newPill, tagAdd);
-      else tagContainer.appendChild(newPill);
-
-      newTagInput.value = '';
-      updateTagHeader();
-      updateTagsOnBackend();
+    addTagBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      addTag();
     });
   }
+
+  document.getElementById('new-tag')?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    addTag();
+  });
 
   function updateTagsOnBackend() {
     if (typeof block_id === 'undefined') {
