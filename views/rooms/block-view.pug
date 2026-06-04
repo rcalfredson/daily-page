@@ -122,10 +122,10 @@ block content
                   if editorialRole.sequence !== null
                     small.block-editorial-sequence= t('blockView.editorial.sequence', { sequence: editorialRole.sequence })
 
-        // Only show edit link if the block is in-progress
+        // Show edit link for open collaboration or post owners with manage access
         .interact-section
           .action-buttons
-            if block.status === 'in-progress'
+            if block.status === 'in-progress' || canManageBlock
               a.block-edit-btn(href=`/rooms/${room_id}/blocks/${block._id}/edit`)= t('blockView.buttons.edit')
             if canManageBlock
               button#delete-block-btn.delete-btn(
