@@ -16,7 +16,7 @@ import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
 import { addI18n } from '../services/i18n.js';
-import { canManageBlock } from '../utils/block.js';
+import { canManageBlock, parseEditTokens } from '../utils/block.js';
 import { canonicalBlockPath } from '../utils/canonical.js';
 
 const router = express.Router();
@@ -60,7 +60,7 @@ router.get(
       const deepLinkCommentId = normalizeCommentId(req.query.commentId);
 
       const block = await getBlockById(block_id);
-      const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
+      const editTokens = parseEditTokens(req.cookies.edit_tokens);
 
       if (!block || block.roomId !== room_id) {
         return res.status(404).render('error', {

@@ -1,10 +1,46 @@
 import { renderMarkdownPreview } from "./markdownHelper.js"
 import { titleOnlyMeta } from './unfinished.js';
 
+function idsMatch(left, right) {
+  return Boolean(left && right && String(left) === String(right));
+}
+
+export function parseEditTokens(rawTokens) {
+  if (!rawTokens) return [];
+
+  try {
+    const tokens = JSON.parse(rawTokens);
+    return Array.isArray(tokens) ? tokens : [];
+  } catch {
+    return [];
+  }
+}
+
+export function isLoggedInBlockCreator(user, block) {
+  if (!user || !block) return false;
+  if (idsMatch(user.id, block.userId)) return true;
+
+  return !block.userId &&
+    block.creator &&
+    block.creator !== 'anonymous' &&
+    user.username === block.creator;
+}
+
 export function canManageBlock(user, block, editTokens) {
-  const isCreator = user && user.username === block.creator;
-  const hasEditToken = editTokens.includes(block.editToken);
+  const isCreator = isLoggedInBlockCreator(user, block);
+  const hasEditToken = Array.isArray(editTokens) && editTokens.includes(block.editToken);
+
+  if (block?.status === 'locked') {
+    return isCreator;
+  }
+
   return isCreator || hasEditToken;
+}
+
+export function canEditBlockContent(user, block) {
+  if (!block) return false;
+  if (block.status === 'locked') return isLoggedInBlockCreator(user, block);
+  return true;
 }
 
 export function toBlockPreviewDTO(block, {

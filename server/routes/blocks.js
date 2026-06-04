@@ -10,7 +10,7 @@ import { getPeerIDs } from '../db/sessionService.js';
 import { addI18n } from '../services/i18n.js';
 import { getUiLang } from '../services/localeContext.js';
 import { generateAnonymousId } from '../utils/anonymousId.js';
-import { canManageBlock } from '../utils/block.js';
+import { canManageBlock, parseEditTokens } from '../utils/block.js';
 import { canonicalBlockEditPath } from '../utils/canonical.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 
@@ -68,9 +68,7 @@ router.get(
     const { t } = res.locals;
     const user = req.user;
 
-    const editTokens = req.cookies.edit_tokens
-      ? JSON.parse(req.cookies.edit_tokens)
-      : [];
+    const editTokens = parseEditTokens(req.cookies.edit_tokens);
 
     try {
       const block = await getBlockById(block_id);
@@ -96,6 +94,11 @@ router.get(
       }
 
       const peerIDs = await getPeerIDs(block_id);
+      const canManage = canManageBlock(user, block, editTokens);
+
+      if (block.status === 'locked' && !canManage) {
+        return res.redirect(`/rooms/${room_id}/blocks/${block_id}`);
+      }
 
       if (peerIDs.length >= 6) {
         return res.render('fullBlock', {
@@ -134,7 +137,7 @@ router.get(
         turnCredential: config.turnCredential,
         peerIDs,
         initialTargetPeerId,
-        canManageBlock: canManageBlock(user, block, editTokens),
+        canManageBlock: canManage,
         backendURL: backendBaseUrl,
 
         // Make the split explicit:

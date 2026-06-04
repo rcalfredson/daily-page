@@ -21,6 +21,11 @@ import optionalAuth from '../../middleware/optionalAuth.js';
 import { refreshAuthToken } from '../../utils/jwtHelper.js';
 import { normalizeEditorialInput } from '../../db/editorial.js';
 import { generateAnonymousId } from '../../utils/anonymousId.js';
+import {
+  canEditBlockContent,
+  canManageBlock,
+  parseEditTokens
+} from '../../utils/block.js';
 
 const roomScopedRouter = Router({ mergeParams: true });
 const globalRouter = Router();
@@ -107,9 +112,7 @@ const useBlockAPI = (app) => {
     }
 
 
-    const existingTokens = req.cookies.edit_tokens
-      ? JSON.parse(req.cookies.edit_tokens)
-      : [];
+    const existingTokens = parseEditTokens(req.cookies.edit_tokens);
 
     let normalizedEditorial;
     try {
@@ -282,8 +285,8 @@ const useBlockAPI = (app) => {
     }
   });
 
-  // 📌 Update the **content** of a block (Anyone can do this!)
-  globalRouter.post('/:block_id/content', async (req, res) => {
+  // 📌 Update the **content** of a block
+  globalRouter.post('/:block_id/content', optionalAuth, async (req, res) => {
     const { block_id } = req.params;
     const { content } = req.body;
 
@@ -291,6 +294,10 @@ const useBlockAPI = (app) => {
       const block = await getBlockById(block_id);
       if (!block) {
         return res.status(404).json({ error: 'Block not found.' });
+      }
+
+      if (!canEditBlockContent(req.user, block)) {
+        return res.status(403).json({ error: 'You are not authorized to update this block.' });
       }
 
       await updateBlock(block_id, { content });
@@ -313,11 +320,9 @@ const useBlockAPI = (app) => {
       }
 
       // Check ownership before allowing edits
-      const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
-      const isCreator = block.creator === req.user?.username;
-      const hasEditToken = editTokens.includes(block.editToken);
+      const editTokens = parseEditTokens(req.cookies.edit_tokens);
 
-      if (!isCreator && !hasEditToken) {
+      if (!canManageBlock(req.user, block, editTokens)) {
         return res.status(403).json({ error: 'You are not authorized to update this block.' });
       }
 
@@ -373,11 +378,9 @@ const useBlockAPI = (app) => {
         return res.status(404).json({ error: 'Block not found.' });
       }
 
-      const editTokens = req.cookies.edit_tokens ? JSON.parse(req.cookies.edit_tokens) : [];
-      const isCreator = block.creator === req.user?.username;
-      const hasEditToken = editTokens.includes(block.editToken);
+      const editTokens = parseEditTokens(req.cookies.edit_tokens);
 
-      if (!isCreator && !hasEditToken) {
+      if (!canManageBlock(req.user, block, editTokens)) {
         return res.status(403).json({ error: 'You are not authorized to delete this block.' });
       }
 
