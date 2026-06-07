@@ -46,3 +46,55 @@
 .btn:hover {
   background-color: #0056b3;
 }
+
+.anonymous-container .btn:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .anonymous-container {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .anonymous-container .ascii-art {
+  color: var(--highlight-color);
+  background: transparent;
+}
+
+html[data-theme="dark"] .anonymous-container h1 {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .anonymous-container p {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .anonymous-container .btn {
+  background: var(--highlight-color);
+  color: var(--highlight-contrast);
+}
+
+html[data-theme="dark"] .anonymous-container .btn:hover {
+  background: var(--highlight-hover);
+}
+
+@media (max-width: 600px) {
+  .anonymous-container {
+    margin: 2rem auto;
+  }
+
+  .ascii-art {
+    max-width: 100%;
+    overflow-x: auto;
+    font-size: 0.7rem;
+  }
+
+  .anonymous-container h1 {
+    font-size: 1.7rem;
+  }
+
+  .btn-container {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

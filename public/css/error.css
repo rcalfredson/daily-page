@@ -4,6 +4,7 @@
   padding: 2rem;
   text-align: center;
   background-color: #ffffff;
+  border: 1px solid transparent;
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
@@ -32,4 +33,43 @@
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+.error-container .btn:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .error-container {
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .error-container h1 {
+  color: var(--danger-color);
+}
+
+html[data-theme="dark"] .error-container .error-message {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .error-container .btn {
+  background: var(--highlight-color);
+  color: var(--highlight-contrast);
+}
+
+html[data-theme="dark"] .error-container .btn:hover {
+  background: var(--highlight-hover);
+}
+
+@media (max-width: 600px) {
+  .error-container {
+    margin: 1.5rem auto;
+    padding: 1.25rem;
+  }
+
+  .error-container h1 {
+    font-size: 1.65rem;
+  }
 }
