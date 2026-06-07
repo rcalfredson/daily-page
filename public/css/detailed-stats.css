@@ -3,8 +3,13 @@
   margin: 2rem auto;
   padding: 2rem;
   background-color: #fff;
+  border: 1px solid transparent;
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.detailed-stats-container h2 {
+  color: var(--text-color);
 }
 
 .stats-grid {
@@ -16,6 +21,7 @@
 
 .stat-card {
   background: #f0f4f8;
+  border: 1px solid transparent;
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
   padding: 1rem;
   border-radius: 10px;
@@ -33,6 +39,12 @@
   font-weight: bold;
   color: #333;
   margin-top: 0.5rem;
+}
+
+.activity-chart-panel {
+  padding: 1rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
 }
 
 canvas#activityChart {
@@ -55,4 +67,66 @@ canvas#activityChart {
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .detailed-stats-container {
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .activity-chart-panel {
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .stat-card {
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .stat-card:hover {
+  border-color: color-mix(in srgb, var(--highlight-color) 45%, var(--border-color));
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+}
+
+html[data-theme="dark"] .stat-card h4 {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .stat-number {
+  color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .detailed-stats-container .btn {
+  background: var(--highlight-color);
+  color: var(--highlight-contrast);
+}
+
+html[data-theme="dark"] .detailed-stats-container .btn:hover {
+  background: var(--highlight-hover);
+}
+
+@media (max-width: 600px) {
+  .detailed-stats-container {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-chart-panel {
+    padding: 0.5rem;
+  }
+
+  .detailed-stats-container .btn {
+    margin-left: 0;
+  }
 }
