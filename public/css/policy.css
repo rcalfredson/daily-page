@@ -3,6 +3,7 @@
   margin: 60px auto;
   padding: 40px;
   background-color: #fff;
+  border: 1px solid transparent;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   border-radius: 8px;
   line-height: 1.6;
@@ -32,4 +33,50 @@
 .privacy-container a {
   color: #007bff;
   text-decoration: underline;
+}
+
+.privacy-container a:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .privacy-container {
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .privacy-container h1 {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .privacy-container h2 {
+  color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .privacy-container p {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .privacy-container a {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .privacy-container a:hover {
+  color: var(--highlight-hover);
+}
+
+@media (max-width: 600px) {
+  .privacy-container {
+    margin: 1rem auto;
+    padding: 1.25rem;
+  }
+
+  .privacy-container h1 {
+    font-size: 1.75rem;
+  }
+
+  .privacy-container h2 {
+    font-size: 1.3rem;
+  }
 }
