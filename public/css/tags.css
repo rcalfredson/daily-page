@@ -39,13 +39,20 @@
   text-decoration: none;
   background-color: #f0f4f8;
   color: #333;
+  border: 1px solid transparent;
   padding: 0.4rem 0.8rem;
   border-radius: 5px;
-  transition: background-color 0.2s;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    transform 0.2s;
 }
 
 .tag-chip:hover {
   background-color: #e2e6ea;
+  text-decoration: none;
+  transform: translateY(-1px);
 }
 
 .timeframe-selector {
@@ -61,16 +68,82 @@
   border: 1px solid #007bff;
   background-color: transparent;
   color: #007bff;
-  padding: 0.4rem 0.8rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.9rem;
   margin-left: 0;
   flex-shrink: 0;
   border-radius: 5px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
   white-space: nowrap;
 }
 
-.timeframe-btn:hover, .timeframe-btn.active {
+.timeframe-btn:hover,
+.timeframe-btn.active {
   background-color: #007bff;
   color: white;
+}
+
+.timeframe-btn:hover {
+  transform: translateY(-1px);
+}
+
+.timeframe-btn:focus-visible,
+.tag-chip:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .tag-header {
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .tag-header h1 {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .tag-name {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .tag-stats {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .timeframe-btn {
+  color: var(--link-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .timeframe-btn:hover {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: color-mix(in srgb, var(--border-color) 45%, var(--highlight-color));
+}
+
+html[data-theme="dark"] .timeframe-btn.active {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--highlight-color) 14%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 65%, var(--border-color));
+  box-shadow: inset 0 -3px 0 var(--highlight-color);
+}
+
+html[data-theme="dark"] .tag-chip {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .tag-chip:hover {
+  color: var(--link-color);
+  background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 45%, var(--border-color));
 }

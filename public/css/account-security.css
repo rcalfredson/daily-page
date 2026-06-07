@@ -106,6 +106,13 @@
   outline: none;
 }
 
+.security-form input:focus-visible,
+.security-button:focus-visible,
+.account-security-back:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
 .security-button {
   background: #007bff;
   border: 0;
@@ -219,6 +226,125 @@
 
 .recovery-codes-warning {
   font-weight: 600;
+}
+
+html[data-theme="dark"] .account-security-back {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .account-security-back:hover {
+  color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .account-security-header h1,
+html[data-theme="dark"] .security-panel h2,
+html[data-theme="dark"] .recovery-codes-panel h3 {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .account-security-header p,
+html[data-theme="dark"] .security-panel p {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .security-panel {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .security-form label {
+  color: var(--text-color);
+  background: transparent;
+  border: 0;
+}
+
+html[data-theme="dark"] .security-form input {
+  color: var(--text-color);
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .security-form input:focus {
+  border-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .security-button {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+  border-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .security-button:hover {
+  color: var(--highlight-contrast);
+  background: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .security-button-secondary {
+  color: var(--danger-color);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--danger-color) 60%, var(--border-color));
+}
+
+html[data-theme="dark"] .security-button-secondary:hover {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--danger-color) 18%, var(--surface-raised-bg));
+  border-color: var(--danger-color);
+}
+
+html[data-theme="dark"] .status-badge {
+  color: var(--muted-text-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .status-badge-on {
+  color: var(--success-color);
+  background: color-mix(in srgb, var(--success-color) 12%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--success-color) 45%, var(--border-color));
+}
+
+html[data-theme="dark"] .security-feedback {
+  border: 1px solid var(--border-color);
+}
+
+html[data-theme="dark"] .security-feedback.is-success {
+  color: var(--success-color);
+  background: color-mix(in srgb, var(--success-color) 12%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--success-color) 45%, var(--border-color));
+}
+
+html[data-theme="dark"] .security-feedback.is-error {
+  color: var(--danger-color);
+  background: color-mix(in srgb, var(--danger-color) 12%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--danger-color) 45%, var(--border-color));
+}
+
+html[data-theme="dark"] .two-factor-qr {
+  background: #fff;
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .manual-key code,
+html[data-theme="dark"] .recovery-codes-panel,
+html[data-theme="dark"] .recovery-codes-list code {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .recovery-codes-panel {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.01);
+}
+
+html[data-theme="dark"] .recovery-codes-list code {
+  background: var(--input-bg);
+}
+
+html[data-theme="dark"] .recovery-codes-warning {
+  color: var(--danger-color);
 }
 
 @media (max-width: 420px) {

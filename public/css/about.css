@@ -21,6 +21,7 @@
 
 .about-section {
   padding: 2rem;
+  border: 1px solid transparent;
   border-radius: 8px;
   margin-bottom: 2rem;
   background-color: #f9f9f9;
@@ -115,4 +116,70 @@
 .btn.secondary:hover {
   transform: translateY(-2px);
   opacity: 0.9;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .tagline {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .about-section {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .about-section.dark {
+  background: var(--surface-raised-bg);
+}
+
+html[data-theme="dark"] .section-title {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .features b {
+  color: #efacb8;
+}
+
+html[data-theme="dark"] .btn.primary {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+}
+
+html[data-theme="dark"] .btn.secondary {
+  color: var(--link-color);
+  border-color: color-mix(in srgb, var(--highlight-color) 65%, var(--border-color));
+}
+
+html[data-theme="dark"] .btn.primary:hover {
+  background: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .btn.secondary:hover {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-raised-bg));
+}
+
+@media (max-width: 600px) {
+  .about-container {
+    margin: 2rem auto;
+    padding: 0;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .about-section {
+    padding: 1.25rem;
+  }
+
+  .section-title {
+    font-size: 1.45rem;
+  }
 }

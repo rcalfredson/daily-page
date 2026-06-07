@@ -18,6 +18,7 @@ p {
 }
 
 .signup-form {
+  box-sizing: border-box;
   width: 100%;
   padding: 20px;
 }
@@ -39,7 +40,8 @@ p {
 }
 
 .signup-form input {
-  width: 95%;
+  box-sizing: border-box;
+  width: 100%;
   padding: 12px;
   font-size: 14px;
   border: 1px solid #ddd;
@@ -68,4 +70,54 @@ p {
 
 .signup-button:hover {
   background-color: #0056b3;
+}
+
+html[data-theme="dark"] .signup-form-container {
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  background: var(--surface-bg);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .signup-form-container h1 {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .signup-form-container > p {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .signup-form label {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .signup-form input {
+  color: var(--text-color);
+  border-color: var(--border-color);
+  background: var(--input-bg);
+}
+
+html[data-theme="dark"] .signup-form input:focus {
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+html[data-theme="dark"] .signup-button {
+  color: var(--highlight-contrast);
+  background-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .signup-button:hover {
+  background-color: var(--highlight-hover);
+}
+
+@media (max-width: 560px) {
+  .signup-form-container {
+    padding: 28px 18px;
+    margin: 24px auto;
+  }
+
+  .signup-form {
+    padding: 12px 0;
+  }
 }

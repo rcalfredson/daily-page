@@ -103,7 +103,8 @@ export async function docText(slug) {
   viewportMeta.setAttribute('name', 'viewport');
   viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1');
   faviconLink.rel = 'shortcut icon';
-  faviconLink.href = '/assets/img/favicon.ico';
+  faviconLink.type = 'image/svg+xml';
+  faviconLink.href = '/assets/img/logo.svg';
   styleLink.rel = 'stylesheet';
   styleLink.href = '/css/googleDocs.css';
 

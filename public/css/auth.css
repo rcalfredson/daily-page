@@ -10,7 +10,7 @@
 #nav-login,
 #nav-logout {
   display: inline-block;
-  font-family: 'Rubik-Medium', sans-serif;
+  font-family: 'Rubik-Regular', sans-serif;
   font-size: 13px;
   padding: 0px 10px;
   margin: unset;
@@ -33,6 +33,28 @@
 
 #nav-logout:hover {
   background-color: #cc4a4a;
+}
+
+html[data-theme="dark"] #nav-login {
+  background-color: var(--highlight-color);
+  color: var(--highlight-contrast);
+}
+
+html[data-theme="dark"] #nav-login:hover {
+  background-color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] #nav-logout {
+  background-color: #9f303d;
+  color: #fff;
+}
+
+html[data-theme="dark"] #welcome-message {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .welcome-message__user {
+  color: var(--link-color) !important;
 }
 
 #welcome-message {

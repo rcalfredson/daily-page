@@ -555,3 +555,39 @@
     gap: 0.35rem 0.7rem;
   }
 }
+
+html[data-theme="dark"] .comment,
+html[data-theme="dark"] .comments-composer,
+html[data-theme="dark"] .comment-reply-form,
+html[data-theme="dark"] .comment-edit-form,
+html[data-theme="dark"] .comments-empty,
+html[data-theme="dark"] .comment-report-form {
+  color: var(--text-color);
+  border-color: var(--border-color);
+  background: var(--surface-bg);
+}
+
+html[data-theme="dark"] .comments-composer textarea,
+html[data-theme="dark"] .comment-reply-form textarea,
+html[data-theme="dark"] .comment-edit-form textarea {
+  color: var(--text-color);
+  border-color: var(--border-color);
+  background: var(--input-bg);
+}
+
+html[data-theme="dark"] .comment__author,
+html[data-theme="dark"] .comment__body {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .comment__meta,
+html[data-theme="dark"] .comment__time,
+html[data-theme="dark"] .comment__edited,
+html[data-theme="dark"] .comment-reply-context {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .comment-action,
+html[data-theme="dark"] .comment-reply-link {
+  color: var(--link-color);
+}

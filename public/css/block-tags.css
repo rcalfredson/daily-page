@@ -91,6 +91,55 @@
   font-size: 0.9rem;
 }
 
+.tag-add input#new-tag:focus-visible,
+.tag-add button#add-tag-btn:focus-visible,
+.tag-pill button.tag-remove:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .tag-pill {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .tag-pill:hover {
+  background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 45%, var(--border-color));
+}
+
+html[data-theme="dark"] .tag-pill a {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .tag-pill button.tag-remove {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .tag-pill button.tag-remove:hover {
+  color: var(--danger-color);
+}
+
+html[data-theme="dark"] .tag-add input#new-tag {
+  color: var(--text-color);
+  background: var(--input-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .tag-add input#new-tag:focus {
+  border-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .tag-add button#add-tag-btn {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+}
+
+html[data-theme="dark"] .tag-add button#add-tag-btn:hover {
+  background: var(--highlight-hover);
+}
+
 @media (max-width: 360px) {
   .tag-add {
     grid-template-columns: 1fr;

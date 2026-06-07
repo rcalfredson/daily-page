@@ -30,6 +30,7 @@
   border: 1px solid #ddd;
   border-radius: 6px;
   background: #fff;
+  color: var(--text-color);
 }
 
 .sort-bar button {
@@ -44,6 +45,13 @@
 
 .sort-bar button:hover {
   background-color: #0056b3;
+}
+
+.sort-bar select:focus-visible,
+.sort-bar button:focus-visible,
+.block-toc li a:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 /* — Block list styling — */
@@ -85,6 +93,49 @@
 /* — Pagination spacing tweak — */
 .pagination {
   margin-top: 2rem;
+}
+
+html[data-theme="dark"] .room-link {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .sort-bar {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .sort-bar select {
+  color: var(--text-color);
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .sort-bar button {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+  border-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .sort-bar button:hover {
+  background: var(--highlight-hover);
+  border-color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .block-toc li {
+  border-color: var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+html[data-theme="dark"] .block-toc li:hover {
+  background: var(--surface-bg);
+}
+
+html[data-theme="dark"] .block-toc li a {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .block-toc .meta {
+  color: var(--muted-text-color);
 }
 
 /* — Mobile adjustments — */

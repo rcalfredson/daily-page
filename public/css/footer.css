@@ -27,6 +27,16 @@
   text-decoration: underline;
 }
 
+html[data-theme="dark"] .footer {
+  background-color: var(--secondary-bg);
+  border-color: var(--border-color);
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .footer a {
+  color: var(--link-color);
+}
+
  @media (max-width: 420px) {
     .footer-content {
       flex-direction: column;
