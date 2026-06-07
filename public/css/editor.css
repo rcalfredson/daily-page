@@ -546,6 +546,235 @@ button#open-insert-img-btn i {
   word-break: normal;
 }
 
+button#open-insert-img-btn:focus-visible,
+#insert-img-tooltip input[type="text"]:focus-visible,
+#insert-img-tooltip button:focus-visible,
+#edit-title-btn:focus-visible,
+#block-title-input:focus-visible,
+.description-edit-button:focus-visible,
+#description-edit:focus-visible,
+.edit-buttons button:focus-visible,
+#lock-block-btn:focus-visible,
+#lock-confirm-btn:focus-visible,
+#lock-cancel-btn:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .editor {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border-color: var(--editor-soft-border);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .room-info,
+html[data-theme="dark"] .room-description-header,
+html[data-theme="dark"] .room-link,
+html[data-theme="dark"] .expand-toggle,
+html[data-theme="dark"] .description-edit-button,
+html[data-theme="dark"] #edit-title-btn i,
+html[data-theme="dark"] .sharing-link a,
+html[data-theme="dark"] .copy-container {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .room-link:hover,
+html[data-theme="dark"] .room-description-header:hover,
+html[data-theme="dark"] .expand-toggle:hover,
+html[data-theme="dark"] .description-edit-button:hover,
+html[data-theme="dark"] #edit-title-btn:hover i {
+  color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] button#edit-title-btn,
+html[data-theme="dark"] button.description-edit-button,
+html[data-theme="dark"] button#edit-title-btn:hover,
+html[data-theme="dark"] button.description-edit-button:hover,
+html[data-theme="dark"] button#edit-title-btn:active,
+html[data-theme="dark"] button.description-edit-button:active {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .copy-container:hover {
+  color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .copy-container .copy-link {
+  color: inherit !important;
+  stroke: currentColor !important;
+}
+
+html[data-theme="dark"] .room-description,
+html[data-theme="dark"] #peerId,
+html[data-theme="dark"] #sync-infobox,
+html[data-theme="dark"] .description-label,
+html[data-theme="dark"] .copy-status {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] #block-title-container,
+html[data-theme="dark"] #date h2,
+html[data-theme="dark"] .modal-message {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] #block-title-input,
+html[data-theme="dark"] #description-edit,
+html[data-theme="dark"] #insert-img-tooltip input[type="text"] {
+  color: var(--text-color);
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .block-description-card {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--editor-soft-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="dark"] .description-body.collapsed::after {
+  background: linear-gradient(transparent, var(--surface-raised-bg));
+}
+
+html[data-theme="dark"] .toolbar.sticky {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--surface-raised-bg) 94%, transparent);
+  border-color: var(--editor-soft-border);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(8px);
+}
+
+html[data-theme="dark"] button#open-insert-img-btn {
+  color: var(--link-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] button#open-insert-img-btn:hover {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: color-mix(in srgb, var(--border-color) 45%, var(--highlight-color));
+}
+
+html[data-theme="dark"] #insert-img-tooltip {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] #insert-img-tooltip button#insert-img-confirm,
+html[data-theme="dark"] #save-description-btn,
+html[data-theme="dark"] #lock-block-btn {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+  border-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] #insert-img-tooltip button#insert-img-confirm:hover,
+html[data-theme="dark"] #save-description-btn:hover,
+html[data-theme="dark"] #lock-block-btn:hover {
+  color: var(--highlight-contrast);
+  background: var(--highlight-hover);
+  border-color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] #insert-img-tooltip button#insert-img-cancel,
+html[data-theme="dark"] #cancel-description-btn,
+html[data-theme="dark"] #lock-cancel-btn {
+  color: var(--muted-text-color);
+  background: transparent;
+  border: 1px solid var(--border-color);
+}
+
+html[data-theme="dark"] #insert-img-tooltip button#insert-img-cancel:hover,
+html[data-theme="dark"] #cancel-description-btn:hover,
+html[data-theme="dark"] #lock-cancel-btn:hover {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: color-mix(in srgb, var(--border-color) 45%, var(--highlight-color));
+}
+
+html[data-theme="dark"] .modal-content {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] #lock-confirm-btn {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--danger-color) 24%, var(--surface-raised-bg));
+  border: 1px solid color-mix(in srgb, var(--danger-color) 65%, var(--border-color));
+}
+
+html[data-theme="dark"] #lock-confirm-btn:hover {
+  background: color-mix(in srgb, var(--danger-color) 36%, var(--surface-raised-bg));
+  border-color: var(--danger-color);
+}
+
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror,
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-fullscreen {
+  color: var(--text-color);
+  background: var(--input-bg);
+  border-color: var(--editor-soft-border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
+  caret-color: var(--text-color);
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-focused {
+  border-color: color-mix(in srgb, var(--highlight-color) 65%, var(--border-color));
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror pre,
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-code,
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-lines,
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-scroll,
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-sizer {
+  color: var(--text-color);
+  background: transparent;
+}
+
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-cursor {
+  border-left-color: var(--text-color);
+}
+
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-selected,
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-focused .CodeMirror-selected,
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-line::selection,
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-line > span::selection,
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-line > span > span::selection {
+  background: color-mix(in srgb, var(--highlight-color) 28%, var(--input-bg));
+}
+
+html[data-theme="dark"] .EasyMDEContainer .CodeMirror-placeholder {
+  color: var(--muted-text-color);
+  opacity: 0.8;
+}
+
+html[data-theme="dark"] .cm-s-easymde .cm-header,
+html[data-theme="dark"] .cm-s-easymde .cm-link,
+html[data-theme="dark"] .cm-s-easymde .cm-url {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .cm-s-easymde .cm-quote,
+html[data-theme="dark"] .cm-s-easymde .cm-comment {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .cm-s-easymde .cm-string,
+html[data-theme="dark"] .cm-s-easymde .cm-attribute {
+  color: var(--success-color);
+}
+
 @media (max-width: 640px) {
   .editor {
     width: 100%;
