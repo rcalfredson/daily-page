@@ -36,3 +36,22 @@ label[for="flag-reason"], label[for="flag-description"] {
   border-color: var(--highlight-color);
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
 }
+
+html[data-theme="dark"] #flag-form .form-group label {
+  color: var(--text-color);
+  background: transparent;
+}
+
+html[data-theme="dark"] #flag-form select,
+html[data-theme="dark"] #flag-form textarea {
+  color: var(--text-color);
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] #flag-form select:focus,
+html[data-theme="dark"] #flag-form textarea:focus {
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
