@@ -30,11 +30,13 @@ block content
         h4= t('detailedStats.cards.daysActive')
         p.stat-number #{stats.daysActive}
 
-    canvas#activityChart(width="400" height="300")
+    .activity-chart-panel
+      canvas#activityChart(width="400" height="300")
 
   script.
-    const ctx = document.getElementById('activityChart').getContext('2d');
-    new Chart(ctx, {
+    const chartCanvas = document.getElementById('activityChart');
+    const ctx = chartCanvas.getContext('2d');
+    const chart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: [
@@ -51,15 +53,50 @@ block content
             #{stats.totalVotesGiven},
             #{stats.daysActive}
           ],
-          backgroundColor: ['#69b3f2', '#70c9a9', '#ffd56b', '#ff9f40'],
+          backgroundColor: ['#9fb8ff', '#8bd5ca', '#f4c95d', '#c4a7e7'],
+          borderWidth: 0,
+          borderRadius: 5
         }]
       },
       options: {
         responsive: true,
+        maintainAspectRatio: true,
         plugins: { legend: { display: false } },
         scales: {
-          y: { beginAtZero: true },
-          x: { ticks: { maxRotation: 45, minRotation: 45, autoSkip: false } }
+          y: { beginAtZero: true, grid: {}, ticks: {} },
+          x: {
+            grid: {},
+            ticks: { maxRotation: 45, minRotation: 45, autoSkip: false }
+          }
         }
       }
+    });
+
+    function updateChartTheme() {
+      const styles = getComputedStyle(document.documentElement);
+      const textColor = styles.getPropertyValue('--muted-text-color').trim();
+      const borderColor = styles.getPropertyValue('--border-color').trim();
+      const surfaceColor = styles.getPropertyValue('--surface-raised-bg').trim();
+
+      chart.options.scales.x.ticks.color = textColor;
+      chart.options.scales.y.ticks.color = textColor;
+      chart.options.scales.x.grid.color = borderColor;
+      chart.options.scales.y.grid.color = borderColor;
+      chart.options.scales.x.border.color = borderColor;
+      chart.options.scales.y.border.color = borderColor;
+      chart.options.plugins.tooltip = {
+        backgroundColor: surfaceColor,
+        titleColor: styles.getPropertyValue('--text-color').trim(),
+        bodyColor: textColor,
+        borderColor,
+        borderWidth: 1
+      };
+      chart.update('none');
+    }
+
+    updateChartTheme();
+
+    new MutationObserver(updateChartTheme).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
     });
