@@ -1,6 +1,7 @@
 .starred-rooms-container {
   padding: 2rem;
   background-color: #fff;
+  border: 1px solid transparent;
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   margin: 1rem auto;
@@ -24,8 +25,9 @@
 
 .starred-room-full-item {
   background: #f8f8f8;
+  border: 1px solid transparent;
   border-radius: 10px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
   position: relative;
   padding: 0; /* padding moved to link */
 }
@@ -37,6 +39,7 @@
 
 .card-link {
   display: block;
+  box-sizing: border-box;
   padding: 1.25rem; /* moved padding here */
   text-decoration: none;
   color: inherit; /* Inherit colors from parent */
@@ -81,4 +84,72 @@
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+.starred-rooms-container .btn:focus-visible,
+.starred-rooms-container .card-link:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .starred-rooms-container {
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .starred-rooms-container h2 {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .starred-room-full-item {
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .starred-room-full-item:hover {
+  border-color: color-mix(in srgb, var(--highlight-color) 45%, var(--border-color));
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="dark"] .starred-rooms-container .room-name {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .starred-rooms-container .card-link:hover .room-name {
+  color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .starred-rooms-container .starred-room-description,
+html[data-theme="dark"] .starred-rooms-container > p {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .starred-rooms-container .btn {
+  background: var(--highlight-color);
+  color: var(--highlight-contrast);
+}
+
+html[data-theme="dark"] .starred-rooms-container .btn:hover {
+  background: var(--highlight-hover);
+}
+
+@media (max-width: 600px) {
+  .starred-rooms-container {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+
+  .starred-rooms-full-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .starred-rooms-container h2 {
+    font-size: 1.65rem;
+  }
+
+  .starred-rooms-container .btn {
+    margin-left: 0;
+  }
 }
