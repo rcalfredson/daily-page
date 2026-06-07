@@ -67,6 +67,15 @@ textarea {
   font-size: 14px;
 }
 
+input[type="text"]:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+.btn-primary:focus-visible,
+.visibility-card:has(input[type="radio"]:focus-visible) {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
 textarea {
   min-height: 80px;
   font-family: inherit;
@@ -102,16 +111,21 @@ textarea {
 
 .visibility-card {
   position: relative;
+  float: none;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 0.75rem;
   min-width: 0;
   min-height: 8rem;
   box-sizing: border-box;
+  margin: 0;
   padding: 0.9rem;
   border: 1px solid #d7dde4;
   border-radius: 6px;
   background: #fff;
+  color: inherit;
+  font-size: inherit;
+  line-height: normal;
   cursor: pointer;
   transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
 }
@@ -276,6 +290,97 @@ textarea {
 .info-icon {
   cursor: pointer;
   font-size: 1.15em;
+}
+
+html[data-theme="dark"] #room-name,
+html[data-theme="dark"] #room-description {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] #room-description,
+html[data-theme="dark"] .form-help,
+html[data-theme="dark"] .block-tags-header {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] #block-form {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] #block-form label:not(.visibility-card),
+html[data-theme="dark"] .visibility-legend {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] #advanced-settings select {
+  color: var(--text-color);
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .visibility-card {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .visibility-card.disabled {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .visibility-card:hover {
+  border-color: color-mix(in srgb, var(--border-color) 45%, var(--highlight-color));
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="dark"] .visibility-card input[type="radio"] {
+  accent-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .visibility-card input[type="radio"]:checked + .visibility-card-body {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .visibility-card:has(input[type="radio"]:checked) {
+  background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 65%, var(--border-color));
+  box-shadow: inset 0 -3px 0 var(--highlight-color);
+}
+
+html[data-theme="dark"] .visibility-description {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .btn-primary {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+}
+
+html[data-theme="dark"] .btn-primary:hover {
+  background: var(--highlight-hover);
+}
+
+html[data-theme="dark"] #advanced-settings summary {
+  color: var(--muted-text-color);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] #advanced-settings summary:hover,
+html[data-theme="dark"] #advanced-settings[open] summary {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .tooltip {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
 }
 
 @media (max-width: 480px) {

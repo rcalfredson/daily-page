@@ -13,6 +13,19 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
         each alt in hreflang
           link(rel="alternate" hreflang=alt.lang href=alt.href)
       meta(name="viewport" content="width=device-width, initial-scale=1.0")
+      script.
+        (function () {
+          try {
+            var stored = localStorage.getItem('daily-page-theme');
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var theme = stored === 'light' || stored === 'dark' ? stored : (prefersDark ? 'dark' : 'light');
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.style.colorScheme = theme;
+          } catch (error) {
+            document.documentElement.dataset.theme = 'light';
+            document.documentElement.style.colorScheme = 'light';
+          }
+        })();
       link(rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css")
       link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet")
       link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/7.5.0/css/flag-icons.min.css")
@@ -24,10 +37,8 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
       link(rel="stylesheet" href="/css/ui-lang-switcher.css")
       link(rel="stylesheet" href="/css/copy-btn.css")
       script(src="/js/auth.js")
-      link(rel="icon" href="/assets/img/favicon.ico")
-      link(rel='icon' type='image/png' sizes="192x192" href='/assets/img/logo-192.png')
-      link(rel='icon' type='image/png' sizes='48x48' href='/assets/img/logo-48.png')
-      link(rel="apple-touch-icon" sizes="180x180" href="/assets/img/logo-192.png")
+      link(rel="icon" type="image/svg+xml" href="/assets/img/logo.svg")
+      link(rel="apple-touch-icon" href="/assets/img/logo.svg")
       include schema.pug
       script(defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js")
       script(defer src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js")
@@ -44,7 +55,7 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
         header.navbar-header
           a.brand(href=uiPath('/'))
             img.brand-mark(
-              src="/assets/img/logo-48.png"
+              src="/assets/img/logo.svg"
               alt=""
               width="24"
               height="24"
@@ -96,6 +107,15 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
             )
               i.fa.fa-search(aria-hidden="true")
               span.sr-only= t('nav.search')
+            button.theme-toggle(
+              type="button"
+              data-theme-toggle
+              aria-label=t('layout.theme.toggleToDark')
+              title=t('layout.theme.toggleToDark')
+              aria-pressed="false"
+            )
+              i.fa.fa-moon-o(data-theme-icon aria-hidden="true")
+              span.sr-only(data-theme-label)= t('layout.theme.toggleToDark')
             include partials/_ui_lang_switcher
       if uiLangIsFallback && uiLangFallbackFrom
         include partials/_ui_lang_fallback_banner

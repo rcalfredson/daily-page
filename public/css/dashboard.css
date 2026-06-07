@@ -162,11 +162,13 @@
 }
 
 #edit-bio-btn {
+  float: none;
   background-color: #f0f4f8;
   color: #555;
   border: 1px solid #ccc;
   font-size: 0.85rem;
   padding: 5px 10px;
+  margin-left: 0;
   margin-top: 1rem;
 }
 
@@ -179,6 +181,11 @@
   display: flex;
   justify-content: center;
   gap: 10px;
+}
+
+.bio-edit-buttons .btn {
+  float: none;
+  margin: 0;
 }
 
 .hidden {
@@ -198,6 +205,12 @@
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+.btn:focus-visible,
+.profile-pic-label:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 /* Spacing for the activity section itself */
@@ -357,6 +370,112 @@
 
 .btn.stats-btn:hover {
   background-color: #218838;
+}
+
+html[data-theme="dark"] .dashboard-container {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .profile-pic-label {
+  background: transparent;
+  border: 0;
+}
+
+html[data-theme="dark"] .profile-pic {
+  border-color: color-mix(in srgb, var(--highlight-color) 45%, var(--border-color));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
+}
+
+html[data-theme="dark"] .profile-section h2,
+html[data-theme="dark"] .dashboard-card h3,
+html[data-theme="dark"] .account-stats h3,
+html[data-theme="dark"] .stat-value {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .bio-text,
+html[data-theme="dark"] .dashboard-container p,
+html[data-theme="dark"] .activity-item p,
+html[data-theme="dark"] .draft-meta,
+html[data-theme="dark"] .stat-label {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] #bio-input {
+  color: var(--text-color);
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  box-shadow: none;
+}
+
+html[data-theme="dark"] #edit-bio-btn {
+  color: var(--link-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] #edit-bio-btn:hover {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 45%, var(--border-color));
+}
+
+html[data-theme="dark"] .dashboard-card,
+html[data-theme="dark"] .account-stats {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="dark"] .dashboard-card h3,
+html[data-theme="dark"] .draft-item,
+html[data-theme="dark"] .activity-item,
+html[data-theme="dark"] .stat-item {
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .dashboard-container ul li a,
+html[data-theme="dark"] .activity-item a,
+html[data-theme="dark"] .starred-room-item a,
+html[data-theme="dark"] .view-more,
+html[data-theme="dark"] .starred-rooms a[href="/dashboard/starred-rooms"] {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .dashboard-container ul li a:hover,
+html[data-theme="dark"] .activity-item a:hover,
+html[data-theme="dark"] .starred-room-item a:hover,
+html[data-theme="dark"] .view-more:hover,
+html[data-theme="dark"] .starred-rooms a[href="/dashboard/starred-rooms"]:hover {
+  color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .draft-pill {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 45%, var(--border-color));
+}
+
+html[data-theme="dark"] .streak-info {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .btn,
+html[data-theme="dark"] .btn.stats-btn {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+  border-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .btn:hover,
+html[data-theme="dark"] .btn.stats-btn:hover {
+  color: var(--highlight-contrast);
+  background: var(--highlight-hover);
+  border-color: var(--highlight-hover);
 }
 
 @media (max-width: 600px) {

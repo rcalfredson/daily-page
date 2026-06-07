@@ -9,6 +9,7 @@
 }
 
 .notifications-toggle {
+  box-sizing: border-box;
   list-style: none;
   cursor: pointer;
   user-select: none;
@@ -32,6 +33,13 @@
 .notifications-toggle:focus-visible {
   background: #eef7ff;
   border-color: #bfdcff;
+}
+
+.notifications-toggle:focus-visible,
+.notifications-item__body:focus-visible,
+.notifications-item__mark-read:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 .notifications-badge {
@@ -62,6 +70,7 @@
   background: var(--primary-bg);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
   transform-origin: top right;
+  scrollbar-color: var(--border-color) transparent;
 }
 
 .notifications-panel__title {
@@ -85,10 +94,15 @@
 }
 
 .notifications-item {
+  position: relative;
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 0.7rem 0.75rem;
   background: #fff;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .notifications-item--unread {
@@ -101,6 +115,7 @@
   gap: 0.35rem;
   color: inherit;
   text-decoration: none;
+  border-radius: 6px;
 }
 
 .notifications-item__message {
@@ -127,6 +142,84 @@
 .notifications-item__mark-read:hover,
 .notifications-item__mark-read:focus-visible {
   text-decoration: underline;
+}
+
+html[data-theme="dark"] .notifications-toggle {
+  color: var(--link-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .notifications-toggle:hover,
+html[data-theme="dark"] .notifications-toggle:focus-visible,
+html[data-theme="dark"] .notifications-menu[open] .notifications-toggle {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: color-mix(in srgb, var(--border-color) 45%, var(--highlight-color));
+}
+
+html[data-theme="dark"] .notifications-badge {
+  color: #fff;
+  background: var(--danger-color);
+  box-shadow: 0 0 0 2px var(--secondary-bg);
+}
+
+html[data-theme="dark"] .notifications-panel {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .notifications-panel__title {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .notifications-panel__status,
+html[data-theme="dark"] .notifications-item__time {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .notifications-item {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .notifications-item:hover {
+  background: color-mix(in srgb, var(--highlight-color) 7%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--border-color) 45%, var(--highlight-color));
+}
+
+html[data-theme="dark"] .notifications-item--unread {
+  background: color-mix(in srgb, var(--highlight-color) 11%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 55%, var(--border-color));
+  box-shadow: inset 3px 0 0 var(--highlight-color);
+}
+
+html[dir="rtl"][data-theme="dark"] .notifications-item--unread {
+  box-shadow: inset -3px 0 0 var(--highlight-color);
+}
+
+html[data-theme="dark"] .notifications-item__body {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .notifications-item__mark-read {
+  color: var(--link-color);
+  background: transparent;
+  border: 0;
+}
+
+html[data-theme="dark"] .notifications-item__mark-read:hover,
+html[data-theme="dark"] .notifications-item__mark-read:focus-visible {
+  color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .notifications-item__mark-read:disabled {
+  color: var(--muted-text-color);
+  cursor: wait;
+  opacity: 0.7;
 }
 
 .site-header:has(.main-menu:target) .notifications-menu,

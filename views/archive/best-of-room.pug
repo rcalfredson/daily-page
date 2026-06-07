@@ -37,21 +37,21 @@ block content
 
   // Tab navigation
   .tabs
-    ul.tab-links
-      li(class={active: activeTab==='24h'} data-tab="tab-24h")= t('bestOf.tabs.24h')
-      li(class={active: activeTab==='7d'}  data-tab="tab-7d")= t('bestOf.tabs.7d')
-      li(class={active: activeTab==='30d'} data-tab="tab-30d")= t('bestOf.tabs.30d')
-      li(class={active: activeTab==='all'} data-tab="tab-all")= t('bestOf.tabs.all')
+    ul.tab-links(role="tablist")
+      li(class={active: activeTab==='24h'} data-tab="tab-24h" role="tab" tabindex=(activeTab === '24h' ? '0' : '-1') aria-selected=(activeTab === '24h' ? 'true' : 'false') aria-controls="tab-24h")= t('bestOf.tabs.24h')
+      li(class={active: activeTab==='7d'}  data-tab="tab-7d" role="tab" tabindex=(activeTab === '7d' ? '0' : '-1') aria-selected=(activeTab === '7d' ? 'true' : 'false') aria-controls="tab-7d")= t('bestOf.tabs.7d')
+      li(class={active: activeTab==='30d'} data-tab="tab-30d" role="tab" tabindex=(activeTab === '30d' ? '0' : '-1') aria-selected=(activeTab === '30d' ? 'true' : 'false') aria-controls="tab-30d")= t('bestOf.tabs.30d')
+      li(class={active: activeTab==='all'} data-tab="tab-all" role="tab" tabindex=(activeTab === 'all' ? '0' : '-1') aria-selected=(activeTab === 'all' ? 'true' : 'false') aria-controls="tab-all")= t('bestOf.tabs.all')
 
   // Tab content
   .tab-content
-    #tab-24h.tab-pane(class={active: activeTab==='24h'})
+    #tab-24h.tab-pane(class={active: activeTab==='24h'} role="tabpanel")
       +renderBlockList(top24h)
-    #tab-7d.tab-pane(class={active: activeTab==='7d'})
+    #tab-7d.tab-pane(class={active: activeTab==='7d'} role="tabpanel")
       +renderBlockList(top7d)
-    #tab-30d.tab-pane(class={active: activeTab==='30d'})
+    #tab-30d.tab-pane(class={active: activeTab==='30d'} role="tabpanel")
       +renderBlockList(top30d)
-    #tab-all.tab-pane(class={active: activeTab==='all'})
+    #tab-all.tab-pane(class={active: activeTab==='all'} role="tabpanel")
       +renderBlockList(topAll)
   include ../partials/_login_modal
   #toast-container

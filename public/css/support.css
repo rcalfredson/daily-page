@@ -1,4 +1,5 @@
 .room-request-container {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6,9 +7,10 @@
   padding: 30px 20px;
   background-color: #f9f9f9;
   /* Keep the container’s background */
+  border: 1px solid transparent;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  width: 95%;
+  width: min(100%, 500px);
   max-width: 500px;
   margin: 20px 50px;
 }
@@ -20,6 +22,7 @@
 }
 
 .room-request-form {
+  box-sizing: border-box;
   width: 100%;
   padding: 20px;
   border-radius: 8px; 
@@ -44,7 +47,8 @@
 
 .room-request-form input,
 .room-request-form textarea {
-  width: 95%;
+  box-sizing: border-box;
+  width: 100%;
   padding: 12px;
   /* Add more padding for better UX */
   font-size: 14px;
@@ -79,4 +83,82 @@
 
 .submit-button:hover {
   background-color: #0056b3;
+}
+
+.room-request-form input:focus-visible,
+.room-request-form textarea:focus-visible,
+.submit-button:focus-visible,
+.info a:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .info h1 {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .info a {
+  color: var(--link-color);
+  text-decoration-color: color-mix(in srgb, var(--link-color) 65%, transparent);
+}
+
+html[data-theme="dark"] .room-request-container {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .room-request-form {
+  background: transparent;
+}
+
+html[data-theme="dark"] .room-request-form label {
+  color: var(--text-color);
+  background: transparent;
+}
+
+html[data-theme="dark"] .room-request-form input,
+html[data-theme="dark"] .room-request-form textarea {
+  color: var(--text-color);
+  background: var(--input-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .room-request-form input:focus,
+html[data-theme="dark"] .room-request-form textarea:focus {
+  border-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .submit-button {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+}
+
+html[data-theme="dark"] .submit-button:hover {
+  background: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .form-feedback {
+  color: var(--text-color);
+}
+
+@media (max-width: 600px) {
+  .info h1 {
+    padding-left: 1.15em;
+    font-size: 1.65rem;
+    overflow-wrap: anywhere;
+  }
+
+  .info p {
+    margin-left: 0;
+  }
+
+  .room-request-container {
+    padding: 1rem;
+  }
+
+  .room-request-form {
+    padding: 0;
+  }
 }

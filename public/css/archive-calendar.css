@@ -3,6 +3,7 @@
   margin: 2rem auto;
   padding: 1.5rem;
   background: #fff;
+  border: 1px solid transparent;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
@@ -54,6 +55,12 @@
   background-color: #0056b3;
 }
 
+.active-day a:focus-visible,
+.nav-link:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .inactive-day {
   color: #ccc;
 }
@@ -78,8 +85,61 @@
   pointer-events: none;
 }
 
+html[data-theme="dark"] .calendar-container {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .calendar th,
+html[data-theme="dark"] .calendar td {
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .calendar th {
+  color: var(--muted-text-color);
+  background: var(--surface-raised-bg);
+}
+
+html[data-theme="dark"] .calendar td {
+  background: color-mix(in srgb, var(--surface-bg) 78%, var(--surface-raised-bg));
+}
+
+html[data-theme="dark"] .active-day a {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+}
+
+html[data-theme="dark"] .active-day a:hover {
+  background: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .inactive-day,
+html[data-theme="dark"] .nav-link.disabled {
+  color: color-mix(in srgb, var(--muted-text-color) 55%, var(--surface-bg));
+}
+
+html[data-theme="dark"] .empty-cell {
+  background: var(--primary-bg);
+}
+
+html[data-theme="dark"] .nav-link {
+  color: var(--link-color);
+}
+
 /* Ajustes específicos para mobile */
 @media (max-width: 600px) {
+  .calendar-container {
+    margin: 1rem auto;
+    padding: 0.75rem;
+  }
+
+  .calendar-container h1 {
+    margin-bottom: 1.25rem;
+    font-size: 1.45rem;
+  }
+
   .calendar th, .calendar td {
     height: 2rem; /* altura consistente menor en móvil 👈 */
     padding: 0.25rem;

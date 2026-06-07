@@ -29,3 +29,12 @@
 .back-to-room-link a:hover {
   text-decoration: underline;
 }
+
+html[data-theme="dark"] .archive-room-meta {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .archive-room-meta a,
+html[data-theme="dark"] .back-to-room-link a {
+  color: var(--link-color);
+}

@@ -15,6 +15,22 @@
   --rooms-radius-md: 16px;
 }
 
+html[data-theme="dark"] {
+  --rooms-bg: linear-gradient(180deg, #202126 0%, #191b20 46%, #15161a 100%);
+  --rooms-surface: rgba(35, 37, 44, 0.92);
+  --rooms-surface-strong: rgba(28, 30, 36, 0.98);
+  --rooms-border: rgba(177, 181, 194, 0.22);
+  --rooms-border-strong: rgba(159, 184, 255, 0.42);
+  --rooms-text: var(--text-color);
+  --rooms-muted: var(--muted-text-color);
+  --rooms-accent: #e29aa8;
+  --rooms-accent-soft: rgba(226, 154, 168, 0.13);
+  --rooms-accent-text: #efacb8;
+  --rooms-accent-deep: var(--link-color);
+  --rooms-shadow-soft: 0 18px 44px rgba(0, 0, 0, 0.25);
+  --rooms-shadow-card: 0 16px 34px rgba(0, 0, 0, 0.24);
+}
+
 .rooms-directory {
   box-sizing: border-box;
   color: var(--rooms-text);
@@ -522,6 +538,88 @@
 .room-link:focus-visible {
   outline: 3px solid rgba(202, 107, 44, 0.35);
   outline-offset: 3px;
+}
+
+html[data-theme="dark"] .rooms-hero {
+  background:
+    radial-gradient(circle at top right, var(--rooms-accent-soft), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(159, 184, 255, 0.1), transparent 30%),
+    var(--rooms-bg);
+}
+
+html[data-theme="dark"] .rooms-hero__eyebrow,
+html[data-theme="dark"] .section-label {
+  background: rgba(159, 184, 255, 0.1);
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .rooms-hero__action--primary,
+html[data-theme="dark"] .modal-link {
+  color: #211317;
+}
+
+html[data-theme="dark"] .rooms-hero__action--secondary {
+  background: var(--rooms-surface);
+}
+
+html[data-theme="dark"] .rooms-stat {
+  border-color: var(--rooms-border);
+}
+
+html[data-theme="dark"] .topic-header:hover,
+html[data-theme="dark"] .topic-header:focus-visible {
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme="dark"] .topic-count {
+  background: var(--rooms-accent-soft);
+  color: var(--rooms-accent-text);
+}
+
+html[data-theme="dark"] .room-grid {
+  background: rgba(159, 184, 255, 0.04);
+}
+
+html[data-theme="dark"] .room-tile {
+  background: linear-gradient(180deg, #22252c 0%, #1c1f25 100%);
+}
+
+html[data-theme="dark"] .room-tile:hover,
+html[data-theme="dark"] .room-tile:focus-within {
+  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.34);
+}
+
+html[data-theme="dark"] .room-title,
+html[data-theme="dark"] .room-cta {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .room-activity {
+  background: rgba(159, 184, 255, 0.08);
+}
+
+html[data-theme="dark"] .room-tile.recently-active .room-activity,
+html[data-theme="dark"] .room-activity.is-visible {
+  background: var(--rooms-accent-soft);
+  color: var(--rooms-accent-text);
+}
+
+html[data-theme="dark"] .expand-icon,
+html[data-theme="dark"] .modal-close {
+  background: rgba(159, 184, 255, 0.08);
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .room-modal {
+  background: rgba(5, 10, 14, 0.8);
+}
+
+html[data-theme="dark"] .modal-close:focus-visible,
+html[data-theme="dark"] .rooms-hero__action:focus-visible,
+html[data-theme="dark"] .modal-link:focus-visible,
+html[data-theme="dark"] .topic-header:focus-visible,
+html[data-theme="dark"] .room-link:focus-visible {
+  outline-color: var(--focus-ring);
 }
 
 @media (max-width: 920px) {

@@ -15,6 +15,7 @@
   flex-direction: row;
   align-items: center;
   background-color: #fff;
+  border: 1px solid transparent;
   margin-bottom: 1rem;
   padding: 1rem;
   border-radius: 8px;
@@ -71,4 +72,56 @@
 .nav-link.disabled {
   color: #ccc;
   pointer-events: none;
+}
+
+.nav-link:focus-visible,
+.block-link:focus-visible,
+.room-link:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .block-item {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .block-link,
+html[data-theme="dark"] .room-link,
+html[data-theme="dark"] .nav-link {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .block-meta {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .nav-link.disabled {
+  color: color-mix(in srgb, var(--muted-text-color) 55%, var(--primary-bg));
+}
+
+@media (max-width: 600px) {
+  .archive-container {
+    max-width: 100%;
+    padding: 0.5rem 0;
+  }
+
+  .archive-nav {
+    gap: 0.75rem;
+  }
+
+  .archive-nav .nav-link {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .block-item {
+    padding: 0.85rem;
+  }
+
+  .block-link {
+    font-size: 1.35rem;
+  }
 }

@@ -18,6 +18,7 @@ p {
 }
 
 .login-form {
+  box-sizing: border-box;
   width: 100%;
   padding: 20px;
 }
@@ -39,7 +40,8 @@ p {
 }
 
 .login-form input {
-  width: 95%;
+  box-sizing: border-box;
+  width: 100%;
   padding: 12px 15px;
   font-size: 14px;
   border: 1px solid #ddd;
@@ -107,4 +109,57 @@ p {
 
 .signup-link a:hover {
   color: #218838;
+}
+
+html[data-theme="dark"] .login-form-container {
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  background: var(--surface-bg);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .login-form-container h1,
+html[data-theme="dark"] .login-form label {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .login-form-container > p:not(.forgot-link):not(.signup-link),
+html[data-theme="dark"] .signup-link {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .login-form input {
+  color: var(--text-color);
+  border-color: var(--border-color);
+  background: var(--input-bg);
+}
+
+html[data-theme="dark"] .login-form input:focus {
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+html[data-theme="dark"] .login-button {
+  color: var(--highlight-contrast);
+  background-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .login-button:hover {
+  background-color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .forgot-link a,
+html[data-theme="dark"] .signup-link a {
+  color: var(--link-color);
+}
+
+@media (max-width: 560px) {
+  .login-form-container {
+    padding: 28px 18px;
+    margin: 24px auto;
+  }
+
+  .login-form {
+    padding: 12px 0;
+  }
 }

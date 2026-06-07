@@ -40,6 +40,11 @@
       "he": "עברית",
       "th": "ไทย",
       "vi": "Tiếng Việt"
+    },
+    "theme": {
+      "label": "Tema",
+      "toggleToDark": "Cambiar a modo oscuro",
+      "toggleToLight": "Cambiar a modo claro"
     }
   }
 }

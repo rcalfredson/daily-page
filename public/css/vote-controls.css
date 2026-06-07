@@ -47,3 +47,24 @@
   line-height: 1;
   text-align: center;
 }
+
+html[data-theme="dark"] .vote-controls,
+html[data-theme="dark"] .vote-arrow {
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .vote-controls {
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .vote-arrow {
+  background: color-mix(in srgb, var(--surface-raised-bg) 55%, transparent);
+}
+
+html[data-theme="dark"] .vote-arrow:hover {
+  color: var(--highlight-color);
+  background: #253c3c;
+  border-color: #3f756c;
+}

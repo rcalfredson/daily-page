@@ -40,6 +40,11 @@
       "he": "עברית",
       "th": "ไทย",
       "vi": "Tiếng Việt"
+    },
+    "theme": {
+      "label": "主题",
+      "toggleToDark": "切换到深色模式",
+      "toggleToLight": "切换到浅色模式"
     }
   }
 }

@@ -75,3 +75,36 @@
 .featured-content p + p {
   margin-top: 15px; /* More spacing between paragraphs */
 }
+
+html[data-theme="dark"] .featured-content {
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .featured-content h2,
+html[data-theme="dark"] .featured-content p {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .featured-content small {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .featured-content a {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .featured-content a.btn {
+  color: var(--highlight-contrast);
+  background-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .featured-content a.btn:hover {
+  background-color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .featured-content a.btn-secondary {
+  color: var(--text-color);
+  background-color: #3b4852;
+}

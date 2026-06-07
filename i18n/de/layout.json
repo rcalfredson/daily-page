@@ -40,6 +40,11 @@
       "he": "עברית",
       "th": "ไทย",
       "vi": "Tiếng Việt"
+    },
+    "theme": {
+      "label": "Design",
+      "toggleToDark": "In den Dunkelmodus wechseln",
+      "toggleToLight": "In den Hellmodus wechseln"
     }
   }
 }

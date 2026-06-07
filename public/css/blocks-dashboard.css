@@ -37,6 +37,9 @@ ul {
   position: relative;
   white-space: normal;
   word-break: break-word;
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--border-color);
 }
 
 .content-preview ul {
@@ -82,11 +85,10 @@ ul {
   flex-wrap: wrap;
 }
 
-/* Let reactions take remaining space, votes stay compact */
 .block-footer .reaction-counts {
   flex: 1 1 auto;
-  min-width: 180px; /* tweak: keeps votes from dropping too eagerly */
-  margin-top: 0;    /* since it's in the footer now */
+  min-width: 180px;
+  margin-top: 0;
 }
 
 .block-footer .vote-controls {
@@ -96,7 +98,6 @@ ul {
   margin-left: auto;
 }
 
-/* On small screens, don't force the divider or right-justify */
 @media (max-width: 600px) {
   .block-footer .vote-controls {
     margin-left: 0;
@@ -144,6 +145,11 @@ a.btn {
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+a.btn:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 .user-profile-link,
@@ -260,6 +266,76 @@ a.btn {
   text-decoration: none;
 }
 
+html[data-theme="dark"] .block-preview,
+html[data-theme="dark"] .room-editorial-guides,
+html[data-theme="dark"] .room-editorial-guides__link {
+  color: var(--text-color);
+  border-color: var(--border-color);
+  background: var(--surface-bg);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .block-preview p,
+html[data-theme="dark"] .block-preview h2,
+html[data-theme="dark"] .block-preview ul,
+html[data-theme="dark"] .block-preview ol,
+html[data-theme="dark"] .block-preview strong,
+html[data-theme="dark"] #room-description,
+html[data-theme="dark"] .room-explore,
+html[data-theme="dark"] .room-explore-label,
+html[data-theme="dark"] .room-editorial-guides__description {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .block-title,
+html[data-theme="dark"] .user-profile-link,
+html[data-theme="dark"] .more-link,
+html[data-theme="dark"] .room-archive-link a,
+html[data-theme="dark"] .room-editorial-guides__link {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .room-editorial-guides__title {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] a.btn {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+}
+
+html[data-theme="dark"] a.btn:hover {
+  color: var(--highlight-contrast);
+  background: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .room-explore a {
+  color: var(--link-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .room-explore a:hover {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: color-mix(in srgb, var(--border-color) 45%, var(--highlight-color));
+}
+
+html[data-theme="dark"] .content-preview.fade-footer::after {
+  background: linear-gradient(transparent, var(--surface-bg));
+}
+
+html[data-theme="dark"] .content-preview {
+  background: transparent;
+  color: var(--muted-text-color);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .block-footer,
+html[data-theme="dark"] .block-footer .vote-controls {
+  border-color: var(--border-color);
+}
+
 .room-editorial-guides__eyebrow {
   display: block;
   margin-bottom: 0.2rem;
@@ -289,6 +365,16 @@ a.btn {
   color: #777;
   font-style: italic;
   margin-bottom: 1rem;
+}
+
+html[data-theme="dark"] .room-editorial-guides__eyebrow,
+html[data-theme="dark"] .room-editorial-guides__meta,
+html[data-theme="dark"] .tab-period {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .room-editorial-guides__entry-title {
+  color: var(--link-color);
 }
 
 @media (min-width: 760px) {

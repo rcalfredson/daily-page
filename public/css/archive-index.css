@@ -3,6 +3,7 @@
   margin: 2rem auto;
   padding: 1.5rem;
   background: #fff;
+  border: 1px solid transparent;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
@@ -23,18 +24,22 @@
 
 .year-month-link {
   display: block;
+  border: 1px solid transparent;
   border-radius: 6px;
   background: #f8f8f8;
-  padding: 0.5rem 1rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s,
+    background-color 0.2s;
   text-decoration: none;
   color: inherit;
 }
 
 .year-month-link:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .year-month-link .year-month-item {
@@ -53,4 +58,51 @@
   color: #007bff;
   text-decoration: none;
   font-weight: bold;
+}
+
+.year-month-link:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .archive-index-container {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .year-month-link {
+  color: var(--link-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .year-month-link:hover {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 45%, var(--border-color));
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);
+}
+
+html[data-theme="dark"] .year-month-link .year-month-item,
+html[data-theme="dark"] .year-month-item {
+  color: inherit;
+  background: transparent;
+}
+
+@media (max-width: 600px) {
+  .archive-index-container {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+
+  .archive-index-container h1 {
+    margin-bottom: 1.25rem;
+    font-size: 1.6rem;
+  }
+
+  .year-month-link {
+    min-height: 3rem;
+  }
 }
