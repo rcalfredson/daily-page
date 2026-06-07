@@ -38,3 +38,27 @@
 .reaction-count {
   font-size: 0.9rem;
 }
+
+.reaction-btn:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .reaction-btn {
+  color: var(--link-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .reaction-btn:hover {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: color-mix(in srgb, var(--highlight-color) 45%, var(--border-color));
+}
+
+html[data-theme="dark"] .reaction-btn.is-active {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--highlight-color) 14%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 65%, var(--border-color));
+  box-shadow: inset 0 -3px 0 var(--highlight-color);
+}

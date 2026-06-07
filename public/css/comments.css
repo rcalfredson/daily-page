@@ -591,3 +591,195 @@ html[data-theme="dark"] .comment-action,
 html[data-theme="dark"] .comment-reply-link {
   color: var(--link-color);
 }
+
+html[data-theme="dark"] .comments-section__title {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .comments-section__count,
+html[data-theme="dark"] .comments-section__empty,
+html[data-theme="dark"] .comments-section__focus-note,
+html[data-theme="dark"] .comment__byline,
+html[data-theme="dark"] .comment__time,
+html[data-theme="dark"] .comment__edited {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .comments-section__sort-label {
+  color: var(--muted-text-color);
+  background: transparent;
+}
+
+html[data-theme="dark"] .comments-section__sort-select {
+  color: var(--text-color);
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .comments-section__sort-select:hover {
+  border-color: color-mix(in srgb, var(--border-color) 45%, var(--highlight-color));
+}
+
+html[data-theme="dark"] .comments-section__sort-select:focus,
+html[data-theme="dark"] .comments-composer__input:focus,
+html[data-theme="dark"] .comment-edit-form__input:focus,
+html[data-theme="dark"] .comment-reply-form__input:focus {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .comments-composer {
+  background: transparent;
+}
+
+html[data-theme="dark"] .comments-composer__input,
+html[data-theme="dark"] .comment-edit-form__input,
+html[data-theme="dark"] .comment-reply-form__input {
+  color: var(--text-color);
+  background: var(--input-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .comments-composer__actions {
+  padding: 0.75rem 0 0;
+  background: transparent;
+}
+
+html[data-theme="dark"] .comments-composer__submit,
+html[data-theme="dark"] .comments-composer__gate-button,
+html[data-theme="dark"] .comment-edit-form__submit,
+html[data-theme="dark"] .comment-reply-form__submit,
+html[data-theme="dark"] .comments-section__load-more {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+  border-color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .comments-composer__submit:hover:not(:disabled),
+html[data-theme="dark"] .comments-composer__gate-button:hover,
+html[data-theme="dark"] .comment-edit-form__submit:hover:not(:disabled),
+html[data-theme="dark"] .comment-reply-form__submit:hover:not(:disabled),
+html[data-theme="dark"] .comments-section__load-more:hover:not(:disabled) {
+  color: var(--highlight-contrast);
+  background: var(--highlight-hover);
+  border-color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .comments-composer__gate {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .comments-composer__gate--warning {
+  background: color-mix(in srgb, #d6a84b 12%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, #d6a84b 50%, var(--border-color));
+}
+
+html[data-theme="dark"] .comments-composer__gate-text {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .comments-composer__gate-link {
+  color: var(--link-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .comments-composer__gate-link:hover {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: color-mix(in srgb, var(--highlight-color) 50%, var(--border-color));
+}
+
+html[data-theme="dark"] .comments-list__item + .comments-list__item,
+html[data-theme="dark"] .comments-list__reply-item + .comments-list__reply-item {
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .comments-list__replies {
+  border-color: color-mix(in srgb, var(--highlight-color) 42%, var(--border-color));
+}
+
+html[data-theme="dark"] .comment {
+  color: var(--text-color);
+  background: transparent;
+}
+
+html[data-theme="dark"] .comment--highlighted {
+  background: color-mix(in srgb, #d6a84b 8%, var(--surface-bg));
+  border-color: color-mix(in srgb, #d6a84b 65%, var(--border-color));
+  box-shadow: 0 0 0 3px color-mix(in srgb, #d6a84b 18%, transparent);
+}
+
+html[data-theme="dark"] .comment__author,
+html[data-theme="dark"] .comment__username,
+html[data-theme="dark"] .comment__body p {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .comment__reply-button,
+html[data-theme="dark"] .comment__edit-button,
+html[data-theme="dark"] .comment__report-button {
+  color: var(--link-color);
+  background: transparent;
+  text-decoration-color: color-mix(in srgb, var(--link-color) 55%, transparent);
+}
+
+html[data-theme="dark"] .comment__delete-button {
+  color: var(--danger-color);
+  background: transparent;
+  text-decoration-color: color-mix(in srgb, var(--danger-color) 55%, transparent);
+}
+
+html[data-theme="dark"] .comment__reply-button:hover:not(:disabled),
+html[data-theme="dark"] .comment__edit-button:hover:not(:disabled),
+html[data-theme="dark"] .comment__report-button:hover:not(:disabled) {
+  color: var(--highlight-hover);
+  background: transparent;
+}
+
+html[data-theme="dark"] .comment__delete-button:hover:not(:disabled) {
+  color: var(--text-color);
+  background: transparent;
+}
+
+html[data-theme="dark"] .comment__report-button.is-reported {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .comment-reply-form,
+html[data-theme="dark"] .comment-edit-form {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .comment-edit-form__cancel,
+html[data-theme="dark"] .comment-reply-form__cancel {
+  color: var(--muted-text-color);
+  background: transparent;
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .comment-edit-form__cancel:hover,
+html[data-theme="dark"] .comment-reply-form__cancel:hover {
+  color: var(--text-color);
+  background: var(--surface-bg);
+}
+
+html[data-theme="dark"] .comments-composer__status[data-status-type="error"],
+html[data-theme="dark"] .comment-edit-form__status[data-status-type="error"],
+html[data-theme="dark"] .comment-reply-form__status[data-status-type="error"],
+html[data-theme="dark"] .comments-section__deep-link-status,
+html[data-theme="dark"] .comments-section__load-error {
+  color: var(--danger-color);
+}
+
+html[data-theme="dark"] .comments-composer__status[data-status-type="success"],
+html[data-theme="dark"] .comment-edit-form__status[data-status-type="success"],
+html[data-theme="dark"] .comment-reply-form__status[data-status-type="success"] {
+  color: var(--success-color);
+}

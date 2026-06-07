@@ -84,3 +84,41 @@ a.btn {
 .modal-buttons button.cancel:hover {
   background-color: #bbb;
 }
+
+html[data-theme="dark"] .modal-content {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .modal-close {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .modal-close:hover,
+html[data-theme="dark"] .modal-close:focus {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .modal-buttons button.confirm {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--danger-color) 24%, var(--surface-raised-bg));
+  border: 1px solid color-mix(in srgb, var(--danger-color) 65%, var(--border-color));
+}
+
+html[data-theme="dark"] .modal-buttons button.confirm:hover {
+  background: color-mix(in srgb, var(--danger-color) 36%, var(--surface-raised-bg));
+  border-color: var(--danger-color);
+}
+
+html[data-theme="dark"] .modal-buttons button.cancel {
+  color: var(--muted-text-color);
+  background: transparent;
+  border: 1px solid var(--border-color);
+}
+
+html[data-theme="dark"] .modal-buttons button.cancel:hover {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+}

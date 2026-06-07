@@ -611,3 +611,133 @@ hr {
     flex-basis: 48px;
   }
 }
+
+html[data-theme="dark"] hr {
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .block-title,
+html[data-theme="dark"] .block-author-name,
+html[data-theme="dark"] .block-editorial-card__title,
+html[data-theme="dark"] .block-editorial-section__title,
+html[data-theme="dark"] .block-editorial-card__cluster-name {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .room-info,
+html[data-theme="dark"] .room-link,
+html[data-theme="dark"] .block-author-name,
+html[data-theme="dark"] .block-editorial-more__summary,
+html[data-theme="dark"] .expand-toggle {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .room-link:hover,
+html[data-theme="dark"] .block-author-name:hover,
+html[data-theme="dark"] .block-editorial-more__summary:hover,
+html[data-theme="dark"] .expand-toggle:hover {
+  color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .block-meta-card,
+html[data-theme="dark"] .block-editorial-card {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .block-author-avatar {
+  background: var(--surface-raised-bg);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--highlight-color) 22%, transparent);
+}
+
+html[data-theme="dark"] .block-author-avatar--placeholder {
+  background:
+    radial-gradient(
+      circle at 30% 30%,
+      color-mix(in srgb, var(--highlight-color) 42%, var(--surface-raised-bg)),
+      color-mix(in srgb, var(--highlight-color) 18%, var(--surface-raised-bg)) 58%,
+      var(--surface-bg) 100%
+    );
+}
+
+html[data-theme="dark"] .meta-label,
+html[data-theme="dark"] .block-editorial-sequence,
+html[data-theme="dark"] .block-editorial-link__meta,
+html[data-theme="dark"] .description-label {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .meta-item time,
+html[data-theme="dark"] .meta-item .room-link {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .block-editorial-link {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .block-editorial-link:hover {
+  background: color-mix(in srgb, var(--highlight-color) 9%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 50%, var(--border-color));
+}
+
+html[data-theme="dark"] .block-description-card {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  border: 1px solid var(--border-color);
+}
+
+html[data-theme="dark"] .description-body.collapsed::after {
+  background: linear-gradient(transparent, var(--surface-raised-bg));
+}
+
+html[data-theme="dark"] .block-edit-btn {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+}
+
+html[data-theme="dark"] .block-edit-btn:hover {
+  color: var(--highlight-contrast);
+  background: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .share-modal-content {
+  color: var(--text-color);
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .share-close-btn {
+  color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .share-close-btn:hover {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .share-links li a {
+  color: var(--link-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .share-links li a:hover {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 50%, var(--border-color));
+}
+
+html[data-theme="dark"] #flag-block-btn {
+  color: var(--danger-color);
+  background: transparent;
+  border-color: transparent;
+}
+
+html[data-theme="dark"] #flag-block-btn:hover {
+  background: transparent;
+}
