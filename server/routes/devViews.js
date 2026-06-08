@@ -49,4 +49,16 @@ router.get(
   }
 );
 
+router.get(
+  '/__dev/views/toasts',
+  optionalAuth,
+  (req, res) => {
+    res.render('dev/toasts', {
+      title: 'Toast preview',
+      user: req.user || null,
+      uiLang: res.locals.uiLang,
+    });
+  }
+);
+
 export default router;
