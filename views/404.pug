@@ -3,6 +3,9 @@ extends layout
 block nav
   include navLinks
 
+block append head
+  link(rel='stylesheet' href='/css/error.css')
+
 block content
   .not-found
     h1= t('errors.notFound.title')

@@ -73,3 +73,56 @@ html[data-theme="dark"] .error-container .btn:hover {
     font-size: 1.65rem;
   }
 }
+
+.not-found {
+  box-sizing: border-box;
+  max-width: 760px;
+  margin: 3rem auto;
+  padding: 2rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.not-found h1 {
+  font-size: 2rem;
+}
+
+.not-found p {
+  margin-left: 0;
+  color: var(--muted-text-color);
+  line-height: 1.55;
+}
+
+.not-found a:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] .not-found {
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] .not-found h1 {
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .not-found a {
+  color: var(--link-color);
+}
+
+html[data-theme="dark"] .not-found a:hover {
+  color: var(--highlight-hover);
+}
+
+@media (max-width: 600px) {
+  .not-found {
+    margin: 1.5rem auto;
+    padding: 1.25rem;
+  }
+
+  .not-found h1 {
+    font-size: 1.65rem;
+  }
+}

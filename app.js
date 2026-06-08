@@ -31,6 +31,7 @@ import loginRoute from './server/routes/login.js';
 import blocksRoute from './server/routes/blocks.js';
 import archiveRoutes from './server/routes/archive.js';
 import blockViewRoute from './server/routes/blockView.js';
+import devViewsRoute from './server/routes/devViews.js';
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
@@ -150,6 +151,9 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
     app.use('/', blocksRoute);
     app.use('/', archiveRoutes);
     app.use('/', blockViewRoute);
+    if (process.env.NODE_ENV !== 'production') {
+      app.use('/', devViewsRoute);
+    }
 
     const server = createServer(app)
 

@@ -3,11 +3,14 @@ extends layout
 block nav
   include navLinks
 
+block append head
+  link(rel='stylesheet' href='/css/full-block.css')
+
 block content
-  #viewer
+  #viewer.full-capacity-page
     h1
       = t('blockEditor.fullBlock.headingPrefix', { blockTitle: block_title }) + ' '
-      span(style="color: #e53449")= t('blockEditor.fullBlock.headingStatus')
+      span.full-capacity-page__status= t('blockEditor.fullBlock.headingStatus')
     h2
       | #{t('blockEditor.fullBlock.retryPrefix')} 
       a(href=uiPath(`/rooms/${room_id}`))= t('blockEditor.fullBlock.retryLink')

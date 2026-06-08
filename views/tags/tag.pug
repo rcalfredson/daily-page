@@ -87,15 +87,17 @@ block content
       const labels = __trendData.map(e => e._id);
       const dataCounts = __trendData.map(e => e.count);
 
-      new Chart(ctxTrend, {
+      const chart = new Chart(ctxTrend, {
         type: 'line',
         data: {
           labels,
           datasets: [{
             label: '#{t("tags.detail.chart.label")}',
             data: dataCounts,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(159, 184, 255, 0.18)',
+            borderColor: '#9fb8ff',
+            pointBackgroundColor: '#9fb8ff',
+            pointBorderColor: '#9fb8ff',
             fill: true,
             tension: 0.3
           }]
@@ -103,12 +105,42 @@ block content
         options: {
           responsive: true,
           scales: {
-            y: { beginAtZero: true },
+            y: { beginAtZero: true, grid: {}, ticks: {} },
             x: {
+              grid: {},
               ticks: { maxRotation: 45, minRotation: 45, autoSkip: false }
             }
           },
           plugins: { legend: { display: false } }
         }
+      });
+
+      function updateChartTheme() {
+        const styles = getComputedStyle(document.documentElement);
+        const textColor = styles.getPropertyValue('--muted-text-color').trim();
+        const borderColor = styles.getPropertyValue('--border-color').trim();
+        const surfaceColor = styles.getPropertyValue('--surface-raised-bg').trim();
+
+        chart.options.scales.x.ticks.color = textColor;
+        chart.options.scales.y.ticks.color = textColor;
+        chart.options.scales.x.grid.color = borderColor;
+        chart.options.scales.y.grid.color = borderColor;
+        chart.options.scales.x.border.color = borderColor;
+        chart.options.scales.y.border.color = borderColor;
+        chart.options.plugins.tooltip = {
+          backgroundColor: surfaceColor,
+          titleColor: styles.getPropertyValue('--text-color').trim(),
+          bodyColor: textColor,
+          borderColor,
+          borderWidth: 1
+        };
+        chart.update('none');
+      }
+
+      updateChartTheme();
+
+      new MutationObserver(updateChartTheme).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme']
       });
     })();
