@@ -219,6 +219,18 @@ Note: `npm test` runs `pretest`, and `pretest` currently invokes ESLint with `--
 
 For frontend work, run `npm run build` after changes to files in `lib/`, or use `npm run local` to rebuild before starting the app.
 
+### Development View Previews
+
+Rare UI states can be previewed without manufacturing matching database or collaboration conditions. While the app is running outside production, open:
+
+- `/en/__dev/views/tag-detail` to preview the tag-detail trend chart with representative fixture data.
+- `/en/__dev/views/full-post-capacity` to preview the message shown when a post editor has reached its collaborator limit.
+- `/en/__dev/views/toasts` to trigger neutral, success, error, long-message, and stacked toast states.
+
+Replace `/en/` with another supported UI-language prefix when checking localized layout behavior. These routes render the real application templates and shared frontend assets, but use development fixture data where needed.
+
+The preview router is mounted only when `NODE_ENV !== 'production'`; these routes are unavailable in production deployments. Add future rare-state previews in `server/routes/devViews.js`, with dedicated templates under `views/dev/` when a reusable production template is not already available.
+
 ## Collaboration Model
 
 The editor traces back to Conclave's CRDT approach. Posts are edited in Markdown, local edits become CRDT operations, and peers exchange updates through the collaboration layer. The server also exposes endpoints for persistence and session/peer discovery.

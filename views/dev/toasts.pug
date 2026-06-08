@@ -1,0 +1,26 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/toast.css')
+  link(rel='stylesheet' href='/css/dev-toasts.css')
+
+block append scripts
+  script(src='/js/toast-utils.js')
+  script(src='/js/dev-toast-preview.js')
+
+block content
+  main.toast-preview
+    h1 Toast preview
+    p Trigger the real shared toast component in its supported states.
+
+    .toast-preview__actions
+      button.btn-primary(type='button' data-toast-type='info') Neutral toast
+      button.btn-primary(type='button' data-toast-type='success') Success toast
+      button.btn-primary(type='button' data-toast-type='error') Error toast
+      button.btn-primary(type='button' data-toast-type='long') Long message
+      button.btn-primary(type='button' data-toast-type='stack') Toast stack
+
+  #toast-container

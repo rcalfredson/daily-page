@@ -1,5 +1,88 @@
+#viewer {
+  box-sizing: border-box;
+  max-width: 960px;
+  margin: 0 auto 2rem;
+  padding: 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+#viewer h2 {
+  color: var(--text-color);
+}
+
+#viewer a:not(.hover-effect-link) {
+  color: var(--link-color);
+}
+
+#viewer a:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.room-archive + .room-archive {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.room-archive > a {
+  text-decoration: none;
+}
+
+.year-month {
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.year-month .hover-effect-link {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+
+html[data-theme="dark"] #viewer {
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] #viewer a:not(.hover-effect-link) {
+  color: var(--link-color);
+  text-decoration-color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] #viewer a:not(.hover-effect-link):hover {
+  color: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .year-month .hover-effect-link {
+  color: var(--link-color);
+  background: var(--surface-raised-bg);
+  border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .year-month .hover-effect-link:hover {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--highlight-color) 12%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 45%, var(--border-color));
+}
+
 @media (max-width: 600px) {
+  #viewer {
+    padding: 1rem;
+  }
+
   img {
     max-width: 100%;
+  }
+
+  .year-month {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 }
