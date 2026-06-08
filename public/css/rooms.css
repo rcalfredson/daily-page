@@ -193,6 +193,10 @@ html[data-theme="dark"] {
   margin: 0 0 0.9rem;
 }
 
+.topic-section.recently-active + .section-anchor + .rooms-section-intro {
+  margin-top: 1.5rem;
+}
+
 .rooms-section-intro .section-label {
   margin-bottom: 0;
 }
