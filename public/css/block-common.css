@@ -161,6 +161,20 @@ a.block-title {
     max-width: 100%;
     margin-right: auto;
   }
+
+  .block-image-lightbox__frame {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .block-image-lightbox__close {
+    position: static;
+    justify-self: end;
+    margin-bottom: 0.5rem;
+  }
+
+  .block-image-lightbox__image {
+    max-height: calc(100vh - 4.5rem);
+  }
 }
 
 @media (max-width: 600px) {
