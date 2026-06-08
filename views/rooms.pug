@@ -43,11 +43,9 @@ block content
     else
       if recentlyActiveRooms && recentlyActiveRooms.length > 0
         .topic-section.recently-active#recently-active
-          .section-label= t('roomsDirectory.liveNow')
           h2.topic-header(data-topic=t('roomsDirectory.recentlyActive') data-recently-active='true')
             .topic-header__main
               span.topic-title= t('roomsDirectory.recentlyActive')
-              span.topic-subtitle= t('roomsDirectory.recentlyActiveSubtitle')
             .topic-header__meta
               span.topic-count= t('roomsDirectory.roomCount', { count: recentlyActiveRooms.length })
               span.expand-icon
@@ -59,12 +57,15 @@ block content
                 data-room-description=(room.displayDescription || room.description)
                 data-room-link=uiPath(`/rooms/${room._id}`)
                 data-room-active-users=(room.activeUsers || 0)
-                data-room-active-users-loaded='true'
+                data-room-active-users-loaded=(room.activeUsers ? 'true' : 'false')
               )
                 a.room-link(href=uiPath(`/rooms/${room._id}`) title=(room.displayName || room.name))
                   .room-card-head
                     span.room-title= room.displayName || room.name
-                    span.room-activity= t('roomsDirectory.activeUsers', { count: room.activeUsers || 0 })
+                    if room.activeUsers > 0
+                      span.room-activity= t('roomsDirectory.activeUsers', { count: room.activeUsers })
+                    else
+                      span.room-activity
                   span.room-description= room.displayDescription || room.description
                   span.room-cta
                     span.room-cta__label= t('roomsDirectory.visitRoom')

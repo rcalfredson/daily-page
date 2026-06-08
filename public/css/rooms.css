@@ -386,13 +386,13 @@ html[data-theme="dark"] {
 }
 
 .room-activity.is-visible,
-.room-tile.recently-active .room-activity {
+.room-tile.recently-active .room-activity:not(:empty) {
   display: inline-flex;
   opacity: 1;
   visibility: visible;
 }
 
-.room-tile.recently-active .room-activity,
+.room-tile.recently-active .room-activity:not(:empty),
 .room-activity.is-visible {
   background: rgba(202, 107, 44, 0.14);
   color: var(--rooms-accent-deep);
@@ -598,7 +598,7 @@ html[data-theme="dark"] .room-activity {
   background: rgba(159, 184, 255, 0.08);
 }
 
-html[data-theme="dark"] .room-tile.recently-active .room-activity,
+html[data-theme="dark"] .room-tile.recently-active .room-activity:not(:empty),
 html[data-theme="dark"] .room-activity.is-visible {
   background: var(--rooms-accent-soft);
   color: var(--rooms-accent-text);

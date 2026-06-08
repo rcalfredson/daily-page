@@ -112,6 +112,7 @@ blockSchema.index({ groupId: 1, lang: 1 }, { unique: true });
 
 blockSchema.index({ creator: 1, createdAt: -1 });
 blockSchema.index({ collaborators: 1, createdAt: -1 });
+blockSchema.index({ updatedAt: -1, roomId: 1 });
 
 // Text search index for MVP search
 // Notes:

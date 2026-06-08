@@ -1,7 +1,10 @@
 import Session from './models/Session.js';
 import Room from './models/Room.js';
+import Block from './models/Block.js';
+import { publiclyVisibleBlockMatch } from './blockService.js';
 
 export const PEER_TTL_MS = 5 * 60 * 1000;
+export const RECENT_ROOM_ACTIVITY_MS = 7 * 24 * 60 * 60 * 1000;
 
 let recentlyActiveCache = null;
 let recentlyActiveCacheExpiration = 0;
@@ -145,53 +148,96 @@ export async function removePeer(peerId, blockId) {
   );
 }
 
+export function rankRoomActivity(recentBlockActivity = [], sessions = [], now = new Date()) {
+  const roomActivity = new Map();
+
+  for (const activity of recentBlockActivity) {
+    if (!activity?._id) continue;
+
+    roomActivity.set(String(activity._id), {
+      activePeers: new Set(),
+      recentPosts: activity.recentPosts || 0,
+      lastActivityAt: activity.lastActivityAt || null
+    });
+  }
+
+  for (const session of sessions) {
+    if (!session.roomId) continue;
+
+    const roomId = String(session.roomId);
+    const activity = roomActivity.get(roomId) || {
+      activePeers: new Set(),
+      recentPosts: 0,
+      lastActivityAt: null
+    };
+    const { activePeers } = splitPeersByFreshness(session.peers, now);
+
+    for (const [peerId, timestamp] of Object.entries(activePeers)) {
+      activity.activePeers.add(peerId);
+      if (!activity.lastActivityAt || new Date(timestamp) > new Date(activity.lastActivityAt)) {
+        activity.lastActivityAt = timestamp;
+      }
+    }
+
+    if (activity.activePeers.size || activity.recentPosts) {
+      roomActivity.set(roomId, activity);
+    }
+  }
+
+  return [...roomActivity.entries()]
+    .map(([roomId, activity]) => ({
+      roomId,
+      activeUsers: activity.activePeers.size,
+      recentPosts: activity.recentPosts,
+      lastActivityAt: activity.lastActivityAt
+    }))
+    .sort((a, b) => (
+      b.activeUsers - a.activeUsers ||
+      new Date(b.lastActivityAt || 0) - new Date(a.lastActivityAt || 0) ||
+      b.recentPosts - a.recentPosts
+    ));
+}
+
 /**
- * Gets X number of "recently active" rooms, meaning rooms with the most peers across their blocks.
+ * Gets recently active rooms using fresh editor sessions and recent public post updates.
  */
 export async function getRecentlyActiveRooms(limit = 5) {
   const now = Date.now();
-  
-  if (recentlyActiveCache && now < recentlyActiveCacheExpiration) {
-    return recentlyActiveCache;
+
+  if (
+    recentlyActiveCache?.limit === limit &&
+    now < recentlyActiveCacheExpiration
+  ) {
+    return recentlyActiveCache.rooms;
   }
 
   try {
-    // Get all active block sessions (blocks with peers)
-    const sessions = await Session.find({ peers: { $exists: true, $ne: {} } }).lean();
-
-    // Group by room
-    const roomActivity = {};
-    for (const session of sessions) {
-      if (!session.roomId) continue; // Skip if no room ID is recorded
-      
-      if (!roomActivity[session.roomId]) {
-        roomActivity[session.roomId] = new Set();
-      }
-
-      const { activePeers } = splitPeersByFreshness(session.peers);
-      const activePeerIds = Object.keys(activePeers);
-      if (!activePeerIds.length) continue;
-
-      activePeerIds.forEach(peer => roomActivity[session.roomId].add(peer));
-    }
-
-    // Convert to array and sort by most active users
-    const sortedRooms = Object.entries(roomActivity)
-      .map(([roomId, peers]) => ({ roomId, activeUsers: peers.size }))
-      .sort((a, b) => b.activeUsers - a.activeUsers)
-      .slice(0, limit);
-
-    // Fetch room info for the top rooms
-    const promises = sortedRooms.map(async ({ roomId, activeUsers }) => {
-      const room = await Room.findOne({ _id: roomId }).lean();
-      return room ? { ...room, activeUsers } : null;
-    });
-
-    const results = await Promise.all(promises);
-    const final = results.filter(Boolean);
+    const cutoff = new Date(now - RECENT_ROOM_ACTIVITY_MS);
+    const [recentBlockActivity, sessions] = await Promise.all([
+      Block.aggregate([
+        { $match: publiclyVisibleBlockMatch({ updatedAt: { $gte: cutoff } }) },
+        {
+          $group: {
+            _id: '$roomId',
+            recentPosts: { $sum: 1 },
+            lastActivityAt: { $max: '$updatedAt' }
+          }
+        }
+      ]),
+      Session.find({ peers: { $exists: true, $ne: {} } }).lean()
+    ]);
+    const rankedRooms = rankRoomActivity(recentBlockActivity, sessions, new Date(now)).slice(0, limit);
+    const rooms = await Room.find({ _id: { $in: rankedRooms.map(room => room.roomId) } }).lean();
+    const roomsById = new Map(rooms.map(room => [String(room._id), room]));
+    const final = rankedRooms
+      .map(activity => {
+        const room = roomsById.get(activity.roomId);
+        return room ? { ...room, ...activity } : null;
+      })
+      .filter(Boolean);
 
     // Cache the final data for 60 seconds
-    recentlyActiveCache = final;
+    recentlyActiveCache = { limit, rooms: final };
     recentlyActiveCacheExpiration = now + 60 * 1000;
 
     return final;
