@@ -23,6 +23,9 @@
 .chart-container {
   width: 50%;
   margin: 0 auto;
+  padding: 1rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
 }
 
 .tag-cloud {
@@ -146,4 +149,18 @@ html[data-theme="dark"] .tag-chip:hover {
   color: var(--link-color);
   background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-raised-bg));
   border-color: color-mix(in srgb, var(--highlight-color) 45%, var(--border-color));
+}
+
+html[data-theme="dark"] .chart-container {
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--box-shadow);
+}
+
+@media (max-width: 800px) {
+  .chart-container {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.75rem;
+  }
 }
