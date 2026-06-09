@@ -82,26 +82,26 @@ General
 }
 
 html[data-theme="dark"] {
-  --primary-bg: #121316;
-  --secondary-bg: #1a1c21;
-  --text-color: #f0f1f4;
-  --muted-text-color: #aeb3bd;
-  --highlight-color: #9fb8ff;
-  --highlight-hover: #b7c9ff;
-  --highlight-contrast: #11141c;
-  --border-color: #383d47;
-  --box-shadow: 0 12px 34px rgba(0, 0, 0, 0.34);
-  --header-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
-  --surface-bg: #1b1e24;
-  --surface-raised-bg: #242830;
-  --input-bg: #101216;
-  --danger-color: #ff7777;
-  --success-color: #64d98b;
-  --link-color: #a9c0ff;
-  --focus-ring: rgba(159, 184, 255, 0.4);
-  --editor-panel-bg: #1b1e24;
-  --editor-soft-border: #383d47;
-  --editor-text-muted: #aeb3bd;
+  --primary-bg: #171612;
+  --secondary-bg: #211f19;
+  --text-color: #f1eadb;
+  --muted-text-color: #b9ad98;
+  --highlight-color: #e2ae58;
+  --highlight-hover: #efc77d;
+  --highlight-contrast: #211707;
+  --border-color: #494235;
+  --box-shadow: 0 12px 34px rgba(5, 4, 2, 0.42);
+  --header-shadow: 0 2px 16px rgba(5, 4, 2, 0.46);
+  --surface-bg: #242119;
+  --surface-raised-bg: #302c22;
+  --input-bg: #12110d;
+  --danger-color: #ff8177;
+  --success-color: #8bd48f;
+  --link-color: #efbe6d;
+  --focus-ring: rgba(226, 174, 88, 0.42);
+  --editor-panel-bg: #242119;
+  --editor-soft-border: #494235;
+  --editor-text-muted: #b9ad98;
 }
 
 html {
@@ -268,8 +268,8 @@ html[data-theme="dark"] img {
 
 html[data-theme="dark"] pre,
 html[data-theme="dark"] code {
-  background-color: #0c111b;
-  color: #edf3ff;
+  background-color: #100e09;
+  color: var(--text-color);
 }
 
 html[data-theme="dark"] table,
@@ -390,9 +390,9 @@ html[data-theme="dark"] .btn-primary {
 html[data-theme="dark"] #nav-logout,
 html[data-theme="dark"] .delete-block-btn,
 html[data-theme="dark"] .modal-delete {
-  background-color: #9f303d;
-  color: #fff;
-  border-color: #9f303d;
+  background-color: color-mix(in srgb, var(--danger-color) 58%, var(--input-bg));
+  color: var(--text-color);
+  border-color: color-mix(in srgb, var(--danger-color) 72%, var(--border-color));
 }
 
 .call-to-action .btn {

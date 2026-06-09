@@ -65,6 +65,6 @@ html[data-theme="dark"] .vote-arrow {
 
 html[data-theme="dark"] .vote-arrow:hover {
   color: var(--highlight-color);
-  background: #253c3c;
-  border-color: #3f756c;
+  background: color-mix(in srgb, var(--highlight-color) 12%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 48%, var(--border-color));
 }

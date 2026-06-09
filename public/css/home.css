@@ -446,10 +446,10 @@ html[data-theme="dark"] .tag-chip a {
 }
 
 html[data-theme="dark"] .homepage-header {
-  border-color: #36505a;
+  border-color: color-mix(in srgb, var(--highlight-color) 34%, var(--border-color));
   background:
-    radial-gradient(circle at top right, rgba(76, 145, 137, 0.2), transparent 38%),
-    linear-gradient(135deg, #1b2932 0%, #17232d 58%, #202a2e 100%);
+    radial-gradient(circle at top right, color-mix(in srgb, var(--highlight-color) 18%, transparent), transparent 38%),
+    linear-gradient(135deg, #302b20 0%, #242119 58%, #29251c 100%);
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.26);
 }
 
@@ -503,7 +503,7 @@ html[data-theme="dark"] .tag-badge {
 html[data-theme="dark"] .live-activity {
   color: var(--text-color);
   border-color: var(--border-color);
-  background: linear-gradient(180deg, #17212b 0%, #141d26 100%);
+  background: linear-gradient(180deg, var(--surface-bg) 0%, var(--secondary-bg) 100%);
   box-shadow: var(--box-shadow);
 }
 
@@ -516,7 +516,7 @@ html[data-theme="dark"] .divider {
 }
 
 html[data-theme="dark"] .tag-chip:hover {
-  background: #293944;
+  background: color-mix(in srgb, var(--highlight-color) 12%, var(--surface-raised-bg));
 }
 
 html[data-theme="dark"] .tag-icon {
@@ -524,23 +524,23 @@ html[data-theme="dark"] .tag-icon {
 }
 
 html[data-theme="dark"] .featured-card {
-  border-color: #8c7432;
-  background: #24281f;
+  border-color: color-mix(in srgb, var(--highlight-color) 48%, var(--border-color));
+  background: color-mix(in srgb, var(--highlight-color) 5%, var(--surface-bg));
 }
 
 html[data-theme="dark"] .featured-card .featured-content-preview {
   padding-top: 0.85rem;
-  border-top: 1px solid rgba(212, 174, 76, 0.28);
+  border-top: 1px solid color-mix(in srgb, var(--highlight-color) 28%, transparent);
   background: transparent;
 }
 
 html[data-theme="dark"] .featured-content-preview::after {
-  background: linear-gradient(transparent, #24281f);
+  background: linear-gradient(transparent, color-mix(in srgb, var(--highlight-color) 5%, var(--surface-bg)));
 }
 
 html[data-theme="dark"] .featured-ribbon {
-  background-color: #d4ae4c;
-  color: #17150d;
+  background-color: var(--highlight-color);
+  color: var(--highlight-contrast);
 }
 
 html[data-theme="dark"] .featured-card .btn {

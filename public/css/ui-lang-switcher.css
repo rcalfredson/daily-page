@@ -145,20 +145,20 @@ html[dir="rtl"] .ui-lang-menu {
 }
 
 html[data-theme="dark"] .ui-lang-fallback-banner {
-  color: #f0d994;
-  background: color-mix(in srgb, #7b6225 32%, var(--surface-bg));
-  border-color: color-mix(in srgb, #d9b85d 48%, var(--border-color));
+  color: var(--highlight-hover);
+  background: color-mix(in srgb, var(--highlight-color) 12%, var(--surface-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 48%, var(--border-color));
 }
 
 html[data-theme="dark"] .ui-lang-fallback-dismiss {
-  color: #f0d994;
-  background: color-mix(in srgb, #d9b85d 10%, var(--surface-raised-bg));
-  border-color: color-mix(in srgb, #d9b85d 35%, var(--border-color));
+  color: var(--highlight-hover);
+  background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 35%, var(--border-color));
 }
 
 html[data-theme="dark"] .ui-lang-fallback-dismiss:hover {
-  background: color-mix(in srgb, #d9b85d 18%, var(--surface-raised-bg));
-  border-color: color-mix(in srgb, #d9b85d 55%, var(--border-color));
+  background: color-mix(in srgb, var(--highlight-color) 18%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 55%, var(--border-color));
 }
 
 /* When the drawer is open, keep the language switcher/dropdown behind the backdrop */

@@ -106,5 +106,5 @@ html[data-theme="dark"] .featured-content a.btn:hover {
 
 html[data-theme="dark"] .featured-content a.btn-secondary {
   color: var(--text-color);
-  background-color: #3b4852;
+  background-color: var(--surface-raised-bg);
 }

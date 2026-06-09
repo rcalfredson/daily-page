@@ -45,8 +45,8 @@ html[data-theme="dark"] #nav-login:hover {
 }
 
 html[data-theme="dark"] #nav-logout {
-  background-color: #9f303d;
-  color: #fff;
+  background-color: color-mix(in srgb, var(--danger-color) 58%, var(--input-bg));
+  color: var(--text-color);
 }
 
 html[data-theme="dark"] #welcome-message {

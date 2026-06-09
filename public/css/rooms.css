@@ -16,16 +16,16 @@
 }
 
 html[data-theme="dark"] {
-  --rooms-bg: linear-gradient(180deg, #202126 0%, #191b20 46%, #15161a 100%);
-  --rooms-surface: rgba(35, 37, 44, 0.92);
-  --rooms-surface-strong: rgba(28, 30, 36, 0.98);
-  --rooms-border: rgba(177, 181, 194, 0.22);
-  --rooms-border-strong: rgba(159, 184, 255, 0.42);
+  --rooms-bg: linear-gradient(180deg, #29251c 0%, #211f19 46%, #171612 100%);
+  --rooms-surface: color-mix(in srgb, var(--surface-raised-bg) 92%, transparent);
+  --rooms-surface-strong: color-mix(in srgb, var(--surface-bg) 98%, transparent);
+  --rooms-border: color-mix(in srgb, var(--muted-text-color) 24%, transparent);
+  --rooms-border-strong: color-mix(in srgb, var(--highlight-color) 48%, transparent);
   --rooms-text: var(--text-color);
   --rooms-muted: var(--muted-text-color);
-  --rooms-accent: #e29aa8;
-  --rooms-accent-soft: rgba(226, 154, 168, 0.13);
-  --rooms-accent-text: #efacb8;
+  --rooms-accent: var(--highlight-color);
+  --rooms-accent-soft: color-mix(in srgb, var(--highlight-color) 14%, transparent);
+  --rooms-accent-text: var(--highlight-hover);
   --rooms-accent-deep: var(--link-color);
   --rooms-shadow-soft: 0 18px 44px rgba(0, 0, 0, 0.25);
   --rooms-shadow-card: 0 16px 34px rgba(0, 0, 0, 0.24);
@@ -547,19 +547,19 @@ html[data-theme="dark"] {
 html[data-theme="dark"] .rooms-hero {
   background:
     radial-gradient(circle at top right, var(--rooms-accent-soft), transparent 34%),
-    radial-gradient(circle at bottom left, rgba(159, 184, 255, 0.1), transparent 30%),
+    radial-gradient(circle at bottom left, color-mix(in srgb, var(--link-color) 10%, transparent), transparent 30%),
     var(--rooms-bg);
 }
 
 html[data-theme="dark"] .rooms-hero__eyebrow,
 html[data-theme="dark"] .section-label {
-  background: rgba(159, 184, 255, 0.1);
+  background: color-mix(in srgb, var(--highlight-color) 10%, transparent);
   color: var(--link-color);
 }
 
 html[data-theme="dark"] .rooms-hero__action--primary,
 html[data-theme="dark"] .modal-link {
-  color: #211317;
+  color: var(--highlight-contrast);
 }
 
 html[data-theme="dark"] .rooms-hero__action--secondary {
@@ -581,11 +581,11 @@ html[data-theme="dark"] .topic-count {
 }
 
 html[data-theme="dark"] .room-grid {
-  background: rgba(159, 184, 255, 0.04);
+  background: color-mix(in srgb, var(--highlight-color) 4%, transparent);
 }
 
 html[data-theme="dark"] .room-tile {
-  background: linear-gradient(180deg, #22252c 0%, #1c1f25 100%);
+  background: linear-gradient(180deg, var(--surface-raised-bg) 0%, var(--surface-bg) 100%);
 }
 
 html[data-theme="dark"] .room-tile:hover,
@@ -599,7 +599,7 @@ html[data-theme="dark"] .room-cta {
 }
 
 html[data-theme="dark"] .room-activity {
-  background: rgba(159, 184, 255, 0.08);
+  background: color-mix(in srgb, var(--highlight-color) 8%, transparent);
 }
 
 html[data-theme="dark"] .room-tile.recently-active .room-activity:not(:empty),
@@ -610,12 +610,12 @@ html[data-theme="dark"] .room-activity.is-visible {
 
 html[data-theme="dark"] .expand-icon,
 html[data-theme="dark"] .modal-close {
-  background: rgba(159, 184, 255, 0.08);
+  background: color-mix(in srgb, var(--highlight-color) 8%, transparent);
   color: var(--link-color);
 }
 
 html[data-theme="dark"] .room-modal {
-  background: rgba(5, 10, 14, 0.8);
+  background: rgba(10, 8, 4, 0.82);
 }
 
 html[data-theme="dark"] .modal-close:focus-visible,

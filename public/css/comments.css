@@ -674,8 +674,8 @@ html[data-theme="dark"] .comments-composer__gate {
 }
 
 html[data-theme="dark"] .comments-composer__gate--warning {
-  background: color-mix(in srgb, #d6a84b 12%, var(--surface-raised-bg));
-  border-color: color-mix(in srgb, #d6a84b 50%, var(--border-color));
+  background: color-mix(in srgb, var(--highlight-color) 12%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 50%, var(--border-color));
 }
 
 html[data-theme="dark"] .comments-composer__gate-text {
@@ -709,9 +709,9 @@ html[data-theme="dark"] .comment {
 }
 
 html[data-theme="dark"] .comment--highlighted {
-  background: color-mix(in srgb, #d6a84b 8%, var(--surface-bg));
-  border-color: color-mix(in srgb, #d6a84b 65%, var(--border-color));
-  box-shadow: 0 0 0 3px color-mix(in srgb, #d6a84b 18%, transparent);
+  background: color-mix(in srgb, var(--highlight-color) 8%, var(--surface-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 65%, var(--border-color));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--highlight-color) 18%, transparent);
 }
 
 html[data-theme="dark"] .comment__author,
