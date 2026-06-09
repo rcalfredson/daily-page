@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Uygunsuz İçeriği Bildirin",
+    "fields": {
+      "reason": {
+        "label": "Sebep",
+        "options": {
+          "spam": "İstenmeyen e-posta",
+          "offensive": "Saldırgan (nefret dolu dil veya hakaretler)",
+          "inappropriate": "Uygunsuz (çıplaklık, grafik içerik vb.)",
+          "other": "Diğer"
+        }
+      },
+      "details": {
+        "label": "Ayrıntılar (isteğe bağlı)",
+        "placeholder": "Ne gördüğünüzü anlatın…"
+      }
+    },
+    "buttons": {
+      "submit": "Raporu Gönder",
+      "cancel": "İptal"
+    },
+    "toasts": {
+      "success": "Rapor gönderildi; teşekkür ederiz!",
+      "failed": "Rapor gönderilemedi."
+    }
+  }
+}

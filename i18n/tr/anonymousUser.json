@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "İsimsiz Gezgin",
+      "description": "Profil yok. Geçmiş yok. Sadece titreşimler."
+    },
+    "ascii": {
+      "ariaLabel": "Alıntılarla tuhaf yaratığın ASCII sanatı"
+    },
+    "header": {
+      "title": "Anonim"
+    },
+    "body": {
+      "line1": "Boşluğa düştün. Burada görülecek hiçbir şey yok.",
+      "line2": "sadece hikayesi olmayan gezgin bir ruh."
+    },
+    "buttons": {
+      "home": "← Eve dönüş",
+      "signup": "Bir kimlik oluşturun"
+    }
+  }
+}

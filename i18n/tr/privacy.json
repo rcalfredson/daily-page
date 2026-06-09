@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Gizlilik Politikası",
+      "description": "Daily Page'nin verilerinizi sade bir dille nasıl topladığı, kullandığı ve koruduğu."
+    },
+    "title": "Gizlilik Politikası",
+    "lastUpdated": "Son güncelleme: {date}",
+    "intro": {
+      "h2": "Giriş",
+      "p1": "Daily Page (\"biz\", \"biz\" veya \"bizim\") dailypage.org web sitesini (bundan sonra \"Hizmet\" olarak anılacaktır) işletmektedir.",
+      "p2": "Bu sayfa, Hizmetimizi kullandığınızda kişisel verilerin toplanması, kullanılması ve ifşa edilmesine ilişkin politikalarımız hakkında sizi bilgilendirir."
+    },
+    "collection": {
+      "h2": "Bilgi Toplama ve Kullanma",
+      "p": "Hizmetimizi geliştirmek ve sunmak için minimum düzeyde kişisel veri topluyoruz. Bu, hesap yönetimine yönelik e-posta adreslerini ve kullanıcılar tarafından gönüllü olarak gönderilen içeriği içerir."
+    },
+    "usage": {
+      "h2": "Veri Kullanımı",
+      "p": "Toplanan veriler yalnızca hesap kimlik doğrulaması, içerik denetimi ve kullanıcı deneyimini geliştirmek için kullanılır."
+    },
+    "storage": {
+      "h2": "Veri Depolama ve Güvenlik",
+      "p": "Verileriniz güvenli bir şekilde saklanır ve yasaların gerektirdiği durumlar dışında, açık rıza olmadan asla üçüncü şahıslarla paylaşılmaz veya satılmaz."
+    },
+    "cookies": {
+      "h2": "Çerezler",
+      "p": "Çerezleri yalnızca oturum yönetimi ve kullanıcı deneyimini geliştirmek için kullanıyoruz. Çerezleri tarayıcınızın ayarlarından devre dışı bırakabilirsiniz."
+    },
+    "rights": {
+      "h2": "Haklarınız",
+      "p": "İstediğiniz zaman bizimle iletişime geçerek kişisel verilerinizin silinmesini veya değiştirilmesini talep edebilirsiniz."
+    },
+    "changes": {
+      "h2": "Bu Gizlilik Politikasındaki Değişiklikler",
+      "p": "Gizlilik Politikamızı zaman zaman güncelleyebiliriz. Değişiklikler bu sayfada yayınlanacaktır."
+    },
+    "contact": {
+      "h2": "Bize Ulaşın",
+      "p": "Bu Gizlilik Politikasıyla ilgili sorularınız için bizimle şu adresten iletişime geçin:",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}

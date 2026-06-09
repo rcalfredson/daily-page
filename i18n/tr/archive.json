@@ -1,0 +1,77 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Arşiv",
+      "description": "Arşivin tamamını aya göre keşfedin.",
+      "titleRoom": "Daily Page — Arşiv · {roomName}",
+      "descriptionRoom": "{roomName} odasındaki geçmiş yazılarınızı ay ay keşfedin. Başkalarının bu alanda zaman içinde neler paylaştığını görmek için herhangi bir tarihe atlayın."
+    },
+    "nav": {
+      "prev": "Öncesi",
+      "next": "Sonraki"
+    },
+    "title": "📚 Arşivlere Göz Atın",
+    "titleRoom": "📚 {roomName} — Arşivler",
+    "roomViewing": "{roomName} odasının arşivi görüntüleniyor",
+    "viewRoomLink": "Odayı görüntüle",
+    "noContent": "Henüz içerik mevcut değil.",
+    "backToRoom": "← Oda Kontrol Paneline geri dön",
+    "calendar": {
+      "meta": {
+        "description": "Hızlı düşüncelerden derin düşüncelere kadar {month} {year}'de yayınlanan tüm yaratıcı gönderileri görüntüleyin. Nelerin paylaşıldığını keşfetmek için herhangi bir tarihi tıklayın.",
+        "descriptionRoom": "{month} {year} sırasında {roomName}'deki yaratıcı etkinliği görüntüleyin. O gün paylaşılan gönderileri keşfetmek için bir tarih seçin."
+      },
+      "title": "📆 {month} {year} arşivi",
+      "prevLabel": "{month} {year} arşivi",
+      "nextLabel": "{month} {year} arşivi"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "{date} arşivi",
+        "titleRoom": "{roomName} — {date} arşivi",
+        "descriptionSite": "Sessiz notlardan vahşi itiraflara kadar {date}'de yazılan gönderileri keşfedin.",
+        "descriptionRoom": "{date}'de, {roomName} odasındaki yazarlar izlerini bıraktı; o gün paylaşılan düşünceler, fikirler ve ifadeler arasında ilerleyin."
+      },
+      "heading": "{date} arşivi",
+      "empty": "Bu tarihe ait içerik bulunamadı.",
+      "labels": {
+        "createdBy": "Oluşturan:",
+        "in": "içinde",
+        "on": "{datetime} tarihinde",
+        "unknownRoom": "Bilinmeyen Oda"
+      },
+      "nav": {
+        "prevDay": "Önceki gün",
+        "nextDay": "Ertesi gün"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — Tüm Gönderiler",
+        "descriptionRoom": "{roomName} odasında şimdiye kadar yayınlanmış her gönderiye göz atın. Geçmişini keşfetmek için tarihe, başlığa veya oylara göre sıralayın."
+      },
+      "header": {
+        "allBlocks": "— Tüm Gönderiler"
+      },
+      "sort": {
+        "label": "Göre sırala",
+        "options": {
+          "date": "Tarih",
+          "title": "Başlık",
+          "votes": "Oylar"
+        },
+        "submit": "Git"
+      }
+    },
+    "pagination": {
+      "prev": "← Önceki",
+      "next": "Sonraki →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "{time} için Daily Page'ler"
+      },
+      "empty": "Bu süre zarfında herhangi bir sayfa bulamadık."
+    }
+  }
+}

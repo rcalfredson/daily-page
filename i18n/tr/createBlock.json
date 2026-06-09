@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Yeni Gönderi Oluştur — Daily Page",
+      "description": "İsteğe bağlı etiketler, dil ve görünürlükle yeni bir yaratıcı gönderiye başlayın."
+    },
+    "heading": "Yeni Gönderi Oluştur",
+    "roomInfo": {
+      "roomLabel": "Oda:",
+      "unavailable": "Oda bilgisi mevcut değil.",
+      "noDescription": "Açıklama mevcut değil."
+    },
+    "form": {
+      "title": {
+        "label": "Başlık:",
+        "placeholder": {
+          "full": "örneğin 'Başyapıtım', 'Şimdiye Kadarki En İyi Fikir', 'Meraklılar İçin İlgi Çekici Bir Başlık'",
+          "short": "örneğin 'Benim Başyapıtım'"
+        }
+      },
+      "description": {
+        "label": "Açıklama (isteğe bağlı):",
+        "placeholder": "Harika fikrinizi açıklayın… ya da doğaçlama yapın."
+      },
+      "initialContent": {
+        "label": "Başlangıç ​​İçeriği (isteğe bağlı):",
+        "help": "Buradan yazmaya başlayın veya görüntüleri ekleyebileceğiniz ve gerçek zamanlı olarak işbirliği yapabileceğiniz tam düzenleyici sayfasında devam etmek için \"Oluştur\"a basın.",
+        "placeholder": "Gönderinize buradan başlayın veya oluşturduktan sonra düzenlemeye devam edin…"
+      },
+      "visibility": {
+        "label": "Görünürlük:"
+      },
+      "submit": "Gönderi Oluştur"
+    },
+    "visibility": {
+      "public": {
+        "label": "Herkese Açık",
+        "title": "Herkes tarafından gerçek zamanlı olarak düzenlenebilir. Giriş yapmanıza gerek yok.",
+        "inline": "Herkes tarafından gerçek zamanlı olarak düzenlenebilir. Giriş yapmanıza gerek yok."
+      },
+      "unlisted": {
+        "label": "Liste Dışı Taslak",
+        "title": "Düzenlenebilirken genel taramadan gizlenir. Kilitlendikten sonra görünür.",
+        "inline": "Düzenlenebilirken genel taramadan gizlenir. Kilitlendikten sonra görünür.",
+        "tooltip": "Liste dışı taslaklar düzenlenebilir durumdayken genel taramadan gizlenir. Bağlantıya sahip olan herkes ortak çalışabilir ve gönderi kilitlendiğinde herkese açık hale gelir."
+      }
+    },
+    "advanced": {
+      "summary": "Gelişmiş seçenekler",
+      "lang": {
+        "label": "Dil:",
+        "options": {
+          "en": "İngilizce",
+          "es": "İspanyolca",
+          "fr": "Fransızca",
+          "ru": "Rusça",
+          "id": "Endonezce",
+          "de": "Almanca",
+          "it": "İtalyanca",
+          "pt": "Portekizce",
+          "zh": "Çince",
+          "ja": "Japonca",
+          "ko": "Korece",
+          "ar": "Arapça",
+          "hi": "Hintçe",
+          "tr": "Türkçe",
+          "nl": "Felemenkçe",
+          "sv": "İsveççe",
+          "no": "Norveççe",
+          "da": "Danca",
+          "fi": "Fince",
+          "pl": "Lehçe",
+          "cs": "Çekçe",
+          "el": "Yunanca",
+          "he": "İbranice",
+          "th": "Tayca",
+          "vi": "Vietnamca"
+        }
+      },
+      "translate": {
+        "label": "Mevcut gönderiyi çevir (URL veya ID):",
+        "placeholder": "Bir gönderi URL'si veya kimliği yapıştırın (isteğe bağlı)",
+        "invalid": "Bu geçerli bir gönderi URL'sine veya kimliğine benzemiyor.",
+        "fetchError": "Gönderi bilgileri getirilemedi."
+      }
+    },
+    "messages": {
+      "langExists": "Bu dil için bir çeviri zaten mevcut. Lütfen başka bir dil seçin.",
+      "genericError": "Bir şeyler ters gitti. Lütfen tekrar deneyin."
+    }
+  }
+}

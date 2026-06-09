@@ -1,0 +1,57 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Kontrol Paneli",
+      "description": "Daily Page kontrol paneliniz ve hesaba genel bakış."
+    },
+    "profile": {
+      "profilePicAlt": "Profil Resmi",
+      "noBio": "Henüz biyografi yok. Bir tane eklemek için \"Düzenle\"yi tıklayın!",
+      "editBio": "Biyografiyi Düzenle",
+      "bioPlaceholder": "Biyografinizi buraya girin",
+      "save": "Kaydet",
+      "cancel": "İptal"
+    },
+    "activity": {
+      "title": "Son Etkinlik",
+      "none": "Yakın zamanda etkinlik yok.",
+      "updatedOn": "{date} tarihinde güncellendi",
+      "viewAllBlocks": "Tüm Gönderileri Görüntüle"
+    },
+    "drafts": {
+      "title": "Yazmaya Devam Et",
+      "none": "Açık durumda taslak yok.",
+      "updatedOn": "{date} tarihinde güncellendi",
+      "unlisted": "Liste dışı",
+      "viewAll": "Tüm Gönderileri Görüntüle"
+    },
+    "streak": {
+      "title": "Yazma Serisi",
+      "line": "{days} gün üst üste! Böyle devam!"
+    },
+    "starredRooms": {
+      "title": "Yıldızlı Odalar",
+      "none": "Henüz hiçbir odaya yıldız eklemediniz. Favorilerinizi bulmak için keşfetmeye başlayın!",
+      "viewAll": "Tüm Yıldızlı Odaları Görüntüle",
+      "unnamedRoom": "İsimsiz Oda"
+    },
+    "security": {
+      "title": "Hesap Güvenliği",
+      "summary": "Şifrenizi değiştirin ve iki faktörlü kimlik doğrulamayı yönetin.",
+      "manage": "Güvenliği Yönet"
+    },
+    "stats": {
+      "title": "İstatistikleriniz",
+      "totalBlocks": "Oluşturulan Toplam Gönderi",
+      "collaborations": "İşbirlikleri",
+      "votesGiven": "Verilen Oylar",
+      "daysActive": "Aktif Günler",
+      "viewDetailed": "Ayrıntılı İstatistikleri Görüntüle 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Profil resmi yüklenemedi. Lütfen tekrar deneyin.",
+      "uploadUnexpected": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
+      "bioUpdateFailed": "Biyografi güncellenirken hata oluştu. Lütfen tekrar deneyin."
+    }
+  }
+}

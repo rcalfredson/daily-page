@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "Gönderileriniz",
+      "description": "Oluşturduğunuz veya üzerinde ortak çalışma yaptığınız tüm gönderilere göz atın ve bunları sıralayın."
+    },
+    "header": {
+      "dashboardLink": "Kontrol Paneliniz",
+      "profileLink": "{username} Profili",
+      "allBlocks": "Tüm Gönderiler"
+    },
+    "empty": "Henüz gönderi yok.",
+    "pagination": {
+      "prev": "← Önceki",
+      "next": "Sonraki →"
+    },
+    "titleUser": "{username}'in Gönderileri"
+  }
+}

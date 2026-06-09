@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — Hakkında",
+      "description": "Daily Page nedir, nasıl çalışır ve neden webin daha yavaş, daha nazik bir köşesi olarak oluşturuldu."
+    },
+    "title": "Daily Page Hakkında",
+    "tagline": "Yemeğinizi değil zihninizi besleyin.",
+    "mission": {
+      "h2": "Misyon",
+      "p1": "Okuyucu merakıyla körüklenen bağımsız bir yazı laboratuvarı oturma odamda başladı.",
+      "p2": "Beyninizi çürütmek için değil, beslemek için inşa edildi: Yavaşça, isterseniz isimsiz olarak yazabileceğiniz ve kimseyi etkileme konusunda asla endişelenmeyeceğiniz bir yer."
+    },
+    "how": {
+      "h2": "Nasıl Çalışır?",
+      "features": {
+        "rooms": {
+          "label": "Odalar",
+          "text": "konu silolarıdır (\"alt reddit, ancak daha dostça\" düşünün)."
+        },
+        "blocks": {
+          "label": "Gönderiler",
+          "text": "işbirliğine dayalı yazma alanlarıdır; herkes (\"anonim\" bile olsa) bir tane oluşturabilir, kilitlenene kadar düzenleyebilir ve diğerlerine oy verebilir."
+        },
+        "privacy": {
+          "label": "Gizlilik ve Paylaşım",
+          "text": "herkese açık gönderilerin odanın akışında yayınlanacağı anlamına gelir. Listelenmemiş taslaklar kilitlenene kadar gizlenir ancak arkadaşlarınızı davet etmek için bir paylaşım bağlantısı alırsınız."
+        },
+        "markdown": {
+          "label": "Markdown ve Medya",
+          "text": "Markdown ile yazmanıza, görseller eklemenize ve Google Dokümanlar'daki gibi birlikte düzenlemenize olanak tanır."
+        },
+        "trends": {
+          "label": "Trendler ve Etiketler",
+          "text": "Gönderinizi etiketlemenize, etiket trendlerini takip etmenize ve en iyi içerikleri keşfetmenize (7 gün / 30 gün / tüm zamanlar) olanak tanır."
+        },
+        "streaks": {
+          "label": "Yazma Serileri",
+          "text": "Günlük yazma serinizi canlı tutun; her gün ortaya çıkmanız için en iyi teşvikiniz."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Buraya Nasıl Geldik?",
+      "p1": "2018'de \"bugünün sayfası\" için tarihe dayalı bir wiki oluşturdum ve birkaç iç gözlem yazarının bunu düşüncelerini aktaracak bir çıkış noktasına dönüştürmesini izledim. Hiçbir zaman çok büyük olmadı ama bir tohum ekti.",
+      "p2": "Şimdilik ileri saralım ve Daily Page birçok odaya yayılan tohumdur; içedönükler, idealistler ve daha yavaş bir tempo isteyen herkes için sessiz bir sosyal ağ."
+    },
+    "next": {
+      "h2": "Sırada Ne Var?",
+      "p1": "Daha yeni başlıyoruz: daha zengin yerleştirmeler, daha derin kullanıcı istatistikleri, itibar skor tabloları ve düşünceli yaratımları ödüllendirmenin daha fazla yolu.",
+      "p2": "Bu küçük bağımsız deneyin parçası olduğunuz için teşekkür ederiz."
+    },
+    "cta": {
+      "rooms": "Odaları Keşfedin",
+      "signup": "Topluluğa Katılın"
+    }
+  }
+}

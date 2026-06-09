@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "Olumlu oy ver",
+    "downvote": "Olumsuz oy",
+    "errors": {
+      "failed": "Oyunuz kaydedilemedi."
+    }
+  }
+}

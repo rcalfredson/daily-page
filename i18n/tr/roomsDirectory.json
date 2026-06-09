@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Oda Dizini",
+      "description": "Her oda farklı bir dünyaya açılan kapıdır. İçeri girin, hikayenizi paylaşın ve güzel bir şey inşa etmek için diğerlerine katılın."
+    },
+    "eyebrow": "Köşenizi bulun",
+    "heading": "Oda Dizini",
+    "intro": "Şu anda hareketli olan odalarla başlayın veya ilginizi çeken bir şey bulana kadar konulara göz atın. Her oda sesinizi bekleyen farklı bir yazma fikri, hayran topluluğu veya ortak tutkudur.",
+    "empty": "Şu anda müsait oda yok. Daha sonra tekrar kontrol edin!",
+    "jumpToActive": "Aktif odaları görün",
+    "jumpToTopics": "Konuya göre göz atın",
+    "statsLabel": "Oda dizininde öne çıkanlar",
+    "liveNow": "Şu anda aktif",
+    "recentlyActive": "Yakın Zamanda Aktif",
+    "recentlyActiveSubtitle": "Şu anda içinde insanların olduğu bir odayı bulmanın en hızlı yolu.",
+    "browseByTopic": "Konuya göre göz atın",
+    "topicSubtitle": "Odalarını keşfetmek için bir konu açın.",
+    "roomCount": "{count} oda",
+    "stats": {
+      "rooms": "keşfedilecek odalar",
+      "topics": "konu grupları",
+      "active": "aktif seçimler"
+    },
+    "activeUsers": "Aktif Kullanıcılar: {count}",
+    "visitRoom": "Odayı Ziyaret Et",
+    "close": "Kapat",
+    "noTitle": "Başlık Mevcut Değil",
+    "noDescription": "Açıklama Mevcut Değil"
+  }
+}

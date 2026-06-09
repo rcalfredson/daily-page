@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — Rastgele Yazar",
+      "description": "Eğlence, ilham veya kaos için sonsuz bir rastgele sözde metin akışı oluşturun."
+    },
+    "title": "Rastgele Yazar",
+    "buttons": {
+      "clear": "Temizle",
+      "stop": "Yazmayı bırak",
+      "start": "Yazmaya başla"
+    }
+  }
+}

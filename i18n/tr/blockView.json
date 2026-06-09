@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Gönderi - {blockTitle}",
+      "titleFallback": "Gönderi"
+    },
+    "labels": {
+      "room": "Oda",
+      "author": "Yazar",
+      "created": "Oluşturuldu",
+      "unknownAuthor": "Anonim",
+      "authorAvatarAlt": "{username}'in avatarı",
+      "viewAuthorProfile": "{username}'in profilini görüntüleyin",
+      "lang": "Çeviriler:",
+      "available": "mevcut"
+    },
+    "buttons": {
+      "edit": "Düzenle",
+      "deleteBlock": "Gönderiyi Sil",
+      "share": "Paylaş",
+      "flagContent": "İçeriği İşaretle"
+    },
+    "description": {
+      "label": "Açıklama",
+      "none": "Açıklama sağlanmadı...",
+      "expand": "Genişlet",
+      "collapse": "Daralt"
+    },
+    "editorial": {
+      "heading": "Okuma kılavuzu",
+      "roleLabel": "Okuma türü",
+      "clusterLabel": "Rehber",
+      "sequence": "Parça {sequence}",
+      "primaryPillarHeading": "Buradan başlayın",
+      "relatedHeading": "Okumaya devam et",
+      "clusterHeading": "Daha fazlası bu kılavuzda",
+      "expandSection": "{count} tane daha göster",
+      "collapseSection": "Daha az göster",
+      "roleNames": {
+        "pillar": "Temel kılavuz",
+        "companion": "Derin dalış",
+        "texture": "Arka plan"
+      }
+    },
+    "comments": {
+      "heading": "Yorumlar",
+      "count": "{count} yorum",
+      "empty": "Henüz kimse cevap vermedi. Konuşma başladığında yorumlar burada görünecek.",
+      "composer": {
+        "label": "Yorum ekle",
+        "placeholder": "Bir yorum yazın...",
+        "submit": "Yorum gönder",
+        "submitting": "Yayınlanıyor...",
+        "success": "Yorum yayınlandı.",
+        "error": "Yorumunuz şu anda yayınlanamıyor.",
+        "loginPrompt": "Sohbete katılmak için giriş yapın.",
+        "loginCta": "Yorum yapmak için giriş yapın",
+        "verifyPrompt": "Yorum göndermeden önce e-posta adresinizi doğrulayın.",
+        "verifyCta": "E-postayı doğrulayın"
+      },
+      "sort": {
+        "label": "Sırala",
+        "oldestFirst": "Önce en eski",
+        "newestFirst": "Önce en yeni"
+      },
+      "by": "Yazan",
+      "unknownAuthor": "Bilinmiyor",
+      "reply": {
+        "action": "Yanıtla",
+        "label": "Yanıt ekle",
+        "placeholder": "Bir cevap yazın...",
+        "submit": "Yanıt gönder",
+        "submitting": "Yayınlanıyor...",
+        "success": "Yanıt gönderildi.",
+        "error": "Yanıtınız şu anda gönderilemiyor.",
+        "cancel": "İptal",
+        "loginPrompt": "Cevaplamak için giriş yapın."
+      },
+      "manage": {
+        "edited": "Düzenlendi",
+        "editAction": "Düzenle",
+        "deleteAction": "Sil",
+        "deleteConfirm": "Bu yorum silinsin mi? Bu aynı zamanda altındaki yanıtları da kaldıracaktır.",
+        "deleteSuccess": "Yorum silindi.",
+        "deleteError": "Bu yorum şu anda silinemiyor.",
+        "forbidden": "Yalnızca kendi yorumlarınızı yönetebilirsiniz.",
+        "edit": {
+          "label": "Yorumu düzenle",
+          "save": "Kaydet",
+          "saving": "Kaydediliyor...",
+          "cancel": "İptal",
+          "success": "Yorum güncellendi.",
+          "error": "Bu yorum şu anda güncellenemiyor."
+        }
+      },
+      "report": {
+        "action": "Bildir",
+        "pending": "Raporlanıyor...",
+        "success": "Yorum bildirildi.",
+        "error": "Bu yorum şu anda raporlanamıyor.",
+        "ownError": "Kendi yorumunuzu bildiremezsiniz.",
+        "hidden": "Yorum rapordan sonra gizlendi.",
+        "reported": "Bildirildi"
+      },
+      "deepLink": {
+        "focused": "Bağlantılı yorum",
+        "unavailable": "Bağlantılı yorum artık mevcut değil."
+      },
+      "loadMore": "Daha fazla yorum yükle",
+      "loading": "Yükleniyor...",
+      "loadError": "Şu anda daha fazla yorum yüklenemiyor."
+    },
+    "share": {
+      "title": "Bu Gönderiyi Paylaş",
+      "shareOn": "Şurada paylaş:",
+      "nativeText": "Bu gönderiye göz atın: {title}",
+      "alt": {
+        "facebook": "Facebook logosu",
+        "reddit": "Reddit logosu",
+        "whatsapp": "WhatsApp logosu",
+        "twitter": "Twitter logosu"
+      }
+    },
+    "errors": {
+      "notFound": "Gönderi bulunamadı veya bu odaya ait değil.",
+      "loadFailed": "Gönderi görünümü yüklenirken hata oluştu."
+    }
+  }
+}

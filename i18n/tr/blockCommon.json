@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "Taslak"
+    },
+    "deleteModal": {
+      "title": "Gönderi Silinsin mi?",
+      "message": "Bu eylem geri alınamaz.",
+      "confirm": "Sil",
+      "cancel": "İptal",
+      "closeAriaLabel": "Kapat"
+    },
+    "toasts": {
+      "deleteSuccess": "Gönderi başarıyla silindi!",
+      "deleteFailed": "Gönderi silinemedi."
+    }
+  }
+}

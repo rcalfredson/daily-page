@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Tüm Yıldızlı Odalar",
+      "description": "Yıldız eklediğiniz tüm odaların listesi."
+    },
+    "nav": {
+      "backToDashboard": "← Kontrol Paneli'e geri dön"
+    },
+    "header": {
+      "title": "🌟 Tüm Yıldızlı Odalarınız 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "İsimsiz Oda",
+      "noDescription": "Açıklama yok."
+    },
+    "empty": {
+      "message": "Henüz hiçbir odaya yıldız eklemediniz!"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Lütfen Giriş Yapın",
+      "message": "Devam etmek için giriş yapmanız gerekiyor.",
+      "messageWithAction": "{action}'de oturum açmanız gerekir.",
+      "cta": "Giriş Yap"
+    },
+    "actions": {
+      "voteOnBlock": "bir gönderiye oy vermek",
+      "starRoom": "bu odaya yıldız ver",
+      "reactToBlock": "bu gönderiye tepki ver",
+      "commentOnBlock": "bu gönderiye yorum yap",
+      "reportComment": "bu yorumu bildir"
+    },
+    "errors": {
+      "starToggleFail": "Yıldız durumu güncellenemedi. Lütfen tekrar deneyin."
+    }
+  }
+}

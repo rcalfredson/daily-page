@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Diğer Projeler",
+      "description": "Daily Page'deki beyzbol günlüklerini, rastgele yazma deneylerini ve diğer yan projeleri keşfedin."
+    },
+    "title": "Diğer Projeler",
+    "tagline": "Deneyler ve yan görevler için rahat bir köşe.",
+    "links": {
+      "baseball": "📖 Beyzbol Günlüğü",
+      "randomWriter": "🎲 Rastgele Yazar"
+    },
+    "cta": {
+      "backToRooms": "Ana Odalara Geri Dön"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Hata! Bir şeyler ters gitti.",
+      "message": "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+      "home": "Ana Sayfaya Geri Dön"
+    },
+    "notFound": {
+      "title": "404 - Sayfa Bulunamadı",
+      "metaTitle": "Sayfa Bulunamadı",
+      "message": "Üzgünüz, aradığınız sayfayı bulamadık.",
+      "homePrefix": "Şuraya geri dönebilirsiniz:",
+      "homeLink": "ana sayfa",
+      "roomsPrefix": "veya şuraya göz atın",
+      "roomsLink": "odalar dizini."
+    }
+  }
+}

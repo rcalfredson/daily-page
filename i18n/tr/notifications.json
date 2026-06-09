@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Bildirimler",
+      "openMenu": "Bildirimleri aç",
+      "loading": "Bildirimler yükleniyor...",
+      "error": "Bildirimler şu anda yüklenemiyor.",
+      "empty": "Henüz bildirim yok.",
+      "markRead": "Okundu olarak işaretle",
+      "fallbackActor": "Birisi",
+      "fallbackBlockTitle": "gönderiniz",
+      "item": {
+        "blockComment": "{actorUsername}, \"{blockTitle}\" gönderinize yorum yaptı.",
+        "commentReply": "{actorUsername}, \"{blockTitle}\" hakkındaki yorumunuza yanıt verdi.",
+        "unknown": "Bildirim"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "\"{blockTitle}\" üzerine yeni yorum",
+        "heading": "Gönderinize yeni yorum",
+        "headingWithName": "Merhaba {username},",
+        "body": "<strong>{actorUsername}</strong> gönderinize yorum yaptı <strong>{blockTitle}</strong>.",
+        "cta": "Daily Page'deki konuşmayı görüntüleyin",
+        "fallbackActor": "Birisi",
+        "fallbackBlockTitle": "gönderiniz"
+      },
+      "commentReply": {
+        "subject": "\"{blockTitle}\" ile ilgili yeni yanıt",
+        "heading": "Yorumunuza yeni yanıt",
+        "headingWithName": "Merhaba {username},",
+        "body": "<strong>{actorUsername}</strong>, <strong>{blockTitle}</strong> hakkındaki yorumunuza yanıt verdi.",
+        "cta": "Daily Page'deki konuşmayı görüntüleyin",
+        "fallbackActor": "Birisi",
+        "fallbackBlockTitle": "gönderiniz"
+      }
+    }
+  }
+}
