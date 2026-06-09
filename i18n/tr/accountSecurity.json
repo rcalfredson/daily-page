@@ -1,0 +1,67 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Hesap Güvenliği",
+      "description": "Daily Page şifrenizi ve iki faktörlü kimlik doğrulamanızı yönetin."
+    },
+    "backToDashboard": "Kontrol paneline geri dön",
+    "heading": "Hesap Güvenliği",
+    "subheading": "Hesabınızı güçlü bir şifre ve kimlik doğrulama uygulamasıyla koruyun.",
+    "password": {
+      "title": "Şifre değiştir",
+      "description": "En az 8 karakterden oluşan benzersiz bir şifre kullanın.",
+      "current": {
+        "label": "Mevcut Şifre"
+      },
+      "new": {
+        "label": "Yeni Şifre"
+      },
+      "submit": "Şifreyi Güncelle"
+    },
+    "twoFactor": {
+      "title": "İki Faktörlü Kimlik Doğrulama",
+      "statusOn": "Etkinleştirilmiş",
+      "statusOff": "Kapalı",
+      "description": "Oturum açtığınızda şifrenizden sonra kimlik doğrulama uygulamasından tek kullanımlık bir kod ekleyin.",
+      "currentPassword": {
+        "label": "Mevcut Şifre"
+      },
+      "startSetup": "Authenticator Uygulamasını Ayarlama",
+      "qrAlt": "Kimlik doğrulayıcı uygulaması QR kodu",
+      "manualKey": "Manuel kurulum tuşu",
+      "code": {
+        "label": "6 haneli kod"
+      },
+      "enable": "2FA'yı etkinleştir",
+      "disableCode": {
+        "label": "Kimlik doğrulayıcı kodu"
+      },
+      "disable": "2FA'yı devre dışı bırak"
+    },
+    "recoveryCodes": {
+      "title": "Kurtarma kodlarınızı kaydedin",
+      "description": "Kimlik doğrulayıcı uygulamanıza erişiminizi kaybederseniz oturum açmak için bu tek kullanımlık kodlardan birini kullanın.",
+      "regenerateDescription": "Önceki seti kaybettiyseniz yeni bir kurtarma kodu seti oluşturun. Bu, eski kurtarma kodlarını geçersiz kılar.",
+      "regenerate": "Yeni Kurtarma Kodları Oluşturun",
+      "warning": "Bunları güvenli bir yerde saklayın. Bir daha gösterilmeyecekler."
+    },
+    "feedback": {
+      "passwordChanged": "Şifreniz güncellendi.",
+      "setupReady": "QR kodunu tarayın ve kurulumu tamamlamak için 6 haneli kodu girin.",
+      "twoFactorEnabled": "İki faktörlü kimlik doğrulama artık etkindir.",
+      "twoFactorDisabled": "İki faktörlü kimlik doğrulama artık devre dışı.",
+      "recoveryCodesRegenerated": "Kurtarma kodlarınız yeniden oluşturuldu. Şimdi yeni kodları kaydedin.",
+      "missingFields": "Lütfen gerekli tüm alanları doldurun.",
+      "missingCurrentPassword": "Devam etmek için mevcut şifrenizi girin.",
+      "passwordTooShort": "Yeni şifreniz en az 8 karakter olmalıdır.",
+      "invalidCurrentPassword": "Mevcut şifre eşleşmedi.",
+      "missingCode": "Kimlik doğrulayıcı uygulamanızdan 6 haneli kodu girin.",
+      "invalidCode": "O kod işe yaramadı. Lütfen tekrar deneyin.",
+      "noPendingSetup": "Kodu girmeden önce kurulumu yeniden başlatın.",
+      "setupExpired": "Bu kurulum oturumunun süresi doldu. Yeni bir QR kodu almak için kurulumu tekrar başlatın.",
+      "twoFactorNotEnabled": "Bu hesap için iki faktörlü kimlik doğrulama etkin değil.",
+      "genericError": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+      "unexpectedError": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+    }
+  }
+}

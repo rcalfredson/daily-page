@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "{username} Profili",
+      "descriptionUser": "{username}'nin son etkinliğini, yıldızlı odalarını ve istatistiklerini görüntüleyin."
+    },
+    "profile": {
+      "profilePicAlt": "Profil resmi",
+      "noBio": "(Biyografi mevcut değil.)"
+    },
+    "activity": {
+      "title": "Son Etkinlik",
+      "updatedOn": "{date} tarihinde güncellendi",
+      "none": "Yakın zamanda etkinlik yok.",
+      "viewAllBlocks": "Tüm Gönderileri Görüntüle"
+    },
+    "starredRooms": {
+      "title": "Yıldızlı Odalar",
+      "none": "Henüz yıldızlı oda yok.",
+      "unnamedRoom": "İsimsiz Oda"
+    },
+    "stats": {
+      "title": "Kullanıcı İstatistikleri",
+      "totalBlocks": "Oluşturulan Toplam Gönderi",
+      "collaborations": "İşbirlikleri",
+      "daysActive": "Aktif Günler"
+    }
+  }
+}

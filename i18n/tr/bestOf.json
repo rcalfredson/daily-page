@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Daily Page'nin en iyisi",
+      "description": "Daily Page'de en sevilen gönderiler; komik, dürüst, şiirsel ya da sadece tuhaf. Geçtiğimiz gün, hafta, ay ve sonrasında neyin öne çıktığını görün.",
+      "titleRoom": "{roomName}'nin en iyisi",
+      "descriptionRoom": "{roomName} odasından öne çıkan gönderileri keşfedin; okuyucuların son 24 saat, 7 gün, 30 gün ve tüm zamanlarda en çok sevdikleri gönderiler."
+    },
+    "heading": "🏆Daily Page'nin en iyileri",
+    "headingRoomPrefix": "🏆 En iyileri",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 Saat",
+      "7d": "🚀 7 Gün",
+      "30d": "🌕 30 Gün",
+      "all": "👑 Tüm Zamanlar"
+    },
+    "labels": {
+      "createdBy": "Oluşturan:",
+      "inRoom": "içinde",
+      "onDate": "{date} tarihinde",
+      "unknownRoom": "Bilinmeyen Oda",
+      "noBlocks": "Hiçbir gönderi bulunamadı.",
+      "viewRoom": "Odayı görüntüle"
+    }
+  }
+}

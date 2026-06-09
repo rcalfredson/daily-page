@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Son 24 Saatteki Popüler Gönderiler",
+      "description": "Daily Page, herkesin yaratıcı düşüncelerini, anılarını veya deneylerini tek seferde yayınlayabileceği minimalist, bağımsız bir yazı sitesidir. Yeni fikirleri keşfedin, odalara katılın ve sesinize katkıda bulunun."
+    },
+    "hero": {
+      "eyebrow": "Yazmak, okumak ve geri dönmek için sessiz bir yer",
+      "title": "Daily Page'ye hoş geldiniz!",
+      "subtitle": "Son 24 saatin en popüler gönderilerini keşfedin.",
+      "ctaPrefix": "İlham mı hissediyorsunuz?",
+      "cta": "Bir odaya katıl",
+      "ctaSuffix": "ve kendi gönderinizi oluşturun!"
+    },
+    "stats": {
+      "blocks": "Gönderiler",
+      "rooms": "Odalar",
+      "tags": "Etiketler",
+      "collabsToday": "Bugünkü İşbirlikleri"
+    },
+    "activity": {
+      "title": "Daily Page'de canlı",
+      "subtitle": "Tek bakışta yeni konuşmalar ve tepkiler.",
+      "fallbackActor": "Birisi",
+      "inRoom": "içinde",
+      "comments": {
+        "title": "Son yorumlar",
+        "more": "Tartışmaları ara",
+        "commentVerb": "yorum yaptı:",
+        "replyVerb": "yanıt verdi:",
+        "empty": "Henüz yeni yorum yok. Bir sonraki konuşma gönderiniz ile başlayabilir."
+      },
+      "reactions": {
+        "title": "Son tepkiler",
+        "more": "Popüler gönderilere göz atın",
+        "empty": "Henüz yeni bir tepki yok. İyi bir gönderi bunu hızla uyandırabilir.",
+        "types": {
+          "heart": "kalp bıraktı:",
+          "leaf": "yaprakla tepki verdi:",
+          "wow": "şaşkınlıkla tepki verdi:",
+          "laugh": "güldü"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Öne Çıkan Oda",
+      "roomInfoDays": "Son {days} gündeki etkinlik: {blocks} gönderi, {votes} oy.",
+      "roomInfo24h": "Son 24 saatteki etkinlik: {blocks} gönderi, {votes} oy.",
+      "checkItOut": "Buna bir bak",
+      "blockRibbon": "★ Öne Çıkan Gönderi",
+      "votes": "{n} oy",
+      "noContent": "(İçerik sağlanmadı...)",
+      "viewBlock": "Gönderiyi Görüntüle"
+    },
+    "trendingTags": {
+      "title": "Trend Olan Etiketler",
+      "suffixDays": "(son {days} gün)",
+      "suffixAllTime": "(tüm zamanlar)",
+      "blocks": "{n} gönderi",
+      "votes": "{n} oy",
+      "empty": "Henüz trend etiketi yok. Harika bir şeyi etiketleyen ilk kişi olun!"
+    },
+    "trendingBlocks": {
+      "title": "Trend Olan Gönderiler",
+      "suffixDays": "(son {days} gün)",
+      "createdBy": "Oluşturan:",
+      "in": "içinde",
+      "on": "tarihinde",
+      "unknownRoom": "Bilinmeyen Oda",
+      "empty24h": "Son 24 saatte henüz gönderi yok. Yakında tekrar kontrol et, dostum!"
+    }
+  }
+}

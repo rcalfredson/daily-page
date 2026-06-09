@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Etiketlere Genel Bakış",
+      "description": "Zamana göre hızlı filtrelerle Daily Page'de kullanılan tüm etiketlere göz atın."
+    },
+    "title": "Etiketlere Genel Bakış",
+    "intro": "Daily Page'de kullanılan tüm etiketleri keşfedin.",
+    "tagCloudTitle": "Etiket Bulutu",
+    "timeframe": {
+      "last24h": "Son 24 Saat",
+      "last7d": "Son 7 Gün",
+      "last30d": "Son 30 Gün",
+      "all": "Tüm Zamanlar"
+    },
+    "error": {
+      "loading": "Etiketlere genel bakış yüklenirken hata oluştu"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": "| Daily Page",
+        "description": "ile etiketlenen gönderiler"
+      },
+      "header": {
+        "label": "Etiket:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Toplam gönderiler",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Oluşturan:",
+        "inRoom": "içinde",
+        "unknownRoom": "Bilinmeyen Oda",
+        "onDate": "tarihinde"
+      },
+      "chart": {
+        "label": "Zaman İçinde Oluşturulan Gönderiler"
+      },
+      "empty": {
+        "message": "Henüz bu etikete sahip gönderi bulunamadı. Belki de ilkini siz oluşturmalısınız? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Etiket sayfası yüklenirken hata oluştu"
+      }
+    }
+  }
+}

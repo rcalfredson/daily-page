@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Destek",
+      "description": "Nasıl iletişime geçilir, sorunlar bildirilir, özellikler veya odalar talep edilir ve Daily Page'ye finansal olarak nasıl destek verilir?"
+    },
+    "contact": {
+      "h1": "★ Bir soru sormak, bir sorun bildirmek veya bir özellik talep etmek istiyorum.",
+      "p1": {
+        "before": "GitHub'u kullanmayı tercih ediyorsanız lütfen kontrol edin",
+        "link": "bu projenin sorunlar sayfasını",
+        "after": "ve görüşünüzü ekleyin. Pull request'ler de elbette memnuniyetle karşılanır."
+      },
+      "p2": {
+        "before": "Alternatif olarak,",
+        "link": "e-posta gönder",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Bu projeye katkıda bulunarak destek olmak istiyorum.",
+      "p1": {
+        "before": "Bu projeye fon sağladığınız için şimdiden teşekkür ederiz. Lütfen ödemeleri güvenli bir şekilde gönderin",
+        "paypal": "PayPal",
+        "middle": "veya isterseniz,",
+        "amazon": "Amazon'da sattığım oyuncaklardan birkaç paket sipariş edin",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Yeni bir oda talep etmek istiyorum.",
+      "form": {
+        "nameLabel": "Oda Adı",
+        "topicLabel": "Konu (isteğe bağlı)",
+        "descriptionLabel": "Açıklama",
+        "submit": "Talebi Gönder",
+        "success": "İstek başarıyla gönderildi!",
+        "errorGeneric": "İstek gönderilemedi. Lütfen tekrar deneyin.",
+        "errorUnexpected": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+      }
+    }
+  }
+}

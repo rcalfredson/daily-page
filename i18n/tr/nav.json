@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Ana Sayfa",
+    "rooms": "Odalar",
+    "tags": "Etiketler",
+    "archive": "Arşiv",
+    "search": "Ara",
+    "bestOf": "En İyisi",
+    "about": "Hakkında",
+    "support": "Destek",
+    "otherProjects": "Diğer Projeler",
+    "auth": {
+      "welcomePrefix": "Hoş geldin, ",
+      "welcomeFallbackUser": "sen",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "Kontrol Paneli"
+  }
+}

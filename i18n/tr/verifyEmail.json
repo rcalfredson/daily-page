@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "E-postayı Doğrula",
+      "description": "Daily Page için e-posta adresinizi doğrulayın."
+    },
+    "header": {
+      "title": "E-postanız doğrulanıyor..."
+    },
+    "status": {
+      "checking": "Jeton kontrol ediliyor, lütfen bekleyin...",
+      "missingToken": "Doğrulama jetonu eksik veya geçersiz.",
+      "genericFailure": "Doğrulama başarısız oldu.",
+      "unexpectedError": "Beklenmeyen bir hata oluştu.",
+      "success": "Hesabınız başarıyla doğrulandı!",
+      "invalidOrExpired": "Geçersiz veya süresi dolmuş doğrulama jetonu."
+    },
+    "verificationMsg": {
+      "subject": "Daily Page hesabınızı doğrulayın ✨",
+      "heading": "Daily Page, {username}'ye hoş geldiniz!",
+      "body": "Lütfen aşağıya tıklayarak e-postanızı doğrulayın:",
+      "cta": "E-posta Adresini Doğrulayın",
+      "expires": "Bu bağlantının süresi {hours} saat içinde doluyor."
+    }
+  }
+}

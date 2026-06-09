@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "{roomName}'deki son ve devam eden gönderileri keşfedin."
+    },
+    "links": {
+      "exploreLabel": "Keşfetmek:",
+      "allBlocks": "🗂️ Tüm gönderiler",
+      "browseByDate": "🗓️ Tarihe göre",
+      "bestOf": "🏅 En iyileri",
+      "searchInRoom": "🔎 Ara"
+    },
+    "actions": {
+      "createBlock": "Gönderi Oluştur",
+      "starTitle": "Bu odaya yıldız ekleyin",
+      "unstarTitle": "Bu odanın yıldızını kaldır"
+    },
+    "tabs": {
+      "locked": "Kilitli Gönderiler",
+      "inProgress": "Devam Eden Gönderiler"
+    },
+    "sections": {
+      "lockedHeader": "Kilitli gönderiler",
+      "inProgressHeader": "Devam eden gönderiler"
+    },
+    "editorial": {
+      "heading": "Öne çıkan kılavuzlar",
+      "description": "Bu oda için seçilmiş öne çıkan kılavuzlarla buradan başlayın.",
+      "roleNames": {
+        "pillar": "Temel kılavuz",
+        "companion": "Okuma kılavuzu",
+        "texture": "Arka plan kılavuzu"
+      }
+    },
+    "empty": {
+      "noDescription": "Açıklama mevcut değil.",
+      "noLocked": "Henüz kilitli gönderi yok! 1 saat işlem yapılmaması durumunda otomatik kilitlenir.",
+      "noInProgress": "Henüz devam eden gönderi yok! Bir tanesine başlama zamanı.",
+      "noBlocks": "Henüz gönderi yok! İlkini yaratın ve izinizi bırakın. 😎"
+    }
+  }
+}

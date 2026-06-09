@@ -1,0 +1,11 @@
+{
+  "blockList": {
+    "period": {
+      "all": "her zaman",
+      "days": "son {n} günlerde",
+      "day": "son 24 saat içinde"
+    },
+    "createdBy": "Oluşturan:",
+    "on": "tarihinde"
+  }
+}

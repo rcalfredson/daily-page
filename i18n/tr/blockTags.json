@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "Etiketler:",
+      "noTags": "Henüz etiket yok! Biraz ekleyin:"
+    },
+    "input": {
+      "placeholder": "Yeni etiket",
+      "addButton": "Ekle"
+    },
+    "buttons": {
+      "removeTag": "X"
+    }
+  }
+}

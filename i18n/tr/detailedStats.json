@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "Ayrıntılı İstatistikler",
+      "description": "Daily Page etkinliğinizin ayrıntılı dökümü."
+    },
+    "nav": {
+      "backToDashboard": "← Kontrol Paneli'e geri dön"
+    },
+    "header": {
+      "title": "📊 İstatistiklerinize Genel Bakış 📊"
+    },
+    "cards": {
+      "totalBlocks": "Oluşturulan Toplam Gönderi 📝",
+      "collaborations": "İşbirlikleri 🤝",
+      "votesGiven": "Verilen Oylar 👍",
+      "daysActive": "Aktif Günler 📆"
+    },
+    "chart": {
+      "datasetLabel": "İstatistikleriniz",
+      "labels": {
+        "blocksCreated": "Oluşturulan Gönderiler",
+        "collaborations": "İşbirlikleri",
+        "votesGiven": "Verilen Oylar",
+        "daysActive": "Aktif Günler"
+      }
+    }
+  }
+}

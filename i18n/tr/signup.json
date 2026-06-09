@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Bir hesap oluşturun",
+      "description": "Tüm özelliklere erişmek için Daily Page'ye kaydolun."
+    },
+    "header": {
+      "title": "Hesabınızı Oluşturun",
+      "subtitle": "Günlük yazılarınızı oluşturmaya ve paylaşmaya başlamak için Daily Page'ye katılın!"
+    },
+    "form": {
+      "email": {
+        "label": "E-posta",
+        "placeholder": "E-postanızı girin"
+      },
+      "username": {
+        "label": "Kullanıcı adı",
+        "placeholder": "Kullanıcı adınızı girin"
+      },
+      "password": {
+        "label": "Şifre",
+        "placeholder": "Bir şifre girin"
+      },
+      "submit": "Kaydol",
+      "feedback": {
+        "success": "Form gönderimi başarılı!",
+        "successCreatedVerify": "Hesap başarıyla oluşturuldu! Hesabınızı doğrulamak için lütfen e-postanızı kontrol edin.",
+        "genericError": "Hesap oluşturulamadı. Lütfen tekrar deneyin.",
+        "unexpectedError": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+      }
+    }
+  }
+}

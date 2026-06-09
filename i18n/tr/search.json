@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "Ara",
+      "description": "Herkese açık gönderileri arayın."
+    },
+    "title": "Ara",
+    "placeholder": "Gönderilerde ara...",
+    "hint": "Arama yapmak için en az 2 karakter yazın.",
+    "noResults": "Sonuç bulunamadı.",
+    "untitled": "İsimsiz",
+    "votesTitle": "Oylar",
+    "pageLabel": "Sayfa",
+    "filters": {
+      "inRoom": "Odada"
+    },
+    "buttons": {
+      "search": "Ara",
+      "prev": "Önceki",
+      "next": "Sonraki"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Sen)"
+    },
+    "meta": {
+      "title": "Gönderiyi Düzenle - {blockTitle}",
+      "titleFallback": "Gönderiyi Düzenle"
+    },
+    "errors": {
+      "imageUrlRequired": "Lütfen bir resim URL'si girin.",
+      "notFound": "Gönderi bulunamadı veya bu odaya ait değil.",
+      "loadFailed": "Gönderi düzenleyici yüklenirken bir hata oluştu.",
+      "updateTitleFailed": "Başlık güncellenirken hata oluştu."
+    },
+    "roomInfo": {
+      "label": "Oda:"
+    },
+    "title": {
+      "placeholder": "Gönderi başlığını girin",
+      "editTooltip": "Başlığı Düzenle",
+      "lock": "Gönderiyi Kilitle",
+      "delete": "Gönderiyi Sil"
+    },
+    "description": {
+      "label": "Açıklama",
+      "editTooltip": "Açıklamayı Düzenle",
+      "placeholder": "Açıklamayı girin",
+      "noDescriptionOwner": "Henüz açıklama yok...",
+      "noDescriptionViewer": "Açıklama sağlanmadı...",
+      "save": "Kaydet",
+      "cancel": "İptal",
+      "expand": "Genişlet",
+      "collapse": "Daralt",
+      "updateError": "Açıklama güncellenirken hata oluştu."
+    },
+    "status": {
+      "lastBackup": "Son yedekleme: {datetime}",
+      "lastBackupUnknown": "Son yedekleme: Bilinmiyor"
+    },
+    "peers": {
+      "label": "Katılımcılar:"
+    },
+    "toasts": {
+      "blockLocked": "Bu gönderi kilitlendi!"
+    },
+    "editor": {
+      "placeholder": "Boş sayfa senin sesini bekliyor; korkusuzca yaz."
+    },
+    "loading": {
+      "label": "Yükleniyor",
+      "quote": "Bırakın dünya sizin için yansın. Prizma ışığını beyaz sıcak bir şekilde kağıda atın.<br>—Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "5 dakikadır hiçbir şey yazmadın. Oturuma devam etmek için Tamam'ı tıklayın; aksi halde arşive yönlendirileceksiniz.",
+      "confirm": "TAMAM"
+    },
+    "sharing": {
+      "label": "Bağlantıyı Paylaşma",
+      "copyTooltip": "Panoya kopyala",
+      "copied": "Kopyalandı!"
+    },
+    "toolbar": {
+      "insertImage": "Resim Ekle",
+      "insertImageUrlPlaceholder": "Resim URL'sini girin",
+      "insertImageAltPlaceholder": "Alternatif metin (isteğe bağlı)",
+      "insertImageConfirm": "Onayla",
+      "insertImageCancel": "İptal"
+    },
+    "buttons": {
+      "downloadFile": "Dosyayı indir"
+    },
+    "lockModal": {
+      "messageLine1": "Bu gönderiyi kilitlemek istediğinizden emin misiniz?",
+      "messageLine2": "Bu, onu sonlandıracak ve daha fazla düzenleme yapılmasını önleyecektir.",
+      "confirm": "Kilit",
+      "cancel": "İptal",
+      "successToast": "Gönderi başarıyla kilitlendi.",
+      "errorToast": "Gönderi kilitlenirken hata oluştu."
+    },
+    "tags": {
+      "headerWithTags": "Etiketler:",
+      "headerNoTags": "Henüz etiket yok! Biraz ekleyin:",
+      "updateError": "Etiketler güncellenirken hata oluştu."
+    },
+    "fullBlock": {
+      "headingPrefix": "Üzgünüz; \"{blockTitle}\" gönderisi şu anda",
+      "headingStatus": "tamamen dolu.",
+      "retryPrefix": "Lütfen",
+      "retryLink": "farklı bir gönderi dene",
+      "retrySuffix": "ya da başka bir zaman geri gel.",
+      "consolationPrefix": "Beklerken okuyabilirsiniz:",
+      "consolationBestOf": "favori gönderilerimizden bazıları",
+      "consolationMiddle": "veya göz atmak için",
+      "consolationArchive": "arşiv."
+    }
+  }
+}

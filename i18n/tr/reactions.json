@@ -1,0 +1,7 @@
+{
+  "reactions": {
+    "aria": "{emoji} tepkileri: {count}",
+    "loginToReact": "Tepki vermek için giriş yapın",
+    "countsLabel": "Tepkiler"
+  }
+}
