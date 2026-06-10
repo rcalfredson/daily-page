@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "Het profiel van {username}",
+      "descriptionUser": "Bekijk de recente activiteit, kamers met ster en statistieken van {username}."
+    },
+    "profile": {
+      "profilePicAlt": "Profielfoto",
+      "noBio": "(Geen bio beschikbaar.)"
+    },
+    "activity": {
+      "title": "Recente activiteit",
+      "updatedOn": "Bijgewerkt op {date}",
+      "none": "Geen recente activiteit.",
+      "viewAllBlocks": "Bekijk alle berichten"
+    },
+    "starredRooms": {
+      "title": "Kamers met ster",
+      "none": "Er zijn nog geen kamers met ster.",
+      "unnamedRoom": "Naamloze kamer"
+    },
+    "stats": {
+      "title": "Gebruikersstatistieken",
+      "totalBlocks": "Totaal aantal berichten gemaakt",
+      "collaborations": "Samenwerkingen",
+      "daysActive": "Dagen actief"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page - Willekeurige schrijver",
+      "description": "Genereer een oneindige stroom willekeurige pseudotekst voor plezier, inspiratie of chaos."
+    },
+    "title": "Willekeurige schrijver",
+    "buttons": {
+      "clear": "Duidelijk",
+      "stop": "Houd op met schrijven",
+      "start": "Begin met schrijven"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Oeps! Er is iets misgegaan.",
+      "message": "Er is een onverwachte fout opgetreden. Probeer het later opnieuw.",
+      "home": "Terug naar Thuis"
+    },
+    "notFound": {
+      "title": "404 - Pagina niet gevonden",
+      "metaTitle": "Pagina niet gevonden",
+      "message": "Sorry, we konden de pagina die u zocht niet vinden.",
+      "homePrefix": "Je kunt teruggaan naar",
+      "homeLink": "de startpagina",
+      "roomsPrefix": "of bekijk de",
+      "roomsLink": "kamers map."
+    }
+  }
+}

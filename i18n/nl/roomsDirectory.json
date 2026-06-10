@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Kamerlijst",
+      "description": "Elke kamer is een deuropening naar een andere wereld. Stap binnen, deel uw verhaal en bouw samen met anderen aan iets moois."
+    },
+    "eyebrow": "Vind jouw hoek",
+    "heading": "Kamerlijst",
+    "intro": "Begin met de kamers die op dit moment levend aanvoelen, of dwaal af op onderwerp totdat er iets klikt. Elke kamer is een andere schrijfopdracht, fandom of gedeelde obsessie die op jouw stem wacht.",
+    "empty": "Er zijn momenteel geen kamers beschikbaar. Kom later terug!",
+    "jumpToActive": "Zie actieve kamers",
+    "jumpToTopics": "Blader op onderwerp",
+    "statsLabel": "Hoogtepunten van de ruimtelijst",
+    "liveNow": "Leef nu",
+    "recentlyActive": "Recent actief",
+    "recentlyActiveSubtitle": "De snelste manier om op dit moment een kamer met mensen te vinden.",
+    "browseByTopic": "Blader op onderwerp",
+    "topicSubtitle": "Open een onderwerp om de kamers ervan te verkennen.",
+    "roomCount": "{count} kamers",
+    "stats": {
+      "rooms": "kamers om te verkennen",
+      "topics": "onderwerp groepen",
+      "active": "actieve keuzes"
+    },
+    "activeUsers": "Actieve gebruikers: {count}",
+    "visitRoom": "Kamer bezoeken",
+    "close": "Dichtbij",
+    "noTitle": "Geen titel beschikbaar",
+    "noDescription": "Geen beschrijving beschikbaar"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "E-mail verifiëren",
+      "description": "Verifieer uw e-mailadres voor Daily Page."
+    },
+    "header": {
+      "title": "Je e-mailadres verifiëren..."
+    },
+    "status": {
+      "checking": "Token wordt gecontroleerd. Even geduld a.u.b....",
+      "missingToken": "Verificatietoken ontbreekt of is ongeldig.",
+      "genericFailure": "Verificatie mislukt.",
+      "unexpectedError": "Er is een onverwachte fout opgetreden.",
+      "success": "Uw account is succesvol geverifieerd!",
+      "invalidOrExpired": "Ongeldig of verlopen verificatietoken."
+    },
+    "verificationMsg": {
+      "subject": "Verifieer je Daily Page-account ✨",
+      "heading": "Welkom bij Daily Page, {username}!",
+      "body": "Controleer uw e-mailadres door hieronder te klikken:",
+      "cta": "Controleer het e-mailadres",
+      "expires": "Deze link verloopt over {hours} uur."
+    }
+  }
+}

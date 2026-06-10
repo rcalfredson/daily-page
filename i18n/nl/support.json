@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Ondersteuning",
+      "description": "Hoe u contact kunt opnemen, problemen kunt melden, functies of kamers kunt aanvragen en Daily Page financieel kunt ondersteunen."
+    },
+    "contact": {
+      "h1": "★ Ik wil graag een vraag stellen, een probleem melden of een functie aanvragen.",
+      "p1": {
+        "before": "Als je liever GitHub gebruikt, vink dit dan aan",
+        "link": "de problemen van dit project",
+        "after": "en voeg uw stem toe. Pull-verzoeken zijn uiteraard ook welkom."
+      },
+      "p2": {
+        "before": "Als alternatief,",
+        "link": "stuur een e-mail",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Ik wil dit project graag steunen met een bijdrage.",
+      "p1": {
+        "before": "Bij voorbaat dank voor de financiering van dit project. Verstuur betalingen veilig via",
+        "paypal": "PayPal",
+        "middle": "of, als u dat liever heeft,",
+        "amazon": "bestel een paar zakken met het speelgoed dat ik op Amazon verkoop",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Ik wil graag een nieuwe kamer aanvragen.",
+      "form": {
+        "nameLabel": "Kamernaam",
+        "topicLabel": "Onderwerp (optioneel)",
+        "descriptionLabel": "Beschrijving",
+        "submit": "Verzoek indienen",
+        "success": "Aanvraag succesvol verzonden!",
+        "errorGeneric": "Kan verzoek niet indienen. Probeer het opnieuw.",
+        "errorUnexpected": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+      }
+    }
+  }
+}

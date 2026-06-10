@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Privacybeleid",
+      "description": "Hoe Daily Page uw gegevens verzamelt, gebruikt en beschermt, in duidelijke taal."
+    },
+    "title": "Privacybeleid",
+    "lastUpdated": "Laatst bijgewerkt: {date}",
+    "intro": {
+      "h2": "Invoering",
+      "p1": "Daily Page (\"ons\", \"wij\" of \"onze\") beheert de website dailypage.org (hierna de \"Service\" genoemd).",
+      "p2": "Deze pagina informeert u over ons beleid met betrekking tot het verzamelen, gebruiken en openbaar maken van persoonlijke gegevens wanneer u onze Service gebruikt."
+    },
+    "collection": {
+      "h2": "Informatieverzameling en -gebruik",
+      "p": "We verzamelen minimale persoonlijke gegevens om onze Service te verbeteren en te leveren. Dit omvat e-mailadressen voor accountbeheer en inhoud die vrijwillig door gebruikers is ingediend."
+    },
+    "usage": {
+      "h2": "Gegevensgebruik",
+      "p": "De verzamelde gegevens worden uitsluitend gebruikt voor accountauthenticatie, contentmoderatie en het verbeteren van de gebruikerservaring."
+    },
+    "storage": {
+      "h2": "Gegevensopslag en beveiliging",
+      "p": "Uw gegevens worden veilig opgeslagen en nooit zonder uitdrukkelijke toestemming aan derden gedeeld of verkocht, behalve zoals vereist door de wet."
+    },
+    "cookies": {
+      "h2": "Koekjes",
+      "p": "We gebruiken cookies uitsluitend voor sessiebeheer en het verbeteren van de gebruikerservaring. U kunt cookies uitschakelen via uw browserinstellingen."
+    },
+    "rights": {
+      "h2": "Uw rechten",
+      "p": "U kunt op elk moment verzoeken om verwijdering of wijziging van uw persoonlijke gegevens door contact met ons op te nemen."
+    },
+    "changes": {
+      "h2": "Wijzigingen in dit privacybeleid",
+      "p": "We kunnen ons privacybeleid van tijd tot tijd bijwerken. Wijzigingen zullen op deze pagina worden geplaatst."
+    },
+    "contact": {
+      "h2": "Neem contact met ons op",
+      "p": "Voor vragen over dit privacybeleid kunt u contact met ons opnemen via:",
+      "emailLabel": "vraag@dailypage.org"
+    }
+  }
+}

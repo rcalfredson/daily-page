@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "Ontdek recente en lopende berichten in {roomName}."
+    },
+    "links": {
+      "exploreLabel": "Ontdekken:",
+      "allBlocks": "🗂️Alle berichten",
+      "browseByDate": "🗓️ Op datum",
+      "bestOf": "🏅 Het beste van",
+      "searchInRoom": "🔎 Zoeken"
+    },
+    "actions": {
+      "createBlock": "Maak een bericht",
+      "starTitle": "Geef deze kamer een ster",
+      "unstarTitle": "Verwijder de ster van deze kamer"
+    },
+    "tabs": {
+      "locked": "Vergrendelde berichten",
+      "inProgress": "Berichten in uitvoering"
+    },
+    "sections": {
+      "lockedHeader": "Vergrendelde berichten",
+      "inProgressHeader": "Berichten in uitvoering"
+    },
+    "editorial": {
+      "heading": "Aanbevolen gidsen",
+      "description": "Begin hier met de aanbevolen gidsen die voor deze kamer zijn samengesteld.",
+      "roleNames": {
+        "pillar": "Kern gids",
+        "companion": "Leesgids",
+        "texture": "Achtergrondgids"
+      }
+    },
+    "empty": {
+      "noDescription": "Geen beschrijving beschikbaar.",
+      "noLocked": "Nog geen vergrendelde berichten! Berichten worden automatisch vergrendeld na 1 uur inactiviteit.",
+      "noInProgress": "Nog geen lopende berichten! Tijd om er een te beginnen.",
+      "noBlocks": "Nog geen berichten! Creëer de eerste en laat uw stempel achter. 😎"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Maak een account aan",
+      "description": "Meld u aan voor Daily Page om toegang te krijgen tot alle functies."
+    },
+    "header": {
+      "title": "Maak uw account aan",
+      "subtitle": "Word lid van Daily Page en begin met het maken en delen van uw dagelijkse schrijfsels!"
+    },
+    "form": {
+      "email": {
+        "label": "E-mail",
+        "placeholder": "Voer uw e-mailadres in"
+      },
+      "username": {
+        "label": "Gebruikersnaam",
+        "placeholder": "Voer uw gebruikersnaam in"
+      },
+      "password": {
+        "label": "Wachtwoord",
+        "placeholder": "Voer een wachtwoord in"
+      },
+      "submit": "Aanmelden",
+      "feedback": {
+        "success": "Formulierinzending succesvol!",
+        "successCreatedVerify": "Account aangemaakt! Controleer uw e-mail om uw account te verifiëren.",
+        "genericError": "Kan account niet aanmaken. Probeer het opnieuw.",
+        "unexpectedError": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+      }
+    }
+  }
+}

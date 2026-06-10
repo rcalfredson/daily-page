@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Rapporteer ongepaste inhoud",
+    "fields": {
+      "reason": {
+        "label": "Reden",
+        "options": {
+          "spam": "Spam",
+          "offensive": "Aanstootgevend (haatdragende taal of laster)",
+          "inappropriate": "Ongepast (naaktheid, grafische inhoud, enz.)",
+          "other": "Ander"
+        }
+      },
+      "details": {
+        "label": "Details (optioneel)",
+        "placeholder": "Beschrijf wat je zag..."
+      }
+    },
+    "buttons": {
+      "submit": "Rapport indienen",
+      "cancel": "Annuleren"
+    },
+    "toasts": {
+      "success": "Rapport ingediend - bedankt!",
+      "failed": "Kan rapport niet indienen."
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Het beste van Daily Page",
+      "description": "De meest geliefde berichten op Daily Page: grappig, eerlijk, poëtisch of gewoon raar. Bekijk wat er de afgelopen dag, week, maand en daarna opviel.",
+      "titleRoom": "Het beste van {roomName}",
+      "descriptionRoom": "Ontdek opvallende berichten uit de {roomName}-ruimte, de berichten waar lezers de afgelopen 24 uur, 7 dagen, 30 dagen en altijd het meest van genoten."
+    },
+    "heading": "🏆 Het beste van Daily Page",
+    "headingRoomPrefix": "🏆 Het beste van",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 uur",
+      "7d": "🚀 7 dagen",
+      "30d": "🌕 30 dagen",
+      "all": "👑 Altijd"
+    },
+    "labels": {
+      "createdBy": "Gemaakt door:",
+      "inRoom": "in",
+      "onDate": "op {date}",
+      "unknownRoom": "Onbekende kamer",
+      "noBlocks": "Geen berichten gevonden.",
+      "viewRoom": "Kamer bekijken"
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Archief",
+      "description": "Ontdek het volledige archief per maand.",
+      "titleRoom": "Daily Page — Archief · {roomName}",
+      "descriptionRoom": "Ontdek eerdere schrijfsels in de {roomName}-kamer, maand na maand. Ga naar een willekeurige datum om te zien wat anderen in de loop van de tijd in deze ruimte hebben gedeeld."
+    },
+    "nav": {
+      "prev": "Vorig",
+      "next": "Volgende"
+    },
+    "title": "📚 Blader door archieven",
+    "titleRoom": "📚 {roomName} — Archief",
+    "roomViewing": "Archief voor kamer {roomName} bekijken",
+    "viewRoomLink": "Kamer bekijken",
+    "noContent": "Nog geen inhoud beschikbaar.",
+    "backToRoom": "← Terug naar kamerdashboard",
+    "calendar": {
+      "meta": {
+        "description": "Bekijk alle creatieve berichten die zijn gepubliceerd in {month} {year} – van snelle gedachten tot diepe reflecties. Klik op een datum om te zien wat er is gedeeld.",
+        "descriptionRoom": "Bekijk de creatieve activiteit in {roomName} tijdens {month} {year}. Kies een datum om de berichten te bekijken die die dag zijn gedeeld."
+      },
+      "title": "📆 Archief voor {month} {year}",
+      "prevLabel": "Archief voor {month} {year}",
+      "nextLabel": "Archief voor {month} {year}"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "Archief voor {date}",
+        "titleRoom": "{roomName} — Archief voor {date}",
+        "descriptionSite": "Ontdek de berichten die op {date} zijn geschreven, van stille notities tot wilde bekentenissen.",
+        "descriptionRoom": "Op {date} hebben schrijvers in de {roomName}-kamer hun sporen nagelaten: blader door reflecties, ideeën en uitdrukkingen die die dag zijn gedeeld."
+      },
+      "heading": "Archief voor {date}",
+      "empty": "Er is geen inhoud gevonden voor deze datum.",
+      "labels": {
+        "createdBy": "Gemaakt door:",
+        "in": "in",
+        "on": "op {datetime}",
+        "unknownRoom": "Onbekende kamer"
+      },
+      "nav": {
+        "prevDay": "Vorige dag",
+        "nextDay": "Volgende dag"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — Alle berichten",
+        "descriptionRoom": "Blader door elk bericht dat ooit in de {roomName}-ruimte is gepubliceerd. Sorteer op datum, titel of stemmen om de geschiedenis ervan te verkennen."
+      },
+      "header": {
+        "allBlocks": "— Alle berichten"
+      },
+      "sort": {
+        "label": "Sorteer op",
+        "options": {
+          "date": "Datum",
+          "title": "Titel",
+          "votes": "Stemmen"
+        },
+        "submit": "Gaan"
+      }
+    },
+    "pagination": {
+      "prev": "← Vorige",
+      "next": "Volgende →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "Daily Pages voor {time}"
+      },
+      "empty": "We konden gedurende die periode geen pagina's vinden."
+    }
+  }
+}

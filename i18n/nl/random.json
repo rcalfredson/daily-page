@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Andere projecten",
+      "description": "Ontdek honkbaljournaling, willekeurige schrijfexperimenten en andere zijprojecten van Daily Page."
+    },
+    "title": "Andere projecten",
+    "tagline": "Een gezellig hoekje voor experimenten en zijmissies.",
+    "links": {
+      "baseball": "📖 Honkbaldagboek",
+      "randomWriter": "🎲 Willekeurige schrijver"
+    },
+    "cta": {
+      "backToRooms": "Terug naar de hoofdkamers"
+    }
+  }
+}

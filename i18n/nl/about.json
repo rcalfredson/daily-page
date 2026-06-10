@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page - Over",
+      "description": "Wat Daily Page is, hoe het werkt en waarom het is gebouwd als een langzamere, vriendelijkere hoek van het internet."
+    },
+    "title": "Over Daily Page",
+    "tagline": "Voed je geest, niet je feed.",
+    "mission": {
+      "h2": "Missie",
+      "p1": "Een indie-schrijflab – begonnen in mijn woonkamer, aangewakkerd door de nieuwsgierigheid van lezers.",
+      "p2": "Het is niet gebouwd om je hersenen te rotten, maar om het te voeden: een plek waar je langzaam kunt schrijven, anoniem als je wilt, en je nooit zorgen hoeft te maken dat je indruk op iemand maakt."
+    },
+    "how": {
+      "h2": "Hoe het werkt",
+      "features": {
+        "rooms": {
+          "label": "Kamers",
+          "text": "zijn topic-silo’s (denk aan “subreddit, maar vriendelijker”)."
+        },
+        "blocks": {
+          "label": "Berichten",
+          "text": "zijn gezamenlijke schrijfruimtes: iedereen (zelfs ‘anoniem’) kan er een maken, deze bewerken totdat deze is vergrendeld, en op anderen stemmen."
+        },
+        "privacy": {
+          "label": "Privacy en delen",
+          "text": "betekent dat openbare berichten live in de feed van de kamer staan. Verborgen concepten worden verborgen totdat ze worden vergrendeld, maar u krijgt een deellink waarmee u vrienden kunt uitnodigen."
+        },
+        "markdown": {
+          "label": "Markdown en media",
+          "text": "Hiermee kunt u in Markdown schrijven, afbeeldingen insluiten en samen bewerken zoals in Google Documenten."
+        },
+        "trends": {
+          "label": "Trends & Tags",
+          "text": "hiermee kunt u uw bericht taggen, tagtrends volgen en topinhoud ontdekken (7 d / 30 d / altijd)."
+        },
+        "streaks": {
+          "label": "Schrijfreeksen",
+          "text": "houd uw dagelijkse schrijfreeks levend - uw beste stimulans om elke dag te verschijnen."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Hoe we hier zijn gekomen",
+      "p1": "In 2018 bouwde ik een op datum gebaseerde wiki voor ‘de pagina van vandaag’ en zag hoe een paar introspectieve schrijvers er een uitlaatklep voor hun gedachten van maakten. Het werd nooit groot, maar het plantte wel een zaadje.",
+      "p2": "Snel vooruit naar nu, en Daily Page is dat zaad dat in veel kamers is gegroeid: een rustig sociaal web voor introverte mensen, idealisten en iedereen die zin heeft in een langzamer tempo."
+    },
+    "next": {
+      "h2": "Wat is het volgende",
+      "p1": "We zijn nog maar net begonnen: rijkere insluitingen, diepere gebruikersstatistieken, reputatiescoreborden en meer manieren om doordachte creaties te belonen.",
+      "p2": "Bedankt dat je deel uitmaakt van dit kleine indie-experiment."
+    },
+    "cta": {
+      "rooms": "Ontdek kamers",
+      "signup": "Sluit u aan bij de gemeenschap"
+    }
+  }
+}

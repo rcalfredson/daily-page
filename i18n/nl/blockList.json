@@ -1,0 +1,11 @@
+{
+  "blockList": {
+    "period": {
+      "all": "alle tijd",
+      "days": "in de afgelopen {n} dagen",
+      "day": "in de afgelopen 24 uur"
+    },
+    "createdBy": "Gemaakt door:",
+    "on": "op"
+  }
+}
