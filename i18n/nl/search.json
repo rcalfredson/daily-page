@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "Zoekopdracht",
+      "description": "Zoek naar openbare berichten."
+    },
+    "title": "Zoekopdracht",
+    "placeholder": "Berichten zoeken...",
+    "hint": "Typ minimaal 2 tekens om te zoeken.",
+    "noResults": "Geen resultaten gevonden.",
+    "untitled": "Zonder titel",
+    "votesTitle": "Stemmen",
+    "pageLabel": "Pagina",
+    "filters": {
+      "inRoom": "In de kamer"
+    },
+    "buttons": {
+      "search": "Zoekopdracht",
+      "prev": "Vorige",
+      "next": "Volgende"
+    }
+  }
+}

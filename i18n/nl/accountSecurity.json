@@ -1,0 +1,67 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Accountbeveiliging",
+      "description": "Beheer uw Daily Page-wachtwoord en tweefactorauthenticatie."
+    },
+    "backToDashboard": "Terug naar dashboard",
+    "heading": "Accountbeveiliging",
+    "subheading": "Houd uw account beveiligd met een sterk wachtwoord en een authenticator-app.",
+    "password": {
+      "title": "Wachtwoord wijzigen",
+      "description": "Gebruik een uniek wachtwoord van minimaal 8 tekens.",
+      "current": {
+        "label": "Huidig ​​wachtwoord"
+      },
+      "new": {
+        "label": "Nieuw wachtwoord"
+      },
+      "submit": "Wachtwoord bijwerken"
+    },
+    "twoFactor": {
+      "title": "Tweefactorauthenticatie",
+      "statusOn": "Ingeschakeld",
+      "statusOff": "Uit",
+      "description": "Voeg een eenmalige code uit een authenticator-app toe na uw wachtwoord wanneer u inlogt.",
+      "currentPassword": {
+        "label": "Huidig ​​wachtwoord"
+      },
+      "startSetup": "Authenticator-app instellen",
+      "qrAlt": "QR-code van Authenticator-app",
+      "manualKey": "Handmatige instelsleutel",
+      "code": {
+        "label": "6-cijferige code"
+      },
+      "enable": "Schakel 2FA in",
+      "disableCode": {
+        "label": "Authenticatiecode"
+      },
+      "disable": "Schakel 2FA uit"
+    },
+    "recoveryCodes": {
+      "title": "Bewaar uw herstelcodes",
+      "description": "Gebruik een van deze eenmalige codes om in te loggen als u de toegang tot uw authenticator-app kwijtraakt.",
+      "regenerateDescription": "Genereer een nieuwe set herstelcodes als u de vorige set bent kwijtgeraakt. Hierdoor worden eventuele oude herstelcodes ongeldig.",
+      "regenerate": "Genereer nieuwe herstelcodes",
+      "warning": "Bewaar ze op een veilige plek. Ze zullen niet meer getoond worden."
+    },
+    "feedback": {
+      "passwordChanged": "Uw wachtwoord is bijgewerkt.",
+      "setupReady": "Scan de QR-code en voer vervolgens de 6-cijferige code in om de installatie te voltooien.",
+      "twoFactorEnabled": "Tweefactorauthenticatie is nu ingeschakeld.",
+      "twoFactorDisabled": "Tweefactorauthenticatie is nu uitgeschakeld.",
+      "recoveryCodesRegenerated": "Uw herstelcodes zijn opnieuw gegenereerd. Sla de nieuwe codes nu op.",
+      "missingFields": "Vul alle verplichte velden in.",
+      "missingCurrentPassword": "Voer uw huidige wachtwoord in om door te gaan.",
+      "passwordTooShort": "Uw nieuwe wachtwoord moet minimaal 8 tekens lang zijn.",
+      "invalidCurrentPassword": "Het huidige wachtwoord kwam niet overeen.",
+      "missingCode": "Voer de 6-cijferige code uit uw authenticator-app in.",
+      "invalidCode": "Die code werkte niet. Probeer het opnieuw.",
+      "noPendingSetup": "Begin opnieuw met instellen voordat u een code invoert.",
+      "setupExpired": "Die installatiesessie is verlopen. Begin opnieuw met instellen en ontvang een nieuwe QR-code.",
+      "twoFactorNotEnabled": "Tweefactorauthenticatie is niet ingeschakeld voor dit account.",
+      "genericError": "Er is iets misgegaan. Probeer het opnieuw.",
+      "unexpectedError": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "Gedetailleerde statistieken",
+      "description": "Een gedetailleerd overzicht van uw Daily Page-activiteit."
+    },
+    "nav": {
+      "backToDashboard": "← Terug naar Dashboard"
+    },
+    "header": {
+      "title": "📊 Uw statistiekenoverzicht 📊"
+    },
+    "cards": {
+      "totalBlocks": "Totaal aantal berichten gemaakt 📝",
+      "collaborations": "Samenwerkingen 🤝",
+      "votesGiven": "Stemmen gegeven 👍",
+      "daysActive": "Dagen actief 📆"
+    },
+    "chart": {
+      "datasetLabel": "Jouw statistieken",
+      "labels": {
+        "blocksCreated": "Berichten gemaakt",
+        "collaborations": "Samenwerkingen",
+        "votesGiven": "Stemmen gegeven",
+        "daysActive": "Dagen actief"
+      }
+    }
+  }
+}

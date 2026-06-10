@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Thuis",
+    "rooms": "Kamers",
+    "tags": "Tags",
+    "archive": "Archief",
+    "search": "Zoekopdracht",
+    "bestOf": "Beste van",
+    "about": "Over",
+    "support": "Steun",
+    "otherProjects": "Andere projecten",
+    "auth": {
+      "welcomePrefix": "Welkom,",
+      "welcomeFallbackUser": "Jij",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "Dashboard"
+  }
+}

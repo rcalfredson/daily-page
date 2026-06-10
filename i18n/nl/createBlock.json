@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Maak een nieuw bericht - Daily Page",
+      "description": "Start een nieuwe creatieve post met optionele tags, taal en zichtbaarheid."
+    },
+    "heading": "Maak een nieuw bericht",
+    "roomInfo": {
+      "roomLabel": "Kamer:",
+      "unavailable": "Kamerinformatie niet beschikbaar.",
+      "noDescription": "Geen beschrijving beschikbaar."
+    },
+    "form": {
+      "title": {
+        "label": "Titel:",
+        "placeholder": {
+          "full": "bijv. 'Mijn meesterwerk', 'Het beste idee ooit', 'Clickbait voor nerds'",
+          "short": "bijv. 'Mijn meesterwerk'"
+        }
+      },
+      "description": {
+        "label": "Beschrijving (optioneel):",
+        "placeholder": "Leg je genialiteit uit... of doe er gewoon mee."
+      },
+      "initialContent": {
+        "label": "Initiële inhoud (optioneel):",
+        "help": "Begin hier met schrijven of druk op 'Maken' om door te gaan naar de volledige editorpagina, waar u afbeeldingen kunt insluiten en in realtime kunt samenwerken.",
+        "placeholder": "Begin hier met je bericht, of ga door met bewerken nadat het is gemaakt..."
+      },
+      "visibility": {
+        "label": "Zichtbaarheid:"
+      },
+      "submit": "Bericht maken"
+    },
+    "visibility": {
+      "public": {
+        "label": "Openbaar",
+        "title": "Kan door iedereen in realtime worden bewerkt. Geen login nodig.",
+        "inline": "Kan door iedereen in realtime worden bewerkt. Geen login nodig."
+      },
+      "unlisted": {
+        "label": "Niet-beursgenoteerd concept",
+        "title": "Verborgen voor openbaar browsen terwijl het bewerkbaar is. Zichtbaar na vergrendeling.",
+        "inline": "Verborgen voor openbaar browsen terwijl het bewerkbaar is. Zichtbaar na vergrendeling.",
+        "tooltip": "Verborgen concepten zijn verborgen voor openbaar browsen, terwijl ze wel kunnen worden bewerkt. Iedereen met de link kan samenwerken en het bericht wordt openbaar wanneer het is vergrendeld."
+      }
+    },
+    "advanced": {
+      "summary": "Geavanceerde opties",
+      "lang": {
+        "label": "Taal:",
+        "options": {
+          "en": "English",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "עברית",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "Vertaal bestaand bericht (URL of ID):",
+        "placeholder": "Plak een bericht-URL of ID (optioneel)",
+        "invalid": "Dat lijkt niet op een geldige bericht-URL of ID.",
+        "fetchError": "Kan berichtinformatie niet ophalen."
+      }
+    },
+    "messages": {
+      "langExists": "Er bestaat al een vertaling voor die taal. Kies een andere taal.",
+      "genericError": "Er is iets misgegaan. Probeer het opnieuw."
+    }
+  }
+}

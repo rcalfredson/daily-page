@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "Jouw berichten",
+      "description": "Blader en sorteer alle berichten die je hebt gemaakt of waaraan je hebt meegewerkt."
+    },
+    "header": {
+      "dashboardLink": "Jouw Dashboard",
+      "profileLink": "Het profiel van {username}",
+      "allBlocks": "Alle berichten"
+    },
+    "empty": "Nog geen berichten.",
+    "pagination": {
+      "prev": "← Vorige",
+      "next": "Volgende →"
+    },
+    "titleUser": "Berichten van {username}"
+  }
+}

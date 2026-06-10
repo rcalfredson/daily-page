@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "Stem omhoog",
+    "downvote": "Stem af",
+    "errors": {
+      "failed": "Kan uw stem niet opslaan."
+    }
+  }
+}

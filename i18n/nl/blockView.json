@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Bericht - {blockTitle}",
+      "titleFallback": "Bericht"
+    },
+    "labels": {
+      "room": "Kamer",
+      "author": "Auteur",
+      "created": "Gemaakt",
+      "unknownAuthor": "Anoniem",
+      "authorAvatarAlt": "De avatar van {username}",
+      "viewAuthorProfile": "Bekijk het profiel van {username}",
+      "lang": "Vertalingen:",
+      "available": "beschikbaar"
+    },
+    "buttons": {
+      "edit": "Bewerken",
+      "deleteBlock": "Bericht verwijderen",
+      "share": "Deel",
+      "flagContent": "Markeer inhoud"
+    },
+    "description": {
+      "label": "Beschrijving",
+      "none": "Er is geen beschrijving opgegeven...",
+      "expand": "Uitbreiden",
+      "collapse": "Inklappen"
+    },
+    "editorial": {
+      "heading": "Leesgids",
+      "roleLabel": "Leestype",
+      "clusterLabel": "Gids",
+      "sequence": "Onderdeel {sequence}",
+      "primaryPillarHeading": "Begin hier",
+      "relatedHeading": "Blijf lezen",
+      "clusterHeading": "Meer in deze gids",
+      "expandSection": "Laat {count} meer zien",
+      "collapseSection": "Laat minder zien",
+      "roleNames": {
+        "pillar": "Kern gids",
+        "companion": "Diepe duik",
+        "texture": "Achtergrond"
+      }
+    },
+    "comments": {
+      "heading": "Opmerkingen",
+      "count": "{count} opmerkingen",
+      "empty": "Er heeft nog niemand gereageerd. Opmerkingen worden hier weergegeven wanneer het gesprek begint.",
+      "composer": {
+        "label": "Voeg een opmerking toe",
+        "placeholder": "Schrijf een reactie...",
+        "submit": "Reactie plaatsen",
+        "submitting": "Posten...",
+        "success": "Reactie geplaatst.",
+        "error": "Kan uw reactie momenteel niet plaatsen.",
+        "loginPrompt": "Log in om deel te nemen aan het gesprek.",
+        "loginCta": "Log in om commentaar te geven",
+        "verifyPrompt": "Verifieer uw e-mailadres voordat u een reactie plaatst.",
+        "verifyCta": "E-mail verifiëren"
+      },
+      "sort": {
+        "label": "Sorteren",
+        "oldestFirst": "Oudste eerst",
+        "newestFirst": "Nieuwste eerst"
+      },
+      "by": "Door",
+      "unknownAuthor": "Onbekend",
+      "reply": {
+        "action": "Antwoord",
+        "label": "Voeg een antwoord toe",
+        "placeholder": "Schrijf een antwoord...",
+        "submit": "Antwoord plaatsen",
+        "submitting": "Posten...",
+        "success": "Reactie geplaatst.",
+        "error": "Kan uw antwoord momenteel niet plaatsen.",
+        "cancel": "Annuleren",
+        "loginPrompt": "Log in om te reageren."
+      },
+      "manage": {
+        "edited": "Bewerkt",
+        "editAction": "Bewerken",
+        "deleteAction": "Verwijderen",
+        "deleteConfirm": "Deze reactie verwijderen? Hiermee worden ook alle antwoorden eronder verwijderd.",
+        "deleteSuccess": "Reactie verwijderd.",
+        "deleteError": "Kan deze reactie momenteel niet verwijderen.",
+        "forbidden": "U kunt alleen uw eigen opmerkingen beheren.",
+        "edit": {
+          "label": "Opmerking bewerken",
+          "save": "Opslaan",
+          "saving": "Opslaan...",
+          "cancel": "Annuleren",
+          "success": "Reactie bijgewerkt.",
+          "error": "Kan deze reactie momenteel niet bijwerken."
+        }
+      },
+      "report": {
+        "action": "Melden",
+        "pending": "Melden...",
+        "success": "Commentaar gerapporteerd.",
+        "error": "Kan deze reactie momenteel niet rapporteren.",
+        "ownError": "U kunt uw eigen reactie niet rapporteren.",
+        "hidden": "Commentaar verborgen na rapport.",
+        "reported": "Gerapporteerd"
+      },
+      "deepLink": {
+        "focused": "Gelinkte opmerking",
+        "unavailable": "De gekoppelde reactie is niet langer beschikbaar."
+      },
+      "loadMore": "Laad meer reacties",
+      "loading": "Laden...",
+      "loadError": "Kan momenteel niet meer reacties laden."
+    },
+    "share": {
+      "title": "Deel dit bericht",
+      "shareOn": "Deel op:",
+      "nativeText": "Bekijk dit bericht: {title}",
+      "alt": {
+        "facebook": "Facebook-logo",
+        "reddit": "Reddit-logo",
+        "whatsapp": "WhatsApp-logo",
+        "twitter": "Twitter-logo"
+      }
+    },
+    "errors": {
+      "notFound": "Bericht niet gevonden of hoort niet bij deze kamer.",
+      "loadFailed": "Fout bij het laden van berichtweergave."
+    }
+  }
+}

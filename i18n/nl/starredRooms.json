@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Alle kamers met sterren",
+      "description": "Een lijst met alle kamers waaraan u een ster heeft toegevoegd."
+    },
+    "nav": {
+      "backToDashboard": "← Terug naar Dashboard"
+    },
+    "header": {
+      "title": "🌟 Al uw kamers met sterren 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Naamloze kamer",
+      "noDescription": "Geen beschrijving."
+    },
+    "empty": {
+      "message": "Je hebt nog geen kamers met een ster gemarkeerd!"
+    }
+  }
+}

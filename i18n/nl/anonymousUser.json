@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "De anonieme wandelaar",
+      "description": "Geen profiel. Geen verleden. Gewoon vibraties."
+    },
+    "ascii": {
+      "ariaLabel": "ASCII-kunst van een grillig wezen met citaat"
+    },
+    "header": {
+      "title": "De anonieme"
+    },
+    "body": {
+      "line1": "Je bent in de leegte gestruikeld. Er is hier niets te zien...",
+      "line2": "gewoon een dwalende geest zonder verhaal."
+    },
+    "buttons": {
+      "home": "← Terug naar huis",
+      "signup": "Creëer een identiteit"
+    }
+  }
+}

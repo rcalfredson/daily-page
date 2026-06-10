@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Meldingen",
+      "openMenu": "Meldingen openen",
+      "loading": "Meldingen laden...",
+      "error": "Kan meldingen momenteel niet laden.",
+      "empty": "Nog geen meldingen.",
+      "markRead": "Markeer gelezen",
+      "fallbackActor": "Iemand",
+      "fallbackBlockTitle": "jouw bericht",
+      "item": {
+        "blockComment": "{actorUsername} heeft gereageerd op uw bericht \"{blockTitle}\".",
+        "commentReply": "{actorUsername} heeft gereageerd op uw opmerking over \"{blockTitle}\".",
+        "unknown": "Kennisgeving"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Nieuwe reactie op \"{blockTitle}\"",
+        "heading": "Nieuwe reactie op je bericht",
+        "headingWithName": "Hallo {username},",
+        "body": "<strong>{actorUsername}</strong> heeft gereageerd op uw bericht <strong>{blockTitle}</strong>.",
+        "cta": "Bekijk het gesprek op Daily Page",
+        "fallbackActor": "Iemand",
+        "fallbackBlockTitle": "jouw bericht"
+      },
+      "commentReply": {
+        "subject": "Nieuw antwoord op \"{blockTitle}\"",
+        "heading": "Nieuw antwoord op uw opmerking",
+        "headingWithName": "Hallo {username},",
+        "body": "<strong>{actorUsername}</strong> heeft gereageerd op uw opmerking over <strong>{blockTitle}</strong>.",
+        "cta": "Bekijk het gesprek op Daily Page",
+        "fallbackActor": "Iemand",
+        "fallbackBlockTitle": "jouw bericht"
+      }
+    }
+  }
+}

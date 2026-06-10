@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Log in",
+      "message": "U moet ingelogd zijn om door te gaan.",
+      "messageWithAction": "U moet ingelogd zijn bij {action}.",
+      "cta": "Inloggen"
+    },
+    "actions": {
+      "voteOnBlock": "stemmen op een bericht",
+      "starRoom": "ster deze kamer",
+      "reactToBlock": "reageer op dit bericht",
+      "commentOnBlock": "reageer op dit bericht",
+      "reportComment": "rapporteer deze reactie"
+    },
+    "errors": {
+      "starToggleFail": "Kan de sterstatus niet updaten. Probeer het opnieuw."
+    }
+  }
+}

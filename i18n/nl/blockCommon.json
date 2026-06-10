@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "Voorlopige versie"
+    },
+    "deleteModal": {
+      "title": "Bericht verwijderen?",
+      "message": "Deze actie kan niet ongedaan worden gemaakt.",
+      "confirm": "Verwijderen",
+      "cancel": "Annuleren",
+      "closeAriaLabel": "Dichtbij"
+    },
+    "toasts": {
+      "deleteSuccess": "Bericht succesvol verwijderd!",
+      "deleteFailed": "Kan bericht niet verwijderen."
+    }
+  }
+}

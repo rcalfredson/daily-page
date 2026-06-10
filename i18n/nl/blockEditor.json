@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Jij)"
+    },
+    "meta": {
+      "title": "Bericht bewerken - {blockTitle}",
+      "titleFallback": "Bewerk bericht"
+    },
+    "errors": {
+      "imageUrlRequired": "Voer een afbeeldings-URL in.",
+      "notFound": "Bericht niet gevonden of hoort niet bij deze kamer.",
+      "loadFailed": "Er is een fout opgetreden bij het laden van de berichteditor.",
+      "updateTitleFailed": "Fout bij updaten van titel."
+    },
+    "roomInfo": {
+      "label": "Kamer:"
+    },
+    "title": {
+      "placeholder": "Voer de berichttitel in",
+      "editTooltip": "Titel bewerken",
+      "lock": "Bericht vergrendelen",
+      "delete": "Bericht verwijderen"
+    },
+    "description": {
+      "label": "Beschrijving",
+      "editTooltip": "Beschrijving bewerken",
+      "placeholder": "Voer een beschrijving in",
+      "noDescriptionOwner": "Nog geen beschrijving...",
+      "noDescriptionViewer": "Er is geen beschrijving opgegeven...",
+      "save": "Opslaan",
+      "cancel": "Annuleren",
+      "expand": "Uitbreiden",
+      "collapse": "Inklappen",
+      "updateError": "Fout bij updaten van beschrijving."
+    },
+    "status": {
+      "lastBackup": "Laatste back-up: {datetime}",
+      "lastBackupUnknown": "Laatste back-up: onbekend"
+    },
+    "peers": {
+      "label": "Leeftijdsgenoten:"
+    },
+    "toasts": {
+      "blockLocked": "Dit bericht is vergrendeld!"
+    },
+    "editor": {
+      "placeholder": "De blanco pagina wacht op jouw stem; schrijf onbevreesd."
+    },
+    "loading": {
+      "label": "Laden",
+      "quote": "Laat de wereld door je heen branden. Gooi het prismalicht, witgloeiend, op papier.<br> – Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "Je hebt al 5 minuten niets geschreven. Klik op OK om de sessie voort te zetten; anders wordt u doorgestuurd naar het archief.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Link delen",
+      "copyTooltip": "Kopiëren naar Klembord",
+      "copied": "Gekopieerd!"
+    },
+    "toolbar": {
+      "insertImage": "Afbeelding invoegen",
+      "insertImageUrlPlaceholder": "Voer de afbeeldings-URL in",
+      "insertImageAltPlaceholder": "Alt-tekst (optioneel)",
+      "insertImageConfirm": "Bevestigen",
+      "insertImageCancel": "Annuleren"
+    },
+    "buttons": {
+      "downloadFile": "Bestand downloaden"
+    },
+    "lockModal": {
+      "messageLine1": "Weet je zeker dat je dit bericht wilt vergrendelen?",
+      "messageLine2": "Hierdoor wordt het definitief gemaakt en wordt verdere bewerking voorkomen.",
+      "confirm": "Slot",
+      "cancel": "Annuleren",
+      "successToast": "Bericht vergrendeld.",
+      "errorToast": "Fout bij vergrendelen van bericht."
+    },
+    "tags": {
+      "headerWithTags": "Tags:",
+      "headerNoTags": "Nog geen tags! Voeg wat toe:",
+      "updateError": "Fout bij updaten van tags."
+    },
+    "fullBlock": {
+      "headingPrefix": "Sorry; het bericht \"{blockTitle}\" is nu",
+      "headingStatus": "volledig bezet.",
+      "retryPrefix": "Alsjeblieft",
+      "retryLink": "probeer een ander bericht",
+      "retrySuffix": "of kom een ​​andere keer terug.",
+      "consolationPrefix": "Terwijl u wacht, kunt u gerust lezen",
+      "consolationBestOf": "enkele van onze favoriete berichten",
+      "consolationMiddle": "of om te bladeren",
+      "consolationArchive": "het archief."
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Tagsoverzicht",
+      "description": "Blader door alle tags die op Daily Page worden gebruikt, met snelle filters op tijd."
+    },
+    "title": "Tagsoverzicht",
+    "intro": "Ontdek alle tags die worden gebruikt op Daily Page.",
+    "tagCloudTitle": "Tagwolk",
+    "timeframe": {
+      "last24h": "Afgelopen 24 uur",
+      "last7d": "Laatste 7 dagen",
+      "last30d": "Laatste 30 dagen",
+      "all": "Altijd"
+    },
+    "error": {
+      "loading": "Fout bij laden van tagsoverzicht"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": "| Daily Page",
+        "description": "Berichten getagd met"
+      },
+      "header": {
+        "label": "Label:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Totaal aantal berichten met",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Gemaakt door:",
+        "inRoom": "in",
+        "unknownRoom": "Onbekende kamer",
+        "onDate": "op"
+      },
+      "chart": {
+        "label": "Berichten die in de loop van de tijd zijn gemaakt"
+      },
+      "empty": {
+        "message": "Er zijn nog geen berichten gevonden met deze tag. Misschien moet je de eerste maken? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Fout bij laden van tagpagina"
+      }
+    }
+  }
+}

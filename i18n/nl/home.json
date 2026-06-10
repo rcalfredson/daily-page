@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Populaire berichten van de afgelopen 24 uur",
+      "description": "Daily Page is een minimalistische, indie-schrijfsite waar iedereen creatieve gedachten, herinneringen of experimenten kan posten - één bericht tegelijk. Ontdek nieuwe ideeën, sluit je aan bij kamers en draag je stem bij."
+    },
+    "hero": {
+      "eyebrow": "Een rustige plek om te schrijven, lezen en terugkeren",
+      "title": "Welkom bij Daily Page!",
+      "subtitle": "Ontdek de populairste berichten van de afgelopen 24 uur.",
+      "ctaPrefix": "Voel je je geïnspireerd?",
+      "cta": "Sluit je aan bij een kamer",
+      "ctaSuffix": "en maak je eigen bericht!"
+    },
+    "stats": {
+      "blocks": "Berichten",
+      "rooms": "Kamers",
+      "tags": "Tags",
+      "collabsToday": "Samenwerkingen vandaag"
+    },
+    "activity": {
+      "title": "Live op Daily Page",
+      "subtitle": "Frisse gesprekken en reacties, alles in één oogopslag.",
+      "fallbackActor": "Iemand",
+      "inRoom": "in",
+      "comments": {
+        "title": "Recente opmerkingen",
+        "more": "Zoek discussies",
+        "commentVerb": "commentaar op gegeven",
+        "replyVerb": "antwoordde op",
+        "empty": "Nog geen recente opmerkingen. Het volgende gesprek kan beginnen met jouw bericht."
+      },
+      "reactions": {
+        "title": "Recente reacties",
+        "more": "Blader door populaire berichten",
+        "empty": "Nog geen recente reacties. Een goede post zou dit snel wakker kunnen maken.",
+        "types": {
+          "heart": "hartelijk",
+          "leaf": "reageerde met een blad op",
+          "wow": "reageerde met wauw op",
+          "laugh": "lachte om"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Uitgelichte kamer",
+      "roomInfoDays": "Activiteit gedurende de afgelopen {days} dagen: {blocks} berichten, {votes} stemmen.",
+      "roomInfo24h": "Activiteit gedurende de afgelopen 24 uur: {blocks} berichten, {votes} stemmen.",
+      "checkItOut": "Bekijk het eens",
+      "blockRibbon": "★ Aanbevolen bericht",
+      "votes": "{n} stemmen",
+      "noContent": "(Geen inhoud verstrekt...)",
+      "viewBlock": "Bekijk bericht"
+    },
+    "trendingTags": {
+      "title": "Trending-tags",
+      "suffixDays": "(laatste {days} dagen)",
+      "suffixAllTime": "(altijd)",
+      "blocks": "{n} berichten",
+      "votes": "{n} stemmen",
+      "empty": "Nog geen trending-tags. Wees de eerste die iets leuks tagt!"
+    },
+    "trendingBlocks": {
+      "title": "Populaire berichten",
+      "suffixDays": "(laatste {days} dagen)",
+      "createdBy": "Gemaakt door:",
+      "in": "in",
+      "on": "op",
+      "unknownRoom": "Onbekende kamer",
+      "empty24h": "Nog geen berichten in de afgelopen 24 uur. Kom snel nog eens terug, compa!"
+    }
+  }
+}

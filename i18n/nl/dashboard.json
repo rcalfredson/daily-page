@@ -1,0 +1,57 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Dashboard",
+      "description": "Uw Daily Page-dashboard en accountoverzicht."
+    },
+    "profile": {
+      "profilePicAlt": "Profielfoto",
+      "noBio": "Nog geen biografie. Klik op \"Bewerken\" om er een toe te voegen!",
+      "editBio": "Biografie bewerken",
+      "bioPlaceholder": "Vul hier uw biografie in",
+      "save": "Opslaan",
+      "cancel": "Annuleren"
+    },
+    "activity": {
+      "title": "Recente activiteit",
+      "none": "Geen recente activiteit.",
+      "updatedOn": "Bijgewerkt op {date}",
+      "viewAllBlocks": "Bekijk alle berichten"
+    },
+    "drafts": {
+      "title": "Ga door met schrijven",
+      "none": "Geen open concepten.",
+      "updatedOn": "Bijgewerkt op {date}",
+      "unlisted": "Niet vermeld",
+      "viewAll": "Bekijk alle berichten"
+    },
+    "streak": {
+      "title": "Schrijfstrook",
+      "line": "{days} dagen op rij! Blijf doorgaan!"
+    },
+    "starredRooms": {
+      "title": "Kamers met ster",
+      "none": "Je hebt nog geen kamers met een ster gemarkeerd. Begin met verkennen om je favorieten te vinden!",
+      "viewAll": "Bekijk alle kamers met sterren",
+      "unnamedRoom": "Naamloze kamer"
+    },
+    "security": {
+      "title": "Accountbeveiliging",
+      "summary": "Wijzig uw wachtwoord en beheer tweefactorauthenticatie.",
+      "manage": "Beheer beveiliging"
+    },
+    "stats": {
+      "title": "Jouw statistieken",
+      "totalBlocks": "Totaal aantal berichten gemaakt",
+      "collaborations": "Samenwerkingen",
+      "votesGiven": "Stemmen gegeven",
+      "daysActive": "Dagen actief",
+      "viewDetailed": "Bekijk gedetailleerde statistieken 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Kan profielfoto niet uploaden. Probeer het opnieuw.",
+      "uploadUnexpected": "Er is een onverwachte fout opgetreden. Probeer het opnieuw.",
+      "bioUpdateFailed": "Fout bij updaten biografie. Probeer het opnieuw."
+    }
+  }
+}
