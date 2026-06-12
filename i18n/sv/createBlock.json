@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Skapa ett nytt inlägg — Daily Page",
+      "description": "Starta ett nytt kreativt inlägg med valfria taggar, språk och synlighet."
+    },
+    "heading": "Skapa ett nytt inlägg",
+    "roomInfo": {
+      "roomLabel": "Rum:",
+      "unavailable": "Rumsinformation inte tillgänglig.",
+      "noDescription": "Ingen beskrivning tillgänglig."
+    },
+    "form": {
+      "title": {
+        "label": "Titel:",
+        "placeholder": {
+          "full": "t.ex. 'My Masterpiece', 'The Best Idea Ever', 'Clickbait for Nerds'",
+          "short": "t.ex. \"Mitt mästerverk\""
+        }
+      },
+      "description": {
+        "label": "Beskrivning (valfritt):",
+        "placeholder": "Förklara din briljans... eller bara ving den."
+      },
+      "initialContent": {
+        "label": "Initialt innehåll (valfritt):",
+        "help": "Börja skriva här eller tryck på \"Skapa\" för att fortsätta på hela redigeringssidan, där du kan bädda in bilder och samarbeta i realtid.",
+        "placeholder": "Börja ditt inlägg här, eller fortsätt redigera efter skapande..."
+      },
+      "visibility": {
+        "label": "Synlighet:"
+      },
+      "submit": "Skapa inlägg"
+    },
+    "visibility": {
+      "public": {
+        "label": "Offentlig",
+        "title": "Kan redigeras av vem som helst i realtid. Ingen inloggning behövs.",
+        "inline": "Kan redigeras av vem som helst i realtid. Ingen inloggning behövs."
+      },
+      "unlisted": {
+        "label": "Onoterat utkast",
+        "title": "Dold från offentlig surfning medan den är redigerbar. Syns efter låsning.",
+        "inline": "Dold från offentlig surfning medan den är redigerbar. Syns efter låsning.",
+        "tooltip": "Olistade utkast är dolda från offentlig surfning medan de är redigerbara. Alla med länken kan samarbeta och inlägget blir offentligt när det är låst."
+      }
+    },
+    "advanced": {
+      "summary": "Avancerade alternativ",
+      "lang": {
+        "label": "Språk:",
+        "options": {
+          "en": "engelska",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "nederländska",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "Hebreiska",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "Översätt befintligt inlägg (URL eller ID):",
+        "placeholder": "Klistra in en inläggs-URL eller ID (valfritt)",
+        "invalid": "Det ser inte ut som en giltig inläggs-URL eller ID.",
+        "fetchError": "Det gick inte att hämta inläggsinformation."
+      }
+    },
+    "messages": {
+      "langExists": "Det finns redan en översättning för det språket. Välj ett annat språk.",
+      "genericError": "Något gick fel. Försök igen."
+    }
+  }
+}

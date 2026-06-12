@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "Taggar:",
+      "noTags": "Inga taggar än! Lägg till några:"
+    },
+    "input": {
+      "placeholder": "Ny tag",
+      "addButton": "Lägg till"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

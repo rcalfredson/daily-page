@@ -1,0 +1,57 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Översikt",
+      "description": "Din Daily Page-kontos instrumentpanel och kontoöversikt."
+    },
+    "profile": {
+      "profilePicAlt": "Profilbild",
+      "noBio": "Ingen biografi ännu. Klicka på \"Redigera\" för att lägga till en!",
+      "editBio": "Redigera bio",
+      "bioPlaceholder": "Ange din biografi här",
+      "save": "Spara",
+      "cancel": "Avbryt"
+    },
+    "activity": {
+      "title": "Senaste aktivitet",
+      "none": "Ingen senaste aktivitet.",
+      "updatedOn": "Uppdaterad på {date}",
+      "viewAllBlocks": "Visa alla inlägg"
+    },
+    "drafts": {
+      "title": "Fortsätt skriva",
+      "none": "Inga öppna utkast.",
+      "updatedOn": "Uppdaterad på {date}",
+      "unlisted": "Onoterat",
+      "viewAll": "Visa alla inlägg"
+    },
+    "streak": {
+      "title": "Skrivsvit",
+      "line": "{days} dagar i rad! Fortsätta!"
+    },
+    "starredRooms": {
+      "title": "Stjärnmärkta rum",
+      "none": "Du har inte stjärnmärkt några rum än. Börja utforska för att hitta dina favoriter!",
+      "viewAll": "Visa alla stjärnmärkta rum",
+      "unnamedRoom": "Namnlöst rum"
+    },
+    "security": {
+      "title": "Kontosäkerhet",
+      "summary": "Ändra ditt lösenord och hantera tvåfaktorsautentisering.",
+      "manage": "Hantera säkerhet"
+    },
+    "stats": {
+      "title": "Din statistik",
+      "totalBlocks": "Totalt antal inlägg skapade",
+      "collaborations": "Samarbeten",
+      "votesGiven": "givna röster",
+      "daysActive": "dagar aktiv",
+      "viewDetailed": "Visa detaljerad statistik 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Det gick inte att ladda upp profilbilden. Försök igen.",
+      "uploadUnexpected": "Ett oväntat fel inträffade. Försök igen.",
+      "bioUpdateFailed": "Fel vid uppdatering av bio. Försök igen."
+    }
+  }
+}

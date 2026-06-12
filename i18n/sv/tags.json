@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Taggöversikt",
+      "description": "Bläddra bland alla taggar som används på Daily Page, med snabba filter efter tid."
+    },
+    "title": "Taggar Översikt",
+    "intro": "Utforska alla taggar som används i Daily Page.",
+    "tagCloudTitle": "Taggmoln",
+    "timeframe": {
+      "last24h": "Senaste 24 timmarna",
+      "last7d": "Senaste 7 dagarna",
+      "last30d": "Senaste 30 dagarna",
+      "all": "alla tider"
+    },
+    "error": {
+      "loading": "Fel vid laddning av taggöversikt"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": "| Daily Page",
+        "description": "Inlägg taggade med"
+      },
+      "header": {
+        "label": "Tagg:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Totalt antal inlägg med",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Skapad av:",
+        "inRoom": "i",
+        "unknownRoom": "Okänt rum",
+        "onDate": "på"
+      },
+      "chart": {
+        "label": "Inlägg skapade över tid"
+      },
+      "empty": {
+        "message": "Inga inlägg hittades med denna tagg än. Du kanske borde skapa den första? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Det gick inte att läsa in taggsidan"
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "Detaljerad statistik",
+      "description": "En detaljerad uppdelning av din Daily Page-aktivitet."
+    },
+    "nav": {
+      "backToDashboard": "← Tillbaka till Dashboard"
+    },
+    "header": {
+      "title": "📊 Din statistiköversikt 📊"
+    },
+    "cards": {
+      "totalBlocks": "Totalt antal inlägg skapade 📝",
+      "collaborations": "Samarbeten 🤝",
+      "votesGiven": "givna röster 👍",
+      "daysActive": "dagar aktiva 📆"
+    },
+    "chart": {
+      "datasetLabel": "Din statistik",
+      "labels": {
+        "blocksCreated": "Inlägg skapade",
+        "collaborations": "Samarbeten",
+        "votesGiven": "givna röster",
+        "daysActive": "dagar aktiv"
+      }
+    }
+  }
+}

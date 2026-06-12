@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Rumskatalog",
+      "description": "Varje rum är en dörröppning till en annan värld. Gå in, dela din berättelse och gå med andra i att bygga något vackert."
+    },
+    "eyebrow": "Hitta ditt hörn",
+    "heading": "Rumskatalog",
+    "intro": "Börja med rummen som känns levande just nu, eller vandra efter ämne tills något klickar. Varje rum är en annan skrivuppmaning, fandom eller delad besatthet som väntar på din röst.",
+    "empty": "Inga rum är tillgängliga för tillfället. Kom tillbaka senare!",
+    "jumpToActive": "Se aktiva rum",
+    "jumpToTopics": "Bläddra efter ämne",
+    "statsLabel": "Rumskatalogens höjdpunkter",
+    "liveNow": "Live nu",
+    "recentlyActive": "Nyligen aktiv",
+    "recentlyActiveSubtitle": "Det snabbaste sättet att hitta ett rum med människor i just nu.",
+    "browseByTopic": "Bläddra efter ämne",
+    "topicSubtitle": "Öppna ett ämne för att utforska dess rum.",
+    "roomCount": "{count} rum",
+    "stats": {
+      "rooms": "rum att utforska",
+      "topics": "ämnesgrupper",
+      "active": "aktiva val"
+    },
+    "activeUsers": "Aktiva användare: {count}",
+    "visitRoom": "Besöksrum",
+    "close": "Stäng",
+    "noTitle": "Ingen titel tillgänglig",
+    "noDescription": "Ingen beskrivning tillgänglig"
+  }
+}

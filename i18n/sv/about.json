@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — Om",
+      "description": "Vad Daily Page är, hur den fungerar och varför den byggdes som ett långsammare, snällare hörn av webben."
+    },
+    "title": "Om Daily Page",
+    "tagline": "Mata ditt sinne, inte ditt flöde.",
+    "mission": {
+      "h2": "Uppdrag",
+      "p1": "Ett indieskrivlabb – startade i mitt vardagsrum, underblåst av läsarnas nyfikenhet.",
+      "p2": "Den är byggd för att inte ruttna din hjärna, utan för att ge den näring: en plats där du kan skriva långsamt, anonymt om du vill, och aldrig oroa dig för att imponera på någon."
+    },
+    "how": {
+      "h2": "Hur det fungerar",
+      "features": {
+        "rooms": {
+          "label": "Rum",
+          "text": "är ämnessilor (tänk \"subreddit, men vänligare\")."
+        },
+        "blocks": {
+          "label": "Inlägg",
+          "text": "är skrivutrymmen för samarbete – vem som helst (även \"anonym\") kan skapa en, redigera den tills den är låst och rösta på andra."
+        },
+        "privacy": {
+          "label": "Sekretess och delning",
+          "text": "betyder offentliga inlägg live i rummets flöde. Olistade utkast gömmer sig tills de är låsta, men du får en delningslänk för att bjuda in vänner."
+        },
+        "markdown": {
+          "label": "Markdown och media",
+          "text": "låter dig skriva i markdown, bädda in bilder och samredigera som i Google Dokument."
+        },
+        "trends": {
+          "label": "Trender och taggar",
+          "text": "låter dig tagga ditt inlägg, spåra taggtrender och upptäcka toppinnehåll (7 d / 30 d / genom tiderna)."
+        },
+        "streaks": {
+          "label": "Skrivsviter",
+          "text": "håll din dagliga skrivserie vid liv – ditt bästa incitament att dyka upp varje dag."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Hur vi kom hit",
+      "p1": "2018 byggde jag en datumbaserad wiki för \"dagens sida\" och såg några introspektiva skribenter förvandla den till ett utlopp för sina tankar. Den blev aldrig stor – men den sådde ett frö.",
+      "p2": "Spola framåt till nu, och Daily Page är det frö som har vuxit in i många rum – en tyst social webb för introverta, idealister och alla som vill ha ett långsammare tempo."
+    },
+    "next": {
+      "h2": "Vad händer härnäst",
+      "p1": "Vi har precis kommit igång: rikare inbäddningar, djupare användarstatistik, anseendetavlor och fler sätt att belöna genomtänkt skapande.",
+      "p2": "Tack för att du är en del av detta lilla indie-experiment."
+    },
+    "cta": {
+      "rooms": "Utforska rum",
+      "signup": "Gå med i gemenskapen"
+    }
+  }
+}

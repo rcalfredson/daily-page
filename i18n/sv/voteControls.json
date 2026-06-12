@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "Uppröst",
+    "downvote": "Nedröst",
+    "errors": {
+      "failed": "Det gick inte att spara din röst."
+    }
+  }
+}

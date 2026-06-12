@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Logga in",
+      "message": "Du måste vara inloggad för att fortsätta.",
+      "messageWithAction": "Du måste vara inloggad på {action}.",
+      "cta": "Logga in"
+    },
+    "actions": {
+      "voteOnBlock": "rösta på ett inlägg",
+      "starRoom": "stjärna detta rum",
+      "reactToBlock": "reagerar på det här inlägget",
+      "commentOnBlock": "kommentera det här inlägget",
+      "reportComment": "rapportera den här kommentaren"
+    },
+    "errors": {
+      "starToggleFail": "Det gick inte att uppdatera stjärnstatus. Försök igen."
+    }
+  }
+}

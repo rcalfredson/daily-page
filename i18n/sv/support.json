@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Support",
+      "description": "Hur man tar kontakt, rapporterar problem, begär funktioner eller rum och stöttar Daily Page ekonomiskt."
+    },
+    "contact": {
+      "h1": "★ Jag skulle vilja ställa en fråga, rapportera ett problem eller begära en funktion.",
+      "p1": {
+        "before": "Om du föredrar att använda GitHub, kontrollera",
+        "link": "det här projektets problem",
+        "after": "och lägg till din röst. Pull-förfrågningar är naturligtvis också välkomna."
+      },
+      "p2": {
+        "before": "Alternativt,",
+        "link": "skicka ett e-postmeddelande",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Jag skulle vilja stödja detta projekt genom ett bidrag.",
+      "p1": {
+        "before": "Tack på förhand för att du finansierar detta projekt. Skicka betalningar säkert genom",
+        "paypal": "PayPal",
+        "middle": "eller, om du föredrar,",
+        "amazon": "beställ några påsar av leksakerna jag säljer på Amazon",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Jag skulle vilja be om ett nytt rum.",
+      "form": {
+        "nameLabel": "Rumsnamn",
+        "topicLabel": "Ämne (valfritt)",
+        "descriptionLabel": "Beskrivning",
+        "submit": "Skicka förfrågan",
+        "success": "Förfrågan har skickats!",
+        "errorGeneric": "Det gick inte att skicka begäran. Försök igen.",
+        "errorUnexpected": "Ett oväntat fel inträffade. Försök igen."
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "Dina inlägg",
+      "description": "Bläddra och sortera alla inlägg som du har skapat eller samarbetat med."
+    },
+    "header": {
+      "dashboardLink": "Din instrumentpanel",
+      "profileLink": "{username}s profil",
+      "allBlocks": "Alla inlägg"
+    },
+    "empty": "Inga inlägg ännu.",
+    "pagination": {
+      "prev": "← Föregående",
+      "next": "Nästa →"
+    },
+    "titleUser": "{username}s inlägg"
+  }
+}

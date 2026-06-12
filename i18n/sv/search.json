@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "Sök",
+      "description": "Sök efter offentliga inlägg."
+    },
+    "title": "Sök",
+    "placeholder": "Sök inlägg...",
+    "hint": "Skriv minst 2 tecken för att söka.",
+    "noResults": "Inga resultat hittades.",
+    "untitled": "Namnlös",
+    "votesTitle": "röster",
+    "pageLabel": "sida",
+    "filters": {
+      "inRoom": "I rummet"
+    },
+    "buttons": {
+      "search": "Sök",
+      "prev": "Föreg",
+      "next": "Nästa"
+    }
+  }
+}

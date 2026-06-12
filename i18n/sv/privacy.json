@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Sekretesspolicy",
+      "description": "Hur Daily Page samlar in, använder och skyddar dina data, på vanligt språk."
+    },
+    "title": "Sekretesspolicy",
+    "lastUpdated": "Senast uppdaterad: {date}",
+    "intro": {
+      "h2": "Introduktion",
+      "p1": "Daily Page (\"oss\", \"vi\" eller \"vår\") driver webbplatsen dailypage.org (hädanefter kallad \"Tjänsten\").",
+      "p2": "Denna sida informerar dig om våra policyer angående insamling, användning och avslöjande av personuppgifter när du använder vår tjänst."
+    },
+    "collection": {
+      "h2": "Insamling och användning av information",
+      "p": "Vi samlar in minimala personuppgifter för att förbättra och tillhandahålla vår tjänst. Detta inkluderar e-postadresser för kontohantering och innehåll som skickas frivilligt av användare."
+    },
+    "usage": {
+      "h2": "Dataanvändning",
+      "p": "Data som samlas in används endast för kontoautentisering, innehållsmoderering och för att förbättra användarupplevelsen."
+    },
+    "storage": {
+      "h2": "Datalagring och säkerhet",
+      "p": "Dina data lagras på ett säkert sätt och delas eller säljs aldrig till tredje part utan uttryckligt medgivande, förutom vad som krävs enligt lag."
+    },
+    "cookies": {
+      "h2": "Cookies",
+      "p": "Vi använder cookies enbart för sessionshantering och för att förbättra användarupplevelsen. Du kan inaktivera cookies via din webbläsarinställningar."
+    },
+    "rights": {
+      "h2": "Dina rättigheter",
+      "p": "Du kan begära radering eller ändring av dina personuppgifter när som helst genom att kontakta oss."
+    },
+    "changes": {
+      "h2": "Ändringar av denna integritetspolicy",
+      "p": "Vi kan komma att uppdatera vår integritetspolicy då och då. Ändringar kommer att publiceras på denna sida."
+    },
+    "contact": {
+      "h2": "Kontakta oss",
+      "p": "För frågor om denna integritetspolicy, kontakta oss på:",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}

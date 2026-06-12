@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Aviseringar",
+      "openMenu": "Öppna meddelanden",
+      "loading": "Laddar aviseringar...",
+      "error": "Det går inte att ladda aviseringar just nu.",
+      "empty": "Inga meddelanden än.",
+      "markRead": "Markera läst",
+      "fallbackActor": "Någon",
+      "fallbackBlockTitle": "ditt inlägg",
+      "item": {
+        "blockComment": "{actorUsername} kommenterade ditt inlägg \"{blockTitle}\".",
+        "commentReply": "{actorUsername} svarade på din kommentar om \"{blockTitle}\".",
+        "unknown": "Underrättelse"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Ny kommentar på \"{blockTitle}\"",
+        "heading": "Ny kommentar på ditt inlägg",
+        "headingWithName": "Hej {username},",
+        "body": "<strong>{actorUsername}</strong> kommenterade ditt inlägg <strong>{blockTitle}</strong>.",
+        "cta": "Se konversationen på Daily Page",
+        "fallbackActor": "Någon",
+        "fallbackBlockTitle": "ditt inlägg"
+      },
+      "commentReply": {
+        "subject": "Nytt svar på \"{blockTitle}\"",
+        "heading": "Nytt svar på din kommentar",
+        "headingWithName": "Hej {username},",
+        "body": "<strong>{actorUsername}</strong> svarade på din kommentar om <strong>{blockTitle}</strong>.",
+        "cta": "Se konversationen på Daily Page",
+        "fallbackActor": "Någon",
+        "fallbackBlockTitle": "ditt inlägg"
+      }
+    }
+  }
+}

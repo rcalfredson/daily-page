@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Alla stjärnmärkta rum",
+      "description": "En lista över alla rum du har stjärnmärkt."
+    },
+    "nav": {
+      "backToDashboard": "← Tillbaka till Dashboard"
+    },
+    "header": {
+      "title": "🌟 Alla dina stjärnmärkta rum 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Namnlöst rum",
+      "noDescription": "Ingen beskrivning."
+    },
+    "empty": {
+      "message": "Du har inte stjärnmärkt några rum än!"
+    }
+  }
+}

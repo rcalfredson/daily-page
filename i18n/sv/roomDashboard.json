@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "Utforska senaste och pågående inlägg i {roomName}."
+    },
+    "links": {
+      "exploreLabel": "Utforska:",
+      "allBlocks": "🗂️ Alla inlägg",
+      "browseByDate": "🗓️ Efter datum",
+      "bestOf": "🏅 Bäst",
+      "searchInRoom": "🔎 Sök"
+    },
+    "actions": {
+      "createBlock": "Skapa ett inlägg",
+      "starTitle": "Stjärnmärk detta rum",
+      "unstarTitle": "Avstjärna detta rum"
+    },
+    "tabs": {
+      "locked": "Låsta inlägg",
+      "inProgress": "Pågående inlägg"
+    },
+    "sections": {
+      "lockedHeader": "Låsta inlägg",
+      "inProgressHeader": "Pågående inlägg"
+    },
+    "editorial": {
+      "heading": "Utvalda guider",
+      "description": "Börja här med de utvalda guiderna som tagits fram för det här rummet.",
+      "roleNames": {
+        "pillar": "Huvudguide",
+        "companion": "Läsguide",
+        "texture": "Bakgrundsguide"
+      }
+    },
+    "empty": {
+      "noDescription": "Ingen beskrivning tillgänglig.",
+      "noLocked": "Inga låsta inlägg ännu! Automatisk låsning av inlägg efter 1 timmes inaktivitet.",
+      "noInProgress": "Inga pågående inlägg ännu! Dags att börja en.",
+      "noBlocks": "Inga inlägg än! Skapa den första och lämna dina spår. 😎"
+    }
+  }
+}

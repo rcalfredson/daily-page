@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Hoppsan! Något gick fel.",
+      "message": "Ett oväntat fel inträffade. Försök igen senare.",
+      "home": "Tillbaka till hemmet"
+    },
+    "notFound": {
+      "title": "404 - Sidan hittades inte",
+      "metaTitle": "Sidan hittades inte",
+      "message": "Tyvärr, vi kunde inte hitta sidan du letade efter.",
+      "homePrefix": "Du kan gå tillbaka till",
+      "homeLink": "hemsidan",
+      "roomsPrefix": "eller kolla in",
+      "roomsLink": "rumskatalog."
+    }
+  }
+}

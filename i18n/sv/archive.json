@@ -1,0 +1,77 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Arkiv",
+      "description": "Utforska hela arkivet per månad.",
+      "titleRoom": "Daily Page — Arkiv · {roomName}",
+      "descriptionRoom": "Utforska tidigare skrivande i {roomName}-rummet — månad för månad. Hoppa till valfritt datum för att se vad andra delat i det här utrymmet över tid."
+    },
+    "nav": {
+      "prev": "Föregående",
+      "next": "Nästa"
+    },
+    "title": "📚 Bläddra i arkiv",
+    "titleRoom": "📚 {roomName} — Arkiv",
+    "roomViewing": "Visningsarkiv för rum {roomName}",
+    "viewRoomLink": "Visa rum",
+    "noContent": "Inget innehåll tillgängligt ännu.",
+    "backToRoom": "← Tillbaka till rummets översikt",
+    "calendar": {
+      "meta": {
+        "description": "Se alla kreativa inlägg publicerade i {month} {year} – från snabba tankar till djupa reflektioner. Klicka på valfritt datum för att utforska vad som delades.",
+        "descriptionRoom": "Se den kreativa aktiviteten i {roomName} under {month} {year}. Välj ett datum för att utforska inläggen som delas den dagen."
+      },
+      "title": "📆 Arkiv för {month} {year}",
+      "prevLabel": "Arkiv för {month} {year}",
+      "nextLabel": "Arkiv för {month} {year}"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "Arkiv för {date}",
+        "titleRoom": "{roomName} — Arkiv för {date}",
+        "descriptionSite": "Utforska inläggen skrivna på {date} – från tysta anteckningar till vilda bekännelser.",
+        "descriptionRoom": "På {date} satte skribenter i {roomName}-rummet sina spår – bläddra igenom reflektioner, idéer och uttryck som delades den dagen."
+      },
+      "heading": "Arkiv för {date}",
+      "empty": "Inget innehåll hittades för detta datum.",
+      "labels": {
+        "createdBy": "Skapad av:",
+        "in": "i",
+        "on": "på {datetime}",
+        "unknownRoom": "Okänt rum"
+      },
+      "nav": {
+        "prevDay": "Föregående dag",
+        "nextDay": "Nästa dag"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — Alla inlägg",
+        "descriptionRoom": "Bläddra i alla inlägg som någonsin publicerats i {roomName}-rummet. Sortera efter datum, titel eller röster för att utforska dess historia."
+      },
+      "header": {
+        "allBlocks": "— Alla inlägg"
+      },
+      "sort": {
+        "label": "Sortera efter",
+        "options": {
+          "date": "Datum",
+          "title": "Titel",
+          "votes": "röster"
+        },
+        "submit": "Visa"
+      }
+    },
+    "pagination": {
+      "prev": "← Föregående",
+      "next": "Nästa →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "Daily Page för {time}"
+      },
+      "empty": "Vi kunde inte hitta några sidor under den tidsramen."
+    }
+  }
+}

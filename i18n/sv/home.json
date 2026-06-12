@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Populära inlägg från de senaste 24 timmarna",
+      "description": "Daily Page är en minimalistisk, indie-skrivsida där vem som helst kan lägga upp kreativa tankar, minnen eller experiment – ett inlägg i taget. Utforska nya idéer, gå med i rum och bidra med din röst."
+    },
+    "hero": {
+      "eyebrow": "En lugn plats för att skriva, läsa och återvända",
+      "title": "Välkommen till Daily Page!",
+      "subtitle": "Utforska de mest populära inläggen från de senaste 24 timmarna.",
+      "ctaPrefix": "Känner du dig inspirerad?",
+      "cta": "Gå med i ett rum",
+      "ctaSuffix": "och skapa ditt eget inlägg!"
+    },
+    "stats": {
+      "blocks": "Inlägg",
+      "rooms": "Rum",
+      "tags": "Taggar",
+      "collabsToday": "Samarbeten idag"
+    },
+    "activity": {
+      "title": "Live på Daily Page",
+      "subtitle": "Nya samtal och reaktioner, allt i en blick.",
+      "fallbackActor": "Någon",
+      "inRoom": "i",
+      "comments": {
+        "title": "Senaste kommentarer",
+        "more": "Sök diskussioner",
+        "commentVerb": "kommenterade",
+        "replyVerb": "svarade på",
+        "empty": "Inga nya kommentarer än. Nästa konversation kan börja med ditt inlägg."
+      },
+      "reactions": {
+        "title": "Senaste reaktioner",
+        "more": "Bläddra bland populära inlägg",
+        "empty": "Inga senaste reaktioner än. Ett bra inlägg skulle kunna väcka detta snabbt.",
+        "types": {
+          "heart": "hjärta",
+          "leaf": "reagerade med ett blad på",
+          "wow": "reagerade med wow till",
+          "laugh": "skrattade åt"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Utvalda rum",
+      "roomInfoDays": "Aktivitet under de senaste {days} dagarna: {blocks} inlägg, {votes} röster.",
+      "roomInfo24h": "Aktivitet under de senaste 24 timmarna: {blocks} inlägg, {votes} röster.",
+      "checkItOut": "Kolla in det",
+      "blockRibbon": "★ Utvalda inlägg",
+      "votes": "{n} röster",
+      "noContent": "(Inget innehåll tillhandahålls...)",
+      "viewBlock": "Visa inlägg"
+    },
+    "trendingTags": {
+      "title": "Trendande taggar",
+      "suffixDays": "(senaste {days} dagarna)",
+      "suffixAllTime": "(genom tiderna)",
+      "blocks": "{n} inlägg",
+      "votes": "{n} röster",
+      "empty": "Inga trendiga taggar ännu. Bli först med att tagga något coolt!"
+    },
+    "trendingBlocks": {
+      "title": "Populära inlägg",
+      "suffixDays": "(senaste {days} dagarna)",
+      "createdBy": "Skapad av:",
+      "in": "i",
+      "on": "på",
+      "unknownRoom": "Okänt rum",
+      "empty24h": "Inga inlägg ännu under de senaste 24 timmarna. Kom tillbaka snart, kompa!"
+    }
+  }
+}
