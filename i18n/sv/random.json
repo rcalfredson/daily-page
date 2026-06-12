@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Andra projekt",
+      "description": "Utforska baseballjournalföring, slumpmässiga skrivexperiment och andra sidoprojekt från Daily Page."
+    },
+    "title": "Andra projekt",
+    "tagline": "En mysig hörna för experiment och sidouppdrag.",
+    "links": {
+      "baseball": "📖 Baseballjournal",
+      "randomWriter": "🎲 Slumpskrivare"
+    },
+    "cta": {
+      "backToRooms": "Tillbaka till huvudrummen"
+    }
+  }
+}

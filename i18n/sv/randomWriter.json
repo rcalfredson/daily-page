@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — Slumpskrivare",
+      "description": "Generera en oändlig ström av slumpmässig pseudotext för nöje, inspiration eller kaos."
+    },
+    "title": "Slumpskrivare",
+    "buttons": {
+      "clear": "Klar",
+      "stop": "Sluta skriva",
+      "start": "Börja skriva"
+    }
+  }
+}

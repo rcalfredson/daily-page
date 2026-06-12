@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Skapa ett konto",
+      "description": "Registrera dig för Daily Page för att få tillgång till alla funktioner."
+    },
+    "header": {
+      "title": "Skapa ditt konto",
+      "subtitle": "Gå med i Daily Page för att börja skapa och dela ditt dagliga skrivande!"
+    },
+    "form": {
+      "email": {
+        "label": "E-post",
+        "placeholder": "Ange din e-postadress"
+      },
+      "username": {
+        "label": "Användarnamn",
+        "placeholder": "Ange ditt användarnamn"
+      },
+      "password": {
+        "label": "Lösenord",
+        "placeholder": "Ange ett lösenord"
+      },
+      "submit": "Registrera dig",
+      "feedback": {
+        "success": "Formuläret har skickats in!",
+        "successCreatedVerify": "Konto skapat framgångsrikt! Kontrollera din e-post för att verifiera ditt konto.",
+        "genericError": "Det gick inte att skapa konto. Försök igen.",
+        "unexpectedError": "Ett oväntat fel inträffade. Försök igen."
+      }
+    }
+  }
+}

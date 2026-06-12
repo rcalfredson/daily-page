@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Du)"
+    },
+    "meta": {
+      "title": "Redigera inlägg - {blockTitle}",
+      "titleFallback": "Redigera inlägg"
+    },
+    "errors": {
+      "imageUrlRequired": "Ange en bildadress.",
+      "notFound": "Inlägg hittades inte eller tillhör inte detta rum.",
+      "loadFailed": "Ett fel uppstod när inläggsredigeraren laddades.",
+      "updateTitleFailed": "Fel vid uppdatering av titel."
+    },
+    "roomInfo": {
+      "label": "Rum:"
+    },
+    "title": {
+      "placeholder": "Ange inläggets titel",
+      "editTooltip": "Redigera titel",
+      "lock": "Låsstolpe",
+      "delete": "Ta bort inlägg"
+    },
+    "description": {
+      "label": "Beskrivning",
+      "editTooltip": "Redigera beskrivning",
+      "placeholder": "Ange beskrivning",
+      "noDescriptionOwner": "Ingen beskrivning ännu...",
+      "noDescriptionViewer": "Ingen beskrivning tillhandahållen...",
+      "save": "Spara",
+      "cancel": "Avbryt",
+      "expand": "Expandera",
+      "collapse": "Kollaps",
+      "updateError": "Fel vid uppdatering av beskrivning."
+    },
+    "status": {
+      "lastBackup": "Senaste säkerhetskopiering: {datetime}",
+      "lastBackupUnknown": "Senaste säkerhetskopiering: Okänd"
+    },
+    "peers": {
+      "label": "Deltagare:"
+    },
+    "toasts": {
+      "blockLocked": "Det här inlägget har låsts!"
+    },
+    "editor": {
+      "placeholder": "Den tomma sidan väntar på din röst; skriva orädd."
+    },
+    "loading": {
+      "label": "Laddar",
+      "quote": "Låt världen brinna genom dig. Kasta prismaljuset, vitt varmt, på papper.<br>—Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "Du har inte skrivit något på 5 minuter. Klicka på OK för att fortsätta sessionen; annars kommer du att omdirigeras till arkivet.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Delningslänk",
+      "copyTooltip": "Kopiera till Urklipp",
+      "copied": "Kopierat!"
+    },
+    "toolbar": {
+      "insertImage": "Infoga bild",
+      "insertImageUrlPlaceholder": "Ange bildens URL",
+      "insertImageAltPlaceholder": "Alt text (valfritt)",
+      "insertImageConfirm": "Bekräfta",
+      "insertImageCancel": "Avbryt"
+    },
+    "buttons": {
+      "downloadFile": "Ladda ner fil"
+    },
+    "lockModal": {
+      "messageLine1": "Är du säker på att du vill låsa det här inlägget?",
+      "messageLine2": "Detta kommer att slutföra det och förhindra ytterligare redigering.",
+      "confirm": "Lås",
+      "cancel": "Avbryt",
+      "successToast": "Post låst framgångsrikt.",
+      "errorToast": "Fel vid låsning av stolpen."
+    },
+    "tags": {
+      "headerWithTags": "Taggar:",
+      "headerNoTags": "Inga taggar än! Lägg till några:",
+      "updateError": "Fel vid uppdatering av taggar."
+    },
+    "fullBlock": {
+      "headingPrefix": "Tyvärr; inlägget \"{blockTitle}\" är nu",
+      "headingStatus": "fullt upptagen.",
+      "retryPrefix": "Snälla",
+      "retryLink": "prova ett annat inlägg",
+      "retrySuffix": "eller kom tillbaka en annan gång.",
+      "consolationPrefix": "Medan du väntar, läs gärna",
+      "consolationBestOf": "några av våra favoritinlägg",
+      "consolationMiddle": "eller för att bläddra",
+      "consolationArchive": "arkivet."
+    }
+  }
+}

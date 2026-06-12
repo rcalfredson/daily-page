@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Hem",
+    "rooms": "Rum",
+    "tags": "Taggar",
+    "archive": "Arkiv",
+    "search": "Sök",
+    "bestOf": "Bäst",
+    "about": "Om",
+    "support": "Support",
+    "otherProjects": "Andra projekt",
+    "auth": {
+      "welcomePrefix": "Välkommen,",
+      "welcomeFallbackUser": "dig",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "Översikt"
+  }
+}

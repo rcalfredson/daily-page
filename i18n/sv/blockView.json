@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Inlägg - {blockTitle}",
+      "titleFallback": "Inlägg"
+    },
+    "labels": {
+      "room": "Rum",
+      "author": "Författare",
+      "created": "Skapad",
+      "unknownAuthor": "Anonym",
+      "authorAvatarAlt": "{username}s avatar",
+      "viewAuthorProfile": "Visa {username}s profil",
+      "lang": "Översättningar:",
+      "available": "tillgänglig"
+    },
+    "buttons": {
+      "edit": "Redigera",
+      "deleteBlock": "Ta bort inlägg",
+      "share": "Dela",
+      "flagContent": "Anmäl innehåll"
+    },
+    "description": {
+      "label": "Beskrivning",
+      "none": "Ingen beskrivning tillhandahållen...",
+      "expand": "Expandera",
+      "collapse": "Kollaps"
+    },
+    "editorial": {
+      "heading": "Läsguide",
+      "roleLabel": "Lästyp",
+      "clusterLabel": "Guide",
+      "sequence": "Del {sequence}",
+      "primaryPillarHeading": "Börja här",
+      "relatedHeading": "Fortsätt läsa",
+      "clusterHeading": "Mer i den här guiden",
+      "expandSection": "Visa {count} mer",
+      "collapseSection": "Visa mindre",
+      "roleNames": {
+        "pillar": "Huvudguide",
+        "companion": "Djupt dyk",
+        "texture": "Bakgrund"
+      }
+    },
+    "comments": {
+      "heading": "Kommentarer",
+      "count": "{count} kommentarer",
+      "empty": "Ingen har svarat än. Kommentarer kommer att dyka upp här när konversationen startar.",
+      "composer": {
+        "label": "Lägg till en kommentar",
+        "placeholder": "Skriv en kommentar...",
+        "submit": "Skriv kommentar",
+        "submitting": "Postar...",
+        "success": "Kommentar postad.",
+        "error": "Det går inte att skriva din kommentar just nu.",
+        "loginPrompt": "Logga in för att gå med i konversationen.",
+        "loginCta": "Logga in för att kommentera",
+        "verifyPrompt": "Verifiera din e-postadress innan du postar en kommentar.",
+        "verifyCta": "Verifiera e-post"
+      },
+      "sort": {
+        "label": "Sortera",
+        "oldestFirst": "Äldsta först",
+        "newestFirst": "Nyaste först"
+      },
+      "by": "Av",
+      "unknownAuthor": "Okänd",
+      "reply": {
+        "action": "Svar",
+        "label": "Lägg till ett svar",
+        "placeholder": "Skriv ett svar...",
+        "submit": "Skicka svar",
+        "submitting": "Postar...",
+        "success": "Svar postat.",
+        "error": "Det går inte att skicka ditt svar just nu.",
+        "cancel": "Avbryt",
+        "loginPrompt": "Logga in för att svara."
+      },
+      "manage": {
+        "edited": "redigerad",
+        "editAction": "Redigera",
+        "deleteAction": "Ta bort",
+        "deleteConfirm": "Ta bort den här kommentaren? Detta tar också bort alla svar under den.",
+        "deleteSuccess": "Kommentar raderad.",
+        "deleteError": "Det går inte att ta bort den här kommentaren just nu.",
+        "forbidden": "Du kan bara hantera dina egna kommentarer.",
+        "edit": {
+          "label": "Redigera kommentar",
+          "save": "Spara",
+          "saving": "Sparar...",
+          "cancel": "Avbryt",
+          "success": "Kommentar uppdaterad.",
+          "error": "Det går inte att uppdatera den här kommentaren just nu."
+        }
+      },
+      "report": {
+        "action": "Rapport",
+        "pending": "Rapportering...",
+        "success": "Kommentar rapporterad.",
+        "error": "Det går inte att rapportera den här kommentaren just nu.",
+        "ownError": "Du kan inte rapportera din egen kommentar.",
+        "hidden": "Kommentar dold efter rapport.",
+        "reported": "rapporterad"
+      },
+      "deepLink": {
+        "focused": "Länkad kommentar",
+        "unavailable": "Den länkade kommentaren är inte längre tillgänglig."
+      },
+      "loadMore": "Ladda fler kommentarer",
+      "loading": "Laddar...",
+      "loadError": "Det går inte att ladda fler kommentarer just nu."
+    },
+    "share": {
+      "title": "Dela detta inlägg",
+      "shareOn": "Dela på:",
+      "nativeText": "Kolla in det här inlägget: {title}",
+      "alt": {
+        "facebook": "Facebook-logotyp",
+        "reddit": "Reddit-logotyp",
+        "whatsapp": "WhatsApp-logotyp",
+        "twitter": "Twitter-logotyp"
+      }
+    },
+    "errors": {
+      "notFound": "Inlägg hittades inte eller tillhör inte detta rum.",
+      "loadFailed": "Fel vid laddning av inläggsvy."
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Rapportera olämpligt innehåll",
+    "fields": {
+      "reason": {
+        "label": "Anledning",
+        "options": {
+          "spam": "Spam",
+          "offensive": "Stötande (hatiskt språk eller förtal)",
+          "inappropriate": "Olämpligt (nakenhet, grafiskt innehåll, etc.)",
+          "other": "Övrigt"
+        }
+      },
+      "details": {
+        "label": "Detaljer (valfritt)",
+        "placeholder": "Beskriv vad du såg..."
+      }
+    },
+    "buttons": {
+      "submit": "Skicka rapport",
+      "cancel": "Avbryt"
+    },
+    "toasts": {
+      "success": "Rapport skickad – tack!",
+      "failed": "Det gick inte att skicka rapporten."
+    }
+  }
+}

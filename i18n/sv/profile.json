@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "{username}s profil",
+      "descriptionUser": "Visa {username}s senaste aktivitet, stjärnmärkta rum och statistik."
+    },
+    "profile": {
+      "profilePicAlt": "Profilbild",
+      "noBio": "(Ingen bio tillgänglig.)"
+    },
+    "activity": {
+      "title": "Senaste aktivitet",
+      "updatedOn": "Uppdaterad på {date}",
+      "none": "Ingen senaste aktivitet.",
+      "viewAllBlocks": "Visa alla inlägg"
+    },
+    "starredRooms": {
+      "title": "Stjärnmärkta rum",
+      "none": "Inga stjärnmärkta rum än.",
+      "unnamedRoom": "Namnlöst rum"
+    },
+    "stats": {
+      "title": "Användarstatistik",
+      "totalBlocks": "Totalt antal inlägg skapade",
+      "collaborations": "Samarbeten",
+      "daysActive": "dagar aktiv"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "Verifiera e-post",
+      "description": "Verifiera din e-postadress för Daily Page."
+    },
+    "header": {
+      "title": "Verifierar din e-post..."
+    },
+    "status": {
+      "checking": "Kontrollerar token, vänligen vänta...",
+      "missingToken": "Verifieringstoken saknas eller är ogiltig.",
+      "genericFailure": "Verifiering misslyckades.",
+      "unexpectedError": "Ett oväntat fel inträffade.",
+      "success": "Ditt konto har verifierats framgångsrikt!",
+      "invalidOrExpired": "Ogiltig eller utgången verifieringstoken."
+    },
+    "verificationMsg": {
+      "subject": "Verifiera ditt Daily Page-konto ✨",
+      "heading": "Välkommen till Daily Page, {username}!",
+      "body": "Vänligen verifiera din e-post genom att klicka nedan:",
+      "cta": "Verifiera e-postadress",
+      "expires": "Den här länken upphör att gälla om {hours} timmar."
+    }
+  }
+}

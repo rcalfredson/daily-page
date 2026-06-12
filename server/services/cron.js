@@ -18,7 +18,7 @@ import {
   getRecentReactionActivity
 } from '../db/homeActivityService.js';
 
-const HOME_LANGS = ['en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr', 'nl'];
+const HOME_LANGS = ['en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr', 'nl', 'sv'];
 
 async function warmHomeCache({ preferredLang }) {
   // Settled so one failure doesn’t prevent other keys from warming
@@ -76,4 +76,5 @@ export function startJobs() {
   setTimeout(() => warmHomeCache({ preferredLang: 'hi' }).catch(console.error), 7_000);
   setTimeout(() => warmHomeCache({ preferredLang: 'tr' }).catch(console.error), 7_500);
   setTimeout(() => warmHomeCache({ preferredLang: 'nl' }).catch(console.error), 8_000);
+  setTimeout(() => warmHomeCache({ preferredLang: 'sv' }).catch(console.error), 8_500);
 }

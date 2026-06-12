@@ -1,0 +1,67 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Kontosäkerhet",
+      "description": "Hantera ditt Daily Page-lösenord och tvåfaktorsautentisering."
+    },
+    "backToDashboard": "Tillbaka till instrumentpanelen",
+    "heading": "Kontosäkerhet",
+    "subheading": "Håll ditt konto skyddat med ett starkt lösenord och en autentiseringsapp.",
+    "password": {
+      "title": "Ändra lösenord",
+      "description": "Använd ett unikt lösenord med minst 8 tecken.",
+      "current": {
+        "label": "Aktuellt lösenord"
+      },
+      "new": {
+        "label": "Nytt lösenord"
+      },
+      "submit": "Uppdatera lösenord"
+    },
+    "twoFactor": {
+      "title": "tvåfaktorsautentisering",
+      "statusOn": "aktiverad",
+      "statusOff": "Av",
+      "description": "Lägg till en engångskod från en autentiseringsapp efter ditt lösenord när du loggar in.",
+      "currentPassword": {
+        "label": "Aktuellt lösenord"
+      },
+      "startSetup": "Konfigurera Authenticator-appen",
+      "qrAlt": "Authenticator app QR-kod",
+      "manualKey": "Manuell inställningsnyckel",
+      "code": {
+        "label": "6-siffrig kod"
+      },
+      "enable": "Aktivera 2FA",
+      "disableCode": {
+        "label": "Autentiseringskod"
+      },
+      "disable": "Inaktivera 2FA"
+    },
+    "recoveryCodes": {
+      "title": "Spara dina återställningskoder",
+      "description": "Använd en av dessa engångskoder för att logga in om du förlorar åtkomsten till din autentiseringsapp.",
+      "regenerateDescription": "Generera en ny uppsättning återställningskoder om du tappade bort den tidigare uppsättningen. Detta ogiltigförklarar alla gamla återställningskoder.",
+      "regenerate": "Generera nya återställningskoder",
+      "warning": "Förvara dem på ett säkert ställe. De kommer inte att visas igen."
+    },
+    "feedback": {
+      "passwordChanged": "Ditt lösenord har uppdaterats.",
+      "setupReady": "Skanna QR-koden och ange sedan den 6-siffriga koden för att avsluta installationen.",
+      "twoFactorEnabled": "Tvåfaktorsautentisering är nu aktiverad.",
+      "twoFactorDisabled": "Tvåfaktorsautentisering är nu inaktiverad.",
+      "recoveryCodesRegenerated": "Dina återställningskoder har återskapats. Spara de nya koderna nu.",
+      "missingFields": "Vänligen fyll i alla obligatoriska fält.",
+      "missingCurrentPassword": "Ange ditt nuvarande lösenord för att fortsätta.",
+      "passwordTooShort": "Ditt nya lösenord måste bestå av minst 8 tecken.",
+      "invalidCurrentPassword": "Det aktuella lösenordet matchade inte.",
+      "missingCode": "Ange den sexsiffriga koden från din autentiseringsapp.",
+      "invalidCode": "Den koden fungerade inte. Försök igen.",
+      "noPendingSetup": "Starta installationen igen innan du anger en kod.",
+      "setupExpired": "Den installationssessionen löpte ut. Börja konfigureringen igen för att få en ny QR-kod.",
+      "twoFactorNotEnabled": "Tvåfaktorsautentisering är inte aktiverad för det här kontot.",
+      "genericError": "Något gick fel. Försök igen.",
+      "unexpectedError": "Ett oväntat fel inträffade. Försök igen."
+    }
+  }
+}

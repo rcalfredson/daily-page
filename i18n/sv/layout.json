@@ -1,0 +1,50 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "Välkommen, användare!",
+    "logout": "Logga ut",
+    "login": "Logga in / Registrera dig",
+    "language": "Språk",
+    "openMenu": "Öppna huvudmenyn",
+    "closeMenu": "Stäng huvudmenyn",
+    "privacy": "Sekretesspolicy",
+    "uiFallbackNotice": "{requested} är inte översatt än. Visar {current} för tillfället.",
+    "copyButton": {
+      "copy": "Kopiera",
+      "copied": "Kopierat!"
+    },
+    "copyright": "© {year}",
+    "languages": {
+      "en": "engelska",
+      "es": "Español",
+      "fr": "Français",
+      "ru": "Русский",
+      "id": "Bahasa Indonesia",
+      "de": "Deutsch",
+      "it": "Italiano",
+      "pt": "Português",
+      "zh": "中文",
+      "ja": "日本語",
+      "ko": "한국어",
+      "ar": "العربية",
+      "hi": "हिन्दी",
+      "tr": "Türkçe",
+      "nl": "nederländska",
+      "sv": "Svenska",
+      "no": "Norsk",
+      "da": "Dansk",
+      "fi": "Suomi",
+      "pl": "Polski",
+      "cs": "Čeština",
+      "el": "Ελληνικά",
+      "he": "Hebreiska",
+      "th": "ไทย",
+      "vi": "Tiếng Việt"
+    },
+    "theme": {
+      "label": "Tema",
+      "toggleToDark": "Växla till mörkt läge",
+      "toggleToLight": "Växla till ljusläge"
+    }
+  }
+}

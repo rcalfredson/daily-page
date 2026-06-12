@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Bästa av Daily Page",
+      "description": "De mest älskade inläggen på Daily Page – roliga, ärliga, poetiska eller helt enkelt konstiga. Se vad som stack ut under den senaste dagen, veckan, månaden och därefter.",
+      "titleRoom": "Det bästa av {roomName}",
+      "descriptionRoom": "Upptäck enastående inlägg från {roomName}-rummet – de som läsarna älskade mest under de senaste 24 timmarna, 7 dagarna, 30 dagarna och hela tiden."
+    },
+    "heading": "🏆 Bästa av Daily Page",
+    "headingRoomPrefix": "🏆 Bäst i ",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 timmar",
+      "7d": "🚀 7 dagar",
+      "30d": "🌕 30 dagar",
+      "all": "👑 Genom tiderna"
+    },
+    "labels": {
+      "createdBy": "Skapad av:",
+      "inRoom": "i",
+      "onDate": "på {date}",
+      "unknownRoom": "Okänt rum",
+      "noBlocks": "Inga inlägg hittades.",
+      "viewRoom": "Visa rum"
+    }
+  }
+}

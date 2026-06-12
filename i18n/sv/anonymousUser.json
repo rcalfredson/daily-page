@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "Den anonyme vandraren",
+      "description": "Ingen profil. Inget förflutet. Bara vibbar."
+    },
+    "ascii": {
+      "ariaLabel": "ASCII konst av nyckfull varelse med citat"
+    },
+    "header": {
+      "title": "Den anonyma"
+    },
+    "body": {
+      "line1": "Du har snubblat in i tomrummet. Det finns inget att se här -",
+      "line2": "bara en vandrande ande utan en historia."
+    },
+    "buttons": {
+      "home": "← Återvänd hem",
+      "signup": "Skapa en identitet"
+    }
+  }
+}
