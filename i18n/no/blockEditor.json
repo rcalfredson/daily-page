@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Du)"
+    },
+    "meta": {
+      "title": "Rediger innlegg - {blockTitle}",
+      "titleFallback": "Rediger innlegg"
+    },
+    "errors": {
+      "imageUrlRequired": "Vennligst skriv inn en bilde-URL.",
+      "notFound": "Finner ikke innlegget eller tilhører ikke dette rommet.",
+      "loadFailed": "Det oppsto en feil under innlasting av innleggsredigeringsprogrammet.",
+      "updateTitleFailed": "Feil under oppdatering av tittel."
+    },
+    "roomInfo": {
+      "label": "Rom:"
+    },
+    "title": {
+      "placeholder": "Skriv inn innleggets tittel",
+      "editTooltip": "Rediger tittel",
+      "lock": "Lås post",
+      "delete": "Slett innlegg"
+    },
+    "description": {
+      "label": "Beskrivelse",
+      "editTooltip": "Rediger beskrivelse",
+      "placeholder": "Skriv inn beskrivelse",
+      "noDescriptionOwner": "Ingen beskrivelse ennå...",
+      "noDescriptionViewer": "Ingen beskrivelse oppgitt...",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "expand": "Vis mer",
+      "collapse": "Vis mindre",
+      "updateError": "Feil under oppdatering av beskrivelse."
+    },
+    "status": {
+      "lastBackup": "Siste sikkerhetskopi: {datetime}",
+      "lastBackupUnknown": "Siste sikkerhetskopi: Ukjent"
+    },
+    "peers": {
+      "label": "andre her:"
+    },
+    "toasts": {
+      "blockLocked": "Dette innlegget er låst!"
+    },
+    "editor": {
+      "placeholder": "Den tomme siden venter på stemmen din; skriv fryktløst."
+    },
+    "loading": {
+      "label": "Laster",
+      "quote": "La verden brenne gjennom deg. Kast prismelyset, hvitt varmt, på papir.<br>—Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "Du har ikke skrevet noe på 5 minutter. Klikk OK for å fortsette økten; ellers blir du omdirigert til arkivet.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Delingslenke",
+      "copyTooltip": "Kopier til utklippstavlen",
+      "copied": "Kopiert!"
+    },
+    "toolbar": {
+      "insertImage": "Sett inn bilde",
+      "insertImageUrlPlaceholder": "Skriv inn bilde-URL",
+      "insertImageAltPlaceholder": "Alt tekst (valgfritt)",
+      "insertImageConfirm": "Bekreft",
+      "insertImageCancel": "Avbryt"
+    },
+    "buttons": {
+      "downloadFile": "Last ned fil"
+    },
+    "lockModal": {
+      "messageLine1": "Er du sikker på at du vil låse dette innlegget?",
+      "messageLine2": "Dette vil fullføre det og forhindre ytterligere redigering.",
+      "confirm": "Lås",
+      "cancel": "Avbryt",
+      "successToast": "Innlegget ble låst.",
+      "errorToast": "Feil ved låsing av post."
+    },
+    "tags": {
+      "headerWithTags": "Tagger:",
+      "headerNoTags": "Ingen tagger ennå! Legg til noen:",
+      "updateError": "Feil under oppdatering av tagger."
+    },
+    "fullBlock": {
+      "headingPrefix": "Beklager; innlegget \"{blockTitle}\" er nå",
+      "headingStatus": "fullt okkupert.",
+      "retryPrefix": "Vennligst",
+      "retryLink": "prøv et annet innlegg",
+      "retrySuffix": "eller kom tilbake en annen gang.",
+      "consolationPrefix": "Mens du venter, les gjerne",
+      "consolationBestOf": "noen av favorittinnleggene våre",
+      "consolationMiddle": "eller for å bla",
+      "consolationArchive": "arkivet."
+    }
+  }
+}

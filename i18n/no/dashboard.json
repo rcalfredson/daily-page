@@ -1,0 +1,57 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Dashbord",
+      "description": "Ditt Daily Page dashbord og kontooversikt."
+    },
+    "profile": {
+      "profilePicAlt": "Profilbilde",
+      "noBio": "Ingen bio ennå. Klikk \"Rediger\" for å legge til en!",
+      "editBio": "Rediger bio",
+      "bioPlaceholder": "Skriv inn din bio her",
+      "save": "Lagre",
+      "cancel": "Avbryt"
+    },
+    "activity": {
+      "title": "Nylig aktivitet",
+      "none": "Ingen nylig aktivitet.",
+      "updatedOn": "Oppdatert på {date}",
+      "viewAllBlocks": "Vis alle innlegg"
+    },
+    "drafts": {
+      "title": "Fortsett å skrive",
+      "none": "Ingen åpne utkast.",
+      "updatedOn": "Oppdatert på {date}",
+      "unlisted": "Unotert",
+      "viewAll": "Vis alle innlegg"
+    },
+    "streak": {
+      "title": "Skrivestrek",
+      "line": "{days} dager på rad! Fortsett!"
+    },
+    "starredRooms": {
+      "title": "Stjernemerkede rom",
+      "none": "Du har ikke stjernemerket noen rom ennå. Begynn å utforske for å finne dine favoritter!",
+      "viewAll": "Se alle stjernede rom",
+      "unnamedRoom": "Rom uten navn"
+    },
+    "security": {
+      "title": "Kontosikkerhet",
+      "summary": "Endre passordet ditt og administrer tofaktorautentisering.",
+      "manage": "Administrer sikkerhet"
+    },
+    "stats": {
+      "title": "Din statistikk",
+      "totalBlocks": "Totalt antall innlegg opprettet",
+      "collaborations": "Samarbeid",
+      "votesGiven": "Stemmer gitt",
+      "daysActive": "Aktive dager",
+      "viewDetailed": "Se detaljert statistikk 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Kunne ikke laste opp profilbilde. Vennligst prøv igjen.",
+      "uploadUnexpected": "Det oppstod en uventet feil. Vennligst prøv igjen.",
+      "bioUpdateFailed": "Feil under oppdatering av bio. Vennligst prøv igjen."
+    }
+  }
+}

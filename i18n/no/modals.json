@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Logg inn",
+      "message": "Du må være pålogget for å fortsette.",
+      "messageWithAction": "Du må være logget på {action}.",
+      "cta": "Logg inn"
+    },
+    "actions": {
+      "voteOnBlock": "stemme på et innlegg",
+      "starRoom": "stjerne dette rommet",
+      "reactToBlock": "reagere på dette innlegget",
+      "commentOnBlock": "kommentere dette innlegget",
+      "reportComment": "rapporter denne kommentaren"
+    },
+    "errors": {
+      "starToggleFail": "Kunne ikke oppdatere stjernestatus. Vennligst prøv igjen."
+    }
+  }
+}

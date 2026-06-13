@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Innlegg - {blockTitle}",
+      "titleFallback": "Innlegg"
+    },
+    "labels": {
+      "room": "Rom",
+      "author": "Forfatter",
+      "created": "Opprettet",
+      "unknownAuthor": "Anonym",
+      "authorAvatarAlt": "{username} sin avatar",
+      "viewAuthorProfile": "Se {username}s profil",
+      "lang": "Oversettelser:",
+      "available": "tilgjengelig"
+    },
+    "buttons": {
+      "edit": "Rediger",
+      "deleteBlock": "Slett innlegg",
+      "share": "Del",
+      "flagContent": "Flagg innhold"
+    },
+    "description": {
+      "label": "Beskrivelse",
+      "none": "Ingen beskrivelse oppgitt...",
+      "expand": "Vis mer",
+      "collapse": "Vis mindre"
+    },
+    "editorial": {
+      "heading": "Leseveiledning",
+      "roleLabel": "Lesetype",
+      "clusterLabel": "Guide",
+      "sequence": "Del {sequence}",
+      "primaryPillarHeading": "Start her",
+      "relatedHeading": "Fortsett å lese",
+      "clusterHeading": "Mer i denne guiden",
+      "expandSection": "Vis {count} mer",
+      "collapseSection": "Vis mindre",
+      "roleNames": {
+        "pillar": "Kjerneguide",
+        "companion": "Dypdykk",
+        "texture": "Bakgrunn"
+      }
+    },
+    "comments": {
+      "heading": "Kommentarer",
+      "count": "{count} kommentarer",
+      "empty": "Ingen har svart ennå. Kommentarer vises her når samtalen starter.",
+      "composer": {
+        "label": "Legg til en kommentar",
+        "placeholder": "Skriv en kommentar...",
+        "submit": "Legg inn kommentar",
+        "submitting": "Legger ut...",
+        "success": "Kommentar lagt ut.",
+        "error": "Kan ikke legge inn kommentaren din akkurat nå.",
+        "loginPrompt": "Logg inn for å bli med i samtalen.",
+        "loginCta": "Logg inn for å kommentere",
+        "verifyPrompt": "Bekreft e-posten din før du legger inn en kommentar.",
+        "verifyCta": "Bekreft e-post"
+      },
+      "sort": {
+        "label": "Sorter",
+        "oldestFirst": "Eldste først",
+        "newestFirst": "Nyeste først"
+      },
+      "by": "Ved",
+      "unknownAuthor": "Ukjent",
+      "reply": {
+        "action": "Svar",
+        "label": "Legg til et svar",
+        "placeholder": "Skriv et svar...",
+        "submit": "Legg inn svar",
+        "submitting": "Legger ut...",
+        "success": "Svar lagt ut.",
+        "error": "Kan ikke legge ut svaret ditt akkurat nå.",
+        "cancel": "Avbryt",
+        "loginPrompt": "Logg inn for å svare."
+      },
+      "manage": {
+        "edited": "Redigert",
+        "editAction": "Rediger",
+        "deleteAction": "Slett",
+        "deleteConfirm": "Vil du slette denne kommentaren? Dette vil også fjerne eventuelle svar under den.",
+        "deleteSuccess": "Kommentar slettet.",
+        "deleteError": "Kan ikke slette denne kommentaren akkurat nå.",
+        "forbidden": "Du kan bare administrere dine egne kommentarer.",
+        "edit": {
+          "label": "Rediger kommentar",
+          "save": "Lagre",
+          "saving": "Lagrer...",
+          "cancel": "Avbryt",
+          "success": "Kommentar oppdatert.",
+          "error": "Kan ikke oppdatere denne kommentaren akkurat nå."
+        }
+      },
+      "report": {
+        "action": "Rapporter",
+        "pending": "Rapporterer...",
+        "success": "Kommentar rapportert.",
+        "error": "Kan ikke rapportere denne kommentaren akkurat nå.",
+        "ownError": "Du kan ikke rapportere din egen kommentar.",
+        "hidden": "Kommentar skjult etter rapport.",
+        "reported": "Rapportert"
+      },
+      "deepLink": {
+        "focused": "Koblet kommentar",
+        "unavailable": "Den koblede kommentaren er ikke lenger tilgjengelig."
+      },
+      "loadMore": "Last inn flere kommentarer",
+      "loading": "Laster inn...",
+      "loadError": "Kan ikke laste inn flere kommentarer akkurat nå."
+    },
+    "share": {
+      "title": "Del dette innlegget",
+      "shareOn": "Del på:",
+      "nativeText": "Sjekk ut dette innlegget: {title}",
+      "alt": {
+        "facebook": "Facebook-logo",
+        "reddit": "Reddit-logo",
+        "whatsapp": "WhatsApp-logo",
+        "twitter": "Twitter-logo"
+      }
+    },
+    "errors": {
+      "notFound": "Finner ikke innlegget eller tilhører ikke dette rommet.",
+      "loadFailed": "Feil ved innlasting av innleggsvisning."
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "{username} sin profil",
+      "descriptionUser": "Se {username}s nylige aktivitet, stjernemerkede rom og statistikk."
+    },
+    "profile": {
+      "profilePicAlt": "Profilbilde",
+      "noBio": "(Ingen bio tilgjengelig.)"
+    },
+    "activity": {
+      "title": "Nylig aktivitet",
+      "updatedOn": "Oppdatert på {date}",
+      "none": "Ingen nylig aktivitet.",
+      "viewAllBlocks": "Vis alle innlegg"
+    },
+    "starredRooms": {
+      "title": "Stjernemerkede rom",
+      "none": "Ingen stjernemerkede rom ennå.",
+      "unnamedRoom": "Rom uten navn"
+    },
+    "stats": {
+      "title": "Brukerstatistikk",
+      "totalBlocks": "Totalt antall innlegg opprettet",
+      "collaborations": "Samarbeid",
+      "daysActive": "Aktive dager"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "Utkast"
+    },
+    "deleteModal": {
+      "title": "Vil du slette innlegget?",
+      "message": "Denne handlingen kan ikke angres.",
+      "confirm": "Slett",
+      "cancel": "Avbryt",
+      "closeAriaLabel": "Lukke"
+    },
+    "toasts": {
+      "deleteSuccess": "Innlegget ble slettet!",
+      "deleteFailed": "Kunne ikke slette innlegget."
+    }
+  }
+}

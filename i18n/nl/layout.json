@@ -45,6 +45,11 @@
       "label": "Thema",
       "toggleToDark": "Schakel over naar de donkere modus",
       "toggleToLight": "Schakel over naar de lichtmodus"
+    },
+    "blockImages": {
+      "preview": "Afbeeldingsvoorbeeld",
+      "close": "Afbeeldingsvoorbeeld sluiten",
+      "open": "Afbeeldingsvoorbeeld openen"
     }
   }
 }

@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Romkatalog",
+      "description": "Hvert rom er en døråpning til en annen verden. Gå inn, del historien din og bli med andre i å bygge noe vakkert."
+    },
+    "eyebrow": "Finn hjørnet ditt",
+    "heading": "Romkatalog",
+    "intro": "Start med rommene som føles levende akkurat nå, eller vandre etter emne til noe klikker. Hvert rom er en annen skrivemelding, fandom eller delt besettelse som venter på stemmen din.",
+    "empty": "Ingen rom er tilgjengelig for øyeblikket. Kom tilbake senere!",
+    "jumpToActive": "Se aktive rom",
+    "jumpToTopics": "Bla etter emne",
+    "statsLabel": "Høydepunkter i romkatalogen",
+    "liveNow": "Lev nå",
+    "recentlyActive": "Nylig aktiv",
+    "recentlyActiveSubtitle": "Den raskeste måten å finne et rom med folk i akkurat nå.",
+    "browseByTopic": "Bla etter emne",
+    "topicSubtitle": "Åpne et emne for å utforske rommene.",
+    "roomCount": "{count} rom",
+    "stats": {
+      "rooms": "rom å utforske",
+      "topics": "emnegrupper",
+      "active": "aktive valg"
+    },
+    "activeUsers": "Aktive brukere: {count}",
+    "visitRoom": "Besøk rommet",
+    "close": "Lukke",
+    "noTitle": "Ingen tittel tilgjengelig",
+    "noDescription": "Ingen beskrivelse tilgjengelig"
+  }
+}

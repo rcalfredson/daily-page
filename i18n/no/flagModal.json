@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Rapporter upassende innhold",
+    "fields": {
+      "reason": {
+        "label": "Grunn",
+        "options": {
+          "spam": "Spam",
+          "offensive": "Støtende (hatefullt språk eller skjellsord)",
+          "inappropriate": "Upassende (nakenhet, grafisk innhold osv.)",
+          "other": "Annet"
+        }
+      },
+      "details": {
+        "label": "Detaljer (valgfritt)",
+        "placeholder": "Beskriv hva du så..."
+      }
+    },
+    "buttons": {
+      "submit": "Send inn rapport",
+      "cancel": "Avbryt"
+    },
+    "toasts": {
+      "success": "Rapport sendt inn – takk!",
+      "failed": "Kunne ikke sende inn rapporten."
+    }
+  }
+}

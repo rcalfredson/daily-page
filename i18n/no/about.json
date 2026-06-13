@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — Omtrent",
+      "description": "Hva Daily Page er, hvordan det fungerer, og hvorfor det ble bygget som et tregere, snillere hjørne av nettet."
+    },
+    "title": "Om Daily Page",
+    "tagline": "Mat tankene dine, ikke maten din.",
+    "mission": {
+      "h2": "Oppdrag",
+      "p1": "Et uavhengig skrivelaboratorium – startet i stuen min, drevet av lesernes nysgjerrighet.",
+      "p2": "Den er bygd for ikke å råtne hjernen din, men for å gi den næring: et sted hvor du kan skrive sakte, anonymt hvis du vil, og aldri bekymre deg for å imponere noen."
+    },
+    "how": {
+      "h2": "Hvordan det fungerer",
+      "features": {
+        "rooms": {
+          "label": "Rom",
+          "text": "er emnesiloer (tenk \"subreddit, men vennligere\")."
+        },
+        "blocks": {
+          "label": "Innlegg",
+          "text": "er samarbeidende skriverom – hvem som helst (selv \"anonyme\") kan opprette en, redigere den til den er låst og stemme på andre."
+        },
+        "privacy": {
+          "label": "Personvern og deling",
+          "text": "betyr at offentlige innlegg vises i rommets feed. Uoppførte utkast skjules til de er låst, men du får en delingslink for å invitere venner."
+        },
+        "markdown": {
+          "label": "Markdown og media",
+          "text": "lar deg skrive inn markdown, legge inn bilder og samredigere som i Google Dokumenter."
+        },
+        "trends": {
+          "label": "Trender og etiketter",
+          "text": "lar deg merke innlegget ditt, spore tag-trender og oppdage toppinnhold (7 d / 30 d / hele tiden)."
+        },
+        "streaks": {
+          "label": "Streker",
+          "text": "hold din daglige skriverekke i live – ditt beste insentiv til å dukke opp hver dag."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Hvordan vi kom hit",
+      "p1": "I 2018 bygde jeg en datebasert wiki for \"dagens side\" og så noen få introspektive forfattere gjøre den til et utløp for tankene sine. Den ble aldri stor - men den plantet et frø.",
+      "p2": "Spol frem til nå, og Daily Page er frøet som vokser inn i mange rom – et stille sosialt nett for introverte, idealister og alle som ønsker et lavere tempo."
+    },
+    "next": {
+      "h2": "Hva er neste",
+      "p1": "Vi har akkurat kommet i gang: rikere innbygginger, dypere brukerstatistikk, omdømmepoengoversikter og flere måter å belønne gjennomtenkt skapelse på.",
+      "p2": "Takk for at du er en del av dette lille indie-eksperimentet."
+    },
+    "cta": {
+      "rooms": "Utforsk rom",
+      "signup": "Bli med i fellesskapet"
+    }
+  }
+}

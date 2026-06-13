@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "Dine innlegg",
+      "description": "Bla gjennom og sorter alle innlegg du har opprettet eller samarbeidet om."
+    },
+    "header": {
+      "dashboardLink": "Dashbordet ditt",
+      "profileLink": "{username} sin profil",
+      "allBlocks": "Alle innlegg"
+    },
+    "empty": "Ingen innlegg ennå.",
+    "pagination": {
+      "prev": "← Forrige",
+      "next": "Neste →"
+    },
+    "titleUser": "{username} sine innlegg"
+  }
+}

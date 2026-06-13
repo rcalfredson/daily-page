@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Opprett et nytt innlegg — Daily Page",
+      "description": "Start et nytt kreativt innlegg med valgfrie tagger, språk og synlighet."
+    },
+    "heading": "Opprett et nytt innlegg",
+    "roomInfo": {
+      "roomLabel": "Rom:",
+      "unavailable": "Rominformasjon ikke tilgjengelig.",
+      "noDescription": "Ingen beskrivelse tilgjengelig."
+    },
+    "form": {
+      "title": {
+        "label": "Tittel:",
+        "placeholder": {
+          "full": "f.eks. \"My Masterpiece\", \"The Best Idea Ever\", \"Clickbait for Nerds\"",
+          "short": "f.eks. \"Mitt mesterverk\""
+        }
+      },
+      "description": {
+        "label": "Beskrivelse (valgfritt):",
+        "placeholder": "Forklar briljansen din ... eller bare ving den."
+      },
+      "initialContent": {
+        "label": "Opprinnelig innhold (valgfritt):",
+        "help": "Begynn å skrive her eller trykk \"Opprett\" for å fortsette på hele redigeringssiden, hvor du kan legge inn bilder og samarbeide i sanntid.",
+        "placeholder": "Start innlegget ditt her, eller fortsett å redigere etter opprettelsen..."
+      },
+      "visibility": {
+        "label": "Synlighet:"
+      },
+      "submit": "Opprett innlegg"
+    },
+    "visibility": {
+      "public": {
+        "label": "Offentlig",
+        "title": "Kan redigeres av alle i sanntid. Ingen pålogging nødvendig.",
+        "inline": "Kan redigeres av alle i sanntid. Ingen pålogging nødvendig."
+      },
+      "unlisted": {
+        "label": "Unotert utkast",
+        "title": "Skjult fra offentlig nettlesing mens den kan redigeres. Synlig etter låsing.",
+        "inline": "Skjult fra offentlig nettlesing mens den kan redigeres. Synlig etter låsing.",
+        "tooltip": "Uoppførte utkast er skjult fra offentlig surfing mens de kan redigeres. Alle med linken kan samarbeide, og innlegget blir offentlig når det er låst."
+      }
+    },
+    "advanced": {
+      "summary": "Avanserte alternativer",
+      "lang": {
+        "label": "Språk:",
+        "options": {
+          "en": "English",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "עברית",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "Oversett eksisterende innlegg (URL eller ID):",
+        "placeholder": "Lim inn en post-URL eller ID (valgfritt)",
+        "invalid": "Det ser ikke ut som en gyldig post-URL eller ID.",
+        "fetchError": "Kunne ikke hente innleggsinformasjon."
+      }
+    },
+    "messages": {
+      "langExists": "Det finnes allerede en oversettelse for det språket. Vennligst velg et annet språk.",
+      "genericError": "Noe gikk galt. Vennligst prøv igjen."
+    }
+  }
+}

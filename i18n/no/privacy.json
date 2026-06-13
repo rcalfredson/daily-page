@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Retningslinjer for personvern",
+      "description": "Hvordan Daily Page samler inn, bruker og beskytter dataene dine, på vanlig språk."
+    },
+    "title": "Personvernerklæring",
+    "lastUpdated": "Sist oppdatert: {date}",
+    "intro": {
+      "h2": "Introduksjon",
+      "p1": "Daily Page (\"oss\", \"vi\" eller \"vår\") driver nettstedet dailypage.org (heretter referert til som \"tjenesten\").",
+      "p2": "Denne siden informerer deg om våre retningslinjer angående innsamling, bruk og utlevering av personopplysninger når du bruker tjenesten vår."
+    },
+    "collection": {
+      "h2": "Informasjonsinnsamling og bruk",
+      "p": "Vi samler inn minimalt med personopplysninger for å forbedre og tilby tjenesten vår. Dette inkluderer e-postadresser for kontoadministrasjon og innhold som sendes inn frivillig av brukere."
+    },
+    "usage": {
+      "h2": "Databruk",
+      "p": "Data som samles inn brukes utelukkende til kontoautentisering, innholdsmoderering og forbedre brukeropplevelsen."
+    },
+    "storage": {
+      "h2": "Datalagring og sikkerhet",
+      "p": "Dine data er sikkert lagret og aldri delt eller solgt til tredjeparter uten uttrykkelig samtykke, med unntak av det som kreves av loven."
+    },
+    "cookies": {
+      "h2": "Informasjonskapsler",
+      "p": "Vi bruker informasjonskapsler utelukkende for øktadministrasjon og for å forbedre brukeropplevelsen. Du kan deaktivere informasjonskapsler via nettleserinnstillingene."
+    },
+    "rights": {
+      "h2": "Dine rettigheter",
+      "p": "Du kan be om sletting eller endring av dine personopplysninger når som helst ved å kontakte oss."
+    },
+    "changes": {
+      "h2": "Endringer i denne personvernerklæringen",
+      "p": "Vi kan oppdatere vår personvernerklæring fra tid til annen. Endringer vil bli lagt ut på denne siden."
+    },
+    "contact": {
+      "h2": "Kontakt oss",
+      "p": "For spørsmål om denne personvernerklæringen, kontakt oss på:",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}

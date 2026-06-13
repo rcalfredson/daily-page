@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "Den anonyme vandreren",
+      "description": "Ingen profil. Ingen fortid. Bare vibber."
+    },
+    "ascii": {
+      "ariaLabel": "ASCII kunst av lunefull skapning med sitat"
+    },
+    "header": {
+      "title": "Den anonyme"
+    },
+    "body": {
+      "line1": "Du har snublet inn i tomrommet. Det er ingenting å se her -",
+      "line2": "bare en vandrende ånd uten en historie."
+    },
+    "buttons": {
+      "home": "← Reis hjem",
+      "signup": "Skap en identitet"
+    }
+  }
+}

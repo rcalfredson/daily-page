@@ -45,6 +45,11 @@
       "label": "主题",
       "toggleToDark": "切换到深色模式",
       "toggleToLight": "切换到浅色模式"
+    },
+    "blockImages": {
+      "preview": "图片预览",
+      "close": "关闭图像预览",
+      "open": "打开图像预览"
     }
   }
 }

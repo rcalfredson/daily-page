@@ -45,6 +45,11 @@
       "label": "Tema",
       "toggleToDark": "Beralih ke mode gelap",
       "toggleToLight": "Beralih ke mode terang"
+    },
+    "blockImages": {
+      "preview": "Pratinjau gambar",
+      "close": "Tutup pratinjau gambar",
+      "open": "Buka pratinjau gambar"
     }
   }
 }

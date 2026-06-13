@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Oops! Noe gikk galt.",
+      "message": "Det oppstod en uventet feil. Vennligst prøv igjen senere.",
+      "home": "Tilbake til Hjemmet"
+    },
+    "notFound": {
+      "title": "404 - Siden ble ikke funnet",
+      "metaTitle": "Siden ikke funnet",
+      "message": "Beklager, vi fant ikke siden du lette etter.",
+      "homePrefix": "Du kan gå tilbake til",
+      "homeLink": "hjemmesiden",
+      "roomsPrefix": "eller sjekk ut",
+      "roomsLink": "romkatalog."
+    }
+  }
+}
