@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Støtte",
+      "description": "Hvordan komme i kontakt, rapportere problemer, be om funksjoner eller rom og støtte Daily Page økonomisk."
+    },
+    "contact": {
+      "h1": "★ Jeg vil gjerne stille et spørsmål, rapportere et problem eller be om en funksjon.",
+      "p1": {
+        "before": "Hvis du foretrekker å bruke GitHub, vennligst sjekk",
+        "link": "dette prosjektets problemer",
+        "after": "og legg til stemmen din. Pull-forespørsler er selvfølgelig også velkomne."
+      },
+      "p2": {
+        "before": "Alternativt",
+        "link": "send en e-post",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Jeg vil gjerne støtte dette prosjektet gjennom et bidrag.",
+      "p1": {
+        "before": "På forhånd takk for finansieringen av dette prosjektet. Vennligst send betalinger sikkert gjennom",
+        "paypal": "PayPal",
+        "middle": "eller, hvis du foretrekker det,",
+        "amazon": "bestill noen poser med lekene jeg selger på Amazon",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Jeg vil gjerne be om et nytt rom.",
+      "form": {
+        "nameLabel": "Romnavn",
+        "topicLabel": "Emne (valgfritt)",
+        "descriptionLabel": "Beskrivelse",
+        "submit": "Send inn forespørsel",
+        "success": "Forespørselen ble sendt!",
+        "errorGeneric": "Kunne ikke sende inn forespørselen. Vennligst prøv igjen.",
+        "errorUnexpected": "Det oppstod en uventet feil. Vennligst prøv igjen."
+      }
+    }
+  }
+}

@@ -45,6 +45,11 @@
       "label": "Thème",
       "toggleToDark": "Activer le mode sombre",
       "toggleToLight": "Activer le mode clair"
+    },
+    "blockImages": {
+      "preview": "Aperçu de l'image",
+      "close": "Fermer l'aperçu de l'image",
+      "open": "Ouvrir l'aperçu de l'image"
     }
   }
 }

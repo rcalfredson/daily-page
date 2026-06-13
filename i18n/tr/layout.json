@@ -45,6 +45,11 @@
       "label": "Tema",
       "toggleToDark": "Karanlık moda geç",
       "toggleToLight": "Işık moduna geç"
+    },
+    "blockImages": {
+      "preview": "Resim önizlemesi",
+      "close": "Resim önizlemesini kapat",
+      "open": "Resim önizlemesini aç"
     }
   }
 }

@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Det beste av Daily Page",
+      "description": "De mest elskede innleggene på Daily Page – morsomme, ærlige, poetiske eller rett og slett rare. Se hva som skilte seg ut den siste dagen, uken, måneden og utover.",
+      "titleRoom": "Det beste av {roomName}",
+      "descriptionRoom": "Oppdag enestående innlegg fra {roomName}-rommet – de leserne elsket mest de siste 24 timene, 7 dagene, 30 dagene og hele tiden."
+    },
+    "heading": "🏆 Det beste fra Daily Page",
+    "headingRoomPrefix": "🏆 Best av",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 timer",
+      "7d": "🚀 7 dager",
+      "30d": "🌕 30 dager",
+      "all": "👑 Hele tiden"
+    },
+    "labels": {
+      "createdBy": "Laget av:",
+      "inRoom": "i",
+      "onDate": "på {date}",
+      "unknownRoom": "Ukjent rom",
+      "noBlocks": "Ingen innlegg funnet.",
+      "viewRoom": "Vis rom"
+    }
+  }
+}

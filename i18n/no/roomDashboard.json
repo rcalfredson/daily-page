@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "Utforsk nylige og pågående innlegg i {roomName}."
+    },
+    "links": {
+      "exploreLabel": "Utforske:",
+      "allBlocks": "🗂️ Alle innlegg",
+      "browseByDate": "🗓️ Etter dato",
+      "bestOf": "🏅 Best av",
+      "searchInRoom": "🔎 Søk"
+    },
+    "actions": {
+      "createBlock": "Opprett et innlegg",
+      "starTitle": "Stjernemerke dette rommet",
+      "unstarTitle": "Fjern stjerne i dette rommet"
+    },
+    "tabs": {
+      "locked": "Låste innlegg",
+      "inProgress": "Pågående innlegg"
+    },
+    "sections": {
+      "lockedHeader": "Låste innlegg",
+      "inProgressHeader": "Pågående innlegg"
+    },
+    "editorial": {
+      "heading": "Utvalgte guider",
+      "description": "Start her med de fremhevede guidene som er kuratert for dette rommet.",
+      "roleNames": {
+        "pillar": "Kjerneguide",
+        "companion": "Leseveiledning",
+        "texture": "Bakgrunnsguide"
+      }
+    },
+    "empty": {
+      "noDescription": "Ingen beskrivelse tilgjengelig.",
+      "noLocked": "Ingen låste innlegg ennå! Poster automatisk låsing etter 1 time med inaktivitet.",
+      "noInProgress": "Ingen pågående innlegg ennå! På tide å starte en.",
+      "noBlocks": "Ingen innlegg ennå! Lag den første og sett spor etter deg. 😎"
+    }
+  }
+}

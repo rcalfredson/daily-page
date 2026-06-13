@@ -1,0 +1,67 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Kontosikkerhet",
+      "description": "Administrer ditt Daily Page-passord og tofaktorautentisering."
+    },
+    "backToDashboard": "Tilbake til dashbordet",
+    "heading": "Kontosikkerhet",
+    "subheading": "Hold kontoen din beskyttet med et sterkt passord og en autentiseringsapp.",
+    "password": {
+      "title": "Endre passord",
+      "description": "Bruk et unikt passord med minst 8 tegn.",
+      "current": {
+        "label": "Gjeldende passord"
+      },
+      "new": {
+        "label": "Nytt passord"
+      },
+      "submit": "Oppdater passord"
+    },
+    "twoFactor": {
+      "title": "Tofaktorautentisering",
+      "statusOn": "Aktivert",
+      "statusOff": "Av",
+      "description": "Legg til en engangskode fra en autentiseringsapp etter passordet ditt når du logger på.",
+      "currentPassword": {
+        "label": "Gjeldende passord"
+      },
+      "startSetup": "Sett opp Authenticator-appen",
+      "qrAlt": "Autentisering app QR-kode",
+      "manualKey": "Manuell oppsettnøkkel",
+      "code": {
+        "label": "6-sifret kode"
+      },
+      "enable": "Aktiver 2FA",
+      "disableCode": {
+        "label": "Autentiseringskode"
+      },
+      "disable": "Deaktiver 2FA"
+    },
+    "recoveryCodes": {
+      "title": "Lagre gjenopprettingskodene dine",
+      "description": "Bruk en av disse engangskodene for å logge på hvis du mister tilgangen til autentiseringsappen din.",
+      "regenerateDescription": "Generer et nytt sett med gjenopprettingskoder hvis du mistet det forrige settet. Dette ugyldiggjør eventuelle gamle gjenopprettingskoder.",
+      "regenerate": "Generer nye gjenopprettingskoder",
+      "warning": "Oppbevar dem et trygt sted. De vil ikke vises igjen."
+    },
+    "feedback": {
+      "passwordChanged": "Passordet ditt ble oppdatert.",
+      "setupReady": "Skann QR-koden, og skriv deretter inn den 6-sifrede koden for å fullføre oppsettet.",
+      "twoFactorEnabled": "Tofaktorautentisering er nå aktivert.",
+      "twoFactorDisabled": "Tofaktorautentisering er nå deaktivert.",
+      "recoveryCodesRegenerated": "Gjenopprettingskodene dine ble generert på nytt. Lagre de nye kodene nå.",
+      "missingFields": "Vennligst fyll ut alle obligatoriske felter.",
+      "missingCurrentPassword": "Skriv inn ditt nåværende passord for å fortsette.",
+      "passwordTooShort": "Ditt nye passord må være på minst 8 tegn.",
+      "invalidCurrentPassword": "Det gjeldende passordet stemte ikke.",
+      "missingCode": "Skriv inn den 6-sifrede koden fra autentiseringsappen din.",
+      "invalidCode": "Den koden fungerte ikke. Vennligst prøv igjen.",
+      "noPendingSetup": "Start oppsettet på nytt før du taster inn en kode.",
+      "setupExpired": "Den oppsettsøkten utløp. Start oppsettet på nytt for å få en ny QR-kode.",
+      "twoFactorNotEnabled": "Tofaktorautentisering er ikke aktivert for denne kontoen.",
+      "genericError": "Noe gikk galt. Vennligst prøv igjen.",
+      "unexpectedError": "Det oppstod en uventet feil. Vennligst prøv igjen."
+    }
+  }
+}

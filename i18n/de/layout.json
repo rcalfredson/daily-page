@@ -45,6 +45,11 @@
       "label": "Design",
       "toggleToDark": "In den Dunkelmodus wechseln",
       "toggleToLight": "In den Hellmodus wechseln"
+    },
+    "blockImages": {
+      "preview": "Bildvorschau",
+      "close": "Bildvorschau schließen",
+      "open": "Bildvorschau öffnen"
     }
   }
 }

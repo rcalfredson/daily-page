@@ -45,6 +45,11 @@
       "label": "Theme",
       "toggleToDark": "Switch to dark mode",
       "toggleToLight": "Switch to light mode"
+    },
+    "blockImages": {
+      "preview": "Image preview",
+      "close": "Close image preview",
+      "open": "Open image preview"
     }
   }
 }

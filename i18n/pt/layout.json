@@ -45,6 +45,11 @@
       "label": "Tema",
       "toggleToDark": "Mudar para modo escuro",
       "toggleToLight": "Mudar para modo claro"
+    },
+    "blockImages": {
+      "preview": "Visualização da imagem",
+      "close": "Fechar visualização da imagem",
+      "open": "Abrir visualização da imagem"
     }
   }
 }

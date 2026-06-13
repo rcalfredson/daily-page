@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — Tilfeldig forfatter",
+      "description": "Generer en uendelig strøm av tilfeldig pseudotekst for moro, inspirasjon eller kaos."
+    },
+    "title": "Tilfeldig forfatter",
+    "buttons": {
+      "clear": "Klar",
+      "stop": "Slutt å skrive",
+      "start": "Begynn å skrive"
+    }
+  }
+}

@@ -45,6 +45,11 @@
       "label": "테마",
       "toggleToDark": "다크 모드로 전환",
       "toggleToLight": "라이트 모드로 전환"
+    },
+    "blockImages": {
+      "preview": "이미지 미리보기",
+      "close": "이미지 미리보기 닫기",
+      "open": "이미지 미리보기 열기"
     }
   }
 }

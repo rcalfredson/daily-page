@@ -1,17 +1,17 @@
 {
   "layout": {
     "siteName": "Daily Page",
-    "welcomeUser": "¡Bienvenido, Usuario!",
-    "logout": "Cerrar sesión",
-    "login": "Iniciar sesión / Registrarse",
-    "language": "Idioma",
-    "openMenu": "Abrir menú principal",
-    "closeMenu": "Cerrar menú principal",
-    "privacy": "Política de privacidad",
-    "uiFallbackNotice": "{requested} todavía no está traducido. Mostrando {current} por ahora.",
+    "welcomeUser": "Velkommen, bruker!",
+    "logout": "Logg ut",
+    "login": "Logg inn / Registrer deg",
+    "language": "Språk",
+    "openMenu": "Åpne hovedmenyen",
+    "closeMenu": "Lukk hovedmenyen",
+    "privacy": "Personvernerklæring",
+    "uiFallbackNotice": "{requested} er ikke oversatt ennå. Viser {current} for nå.",
     "copyButton": {
-      "copy": "Copiar",
-      "copied": "¡Copiado!"
+      "copy": "Kopier",
+      "copied": "Kopiert!"
     },
     "copyright": "© {year}",
     "languages": {
@@ -43,13 +43,13 @@
     },
     "theme": {
       "label": "Tema",
-      "toggleToDark": "Cambiar a modo oscuro",
-      "toggleToLight": "Cambiar a modo claro"
+      "toggleToDark": "Bytt til mørk modus",
+      "toggleToLight": "Bytt til lysmodus"
     },
     "blockImages": {
-      "preview": "Vista previa de la imagen",
-      "close": "Cerrar vista previa de la imagen",
-      "open": "Abrir vista previa de la imagen"
+      "preview": "Forhåndsvisning av bilde",
+      "close": "Lukk forhåndsvisning av bildet",
+      "open": "Åpne forhåndsvisning av bilde"
     }
   }
 }

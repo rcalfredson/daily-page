@@ -45,6 +45,11 @@
       "label": "Tema",
       "toggleToDark": "Passa alla modalita scura",
       "toggleToLight": "Passa alla modalita chiara"
+    },
+    "blockImages": {
+      "preview": "Anteprima dell'immagine",
+      "close": "Chiudi l'anteprima dell'immagine",
+      "open": "Apri l'anteprima dell'immagine"
     }
   }
 }

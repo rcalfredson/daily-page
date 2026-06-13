@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Oversikt over etiketter",
+      "description": "Bla gjennom alle tagger som brukes på tvers av Daily Page, med raske filtre etter tid."
+    },
+    "title": "Tags Oversikt",
+    "intro": "Utforsk alle tagger som brukes i Daily Page.",
+    "tagCloudTitle": "Taggsky",
+    "timeframe": {
+      "last24h": "Siste 24 timer",
+      "last7d": "Siste 7 dager",
+      "last30d": "Siste 30 dager",
+      "all": "Hele tiden"
+    },
+    "error": {
+      "loading": "Feil ved innlasting av taggeroversikt"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": "| Daily Page",
+        "description": "Innlegg merket med"
+      },
+      "header": {
+        "label": "Tag:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Totalt innlegg med",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Laget av:",
+        "inRoom": "i",
+        "unknownRoom": "Ukjent rom",
+        "onDate": "på"
+      },
+      "chart": {
+        "label": "Innlegg laget over tid"
+      },
+      "empty": {
+        "message": "Ingen innlegg funnet med denne taggen ennå. Kanskje du burde lage den første? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Feil ved innlasting av tagside"
+      }
+    }
+  }
+}

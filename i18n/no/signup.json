@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Opprett en konto",
+      "description": "Registrer deg for Daily Page for å få tilgang til alle funksjonene."
+    },
+    "header": {
+      "title": "Opprett din konto",
+      "subtitle": "Bli med Daily Page for å begynne å lage og dele din daglige skriving!"
+    },
+    "form": {
+      "email": {
+        "label": "E-post",
+        "placeholder": "Skriv inn e-postadressen din"
+      },
+      "username": {
+        "label": "Brukernavn",
+        "placeholder": "Skriv inn brukernavnet ditt"
+      },
+      "password": {
+        "label": "Passord",
+        "placeholder": "Skriv inn et passord"
+      },
+      "submit": "Registrer deg",
+      "feedback": {
+        "success": "Skjemainnsending var vellykket!",
+        "successCreatedVerify": "Konto opprettet! Sjekk e-posten din for å bekrefte kontoen din.",
+        "genericError": "Kunne ikke opprette konto. Vennligst prøv igjen.",
+        "unexpectedError": "Det oppstod en uventet feil. Vennligst prøv igjen."
+      }
+    }
+  }
+}

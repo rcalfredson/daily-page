@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Populære innlegg fra de siste 24 timene",
+      "description": "Daily Page er en minimalistisk, indie-skriveside der alle kan legge ut kreative tanker, minner eller eksperimenter – ett innlegg om gangen. Utforsk nye ideer, bli med i rom og bidra med stemmen din."
+    },
+    "hero": {
+      "eyebrow": "Et rolig sted for å skrive, lese og komme tilbake",
+      "title": "Velkommen til Daily Page!",
+      "subtitle": "Utforsk de mest populære innleggene fra de siste 24 timene.",
+      "ctaPrefix": "Føler du deg inspirert?",
+      "cta": "Bli med i et rom",
+      "ctaSuffix": "og lag ditt eget innlegg!"
+    },
+    "stats": {
+      "blocks": "Innlegg",
+      "rooms": "Rom",
+      "tags": "Tagger",
+      "collabsToday": "Samarbeid i dag"
+    },
+    "activity": {
+      "title": "Live på Daily Page",
+      "subtitle": "Friske samtaler og reaksjoner, alt i ett blikk.",
+      "fallbackActor": "Noen",
+      "inRoom": "i",
+      "comments": {
+        "title": "Nylige kommentarer",
+        "more": "Søk i diskusjoner",
+        "commentVerb": "kommentert",
+        "replyVerb": "svarte videre",
+        "empty": "Ingen nyere kommentarer ennå. Den neste samtalen kan starte med innlegget ditt."
+      },
+      "reactions": {
+        "title": "Nylige reaksjoner",
+        "more": "Bla gjennom populære innlegg",
+        "empty": "Ingen nylige reaksjoner ennå. Et godt innlegg kan vekke dette raskt.",
+        "types": {
+          "heart": "hjertelig",
+          "leaf": "reagerte med et blad på",
+          "wow": "reagerte med wow til",
+          "laugh": "lo av"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Utvalgte rom",
+      "roomInfoDays": "Aktivitet de siste {days}-dagene: {blocks}-innlegg, {votes}-stemmer.",
+      "roomInfo24h": "Aktivitet siste 24 timer: {blocks} innlegg, {votes} stemmer.",
+      "checkItOut": "Sjekk det ut",
+      "blockRibbon": "★ Utvalgt innlegg",
+      "votes": "{n} stemmer",
+      "noContent": "(Ingen innhold gitt...)",
+      "viewBlock": "Se innlegg"
+    },
+    "trendingTags": {
+      "title": "Trendende tagger",
+      "suffixDays": "(siste {days} dager)",
+      "suffixAllTime": "(hele tiden)",
+      "blocks": "{n} innlegg",
+      "votes": "{n} stemmer",
+      "empty": "Ingen trendende tagger ennå. Vær den første til å tagge noe kult!"
+    },
+    "trendingBlocks": {
+      "title": "Populære innlegg",
+      "suffixDays": "(siste {days} dager)",
+      "createdBy": "Laget av:",
+      "in": "i",
+      "on": "på",
+      "unknownRoom": "Ukjent rom",
+      "empty24h": "Ingen innlegg ennå de siste 24 timene. Kom tilbake snart, compa!"
+    }
+  }
+}

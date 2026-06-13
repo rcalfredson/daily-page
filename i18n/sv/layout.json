@@ -45,6 +45,11 @@
       "label": "Tema",
       "toggleToDark": "Växla till mörkt läge",
       "toggleToLight": "Växla till ljusläge"
+    },
+    "blockImages": {
+      "preview": "Förhandsgranskning av bild",
+      "close": "Stäng bildförhandsgranskning",
+      "open": "Öppna förhandsgranskning av bilden"
     }
   }
 }

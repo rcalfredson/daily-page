@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Alle rom med stjerner",
+      "description": "En liste over alle rommene du har stjernemerket."
+    },
+    "nav": {
+      "backToDashboard": "← Tilbake til Dashboard"
+    },
+    "header": {
+      "title": "🌟 Alle dine stjernemerkede rom 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Rom uten navn",
+      "noDescription": "Ingen beskrivelse."
+    },
+    "empty": {
+      "message": "Du har ikke stjernemerket noen rom ennå!"
+    }
+  }
+}

@@ -45,6 +45,11 @@
       "label": "テーマ",
       "toggleToDark": "ダークモードに切り替え",
       "toggleToLight": "ライトモードに切り替え"
+    },
+    "blockImages": {
+      "preview": "画像プレビュー",
+      "close": "画像プレビューを閉じる",
+      "open": "画像プレビューを開く"
     }
   }
 }
