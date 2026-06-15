@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Meddelelser",
+      "openMenu": "Åbn notifikationer",
+      "loading": "Indlæser notifikationer...",
+      "error": "Kunne ikke indlæse notifikationer lige nu.",
+      "empty": "Ingen notifikationer endnu.",
+      "markRead": "Mark læst",
+      "fallbackActor": "Nogen",
+      "fallbackBlockTitle": "dit indlæg",
+      "item": {
+        "blockComment": "{actorUsername} kommenterede dit indlæg \"{blockTitle}\".",
+        "commentReply": "{actorUsername} svarede på din kommentar til \"{blockTitle}\".",
+        "unknown": "Notifikation"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Ny kommentar til \"{blockTitle}\"",
+        "heading": "Ny kommentar til dit indlæg",
+        "headingWithName": "Hej {username},",
+        "body": "<strong>{actorUsername}</strong> kommenterede dit indlæg <strong>{blockTitle}</strong>.",
+        "cta": "Se samtalen på Daily Page",
+        "fallbackActor": "Nogen",
+        "fallbackBlockTitle": "dit indlæg"
+      },
+      "commentReply": {
+        "subject": "Nyt svar på \"{blockTitle}\"",
+        "heading": "Nyt svar på din kommentar",
+        "headingWithName": "Hej {username},",
+        "body": "<strong>{actorUsername}</strong> svarede på din kommentar til <strong>{blockTitle}</strong>.",
+        "cta": "Se samtalen på Daily Page",
+        "fallbackActor": "Nogen",
+        "fallbackBlockTitle": "dit indlæg"
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Kontosikkerhed",
+      "description": "Administrer din Daily Page adgangskode og to-faktor godkendelse."
+    },
+    "backToDashboard": "Tilbage til dashboard",
+    "heading": "Kontosikkerhed",
+    "subheading": "Hold din konto beskyttet med en stærk adgangskode og en godkendelsesapp.",
+    "password": {
+      "title": "Skift adgangskode",
+      "description": "Brug en unik adgangskode med mindst 8 tegn.",
+      "current": {
+        "label": "Nuværende adgangskode"
+      },
+      "new": {
+        "label": "Ny adgangskode"
+      },
+      "submit": "Opdater adgangskode"
+    },
+    "twoFactor": {
+      "title": "To-faktor-godkendelse",
+      "statusOn": "Aktiveret",
+      "statusOff": "Slukket",
+      "description": "Tilføj en engangskode fra en godkendelsesapp efter din adgangskode, når du logger ind.",
+      "currentPassword": {
+        "label": "Nuværende adgangskode"
+      },
+      "startSetup": "Konfigurer Authenticator-appen",
+      "qrAlt": "Authenticator app QR-kode",
+      "manualKey": "Manuel opsætningstast",
+      "code": {
+        "label": "6-cifret kode"
+      },
+      "enable": "Aktiver 2FA",
+      "disableCode": {
+        "label": "Autentificeringskode"
+      },
+      "disable": "Deaktiver 2FA"
+    },
+    "recoveryCodes": {
+      "title": "Gem dine gendannelseskoder",
+      "description": "Brug en af ​​disse engangskoder til at logge ind, hvis du mister adgangen til din autentificeringsapp.",
+      "regenerateDescription": "Generer et nyt sæt gendannelseskoder, hvis du mistede det forrige sæt. Dette ugyldiggør eventuelle gamle gendannelseskoder.",
+      "regenerate": "Generer nye gendannelseskoder",
+      "warning": "Opbevar dem et sikkert sted. De vil ikke blive vist igen."
+    },
+    "feedback": {
+      "passwordChanged": "Din adgangskode blev opdateret.",
+      "setupReady": "Scan QR-koden, og indtast derefter den 6-cifrede kode for at afslutte opsætningen.",
+      "twoFactorEnabled": "To-faktor-godkendelse er nu aktiveret.",
+      "twoFactorDisabled": "To-faktor-godkendelse er nu deaktiveret.",
+      "recoveryCodesRegenerated": "Dine gendannelseskoder blev gendannet. Gem de nye koder nu.",
+      "missingFields": "Udfyld venligst alle obligatoriske felter.",
+      "missingCurrentPassword": "Indtast din nuværende adgangskode for at fortsætte.",
+      "passwordTooShort": "Din nye adgangskode skal være på mindst 8 tegn.",
+      "invalidCurrentPassword": "Den aktuelle adgangskode matchede ikke.",
+      "missingCode": "Indtast den 6-cifrede kode fra din autentificeringsapp.",
+      "invalidCode": "Den kode virkede ikke. Prøv venligst igen.",
+      "noPendingSetup": "Start opsætningen igen, før du indtaster en kode.",
+      "setupExpired": "Denne opsætningssession udløb. Start opsætningen igen for at få en ny QR-kode.",
+      "twoFactorNotEnabled": "To-faktor-godkendelse er ikke aktiveret for denne konto.",
+      "genericError": "Noget gik galt. Prøv venligst igen.",
+      "unexpectedError": "Der opstod en uventet fejl. Prøv venligst igen."
+    }
+  }
+}

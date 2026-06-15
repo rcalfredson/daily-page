@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Opret en konto",
+      "description": "Tilmeld dig Daily Page for at få adgang til alle funktioner."
+    },
+    "header": {
+      "title": "Opret din konto",
+      "subtitle": "Tilmeld dig Daily Page for at begynde at skabe og dele dit daglige forfatterskab!"
+    },
+    "form": {
+      "email": {
+        "label": "E-mail",
+        "placeholder": "Indtast din e-mail"
+      },
+      "username": {
+        "label": "Brugernavn",
+        "placeholder": "Indtast dit brugernavn"
+      },
+      "password": {
+        "label": "Adgangskode",
+        "placeholder": "Indtast en adgangskode"
+      },
+      "submit": "Tilmeld dig",
+      "feedback": {
+        "success": "Formularindsendelse lykkedes!",
+        "successCreatedVerify": "Konto oprettet! Tjek venligst din e-mail for at bekræfte din konto.",
+        "genericError": "Kunne ikke oprette konto. Prøv venligst igen.",
+        "unexpectedError": "Der opstod en uventet fejl. Prøv venligst igen."
+      }
+    }
+  }
+}

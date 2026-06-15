@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Andre projekter",
+      "description": "Udforsk baseballjournalføring, tilfældige skriveeksperimenter og andre sideprojekter fra Daily Page."
+    },
+    "title": "Andre projekter",
+    "tagline": "Et hyggeligt hjørne til eksperimenter og sideopgaver.",
+    "links": {
+      "baseball": "📖 Baseball Journal",
+      "randomWriter": "🎲 Tilfældig forfatter"
+    },
+    "cta": {
+      "backToRooms": "Tilbage til hovedrum"
+    }
+  }
+}

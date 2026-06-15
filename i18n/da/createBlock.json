@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Opret et nyt indlæg — Daily Page",
+      "description": "Start et nyt kreativt indlæg med valgfri tags, sprog og synlighed."
+    },
+    "heading": "Opret et nyt indlæg",
+    "roomInfo": {
+      "roomLabel": "Rum:",
+      "unavailable": "Rumsinformation er ikke tilgængelig.",
+      "noDescription": "Ingen beskrivelse tilgængelig."
+    },
+    "form": {
+      "title": {
+        "label": "Titel:",
+        "placeholder": {
+          "full": "f.eks. 'My Masterpiece', 'The Best Idea Ever', 'Clickbait for Nerds'",
+          "short": "f.eks. 'Mit mesterværk'"
+        }
+      },
+      "description": {
+        "label": "Beskrivelse (valgfrit):",
+        "placeholder": "Forklar din glans ... eller bare ving den."
+      },
+      "initialContent": {
+        "label": "Indledende indhold (valgfrit):",
+        "help": "Begynd at skrive her eller tryk på \"Opret\" for at fortsætte på hele editorsiden, hvor du kan indlejre billeder og samarbejde i realtid.",
+        "placeholder": "Start dit indlæg her, eller fortsæt med at redigere efter oprettelsen..."
+      },
+      "visibility": {
+        "label": "Sigtbarhed:"
+      },
+      "submit": "Opret indlæg"
+    },
+    "visibility": {
+      "public": {
+        "label": "Offentlig",
+        "title": "Kan redigeres af alle i realtid. Ingen login nødvendig.",
+        "inline": "Kan redigeres af alle i realtid. Ingen login nødvendig."
+      },
+      "unlisted": {
+        "label": "Unoteret udkast",
+        "title": "Skjult fra offentlig browsing, mens den kan redigeres. Synlig efter låsning.",
+        "inline": "Skjult fra offentlig browsing, mens den kan redigeres. Synlig efter låsning.",
+        "tooltip": "Ikke-opførte kladder er skjult fra offentlig browsing, mens de kan redigeres. Alle med linket kan samarbejde, og indlægget bliver offentligt, når det er låst."
+      }
+    },
+    "advanced": {
+      "summary": "Avancerede muligheder",
+      "lang": {
+        "label": "Sprog:",
+        "options": {
+          "en": "engelsk",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesien",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "hebraisk",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "Oversæt eksisterende indlæg (URL eller ID):",
+        "placeholder": "Indsæt et indlægs URL eller id (valgfrit)",
+        "invalid": "Det ligner ikke en gyldig indlægs-URL eller ID.",
+        "fetchError": "Kunne ikke hente indlægsoplysninger."
+      }
+    },
+    "messages": {
+      "langExists": "Der findes allerede en oversættelse til det sprog. Vælg venligst et andet sprog.",
+      "genericError": "Noget gik galt. Prøv venligst igen."
+    }
+  }
+}

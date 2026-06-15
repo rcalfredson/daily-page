@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "Tags:",
+      "noTags": "Ingen tags endnu! Tilføj nogle:"
+    },
+    "input": {
+      "placeholder": "Nyt tag",
+      "addButton": "Tilføje"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

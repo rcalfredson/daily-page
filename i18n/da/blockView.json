@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Indlæg - {blockTitle}",
+      "titleFallback": "Stolpe"
+    },
+    "labels": {
+      "room": "Rum",
+      "author": "Forfatter",
+      "created": "Oprettet",
+      "unknownAuthor": "Anonym",
+      "authorAvatarAlt": "{username}s avatar",
+      "viewAuthorProfile": "Se {username}s profil",
+      "lang": "Oversættelser:",
+      "available": "tilgængelig"
+    },
+    "buttons": {
+      "edit": "Redigere",
+      "deleteBlock": "Slet indlæg",
+      "share": "Dele",
+      "flagContent": "Flag indhold"
+    },
+    "description": {
+      "label": "Beskrivelse",
+      "none": "Ingen beskrivelse angivet...",
+      "expand": "Udvide",
+      "collapse": "Bryde sammen"
+    },
+    "editorial": {
+      "heading": "Læsevejledning",
+      "roleLabel": "Læsetype",
+      "clusterLabel": "Guide",
+      "sequence": "Del {sequence}",
+      "primaryPillarHeading": "Start her",
+      "relatedHeading": "Fortsæt med at læse",
+      "clusterHeading": "Mere i denne guide",
+      "expandSection": "Vis {count} mere",
+      "collapseSection": "Vis mindre",
+      "roleNames": {
+        "pillar": "Kernevejledning",
+        "companion": "Dybt dyk",
+        "texture": "Baggrund"
+      }
+    },
+    "comments": {
+      "heading": "Kommentarer",
+      "count": "{count} kommentarer",
+      "empty": "Ingen har svaret endnu. Kommentarer vises her, når samtalen starter.",
+      "composer": {
+        "label": "Tilføj en kommentar",
+        "placeholder": "Skriv en kommentar...",
+        "submit": "Skriv kommentar",
+        "submitting": "Sender...",
+        "success": "Kommentar indsendt.",
+        "error": "Kan ikke skrive din kommentar lige nu.",
+        "loginPrompt": "Log ind for at deltage i samtalen.",
+        "loginCta": "Log ind for at kommentere",
+        "verifyPrompt": "Bekræft din e-mail, før du sender en kommentar.",
+        "verifyCta": "Bekræft e-mail"
+      },
+      "sort": {
+        "label": "Sortere",
+        "oldestFirst": "Ældste først",
+        "newestFirst": "Nyeste først"
+      },
+      "by": "Ved",
+      "unknownAuthor": "Ukendt",
+      "reply": {
+        "action": "Svar",
+        "label": "Tilføj et svar",
+        "placeholder": "Skriv et svar...",
+        "submit": "Send svar",
+        "submitting": "Sender...",
+        "success": "Svar indsendt.",
+        "error": "Kan ikke sende dit svar lige nu.",
+        "cancel": "Ophæve",
+        "loginPrompt": "Log ind for at svare."
+      },
+      "manage": {
+        "edited": "Redigeret",
+        "editAction": "Redigere",
+        "deleteAction": "Slet",
+        "deleteConfirm": "Vil du slette denne kommentar? Dette vil også fjerne eventuelle svar under den.",
+        "deleteSuccess": "Kommentar slettet.",
+        "deleteError": "Kan ikke slette denne kommentar lige nu.",
+        "forbidden": "Du kan kun administrere dine egne kommentarer.",
+        "edit": {
+          "label": "Rediger kommentar",
+          "save": "Spare",
+          "saving": "Gemmer...",
+          "cancel": "Ophæve",
+          "success": "Kommentar opdateret.",
+          "error": "Kan ikke opdatere denne kommentar lige nu."
+        }
+      },
+      "report": {
+        "action": "Rapport",
+        "pending": "Rapporterer...",
+        "success": "Kommentar indberettet.",
+        "error": "Kan ikke rapportere denne kommentar lige nu.",
+        "ownError": "Du kan ikke rapportere din egen kommentar.",
+        "hidden": "Kommentar skjult efter rapport.",
+        "reported": "Rapporteret"
+      },
+      "deepLink": {
+        "focused": "Linket kommentar",
+        "unavailable": "Den linkede kommentar er ikke længere tilgængelig."
+      },
+      "loadMore": "Indlæs flere kommentarer",
+      "loading": "Indlæser...",
+      "loadError": "Kan ikke indlæse flere kommentarer lige nu."
+    },
+    "share": {
+      "title": "Del dette opslag",
+      "shareOn": "Del på:",
+      "nativeText": "Tjek dette indlæg: {title}",
+      "alt": {
+        "facebook": "Facebook logo",
+        "reddit": "Reddit logo",
+        "whatsapp": "WhatsApp logo",
+        "twitter": "Twitter-logo"
+      }
+    },
+    "errors": {
+      "notFound": "Indlægget blev ikke fundet eller hører ikke til dette rum.",
+      "loadFailed": "Fejl ved indlæsning af indlægsvisning."
+    }
+  }
+}

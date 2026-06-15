@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Support",
+      "description": "Sådan kommer du i kontakt, rapporterer problemer, anmoder om funktioner eller lokaler og støtter Daily Page økonomisk."
+    },
+    "contact": {
+      "h1": "★ Jeg vil gerne stille et spørgsmål, rapportere et problem eller anmode om en funktion.",
+      "p1": {
+        "before": "Hvis du foretrækker at bruge GitHub, så tjek venligst",
+        "link": "dette projekts problemer",
+        "after": "og tilføje din stemme. Pull-anmodninger er selvfølgelig også velkomne."
+      },
+      "p2": {
+        "before": "Alternativt",
+        "link": "send en e-mail",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Jeg vil gerne støtte dette projekt gennem et bidrag.",
+      "p1": {
+        "before": "På forhånd tak for finansieringen af ​​dette projekt. Send venligst betalinger sikkert igennem",
+        "paypal": "PayPal",
+        "middle": "eller, hvis du foretrækker det,",
+        "amazon": "bestil et par poser af det legetøj, jeg sælger på Amazon",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Jeg vil gerne anmode om et nyt rum.",
+      "form": {
+        "nameLabel": "Rumsnavn",
+        "topicLabel": "Emne (valgfrit)",
+        "descriptionLabel": "Beskrivelse",
+        "submit": "Indsend anmodning",
+        "success": "Anmodningen blev sendt med succes!",
+        "errorGeneric": "Kunne ikke indsende anmodning. Prøv venligst igen.",
+        "errorUnexpected": "Der opstod en uventet fejl. Prøv venligst igen."
+      }
+    }
+  }
+}

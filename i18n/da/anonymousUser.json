@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "Den anonyme vandrer",
+      "description": "Ingen profil. Ingen fortid. Bare vibes."
+    },
+    "ascii": {
+      "ariaLabel": "ASCII kunst af lunefuldt væsen med citat"
+    },
+    "header": {
+      "title": "Den Anonyme"
+    },
+    "body": {
+      "line1": "Du er snublet ind i tomrummet. Der er intet at se her -",
+      "line2": "bare en omvandrende ånd uden en historie."
+    },
+    "buttons": {
+      "home": "← Vend hjem",
+      "signup": "Skab en identitet"
+    }
+  }
+}

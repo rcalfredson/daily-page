@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "Bekræft e-mail",
+      "description": "Bekræft din e-mailadresse for Daily Page."
+    },
+    "header": {
+      "title": "Bekræfter din e-mail..."
+    },
+    "status": {
+      "checking": "Kontrollerer token, vent venligst...",
+      "missingToken": "Bekræftelsestoken mangler eller er ugyldigt.",
+      "genericFailure": "Bekræftelse mislykkedes.",
+      "unexpectedError": "Der opstod en uventet fejl.",
+      "success": "Din konto er blevet bekræftet!",
+      "invalidOrExpired": "Ugyldigt eller udløbet bekræftelsestoken."
+    },
+    "verificationMsg": {
+      "subject": "Bekræft din Daily Page konto ✨",
+      "heading": "Velkommen til Daily Page, {username}!",
+      "body": "Bekræft venligst din e-mail ved at klikke nedenfor:",
+      "cta": "Bekræft e-mail-adresse",
+      "expires": "Dette link udløber om {hours} timer."
+    }
+  }
+}
