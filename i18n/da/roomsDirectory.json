@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Rumsoversigt",
+      "description": "Hvert rum er en døråbning til en anden verden. Træd indenfor, del din historie, og vær med andre til at bygge noget smukt."
+    },
+    "eyebrow": "Find dit hjørne",
+    "heading": "Rumsoversigt",
+    "intro": "Start med de rum, der føles levende lige nu, eller gå rundt efter emne, indtil noget klikker. Hvert rum er en anden skriveprompt, fandom eller delt besættelse, der venter på din stemme.",
+    "empty": "Der er ingen ledige rum i øjeblikket. Kom tilbage senere!",
+    "jumpToActive": "Se aktive rum",
+    "jumpToTopics": "Gennemse efter emne",
+    "statsLabel": "Højdepunkter i rumkataloget",
+    "liveNow": "Lev nu",
+    "recentlyActive": "For nylig aktiv",
+    "recentlyActiveSubtitle": "Den hurtigste måde at finde et rum med folk i lige nu.",
+    "browseByTopic": "Gennemse efter emne",
+    "topicSubtitle": "Åbn et emne for at udforske dets rum.",
+    "roomCount": "{count} rum",
+    "stats": {
+      "rooms": "rum at udforske",
+      "topics": "emnegrupper",
+      "active": "aktive valg"
+    },
+    "activeUsers": "Aktive brugere: {count}",
+    "visitRoom": "Besøg rum",
+    "close": "Tæt",
+    "noTitle": "Ingen titel tilgængelig",
+    "noDescription": "Ingen beskrivelse tilgængelig"
+  }
+}

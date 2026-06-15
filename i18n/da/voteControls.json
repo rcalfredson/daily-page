@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "Stem op",
+    "downvote": "Stem ned",
+    "errors": {
+      "failed": "Kunne ikke gemme din stemme."
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Log venligst ind",
+      "message": "Du skal være logget ind for at fortsætte.",
+      "messageWithAction": "Du skal være logget ind på {action}.",
+      "cta": "Log ind"
+    },
+    "actions": {
+      "voteOnBlock": "stemme på et opslag",
+      "starRoom": "stjerne dette rum",
+      "reactToBlock": "reagere på dette indlæg",
+      "commentOnBlock": "kommentere dette indlæg",
+      "reportComment": "rapporter denne kommentar"
+    },
+    "errors": {
+      "starToggleFail": "Kunne ikke opdatere stjernestatus. Prøv venligst igen."
+    }
+  }
+}

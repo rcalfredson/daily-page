@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "{username}s profil",
+      "descriptionUser": "Se {username}s seneste aktivitet, stjernemarkerede rum og statistik."
+    },
+    "profile": {
+      "profilePicAlt": "Profilbillede",
+      "noBio": "(Ingen bio tilgængelig.)"
+    },
+    "activity": {
+      "title": "Seneste aktivitet",
+      "updatedOn": "Opdateret den {date}",
+      "none": "Ingen nylig aktivitet.",
+      "viewAllBlocks": "Se alle indlæg"
+    },
+    "starredRooms": {
+      "title": "Stjernemarkerede rum",
+      "none": "Ingen stjernemarkerede rum endnu.",
+      "unnamedRoom": "Unavngivet rum"
+    },
+    "stats": {
+      "title": "Brugerstatistik",
+      "totalBlocks": "Samlet antal oprettede indlæg",
+      "collaborations": "Samarbejde",
+      "daysActive": "Aktive dage"
+    }
+  }
+}

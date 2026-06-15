@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "Udforsk seneste og igangværende indlæg i {roomName}."
+    },
+    "links": {
+      "exploreLabel": "Udforske:",
+      "allBlocks": "🗂️ Alle indlæg",
+      "browseByDate": "🗓️ Efter dato",
+      "bestOf": "🏅 Bedst af",
+      "searchInRoom": "🔎 Søg"
+    },
+    "actions": {
+      "createBlock": "Opret et indlæg",
+      "starTitle": "Stjerne dette rum",
+      "unstarTitle": "Fjern stjerne i dette rum"
+    },
+    "tabs": {
+      "locked": "Låste indlæg",
+      "inProgress": "Igangværende indlæg"
+    },
+    "sections": {
+      "lockedHeader": "Låste indlæg",
+      "inProgressHeader": "Igangværende indlæg"
+    },
+    "editorial": {
+      "heading": "Udvalgte guider",
+      "description": "Start her med de udvalgte guider, der er udvalgt til dette rum.",
+      "roleNames": {
+        "pillar": "Kernevejledning",
+        "companion": "Læsevejledning",
+        "texture": "Baggrundsvejledning"
+      }
+    },
+    "empty": {
+      "noDescription": "Ingen beskrivelse tilgængelig.",
+      "noLocked": "Ingen låste indlæg endnu! Indlæg automatisk låsning efter 1 times inaktivitet.",
+      "noInProgress": "Ingen igangværende indlæg endnu! Tid til at starte en.",
+      "noBlocks": "Ingen indlæg endnu! Opret den første og efterlad dit præg. 😎"
+    }
+  }
+}

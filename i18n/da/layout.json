@@ -1,0 +1,55 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "Velkommen, bruger!",
+    "logout": "Log ud",
+    "login": "Log ind / Tilmeld dig",
+    "language": "Sprog",
+    "openMenu": "Åbn hovedmenuen",
+    "closeMenu": "Luk hovedmenuen",
+    "privacy": "Privatlivspolitik",
+    "uiFallbackNotice": "{requested} er ikke oversat endnu. Viser {current} for nu.",
+    "copyButton": {
+      "copy": "Kopi",
+      "copied": "Kopieret!"
+    },
+    "copyright": "© {year}",
+    "languages": {
+      "en": "engelsk",
+      "es": "Español",
+      "fr": "Français",
+      "ru": "Русский",
+      "id": "Bahasa Indonesien",
+      "de": "Deutsch",
+      "it": "Italiano",
+      "pt": "Português",
+      "zh": "中文",
+      "ja": "日本語",
+      "ko": "한국어",
+      "ar": "العربية",
+      "hi": "हिन्दी",
+      "tr": "Türkçe",
+      "nl": "Nederlands",
+      "sv": "Svenska",
+      "no": "Norsk",
+      "da": "Dansk",
+      "fi": "Suomi",
+      "pl": "Polski",
+      "cs": "Čeština",
+      "el": "Ελληνικά",
+      "he": "hebraisk",
+      "th": "ไทย",
+      "vi": "Tiếng Việt"
+    },
+    "theme": {
+      "label": "Tema",
+      "toggleToDark": "Skift til mørk tilstand",
+      "toggleToLight": "Skift til lystilstand"
+    },
+    "blockImages": {
+      "preview": "Forhåndsvisning af billede",
+      "close": "Luk forhåndsvisning af billede",
+      "open": "Åbn forhåndsvisning af billede"
+    }
+  }
+}

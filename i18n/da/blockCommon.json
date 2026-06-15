@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "Udkast"
+    },
+    "deleteModal": {
+      "title": "Slet indlæg?",
+      "message": "Denne handling kan ikke fortrydes.",
+      "confirm": "Slet",
+      "cancel": "Ophæve",
+      "closeAriaLabel": "Tæt"
+    },
+    "toasts": {
+      "deleteSuccess": "Indlægget blev slettet!",
+      "deleteFailed": "Kunne ikke slette indlægget."
+    }
+  }
+}

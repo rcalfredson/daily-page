@@ -1,0 +1,77 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Arkiv",
+      "description": "Udforsk hele arkivet efter måned.",
+      "titleRoom": "Daily Page — Arkiv · {roomName}",
+      "descriptionRoom": "Udforsk tidligere skrivninger i rummet {roomName} - måned for måned. Hop til en hvilken som helst dato for at se, hvad andre har delt i dette rum over tid."
+    },
+    "nav": {
+      "prev": "Tidligere",
+      "next": "Næste"
+    },
+    "title": "📚 Gennemse arkiver",
+    "titleRoom": "📚 {roomName} — Arkiver",
+    "roomViewing": "Viser arkiv for rum {roomName}",
+    "viewRoomLink": "Udsigt rum",
+    "noContent": "Intet indhold tilgængeligt endnu.",
+    "backToRoom": "← Tilbage til Rumoversigt",
+    "calendar": {
+      "meta": {
+        "description": "Se alle kreative indlæg udgivet i {month} {year}—fra hurtige tanker til dybe refleksioner. Klik på en hvilken som helst dato for at se, hvad der blev delt.",
+        "descriptionRoom": "Se den kreative aktivitet i {roomName} under {month} {year}. Vælg en dato for at udforske de opslag, der blev delt den dag."
+      },
+      "title": "📆 Arkiv for {month} {year}",
+      "prevLabel": "Arkiv for {month} {year}",
+      "nextLabel": "Arkiv for {month} {year}"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "Arkiv for {date}",
+        "titleRoom": "{roomName} — Arkiv for {date}",
+        "descriptionSite": "Udforsk indlæg skrevet på {date}—fra stille noter til vilde bekendelser.",
+        "descriptionRoom": "På {date} satte forfattere i rummet {roomName} deres præg - rul gennem refleksioner, ideer og udtryk, der blev delt den dag."
+      },
+      "heading": "Arkiv for {date}",
+      "empty": "Der blev ikke fundet noget indhold for denne dato.",
+      "labels": {
+        "createdBy": "Skabt af:",
+        "in": "i",
+        "on": "på {datetime}",
+        "unknownRoom": "Ukendt rum"
+      },
+      "nav": {
+        "prevDay": "Forrige dag",
+        "nextDay": "Næste dag"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — Alle indlæg",
+        "descriptionRoom": "Gennemse hvert indlæg, der nogensinde er udgivet i rummet {roomName}. Sorter efter dato, titel eller stemmer for at udforske dens historie."
+      },
+      "header": {
+        "allBlocks": "— Alle indlæg"
+      },
+      "sort": {
+        "label": "Sorter efter",
+        "options": {
+          "date": "Dato",
+          "title": "Titel",
+          "votes": "Stemmer"
+        },
+        "submit": "Gå"
+      }
+    },
+    "pagination": {
+      "prev": "← Forrige",
+      "next": "Næste →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "Daglige sider for {time}"
+      },
+      "empty": "Vi kunne ikke finde nogen sider i denne tidsramme."
+    }
+  }
+}

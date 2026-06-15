@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Du)"
+    },
+    "meta": {
+      "title": "Rediger indlæg - {blockTitle}",
+      "titleFallback": "Rediger indlæg"
+    },
+    "errors": {
+      "imageUrlRequired": "Indtast venligst en billed-URL.",
+      "notFound": "Indlægget blev ikke fundet eller hører ikke til dette rum.",
+      "loadFailed": "Der opstod en fejl under indlæsning af indlægseditoren.",
+      "updateTitleFailed": "Fejl under opdatering af titel."
+    },
+    "roomInfo": {
+      "label": "Rum:"
+    },
+    "title": {
+      "placeholder": "Indtast indlægstitel",
+      "editTooltip": "Rediger titel",
+      "lock": "Låsestolpe",
+      "delete": "Slet indlæg"
+    },
+    "description": {
+      "label": "Beskrivelse",
+      "editTooltip": "Rediger beskrivelse",
+      "placeholder": "Indtast beskrivelse",
+      "noDescriptionOwner": "Ingen beskrivelse endnu...",
+      "noDescriptionViewer": "Ingen beskrivelse angivet...",
+      "save": "Spare",
+      "cancel": "Ophæve",
+      "expand": "Udvide",
+      "collapse": "Bryde sammen",
+      "updateError": "Fejl ved opdatering af beskrivelse."
+    },
+    "status": {
+      "lastBackup": "Sidste backup: {datetime}",
+      "lastBackupUnknown": "Sidste backup: Ukendt"
+    },
+    "peers": {
+      "label": "Peers:"
+    },
+    "toasts": {
+      "blockLocked": "Dette indlæg er blevet låst!"
+    },
+    "editor": {
+      "placeholder": "Den tomme side venter på din stemme; skrive frygtløst."
+    },
+    "loading": {
+      "label": "Indlæser",
+      "quote": "Lad verden brænde igennem dig. Kast prismelyset, hvidt varmt, på papir.<br>—Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "Du har ikke skrevet noget i 5 minutter. Klik på OK for at fortsætte sessionen; ellers vil du blive omdirigeret til arkivet.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Link til deling",
+      "copyTooltip": "Kopiér til udklipsholder",
+      "copied": "Kopieret!"
+    },
+    "toolbar": {
+      "insertImage": "Indsæt billede",
+      "insertImageUrlPlaceholder": "Indtast billed-URL",
+      "insertImageAltPlaceholder": "Alt tekst (valgfrit)",
+      "insertImageConfirm": "Bekræfte",
+      "insertImageCancel": "Ophæve"
+    },
+    "buttons": {
+      "downloadFile": "Download fil"
+    },
+    "lockModal": {
+      "messageLine1": "Er du sikker på, at du vil låse dette indlæg?",
+      "messageLine2": "Dette vil afslutte det og forhindre yderligere redigering.",
+      "confirm": "Låse",
+      "cancel": "Ophæve",
+      "successToast": "Indlægget blev låst.",
+      "errorToast": "Fejl ved låsning af post."
+    },
+    "tags": {
+      "headerWithTags": "Tags:",
+      "headerNoTags": "Ingen tags endnu! Tilføj nogle:",
+      "updateError": "Fejl under opdatering af tags."
+    },
+    "fullBlock": {
+      "headingPrefix": "Undskyld; indlægget \"{blockTitle}\" er nu",
+      "headingStatus": "fuldt optaget.",
+      "retryPrefix": "Behage",
+      "retryLink": "prøv et andet indlæg",
+      "retrySuffix": "eller kom tilbage en anden gang.",
+      "consolationPrefix": "Mens du venter, er du velkommen til at læse",
+      "consolationBestOf": "nogle af vores yndlingsindlæg",
+      "consolationMiddle": "eller for at gennemse",
+      "consolationArchive": "arkivet."
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "Søg",
+      "description": "Søg i offentlige indlæg."
+    },
+    "title": "Søg",
+    "placeholder": "Søg i indlæg...",
+    "hint": "Indtast mindst 2 tegn for at søge.",
+    "noResults": "Ingen resultater fundet.",
+    "untitled": "Uden titel",
+    "votesTitle": "Stemmer",
+    "pageLabel": "Side",
+    "filters": {
+      "inRoom": "På rumt"
+    },
+    "buttons": {
+      "search": "Søg",
+      "prev": "Forrige",
+      "next": "Næste"
+    }
+  }
+}

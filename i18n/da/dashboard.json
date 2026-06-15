@@ -1,0 +1,57 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Dashboard",
+      "description": "Dit Daily Page dashboard og kontooversigt."
+    },
+    "profile": {
+      "profilePicAlt": "Profilbillede",
+      "noBio": "Ingen bio endnu. Klik på \"Rediger\" for at tilføje en!",
+      "editBio": "Rediger bio",
+      "bioPlaceholder": "Indtast din bio her",
+      "save": "Spare",
+      "cancel": "Ophæve"
+    },
+    "activity": {
+      "title": "Seneste aktivitet",
+      "none": "Ingen nylig aktivitet.",
+      "updatedOn": "Opdateret den {date}",
+      "viewAllBlocks": "Se alle indlæg"
+    },
+    "drafts": {
+      "title": "Fortsæt med at skrive",
+      "none": "Ingen åbne kladder.",
+      "updatedOn": "Opdateret den {date}",
+      "unlisted": "Unoteret",
+      "viewAll": "Se alle indlæg"
+    },
+    "streak": {
+      "title": "Skriverække",
+      "line": "{days} dage i træk! Fortsæt!"
+    },
+    "starredRooms": {
+      "title": "Stjernemarkerede rum",
+      "none": "Du har ikke stjernemarkeret nogen rum endnu. Begynd at udforske for at finde dine favoritter!",
+      "viewAll": "Se alle stjernede rum",
+      "unnamedRoom": "Unavngivet rum"
+    },
+    "security": {
+      "title": "Kontosikkerhed",
+      "summary": "Skift din adgangskode og administrer to-faktor-godkendelse.",
+      "manage": "Administrer sikkerhed"
+    },
+    "stats": {
+      "title": "Dine statistikker",
+      "totalBlocks": "Samlet antal oprettede indlæg",
+      "collaborations": "Samarbejde",
+      "votesGiven": "Afgivne stemmer",
+      "daysActive": "Aktive dage",
+      "viewDetailed": "Se detaljerede statistikker 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Kunne ikke uploade profilbillede. Prøv venligst igen.",
+      "uploadUnexpected": "Der opstod en uventet fejl. Prøv venligst igen.",
+      "bioUpdateFailed": "Fejl under opdatering af bio. Prøv venligst igen."
+    }
+  }
+}

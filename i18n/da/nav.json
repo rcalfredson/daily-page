@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Hjem",
+    "rooms": "Rum",
+    "tags": "Tags",
+    "archive": "Arkiv",
+    "search": "Søg",
+    "bestOf": "Det bedste",
+    "about": "Om",
+    "support": "Støtte",
+    "otherProjects": "Andre projekter",
+    "auth": {
+      "welcomePrefix": "Velkomst,",
+      "welcomeFallbackUser": "du",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "Dashboard"
+  }
+}

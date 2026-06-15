@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Tags Oversigt",
+      "description": "Gennemse alle tags, der bruges på tværs af Daily Page, med hurtige filtre efter tid."
+    },
+    "title": "Tags Oversigt",
+    "intro": "Udforsk alle tags brugt i Daily Page.",
+    "tagCloudTitle": "Tagsky",
+    "timeframe": {
+      "last24h": "Sidste 24 timer",
+      "last7d": "Sidste 7 dage",
+      "last30d": "Sidste 30 dage",
+      "all": "Alle Tider"
+    },
+    "error": {
+      "loading": "Fejl ved indlæsning af tags-oversigt"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": "| Daily Page",
+        "description": "Indlæg tagget med"
+      },
+      "header": {
+        "label": "Tag:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Samlet indlæg med",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Skabt af:",
+        "inRoom": "i",
+        "unknownRoom": "Ukendt rum",
+        "onDate": "på"
+      },
+      "chart": {
+        "label": "Indlæg oprettet over tid"
+      },
+      "empty": {
+        "message": "Ingen indlæg fundet med dette tag endnu. Måske skulle du lave den første? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Fejl ved indlæsning af tagside"
+      }
+    }
+  }
+}

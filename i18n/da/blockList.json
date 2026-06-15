@@ -1,0 +1,11 @@
+{
+  "blockList": {
+    "period": {
+      "all": "hele tiden",
+      "days": "i de sidste {n} dage",
+      "day": "inden for de sidste 24 timer"
+    },
+    "createdBy": "Skabt af:",
+    "on": "på"
+  }
+}

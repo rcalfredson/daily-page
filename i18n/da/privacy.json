@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Privatlivspolitik",
+      "description": "Hvordan Daily Page indsamler, bruger og beskytter dine data, i almindeligt sprog."
+    },
+    "title": "Privatlivspolitik",
+    "lastUpdated": "Sidst opdateret: {date}",
+    "intro": {
+      "h2": "Indledning",
+      "p1": "Daily Page (\"os\", \"vi\" eller \"vores\") driver websitet dailypage.org (herefter benævnt \"tjenesten\").",
+      "p2": "Denne side informerer dig om vores politikker vedrørende indsamling, brug og videregivelse af personlige data, når du bruger vores Tjeneste."
+    },
+    "collection": {
+      "h2": "Indsamling og brug af oplysninger",
+      "p": "Vi indsamler minimale personlige data for at forbedre og levere vores service. Dette inkluderer e-mailadresser til kontoadministration og indhold, der er indsendt frivilligt af brugere."
+    },
+    "usage": {
+      "h2": "Dataforbrug",
+      "p": "De indsamlede data bruges udelukkende til kontogodkendelse, indholdsmoderering og forbedring af brugeroplevelsen."
+    },
+    "storage": {
+      "h2": "Datalagring og sikkerhed",
+      "p": "Dine data opbevares sikkert og deles eller sælges aldrig til tredjemand uden udtrykkeligt samtykke, undtagen som krævet ved lov."
+    },
+    "cookies": {
+      "h2": "Cookies",
+      "p": "Vi bruger udelukkende cookies til sessionsstyring og forbedring af brugeroplevelsen. Du kan deaktivere cookies via dine browserindstillinger."
+    },
+    "rights": {
+      "h2": "Dine rettigheder",
+      "p": "Du kan til enhver tid anmode om sletning eller ændring af dine personlige data ved at kontakte os."
+    },
+    "changes": {
+      "h2": "Ændringer til denne privatlivspolitik",
+      "p": "Vi kan opdatere vores privatlivspolitik fra tid til anden. Ændringer vil blive offentliggjort på denne side."
+    },
+    "contact": {
+      "h2": "Kontakt os",
+      "p": "For spørgsmål om denne privatlivspolitik, kontakt os på:",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}

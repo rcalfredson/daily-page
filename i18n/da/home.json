@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Populære indlæg fra de sidste 24 timer",
+      "description": "Daily Page er et minimalistisk, indie-skrivewebsted, hvor alle kan poste kreative tanker, minder eller eksperimenter – et indlæg ad gangen. Udforsk nye ideer, deltag i rum, og bidrag med din stemme."
+    },
+    "hero": {
+      "eyebrow": "Et roligt sted at skrive, læse og vende tilbage",
+      "title": "Velkommen til Daily Page!",
+      "subtitle": "Udforsk de mest populære indlæg fra de sidste 24 timer.",
+      "ctaPrefix": "Føler du dig inspireret?",
+      "cta": "Deltag i et rum",
+      "ctaSuffix": "og lav dit eget indlæg!"
+    },
+    "stats": {
+      "blocks": "Indlæg",
+      "rooms": "Rum",
+      "tags": "Tags",
+      "collabsToday": "Samarbejde i dag"
+    },
+    "activity": {
+      "title": "Live på Daily Page",
+      "subtitle": "Frisk samtale og reaktioner, alt sammen i ét blik.",
+      "fallbackActor": "Nogen",
+      "inRoom": "i",
+      "comments": {
+        "title": "Seneste kommentarer",
+        "more": "Søg efter diskussioner",
+        "commentVerb": "kommenterede",
+        "replyVerb": "svarede på",
+        "empty": "Ingen nyere kommentarer endnu. Den næste samtale kan starte med dit indlæg."
+      },
+      "reactions": {
+        "title": "Seneste reaktioner",
+        "more": "Gennemse populære indlæg",
+        "empty": "Ingen nylige reaktioner endnu. Et godt indlæg kunne hurtigt vække dette.",
+        "types": {
+          "heart": "hjerteligt",
+          "leaf": "reagerede med et blad på",
+          "wow": "reagerede med wow til",
+          "laugh": "grinede af"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Udvalgt rum",
+      "roomInfoDays": "Aktivitet over de seneste {days} dage: {blocks} indlæg, {votes} stemmer.",
+      "roomInfo24h": "Aktivitet i løbet af de sidste 24 timer: {blocks} indlæg, {votes} stemmer.",
+      "checkItOut": "Tjek det ud",
+      "blockRibbon": "★ Udvalgte indlæg",
+      "votes": "{n} stemmer",
+      "noContent": "(Intet indhold angivet...)",
+      "viewBlock": "Se indlæg"
+    },
+    "trendingTags": {
+      "title": "Populære tags",
+      "suffixDays": "(sidste {days} dage)",
+      "suffixAllTime": "(alle tider)",
+      "blocks": "{n} indlæg",
+      "votes": "{n} stemmer",
+      "empty": "Ingen populære tags endnu. Vær den første til at tagge noget fedt!"
+    },
+    "trendingBlocks": {
+      "title": "Populære indlæg",
+      "suffixDays": "(sidste {days} dage)",
+      "createdBy": "Skabt af:",
+      "in": "i",
+      "on": "på",
+      "unknownRoom": "Ukendt rum",
+      "empty24h": "Ingen indlæg endnu inden for de sidste 24 timer. Kom snart tilbage, compa!"
+    }
+  }
+}
