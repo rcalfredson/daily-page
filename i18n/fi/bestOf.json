@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Daily Pagen parhaat",
+      "description": "Daily Pagen rakastetuimmat julkaisut: hauskat, rehelliset, runolliset tai vain oudot. Katso, mikä erottui viime päivän, viikon, kuukauden ja pidemmän ajan aikana.",
+      "titleRoom": "Huoneen {roomName} parhaat",
+      "descriptionRoom": "Löydä huoneen {roomName} erottuvat julkaisut, joista lukijat pitivät eniten viimeisen 24 tunnin, 7 päivän, 30 päivän ja kaikkien aikojen aikana."
+    },
+    "heading": "🏆 Daily Pagen parhaat",
+    "headingRoomPrefix": "🏆 Parhaat: ",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 tuntia",
+      "7d": "🚀 7 päivää",
+      "30d": "🌕 30 päivää",
+      "all": "👑 Kaikkien aikojen"
+    },
+    "labels": {
+      "createdBy": "Luonut:",
+      "inRoom": "huoneessa",
+      "onDate": "{date}",
+      "unknownRoom": "Tuntematon huone",
+      "noBlocks": "Julkaisuja ei löytynyt.",
+      "viewRoom": "Näytä huone"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Huonehakemisto",
+      "description": "Jokainen huone on ovi erilaiseen maailmaan. Astu sisään, jaa tarinasi ja rakenna muiden kanssa jotain kaunista."
+    },
+    "eyebrow": "Löydä oma nurkkasi",
+    "heading": "Huonehakemisto",
+    "intro": "Aloita huoneista, jotka tuntuvat juuri nyt eläviltä, tai vaella aiheittain, kunnes jokin kolahtaa. Jokainen huone on erilainen kirjoitusvirike, fanikunta tai jaettu intohimo, joka odottaa ääntäsi.",
+    "empty": "Huoneita ei ole tällä hetkellä saatavilla. Tarkista myöhemmin uudelleen!",
+    "jumpToActive": "Näytä aktiiviset huoneet",
+    "jumpToTopics": "Selaa aiheittain",
+    "statsLabel": "Huonehakemiston kohokohdat",
+    "liveNow": "Käynnissä nyt",
+    "recentlyActive": "Äskettäin aktiiviset",
+    "recentlyActiveSubtitle": "Nopein tapa löytää huone, jossa on ihmisiä juuri nyt.",
+    "browseByTopic": "Selaa aiheittain",
+    "topicSubtitle": "Avaa aihe tutkiaksesi sen huoneita.",
+    "roomCount": "{count} huonetta",
+    "stats": {
+      "rooms": "huonetta tutkittavaksi",
+      "topics": "aiheryhmää",
+      "active": "aktiivista valintaa"
+    },
+    "activeUsers": "Aktiiviset käyttäjät: {count}",
+    "visitRoom": "Vieraile huoneessa",
+    "close": "Sulje",
+    "noTitle": "Otsikkoa ei ole saatavilla",
+    "noDescription": "Kuvausta ei ole saatavilla"
+  }
+}

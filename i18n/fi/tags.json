@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Tunnisteiden yleiskatsaus",
+      "description": "Selaa kaikkia Daily Pagessa käytettyjä tunnisteita nopeilla aikasuodattimilla."
+    },
+    "title": "Tunnisteiden yleiskatsaus",
+    "intro": "Tutustu kaikkiin Daily Pagessa käytettyihin tunnisteisiin.",
+    "tagCloudTitle": "Tunnistepilvi",
+    "timeframe": {
+      "last24h": "Viimeiset 24 tuntia",
+      "last7d": "Viimeiset 7 päivää",
+      "last30d": "Viimeiset 30 päivää",
+      "all": "Kaikkien aikojen"
+    },
+    "error": {
+      "loading": "Tunnisteiden yleiskatsauksen lataaminen epäonnistui"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "Julkaisut tunnisteella"
+      },
+      "header": {
+        "label": "Tunniste:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Julkaisuja yhteensä tunnisteella",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Luonut:",
+        "inRoom": "huoneessa",
+        "unknownRoom": "Tuntematon huone",
+        "onDate": ""
+      },
+      "chart": {
+        "label": "Ajan mittaan luodut julkaisut"
+      },
+      "empty": {
+        "message": "Tällä tunnisteella ei löytynyt vielä julkaisuja. Ehkä sinun kannattaa luoda ensimmäinen? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Tunnistesivun lataaminen epäonnistui"
+      }
+    }
+  }
+}

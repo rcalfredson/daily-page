@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Tuki",
+      "description": "Miten ottaa yhteyttä, ilmoittaa ongelmista, pyytää ominaisuuksia tai huoneita ja tukea Daily Pagea taloudellisesti."
+    },
+    "contact": {
+      "h1": "★ Haluan esittää kysymyksen, ilmoittaa ongelmasta tai pyytää ominaisuutta.",
+      "p1": {
+        "before": "Jos käytät mieluummin GitHubia, katso",
+        "link": "tämän projektin ongelmat",
+        "after": "ja lisää oma äänesi. Myös pull requestit ovat tietenkin tervetulleita."
+      },
+      "p2": {
+        "before": "Vaihtoehtoisesti",
+        "link": "lähetä sähköpostia",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Haluan tukea tätä projektia lahjoituksella.",
+      "p1": {
+        "before": "Kiitos jo etukäteen tämän projektin rahoittamisesta. Lähetä maksut turvallisesti palvelun kautta",
+        "paypal": "PayPal",
+        "middle": "tai halutessasi",
+        "amazon": "tilaa muutama pussillinen Amazonissa myymiäni leluja",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Haluan pyytää uutta huonetta.",
+      "form": {
+        "nameLabel": "Huoneen nimi",
+        "topicLabel": "Aihe (valinnainen)",
+        "descriptionLabel": "Kuvaus",
+        "submit": "Lähetä pyyntö",
+        "success": "Pyyntö lähetettiin onnistuneesti!",
+        "errorGeneric": "Pyynnön lähettäminen epäonnistui. Yritä uudelleen.",
+        "errorUnexpected": "Tapahtui odottamaton virhe. Yritä uudelleen."
+      }
+    }
+  }
+}

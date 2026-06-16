@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Kirjaudu sisään",
+      "message": "Sinun on kirjauduttava sisään jatkaaksesi.",
+      "messageWithAction": "Sinun on kirjauduttava sisään voidaksesi {action}.",
+      "cta": "Kirjaudu sisään"
+    },
+    "actions": {
+      "voteOnBlock": "äänestää julkaisua",
+      "starRoom": "merkitä tämän huoneen tähdellä",
+      "reactToBlock": "reagoida tähän julkaisuun",
+      "commentOnBlock": "kommentoida tätä julkaisua",
+      "reportComment": "ilmoittaa tästä kommentista"
+    },
+    "errors": {
+      "starToggleFail": "Tähtimerkinnän päivittäminen epäonnistui. Yritä uudelleen."
+    }
+  }
+}

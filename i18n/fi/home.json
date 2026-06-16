@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Suositut julkaisut viimeiseltä 24 tunnilta",
+      "description": "Daily Page on minimalistinen indie-kirjoitussivusto, jossa kuka tahansa voi julkaista luovia ajatuksia, muistoja tai kokeiluja, yksi julkaisu kerrallaan. Tutki uusia ideoita, liity huoneisiin ja tuo äänesi mukaan."
+    },
+    "hero": {
+      "eyebrow": "Hiljainen paikka kirjoittamiseen, lukemiseen ja palaamiseen",
+      "title": "Tervetuloa Daily Pageen!",
+      "subtitle": "Tutustu viimeisen 24 tunnin suosituimpiin julkaisuihin.",
+      "ctaPrefix": "Inspiroiko?",
+      "cta": "Liity huoneeseen",
+      "ctaSuffix": "ja luo oma julkaisusi!"
+    },
+    "stats": {
+      "blocks": "Julkaisut",
+      "rooms": "Huoneet",
+      "tags": "Tunnisteet",
+      "collabsToday": "Yhteistöitä tänään"
+    },
+    "activity": {
+      "title": "Elossa Daily Pagessa",
+      "subtitle": "Tuoreet keskustelut ja reaktiot yhdellä silmäyksellä.",
+      "fallbackActor": "Joku",
+      "inRoom": "huoneessa",
+      "comments": {
+        "title": "Viimeisimmät kommentit",
+        "more": "Hae keskusteluista",
+        "commentVerb": "kommentoi julkaisua",
+        "replyVerb": "vastasi julkaisussa",
+        "empty": "Ei vielä viimeaikaisia kommentteja. Seuraava keskustelu voi alkaa sinun julkaisustasi."
+      },
+      "reactions": {
+        "title": "Viimeisimmät reaktiot",
+        "more": "Selaa suosittuja julkaisuja",
+        "empty": "Ei vielä viimeaikaisia reaktioita. Hyvä julkaisu voi herättää tämän nopeasti.",
+        "types": {
+          "heart": "tykkäsi sydämellä",
+          "leaf": "reagoi lehdellä julkaisuun",
+          "wow": "reagoi ihmetellen julkaisuun",
+          "laugh": "nauroi julkaisulle"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Esittelyssä oleva huone",
+      "roomInfoDays": "Toiminta viimeisten {days} päivän aikana: {blocks} julkaisua, {votes} ääntä.",
+      "roomInfo24h": "Toiminta viimeisen 24 tunnin aikana: {blocks} julkaisua, {votes} ääntä.",
+      "checkItOut": "Tutustu",
+      "blockRibbon": "★ Esittelyssä oleva julkaisu",
+      "votes": "{n} ääntä",
+      "noContent": "(Sisältöä ei annettu...)",
+      "viewBlock": "Näytä julkaisu"
+    },
+    "trendingTags": {
+      "title": "Nousussa olevat tunnisteet",
+      "suffixDays": "(viimeiset {days} päivää)",
+      "suffixAllTime": "(kaikkien aikojen)",
+      "blocks": "{n} julkaisua",
+      "votes": "{n} ääntä",
+      "empty": "Ei vielä nousevia tunnisteita. Ole ensimmäinen, joka lisää tunnisteen johonkin hienoon!"
+    },
+    "trendingBlocks": {
+      "title": "Nousussa olevat julkaisut",
+      "suffixDays": "(viimeiset {days} päivää)",
+      "createdBy": "Luonut:",
+      "in": "huoneessa",
+      "on": "päivänä",
+      "unknownRoom": "Tuntematon huone",
+      "empty24h": "Ei julkaisuja viimeisen 24 tunnin aikana. Tarkista pian uudelleen!"
+    }
+  }
+}

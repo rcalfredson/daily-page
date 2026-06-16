@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "Tutustu huoneen {roomName} viimeaikaisiin ja keskeneräisiin julkaisuihin."
+    },
+    "links": {
+      "exploreLabel": "Tutki:",
+      "allBlocks": "🗂️ Kaikki julkaisut",
+      "browseByDate": "🗓️ Päivämäärän mukaan",
+      "bestOf": "🏅 Parhaat",
+      "searchInRoom": "🔎 Haku"
+    },
+    "actions": {
+      "createBlock": "Luo julkaisu",
+      "starTitle": "Merkitse tämä huone tähdellä",
+      "unstarTitle": "Poista tähti tästä huoneesta"
+    },
+    "tabs": {
+      "locked": "Lukitut julkaisut",
+      "inProgress": "Keskeneräiset julkaisut"
+    },
+    "sections": {
+      "lockedHeader": "Lukitut julkaisut",
+      "inProgressHeader": "Keskeneräiset julkaisut"
+    },
+    "editorial": {
+      "heading": "Esittelyssä olevat oppaat",
+      "description": "Aloita tästä tähän huoneeseen kuratoiduilla oppailla.",
+      "roleNames": {
+        "pillar": "Ydinopas",
+        "companion": "Lukuopas",
+        "texture": "Taustaopas"
+      }
+    },
+    "empty": {
+      "noDescription": "Kuvausta ei ole saatavilla.",
+      "noLocked": "Ei lukittuja julkaisuja vielä! Julkaisut lukittuvat automaattisesti 1 tunnin käyttämättömyyden jälkeen.",
+      "noInProgress": "Ei keskeneräisiä julkaisuja vielä! Aika aloittaa yksi.",
+      "noBlocks": "Ei julkaisuja vielä! Luo ensimmäinen ja jätä jälkesi. 😎"
+    }
+  }
+}

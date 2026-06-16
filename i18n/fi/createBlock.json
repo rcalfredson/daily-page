@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Luo uusi julkaisu — Daily Page",
+      "description": "Aloita uusi luova julkaisu valinnaisilla tunnisteilla, kielellä ja näkyvyydellä."
+    },
+    "heading": "Luo uusi julkaisu",
+    "roomInfo": {
+      "roomLabel": "Huone:",
+      "unavailable": "Huoneen tietoja ei ole saatavilla.",
+      "noDescription": "Kuvausta ei ole saatavilla."
+    },
+    "form": {
+      "title": {
+        "label": "Otsikko:",
+        "placeholder": {
+          "full": "esim. 'Mestariteokseni', 'Paras idea ikinä', 'Klikkiotsikko nörteille'",
+          "short": "esim. 'Mestariteokseni'"
+        }
+      },
+      "description": {
+        "label": "Kuvaus (valinnainen):",
+        "placeholder": "Selitä neroutesi… tai improvisoi."
+      },
+      "initialContent": {
+        "label": "Alustava sisältö (valinnainen):",
+        "help": "Aloita kirjoittaminen tässä tai jatka koko editorisivulle painamalla “Luo”, missä voit upottaa kuvia ja tehdä yhteistyötä reaaliajassa.",
+        "placeholder": "Aloita julkaisu tässä tai jatka muokkaamista luomisen jälkeen…"
+      },
+      "visibility": {
+        "label": "Näkyvyys:"
+      },
+      "submit": "Luo julkaisu"
+    },
+    "visibility": {
+      "public": {
+        "label": "Julkinen",
+        "title": "Kuka tahansa voi muokata reaaliajassa. Kirjautumista ei tarvita.",
+        "inline": "Kuka tahansa voi muokata reaaliajassa. Kirjautumista ei tarvita."
+      },
+      "unlisted": {
+        "label": "Listaamaton luonnos",
+        "title": "Piilotettu julkiselta selaamiselta muokattavana ollessaan. Näkyy lukitsemisen jälkeen.",
+        "inline": "Piilotettu julkiselta selaamiselta muokattavana ollessaan. Näkyy lukitsemisen jälkeen.",
+        "tooltip": "Listaamattomat luonnokset piilotetaan julkiselta selaamiselta muokkauksen ajaksi. Kuka tahansa linkin saanut voi osallistua, ja julkaisu muuttuu julkiseksi, kun se lukitaan."
+      }
+    },
+    "advanced": {
+      "summary": "Lisäasetukset",
+      "lang": {
+        "label": "Kieli:",
+        "options": {
+          "en": "englanti",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "עברית",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "Käännä olemassa oleva julkaisu (URL tai tunnus):",
+        "placeholder": "Liitä julkaisun URL tai tunnus (valinnainen)",
+        "invalid": "Tämä ei näytä kelvolliselta julkaisun URL-osoitteelta tai tunnukselta.",
+        "fetchError": "Julkaisun tietoja ei voitu hakea."
+      }
+    },
+    "messages": {
+      "langExists": "Tälle kielelle on jo käännös. Valitse toinen kieli.",
+      "genericError": "Jokin meni pieleen. Yritä uudelleen."
+    }
+  }
+}

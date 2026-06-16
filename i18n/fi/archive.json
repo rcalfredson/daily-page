@@ -1,0 +1,77 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Arkisto",
+      "description": "Selaa koko arkistoa kuukausittain.",
+      "titleRoom": "Daily Page — Arkisto · {roomName}",
+      "descriptionRoom": "Selaa huoneen {roomName} aiempia kirjoituksia kuukausittain. Hyppää mihin tahansa päivään nähdäksesi, mitä muut ovat ajan mittaan jakaneet tässä tilassa."
+    },
+    "nav": {
+      "prev": "Edellinen",
+      "next": "Seuraava"
+    },
+    "title": "📚 Selaa arkistoja",
+    "titleRoom": "📚 {roomName} — Arkistot",
+    "roomViewing": "Näytetään huoneen {roomName} arkistoa",
+    "viewRoomLink": "Näytä huone",
+    "noContent": "Sisältöä ei ole vielä saatavilla.",
+    "backToRoom": "← Takaisin huoneen hallintapaneeliin",
+    "calendar": {
+      "meta": {
+        "description": "Näytä kaikki luovat julkaisut ajalta {month} {year}, nopeista ajatuksista syviin pohdintoihin. Napsauta mitä tahansa päivää nähdäksesi, mitä jaettiin.",
+        "descriptionRoom": "Näytä huoneen {roomName} luova toiminta ajalta {month} {year}. Valitse päivämäärä tutkiaksesi sinä päivänä jaettuja julkaisuja."
+      },
+      "title": "📆 Arkisto ajalle {month} {year}",
+      "prevLabel": "Arkisto ajalle {month} {year}",
+      "nextLabel": "Arkisto ajalle {month} {year}"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "Arkisto päivälle {date}",
+        "titleRoom": "{roomName} — Arkisto päivälle {date}",
+        "descriptionSite": "Tutustu päivänä {date} kirjoitettuihin julkaisuihin hiljaisista muistiinpanoista villeihin tunnustuksiin.",
+        "descriptionRoom": "Päivänä {date} huoneen {roomName} kirjoittajat jättivät jälkensä. Selaa sinä päivänä jaettuja pohdintoja, ideoita ja ilmaisuja."
+      },
+      "heading": "Arkisto päivälle {date}",
+      "empty": "Tälle päivälle ei löytynyt sisältöä.",
+      "labels": {
+        "createdBy": "Luonut:",
+        "in": "huoneessa",
+        "on": "päivänä {datetime}",
+        "unknownRoom": "Tuntematon huone"
+      },
+      "nav": {
+        "prevDay": "Edellinen päivä",
+        "nextDay": "Seuraava päivä"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — Kaikki julkaisut",
+        "descriptionRoom": "Selaa kaikkia huoneessa {roomName} koskaan julkaistuja julkaisuja. Järjestä päivämäärän, otsikon tai äänten mukaan tutkiaksesi sen historiaa."
+      },
+      "header": {
+        "allBlocks": "— Kaikki julkaisut"
+      },
+      "sort": {
+        "label": "Järjestä",
+        "options": {
+          "date": "Päivämäärä",
+          "title": "Otsikko",
+          "votes": "Äänet"
+        },
+        "submit": "Näytä"
+      }
+    },
+    "pagination": {
+      "prev": "← Edellinen",
+      "next": "Seuraava →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "Daily Page -julkaisut ajalle {time}"
+      },
+      "empty": "Emme löytäneet sivuja tuolta ajanjaksolta."
+    }
+  }
+}

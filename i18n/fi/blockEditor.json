@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Sinä)"
+    },
+    "meta": {
+      "title": "Muokkaa julkaisua - {blockTitle}",
+      "titleFallback": "Muokkaa julkaisua"
+    },
+    "errors": {
+      "imageUrlRequired": "Syötä kuvan URL-osoite.",
+      "notFound": "Julkaisua ei löytynyt tai se ei kuulu tähän huoneeseen.",
+      "loadFailed": "Julkaisueditoria ladattaessa tapahtui virhe.",
+      "updateTitleFailed": "Otsikon päivittäminen epäonnistui."
+    },
+    "roomInfo": {
+      "label": "Huone:"
+    },
+    "title": {
+      "placeholder": "Syötä julkaisun otsikko",
+      "editTooltip": "Muokkaa otsikkoa",
+      "lock": "Lukitse julkaisu",
+      "delete": "Poista julkaisu"
+    },
+    "description": {
+      "label": "Kuvaus",
+      "editTooltip": "Muokkaa kuvausta",
+      "placeholder": "Syötä kuvaus",
+      "noDescriptionOwner": "Ei kuvausta vielä...",
+      "noDescriptionViewer": "Kuvausta ei annettu...",
+      "save": "Tallenna",
+      "cancel": "Peruuta",
+      "expand": "Laajenna",
+      "collapse": "Supista",
+      "updateError": "Kuvauksen päivittäminen epäonnistui."
+    },
+    "status": {
+      "lastBackup": "Viimeisin varmuuskopio: {datetime}",
+      "lastBackupUnknown": "Viimeisin varmuuskopio: tuntematon"
+    },
+    "peers": {
+      "label": "Muut käyttäjät:"
+    },
+    "toasts": {
+      "blockLocked": "Tämä julkaisu on lukittu!"
+    },
+    "editor": {
+      "placeholder": "Tyhjä sivu odottaa ääntäsi; kirjoita pelottomasti."
+    },
+    "loading": {
+      "label": "Ladataan",
+      "quote": "Anna maailman palaa lävitsesi. Heitä prisman valo, valkohehkuisena, paperille.<br>—Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "Et ole kirjoittanut mitään 5 minuuttiin. Jatka istuntoa napsauttamalla OK, muuten sinut ohjataan arkistoon.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Jakolinkki",
+      "copyTooltip": "Kopioi leikepöydälle",
+      "copied": "Kopioitu!"
+    },
+    "toolbar": {
+      "insertImage": "Lisää kuva",
+      "insertImageUrlPlaceholder": "Syötä kuvan URL-osoite",
+      "insertImageAltPlaceholder": "Vaihtoehtoinen teksti (valinnainen)",
+      "insertImageConfirm": "Vahvista",
+      "insertImageCancel": "Peruuta"
+    },
+    "buttons": {
+      "downloadFile": "Lataa tiedosto"
+    },
+    "lockModal": {
+      "messageLine1": "Haluatko varmasti lukita tämän julkaisun?",
+      "messageLine2": "Tämä viimeistelee sen ja estää lisämuokkaukset.",
+      "confirm": "Lukitse",
+      "cancel": "Peruuta",
+      "successToast": "Julkaisu lukittiin onnistuneesti.",
+      "errorToast": "Julkaisun lukitseminen epäonnistui."
+    },
+    "tags": {
+      "headerWithTags": "Tunnisteet:",
+      "headerNoTags": "Ei tunnisteita vielä! Lisää muutama:",
+      "updateError": "Tunnisteiden päivittäminen epäonnistui."
+    },
+    "fullBlock": {
+      "headingPrefix": "Valitettavasti julkaisu \"{blockTitle}\" on nyt",
+      "headingStatus": "täynnä.",
+      "retryPrefix": "Ole hyvä ja",
+      "retryLink": "kokeile toista julkaisua",
+      "retrySuffix": "tai palaa myöhemmin.",
+      "consolationPrefix": "Odottaessasi voit lukea",
+      "consolationBestOf": "joitakin suosikkijulkaisuistamme",
+      "consolationMiddle": "tai selata",
+      "consolationArchive": "arkistoa."
+    }
+  }
+}

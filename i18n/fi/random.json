@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Muut projektit",
+      "description": "Tutustu baseball-päiväkirjaan, satunnaisiin kirjoituskokeiluihin ja muihin Daily Pagen sivuprojekteihin."
+    },
+    "title": "Muut projektit",
+    "tagline": "Kotoisa nurkka kokeiluille ja sivuseikkailuille.",
+    "links": {
+      "baseball": "📖 Baseball-päiväkirja",
+      "randomWriter": "🎲 Satunnaiskirjoittaja"
+    },
+    "cta": {
+      "backToRooms": "Takaisin päähuoneisiin"
+    }
+  }
+}

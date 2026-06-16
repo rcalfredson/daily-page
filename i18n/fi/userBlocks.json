@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "Julkaisusi",
+      "description": "Selaa ja järjestä kaikkia julkaisuja, jotka olet luonut tai joissa olet ollut mukana."
+    },
+    "header": {
+      "dashboardLink": "Hallintapaneelisi",
+      "profileLink": "Käyttäjän {username} profiili",
+      "allBlocks": "Kaikki julkaisut"
+    },
+    "empty": "Ei julkaisuja vielä.",
+    "pagination": {
+      "prev": "← Edellinen",
+      "next": "Seuraava →"
+    },
+    "titleUser": "Käyttäjän {username} julkaisut"
+  }
+}

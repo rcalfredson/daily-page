@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "Luonnos"
+    },
+    "deleteModal": {
+      "title": "Poistetaanko julkaisu?",
+      "message": "Tätä toimintoa ei voi perua.",
+      "confirm": "Poista",
+      "cancel": "Peruuta",
+      "closeAriaLabel": "Sulje"
+    },
+    "toasts": {
+      "deleteSuccess": "Julkaisu poistettiin onnistuneesti!",
+      "deleteFailed": "Julkaisun poistaminen epäonnistui."
+    }
+  }
+}

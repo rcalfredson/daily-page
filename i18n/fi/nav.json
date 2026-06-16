@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Etusivu",
+    "rooms": "Huoneet",
+    "tags": "Tunnisteet",
+    "archive": "Arkisto",
+    "search": "Haku",
+    "bestOf": "Parhaat",
+    "about": "Tietoja",
+    "support": "Tuki",
+    "otherProjects": "Muut projektit",
+    "auth": {
+      "welcomePrefix": "Tervetuloa, ",
+      "welcomeFallbackUser": "sinä",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "Hallintapaneeli"
+  }
+}

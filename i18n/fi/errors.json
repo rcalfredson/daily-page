@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Hups! Jokin meni pieleen.",
+      "message": "Tapahtui odottamaton virhe. Yritä myöhemmin uudelleen.",
+      "home": "Takaisin etusivulle"
+    },
+    "notFound": {
+      "title": "404 - Sivua ei löydy",
+      "metaTitle": "Sivua ei löydy",
+      "message": "Valitettavasti emme löytäneet etsimääsi sivua.",
+      "homePrefix": "Voit palata",
+      "homeLink": "etusivulle",
+      "roomsPrefix": "tai tutustua",
+      "roomsLink": "huonehakemistoon."
+    }
+  }
+}

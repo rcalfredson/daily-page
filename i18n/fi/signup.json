@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Luo tili",
+      "description": "Rekisteröidy Daily Pageen käyttääksesi kaikkia ominaisuuksia."
+    },
+    "header": {
+      "title": "Luo tilisi",
+      "subtitle": "Liity Daily Pageen aloittaaksesi päivittäisen kirjoittamisesi luomisen ja jakamisen!"
+    },
+    "form": {
+      "email": {
+        "label": "Sähköposti",
+        "placeholder": "Syötä sähköpostisi"
+      },
+      "username": {
+        "label": "Käyttäjänimi",
+        "placeholder": "Syötä käyttäjänimesi"
+      },
+      "password": {
+        "label": "Salasana",
+        "placeholder": "Syötä salasana"
+      },
+      "submit": "Rekisteröidy",
+      "feedback": {
+        "success": "Lomakkeen lähetys onnistui!",
+        "successCreatedVerify": "Tili luotiin onnistuneesti! Tarkista sähköpostisi vahvistaaksesi tilisi.",
+        "genericError": "Tilin luominen epäonnistui. Yritä uudelleen.",
+        "unexpectedError": "Tapahtui odottamaton virhe. Yritä uudelleen."
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Tilin turvallisuus",
+      "description": "Hallinnoi Daily Page -salasanaasi ja kaksivaiheista tunnistautumista."
+    },
+    "backToDashboard": "Takaisin hallintapaneeliin",
+    "heading": "Tilin turvallisuus",
+    "subheading": "Suojaa tilisi vahvalla salasanalla ja tunnistussovelluksella.",
+    "password": {
+      "title": "Vaihda salasana",
+      "description": "Käytä yksilöllistä salasanaa, jossa on vähintään 8 merkkiä.",
+      "current": {
+        "label": "Nykyinen salasana"
+      },
+      "new": {
+        "label": "Uusi salasana"
+      },
+      "submit": "Päivitä salasana"
+    },
+    "twoFactor": {
+      "title": "Kaksivaiheinen tunnistautuminen",
+      "statusOn": "Käytössä",
+      "statusOff": "Pois käytöstä",
+      "description": "Lisää kirjautuessasi salasanan jälkeen kertakäyttökoodi tunnistussovelluksesta.",
+      "currentPassword": {
+        "label": "Nykyinen salasana"
+      },
+      "startSetup": "Ota tunnistussovellus käyttöön",
+      "qrAlt": "Tunnistussovelluksen QR-koodi",
+      "manualKey": "Manuaalinen määritysavain",
+      "code": {
+        "label": "6-numeroinen koodi"
+      },
+      "enable": "Ota 2FA käyttöön",
+      "disableCode": {
+        "label": "Tunnistuskoodi"
+      },
+      "disable": "Poista 2FA käytöstä"
+    },
+    "recoveryCodes": {
+      "title": "Tallenna palautuskoodisi",
+      "description": "Käytä jotakin näistä kertakäyttökoodeista kirjautumiseen, jos menetät pääsyn tunnistussovellukseesi.",
+      "regenerateDescription": "Luo uusi palautuskoodien sarja, jos kadotit edellisen. Tämä mitätöi kaikki vanhat palautuskoodit.",
+      "regenerate": "Luo uudet palautuskoodit",
+      "warning": "Säilytä ne turvallisessa paikassa. Niitä ei näytetä uudelleen."
+    },
+    "feedback": {
+      "passwordChanged": "Salasanasi päivitettiin.",
+      "setupReady": "Skannaa QR-koodi ja viimeistele määritys syöttämällä 6-numeroinen koodi.",
+      "twoFactorEnabled": "Kaksivaiheinen tunnistautuminen on nyt käytössä.",
+      "twoFactorDisabled": "Kaksivaiheinen tunnistautuminen on nyt poistettu käytöstä.",
+      "recoveryCodesRegenerated": "Palautuskoodisi luotiin uudelleen. Tallenna uudet koodit nyt.",
+      "missingFields": "Täytä kaikki pakolliset kentät.",
+      "missingCurrentPassword": "Jatka syöttämällä nykyinen salasanasi.",
+      "passwordTooShort": "Uuden salasanasi on oltava vähintään 8 merkkiä pitkä.",
+      "invalidCurrentPassword": "Nykyinen salasana ei täsmännyt.",
+      "missingCode": "Syötä tunnistussovelluksesi 6-numeroinen koodi.",
+      "invalidCode": "Koodi ei toiminut. Yritä uudelleen.",
+      "noPendingSetup": "Aloita määritys uudelleen ennen koodin syöttämistä.",
+      "setupExpired": "Määritysistunto vanheni. Aloita uudelleen saadaksesi uuden QR-koodin.",
+      "twoFactorNotEnabled": "Kaksivaiheinen tunnistautuminen ei ole käytössä tällä tilillä.",
+      "genericError": "Jokin meni pieleen. Yritä uudelleen.",
+      "unexpectedError": "Tapahtui odottamaton virhe. Yritä uudelleen."
+    }
+  }
+}

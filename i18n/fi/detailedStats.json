@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "Tarkat tilastot",
+      "description": "Yksityiskohtainen erittely Daily Page -toiminnastasi."
+    },
+    "nav": {
+      "backToDashboard": "← Takaisin hallintapaneeliin"
+    },
+    "header": {
+      "title": "📊 Tilastojesi yleiskatsaus 📊"
+    },
+    "cards": {
+      "totalBlocks": "Luotuja julkaisuja yhteensä 📝",
+      "collaborations": "Yhteistyöt 🤝",
+      "votesGiven": "Annetut äänet 👍",
+      "daysActive": "Aktiiviset päivät 📆"
+    },
+    "chart": {
+      "datasetLabel": "Tilastosi",
+      "labels": {
+        "blocksCreated": "Luodut julkaisut",
+        "collaborations": "Yhteistyöt",
+        "votesGiven": "Annetut äänet",
+        "daysActive": "Aktiiviset päivät"
+      }
+    }
+  }
+}

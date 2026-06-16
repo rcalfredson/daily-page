@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — Tietoja",
+      "description": "Mikä Daily Page on, miten se toimii ja miksi se rakennettiin verkon hitaammaksi ja lempeämmäksi nurkaksi."
+    },
+    "title": "Tietoja Daily Pagesta",
+    "tagline": "Ruoki mieltäsi, älä syötettäsi.",
+    "mission": {
+      "h2": "Tehtävä",
+      "p1": "Indie-kirjoituslaboratorio, joka alkoi olohuoneessani ja saa voimansa lukijoiden uteliaisuudesta.",
+      "p2": "Sitä ei rakennettu mädättämään aivojasi vaan ravitsemaan niitä: paikka, jossa voit kirjoittaa hitaasti, halutessasi nimettömästi, eikä sinun tarvitse huolehtia vaikutuksen tekemisestä."
+    },
+    "how": {
+      "h2": "Miten se toimii",
+      "features": {
+        "rooms": {
+          "label": "Huoneet",
+          "text": "ovat aihekohtaisia tiloja (ajattele “subreddit, mutta ystävällisempi”)."
+        },
+        "blocks": {
+          "label": "Julkaisut",
+          "text": "ovat yhteisiä kirjoitustiloja. Kuka tahansa, myös “nimetön”, voi luoda sellaisen, muokata sitä lukitsemiseen asti ja äänestää muiden julkaisuja."
+        },
+        "privacy": {
+          "label": "Yksityisyys ja jakaminen",
+          "text": "tarkoittaa, että julkiset julkaisut näkyvät huoneen syötteessä. Listaamattomat luonnokset pysyvät piilossa lukitsemiseen asti, mutta saat jakolinkin ystävien kutsumista varten."
+        },
+        "markdown": {
+          "label": "Markdown ja media",
+          "text": "antaa kirjoittaa markdownilla, upottaa kuvia ja muokata yhdessä kuten Google Docsissa."
+        },
+        "trends": {
+          "label": "Trendit ja tunnisteet",
+          "text": "antavat lisätä julkaisuun tunnisteita, seurata tunnistetrendejä ja löytää parhaat sisällöt (7 pv / 30 pv / kaikkien aikojen)."
+        },
+        "streaks": {
+          "label": "Putket",
+          "text": "pitävät päivittäisen kirjoitusputkesi elossa, paras kannustin palata joka päivä."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Miten päädyimme tänne",
+      "p1": "Vuonna 2018 rakensin päivämäärään perustuvan wikin “tämän päivän sivulle” ja katselin, kuinka muutama pohdiskeleva kirjoittaja teki siitä ajatustensa kanavan. Siitä ei koskaan tullut valtavaa, mutta se kylvi siemenen.",
+      "p2": "Nyt Daily Page on kasvanut siitä siemenestä moniksi huoneiksi: hiljaiseksi sosiaaliseksi verkoksi introverteille, idealisteille ja kaikille, jotka kaipaavat hitaampaa tahtia."
+    },
+    "next": {
+      "h2": "Mitä seuraavaksi",
+      "p1": "Olemme vasta alussa: rikkaammat upotukset, syvemmät käyttäjätilastot, mainepistetaulukot ja lisää tapoja palkita harkittua luomista.",
+      "p2": "Kiitos, että olet osa tätä pientä indie-kokeilua."
+    },
+    "cta": {
+      "rooms": "Tutustu huoneisiin",
+      "signup": "Liity yhteisöön"
+    }
+  }
+}
