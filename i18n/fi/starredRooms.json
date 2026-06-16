@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Kaikki tähdellä merkityt huoneet",
+      "description": "Luettelo kaikista huoneista, jotka olet merkinnyt tähdellä."
+    },
+    "nav": {
+      "backToDashboard": "← Takaisin hallintapaneeliin"
+    },
+    "header": {
+      "title": "🌟 Kaikki tähdellä merkitsemäsi huoneet 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Nimetön huone",
+      "noDescription": "Ei kuvausta."
+    },
+    "empty": {
+      "message": "Et ole vielä merkinnyt yhtään huonetta tähdellä!"
+    }
+  }
+}

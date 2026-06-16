@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Ilmoita sopimattomasta sisällöstä",
+    "fields": {
+      "reason": {
+        "label": "Syy",
+        "options": {
+          "spam": "Roskaposti",
+          "offensive": "Loukkaava (vihapuhe tai halventavat ilmaukset)",
+          "inappropriate": "Sopimaton (alastomuus, graafinen sisältö jne.)",
+          "other": "Muu"
+        }
+      },
+      "details": {
+        "label": "Lisätiedot (valinnainen)",
+        "placeholder": "Kuvaile, mitä näit…"
+      }
+    },
+    "buttons": {
+      "submit": "Lähetä ilmoitus",
+      "cancel": "Peruuta"
+    },
+    "toasts": {
+      "success": "Ilmoitus lähetetty, kiitos!",
+      "failed": "Ilmoituksen lähettäminen epäonnistui."
+    }
+  }
+}

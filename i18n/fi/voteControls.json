@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "Ylä-ääni",
+    "downvote": "Ala-ääni",
+    "errors": {
+      "failed": "Ääntäsi ei voitu tallentaa."
+    }
+  }
+}

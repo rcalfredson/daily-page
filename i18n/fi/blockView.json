@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Julkaisu - {blockTitle}",
+      "titleFallback": "Julkaisu"
+    },
+    "labels": {
+      "room": "Huone",
+      "author": "Tekijä",
+      "created": "Luotu",
+      "unknownAuthor": "Nimetön",
+      "authorAvatarAlt": "Käyttäjän {username} avatar",
+      "viewAuthorProfile": "Näytä käyttäjän {username} profiili",
+      "lang": "Käännökset: ",
+      "available": "saatavilla"
+    },
+    "buttons": {
+      "edit": "Muokkaa",
+      "deleteBlock": "Poista julkaisu",
+      "share": "Jaa",
+      "flagContent": "Ilmianna sisältö"
+    },
+    "description": {
+      "label": "Kuvaus",
+      "none": "Kuvausta ei annettu...",
+      "expand": "Laajenna",
+      "collapse": "Supista"
+    },
+    "editorial": {
+      "heading": "Lukuopas",
+      "roleLabel": "Lukutyyppi",
+      "clusterLabel": "Opas",
+      "sequence": "Osa {sequence}",
+      "primaryPillarHeading": "Aloita tästä",
+      "relatedHeading": "Jatka lukemista",
+      "clusterHeading": "Lisää tässä oppaassa",
+      "expandSection": "Näytä {count} lisää",
+      "collapseSection": "Näytä vähemmän",
+      "roleNames": {
+        "pillar": "Ydinopas",
+        "companion": "Syväsukellus",
+        "texture": "Tausta"
+      }
+    },
+    "comments": {
+      "heading": "Kommentit",
+      "count": "{count} kommenttia",
+      "empty": "Kukaan ei ole vielä vastannut. Kommentit ilmestyvät tänne, kun keskustelu alkaa.",
+      "composer": {
+        "label": "Lisää kommentti",
+        "placeholder": "Kirjoita kommentti...",
+        "submit": "Julkaise kommentti",
+        "submitting": "Julkaistaan...",
+        "success": "Kommentti julkaistiin.",
+        "error": "Kommentin julkaiseminen ei onnistu juuri nyt.",
+        "loginPrompt": "Kirjaudu sisään liittyäksesi keskusteluun.",
+        "loginCta": "Kirjaudu kommentoidaksesi",
+        "verifyPrompt": "Vahvista sähköpostisi ennen kommentin julkaisemista.",
+        "verifyCta": "Vahvista sähköposti"
+      },
+      "sort": {
+        "label": "Järjestä",
+        "oldestFirst": "Vanhimmat ensin",
+        "newestFirst": "Uusimmat ensin"
+      },
+      "by": "Tekijä",
+      "unknownAuthor": "Tuntematon",
+      "reply": {
+        "action": "Vastaa",
+        "label": "Lisää vastaus",
+        "placeholder": "Kirjoita vastaus...",
+        "submit": "Julkaise vastaus",
+        "submitting": "Julkaistaan...",
+        "success": "Vastaus julkaistiin.",
+        "error": "Vastauksen julkaiseminen ei onnistu juuri nyt.",
+        "cancel": "Peruuta",
+        "loginPrompt": "Kirjaudu vastataksesi."
+      },
+      "manage": {
+        "edited": "Muokattu",
+        "editAction": "Muokkaa",
+        "deleteAction": "Poista",
+        "deleteConfirm": "Poistetaanko tämä kommentti? Myös sen alla olevat vastaukset poistetaan.",
+        "deleteSuccess": "Kommentti poistettiin.",
+        "deleteError": "Kommentin poistaminen ei onnistu juuri nyt.",
+        "forbidden": "Voit hallita vain omia kommenttejasi.",
+        "edit": {
+          "label": "Muokkaa kommenttia",
+          "save": "Tallenna",
+          "saving": "Tallennetaan...",
+          "cancel": "Peruuta",
+          "success": "Kommentti päivitettiin.",
+          "error": "Kommentin päivittäminen ei onnistu juuri nyt."
+        }
+      },
+      "report": {
+        "action": "Ilmoita",
+        "pending": "Ilmoitetaan...",
+        "success": "Kommentti ilmoitettu.",
+        "error": "Kommentin ilmoittaminen ei onnistu juuri nyt.",
+        "ownError": "Et voi ilmoittaa omaa kommenttiasi.",
+        "hidden": "Kommentti piilotettu ilmoituksen jälkeen.",
+        "reported": "Ilmoitettu"
+      },
+      "deepLink": {
+        "focused": "Linkitetty kommentti",
+        "unavailable": "Linkitetty kommentti ei ole enää saatavilla."
+      },
+      "loadMore": "Lataa lisää kommentteja",
+      "loading": "Ladataan...",
+      "loadError": "Lisää kommentteja ei voi ladata juuri nyt."
+    },
+    "share": {
+      "title": "Jaa tämä julkaisu",
+      "shareOn": "Jaa palvelussa:",
+      "nativeText": "Katso tämä julkaisu: {title}",
+      "alt": {
+        "facebook": "Facebook-logo",
+        "reddit": "Reddit-logo",
+        "whatsapp": "WhatsApp-logo",
+        "twitter": "Twitter-logo"
+      }
+    },
+    "errors": {
+      "notFound": "Julkaisua ei löytynyt tai se ei kuulu tähän huoneeseen.",
+      "loadFailed": "Julkaisunäkymän lataaminen epäonnistui."
+    }
+  }
+}

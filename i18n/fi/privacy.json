@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Tietosuojakäytäntö",
+      "description": "Selkeästi kerrottuna, miten Daily Page kerää, käyttää ja suojaa tietojasi."
+    },
+    "title": "Tietosuojakäytäntö",
+    "lastUpdated": "Viimeksi päivitetty: {date}",
+    "intro": {
+      "h2": "Johdanto",
+      "p1": "Daily Page (\"me\") ylläpitää dailypage.org-sivustoa (jäljempänä \"Palvelu\").",
+      "p2": "Tämä sivu kertoo käytännöistämme henkilötietojen keräämisessä, käytössä ja luovuttamisessa, kun käytät Palveluamme."
+    },
+    "collection": {
+      "h2": "Tietojen kerääminen ja käyttö",
+      "p": "Keräämme vain vähän henkilötietoja Palvelumme parantamiseksi ja tarjoamiseksi. Näihin kuuluvat tilinhallintaan käytettävät sähköpostiosoitteet ja käyttäjien vapaaehtoisesti lähettämä sisältö."
+    },
+    "usage": {
+      "h2": "Tietojen käyttö",
+      "p": "Kerättyjä tietoja käytetään vain tilin tunnistamiseen, sisällön moderointiin ja käyttökokemuksen parantamiseen."
+    },
+    "storage": {
+      "h2": "Tietojen säilytys ja turvallisuus",
+      "p": "Tietosi säilytetään turvallisesti, eikä niitä koskaan jaeta tai myydä kolmansille osapuolille ilman nimenomaista suostumustasi, ellei laki sitä vaadi."
+    },
+    "cookies": {
+      "h2": "Evästeet",
+      "p": "Käytämme evästeitä vain istuntojen hallintaan ja käyttökokemuksen parantamiseen. Voit poistaa evästeet käytöstä selaimesi asetuksista."
+    },
+    "rights": {
+      "h2": "Oikeutesi",
+      "p": "Voit pyytää henkilötietojesi poistamista tai muuttamista milloin tahansa ottamalla meihin yhteyttä."
+    },
+    "changes": {
+      "h2": "Muutokset tähän tietosuojakäytäntöön",
+      "p": "Saatamme päivittää tietosuojakäytäntöämme aika ajoin. Muutokset julkaistaan tällä sivulla."
+    },
+    "contact": {
+      "h2": "Ota yhteyttä",
+      "p": "Jos sinulla on kysyttävää tästä tietosuojakäytännöstä, ota yhteyttä:",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "Vahvista sähköposti",
+      "description": "Vahvista sähköpostiosoitteesi Daily Pagea varten."
+    },
+    "header": {
+      "title": "Vahvistetaan sähköpostiasi..."
+    },
+    "status": {
+      "checking": "Tarkistetaan tunnusta, odota...",
+      "missingToken": "Vahvistustunnus puuttuu tai on virheellinen.",
+      "genericFailure": "Vahvistus epäonnistui.",
+      "unexpectedError": "Tapahtui odottamaton virhe.",
+      "success": "Tilisi on vahvistettu onnistuneesti!",
+      "invalidOrExpired": "Virheellinen tai vanhentunut vahvistustunnus."
+    },
+    "verificationMsg": {
+      "subject": "Vahvista Daily Page -tilisi ✨",
+      "heading": "Tervetuloa Daily Pageen, {username}!",
+      "body": "Vahvista sähköpostisi napsauttamalla alla:",
+      "cta": "Vahvista sähköpostiosoite",
+      "expires": "Tämä linkki vanhenee {hours} tunnin kuluttua."
+    }
+  }
+}

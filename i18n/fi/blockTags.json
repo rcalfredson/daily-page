@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "Tunnisteet:",
+      "noTags": "Ei tunnisteita vielä! Lisää muutama:"
+    },
+    "input": {
+      "placeholder": "Uusi tunniste",
+      "addButton": "Lisää"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

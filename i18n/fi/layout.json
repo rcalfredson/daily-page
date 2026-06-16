@@ -1,0 +1,55 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "Tervetuloa, käyttäjä!",
+    "logout": "Kirjaudu ulos",
+    "login": "Kirjaudu / Rekisteröidy",
+    "language": "Kieli",
+    "openMenu": "Avaa päävalikko",
+    "closeMenu": "Sulje päävalikko",
+    "privacy": "Tietosuojakäytäntö",
+    "uiFallbackNotice": "{requested} ei ole vielä käännetty. Näytetään toistaiseksi {current}.",
+    "copyButton": {
+      "copy": "Kopioi",
+      "copied": "Kopioitu!"
+    },
+    "copyright": "© {year}",
+    "languages": {
+      "en": "englanti",
+      "es": "Español",
+      "fr": "Français",
+      "ru": "Русский",
+      "id": "Bahasa Indonesia",
+      "de": "Deutsch",
+      "it": "Italiano",
+      "pt": "Português",
+      "zh": "中文",
+      "ja": "日本語",
+      "ko": "한국어",
+      "ar": "العربية",
+      "hi": "हिन्दी",
+      "tr": "Türkçe",
+      "nl": "Nederlands",
+      "sv": "Svenska",
+      "no": "Norsk",
+      "da": "Dansk",
+      "fi": "Suomi",
+      "pl": "Polski",
+      "cs": "Čeština",
+      "el": "Ελληνικά",
+      "he": "עברית",
+      "th": "ไทย",
+      "vi": "Tiếng Việt"
+    },
+    "theme": {
+      "label": "Teema",
+      "toggleToDark": "Vaihda tummaan tilaan",
+      "toggleToLight": "Vaihda vaaleaan tilaan"
+    },
+    "blockImages": {
+      "preview": "Kuvan esikatselu",
+      "close": "Sulje kuvan esikatselu",
+      "open": "Avaa kuvan esikatselu"
+    }
+  }
+}

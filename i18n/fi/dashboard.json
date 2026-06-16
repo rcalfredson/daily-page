@@ -1,0 +1,57 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Hallintapaneeli",
+      "description": "Daily Page -hallintapaneelisi ja tilin yleiskatsaus."
+    },
+    "profile": {
+      "profilePicAlt": "Profiilikuva",
+      "noBio": "Ei esittelyä vielä. Lisää sellainen napsauttamalla \"Muokkaa\"!",
+      "editBio": "Muokkaa esittelyä",
+      "bioPlaceholder": "Kirjoita esittelysi tähän",
+      "save": "Tallenna",
+      "cancel": "Peruuta"
+    },
+    "activity": {
+      "title": "Viimeaikainen toiminta",
+      "none": "Ei viimeaikaista toimintaa.",
+      "updatedOn": "Päivitetty {date}",
+      "viewAllBlocks": "Näytä kaikki julkaisut"
+    },
+    "drafts": {
+      "title": "Jatka kirjoittamista",
+      "none": "Ei avoimia luonnoksia.",
+      "updatedOn": "Päivitetty {date}",
+      "unlisted": "Listaamaton",
+      "viewAll": "Näytä kaikki julkaisut"
+    },
+    "streak": {
+      "title": "Kirjoitusputki",
+      "line": "{days} päivää peräkkäin! Jatka samaan malliin!"
+    },
+    "starredRooms": {
+      "title": "Tähdellä merkityt huoneet",
+      "none": "Et ole vielä merkinnyt huoneita tähdellä. Aloita tutkiminen löytääksesi suosikkisi!",
+      "viewAll": "Näytä kaikki tähdellä merkityt huoneet",
+      "unnamedRoom": "Nimetön huone"
+    },
+    "security": {
+      "title": "Tilin turvallisuus",
+      "summary": "Vaihda salasanasi ja hallinnoi kaksivaiheista tunnistautumista.",
+      "manage": "Hallitse turvallisuutta"
+    },
+    "stats": {
+      "title": "Tilastosi",
+      "totalBlocks": "Luotuja julkaisuja yhteensä",
+      "collaborations": "Yhteistyöt",
+      "votesGiven": "Annetut äänet",
+      "daysActive": "Aktiiviset päivät",
+      "viewDetailed": "Näytä tarkat tilastot 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Profiilikuvan lataaminen epäonnistui. Yritä uudelleen.",
+      "uploadUnexpected": "Tapahtui odottamaton virhe. Yritä uudelleen.",
+      "bioUpdateFailed": "Esittelyn päivittäminen epäonnistui. Yritä uudelleen."
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "blockList": {
+    "period": {
+      "all": "kaikkien aikojen",
+      "days": "viimeisten {n} päivän aikana",
+      "day": "viimeisten 24 tunnin aikana"
+    },
+    "createdBy": "Luonut:",
+    "on": "päivänä"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "Nimetön vaeltaja",
+      "description": "Ei profiilia. Ei menneisyyttä. Vain tunnelmaa."
+    },
+    "ascii": {
+      "ariaLabel": "ASCII-taidetta leikkisästä olennosta ja lainauksesta"
+    },
+    "header": {
+      "title": "Nimetön"
+    },
+    "body": {
+      "line1": "Olet kompastunut tyhjyyteen. Täällä ei ole mitään nähtävää—",
+      "line2": "vain vaeltava henki ilman tarinaa."
+    },
+    "buttons": {
+      "home": "← Palaa etusivulle",
+      "signup": "Luo identiteetti"
+    }
+  }
+}

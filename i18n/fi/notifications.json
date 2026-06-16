@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Ilmoitukset",
+      "openMenu": "Avaa ilmoitukset",
+      "loading": "Ladataan ilmoituksia...",
+      "error": "Ilmoituksia ei voi ladata juuri nyt.",
+      "empty": "Ei ilmoituksia vielä.",
+      "markRead": "Merkitse luetuksi",
+      "fallbackActor": "Joku",
+      "fallbackBlockTitle": "julkaisusi",
+      "item": {
+        "blockComment": "{actorUsername} kommentoi julkaisuasi \"{blockTitle}\".",
+        "commentReply": "{actorUsername} vastasi kommenttiisi julkaisussa \"{blockTitle}\".",
+        "unknown": "Ilmoitus"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Uusi kommentti julkaisuun \"{blockTitle}\"",
+        "heading": "Uusi kommentti julkaisuusi",
+        "headingWithName": "Hei {username},",
+        "body": "<strong>{actorUsername}</strong> kommentoi julkaisuasi <strong>{blockTitle}</strong>.",
+        "cta": "Näytä keskustelu Daily Pagessa",
+        "fallbackActor": "Joku",
+        "fallbackBlockTitle": "julkaisusi"
+      },
+      "commentReply": {
+        "subject": "Uusi vastaus julkaisuun \"{blockTitle}\"",
+        "heading": "Uusi vastaus kommenttiisi",
+        "headingWithName": "Hei {username},",
+        "body": "<strong>{actorUsername}</strong> vastasi kommenttiisi julkaisussa <strong>{blockTitle}</strong>.",
+        "cta": "Näytä keskustelu Daily Pagessa",
+        "fallbackActor": "Joku",
+        "fallbackBlockTitle": "julkaisusi"
+      }
+    }
+  }
+}

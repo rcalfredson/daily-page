@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "Käyttäjän {username} profiili",
+      "descriptionUser": "Näytä käyttäjän {username} viimeaikainen toiminta, tähdellä merkityt huoneet ja tilastot."
+    },
+    "profile": {
+      "profilePicAlt": "Profiilikuva",
+      "noBio": "(Esittelyä ei ole saatavilla.)"
+    },
+    "activity": {
+      "title": "Viimeaikainen toiminta",
+      "updatedOn": "Päivitetty {date}",
+      "none": "Ei viimeaikaista toimintaa.",
+      "viewAllBlocks": "Näytä kaikki julkaisut"
+    },
+    "starredRooms": {
+      "title": "Tähdellä merkityt huoneet",
+      "none": "Ei tähdellä merkittyjä huoneita vielä.",
+      "unnamedRoom": "Nimetön huone"
+    },
+    "stats": {
+      "title": "Käyttäjätilastot",
+      "totalBlocks": "Luotuja julkaisuja yhteensä",
+      "collaborations": "Yhteistyöt",
+      "daysActive": "Aktiiviset päivät"
+    }
+  }
+}

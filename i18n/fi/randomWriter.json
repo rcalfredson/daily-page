@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — Satunnaiskirjoittaja",
+      "description": "Luo loputon virta satunnaista pseudotekstiä huviksi, inspiraatioksi tai kaaokseksi."
+    },
+    "title": "Satunnaiskirjoittaja",
+    "buttons": {
+      "clear": "Tyhjennä",
+      "stop": "Lopeta kirjoittaminen",
+      "start": "Aloita kirjoittaminen"
+    }
+  }
+}

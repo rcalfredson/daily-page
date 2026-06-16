@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "Haku",
+      "description": "Hae julkisista julkaisuista."
+    },
+    "title": "Haku",
+    "placeholder": "Hae julkaisuja...",
+    "hint": "Kirjoita vähintään 2 merkkiä hakeaksesi.",
+    "noResults": "Tuloksia ei löytynyt.",
+    "untitled": "Otsikoton",
+    "votesTitle": "Äänet",
+    "pageLabel": "Sivu",
+    "filters": {
+      "inRoom": "Huoneessa"
+    },
+    "buttons": {
+      "search": "Haku",
+      "prev": "Edellinen",
+      "next": "Seuraava"
+    }
+  }
+}
