@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "Szukaj",
+      "description": "Szukaj publicznych postów."
+    },
+    "title": "Szukaj",
+    "placeholder": "Szukaj postów...",
+    "hint": "Wpisz co najmniej 2 znaki, aby wyszukać.",
+    "noResults": "Nie znaleziono wyników.",
+    "untitled": "Bez tytułu",
+    "votesTitle": "Głosy",
+    "pageLabel": "Strona",
+    "filters": {
+      "inRoom": "W pokoju"
+    },
+    "buttons": {
+      "search": "Szukaj",
+      "prev": "Poprzednia",
+      "next": "Następne"
+    }
+  }
+}

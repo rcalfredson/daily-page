@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "Wersja robocza"
+    },
+    "deleteModal": {
+      "title": "Usunąć post?",
+      "message": "Tej czynności nie można cofnąć.",
+      "confirm": "Usuń",
+      "cancel": "Anuluj",
+      "closeAriaLabel": "Zamknij"
+    },
+    "toasts": {
+      "deleteSuccess": "Post został usunięty.",
+      "deleteFailed": "Nie udało się usunąć posta."
+    }
+  }
+}

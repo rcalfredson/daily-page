@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — O nas",
+      "description": "Czym jest Daily Page, jak działa i dlaczego powstało jako wolniejszy, życzliwszy zakątek internetu."
+    },
+    "title": "O Daily Page",
+    "tagline": "Karm swój umysł, nie swój feed.",
+    "mission": {
+      "h2": "Misja",
+      "p1": "Niezależne laboratorium pisania, które zaczęło się w moim salonie i żyje dzięki ciekawości czytelników.",
+      "p2": "Powstało nie po to, by męczyć umysł, ale by go karmić: to miejsce, gdzie możesz pisać powoli, anonimowo, jeśli chcesz, i nie martwić się robieniem na kimkolwiek wrażenia."
+    },
+    "how": {
+      "h2": "Jak to działa",
+      "features": {
+        "rooms": {
+          "label": "Pokoje",
+          "text": "to tematyczne przestrzenie (pomyśl: „subreddit, ale bardziej przyjazny”)."
+        },
+        "blocks": {
+          "label": "Posty",
+          "text": "to wspólne przestrzenie pisania — każdy, nawet osoba anonimowa, może je tworzyć, edytować do momentu zablokowania i głosować na inne."
+        },
+        "privacy": {
+          "label": "Prywatność i udostępnianie",
+          "text": "oznacza, że publiczne posty trafiają do kanału pokoju. Niepubliczne wersje robocze są ukryte do czasu zablokowania, ale dostajesz link do zaproszenia znajomych."
+        },
+        "markdown": {
+          "label": "Markdown i multimedia",
+          "text": "pozwalają pisać w Markdownie, osadzać obrazy i współedytować jak w Google Docs."
+        },
+        "trends": {
+          "label": "Trendy i tagi",
+          "text": "pozwalają tagować posty, śledzić trendy tagów i odkrywać najlepsze treści (7 dni / 30 dni / od początku)."
+        },
+        "streaks": {
+          "label": "Serie",
+          "text": "pomagają utrzymać codzienną serię pisania — najlepszą zachętę, by wracać każdego dnia."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Jak tu dotarliśmy",
+      "p1": "W 2018 roku zbudowałem wiki oparte na datach dla „dzisiejszej strony” i obserwowałem, jak kilku introspektywnych autorów zmienia je w ujście dla swoich myśli. Nigdy nie urosło ogromnie, ale zasadziło ziarno.",
+      "p2": "Dziś Daily Page jest tym ziarnem, które rozrosło się w wiele pokoi — cichą sieć społeczną dla introwertyków, idealistów i każdego, kto tęskni za wolniejszym tempem."
+    },
+    "next": {
+      "h2": "Co dalej",
+      "p1": "Dopiero zaczynamy: bogatsze osadzanie treści, głębsze statystyki użytkowników, rankingi reputacji i więcej sposobów nagradzania przemyślanej twórczości.",
+      "p2": "Dziękujemy, że jesteś częścią tego małego niezależnego eksperymentu."
+    },
+    "cta": {
+      "rooms": "Odkryj pokoje",
+      "signup": "Dołącz do społeczności"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Bezpieczeństwo konta",
+      "description": "Zarządzaj hasłem Daily Page i uwierzytelnianiem dwuskładnikowym."
+    },
+    "backToDashboard": "Wróć do panelu",
+    "heading": "Bezpieczeństwo konta",
+    "subheading": "Chroń konto silnym hasłem i aplikacją uwierzytelniającą.",
+    "password": {
+      "title": "Zmień hasło",
+      "description": "Użyj unikalnego hasła z co najmniej 8 znakami.",
+      "current": {
+        "label": "Obecne hasło"
+      },
+      "new": {
+        "label": "Nowe hasło"
+      },
+      "submit": "Zaktualizuj hasło"
+    },
+    "twoFactor": {
+      "title": "Uwierzytelnianie dwuskładnikowe",
+      "statusOn": "Włączone",
+      "statusOff": "Wyłączone",
+      "description": "Podczas logowania po haśle dodaj jednorazowy kod z aplikacji uwierzytelniającej.",
+      "currentPassword": {
+        "label": "Obecne hasło"
+      },
+      "startSetup": "Skonfiguruj aplikację uwierzytelniającą",
+      "qrAlt": "Kod QR aplikacji uwierzytelniającej",
+      "manualKey": "Klucz konfiguracji ręcznej",
+      "code": {
+        "label": "6-cyfrowy kod"
+      },
+      "enable": "Włącz 2FA",
+      "disableCode": {
+        "label": "Kod uwierzytelniający"
+      },
+      "disable": "Wyłącz 2FA"
+    },
+    "recoveryCodes": {
+      "title": "Zapisz kody odzyskiwania",
+      "description": "Użyj jednego z tych jednorazowych kodów, aby się zalogować, jeśli stracisz dostęp do aplikacji uwierzytelniającej.",
+      "regenerateDescription": "Wygeneruj nowy zestaw kodów odzyskiwania, jeśli poprzedni został utracony. Stare kody przestaną działać.",
+      "regenerate": "Wygeneruj nowe kody odzyskiwania",
+      "warning": "Przechowuj je w bezpiecznym miejscu. Nie zostaną pokazane ponownie."
+    },
+    "feedback": {
+      "passwordChanged": "Hasło zostało zaktualizowane.",
+      "setupReady": "Zeskanuj kod QR, a następnie wpisz 6-cyfrowy kod, aby zakończyć konfigurację.",
+      "twoFactorEnabled": "Uwierzytelnianie dwuskładnikowe jest teraz włączone.",
+      "twoFactorDisabled": "Uwierzytelnianie dwuskładnikowe jest teraz wyłączone.",
+      "recoveryCodesRegenerated": "Kody odzyskiwania zostały wygenerowane ponownie. Zapisz teraz nowe kody.",
+      "missingFields": "Wypełnij wszystkie wymagane pola.",
+      "missingCurrentPassword": "Wpisz obecne hasło, aby kontynuować.",
+      "passwordTooShort": "Nowe hasło musi mieć co najmniej 8 znaków.",
+      "invalidCurrentPassword": "Obecne hasło się nie zgadza.",
+      "missingCode": "Wpisz 6-cyfrowy kod z aplikacji uwierzytelniającej.",
+      "invalidCode": "Ten kod nie zadziałał. Spróbuj ponownie.",
+      "noPendingSetup": "Rozpocznij konfigurację ponownie przed wpisaniem kodu.",
+      "setupExpired": "Ta sesja konfiguracji wygasła. Rozpocznij konfigurację ponownie, aby otrzymać nowy kod QR.",
+      "twoFactorNotEnabled": "Uwierzytelnianie dwuskładnikowe nie jest włączone dla tego konta.",
+      "genericError": "Coś poszło nie tak. Spróbuj ponownie.",
+      "unexpectedError": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."
+    }
+  }
+}

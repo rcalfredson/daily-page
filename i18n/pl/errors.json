@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Ups! Coś poszło nie tak.",
+      "message": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.",
+      "home": "Wróć na stronę główną"
+    },
+    "notFound": {
+      "title": "404 - Nie znaleziono strony",
+      "metaTitle": "Nie znaleziono strony",
+      "message": "Przepraszamy, nie mogliśmy znaleźć strony, której szukasz.",
+      "homePrefix": "Możesz wrócić do",
+      "homeLink": "strony głównej",
+      "roomsPrefix": "albo zajrzeć do",
+      "roomsLink": "katalogu pokoi."
+    }
+  }
+}

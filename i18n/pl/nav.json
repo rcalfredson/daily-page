@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Strona główna",
+    "rooms": "Pokoje",
+    "tags": "Tagi",
+    "archive": "Archiwum",
+    "search": "Szukaj",
+    "bestOf": "Najlepsze",
+    "about": "O nas",
+    "support": "Wsparcie",
+    "otherProjects": "Inne projekty",
+    "auth": {
+      "welcomePrefix": "Witaj, ",
+      "welcomeFallbackUser": "Ty",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "Panel"
+  }
+}

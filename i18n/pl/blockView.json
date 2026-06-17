@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Post - {blockTitle}",
+      "titleFallback": "Post"
+    },
+    "labels": {
+      "room": "Pokój",
+      "author": "Autor",
+      "created": "Utworzono",
+      "unknownAuthor": "Anonimowy",
+      "authorAvatarAlt": "Awatar użytkownika {username}",
+      "viewAuthorProfile": "Zobacz profil użytkownika {username}",
+      "lang": "Tłumaczenia: ",
+      "available": "dostępne"
+    },
+    "buttons": {
+      "edit": "Edytuj",
+      "deleteBlock": "Usuń post",
+      "share": "Udostępnij",
+      "flagContent": "Zgłoś treść"
+    },
+    "description": {
+      "label": "Opis",
+      "none": "Nie podano opisu...",
+      "expand": "Rozwiń",
+      "collapse": "Zwiń"
+    },
+    "editorial": {
+      "heading": "Przewodnik czytania",
+      "roleLabel": "Typ czytania",
+      "clusterLabel": "Przewodnik",
+      "sequence": "Część {sequence}",
+      "primaryPillarHeading": "Zacznij tutaj",
+      "relatedHeading": "Czytaj dalej",
+      "clusterHeading": "Więcej w tym przewodniku",
+      "expandSection": "Pokaż jeszcze {count}",
+      "collapseSection": "Pokaż mniej",
+      "roleNames": {
+        "pillar": "Główny przewodnik",
+        "companion": "Dogłębna lektura",
+        "texture": "Tło"
+      }
+    },
+    "comments": {
+      "heading": "Komentarze",
+      "count": "Komentarze: {count}",
+      "empty": "Nikt jeszcze nie odpowiedział. Komentarze pojawią się tutaj, gdy rozmowa się zacznie.",
+      "composer": {
+        "label": "Dodaj komentarz",
+        "placeholder": "Napisz komentarz...",
+        "submit": "Opublikuj komentarz",
+        "submitting": "Publikowanie...",
+        "success": "Komentarz opublikowany.",
+        "error": "Nie można teraz opublikować komentarza.",
+        "loginPrompt": "Zaloguj się, aby dołączyć do rozmowy.",
+        "loginCta": "Zaloguj się, aby komentować",
+        "verifyPrompt": "Zweryfikuj e-mail przed opublikowaniem komentarza.",
+        "verifyCta": "Zweryfikuj e-mail"
+      },
+      "sort": {
+        "label": "Sortuj",
+        "oldestFirst": "Najstarsze najpierw",
+        "newestFirst": "Najnowsze najpierw"
+      },
+      "by": "Przez",
+      "unknownAuthor": "Nieznany",
+      "reply": {
+        "action": "Odpowiedz",
+        "label": "Dodaj odpowiedź",
+        "placeholder": "Napisz odpowiedź...",
+        "submit": "Opublikuj odpowiedź",
+        "submitting": "Publikowanie...",
+        "success": "Odpowiedź opublikowana.",
+        "error": "Nie można teraz opublikować odpowiedzi.",
+        "cancel": "Anuluj",
+        "loginPrompt": "Zaloguj się, aby odpowiedzieć."
+      },
+      "manage": {
+        "edited": "Edytowano",
+        "editAction": "Edytuj",
+        "deleteAction": "Usuń",
+        "deleteConfirm": "Usunąć ten komentarz? Spowoduje to także usunięcie odpowiedzi pod nim.",
+        "deleteSuccess": "Komentarz usunięty.",
+        "deleteError": "Nie można teraz usunąć komentarza.",
+        "forbidden": "Możesz zarządzać tylko własnymi komentarzami.",
+        "edit": {
+          "label": "Edytuj komentarz",
+          "save": "Zapisz",
+          "saving": "Zapisywanie...",
+          "cancel": "Anuluj",
+          "success": "Komentarz zaktualizowany.",
+          "error": "Nie można teraz zaktualizować komentarza."
+        }
+      },
+      "report": {
+        "action": "Zgłoś",
+        "pending": "Zgłaszanie...",
+        "success": "Komentarz zgłoszony.",
+        "error": "Nie można teraz zgłosić komentarza.",
+        "ownError": "Nie możesz zgłosić własnego komentarza.",
+        "hidden": "Komentarz ukryty po zgłoszeniu.",
+        "reported": "Zgłoszono"
+      },
+      "deepLink": {
+        "focused": "Powiązany komentarz",
+        "unavailable": "Powiązany komentarz nie jest już dostępny."
+      },
+      "loadMore": "Załaduj więcej komentarzy",
+      "loading": "Ładowanie...",
+      "loadError": "Nie można teraz załadować więcej komentarzy."
+    },
+    "share": {
+      "title": "Udostępnij ten post",
+      "shareOn": "Udostępnij na:",
+      "nativeText": "Zobacz ten post: {title}",
+      "alt": {
+        "facebook": "Logo Facebooka",
+        "reddit": "Logo Reddita",
+        "whatsapp": "Logo WhatsAppa",
+        "twitter": "Logo Twittera"
+      }
+    },
+    "errors": {
+      "notFound": "Nie znaleziono posta albo nie należy on do tego pokoju.",
+      "loadFailed": "Błąd podczas ładowania widoku posta."
+    }
+  }
+}

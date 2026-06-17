@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Najlepsze z Daily Page",
+      "description": "Najbardziej lubiane posty na Daily Page — zabawne, szczere, poetyckie albo po prostu dziwne. Zobacz, co wyróżniało się w ostatnim dniu, tygodniu, miesiącu i dłużej.",
+      "titleRoom": "Najlepsze z {roomName}",
+      "descriptionRoom": "Odkryj wyróżniające się posty z pokoju {roomName} — te, które czytelnicy najbardziej polubili w ostatnich 24 godzinach, 7 dniach, 30 dniach i od początku."
+    },
+    "heading": "🏆 Najlepsze z Daily Page",
+    "headingRoomPrefix": "🏆 Najlepsze z ",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 godziny",
+      "7d": "🚀 7 dni",
+      "30d": "🌕 30 dni",
+      "all": "👑 Od początku"
+    },
+    "labels": {
+      "createdBy": "Utworzone przez:",
+      "inRoom": "w",
+      "onDate": "{date}",
+      "unknownRoom": "Nieznany pokój",
+      "noBlocks": "Nie znaleziono postów.",
+      "viewRoom": "Zobacz pokój"
+    }
+  }
+}

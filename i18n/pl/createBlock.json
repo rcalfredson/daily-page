@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Utwórz nowy post — Daily Page",
+      "description": "Rozpocznij nowy twórczy post z opcjonalnymi tagami, językiem i widocznością."
+    },
+    "heading": "Utwórz nowy post",
+    "roomInfo": {
+      "roomLabel": "Pokój:",
+      "unavailable": "Informacje o pokoju są niedostępne.",
+      "noDescription": "Brak opisu."
+    },
+    "form": {
+      "title": {
+        "label": "Tytuł:",
+        "placeholder": {
+          "full": "np. „Moje arcydzieło”, „Najlepszy pomysł świata”, „Clickbait dla nerdów”",
+          "short": "np. „Moje arcydzieło”"
+        }
+      },
+      "description": {
+        "label": "Opis (opcjonalnie):",
+        "placeholder": "Wyjaśnij swój geniusz… albo po prostu improwizuj."
+      },
+      "initialContent": {
+        "label": "Treść początkowa (opcjonalnie):",
+        "help": "Zacznij pisać tutaj albo naciśnij „Utwórz”, aby kontynuować na pełnej stronie edytora, gdzie możesz osadzać obrazy i współpracować w czasie rzeczywistym.",
+        "placeholder": "Zacznij post tutaj albo kontynuuj edycję po utworzeniu…"
+      },
+      "visibility": {
+        "label": "Widoczność:"
+      },
+      "submit": "Utwórz post"
+    },
+    "visibility": {
+      "public": {
+        "label": "Publiczny",
+        "title": "Edytowalny przez każdego w czasie rzeczywistym. Logowanie nie jest potrzebne.",
+        "inline": "Edytowalny przez każdego w czasie rzeczywistym. Logowanie nie jest potrzebne."
+      },
+      "unlisted": {
+        "label": "Niepubliczna wersja robocza",
+        "title": "Ukryta przed publicznym przeglądaniem podczas edycji. Widoczna po zablokowaniu.",
+        "inline": "Ukryta przed publicznym przeglądaniem podczas edycji. Widoczna po zablokowaniu.",
+        "tooltip": "Niepubliczne wersje robocze są ukryte przed publicznym przeglądaniem podczas edycji. Każdy z linkiem może współpracować, a post staje się publiczny po zablokowaniu."
+      }
+    },
+    "advanced": {
+      "summary": "Opcje zaawansowane",
+      "lang": {
+        "label": "Język:",
+        "options": {
+          "en": "English",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "עברית",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "Przetłumacz istniejący post (URL lub ID):",
+        "placeholder": "Wklej adres URL lub ID posta (opcjonalnie)",
+        "invalid": "To nie wygląda na prawidłowy adres URL ani ID posta.",
+        "fetchError": "Nie udało się pobrać informacji o poście."
+      }
+    },
+    "messages": {
+      "langExists": "Tłumaczenie dla tego języka już istnieje. Wybierz inny język.",
+      "genericError": "Coś poszło nie tak. Spróbuj ponownie."
+    }
+  }
+}

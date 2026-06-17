@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "Przeglądaj ostatnie i trwające posty w {roomName}."
+    },
+    "links": {
+      "exploreLabel": "Odkryj:",
+      "allBlocks": "🗂️ Wszystkie posty",
+      "browseByDate": "🗓️ Według daty",
+      "bestOf": "🏅 Najlepsze",
+      "searchInRoom": "🔎 Szukaj"
+    },
+    "actions": {
+      "createBlock": "Utwórz post",
+      "starTitle": "Wyróżnij ten pokój",
+      "unstarTitle": "Usuń wyróżnienie tego pokoju"
+    },
+    "tabs": {
+      "locked": "Zablokowane posty",
+      "inProgress": "Posty w toku"
+    },
+    "sections": {
+      "lockedHeader": "Zablokowane posty",
+      "inProgressHeader": "Posty w toku"
+    },
+    "editorial": {
+      "heading": "Wyróżnione przewodniki",
+      "description": "Zacznij od wyróżnionych przewodników przygotowanych dla tego pokoju.",
+      "roleNames": {
+        "pillar": "Główny przewodnik",
+        "companion": "Przewodnik czytania",
+        "texture": "Przewodnik tła"
+      }
+    },
+    "empty": {
+      "noDescription": "Brak opisu.",
+      "noLocked": "Brak zablokowanych postów. Posty blokują się automatycznie po 1 godzinie bezczynności.",
+      "noInProgress": "Brak postów w toku. Czas zacząć pierwszy.",
+      "noBlocks": "Brak postów. Utwórz pierwszy i zostaw swój ślad. 😎"
+    }
+  }
+}

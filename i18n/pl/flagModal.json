@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Zgłoś nieodpowiednią treść",
+    "fields": {
+      "reason": {
+        "label": "Powód",
+        "options": {
+          "spam": "Spam",
+          "offensive": "Obraźliwe (mowa nienawiści lub obelgi)",
+          "inappropriate": "Nieodpowiednie (nagość, drastyczne treści itd.)",
+          "other": "Inne"
+        }
+      },
+      "details": {
+        "label": "Szczegóły (opcjonalnie)",
+        "placeholder": "Opisz, co zobaczono…"
+      }
+    },
+    "buttons": {
+      "submit": "Wyślij zgłoszenie",
+      "cancel": "Anuluj"
+    },
+    "toasts": {
+      "success": "Zgłoszenie wysłane — dziękujemy!",
+      "failed": "Nie udało się wysłać zgłoszenia."
+    }
+  }
+}

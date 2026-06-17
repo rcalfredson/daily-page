@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Ty)"
+    },
+    "meta": {
+      "title": "Edytuj post - {blockTitle}",
+      "titleFallback": "Edytuj post"
+    },
+    "errors": {
+      "imageUrlRequired": "Wpisz adres URL obrazu.",
+      "notFound": "Nie znaleziono posta albo nie należy on do tego pokoju.",
+      "loadFailed": "Wystąpił błąd podczas ładowania edytora posta.",
+      "updateTitleFailed": "Błąd podczas aktualizacji tytułu."
+    },
+    "roomInfo": {
+      "label": "Pokój:"
+    },
+    "title": {
+      "placeholder": "Wpisz tytuł posta",
+      "editTooltip": "Edytuj tytuł",
+      "lock": "Zablokuj post",
+      "delete": "Usuń post"
+    },
+    "description": {
+      "label": "Opis",
+      "editTooltip": "Edytuj opis",
+      "placeholder": "Wpisz opis",
+      "noDescriptionOwner": "Brak opisu...",
+      "noDescriptionViewer": "Nie podano opisu...",
+      "save": "Zapisz",
+      "cancel": "Anuluj",
+      "expand": "Rozwiń",
+      "collapse": "Zwiń",
+      "updateError": "Błąd podczas aktualizacji opisu."
+    },
+    "status": {
+      "lastBackup": "Ostatnia kopia zapasowa: {datetime}",
+      "lastBackupUnknown": "Ostatnia kopia zapasowa: nieznana"
+    },
+    "peers": {
+      "label": "Współautorzy:"
+    },
+    "toasts": {
+      "blockLocked": "Ten post został zablokowany!"
+    },
+    "editor": {
+      "placeholder": "Pusta strona czeka na Twój głos; pisz bez lęku."
+    },
+    "loading": {
+      "label": "Ładowanie",
+      "quote": "Pozwól światu przepłynąć przez siebie jak ogień. Rzuć pryzmatyczne światło, rozpalone do bieli, na papier.<br>—Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "Nie napisano nic przez 5 minut. Kliknij OK, aby kontynuować sesję; w przeciwnym razie nastąpi przekierowanie do archiwum.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Link do udostępniania",
+      "copyTooltip": "Kopiuj do schowka",
+      "copied": "Skopiowano!"
+    },
+    "toolbar": {
+      "insertImage": "Wstaw obraz",
+      "insertImageUrlPlaceholder": "Wpisz adres URL obrazu",
+      "insertImageAltPlaceholder": "Tekst alternatywny (opcjonalnie)",
+      "insertImageConfirm": "Potwierdź",
+      "insertImageCancel": "Anuluj"
+    },
+    "buttons": {
+      "downloadFile": "Pobierz plik"
+    },
+    "lockModal": {
+      "messageLine1": "Czy na pewno chcesz zablokować ten post?",
+      "messageLine2": "To go sfinalizuje i uniemożliwi dalszą edycję.",
+      "confirm": "Zablokuj",
+      "cancel": "Anuluj",
+      "successToast": "Post został zablokowany.",
+      "errorToast": "Błąd podczas blokowania posta."
+    },
+    "tags": {
+      "headerWithTags": "Tagi:",
+      "headerNoTags": "Nie ma jeszcze tagów. Dodaj kilka:",
+      "updateError": "Błąd podczas aktualizacji tagów."
+    },
+    "fullBlock": {
+      "headingPrefix": "Przepraszamy; post „{blockTitle}” jest teraz",
+      "headingStatus": "w pełni zajęty.",
+      "retryPrefix": "Proszę",
+      "retryLink": "spróbuj innego posta",
+      "retrySuffix": "albo wróć innym razem.",
+      "consolationPrefix": "W oczekiwaniu możesz przeczytać",
+      "consolationBestOf": "kilka naszych ulubionych postów",
+      "consolationMiddle": "albo przejrzeć",
+      "consolationArchive": "archiwum."
+    }
+  }
+}

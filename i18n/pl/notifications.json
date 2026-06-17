@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Powiadomienia",
+      "openMenu": "Otwórz powiadomienia",
+      "loading": "Ładowanie powiadomień...",
+      "error": "Nie można teraz załadować powiadomień.",
+      "empty": "Brak powiadomień.",
+      "markRead": "Oznacz jako przeczytane",
+      "fallbackActor": "Ktoś",
+      "fallbackBlockTitle": "Twój post",
+      "item": {
+        "blockComment": "{actorUsername} skomentował(a) Twój post „{blockTitle}”.",
+        "commentReply": "{actorUsername} odpowiedział(a) na Twój komentarz do „{blockTitle}”.",
+        "unknown": "Powiadomienie"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Nowy komentarz do „{blockTitle}”",
+        "heading": "Nowy komentarz do Twojego posta",
+        "headingWithName": "Cześć {username},",
+        "body": "<strong>{actorUsername}</strong> skomentował(a) Twój post <strong>{blockTitle}</strong>.",
+        "cta": "Zobacz rozmowę w Daily Page",
+        "fallbackActor": "Ktoś",
+        "fallbackBlockTitle": "Twój post"
+      },
+      "commentReply": {
+        "subject": "Nowa odpowiedź w „{blockTitle}”",
+        "heading": "Nowa odpowiedź na Twój komentarz",
+        "headingWithName": "Cześć {username},",
+        "body": "<strong>{actorUsername}</strong> odpowiedział(a) na Twój komentarz do <strong>{blockTitle}</strong>.",
+        "cta": "Zobacz rozmowę w Daily Page",
+        "fallbackActor": "Ktoś",
+        "fallbackBlockTitle": "Twój post"
+      }
+    }
+  }
+}

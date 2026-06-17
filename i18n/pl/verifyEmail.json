@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "Zweryfikuj e-mail",
+      "description": "Zweryfikuj swój adres e-mail w Daily Page."
+    },
+    "header": {
+      "title": "Weryfikowanie e-maila..."
+    },
+    "status": {
+      "checking": "Sprawdzanie tokenu, proszę czekać...",
+      "missingToken": "Brak tokenu weryfikacyjnego albo token jest nieprawidłowy.",
+      "genericFailure": "Weryfikacja nie powiodła się.",
+      "unexpectedError": "Wystąpił nieoczekiwany błąd.",
+      "success": "Konto zostało pomyślnie zweryfikowane.",
+      "invalidOrExpired": "Token weryfikacyjny jest nieprawidłowy albo wygasł."
+    },
+    "verificationMsg": {
+      "subject": "Zweryfikuj konto Daily Page ✨",
+      "heading": "Witaj w Daily Page, {username}!",
+      "body": "Zweryfikuj e-mail, klikając poniżej:",
+      "cta": "Zweryfikuj adres e-mail",
+      "expires": "Ten link wygasa za {hours} godz."
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Polityka prywatności",
+      "description": "Prosto o tym, jak Daily Page zbiera, wykorzystuje i chroni Twoje dane."
+    },
+    "title": "Polityka prywatności",
+    "lastUpdated": "Ostatnia aktualizacja: {date}",
+    "intro": {
+      "h2": "Wprowadzenie",
+      "p1": "Daily Page („my”, „nas” lub „nasze”) prowadzi stronę dailypage.org (dalej „Usługa”).",
+      "p2": "Ta strona informuje o naszych zasadach dotyczących zbierania, wykorzystywania i ujawniania danych osobowych podczas korzystania z Usługi."
+    },
+    "collection": {
+      "h2": "Zbieranie i wykorzystywanie informacji",
+      "p": "Zbieramy minimalne dane osobowe, aby ulepszać i świadczyć Usługę. Obejmuje to adresy e-mail do zarządzania kontem oraz treści dobrowolnie przesłane przez użytkowników."
+    },
+    "usage": {
+      "h2": "Wykorzystanie danych",
+      "p": "Zebrane dane są używane wyłącznie do uwierzytelniania kont, moderacji treści i ulepszania doświadczenia użytkownika."
+    },
+    "storage": {
+      "h2": "Przechowywanie danych i bezpieczeństwo",
+      "p": "Twoje dane są bezpiecznie przechowywane i nigdy nie są udostępniane ani sprzedawane stronom trzecim bez wyraźnej zgody, z wyjątkiem sytuacji wymaganych prawem."
+    },
+    "cookies": {
+      "h2": "Pliki cookie",
+      "p": "Używamy plików cookie wyłącznie do zarządzania sesją i ulepszania doświadczenia użytkownika. Możesz wyłączyć pliki cookie w ustawieniach przeglądarki."
+    },
+    "rights": {
+      "h2": "Twoje prawa",
+      "p": "Możesz w każdej chwili poprosić o usunięcie lub zmianę swoich danych osobowych, kontaktując się z nami."
+    },
+    "changes": {
+      "h2": "Zmiany w tej polityce prywatności",
+      "p": "Możemy od czasu do czasu aktualizować Politykę prywatności. Zmiany będą publikowane na tej stronie."
+    },
+    "contact": {
+      "h2": "Kontakt",
+      "p": "W sprawach dotyczących tej Polityki prywatności skontaktuj się z nami pod adresem:",
+      "emailLabel": "ask@dailypage.org"
+    }
+  }
+}

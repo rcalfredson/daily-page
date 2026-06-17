@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "Profil użytkownika {username}",
+      "descriptionUser": "Zobacz ostatnią aktywność, wyróżnione pokoje i statystyki użytkownika {username}."
+    },
+    "profile": {
+      "profilePicAlt": "Zdjęcie profilowe",
+      "noBio": "(Brak biogramu.)"
+    },
+    "activity": {
+      "title": "Ostatnia aktywność",
+      "updatedOn": "Zaktualizowano {date}",
+      "none": "Brak ostatniej aktywności.",
+      "viewAllBlocks": "Zobacz wszystkie posty"
+    },
+    "starredRooms": {
+      "title": "Wyróżnione pokoje",
+      "none": "Brak wyróżnionych pokoi.",
+      "unnamedRoom": "Pokój bez nazwy"
+    },
+    "stats": {
+      "title": "Statystyki użytkownika",
+      "totalBlocks": "Łączna liczba utworzonych postów",
+      "collaborations": "Współprace",
+      "daysActive": "Aktywne dni"
+    }
+  }
+}

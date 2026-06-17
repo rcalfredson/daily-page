@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "Twoje posty",
+      "description": "Przeglądaj i sortuj wszystkie posty, które utworzono lub współtworzono."
+    },
+    "header": {
+      "dashboardLink": "Twój panel",
+      "profileLink": "Profil użytkownika {username}",
+      "allBlocks": "Wszystkie posty"
+    },
+    "empty": "Brak postów.",
+    "pagination": {
+      "prev": "← Poprzednia",
+      "next": "Następna →"
+    },
+    "titleUser": "Posty użytkownika {username}"
+  }
+}

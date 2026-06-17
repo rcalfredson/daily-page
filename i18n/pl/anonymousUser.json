@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "Anonimowy wędrowiec",
+      "description": "Bez profilu. Bez przeszłości. Tylko klimat."
+    },
+    "ascii": {
+      "ariaLabel": "Sztuka ASCII fantazyjnej postaci z cytatem"
+    },
+    "header": {
+      "title": "Anonimowy"
+    },
+    "body": {
+      "line1": "Trafiasz w pustkę. Nie ma tu nic do zobaczenia —",
+      "line2": "tylko wędrujący duch bez historii."
+    },
+    "buttons": {
+      "home": "← Wróć na stronę główną",
+      "signup": "Utwórz tożsamość"
+    }
+  }
+}

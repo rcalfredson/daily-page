@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "Głos w górę",
+    "downvote": "Głos w dół",
+    "errors": {
+      "failed": "Nie udało się zapisać głosu."
+    }
+  }
+}

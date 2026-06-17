@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Utwórz konto",
+      "description": "Zarejestruj się w Daily Page, aby korzystać ze wszystkich funkcji."
+    },
+    "header": {
+      "title": "Utwórz swoje konto",
+      "subtitle": "Dołącz do Daily Page, aby zacząć tworzyć i udostępniać codzienne pisanie!"
+    },
+    "form": {
+      "email": {
+        "label": "E-mail",
+        "placeholder": "Wpisz e-mail"
+      },
+      "username": {
+        "label": "Nazwa użytkownika",
+        "placeholder": "Wpisz nazwę użytkownika"
+      },
+      "password": {
+        "label": "Hasło",
+        "placeholder": "Wpisz hasło"
+      },
+      "submit": "Zarejestruj się",
+      "feedback": {
+        "success": "Formularz wysłany pomyślnie!",
+        "successCreatedVerify": "Konto zostało utworzone. Sprawdź e-mail, aby je zweryfikować.",
+        "genericError": "Nie udało się utworzyć konta. Spróbuj ponownie.",
+        "unexpectedError": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."
+      }
+    }
+  }
+}

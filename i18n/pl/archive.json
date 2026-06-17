@@ -1,0 +1,77 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Archiwum",
+      "description": "Przeglądaj pełne archiwum według miesięcy.",
+      "titleRoom": "Daily Page — Archiwum · {roomName}",
+      "descriptionRoom": "Przeglądaj dawne teksty w pokoju {roomName} miesiąc po miesiącu. Przejdź do dowolnej daty, aby zobaczyć, co inni udostępniali tu z czasem."
+    },
+    "nav": {
+      "prev": "Poprzednie",
+      "next": "Następne"
+    },
+    "title": "📚 Przeglądaj archiwa",
+    "titleRoom": "📚 {roomName} — Archiwa",
+    "roomViewing": "Przeglądasz archiwum pokoju {roomName}",
+    "viewRoomLink": "Zobacz pokój",
+    "noContent": "Brak dostępnych treści.",
+    "backToRoom": "← Wróć do panelu pokoju",
+    "calendar": {
+      "meta": {
+        "description": "Zobacz wszystkie twórcze posty opublikowane w {month} {year} — od krótkich myśli po głębokie refleksje. Kliknij dowolną datę, aby odkryć, co udostępniono.",
+        "descriptionRoom": "Zobacz twórczą aktywność w pokoju {roomName} w {month} {year}. Wybierz datę, aby przejrzeć posty udostępnione tego dnia."
+      },
+      "title": "📆 Archiwum za {month} {year}",
+      "prevLabel": "Archiwum za {month} {year}",
+      "nextLabel": "Archiwum za {month} {year}"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "Archiwum z {date}",
+        "titleRoom": "{roomName} — Archiwum z {date}",
+        "descriptionSite": "Przeglądaj posty napisane {date} — od cichych notatek po odważne wyznania.",
+        "descriptionRoom": "{date} autorzy w pokoju {roomName} zostawili swój ślad — przewiń refleksje, pomysły i wypowiedzi udostępnione tego dnia."
+      },
+      "heading": "Archiwum z {date}",
+      "empty": "Nie znaleziono treści dla tej daty.",
+      "labels": {
+        "createdBy": "Utworzone przez:",
+        "in": "w",
+        "on": "{datetime}",
+        "unknownRoom": "Nieznany pokój"
+      },
+      "nav": {
+        "prevDay": "Poprzedni dzień",
+        "nextDay": "Następny dzień"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — Wszystkie posty",
+        "descriptionRoom": "Przeglądaj każdy post opublikowany w pokoju {roomName}. Sortuj według daty, tytułu lub głosów, aby poznać jego historię."
+      },
+      "header": {
+        "allBlocks": "— Wszystkie posty"
+      },
+      "sort": {
+        "label": "Sortuj według",
+        "options": {
+          "date": "Data",
+          "title": "Tytuł",
+          "votes": "Głosy"
+        },
+        "submit": "Idź"
+      }
+    },
+    "pagination": {
+      "prev": "← Poprzednia",
+      "next": "Następna →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "Daily Pages dla {time}"
+      },
+      "empty": "Nie znaleźliśmy żadnych stron w tym okresie."
+    }
+  }
+}

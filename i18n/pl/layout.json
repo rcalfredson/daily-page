@@ -1,0 +1,55 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "Witaj, użytkowniku!",
+    "logout": "Wyloguj",
+    "login": "Zaloguj / Zarejestruj",
+    "language": "Język",
+    "openMenu": "Otwórz menu główne",
+    "closeMenu": "Zamknij menu główne",
+    "privacy": "Polityka prywatności",
+    "uiFallbackNotice": "{requested} nie jest jeszcze przetłumaczony. Na razie wyświetlamy {current}.",
+    "copyButton": {
+      "copy": "Kopiuj",
+      "copied": "Skopiowano!"
+    },
+    "copyright": "© {year}",
+    "languages": {
+      "en": "English",
+      "es": "Español",
+      "fr": "Français",
+      "ru": "Русский",
+      "id": "Bahasa Indonesia",
+      "de": "Deutsch",
+      "it": "Italiano",
+      "pt": "Português",
+      "zh": "中文",
+      "ja": "日本語",
+      "ko": "한국어",
+      "ar": "العربية",
+      "hi": "हिन्दी",
+      "tr": "Türkçe",
+      "nl": "Nederlands",
+      "sv": "Svenska",
+      "no": "Norsk",
+      "da": "Dansk",
+      "fi": "Suomi",
+      "pl": "Polski",
+      "cs": "Čeština",
+      "el": "Ελληνικά",
+      "he": "עברית",
+      "th": "ไทย",
+      "vi": "Tiếng Việt"
+    },
+    "theme": {
+      "label": "Motyw",
+      "toggleToDark": "Przełącz na tryb ciemny",
+      "toggleToLight": "Przełącz na tryb jasny"
+    },
+    "blockImages": {
+      "preview": "Podgląd obrazu",
+      "close": "Zamknij podgląd obrazu",
+      "open": "Otwórz podgląd obrazu"
+    }
+  }
+}

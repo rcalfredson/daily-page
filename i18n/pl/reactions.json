@@ -1,0 +1,7 @@
+{
+  "reactions": {
+    "aria": "{emoji} reakcje: {count}",
+    "loginToReact": "Zaloguj się, aby zareagować",
+    "countsLabel": "Reakcje"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Popularne posty z ostatnich 24 godzin",
+      "description": "Daily Page to minimalistyczny, niezależny serwis do pisania, gdzie każdy może publikować twórcze myśli, wspomnienia lub eksperymenty — po jednym poście naraz. Odkrywaj nowe pomysły, dołączaj do pokoi i dodaj swój głos."
+    },
+    "hero": {
+      "eyebrow": "Ciche miejsce do pisania, czytania i powracania",
+      "title": "Witaj w Daily Page!",
+      "subtitle": "Odkryj najpopularniejsze posty z ostatnich 24 godzin.",
+      "ctaPrefix": "Masz inspirację?",
+      "cta": "Dołącz do pokoju",
+      "ctaSuffix": "i utwórz własny post!"
+    },
+    "stats": {
+      "blocks": "Posty",
+      "rooms": "Pokoje",
+      "tags": "Tagi",
+      "collabsToday": "Dzisiejsze współprace"
+    },
+    "activity": {
+      "title": "Na żywo w Daily Page",
+      "subtitle": "Świeże rozmowy i reakcje w jednym widoku.",
+      "fallbackActor": "Ktoś",
+      "inRoom": "w",
+      "comments": {
+        "title": "Ostatnie komentarze",
+        "more": "Szukaj dyskusji",
+        "commentVerb": "skomentował(a)",
+        "replyVerb": "odpowiedział(a) w",
+        "empty": "Nie ma jeszcze ostatnich komentarzy. Następna rozmowa może zacząć się od Twojego posta."
+      },
+      "reactions": {
+        "title": "Ostatnie reakcje",
+        "more": "Przeglądaj popularne posty",
+        "empty": "Nie ma jeszcze ostatnich reakcji. Dobry post może szybko to ożywić.",
+        "types": {
+          "heart": "polubił(a) sercem",
+          "leaf": "zareagował(a) liściem na",
+          "wow": "zareagował(a) zachwytem na",
+          "laugh": "zaśmiał(a) się z"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Wyróżniony pokój",
+      "roomInfoDays": "Aktywność z ostatnich {days} dni: {blocks} postów, {votes} głosów.",
+      "roomInfo24h": "Aktywność z ostatnich 24 godzin: {blocks} postów, {votes} głosów.",
+      "checkItOut": "Sprawdź",
+      "blockRibbon": "★ Wyróżniony post",
+      "votes": "Głosy: {n}",
+      "noContent": "(Nie podano treści...)",
+      "viewBlock": "Zobacz post"
+    },
+    "trendingTags": {
+      "title": "Popularne tagi",
+      "suffixDays": "(ostatnie {days} dni)",
+      "suffixAllTime": "(od początku)",
+      "blocks": "Posty: {n}",
+      "votes": "Głosy: {n}",
+      "empty": "Nie ma jeszcze popularnych tagów. Otaguj coś ciekawego jako pierwszy!"
+    },
+    "trendingBlocks": {
+      "title": "Popularne posty",
+      "suffixDays": "(ostatnie {days} dni)",
+      "createdBy": "Utworzone przez:",
+      "in": "w",
+      "on": "w dniu",
+      "unknownRoom": "Nieznany pokój",
+      "empty24h": "Brak postów w ostatnich 24 godzinach. Zajrzyj wkrótce!"
+    }
+  }
+}
