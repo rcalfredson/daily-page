@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Wszystkie wyróżnione pokoje",
+      "description": "Lista wszystkich pokoi, które wyróżniono."
+    },
+    "nav": {
+      "backToDashboard": "← Wróć do panelu"
+    },
+    "header": {
+      "title": "🌟 Wszystkie Twoje wyróżnione pokoje 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Pokój bez nazwy",
+      "noDescription": "Brak opisu."
+    },
+    "empty": {
+      "message": "Nie wyróżniono jeszcze żadnych pokoi!"
+    }
+  }
+}

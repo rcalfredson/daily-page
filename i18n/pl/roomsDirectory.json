@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Katalog pokoi",
+      "description": "Każdy pokój jest wejściem do innego świata. Wejdź, podziel się historią i dołącz do innych w tworzeniu czegoś pięknego."
+    },
+    "eyebrow": "Znajdź swój kąt",
+    "heading": "Katalog pokoi",
+    "intro": "Zacznij od pokoi, które teraz tętnią życiem, albo wędruj po tematach, aż coś zaskoczy. Każdy pokój to inna podpowiedź do pisania, fandom lub wspólna pasja czekająca na Twój głos.",
+    "empty": "W tej chwili nie ma dostępnych pokoi. Zajrzyj później!",
+    "jumpToActive": "Zobacz aktywne pokoje",
+    "jumpToTopics": "Przeglądaj według tematu",
+    "statsLabel": "Najważniejsze informacje katalogu pokoi",
+    "liveNow": "Teraz aktywne",
+    "recentlyActive": "Ostatnio aktywne",
+    "recentlyActiveSubtitle": "Najszybszy sposób, by znaleźć pokój, w którym teraz są ludzie.",
+    "browseByTopic": "Przeglądaj według tematu",
+    "topicSubtitle": "Otwórz temat, aby poznać jego pokoje.",
+    "roomCount": "Pokoje: {count}",
+    "stats": {
+      "rooms": "pokoje do odkrycia",
+      "topics": "grupy tematów",
+      "active": "aktywne wybory"
+    },
+    "activeUsers": "Aktywni użytkownicy: {count}",
+    "visitRoom": "Odwiedź pokój",
+    "close": "Zamknij",
+    "noTitle": "Brak tytułu",
+    "noDescription": "Brak opisu"
+  }
+}

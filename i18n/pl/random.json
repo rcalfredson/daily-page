@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Inne projekty",
+      "description": "Odkryj baseballowy dziennik, losowe eksperymenty pisarskie i inne poboczne projekty Daily Page."
+    },
+    "title": "Inne projekty",
+    "tagline": "Przytulny kąt na eksperymenty i poboczne wyprawy.",
+    "links": {
+      "baseball": "📖 Dziennik baseballowy",
+      "randomWriter": "🎲 Losowy pisarz"
+    },
+    "cta": {
+      "backToRooms": "Wróć do głównych pokoi"
+    }
+  }
+}

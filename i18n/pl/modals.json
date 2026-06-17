@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Zaloguj się",
+      "message": "Musisz się zalogować, aby kontynuować.",
+      "messageWithAction": "Musisz się zalogować, aby {action}.",
+      "cta": "Zaloguj się"
+    },
+    "actions": {
+      "voteOnBlock": "zagłosować na post",
+      "starRoom": "wyróżnić ten pokój",
+      "reactToBlock": "zareagować na ten post",
+      "commentOnBlock": "skomentować ten post",
+      "reportComment": "zgłosić ten komentarz"
+    },
+    "errors": {
+      "starToggleFail": "Nie udało się zaktualizować wyróżnienia. Spróbuj ponownie."
+    }
+  }
+}

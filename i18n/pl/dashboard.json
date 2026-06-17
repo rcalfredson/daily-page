@@ -1,0 +1,57 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Panel",
+      "description": "Twój panel Daily Page i przegląd konta."
+    },
+    "profile": {
+      "profilePicAlt": "Zdjęcie profilowe",
+      "noBio": "Nie ma jeszcze biogramu. Kliknij „Edytuj”, aby go dodać!",
+      "editBio": "Edytuj biogram",
+      "bioPlaceholder": "Wpisz tutaj swój biogram",
+      "save": "Zapisz",
+      "cancel": "Anuluj"
+    },
+    "activity": {
+      "title": "Ostatnia aktywność",
+      "none": "Brak ostatniej aktywności.",
+      "updatedOn": "Zaktualizowano {date}",
+      "viewAllBlocks": "Zobacz wszystkie posty"
+    },
+    "drafts": {
+      "title": "Kontynuuj pisanie",
+      "none": "Brak otwartych wersji roboczych.",
+      "updatedOn": "Zaktualizowano {date}",
+      "unlisted": "Niepubliczny",
+      "viewAll": "Zobacz wszystkie posty"
+    },
+    "streak": {
+      "title": "Seria pisania",
+      "line": "{days} dni z rzędu! Tak trzymaj!"
+    },
+    "starredRooms": {
+      "title": "Wyróżnione pokoje",
+      "none": "Nie masz jeszcze wyróżnionych pokoi. Zacznij odkrywać, aby znaleźć ulubione!",
+      "viewAll": "Zobacz wszystkie wyróżnione pokoje",
+      "unnamedRoom": "Pokój bez nazwy"
+    },
+    "security": {
+      "title": "Bezpieczeństwo konta",
+      "summary": "Zmień hasło i zarządzaj uwierzytelnianiem dwuskładnikowym.",
+      "manage": "Zarządzaj bezpieczeństwem"
+    },
+    "stats": {
+      "title": "Twoje statystyki",
+      "totalBlocks": "Łączna liczba utworzonych postów",
+      "collaborations": "Współprace",
+      "votesGiven": "Oddane głosy",
+      "daysActive": "Aktywne dni",
+      "viewDetailed": "Zobacz szczegółowe statystyki 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Nie udało się przesłać zdjęcia profilowego. Spróbuj ponownie.",
+      "uploadUnexpected": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.",
+      "bioUpdateFailed": "Błąd podczas aktualizacji biogramu. Spróbuj ponownie."
+    }
+  }
+}

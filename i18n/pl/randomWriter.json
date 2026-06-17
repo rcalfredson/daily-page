@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — Losowy pisarz",
+      "description": "Generuj nieskończony strumień losowego pseudotekstu dla zabawy, inspiracji albo chaosu."
+    },
+    "title": "Losowy pisarz",
+    "buttons": {
+      "clear": "Wyczyść",
+      "stop": "Zatrzymaj pisanie",
+      "start": "Zacznij pisać"
+    }
+  }
+}

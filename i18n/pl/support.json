@@ -1,0 +1,43 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page — Wsparcie",
+      "description": "Jak się skontaktować, zgłosić problemy, poprosić o funkcje lub pokoje i wesprzeć Daily Page finansowo."
+    },
+    "contact": {
+      "h1": "★ Chcę zadać pytanie, zgłosić problem albo poprosić o funkcję.",
+      "p1": {
+        "before": "Jeśli wolisz użyć GitHuba, sprawdź",
+        "link": "zgłoszenia tego projektu",
+        "after": "i dodaj swój głos. Pull requesty są oczywiście mile widziane."
+      },
+      "p2": {
+        "before": "Alternatywnie",
+        "link": "wyślij e-mail",
+        "after": "."
+      }
+    },
+    "contribute": {
+      "h1": "★ Chcę wesprzeć ten projekt wpłatą.",
+      "p1": {
+        "before": "Z góry dziękujemy za finansowe wsparcie projektu. Płatności prosimy wysyłać bezpiecznie przez",
+        "paypal": "PayPal",
+        "middle": "albo, jeśli wolisz,",
+        "amazon": "zamów kilka torebek zabawek, które sprzedaję na Amazonie",
+        "after": "."
+      }
+    },
+    "rooms": {
+      "h1": "★ Chcę poprosić o nowy pokój.",
+      "form": {
+        "nameLabel": "Nazwa pokoju",
+        "topicLabel": "Temat (opcjonalnie)",
+        "descriptionLabel": "Opis",
+        "submit": "Wyślij prośbę",
+        "success": "Prośba została wysłana.",
+        "errorGeneric": "Nie udało się wysłać prośby. Spróbuj ponownie.",
+        "errorUnexpected": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."
+      }
+    }
+  }
+}

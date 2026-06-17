@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Przegląd tagów",
+      "description": "Przeglądaj wszystkie tagi używane w Daily Page, z szybkimi filtrami czasu."
+    },
+    "title": "Przegląd tagów",
+    "intro": "Odkryj wszystkie tagi używane w Daily Page.",
+    "tagCloudTitle": "Chmura tagów",
+    "timeframe": {
+      "last24h": "Ostatnie 24 godziny",
+      "last7d": "Ostatnie 7 dni",
+      "last30d": "Ostatnie 30 dni",
+      "all": "Od początku"
+    },
+    "error": {
+      "loading": "Błąd podczas ładowania przeglądu tagów"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "Posty otagowane"
+      },
+      "header": {
+        "label": "Tag:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Łączna liczba postów z",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Utworzone przez:",
+        "inRoom": "w",
+        "unknownRoom": "Nieznany pokój",
+        "onDate": "w dniu"
+      },
+      "chart": {
+        "label": "Posty utworzone w czasie"
+      },
+      "empty": {
+        "message": "Nie znaleziono jeszcze postów z tym tagiem. Może utworzysz pierwszy? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Błąd podczas ładowania strony tagu"
+      }
+    }
+  }
+}
