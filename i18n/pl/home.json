@@ -68,6 +68,16 @@
       "on": "w dniu",
       "unknownRoom": "Nieznany pokój",
       "empty24h": "Brak postów w ostatnich 24 godzinach. Zajrzyj wkrótce!"
+    },
+    "supportWidget": {
+      "eyebrow": "Wsparcie strony",
+      "title": "Miesięczne wsparcie utrzymuje Daily Page online.",
+      "text": "Każde cykliczne wsparcie pomaga pokryć podstawowe koszty Daily Page.",
+      "cta": "Wesprzyj stronę",
+      "ariaLabel": "Postęp miesięcznego wsparcia: {raised} zadeklarowane z {goal}, {percent} procent.",
+      "ariaValue": "{raised} zadeklarowane z {goal}",
+      "amountSeparator": "z",
+      "amountSuffix": "miesięcznie"
     }
   }
 }

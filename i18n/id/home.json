@@ -68,6 +68,16 @@
       "on": "pada",
       "unknownRoom": "Ruang Tidak Dikenal",
       "empty24h": "Belum ada postingan dalam 24 jam terakhir. Cek lagi segera, kawan!"
+    },
+    "supportWidget": {
+      "eyebrow": "Dukungan situs",
+      "title": "Dukungan bulanan menjaga Daily Page tetap online.",
+      "text": "Setiap kontribusi berulang membantu menutup biaya dasar Daily Page.",
+      "cta": "Dukung situs",
+      "ariaLabel": "Progres dukungan bulanan: {raised} dijanjikan dari {goal}, {percent} persen.",
+      "ariaValue": "{raised} dijanjikan dari {goal}",
+      "amountSeparator": "dari",
+      "amountSuffix": "bulanan"
     }
   }
 }

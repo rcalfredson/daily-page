@@ -68,6 +68,16 @@
       "on": "于",
       "unknownRoom": "未知房间",
       "empty24h": "最近 24 小时还没有帖子。稍后再来看看吧，朋友！"
+    },
+    "supportWidget": {
+      "eyebrow": "网站支持",
+      "title": "月度支持让 Daily Page 保持在线。",
+      "text": "每一笔循环支持都有助于支付 Daily Page 的基本成本。",
+      "cta": "支持网站",
+      "ariaLabel": "月度支持进度：已承诺 {raised}，目标 {goal}，{percent}%。",
+      "ariaValue": "已承诺 {raised}，目标 {goal}",
+      "amountSeparator": "/",
+      "amountSuffix": "每月"
     }
   }
 }

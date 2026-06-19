@@ -68,6 +68,16 @@
       "on": "op",
       "unknownRoom": "Onbekende kamer",
       "empty24h": "Nog geen berichten in de afgelopen 24 uur. Kom snel nog eens terug, compa!"
+    },
+    "supportWidget": {
+      "eyebrow": "Sitesteun",
+      "title": "Maandelijkse steun houdt Daily Page online.",
+      "text": "Elke terugkerende bijdrage helpt de basiskosten van Daily Page te dekken.",
+      "cta": "Steun de site",
+      "ariaLabel": "Voortgang maandelijkse steun: {raised} toegezegd van {goal}, {percent} procent.",
+      "ariaValue": "{raised} toegezegd van {goal}",
+      "amountSeparator": "van",
+      "amountSuffix": "maandelijks"
     }
   }
 }

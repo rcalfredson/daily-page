@@ -39,6 +39,43 @@ block content
         |  #{' '}
         = t('home.hero.ctaSuffix')
 
+    if supportFunding
+      -
+        const supportWidgetText = t('home.supportWidget.text');
+        const supportWidgetAriaLabel = t('home.supportWidget.ariaLabel', {
+          raised: supportFunding.monthlyRaisedDisplay,
+          goal: supportFunding.monthlyGoalDisplay,
+          percent: supportFunding.percent
+        });
+        const supportWidgetAriaValue = t('home.supportWidget.ariaValue', {
+          raised: supportFunding.monthlyRaisedDisplay,
+          goal: supportFunding.monthlyGoalDisplay
+        });
+        const supportWidgetFillWidth = supportFunding.percent > 0 ? `${supportFunding.percent}%` : '8px';
+      aside.home-support-widget(aria-labelledby='home-support-title')
+        .home-support-widget__copy
+          p.home-support-widget__eyebrow= t('home.supportWidget.eyebrow')
+          h2#home-support-title= t('home.supportWidget.title')
+          p= supportWidgetText
+        .home-support-widget__status
+          .home-support-widget__meter(aria-label=supportWidgetAriaLabel)
+            .home-support-widget__headline
+              strong.home-support-widget__percent #{supportFunding.percent}%
+            .home-support-widget__track(
+              role='progressbar'
+              aria-valuemin='0'
+              aria-valuemax=supportFunding.monthlyGoal
+              aria-valuenow=supportFunding.meterValue
+              aria-valuetext=supportWidgetAriaValue
+            )
+              .home-support-widget__fill(style=`width: ${supportWidgetFillWidth}`)
+            p.home-support-widget__amount
+              strong= supportFunding.monthlyRaisedDisplay
+              span= t('home.supportWidget.amountSeparator')
+              strong= supportFunding.monthlyGoalDisplay
+              span= t('home.supportWidget.amountSuffix')
+          a.home-support-widget__link(href=uiPath('/support'))= t('home.supportWidget.cta')
+
     .global-stats
       a.stat-item(href=uiPath('/archive'))
         i.fas.fa-layer-group

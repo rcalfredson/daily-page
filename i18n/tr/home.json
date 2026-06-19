@@ -68,6 +68,16 @@
       "on": "tarihinde",
       "unknownRoom": "Bilinmeyen Oda",
       "empty24h": "Son 24 saatte henüz gönderi yok. Yakında tekrar kontrol et, dostum!"
+    },
+    "supportWidget": {
+      "eyebrow": "Site desteği",
+      "title": "Aylık destek Daily Page’i çevrimiçi tutar.",
+      "text": "Her yinelenen katkı Daily Page’in temel maliyetlerini karşılamaya yardımcı olur.",
+      "cta": "Siteyi destekle",
+      "ariaLabel": "Aylık destek ilerlemesi: {goal} hedeften {raised} taahhüt edildi, yüzde {percent}.",
+      "ariaValue": "{goal} hedeften {raised} taahhüt edildi",
+      "amountSeparator": "/",
+      "amountSuffix": "aylık"
     }
   }
 }

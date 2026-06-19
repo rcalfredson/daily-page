@@ -68,6 +68,16 @@
       "on": "على",
       "unknownRoom": "غرفة غير معروفة",
       "empty24h": "لا توجد منشورات حتى الآن خلال الـ 24 ساعة الماضية. التحقق مرة أخرى قريبا، كومبا!"
+    },
+    "supportWidget": {
+      "eyebrow": "دعم الموقع",
+      "title": "الدعم الشهري يبقي Daily Page على الإنترنت.",
+      "text": "كل مساهمة متكررة تساعد في تغطية تكاليف Daily Page الأساسية.",
+      "cta": "ادعم الموقع",
+      "ariaLabel": "تقدم الدعم الشهري: {raised} من {goal}، {percent} بالمئة.",
+      "ariaValue": "{raised} من {goal}",
+      "amountSeparator": "من",
+      "amountSuffix": "شهريا"
     }
   }
 }

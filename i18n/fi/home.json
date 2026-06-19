@@ -68,6 +68,16 @@
       "on": "päivänä",
       "unknownRoom": "Tuntematon huone",
       "empty24h": "Ei julkaisuja viimeisen 24 tunnin aikana. Tarkista pian uudelleen!"
+    },
+    "supportWidget": {
+      "eyebrow": "Sivuston tuki",
+      "title": "Kuukausituki pitää Daily Pagen verkossa.",
+      "text": "Jokainen toistuva lahjoitus auttaa kattamaan Daily Pagen peruskuluja.",
+      "cta": "Tue sivustoa",
+      "ariaLabel": "Kuukausituen edistyminen: {raised} luvattu tavoitteesta {goal}, {percent} prosenttia.",
+      "ariaValue": "{raised} luvattu tavoitteesta {goal}",
+      "amountSeparator": "/",
+      "amountSuffix": "kuukaudessa"
     }
   }
 }

@@ -68,6 +68,16 @@
       "on": "på",
       "unknownRoom": "Okänt rum",
       "empty24h": "Inga inlägg ännu under de senaste 24 timmarna. Kom tillbaka snart, kompa!"
+    },
+    "supportWidget": {
+      "eyebrow": "Stöd till webbplatsen",
+      "title": "Månatligt stöd håller Daily Page online.",
+      "text": "Varje återkommande bidrag hjälper till att täcka Daily Pages grundkostnader.",
+      "cta": "Stöd webbplatsen",
+      "ariaLabel": "Månatlig stödförlopp: {raised} utlovat av {goal}, {percent} procent.",
+      "ariaValue": "{raised} utlovat av {goal}",
+      "amountSeparator": "av",
+      "amountSuffix": "månadsvis"
     }
   }
 }
