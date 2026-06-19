@@ -23,7 +23,9 @@
         "note": "Päivitetään, kun vahvistettu kuukausituki muuttuu.",
         "ariaLabel": "Kuukausirahoituksen edistyminen: {raised} kerätty tavoitteesta {goal}, {percent} prosenttia.",
         "ariaValue": "{raised} kerätty tavoitteesta {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "Valitse kuukausittainen summa",
+      "monthlyOptionAriaLabel": "Tue kuukausittain summalla {amount}"
     },
     "openSource": {
       "h2": "Avoin lähdekoodi",

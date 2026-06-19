@@ -22,11 +22,22 @@ block content
         p= t('support.funding.p1')
         p= t('support.funding.p2')
         .support-actions
-          if funding.monthlyDonateUrl
+          if funding.monthlyDonateOptions && funding.monthlyDonateOptions.length
+            .monthly-support-options
+              p.monthly-support-options__label= t('support.funding.monthlyOptionsLabel')
+              .monthly-support-options__links
+                each option in funding.monthlyDonateOptions
+                  a.btn.primary.monthly-support-option(
+                    href=option.url
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label=t('support.funding.monthlyOptionAriaLabel', {amount: option.amountDisplay})
+                  )= option.amountDisplay
+          else if funding.monthlyDonateUrl
             a.btn.primary(href=funding.monthlyDonateUrl target="_blank" rel="noopener noreferrer")= t('support.funding.ctaMonthly')
           if funding.oneTimeDonateUrl
             a.btn.secondary(href=funding.oneTimeDonateUrl target="_blank" rel="noopener noreferrer")= t('support.funding.ctaOneTime')
-          if !funding.monthlyDonateUrl && !funding.oneTimeDonateUrl
+          if (!funding.monthlyDonateOptions || !funding.monthlyDonateOptions.length) && !funding.monthlyDonateUrl && !funding.oneTimeDonateUrl
             a.btn.secondary(href="mailto:ask@dailypage.org")= t('support.funding.ctaEmail')
 
       .funding-meter(

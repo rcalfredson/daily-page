@@ -23,7 +23,9 @@
         "note": "Aggiornato quando cambia il sostegno mensile confermato.",
         "ariaLabel": "Avanzamento finanziamento mensile: {raised} raccolti su {goal}, {percent} per cento.",
         "ariaValue": "{raised} raccolti su {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "Scegli un importo mensile",
+      "monthlyOptionAriaLabel": "Contribuisci {amount} al mese"
     },
     "openSource": {
       "h2": "Open source",

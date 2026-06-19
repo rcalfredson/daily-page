@@ -23,7 +23,9 @@
         "note": "Bijgewerkt wanneer bevestigde maandelijkse steun verandert.",
         "ariaLabel": "Maandelijkse financieringsvoortgang: {raised} opgehaald van {goal}, {percent} procent.",
         "ariaValue": "{raised} opgehaald van {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "Kies een maandelijks bedrag",
+      "monthlyOptionAriaLabel": "Draag maandelijks {amount} bij"
     },
     "openSource": {
       "h2": "Open source",

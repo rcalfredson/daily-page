@@ -23,7 +23,9 @@
         "note": "Diperbarui saat dukungan bulanan yang dikonfirmasi berubah.",
         "ariaLabel": "Progres pendanaan bulanan: {raised} terkumpul dari {goal}, {percent} persen.",
         "ariaValue": "{raised} terkumpul dari {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "Pilih jumlah bulanan",
+      "monthlyOptionAriaLabel": "Berkontribusi {amount} per bulan"
     },
     "openSource": {
       "h2": "Sumber Terbuka",

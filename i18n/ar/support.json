@@ -23,7 +23,9 @@
         "note": "يتم التحديث عندما يتغير الدعم الشهري المؤكد.",
         "ariaLabel": "تقدم التمويل الشهري: {raised} تم جمعها من {goal}، {percent} بالمئة.",
         "ariaValue": "{raised} تم جمعها من {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "اختر مبلغا شهريا",
+      "monthlyOptionAriaLabel": "ساهم بمبلغ {amount} شهريا"
     },
     "openSource": {
       "h2": "مفتوح المصدر",

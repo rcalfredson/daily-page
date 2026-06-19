@@ -23,7 +23,9 @@
         "note": "Updated as confirmed monthly support changes.",
         "ariaLabel": "Monthly funding progress: {raised} raised of {goal}, {percent} percent.",
         "ariaValue": "{raised} raised of {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "Choose a monthly amount",
+      "monthlyOptionAriaLabel": "Contribute {amount} monthly"
     },
     "openSource": {
       "h2": "Open Source",

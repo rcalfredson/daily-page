@@ -86,6 +86,34 @@
   margin-top: 1.25rem;
 }
 
+.monthly-support-options {
+  flex: 1 0 100%;
+  min-width: 0;
+}
+
+.monthly-support-options__label {
+  margin: 0 0 0.5rem;
+  color: #5f6673;
+  font-family: 'Rubik-Medium', sans-serif;
+  font-size: 0.9rem;
+}
+
+.monthly-support-options__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.monthly-support-option {
+  min-width: 64px;
+  min-height: 40px;
+  padding: 0.55rem 0.8rem;
+}
+
+.btn.primary.monthly-support-option::after {
+  content: none;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -306,7 +334,8 @@ html[data-theme="dark"] .funding-meter__percent {
 html[data-theme="dark"] .tagline,
 html[data-theme="dark"] .funding-meter__label,
 html[data-theme="dark"] .funding-meter__amount span,
-html[data-theme="dark"] .funding-meter__note {
+html[data-theme="dark"] .funding-meter__note,
+html[data-theme="dark"] .monthly-support-options__label {
   color: var(--muted-text-color);
 }
 
@@ -400,6 +429,11 @@ html[data-theme="dark"] .form-feedback {
 @media (max-width: 380px) {
   .support-actions {
     flex-direction: column;
+  }
+
+  .monthly-support-options__links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .btn,

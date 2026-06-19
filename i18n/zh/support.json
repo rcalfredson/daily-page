@@ -23,7 +23,9 @@
         "note": "会在已确认的月度支持发生变化时更新。",
         "ariaLabel": "月度筹款进度：已筹集 {raised}，目标 {goal}，{percent}%。",
         "ariaValue": "已筹集 {raised}，目标 {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "选择每月金额",
+      "monthlyOptionAriaLabel": "每月支持 {amount}"
     },
     "openSource": {
       "h2": "开源",

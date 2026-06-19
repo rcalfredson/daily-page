@@ -23,7 +23,9 @@
         "note": "पुष्टि किए गए मासिक समर्थन में बदलाव होने पर अपडेट होता है.",
         "ariaLabel": "मासिक फंडिंग प्रगति: {goal} में से {raised} जुटाए गए, {percent} प्रतिशत.",
         "ariaValue": "{goal} में से {raised} जुटाए गए"
-      }
+      },
+      "monthlyOptionsLabel": "मासिक राशि चुनें",
+      "monthlyOptionAriaLabel": "हर महीने {amount} का योगदान दें"
     },
     "openSource": {
       "h2": "ओपन सोर्स",
