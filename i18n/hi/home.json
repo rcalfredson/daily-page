@@ -77,7 +77,14 @@
       "ariaLabel": "मासिक समर्थन प्रगति: {goal} में से {raised} वचनबद्ध, {percent} प्रतिशत.",
       "ariaValue": "{goal} में से {raised} वचनबद्ध",
       "amountSeparator": "में से",
-      "amountSuffix": "मासिक"
+      "amountSuffix": "मासिक",
+      "goalReached": {
+        "title": "इस महीने का समर्थन लक्ष्य पूरा हो गया है.",
+        "text": "धन्यवाद! अतिरिक्त समर्थन Daily Page की भविष्य की लागतों और सुधारों में मदद करता है.",
+        "meterLabel": "लक्ष्य पूरा हुआ",
+        "ariaLabel": "मासिक समर्थन लक्ष्य पूरा हुआ: {goal} के लक्ष्य के मुकाबले {raised}.",
+        "ariaValue": "लक्ष्य पूरा हुआ, {goal} के मुकाबले {raised}"
+      }
     }
   }
 }

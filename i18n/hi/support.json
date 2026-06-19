@@ -25,7 +25,18 @@
         "ariaValue": "{goal} में से {raised} जुटाए गए"
       },
       "monthlyOptionsLabel": "मासिक राशि चुनें",
-      "monthlyOptionAriaLabel": "हर महीने {amount} का योगदान दें"
+      "monthlyOptionAriaLabel": "हर महीने {amount} का योगदान दें",
+      "goalReached": {
+        "h2": "मासिक लक्ष्य पूरा हो गया है. धन्यवाद!",
+        "p1": "आवर्ती समर्थन अब Daily Page की {goal} मासिक बुनियादी लागत को पूरा करता है.",
+        "p2": "अतिरिक्त समर्थन का अभी भी स्वागत है और यह अप्रत्याशित लागतों, रखरखाव और भविष्य के सुधारों के लिए सहारा बनाता है.",
+        "monthlyOptionsLabel": "Daily Page का समर्थन जारी रखें",
+        "ctaMonthly": "मासिक समर्थन जारी रखें",
+        "meterLabel": "लक्ष्य पूरा हुआ",
+        "meterNote": "मासिक बुनियादी लागत पूरी करने में मदद के लिए धन्यवाद.",
+        "meterAriaLabel": "मासिक फंडिंग लक्ष्य पूरा हुआ: {goal} के लक्ष्य के मुकाबले {raised}.",
+        "meterAriaValue": "लक्ष्य पूरा हुआ, {goal} के मुकाबले {raised}"
+      }
     },
     "openSource": {
       "h2": "ओपन सोर्स",

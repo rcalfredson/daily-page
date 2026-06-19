@@ -77,7 +77,14 @@
       "ariaLabel": "월간 후원 진행 상황: {goal} 중 {raised}, {percent} 퍼센트.",
       "ariaValue": "{goal} 중 {raised}",
       "amountSeparator": "/",
-      "amountSuffix": "월간"
+      "amountSuffix": "월간",
+      "goalReached": {
+        "title": "이번 달 후원 목표가 충족되었습니다.",
+        "text": "감사합니다! 추가 후원은 Daily Page의 향후 비용과 개선에 도움이 됩니다.",
+        "meterLabel": "목표 달성",
+        "ariaLabel": "월간 후원 목표 달성: 목표 {goal}에 {raised}.",
+        "ariaValue": "목표 달성, {goal}에 {raised}"
+      }
     }
   }
 }

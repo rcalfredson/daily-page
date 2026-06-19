@@ -77,7 +77,14 @@
       "ariaLabel": "Kuukausituen edistyminen: {raised} luvattu tavoitteesta {goal}, {percent} prosenttia.",
       "ariaValue": "{raised} luvattu tavoitteesta {goal}",
       "amountSeparator": "/",
-      "amountSuffix": "kuukaudessa"
+      "amountSuffix": "kuukaudessa",
+      "goalReached": {
+        "title": "Kuukausittainen tukitavoite on katettu.",
+        "text": "Kiitos! Lisätuki auttaa Daily Pagea tulevissa kuluissa ja parannuksissa.",
+        "meterLabel": "Tavoite saavutettu",
+        "ariaLabel": "Kuukausituen tavoite saavutettu: {raised}, tavoite {goal}.",
+        "ariaValue": "Tavoite saavutettu, {raised} / {goal}"
+      }
     }
   }
 }

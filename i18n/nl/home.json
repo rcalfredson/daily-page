@@ -77,7 +77,14 @@
       "ariaLabel": "Voortgang maandelijkse steun: {raised} toegezegd van {goal}, {percent} procent.",
       "ariaValue": "{raised} toegezegd van {goal}",
       "amountSeparator": "van",
-      "amountSuffix": "maandelijks"
+      "amountSuffix": "maandelijks",
+      "goalReached": {
+        "title": "Het maandelijkse steundoel is gedekt.",
+        "text": "Dank je! Extra steun helpt Daily Page met toekomstige kosten en verbeteringen.",
+        "meterLabel": "Doel bereikt",
+        "ariaLabel": "Maandelijks steundoel bereikt: {raised} tegenover een doel van {goal}.",
+        "ariaValue": "Doel bereikt, {raised} van {goal}"
+      }
     }
   }
 }

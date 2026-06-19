@@ -77,7 +77,14 @@
       "ariaLabel": "تقدم الدعم الشهري: {raised} من {goal}، {percent} بالمئة.",
       "ariaValue": "{raised} من {goal}",
       "amountSeparator": "من",
-      "amountSuffix": "شهريا"
+      "amountSuffix": "شهريا",
+      "goalReached": {
+        "title": "تمت تغطية هدف الدعم الشهري.",
+        "text": "شكرا لك! يساعد الدعم الإضافي Daily Page في مواجهة التكاليف المستقبلية والتحسينات.",
+        "meterLabel": "تم تحقيق الهدف",
+        "ariaLabel": "تم تحقيق هدف الدعم الشهري: {raised} مقابل هدف {goal}.",
+        "ariaValue": "تم تحقيق الهدف، {raised} مقابل {goal}"
+      }
     }
   }
 }

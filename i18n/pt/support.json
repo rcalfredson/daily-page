@@ -25,7 +25,18 @@
         "ariaValue": "{raised} arrecadados de {goal}"
       },
       "monthlyOptionsLabel": "Escolha um valor mensal",
-      "monthlyOptionAriaLabel": "Contribuir com {amount} por mês"
+      "monthlyOptionAriaLabel": "Contribuir com {amount} por mês",
+      "goalReached": {
+        "h2": "A meta mensal está coberta. Obrigado!",
+        "p1": "O apoio recorrente agora cobre a base mensal de {goal} do Daily Page.",
+        "p2": "O apoio adicional continua bem-vindo e ajuda a criar uma reserva para custos inesperados, manutenção e melhorias futuras.",
+        "monthlyOptionsLabel": "Continue apoiando o Daily Page",
+        "ctaMonthly": "Continuar o apoio mensal",
+        "meterLabel": "Meta alcançada",
+        "meterNote": "Obrigado por ajudar a cobrir a base mensal.",
+        "meterAriaLabel": "Meta mensal de financiamento alcançada: {raised} para uma meta de {goal}.",
+        "meterAriaValue": "Meta alcançada, {raised} de {goal}"
+      }
     },
     "openSource": {
       "h2": "Código aberto",

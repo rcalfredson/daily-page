@@ -25,7 +25,18 @@
         "ariaValue": "{raised} raised of {goal}"
       },
       "monthlyOptionsLabel": "Choose a monthly amount",
-      "monthlyOptionAriaLabel": "Contribute {amount} monthly"
+      "monthlyOptionAriaLabel": "Contribute {amount} monthly",
+      "goalReached": {
+        "h2": "The monthly goal is covered. Thank you!",
+        "p1": "Recurring support now covers Daily Page’s {goal} monthly baseline.",
+        "p2": "Additional support is still welcome and helps build a cushion for unexpected costs, maintenance, and future improvements.",
+        "monthlyOptionsLabel": "Continue supporting Daily Page",
+        "ctaMonthly": "Keep Supporting Monthly",
+        "meterLabel": "Goal reached",
+        "meterNote": "Thank you for helping cover the monthly baseline.",
+        "meterAriaLabel": "Monthly funding goal reached: {raised} pledged against a {goal} goal.",
+        "meterAriaValue": "Goal reached, {raised} pledged against {goal}"
+      }
     },
     "openSource": {
       "h2": "Open Source",

@@ -77,7 +77,14 @@
       "ariaLabel": "Monthly support progress: {raised} pledged of {goal}, {percent} percent.",
       "ariaValue": "{raised} pledged of {goal}",
       "amountSeparator": "of",
-      "amountSuffix": "monthly"
+      "amountSuffix": "monthly",
+      "goalReached": {
+        "title": "This month’s support goal is covered.",
+        "text": "Thank you! Extra support helps Daily Page handle future costs and improvements.",
+        "meterLabel": "Goal reached",
+        "ariaLabel": "Monthly support goal reached: {raised} pledged against a {goal} goal.",
+        "ariaValue": "Goal reached, {raised} pledged against {goal}"
+      }
     }
   }
 }

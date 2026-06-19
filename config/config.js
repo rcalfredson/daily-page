@@ -88,6 +88,7 @@ export const config = {
   // Support page funding display
   supportMonthlyGoalUsd: process.env.SUPPORT_MONTHLY_GOAL_USD,
   supportMonthlyRaisedUsd: process.env.SUPPORT_MONTHLY_RAISED_USD,
+  supportFundingPreviewRaisedUsd: process.env.SUPPORT_FUNDING_PREVIEW_RAISED_USD,
   supportDonateUrl: process.env.SUPPORT_DONATE_URL,
   supportMonthlyDonateUrl: process.env.SUPPORT_MONTHLY_DONATE_URL,
   supportMonthlyDonateOptions: parseMonthlyDonateOptions(process.env.SUPPORT_MONTHLY_DONATE_OPTIONS),

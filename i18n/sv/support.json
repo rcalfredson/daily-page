@@ -25,7 +25,18 @@
         "ariaValue": "{raised} insamlat av {goal}"
       },
       "monthlyOptionsLabel": "Välj ett månadsbelopp",
-      "monthlyOptionAriaLabel": "Bidra med {amount} per månad"
+      "monthlyOptionAriaLabel": "Bidra med {amount} per månad",
+      "goalReached": {
+        "h2": "Månadsmålet är täckt. Tack!",
+        "p1": "Återkommande stöd täcker nu Daily Pages månatliga bas på {goal}.",
+        "p2": "Ytterligare stöd är fortfarande välkommet och hjälper till att bygga en buffert för oväntade kostnader, underhåll och framtida förbättringar.",
+        "monthlyOptionsLabel": "Fortsätt stödja Daily Page",
+        "ctaMonthly": "Fortsätt med månatligt stöd",
+        "meterLabel": "Målet är nått",
+        "meterNote": "Tack för att du hjälper till att täcka den månatliga basen.",
+        "meterAriaLabel": "Månatligt finansieringsmål nått: {raised} mot ett mål på {goal}.",
+        "meterAriaValue": "Målet är nått, {raised} av {goal}"
+      }
     },
     "openSource": {
       "h2": "Open source",

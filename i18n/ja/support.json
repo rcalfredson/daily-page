@@ -25,7 +25,18 @@
         "ariaValue": "{goal} のうち {raised}"
       },
       "monthlyOptionsLabel": "月額を選択",
-      "monthlyOptionAriaLabel": "毎月{amount}を支援する"
+      "monthlyOptionAriaLabel": "毎月{amount}を支援する",
+      "goalReached": {
+        "h2": "月間目標を達成しました。ありがとうございます！",
+        "p1": "継続支援により、Daily Pageの月間基本費用{goal}をまかなえるようになりました。",
+        "p2": "追加の支援も引き続き歓迎します。予期しない費用、メンテナンス、今後の改善のための余裕につながります。",
+        "monthlyOptionsLabel": "Daily Pageの支援を続ける",
+        "ctaMonthly": "月間支援を続ける",
+        "meterLabel": "目標達成",
+        "meterNote": "月間基本費用を支えていただき、ありがとうございます。",
+        "meterAriaLabel": "月間支援目標を達成しました。目標{goal}に対して{raised}です。",
+        "meterAriaValue": "目標達成、{goal}に対して{raised}"
+      }
     },
     "openSource": {
       "h2": "オープンソース",

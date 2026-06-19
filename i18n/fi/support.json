@@ -25,7 +25,18 @@
         "ariaValue": "{raised} kerätty tavoitteesta {goal}"
       },
       "monthlyOptionsLabel": "Valitse kuukausittainen summa",
-      "monthlyOptionAriaLabel": "Tue kuukausittain summalla {amount}"
+      "monthlyOptionAriaLabel": "Tue kuukausittain summalla {amount}",
+      "goalReached": {
+        "h2": "Kuukausitavoite on katettu. Kiitos!",
+        "p1": "Toistuva tuki kattaa nyt Daily Pagen {goal} kuukausittaisen perustason.",
+        "p2": "Lisätuki on edelleen tervetullutta ja auttaa luomaan puskuria odottamattomiin kuluihin, ylläpitoon ja tuleviin parannuksiin.",
+        "monthlyOptionsLabel": "Jatka Daily Pagen tukemista",
+        "ctaMonthly": "Jatka kuukausittaista tukea",
+        "meterLabel": "Tavoite saavutettu",
+        "meterNote": "Kiitos kuukausittaisen perustason kattamisesta.",
+        "meterAriaLabel": "Kuukausirahoituksen tavoite saavutettu: {raised}, tavoite {goal}.",
+        "meterAriaValue": "Tavoite saavutettu, {raised} / {goal}"
+      }
     },
     "openSource": {
       "h2": "Avoin lähdekoodi",

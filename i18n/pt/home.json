@@ -77,7 +77,14 @@
       "ariaLabel": "Progresso do apoio mensal: {raised} comprometidos de {goal}, {percent} por cento.",
       "ariaValue": "{raised} comprometidos de {goal}",
       "amountSeparator": "de",
-      "amountSuffix": "mensais"
+      "amountSuffix": "mensais",
+      "goalReached": {
+        "title": "A meta mensal de apoio está coberta.",
+        "text": "Obrigado! O apoio adicional ajuda o Daily Page com custos futuros e melhorias.",
+        "meterLabel": "Meta alcançada",
+        "ariaLabel": "Meta mensal de apoio alcançada: {raised} para uma meta de {goal}.",
+        "ariaValue": "Meta alcançada, {raised} de {goal}"
+      }
     }
   }
 }

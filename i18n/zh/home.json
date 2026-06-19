@@ -77,7 +77,14 @@
       "ariaLabel": "月度支持进度：已承诺 {raised}，目标 {goal}，{percent}%。",
       "ariaValue": "已承诺 {raised}，目标 {goal}",
       "amountSeparator": "/",
-      "amountSuffix": "每月"
+      "amountSuffix": "每月",
+      "goalReached": {
+        "title": "本月支持目标已覆盖。",
+        "text": "谢谢！额外支持有助于 Daily Page 应对未来成本和改进。",
+        "meterLabel": "目标已达成",
+        "ariaLabel": "月度支持目标已达成：目标 {goal}，已承诺 {raised}。",
+        "ariaValue": "目标已达成，{raised} / {goal}"
+      }
     }
   }
 }

@@ -25,7 +25,18 @@
         "ariaValue": "{goal} hedefinden {raised} toplandı"
       },
       "monthlyOptionsLabel": "Aylık bir tutar seçin",
-      "monthlyOptionAriaLabel": "Aylık {amount} katkıda bulun"
+      "monthlyOptionAriaLabel": "Aylık {amount} katkıda bulun",
+      "goalReached": {
+        "h2": "Aylık hedef karşılandı. Teşekkürler!",
+        "p1": "Yinelenen destek artık Daily Page’in aylık {goal} temel maliyetini karşılıyor.",
+        "p2": "Ek destek hâlâ memnuniyetle karşılanır ve beklenmedik maliyetler, bakım ve gelecekteki iyileştirmeler için bir pay oluşturmaya yardımcı olur.",
+        "monthlyOptionsLabel": "Daily Page’i desteklemeye devam edin",
+        "ctaMonthly": "Aylık desteği sürdür",
+        "meterLabel": "Hedefe ulaşıldı",
+        "meterNote": "Aylık temel maliyeti karşılamaya yardım ettiğiniz için teşekkürler.",
+        "meterAriaLabel": "Aylık finansman hedefine ulaşıldı: {goal} hedefe karşı {raised}.",
+        "meterAriaValue": "Hedefe ulaşıldı, {goal} karşısında {raised}"
+      }
     },
     "openSource": {
       "h2": "Açık Kaynak",
