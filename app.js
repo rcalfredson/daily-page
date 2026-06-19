@@ -20,6 +20,7 @@ import usePeersAPI from './server/api/v1/peers.js';
 import useReactionsAPI from './server/api/v1/reactions.js';
 import useRoomAPI from './server/api/v1/rooms.js';
 import useSearchAPI from './server/api/v1/search.js';
+import useStripeAPI from './server/api/v1/stripe.js';
 import useUserAPI from './server/api/v1/users.js';
 import useVoteAPI from './server/api/v1/votes.js';
 
@@ -41,6 +42,7 @@ import { initI18n, addI18n } from './server/services/i18n.js'
 import { startJobs } from './server/services/cron.js';
 import * as google from './server/services/google.js';
 import { timeIt } from './server/services/perf.js';
+import { getRecurringSupportMonthlyTotalUsd } from './server/db/supportFundingService.js';
 
 import { renderMarkdownContent } from './server/utils/markdownHelper.js';
 import { titleOnlyMeta } from './server/utils/unfinished.js';
@@ -129,6 +131,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     app.use(express.static('public'));
     app.use(express.urlencoded({ extended: true }));
+    useStripeAPI(app);
     app.use(bodyParser.json());
     app.set('views', './views');
     app.set('view engine', 'pug');
@@ -434,12 +437,45 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
       });
     });
 
-    app.get('/support', addI18n(['support']), (_, res) => {
+    app.get('/support', addI18n(['support']), async (_, res) => {
       const { t } = res.locals;
+      const configuredMonthlyGoal = Number.parseFloat(config.supportMonthlyGoalUsd);
+      const monthlyGoal = configuredMonthlyGoal > 0 ? configuredMonthlyGoal : 20;
+      let monthlyRaised = Math.max(0, Number.parseFloat(config.supportMonthlyRaisedUsd) || 0);
+
+      try {
+        const stripeMonthlyRaised = await getRecurringSupportMonthlyTotalUsd();
+        if (typeof stripeMonthlyRaised === 'number') {
+          monthlyRaised = Math.max(0, stripeMonthlyRaised);
+        }
+      } catch (error) {
+        console.error('Failed to load Stripe support funding total:', error);
+      }
+
+      const fundingPercent = Math.min(100, Math.round((monthlyRaised / monthlyGoal) * 100));
+      const fundingMeterValue = Math.min(monthlyRaised, monthlyGoal);
+      const monthlyDonateUrl = config.supportMonthlyDonateUrl || config.supportDonateUrl || null;
+      const oneTimeDonateUrl = config.supportOneTimeDonateUrl || null;
+      const formatUsd = (amount) => {
+        const normalizedAmount = Number.isInteger(amount) ? amount.toFixed(0) : amount.toFixed(2);
+        return `$${normalizedAmount}`;
+      };
 
       res.render('support', {
         title: t('support.meta.title'),
-        description: t('support.meta.description')
+        description: t('support.meta.description'),
+        funding: {
+          monthlyGoal,
+          monthlyRaised,
+          monthlyGoalDisplay: formatUsd(monthlyGoal),
+          monthlyRaisedDisplay: formatUsd(monthlyRaised),
+          meterValue: fundingMeterValue,
+          percent: fundingPercent,
+          monthlyDonateUrl,
+          oneTimeDonateUrl
+        },
+        repoUrl: 'https://github.com/rcalfredson/daily-page',
+        issuesUrl: 'https://github.com/rcalfredson/daily-page/issues'
       })
     });
 

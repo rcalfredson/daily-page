@@ -78,6 +78,7 @@
     "slug": "^4.0.4",
     "sorted-cmp-array": "^2.0.1",
     "strip-bom": "^4.0.0",
+    "stripe": "^22.2.2",
     "uuid": "^14"
   },
   "devDependencies": {

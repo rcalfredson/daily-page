@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — Support",
-      "description": "How to get in touch, report issues, request features or rooms, and support Daily Page financially."
+      "title": "Daily Page - Support",
+      "description": "Support Daily Page financially, contribute to the open-source project, report issues, get in touch, or request a new room."
+    },
+    "hero": {
+      "eyebrow": "Support Daily Page",
+      "title": "Help keep this little writing space online.",
+      "tagline": "Daily Page is an open-source, indie project. A few steady contributions go a long way toward hosting, email, storage, maintenance, and the quiet work of keeping it useful."
+    },
+    "funding": {
+      "h2": "Monthly Funding Goal",
+      "p1": "The current goal is to raise $20 each month to cover the basic costs of running the site.",
+      "p2": "The progress meter reflects confirmed recurring monthly support. One-time support is welcome too, but the meter tracks the monthly sustainability goal.",
+      "ctaMonthly": "Contribute Monthly",
+      "ctaOneTime": "Give Once",
+      "ctaEmail": "Email Daily Page",
+      "meter": {
+        "label": "Progress this month",
+        "amountSeparator": "raised of",
+        "amountSuffix": "monthly",
+        "note": "Updated as confirmed monthly support changes.",
+        "ariaLabel": "Monthly funding progress: {raised} raised of {goal}, {percent} percent.",
+        "ariaValue": "{raised} raised of {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "Open Source",
+      "p1": "Daily Page is developed in public. You can read the code, report bugs, suggest features, or open a pull request.",
+      "items": {
+        "code": {
+          "label": "Browse the code",
+          "text": "to see how the site works and where it is headed."
+        },
+        "issues": {
+          "label": "Use issues",
+          "text": "for bugs, rough edges, accessibility problems, translation gaps, and feature ideas."
+        },
+        "community": {
+          "label": "Contribute carefully",
+          "text": "with fixes, documentation, translations, design polish, or small improvements that make writing here easier."
+        }
+      },
+      "repoCta": "View Repository",
+      "issuesCta": "Open Issues"
     },
     "contact": {
-      "h1": "★ I would like to pose a question, report a problem, or request a feature.",
-      "p1": {
-        "before": "If you prefer to use GitHub, please check",
-        "link": "this project's issues",
-        "after": "and add your voice. Pull requests are also welcome, of course."
-      },
-      "p2": {
-        "before": "Alternatively,",
-        "link": "send an email",
-        "after": "."
-      }
-    },
-    "contribute": {
-      "h1": "★ I would like to support this project through a contribution.",
-      "p1": {
-        "before": "Thank you in advance for funding this project. Please send payments securely through",
-        "paypal": "PayPal",
-        "middle": "or, if you prefer,",
-        "amazon": "order a few bags of the toys I am selling on Amazon",
-        "after": "."
-      }
+      "h2": "Questions and Feedback",
+      "p1": "For private questions, account help, or anything that does not belong in a public issue, email is still the best route.",
+      "emailCta": "Email Daily Page",
+      "issueCta": "Report an Issue"
     },
     "rooms": {
-      "h1": "★ I would like to request a new room.",
+      "h2": "Request a Room",
+      "p1": "Rooms keep Daily Page organized around shared topics. If there is a writing space you would like to see, send a request here.",
       "form": {
         "nameLabel": "Room Name",
         "topicLabel": "Topic (optional)",
