@@ -23,7 +23,9 @@
         "note": "Oppdateres når bekreftet månedlig støtte endres.",
         "ariaLabel": "Månedlig finansieringsfremdrift: {raised} samlet inn av {goal}, {percent} prosent.",
         "ariaValue": "{raised} samlet inn av {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "Velg et månedlig beløp",
+      "monthlyOptionAriaLabel": "Bidra med {amount} per måned"
     },
     "openSource": {
       "h2": "Open source",

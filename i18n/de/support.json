@@ -23,7 +23,9 @@
         "note": "Wird aktualisiert, wenn sich die bestätigte monatliche Unterstützung ändert.",
         "ariaLabel": "Monatlicher Finanzierungsfortschritt: {raised} gesammelt von {goal}, {percent} Prozent.",
         "ariaValue": "{raised} gesammelt von {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "Monatlichen Betrag auswählen",
+      "monthlyOptionAriaLabel": "Monatlich {amount} beitragen"
     },
     "openSource": {
       "h2": "Open Source",

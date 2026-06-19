@@ -23,7 +23,9 @@
         "note": "Aktualizowane, gdy zmienia się potwierdzone wsparcie miesięczne.",
         "ariaLabel": "Postęp miesięcznego finansowania: {raised} zebrano z {goal}, {percent} procent.",
         "ariaValue": "{raised} zebrano z {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "Wybierz miesięczną kwotę",
+      "monthlyOptionAriaLabel": "Wpłacaj {amount} miesięcznie"
     },
     "openSource": {
       "h2": "Open source",

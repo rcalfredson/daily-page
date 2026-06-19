@@ -23,7 +23,9 @@
         "note": "Se actualiza cuando cambia el apoyo mensual confirmado.",
         "ariaLabel": "Progreso de financiación mensual: {raised} recaudados de {goal}, {percent} por ciento.",
         "ariaValue": "{raised} recaudados de {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "Elige una cantidad mensual",
+      "monthlyOptionAriaLabel": "Contribuir {amount} al mes"
     },
     "openSource": {
       "h2": "Código abierto",

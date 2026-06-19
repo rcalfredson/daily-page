@@ -23,7 +23,9 @@
         "note": "確認済みの月間支援が変わると更新されます。",
         "ariaLabel": "月間支援の進捗: {goal} のうち {raised}、{percent} パーセント。",
         "ariaValue": "{goal} のうち {raised}"
-      }
+      },
+      "monthlyOptionsLabel": "月額を選択",
+      "monthlyOptionAriaLabel": "毎月{amount}を支援する"
     },
     "openSource": {
       "h2": "オープンソース",

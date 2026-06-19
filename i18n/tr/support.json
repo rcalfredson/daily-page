@@ -23,7 +23,9 @@
         "note": "Onaylanmış aylık destek değiştikçe güncellenir.",
         "ariaLabel": "Aylık fonlama ilerlemesi: {goal} hedefinden {raised} toplandı, yüzde {percent}.",
         "ariaValue": "{goal} hedefinden {raised} toplandı"
-      }
+      },
+      "monthlyOptionsLabel": "Aylık bir tutar seçin",
+      "monthlyOptionAriaLabel": "Aylık {amount} katkıda bulun"
     },
     "openSource": {
       "h2": "Açık Kaynak",

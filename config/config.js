@@ -12,6 +12,48 @@ function parseCsv(value) {
     .filter(Boolean);
 }
 
+function parseMonthlyDonateOptions(value) {
+  const optionsByAmount = new Map();
+
+  for (const [index, entry] of (value || '').split(',').entries()) {
+    const normalizedEntry = entry.trim();
+    if (!normalizedEntry) continue;
+
+    const separatorIndex = normalizedEntry.indexOf('=');
+    if (separatorIndex <= 0) {
+      console.warn(`Ignoring invalid SUPPORT_MONTHLY_DONATE_OPTIONS entry ${index + 1}: expected amount=url.`);
+      continue;
+    }
+
+    const amount = Number(normalizedEntry.slice(0, separatorIndex).trim());
+    const urlValue = normalizedEntry.slice(separatorIndex + 1).trim();
+    let donateUrl;
+
+    try {
+      donateUrl = new URL(urlValue);
+    } catch {
+      console.warn(`Ignoring invalid SUPPORT_MONTHLY_DONATE_OPTIONS entry ${index + 1}: invalid URL.`);
+      continue;
+    }
+
+    if (!Number.isFinite(amount) || amount <= 0 || donateUrl.protocol !== 'https:') {
+      console.warn(`Ignoring invalid SUPPORT_MONTHLY_DONATE_OPTIONS entry ${index + 1}: use a positive amount and HTTPS URL.`);
+      continue;
+    }
+
+    if (optionsByAmount.has(amount)) {
+      console.warn(`Duplicate SUPPORT_MONTHLY_DONATE_OPTIONS amount ${amount}; using the last entry.`);
+    }
+
+    optionsByAmount.set(amount, {
+      amount,
+      url: donateUrl.toString(),
+    });
+  }
+
+  return [...optionsByAmount.values()].sort((a, b) => a.amount - b.amount);
+}
+
 export const config = {
   // MongoDB Config
   mongoDbAddr: process.env.MONGO_DB_ADDR,
@@ -48,6 +90,7 @@ export const config = {
   supportMonthlyRaisedUsd: process.env.SUPPORT_MONTHLY_RAISED_USD,
   supportDonateUrl: process.env.SUPPORT_DONATE_URL,
   supportMonthlyDonateUrl: process.env.SUPPORT_MONTHLY_DONATE_URL,
+  supportMonthlyDonateOptions: parseMonthlyDonateOptions(process.env.SUPPORT_MONTHLY_DONATE_OPTIONS),
   supportOneTimeDonateUrl: process.env.SUPPORT_ONE_TIME_DONATE_URL,
   stripeSupportMonthlyPriceId: process.env.STRIPE_SUPPORT_MONTHLY_PRICE_ID,
   stripeSupportMonthlyPriceIds: parseCsv(process.env.STRIPE_SUPPORT_MONTHLY_PRICE_IDS || process.env.STRIPE_SUPPORT_MONTHLY_PRICE_ID),

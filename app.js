@@ -110,6 +110,10 @@ async function getSupportFundingViewModel() {
   const fundingPercent = Math.min(100, Math.round((monthlyRaised / monthlyGoal) * 100));
   const fundingMeterValue = Math.min(monthlyRaised, monthlyGoal);
   const monthlyDonateUrl = config.supportMonthlyDonateUrl || config.supportDonateUrl || null;
+  const monthlyDonateOptions = (config.supportMonthlyDonateOptions || []).map((option) => ({
+    ...option,
+    amountDisplay: formatUsd(option.amount),
+  }));
   const oneTimeDonateUrl = config.supportOneTimeDonateUrl || null;
 
   return {
@@ -120,6 +124,7 @@ async function getSupportFundingViewModel() {
     meterValue: fundingMeterValue,
     percent: fundingPercent,
     monthlyDonateUrl,
+    monthlyDonateOptions,
     oneTimeDonateUrl,
   };
 }

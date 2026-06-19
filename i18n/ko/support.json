@@ -23,7 +23,9 @@
         "note": "확인된 월간 후원이 변경되면 업데이트됩니다.",
         "ariaLabel": "월간 후원 진행 상황: {goal} 중 {raised}, {percent} 퍼센트.",
         "ariaValue": "{goal} 중 {raised}"
-      }
+      },
+      "monthlyOptionsLabel": "월간 금액 선택",
+      "monthlyOptionAriaLabel": "매월 {amount} 후원하기"
     },
     "openSource": {
       "h2": "오픈 소스",

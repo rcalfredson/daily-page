@@ -23,7 +23,9 @@
         "note": "Обновляется при изменении подтвержденной ежемесячной поддержки.",
         "ariaLabel": "Прогресс ежемесячного финансирования: {raised} собрано из {goal}, {percent} процентов.",
         "ariaValue": "{raised} собрано из {goal}"
-      }
+      },
+      "monthlyOptionsLabel": "Выберите ежемесячную сумму",
+      "monthlyOptionAriaLabel": "Поддерживать на {amount} в месяц"
     },
     "openSource": {
       "h2": "Open source",
