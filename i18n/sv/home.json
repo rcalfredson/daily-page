@@ -77,7 +77,14 @@
       "ariaLabel": "Månatlig stödförlopp: {raised} utlovat av {goal}, {percent} procent.",
       "ariaValue": "{raised} utlovat av {goal}",
       "amountSeparator": "av",
-      "amountSuffix": "månadsvis"
+      "amountSuffix": "månadsvis",
+      "goalReached": {
+        "title": "Målet för månatligt stöd är täckt.",
+        "text": "Tack! Ytterligare stöd hjälper Daily Page med framtida kostnader och förbättringar.",
+        "meterLabel": "Målet är nått",
+        "ariaLabel": "Målet för månatligt stöd är nått: {raised} mot ett mål på {goal}.",
+        "ariaValue": "Målet är nått, {raised} av {goal}"
+      }
     }
   }
 }

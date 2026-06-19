@@ -25,7 +25,18 @@
         "ariaValue": "已筹集 {raised}，目标 {goal}"
       },
       "monthlyOptionsLabel": "选择每月金额",
-      "monthlyOptionAriaLabel": "每月支持 {amount}"
+      "monthlyOptionAriaLabel": "每月支持 {amount}",
+      "goalReached": {
+        "h2": "月度目标已覆盖。谢谢！",
+        "p1": "循环支持现在已经覆盖 Daily Page 每月 {goal} 的基本成本。",
+        "p2": "我们仍然欢迎额外支持，它能为意外成本、维护和未来改进建立缓冲。",
+        "monthlyOptionsLabel": "继续支持 Daily Page",
+        "ctaMonthly": "继续每月支持",
+        "meterLabel": "目标已达成",
+        "meterNote": "感谢你帮助覆盖每月基本成本。",
+        "meterAriaLabel": "月度筹款目标已达成：目标 {goal}，已承诺 {raised}。",
+        "meterAriaValue": "目标已达成，{raised} / {goal}"
+      }
     },
     "openSource": {
       "h2": "开源",

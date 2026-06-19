@@ -77,7 +77,14 @@
       "ariaLabel": "Postęp miesięcznego wsparcia: {raised} zadeklarowane z {goal}, {percent} procent.",
       "ariaValue": "{raised} zadeklarowane z {goal}",
       "amountSeparator": "z",
-      "amountSuffix": "miesięcznie"
+      "amountSuffix": "miesięcznie",
+      "goalReached": {
+        "title": "Miesięczny cel wsparcia został pokryty.",
+        "text": "Dziękujemy! Dodatkowe wsparcie pomaga Daily Page w przyszłych kosztach i ulepszeniach.",
+        "meterLabel": "Cel osiągnięty",
+        "ariaLabel": "Miesięczny cel wsparcia osiągnięty: {raised} przy celu {goal}.",
+        "ariaValue": "Cel osiągnięty, {raised} z {goal}"
+      }
     }
   }
 }

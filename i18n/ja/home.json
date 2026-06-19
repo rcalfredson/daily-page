@@ -77,7 +77,14 @@
       "ariaLabel": "月間支援の進捗: {goal} のうち {raised}、{percent} パーセント。",
       "ariaValue": "{goal} のうち {raised}",
       "amountSeparator": "/",
-      "amountSuffix": "月間"
+      "amountSuffix": "月間",
+      "goalReached": {
+        "title": "今月の支援目標を達成しました。",
+        "text": "ありがとうございます！追加支援は、Daily Pageの今後の費用と改善に役立ちます。",
+        "meterLabel": "目標達成",
+        "ariaLabel": "月間支援目標を達成しました。目標{goal}に対して{raised}です。",
+        "ariaValue": "目標達成、{goal}に対して{raised}"
+      }
     }
   }
 }

@@ -77,7 +77,14 @@
       "ariaLabel": "Прогресс ежемесячной поддержки: {raised} обещано из {goal}, {percent} процентов.",
       "ariaValue": "{raised} обещано из {goal}",
       "amountSeparator": "из",
-      "amountSuffix": "в месяц"
+      "amountSuffix": "в месяц",
+      "goalReached": {
+        "title": "Месячная цель поддержки покрыта.",
+        "text": "Спасибо! Дополнительная поддержка помогает Daily Page с будущими расходами и улучшениями.",
+        "meterLabel": "Цель достигнута",
+        "ariaLabel": "Месячная цель поддержки достигнута: {raised} при цели {goal}.",
+        "ariaValue": "Цель достигнута, {raised} из {goal}"
+      }
     }
   }
 }

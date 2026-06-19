@@ -25,7 +25,18 @@
         "ariaValue": "{raised} indsamlet af {goal}"
       },
       "monthlyOptionsLabel": "Vælg et månedligt beløb",
-      "monthlyOptionAriaLabel": "Bidrag med {amount} om måneden"
+      "monthlyOptionAriaLabel": "Bidrag med {amount} om måneden",
+      "goalReached": {
+        "h2": "Det månedlige mål er dækket. Tak!",
+        "p1": "Tilbagevendende støtte dækker nu Daily Pages månedlige grundbeløb på {goal}.",
+        "p2": "Ekstra støtte er stadig velkommen og hjælper med at skabe en buffer til uventede udgifter, vedligeholdelse og fremtidige forbedringer.",
+        "monthlyOptionsLabel": "Fortsæt med at støtte Daily Page",
+        "ctaMonthly": "Fortsæt den månedlige støtte",
+        "meterLabel": "Målet er nået",
+        "meterNote": "Tak, fordi du hjælper med at dække det månedlige grundbeløb.",
+        "meterAriaLabel": "Det månedlige finansieringsmål er nået: {raised} mod et mål på {goal}.",
+        "meterAriaValue": "Målet er nået, {raised} mod {goal}"
+      }
     },
     "openSource": {
       "h2": "Open source",

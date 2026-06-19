@@ -25,7 +25,18 @@
         "ariaValue": "{raised} terkumpul dari {goal}"
       },
       "monthlyOptionsLabel": "Pilih jumlah bulanan",
-      "monthlyOptionAriaLabel": "Berkontribusi {amount} per bulan"
+      "monthlyOptionAriaLabel": "Berkontribusi {amount} per bulan",
+      "goalReached": {
+        "h2": "Target bulanan sudah tercapai. Terima kasih!",
+        "p1": "Dukungan berulang kini menutup biaya dasar bulanan Daily Page sebesar {goal}.",
+        "p2": "Dukungan tambahan tetap diterima dan membantu membangun cadangan untuk biaya tak terduga, pemeliharaan, dan peningkatan mendatang.",
+        "monthlyOptionsLabel": "Terus dukung Daily Page",
+        "ctaMonthly": "Terus Dukung Bulanan",
+        "meterLabel": "Target tercapai",
+        "meterNote": "Terima kasih telah membantu menutup biaya dasar bulanan.",
+        "meterAriaLabel": "Target pendanaan bulanan tercapai: {raised} dari target {goal}.",
+        "meterAriaValue": "Target tercapai, {raised} dari {goal}"
+      }
     },
     "openSource": {
       "h2": "Sumber Terbuka",

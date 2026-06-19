@@ -18,13 +18,18 @@ block content
 
     section.support-section.support-funding(aria-labelledby="support-funding-title")
       .support-section__copy
-        h2#support-funding-title.section-title= t('support.funding.h2')
-        p= t('support.funding.p1')
-        p= t('support.funding.p2')
+        if funding.goalReached
+          h2#support-funding-title.section-title= t('support.funding.goalReached.h2')
+          p= t('support.funding.goalReached.p1', {goal: funding.monthlyGoalDisplay})
+          p= t('support.funding.goalReached.p2')
+        else
+          h2#support-funding-title.section-title= t('support.funding.h2')
+          p= t('support.funding.p1')
+          p= t('support.funding.p2')
         .support-actions
           if funding.monthlyDonateOptions && funding.monthlyDonateOptions.length
             .monthly-support-options
-              p.monthly-support-options__label= t('support.funding.monthlyOptionsLabel')
+              p.monthly-support-options__label= funding.goalReached ? t('support.funding.goalReached.monthlyOptionsLabel') : t('support.funding.monthlyOptionsLabel')
               .monthly-support-options__links
                 each option in funding.monthlyDonateOptions
                   a.btn.primary.monthly-support-option(
@@ -34,26 +39,34 @@ block content
                     aria-label=t('support.funding.monthlyOptionAriaLabel', {amount: option.amountDisplay})
                   )= option.amountDisplay
           else if funding.monthlyDonateUrl
-            a.btn.primary(href=funding.monthlyDonateUrl target="_blank" rel="noopener noreferrer")= t('support.funding.ctaMonthly')
+            a.btn.primary(href=funding.monthlyDonateUrl target="_blank" rel="noopener noreferrer")= funding.goalReached ? t('support.funding.goalReached.ctaMonthly') : t('support.funding.ctaMonthly')
           if funding.oneTimeDonateUrl
             a.btn.secondary(href=funding.oneTimeDonateUrl target="_blank" rel="noopener noreferrer")= t('support.funding.ctaOneTime')
           if (!funding.monthlyDonateOptions || !funding.monthlyDonateOptions.length) && !funding.monthlyDonateUrl && !funding.oneTimeDonateUrl
             a.btn.secondary(href="mailto:ask@dailypage.org")= t('support.funding.ctaEmail')
 
-      .funding-meter(
-        aria-label=t('support.funding.meter.ariaLabel', {raised: funding.monthlyRaisedDisplay, goal: funding.monthlyGoalDisplay, percent: funding.percent})
-      )
+      -
+        const fundingMeterAriaLabel = funding.goalReached
+          ? t('support.funding.goalReached.meterAriaLabel', {raised: funding.monthlyRaisedDisplay, goal: funding.monthlyGoalDisplay})
+          : t('support.funding.meter.ariaLabel', {raised: funding.monthlyRaisedDisplay, goal: funding.monthlyGoalDisplay, percent: funding.percent});
+        const fundingMeterAriaValue = funding.goalReached
+          ? t('support.funding.goalReached.meterAriaValue', {raised: funding.monthlyRaisedDisplay, goal: funding.monthlyGoalDisplay})
+          : t('support.funding.meter.ariaValue', {raised: funding.monthlyRaisedDisplay, goal: funding.monthlyGoalDisplay});
+      .funding-meter(aria-label=fundingMeterAriaLabel)
         .funding-meter__headline
           span.funding-meter__label= t('support.funding.meter.label')
-          strong.funding-meter__percent #{funding.percent}%
-        .funding-meter__track(role="progressbar" aria-valuemin="0" aria-valuemax=funding.monthlyGoal aria-valuenow=funding.meterValue aria-valuetext=t('support.funding.meter.ariaValue', {raised: funding.monthlyRaisedDisplay, goal: funding.monthlyGoalDisplay}))
+          if funding.goalReached
+            strong.funding-meter__percent= t('support.funding.goalReached.meterLabel')
+          else
+            strong.funding-meter__percent #{funding.percent}%
+        .funding-meter__track(role="progressbar" aria-valuemin="0" aria-valuemax=funding.monthlyGoal aria-valuenow=funding.meterValue aria-valuetext=fundingMeterAriaValue)
           .funding-meter__fill(style=`width: ${funding.percent}%`)
         p.funding-meter__amount
           strong= funding.monthlyRaisedDisplay
           span= t('support.funding.meter.amountSeparator')
           strong= funding.monthlyGoalDisplay
           span= t('support.funding.meter.amountSuffix')
-        p.funding-meter__note= t('support.funding.meter.note')
+        p.funding-meter__note= funding.goalReached ? t('support.funding.goalReached.meterNote') : t('support.funding.meter.note')
 
     section.support-section.dark(aria-labelledby="support-open-source-title")
       h2#support-open-source-title.section-title= t('support.openSource.h2')

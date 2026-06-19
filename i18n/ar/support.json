@@ -25,7 +25,18 @@
         "ariaValue": "{raised} تم جمعها من {goal}"
       },
       "monthlyOptionsLabel": "اختر مبلغا شهريا",
-      "monthlyOptionAriaLabel": "ساهم بمبلغ {amount} شهريا"
+      "monthlyOptionAriaLabel": "ساهم بمبلغ {amount} شهريا",
+      "goalReached": {
+        "h2": "تمت تغطية الهدف الشهري. شكرا لك!",
+        "p1": "يغطي الدعم المتكرر الآن الحد الأساسي الشهري لـ Daily Page والبالغ {goal}.",
+        "p2": "لا يزال الدعم الإضافي موضع ترحيب، ويساعد في بناء احتياطي للتكاليف غير المتوقعة والصيانة والتحسينات المستقبلية.",
+        "monthlyOptionsLabel": "استمر في دعم Daily Page",
+        "ctaMonthly": "استمر في الدعم الشهري",
+        "meterLabel": "تم تحقيق الهدف",
+        "meterNote": "شكرا لمساعدتك في تغطية الحد الأساسي الشهري.",
+        "meterAriaLabel": "تم تحقيق هدف التمويل الشهري: {raised} مقابل هدف {goal}.",
+        "meterAriaValue": "تم تحقيق الهدف، {raised} مقابل {goal}"
+      }
     },
     "openSource": {
       "h2": "مفتوح المصدر",

@@ -107,8 +107,18 @@ async function getSupportFundingViewModel() {
     console.error('Failed to load Stripe support funding total:', error);
   }
 
+  const previewMonthlyRaised = Number.parseFloat(config.supportFundingPreviewRaisedUsd);
+  if (
+    process.env.NODE_ENV !== 'production'
+    && Number.isFinite(previewMonthlyRaised)
+    && previewMonthlyRaised >= 0
+  ) {
+    monthlyRaised = previewMonthlyRaised;
+  }
+
   const fundingPercent = Math.min(100, Math.round((monthlyRaised / monthlyGoal) * 100));
   const fundingMeterValue = Math.min(monthlyRaised, monthlyGoal);
+  const goalReached = monthlyRaised >= monthlyGoal;
   const monthlyDonateUrl = config.supportMonthlyDonateUrl || config.supportDonateUrl || null;
   const monthlyDonateOptions = (config.supportMonthlyDonateOptions || []).map((option) => ({
     ...option,
@@ -123,6 +133,7 @@ async function getSupportFundingViewModel() {
     monthlyRaisedDisplay: formatUsd(monthlyRaised),
     meterValue: fundingMeterValue,
     percent: fundingPercent,
+    goalReached,
     monthlyDonateUrl,
     monthlyDonateOptions,
     oneTimeDonateUrl,

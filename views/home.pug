@@ -41,13 +41,14 @@ block content
 
     if supportFunding
       -
-        const supportWidgetText = t('home.supportWidget.text');
-        const supportWidgetAriaLabel = t('home.supportWidget.ariaLabel', {
+        const supportWidgetKey = supportFunding.goalReached ? 'home.supportWidget.goalReached' : 'home.supportWidget';
+        const supportWidgetText = t(`${supportWidgetKey}.text`);
+        const supportWidgetAriaLabel = t(`${supportWidgetKey}.ariaLabel`, {
           raised: supportFunding.monthlyRaisedDisplay,
           goal: supportFunding.monthlyGoalDisplay,
           percent: supportFunding.percent
         });
-        const supportWidgetAriaValue = t('home.supportWidget.ariaValue', {
+        const supportWidgetAriaValue = t(`${supportWidgetKey}.ariaValue`, {
           raised: supportFunding.monthlyRaisedDisplay,
           goal: supportFunding.monthlyGoalDisplay
         });
@@ -55,12 +56,15 @@ block content
       aside.home-support-widget(aria-labelledby='home-support-title')
         .home-support-widget__copy
           p.home-support-widget__eyebrow= t('home.supportWidget.eyebrow')
-          h2#home-support-title= t('home.supportWidget.title')
+          h2#home-support-title= t(`${supportWidgetKey}.title`)
           p= supportWidgetText
         .home-support-widget__status
           .home-support-widget__meter(aria-label=supportWidgetAriaLabel)
             .home-support-widget__headline
-              strong.home-support-widget__percent #{supportFunding.percent}%
+              if supportFunding.goalReached
+                strong.home-support-widget__percent= t('home.supportWidget.goalReached.meterLabel')
+              else
+                strong.home-support-widget__percent #{supportFunding.percent}%
             .home-support-widget__track(
               role='progressbar'
               aria-valuemin='0'

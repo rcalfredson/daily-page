@@ -77,7 +77,14 @@
       "ariaLabel": "Aylık destek ilerlemesi: {goal} hedeften {raised} taahhüt edildi, yüzde {percent}.",
       "ariaValue": "{goal} hedeften {raised} taahhüt edildi",
       "amountSeparator": "/",
-      "amountSuffix": "aylık"
+      "amountSuffix": "aylık",
+      "goalReached": {
+        "title": "Bu ayın destek hedefi karşılandı.",
+        "text": "Teşekkürler! Ek destek Daily Page’in gelecekteki maliyetlerine ve iyileştirmelerine yardımcı olur.",
+        "meterLabel": "Hedefe ulaşıldı",
+        "ariaLabel": "Aylık destek hedefine ulaşıldı: {goal} hedefe karşı {raised}.",
+        "ariaValue": "Hedefe ulaşıldı, {goal} karşısında {raised}"
+      }
     }
   }
 }

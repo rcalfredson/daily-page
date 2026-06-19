@@ -77,7 +77,14 @@
       "ariaLabel": "Progression du soutien mensuel : {raised} promis sur {goal}, {percent} pour cent.",
       "ariaValue": "{raised} promis sur {goal}",
       "amountSeparator": "sur",
-      "amountSuffix": "par mois"
+      "amountSuffix": "par mois",
+      "goalReached": {
+        "title": "L'objectif mensuel de soutien est couvert.",
+        "text": "Merci ! Le soutien supplémentaire aide Daily Page à gérer les coûts futurs et les améliorations.",
+        "meterLabel": "Objectif atteint",
+        "ariaLabel": "Objectif mensuel de soutien atteint : {raised} promis pour un objectif de {goal}.",
+        "ariaValue": "Objectif atteint, {raised} promis sur {goal}"
+      }
     }
   }
 }

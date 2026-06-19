@@ -77,7 +77,14 @@
       "ariaLabel": "Progres dukungan bulanan: {raised} dijanjikan dari {goal}, {percent} persen.",
       "ariaValue": "{raised} dijanjikan dari {goal}",
       "amountSeparator": "dari",
-      "amountSuffix": "bulanan"
+      "amountSuffix": "bulanan",
+      "goalReached": {
+        "title": "Target dukungan bulan ini sudah tercapai.",
+        "text": "Terima kasih! Dukungan tambahan membantu Daily Page menghadapi biaya dan peningkatan mendatang.",
+        "meterLabel": "Target tercapai",
+        "ariaLabel": "Target dukungan bulanan tercapai: {raised} dari target {goal}.",
+        "ariaValue": "Target tercapai, {raised} dari {goal}"
+      }
     }
   }
 }
