@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — Wsparcie",
-      "description": "Jak się skontaktować, zgłosić problemy, poprosić o funkcje lub pokoje i wesprzeć Daily Page finansowo."
+      "title": "Daily Page - Wsparcie",
+      "description": "Wesprzyj Daily Page finansowo, dołącz do projektu open source, zgłoś problemy, skontaktuj się lub poproś o nowy pokój."
+    },
+    "hero": {
+      "eyebrow": "Wesprzyj Daily Page",
+      "title": "Pomóż utrzymać tę małą przestrzeń do pisania online.",
+      "tagline": "Daily Page to niezależny projekt open source. Kilka stałych wpłat bardzo pomaga w opłaceniu hostingu, poczty, przechowywania danych, utrzymania i cichej pracy nad tym, by strona pozostała użyteczna."
+    },
+    "funding": {
+      "h2": "Miesięczny cel finansowania",
+      "p1": "Obecny cel to zebranie $20 miesięcznie na pokrycie podstawowych kosztów działania strony.",
+      "p2": "Wskaźnik postępu pokazuje potwierdzone cykliczne wsparcie miesięczne. Jednorazowe wsparcie też jest mile widziane, ale wskaźnik śledzi miesięczny cel stabilności.",
+      "ctaMonthly": "Wspieraj miesięcznie",
+      "ctaOneTime": "Wpłać jednorazowo",
+      "ctaEmail": "Napisz do Daily Page",
+      "meter": {
+        "label": "Postęp w tym miesiącu",
+        "amountSeparator": "zebrano z",
+        "amountSuffix": "miesięcznie",
+        "note": "Aktualizowane, gdy zmienia się potwierdzone wsparcie miesięczne.",
+        "ariaLabel": "Postęp miesięcznego finansowania: {raised} zebrano z {goal}, {percent} procent.",
+        "ariaValue": "{raised} zebrano z {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "Open source",
+      "p1": "Daily Page jest rozwijany publicznie. Możesz czytać kod, zgłaszać błędy, proponować funkcje albo otworzyć pull request.",
+      "items": {
+        "code": {
+          "label": "Przejrzyj kod",
+          "text": "aby zobaczyć, jak działa strona i dokąd zmierza."
+        },
+        "issues": {
+          "label": "Użyj issues",
+          "text": "do błędów, niedociągnięć, problemów z dostępnością, braków w tłumaczeniach i pomysłów na funkcje."
+        },
+        "community": {
+          "label": "Wnoś ostrożny wkład",
+          "text": "poprzez poprawki, dokumentację, tłumaczenia, dopracowanie projektu lub małe ulepszenia, które ułatwiają pisanie tutaj."
+        }
+      },
+      "repoCta": "Zobacz repozytorium",
+      "issuesCta": "Otwórz issues"
     },
     "contact": {
-      "h1": "★ Chcę zadać pytanie, zgłosić problem albo poprosić o funkcję.",
-      "p1": {
-        "before": "Jeśli wolisz użyć GitHuba, sprawdź",
-        "link": "zgłoszenia tego projektu",
-        "after": "i dodaj swój głos. Pull requesty są oczywiście mile widziane."
-      },
-      "p2": {
-        "before": "Alternatywnie",
-        "link": "wyślij e-mail",
-        "after": "."
-      }
-    },
-    "contribute": {
-      "h1": "★ Chcę wesprzeć ten projekt wpłatą.",
-      "p1": {
-        "before": "Z góry dziękujemy za finansowe wsparcie projektu. Płatności prosimy wysyłać bezpiecznie przez",
-        "paypal": "PayPal",
-        "middle": "albo, jeśli wolisz,",
-        "amazon": "zamów kilka torebek zabawek, które sprzedaję na Amazonie",
-        "after": "."
-      }
+      "h2": "Pytania i opinie",
+      "p1": "W sprawach prywatnych, pomocy z kontem lub czymkolwiek, co nie pasuje do publicznego issue, e-mail nadal jest najlepszą drogą.",
+      "emailCta": "Napisz do Daily Page",
+      "issueCta": "Zgłoś problem"
     },
     "rooms": {
-      "h1": "★ Chcę poprosić o nowy pokój.",
+      "h2": "Poproś o pokój",
+      "p1": "Pokoje pomagają organizować Daily Page wokół wspólnych tematów. Jeśli jest przestrzeń do pisania, którą chcesz zobaczyć, wyślij tutaj prośbę.",
       "form": {
         "nameLabel": "Nazwa pokoju",
         "topicLabel": "Temat (opcjonalnie)",

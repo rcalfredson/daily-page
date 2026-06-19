@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — Dukungan",
-      "description": "Cara menghubungi kami, melaporkan masalah, meminta fitur atau ruang, dan mendukung Daily Page secara finansial."
+      "title": "Daily Page - Dukungan",
+      "description": "Dukung Daily Page secara finansial, berkontribusi pada proyek sumber terbuka, laporkan masalah, hubungi kami, atau minta room baru."
+    },
+    "hero": {
+      "eyebrow": "Dukung Daily Page",
+      "title": "Bantu menjaga ruang menulis kecil ini tetap online.",
+      "tagline": "Daily Page adalah proyek indie sumber terbuka. Beberapa kontribusi rutin sangat membantu untuk hosting, email, penyimpanan, pemeliharaan, dan kerja tenang agar tetap berguna."
+    },
+    "funding": {
+      "h2": "Target Pendanaan Bulanan",
+      "p1": "Target saat ini adalah mengumpulkan $20 setiap bulan untuk menutup biaya dasar menjalankan situs.",
+      "p2": "Meter progres mencerminkan dukungan bulanan berulang yang sudah dikonfirmasi. Dukungan satu kali juga diterima, tetapi meter ini melacak target keberlanjutan bulanan.",
+      "ctaMonthly": "Kontribusi Bulanan",
+      "ctaOneTime": "Beri Sekali",
+      "ctaEmail": "Email Daily Page",
+      "meter": {
+        "label": "Progres bulan ini",
+        "amountSeparator": "terkumpul dari",
+        "amountSuffix": "bulanan",
+        "note": "Diperbarui saat dukungan bulanan yang dikonfirmasi berubah.",
+        "ariaLabel": "Progres pendanaan bulanan: {raised} terkumpul dari {goal}, {percent} persen.",
+        "ariaValue": "{raised} terkumpul dari {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "Sumber Terbuka",
+      "p1": "Daily Page dikembangkan secara publik. Anda dapat membaca kode, melaporkan bug, menyarankan fitur, atau membuka pull request.",
+      "items": {
+        "code": {
+          "label": "Jelajahi kode",
+          "text": "untuk melihat cara kerja situs dan arahnya."
+        },
+        "issues": {
+          "label": "Gunakan issues",
+          "text": "untuk bug, bagian yang belum rapi, masalah aksesibilitas, kekurangan terjemahan, dan ide fitur."
+        },
+        "community": {
+          "label": "Berkontribusi dengan hati-hati",
+          "text": "melalui perbaikan, dokumentasi, terjemahan, polesan desain, atau peningkatan kecil yang membuat menulis di sini lebih mudah."
+        }
+      },
+      "repoCta": "Lihat Repositori",
+      "issuesCta": "Buka Issues"
     },
     "contact": {
-      "h1": "★ Saya ingin mengajukan pertanyaan, melaporkan masalah, atau meminta fitur.",
-      "p1": {
-        "before": "Jika kamu lebih suka menggunakan GitHub, silakan cek",
-        "link": "issue proyek ini",
-        "after": "dan tambahkan suaramu. Pull request juga tentu diterima."
-      },
-      "p2": {
-        "before": "Atau,",
-        "link": "kirim email",
-        "after": "."
-      }
-    },
-    "contribute": {
-      "h1": "★ Saya ingin mendukung proyek ini melalui kontribusi.",
-      "p1": {
-        "before": "Terima kasih sebelumnya karena mendanai proyek ini. Silakan kirim pembayaran dengan aman melalui",
-        "paypal": "PayPal",
-        "middle": "atau, jika kamu mau,",
-        "amazon": "pesan beberapa kantong mainan yang saya jual di Amazon",
-        "after": "."
-      }
+      "h2": "Pertanyaan dan Masukan",
+      "p1": "Untuk pertanyaan pribadi, bantuan akun, atau apa pun yang tidak cocok untuk issue publik, email masih menjadi jalur terbaik.",
+      "emailCta": "Email Daily Page",
+      "issueCta": "Laporkan Masalah"
     },
     "rooms": {
-      "h1": "★ Saya ingin meminta ruang baru.",
+      "h2": "Minta Room",
+      "p1": "Room membantu Daily Page tetap teratur di sekitar topik bersama. Jika ada ruang menulis yang ingin Anda lihat, kirim permintaan di sini.",
       "form": {
         "nameLabel": "Nama Ruang",
         "topicLabel": "Topik (opsional)",

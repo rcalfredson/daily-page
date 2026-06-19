@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — Suporte",
-      "description": "Como entrar em contato, relatar problemas, solicitar recursos ou salas e apoiar financeiramente o Daily Page."
+      "title": "Daily Page - Apoio",
+      "description": "Apoie financeiramente o Daily Page, contribua com o projeto de código aberto, relate problemas, entre em contato ou solicite uma nova sala."
+    },
+    "hero": {
+      "eyebrow": "Apoie o Daily Page",
+      "title": "Ajude a manter este pequeno espaço de escrita online.",
+      "tagline": "Daily Page é um projeto independente e de código aberto. Algumas contribuições constantes ajudam muito com hospedagem, email, armazenamento, manutenção e o trabalho silencioso de mantê-lo útil."
+    },
+    "funding": {
+      "h2": "Meta mensal de financiamento",
+      "p1": "A meta atual é arrecadar $20 por mês para cobrir os custos básicos de funcionamento do site.",
+      "p2": "O medidor de progresso reflete o apoio mensal recorrente confirmado. Apoios pontuais também são bem-vindos, mas o medidor acompanha a meta mensal de sustentabilidade.",
+      "ctaMonthly": "Contribuir mensalmente",
+      "ctaOneTime": "Doar uma vez",
+      "ctaEmail": "Enviar email ao Daily Page",
+      "meter": {
+        "label": "Progresso deste mês",
+        "amountSeparator": "arrecadados de",
+        "amountSuffix": "mensais",
+        "note": "Atualizado quando o apoio mensal confirmado muda.",
+        "ariaLabel": "Progresso do financiamento mensal: {raised} arrecadados de {goal}, {percent} por cento.",
+        "ariaValue": "{raised} arrecadados de {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "Código aberto",
+      "p1": "Daily Page é desenvolvido publicamente. Você pode ler o código, relatar bugs, sugerir recursos ou abrir um pull request.",
+      "items": {
+        "code": {
+          "label": "Navegue pelo código",
+          "text": "para ver como o site funciona e para onde está indo."
+        },
+        "issues": {
+          "label": "Use issues",
+          "text": "para bugs, pontos a melhorar, problemas de acessibilidade, lacunas de tradução e ideias de recursos."
+        },
+        "community": {
+          "label": "Contribua com cuidado",
+          "text": "com correções, documentação, traduções, polimento de design ou pequenas melhorias que tornem escrever aqui mais fácil."
+        }
+      },
+      "repoCta": "Ver repositório",
+      "issuesCta": "Abrir issues"
     },
     "contact": {
-      "h1": "★ Gostaria de fazer uma pergunta, relatar um problema ou solicitar um recurso.",
-      "p1": {
-        "before": "Se preferir usar o GitHub, confira",
-        "link": "as issues deste projeto",
-        "after": "e acrescente sua voz. Pull requests também são bem-vindos, claro."
-      },
-      "p2": {
-        "before": "Como alternativa,",
-        "link": "envie um email",
-        "after": "."
-      }
-    },
-    "contribute": {
-      "h1": "★ Gostaria de apoiar este projeto com uma contribuição.",
-      "p1": {
-        "before": "Agradeço desde já por financiar este projeto. Envie pagamentos com segurança pelo",
-        "paypal": "PayPal",
-        "middle": "ou, se preferir,",
-        "amazon": "peça algumas sacolas dos brinquedos que estou vendendo na Amazon",
-        "after": "."
-      }
+      "h2": "Perguntas e feedback",
+      "p1": "Para perguntas privadas, ajuda com a conta ou qualquer coisa que não pertença a uma issue pública, email ainda é o melhor caminho.",
+      "emailCta": "Enviar email ao Daily Page",
+      "issueCta": "Relatar um problema"
     },
     "rooms": {
-      "h1": "★ Gostaria de solicitar uma nova sala.",
+      "h2": "Solicitar uma sala",
+      "p1": "As salas mantêm o Daily Page organizado em torno de tópicos compartilhados. Se houver um espaço de escrita que você gostaria de ver, envie uma solicitação aqui.",
       "form": {
         "nameLabel": "Nome da Sala",
         "topicLabel": "Tópico (opcional)",
