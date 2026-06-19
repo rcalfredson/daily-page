@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — Tuki",
-      "description": "Miten ottaa yhteyttä, ilmoittaa ongelmista, pyytää ominaisuuksia tai huoneita ja tukea Daily Pagea taloudellisesti."
+      "title": "Daily Page - Tuki",
+      "description": "Tue Daily Pagea taloudellisesti, osallistu avoimen lähdekoodin projektiin, ilmoita ongelmista, ota yhteyttä tai pyydä uutta huonetta."
+    },
+    "hero": {
+      "eyebrow": "Tue Daily Pagea",
+      "title": "Auta pitämään tämä pieni kirjoitustila verkossa.",
+      "tagline": "Daily Page on itsenäinen avoimen lähdekoodin projekti. Muutama säännöllinen lahjoitus auttaa paljon ylläpidon, sähköpostin, tallennustilan, huollon ja hyödyllisenä pitämisen hiljaisen työn kanssa."
+    },
+    "funding": {
+      "h2": "Kuukausittainen rahoitustavoite",
+      "p1": "Nykyinen tavoite on kerätä $20 kuukaudessa sivuston peruskulujen kattamiseksi.",
+      "p2": "Edistymismittari näyttää vahvistetun toistuvan kuukausituen. Kertalahjoitukset ovat myös tervetulleita, mutta mittari seuraa kuukausittaista kestävän ylläpidon tavoitetta.",
+      "ctaMonthly": "Tue kuukausittain",
+      "ctaOneTime": "Anna kerran",
+      "ctaEmail": "Lähetä sähköpostia Daily Pagelle",
+      "meter": {
+        "label": "Edistyminen tässä kuussa",
+        "amountSeparator": "kerätty tavoitteesta",
+        "amountSuffix": "kuukaudessa",
+        "note": "Päivitetään, kun vahvistettu kuukausituki muuttuu.",
+        "ariaLabel": "Kuukausirahoituksen edistyminen: {raised} kerätty tavoitteesta {goal}, {percent} prosenttia.",
+        "ariaValue": "{raised} kerätty tavoitteesta {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "Avoin lähdekoodi",
+      "p1": "Daily Pagea kehitetään julkisesti. Voit lukea koodia, ilmoittaa virheistä, ehdottaa ominaisuuksia tai avata pull requestin.",
+      "items": {
+        "code": {
+          "label": "Selaa koodia",
+          "text": "nähdäksesi, miten sivusto toimii ja minne se on menossa."
+        },
+        "issues": {
+          "label": "Käytä issueita",
+          "text": "virheisiin, hiomattomiin kohtiin, saavutettavuusongelmiin, käännöspuutteisiin ja ominaisuusideoihin."
+        },
+        "community": {
+          "label": "Osallistu huolellisesti",
+          "text": "korjauksilla, dokumentaatiolla, käännöksillä, designin viimeistelyllä tai pienillä parannuksilla, jotka helpottavat kirjoittamista täällä."
+        }
+      },
+      "repoCta": "Näytä repositorio",
+      "issuesCta": "Avaa issuet"
     },
     "contact": {
-      "h1": "★ Haluan esittää kysymyksen, ilmoittaa ongelmasta tai pyytää ominaisuutta.",
-      "p1": {
-        "before": "Jos käytät mieluummin GitHubia, katso",
-        "link": "tämän projektin ongelmat",
-        "after": "ja lisää oma äänesi. Myös pull requestit ovat tietenkin tervetulleita."
-      },
-      "p2": {
-        "before": "Vaihtoehtoisesti",
-        "link": "lähetä sähköpostia",
-        "after": "."
-      }
-    },
-    "contribute": {
-      "h1": "★ Haluan tukea tätä projektia lahjoituksella.",
-      "p1": {
-        "before": "Kiitos jo etukäteen tämän projektin rahoittamisesta. Lähetä maksut turvallisesti palvelun kautta",
-        "paypal": "PayPal",
-        "middle": "tai halutessasi",
-        "amazon": "tilaa muutama pussillinen Amazonissa myymiäni leluja",
-        "after": "."
-      }
+      "h2": "Kysymykset ja palaute",
+      "p1": "Yksityisiin kysymyksiin, tilin apuun tai kaikkeen, mikä ei kuulu julkiseen issueen, sähköposti on edelleen paras reitti.",
+      "emailCta": "Lähetä sähköpostia Daily Pagelle",
+      "issueCta": "Ilmoita ongelmasta"
     },
     "rooms": {
-      "h1": "★ Haluan pyytää uutta huonetta.",
+      "h2": "Pyydä huonetta",
+      "p1": "Huoneet pitävät Daily Pagen järjestettynä yhteisten aiheiden ympärille. Jos haluaisit nähdä tietyn kirjoitustilan, lähetä pyyntö täällä.",
       "form": {
         "nameLabel": "Huoneen nimi",
         "topicLabel": "Aihe (valinnainen)",

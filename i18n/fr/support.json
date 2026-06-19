@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — Assistance",
-      "description": "Comment nous contacter, signaler des problèmes, demander des fonctionnalités ou des salons, et soutenir financièrement Daily Page."
+      "title": "Daily Page - Soutien",
+      "description": "Soutenir Daily Page financièrement, contribuer au projet open source, signaler des problèmes, nous contacter ou demander une nouvelle salle."
+    },
+    "hero": {
+      "eyebrow": "Soutenir Daily Page",
+      "title": "Aidez à garder ce petit espace d'écriture en ligne.",
+      "tagline": "Daily Page est un projet indépendant et open source. Quelques contributions régulières aident beaucoup à financer l'hébergement, les e-mails, le stockage, la maintenance et le travail discret qui le garde utile."
+    },
+    "funding": {
+      "h2": "Objectif mensuel de financement",
+      "p1": "L'objectif actuel est de réunir 20 $ par mois pour couvrir les coûts de base du site.",
+      "p2": "L'indicateur de progression reflète le soutien mensuel récurrent confirmé. Les dons ponctuels sont aussi bienvenus, mais l'indicateur suit l'objectif mensuel de durabilité.",
+      "ctaMonthly": "Contribuer chaque mois",
+      "ctaOneTime": "Donner une fois",
+      "ctaEmail": "Envoyer un e-mail à Daily Page",
+      "meter": {
+        "label": "Progression ce mois-ci",
+        "amountSeparator": "réunis sur",
+        "amountSuffix": "par mois",
+        "note": "Mis à jour lorsque le soutien mensuel confirmé change.",
+        "ariaLabel": "Progression du financement mensuel : {raised} réunis sur {goal}, {percent} pour cent.",
+        "ariaValue": "{raised} réunis sur {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "Open source",
+      "p1": "Daily Page est développé publiquement. Vous pouvez lire le code, signaler des bugs, proposer des fonctionnalités ou ouvrir une pull request.",
+      "items": {
+        "code": {
+          "label": "Parcourir le code",
+          "text": "pour voir comment le site fonctionne et où il va."
+        },
+        "issues": {
+          "label": "Utiliser les issues",
+          "text": "pour les bugs, les aspérités, les problèmes d'accessibilité, les manques de traduction et les idées de fonctionnalités."
+        },
+        "community": {
+          "label": "Contribuer avec soin",
+          "text": "avec des correctifs, de la documentation, des traductions, des améliorations de design ou de petites améliorations qui rendent l'écriture ici plus facile."
+        }
+      },
+      "repoCta": "Voir le dépôt",
+      "issuesCta": "Ouvrir les issues"
     },
     "contact": {
-      "h1": "★ Je souhaite poser une question, signaler un problème ou demander une fonctionnalité.",
-      "p1": {
-        "before": "Si vous préférez utiliser GitHub, consultez",
-        "link": "les issues de ce projet",
-        "after": "et ajoutez votre voix. Les pull requests sont bien sûr les bienvenues."
-      },
-      "p2": {
-        "before": "Sinon,",
-        "link": "envoyez un e-mail",
-        "after": "."
-      }
-    },
-    "contribute": {
-      "h1": "★ Je souhaite soutenir ce projet par une contribution.",
-      "p1": {
-        "before": "Merci d'avance de financer ce projet. Veuillez envoyer vos paiements de manière sécurisée via",
-        "paypal": "PayPal",
-        "middle": "ou, si vous préférez,",
-        "amazon": "commandez quelques sachets des jouets que je vends sur Amazon",
-        "after": "."
-      }
+      "h2": "Questions et retours",
+      "p1": "Pour les questions privées, l'aide liée au compte ou tout ce qui n'a pas sa place dans une issue publique, l'e-mail reste le meilleur moyen.",
+      "emailCta": "Envoyer un e-mail à Daily Page",
+      "issueCta": "Signaler un problème"
     },
     "rooms": {
-      "h1": "★ Je souhaite demander un nouveau salon.",
+      "h2": "Demander une salle",
+      "p1": "Les salles organisent Daily Page autour de sujets partagés. Si vous aimeriez voir un espace d'écriture, envoyez une demande ici.",
       "form": {
         "nameLabel": "Nom du salon",
         "topicLabel": "Sujet (facultatif)",

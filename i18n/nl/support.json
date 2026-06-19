@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — Ondersteuning",
-      "description": "Hoe u contact kunt opnemen, problemen kunt melden, functies of kamers kunt aanvragen en Daily Page financieel kunt ondersteunen."
+      "title": "Daily Page - Steun",
+      "description": "Steun Daily Page financieel, draag bij aan het open-sourceproject, meld problemen, neem contact op of vraag een nieuwe ruimte aan."
+    },
+    "hero": {
+      "eyebrow": "Steun Daily Page",
+      "title": "Help deze kleine schrijfruimte online te houden.",
+      "tagline": "Daily Page is een onafhankelijk open-sourceproject. Een paar vaste bijdragen helpen veel met hosting, e-mail, opslag, onderhoud en het rustige werk om het nuttig te houden."
+    },
+    "funding": {
+      "h2": "Maandelijks financieringsdoel",
+      "p1": "Het huidige doel is om elke maand $20 op te halen om de basiskosten van de site te dekken.",
+      "p2": "De voortgangsmeter toont bevestigde terugkerende maandelijkse steun. Eenmalige steun is ook welkom, maar de meter volgt het maandelijkse duurzaamheidsdoel.",
+      "ctaMonthly": "Maandelijks bijdragen",
+      "ctaOneTime": "Eenmalig geven",
+      "ctaEmail": "E-mail Daily Page",
+      "meter": {
+        "label": "Voortgang deze maand",
+        "amountSeparator": "opgehaald van",
+        "amountSuffix": "maandelijks",
+        "note": "Bijgewerkt wanneer bevestigde maandelijkse steun verandert.",
+        "ariaLabel": "Maandelijkse financieringsvoortgang: {raised} opgehaald van {goal}, {percent} procent.",
+        "ariaValue": "{raised} opgehaald van {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "Open source",
+      "p1": "Daily Page wordt publiek ontwikkeld. Je kunt de code lezen, bugs melden, functies voorstellen of een pull request openen.",
+      "items": {
+        "code": {
+          "label": "Bekijk de code",
+          "text": "om te zien hoe de site werkt en waar die naartoe gaat."
+        },
+        "issues": {
+          "label": "Gebruik issues",
+          "text": "voor bugs, ruwe randjes, toegankelijkheidsproblemen, vertaalgaten en functie-ideeën."
+        },
+        "community": {
+          "label": "Draag zorgvuldig bij",
+          "text": "met fixes, documentatie, vertalingen, ontwerpverbeteringen of kleine verbeteringen die schrijven hier makkelijker maken."
+        }
+      },
+      "repoCta": "Repository bekijken",
+      "issuesCta": "Issues openen"
     },
     "contact": {
-      "h1": "★ Ik wil graag een vraag stellen, een probleem melden of een functie aanvragen.",
-      "p1": {
-        "before": "Als je liever GitHub gebruikt, vink dit dan aan",
-        "link": "de problemen van dit project",
-        "after": "en voeg uw stem toe. Pull-verzoeken zijn uiteraard ook welkom."
-      },
-      "p2": {
-        "before": "Als alternatief,",
-        "link": "stuur een e-mail",
-        "after": "."
-      }
-    },
-    "contribute": {
-      "h1": "★ Ik wil dit project graag steunen met een bijdrage.",
-      "p1": {
-        "before": "Bij voorbaat dank voor de financiering van dit project. Verstuur betalingen veilig via",
-        "paypal": "PayPal",
-        "middle": "of, als u dat liever heeft,",
-        "amazon": "bestel een paar zakken met het speelgoed dat ik op Amazon verkoop",
-        "after": "."
-      }
+      "h2": "Vragen en feedback",
+      "p1": "Voor privévragen, accounthulp of iets dat niet in een publieke issue thuishoort, blijft e-mail de beste route.",
+      "emailCta": "E-mail Daily Page",
+      "issueCta": "Probleem melden"
     },
     "rooms": {
-      "h1": "★ Ik wil graag een nieuwe kamer aanvragen.",
+      "h2": "Vraag een ruimte aan",
+      "p1": "Ruimtes houden Daily Page georganiseerd rond gedeelde onderwerpen. Als er een schrijfruimte is die je graag wilt zien, stuur hier een verzoek.",
       "form": {
         "nameLabel": "Kamernaam",
         "topicLabel": "Onderwerp (optioneel)",

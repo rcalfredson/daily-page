@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — Soporte",
-      "description": "Cómo ponerte en contacto, informar problemas, pedir funciones o salas nuevas y apoyar económicamente a Daily Page."
+      "title": "Daily Page - Soporte",
+      "description": "Apoya económicamente a Daily Page, contribuye al proyecto de código abierto, informa problemas, ponte en contacto o solicita una sala nueva."
+    },
+    "hero": {
+      "eyebrow": "Apoya Daily Page",
+      "title": "Ayuda a mantener en línea este pequeño espacio de escritura.",
+      "tagline": "Daily Page es un proyecto independiente y de código abierto. Unas pocas contribuciones constantes ayudan mucho con el alojamiento, el correo, el almacenamiento, el mantenimiento y el trabajo tranquilo de mantenerlo útil."
+    },
+    "funding": {
+      "h2": "Meta mensual de financiación",
+      "p1": "La meta actual es recaudar $20 al mes para cubrir los costos básicos de funcionamiento del sitio.",
+      "p2": "El indicador de progreso refleja el apoyo mensual recurrente confirmado. El apoyo único también es bienvenido, pero el indicador mide la meta mensual de sostenibilidad.",
+      "ctaMonthly": "Contribuir mensualmente",
+      "ctaOneTime": "Dar una vez",
+      "ctaEmail": "Enviar correo a Daily Page",
+      "meter": {
+        "label": "Progreso de este mes",
+        "amountSeparator": "recaudados de",
+        "amountSuffix": "mensuales",
+        "note": "Se actualiza cuando cambia el apoyo mensual confirmado.",
+        "ariaLabel": "Progreso de financiación mensual: {raised} recaudados de {goal}, {percent} por ciento.",
+        "ariaValue": "{raised} recaudados de {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "Código abierto",
+      "p1": "Daily Page se desarrolla en público. Puedes leer el código, informar errores, sugerir funciones o abrir una pull request.",
+      "items": {
+        "code": {
+          "label": "Explora el código",
+          "text": "para ver cómo funciona el sitio y hacia dónde va."
+        },
+        "issues": {
+          "label": "Usa los issues",
+          "text": "para errores, asperezas, problemas de accesibilidad, faltas de traducción e ideas de funciones."
+        },
+        "community": {
+          "label": "Contribuye con cuidado",
+          "text": "con correcciones, documentación, traducciones, mejoras de diseño o pequeños cambios que faciliten escribir aquí."
+        }
+      },
+      "repoCta": "Ver repositorio",
+      "issuesCta": "Ver issues"
     },
     "contact": {
-      "h1": "★ Quiero plantear una pregunta, informar de un problema o solicitar una nueva función.",
-      "p1": {
-        "before": "Si prefieres usar GitHub, por favor revisa",
-        "link": "los issues de este proyecto",
-        "after": "y añade tu voz. Las pull requests también son bienvenidas, por supuesto."
-      },
-      "p2": {
-        "before": "Como alternativa, puedes",
-        "link": "enviar un correo",
-        "after": "."
-      }
-    },
-    "contribute": {
-      "h1": "★ Quiero apoyar este proyecto con una contribución.",
-      "p1": {
-        "before": "Gracias de antemano por ayudar a financiar este proyecto. Por favor envía pagos de forma segura a través de",
-        "paypal": "PayPal",
-        "middle": "o, si lo prefieres, puedes",
-        "amazon": "pedir unas cuantas bolsas de los juguetes que vendo en Amazon",
-        "after": "."
-      }
+      "h2": "Preguntas y comentarios",
+      "p1": "Para preguntas privadas, ayuda con la cuenta o cualquier cosa que no pertenezca a un issue público, el correo sigue siendo la mejor vía.",
+      "emailCta": "Enviar correo a Daily Page",
+      "issueCta": "Informar un problema"
     },
     "rooms": {
-      "h1": "★ Quiero solicitar una sala nueva.",
+      "h2": "Solicitar una sala",
+      "p1": "Las salas mantienen Daily Page organizado en torno a temas compartidos. Si hay un espacio de escritura que te gustaría ver, envía una solicitud aquí.",
       "form": {
         "nameLabel": "Nombre de la sala",
         "topicLabel": "Tema (opcional)",

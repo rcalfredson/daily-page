@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — Hilfe",
-      "description": "Wie du Kontakt aufnimmst, Probleme meldest, Funktionen oder Raume anfragst und Daily Page finanziell unterstutzt."
+      "title": "Daily Page - Support",
+      "description": "Unterstütze Daily Page finanziell, trage zum Open-Source-Projekt bei, melde Probleme, nimm Kontakt auf oder frage einen neuen Raum an."
+    },
+    "hero": {
+      "eyebrow": "Daily Page unterstützen",
+      "title": "Hilf mit, diesen kleinen Schreibraum online zu halten.",
+      "tagline": "Daily Page ist ein unabhängiges Open-Source-Projekt. Ein paar regelmäßige Beiträge helfen sehr bei Hosting, E-Mail, Speicher, Wartung und der ruhigen Arbeit, die es nützlich hält."
+    },
+    "funding": {
+      "h2": "Monatliches Finanzierungsziel",
+      "p1": "Das aktuelle Ziel ist, jeden Monat $20 zu sammeln, um die grundlegenden Betriebskosten der Website zu decken.",
+      "p2": "Die Fortschrittsanzeige zeigt bestätigte wiederkehrende monatliche Unterstützung. Einmalige Unterstützung ist ebenfalls willkommen, aber die Anzeige verfolgt das monatliche Nachhaltigkeitsziel.",
+      "ctaMonthly": "Monatlich beitragen",
+      "ctaOneTime": "Einmalig geben",
+      "ctaEmail": "Daily Page per E-Mail kontaktieren",
+      "meter": {
+        "label": "Fortschritt in diesem Monat",
+        "amountSeparator": "gesammelt von",
+        "amountSuffix": "monatlich",
+        "note": "Wird aktualisiert, wenn sich die bestätigte monatliche Unterstützung ändert.",
+        "ariaLabel": "Monatlicher Finanzierungsfortschritt: {raised} gesammelt von {goal}, {percent} Prozent.",
+        "ariaValue": "{raised} gesammelt von {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "Open Source",
+      "p1": "Daily Page wird öffentlich entwickelt. Du kannst den Code lesen, Fehler melden, Funktionen vorschlagen oder einen Pull Request öffnen.",
+      "items": {
+        "code": {
+          "label": "Code ansehen",
+          "text": "um zu sehen, wie die Website funktioniert und wohin sie sich entwickelt."
+        },
+        "issues": {
+          "label": "Issues nutzen",
+          "text": "für Fehler, raue Kanten, Barrierefreiheitsprobleme, Übersetzungslücken und Funktionsideen."
+        },
+        "community": {
+          "label": "Sorgfältig beitragen",
+          "text": "mit Korrekturen, Dokumentation, Übersetzungen, Design-Feinschliff oder kleinen Verbesserungen, die das Schreiben hier erleichtern."
+        }
+      },
+      "repoCta": "Repository ansehen",
+      "issuesCta": "Issues öffnen"
     },
     "contact": {
-      "h1": "★ Ich mochte eine Frage stellen, ein Problem melden oder eine Funktion anfragen.",
-      "p1": {
-        "before": "Wenn du lieber GitHub nutzt, sieh dir bitte",
-        "link": "die Issues dieses Projekts",
-        "after": "an und bring dich ein. Pull Requests sind naturlich ebenfalls willkommen."
-      },
-      "p2": {
-        "before": "Alternativ:",
-        "link": "sende eine E-Mail",
-        "after": "."
-      }
-    },
-    "contribute": {
-      "h1": "★ Ich mochte dieses Projekt mit einem Beitrag unterstutzen.",
-      "p1": {
-        "before": "Vielen Dank im Voraus, dass du dieses Projekt finanzierst. Bitte sende Zahlungen sicher uber",
-        "paypal": "PayPal",
-        "middle": "oder, wenn du mochtest,",
-        "amazon": "bestelle ein paar Beutel der Spielzeuge, die ich auf Amazon verkaufe",
-        "after": "."
-      }
+      "h2": "Fragen und Feedback",
+      "p1": "Für private Fragen, Kontohilfe oder alles, was nicht in ein öffentliches Issue gehört, ist E-Mail weiterhin der beste Weg.",
+      "emailCta": "Daily Page per E-Mail kontaktieren",
+      "issueCta": "Problem melden"
     },
     "rooms": {
-      "h1": "★ Ich mochte einen neuen Raum anfragen.",
+      "h2": "Raum anfragen",
+      "p1": "Räume halten Daily Page rund um gemeinsame Themen organisiert. Wenn du einen Schreibraum sehen möchtest, sende hier eine Anfrage.",
       "form": {
         "nameLabel": "Raumname",
         "topicLabel": "Thema (optional)",

@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — 支持",
-      "description": "如何联系、报告问题、请求功能或房间，以及在资金上支持 Daily Page。"
+      "title": "Daily Page - 支持",
+      "description": "为 Daily Page 提供资金支持，参与开源项目，报告问题，联系我们，或申请新的房间。"
+    },
+    "hero": {
+      "eyebrow": "支持 Daily Page",
+      "title": "帮助这个小小的写作空间继续在线。",
+      "tagline": "Daily Page 是一个独立的开源项目。少量稳定的贡献就能大大帮助支付托管、邮件、存储、维护，以及让它保持有用的安静工作。"
+    },
+    "funding": {
+      "h2": "每月筹款目标",
+      "p1": "当前目标是每月筹集 20 美元，用于支付网站运行的基本成本。",
+      "p2": "进度条反映已确认的循环月度支持。一次性支持也很欢迎，但进度条追踪的是月度可持续目标。",
+      "ctaMonthly": "每月支持",
+      "ctaOneTime": "一次性支持",
+      "ctaEmail": "给 Daily Page 发邮件",
+      "meter": {
+        "label": "本月进度",
+        "amountSeparator": "已筹集，共",
+        "amountSuffix": "每月",
+        "note": "会在已确认的月度支持发生变化时更新。",
+        "ariaLabel": "月度筹款进度：已筹集 {raised}，目标 {goal}，{percent}%。",
+        "ariaValue": "已筹集 {raised}，目标 {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "开源",
+      "p1": "Daily Page 是公开开发的。你可以阅读代码、报告错误、建议功能，或提交 pull request。",
+      "items": {
+        "code": {
+          "label": "浏览代码",
+          "text": "了解网站如何运作以及未来方向。"
+        },
+        "issues": {
+          "label": "使用 issues",
+          "text": "用于报告错误、粗糙之处、可访问性问题、翻译缺口和功能想法。"
+        },
+        "community": {
+          "label": "谨慎贡献",
+          "text": "通过修复、文档、翻译、设计打磨或小改进，让这里的写作更轻松。"
+        }
+      },
+      "repoCta": "查看仓库",
+      "issuesCta": "打开 issues"
     },
     "contact": {
-      "h1": "★ 我想提问、报告问题或请求功能。",
-      "p1": {
-        "before": "如果你更喜欢使用 GitHub，请查看",
-        "link": "这个项目的 issues",
-        "after": "并加入你的声音。当然，也欢迎提交 pull request。"
-      },
-      "p2": {
-        "before": "或者，",
-        "link": "发送电子邮件",
-        "after": "。"
-      }
-    },
-    "contribute": {
-      "h1": "★ 我想通过捐助支持这个项目。",
-      "p1": {
-        "before": "提前感谢你资助这个项目。请通过以下方式安全付款：",
-        "paypal": "PayPal",
-        "middle": "或者，如果你愿意，",
-        "amazon": "订购几袋我在 Amazon 上销售的玩具",
-        "after": "。"
-      }
+      "h2": "问题和反馈",
+      "p1": "对于私人问题、账户帮助，或任何不适合公开 issue 的内容，电子邮件仍然是最好的方式。",
+      "emailCta": "给 Daily Page 发邮件",
+      "issueCta": "报告问题"
     },
     "rooms": {
-      "h1": "★ 我想请求一个新房间。",
+      "h2": "申请房间",
+      "p1": "房间让 Daily Page 围绕共同主题保持有序。如果你希望看到某个写作空间，请在这里提交申请。",
       "form": {
         "nameLabel": "房间名称",
         "topicLabel": "主题（可选）",

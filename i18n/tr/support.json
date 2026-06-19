@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — Destek",
-      "description": "Nasıl iletişime geçilir, sorunlar bildirilir, özellikler veya odalar talep edilir ve Daily Page'ye finansal olarak nasıl destek verilir?"
+      "title": "Daily Page - Destek",
+      "description": "Daily Page’i finansal olarak destekleyin, açık kaynak projeye katkıda bulunun, sorunları bildirin, iletişime geçin veya yeni bir oda isteyin."
+    },
+    "hero": {
+      "eyebrow": "Daily Page’i Destekle",
+      "title": "Bu küçük yazı alanını çevrimiçi tutmaya yardım edin.",
+      "tagline": "Daily Page bağımsız ve açık kaynaklı bir projedir. Birkaç düzenli katkı; barındırma, e-posta, depolama, bakım ve onu kullanışlı tutan sessiz çalışma için çok şey ifade eder."
+    },
+    "funding": {
+      "h2": "Aylık Fonlama Hedefi",
+      "p1": "Mevcut hedef, sitenin temel işletme maliyetlerini karşılamak için her ay $20 toplamaktır.",
+      "p2": "İlerleme göstergesi onaylanmış yinelenen aylık desteği yansıtır. Tek seferlik destek de memnuniyetle karşılanır, ancak gösterge aylık sürdürülebilirlik hedefini izler.",
+      "ctaMonthly": "Aylık Katkı Yap",
+      "ctaOneTime": "Bir Kez Destekle",
+      "ctaEmail": "Daily Page’e E-posta Gönder",
+      "meter": {
+        "label": "Bu ayki ilerleme",
+        "amountSeparator": "toplanan /",
+        "amountSuffix": "aylık",
+        "note": "Onaylanmış aylık destek değiştikçe güncellenir.",
+        "ariaLabel": "Aylık fonlama ilerlemesi: {goal} hedefinden {raised} toplandı, yüzde {percent}.",
+        "ariaValue": "{goal} hedefinden {raised} toplandı"
+      }
+    },
+    "openSource": {
+      "h2": "Açık Kaynak",
+      "p1": "Daily Page herkese açık şekilde geliştiriliyor. Kodu okuyabilir, hataları bildirebilir, özellik önerebilir veya pull request açabilirsiniz.",
+      "items": {
+        "code": {
+          "label": "Kodu incele",
+          "text": "sitenin nasıl çalıştığını ve nereye gittiğini görmek için."
+        },
+        "issues": {
+          "label": "Issue’ları kullan",
+          "text": "hatalar, pürüzler, erişilebilirlik sorunları, çeviri eksikleri ve özellik fikirleri için."
+        },
+        "community": {
+          "label": "Özenle katkıda bulun",
+          "text": "düzeltmeler, dokümantasyon, çeviriler, tasarım iyileştirmeleri veya burada yazmayı kolaylaştıran küçük geliştirmelerle."
+        }
+      },
+      "repoCta": "Depoyu Gör",
+      "issuesCta": "Issue’ları Aç"
     },
     "contact": {
-      "h1": "★ Bir soru sormak, bir sorun bildirmek veya bir özellik talep etmek istiyorum.",
-      "p1": {
-        "before": "GitHub'u kullanmayı tercih ediyorsanız lütfen kontrol edin",
-        "link": "bu projenin sorunlar sayfasını",
-        "after": "ve görüşünüzü ekleyin. Pull request'ler de elbette memnuniyetle karşılanır."
-      },
-      "p2": {
-        "before": "Alternatif olarak,",
-        "link": "e-posta gönder",
-        "after": "."
-      }
-    },
-    "contribute": {
-      "h1": "★ Bu projeye katkıda bulunarak destek olmak istiyorum.",
-      "p1": {
-        "before": "Bu projeye fon sağladığınız için şimdiden teşekkür ederiz. Lütfen ödemeleri güvenli bir şekilde gönderin",
-        "paypal": "PayPal",
-        "middle": "veya isterseniz,",
-        "amazon": "Amazon'da sattığım oyuncaklardan birkaç paket sipariş edin",
-        "after": "."
-      }
+      "h2": "Sorular ve Geri Bildirim",
+      "p1": "Özel sorular, hesap yardımı veya herkese açık bir issue’ya ait olmayan herhangi bir konu için e-posta hâlâ en iyi yoldur.",
+      "emailCta": "Daily Page’e E-posta Gönder",
+      "issueCta": "Sorun Bildir"
     },
     "rooms": {
-      "h1": "★ Yeni bir oda talep etmek istiyorum.",
+      "h2": "Oda İste",
+      "p1": "Odalar Daily Page’i ortak konular etrafında düzenli tutar. Görmek istediğiniz bir yazı alanı varsa buradan istek gönderin.",
       "form": {
         "nameLabel": "Oda Adı",
         "topicLabel": "Konu (isteğe bağlı)",

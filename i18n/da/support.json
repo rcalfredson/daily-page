@@ -1,34 +1,59 @@
 {
   "support": {
     "meta": {
-      "title": "Daily Page — Support",
-      "description": "Sådan kommer du i kontakt, rapporterer problemer, anmoder om funktioner eller lokaler og støtter Daily Page økonomisk."
+      "title": "Daily Page - Support",
+      "description": "Støt Daily Page økonomisk, bidrag til open source-projektet, rapporter problemer, kontakt os, eller anmod om et nyt rum."
+    },
+    "hero": {
+      "eyebrow": "Støt Daily Page",
+      "title": "Hjælp med at holde dette lille skriverum online.",
+      "tagline": "Daily Page er et uafhængigt open source-projekt. Nogle få faste bidrag hjælper meget med hosting, e-mail, lagerplads, vedligeholdelse og det stille arbejde med at holde det nyttigt."
+    },
+    "funding": {
+      "h2": "Månedligt finansieringsmål",
+      "p1": "Det aktuelle mål er at indsamle $20 hver måned for at dække de grundlæggende omkostninger ved at drive siden.",
+      "p2": "Fremdriftsmåleren viser bekræftet tilbagevendende månedlig support. Engangsstøtte er også velkommen, men måleren følger det månedlige mål for bæredygtighed.",
+      "ctaMonthly": "Bidrag månedligt",
+      "ctaOneTime": "Giv en gang",
+      "ctaEmail": "Send email til Daily Page",
+      "meter": {
+        "label": "Fremdrift denne måned",
+        "amountSeparator": "indsamlet af",
+        "amountSuffix": "månedligt",
+        "note": "Opdateres når bekræftet månedlig support ændrer sig.",
+        "ariaLabel": "Månedlig finansieringsfremdrift: {raised} indsamlet af {goal}, {percent} procent.",
+        "ariaValue": "{raised} indsamlet af {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "Open source",
+      "p1": "Daily Page udvikles offentligt. Du kan læse koden, rapportere fejl, foreslå funktioner eller åbne en pull request.",
+      "items": {
+        "code": {
+          "label": "Gennemse koden",
+          "text": "for at se, hvordan siden virker, og hvor den er på vej hen."
+        },
+        "issues": {
+          "label": "Brug issues",
+          "text": "til fejl, ru kanter, tilgængelighedsproblemer, oversættelseshuller og funktionsideer."
+        },
+        "community": {
+          "label": "Bidrag omhyggeligt",
+          "text": "med rettelser, dokumentation, oversættelser, designpolering eller små forbedringer, der gør det lettere at skrive her."
+        }
+      },
+      "repoCta": "Se repository",
+      "issuesCta": "Abn issues"
     },
     "contact": {
-      "h1": "★ Jeg vil gerne stille et spørgsmål, rapportere et problem eller anmode om en funktion.",
-      "p1": {
-        "before": "Hvis du foretrækker at bruge GitHub, så tjek venligst",
-        "link": "dette projekts problemer",
-        "after": "og tilføje din stemme. Pull-anmodninger er selvfølgelig også velkomne."
-      },
-      "p2": {
-        "before": "Alternativt",
-        "link": "send en e-mail",
-        "after": "."
-      }
-    },
-    "contribute": {
-      "h1": "★ Jeg vil gerne støtte dette projekt gennem et bidrag.",
-      "p1": {
-        "before": "På forhånd tak for finansieringen af ​​dette projekt. Send venligst betalinger sikkert igennem",
-        "paypal": "PayPal",
-        "middle": "eller, hvis du foretrækker det,",
-        "amazon": "bestil et par poser af det legetøj, jeg sælger på Amazon",
-        "after": "."
-      }
+      "h2": "Spørgsmål og feedback",
+      "p1": "Til private spørgsmål, kontohjælp eller noget, der ikke hører hjemme i et offentligt issue, er e-mail stadig den bedste vej.",
+      "emailCta": "Send e-mail til Daily Page",
+      "issueCta": "Rapporter et problem"
     },
     "rooms": {
-      "h1": "★ Jeg vil gerne anmode om et nyt rum.",
+      "h2": "Anmod om et rum",
+      "p1": "Rum holder Daily Page organiseret omkring fælles emner. Hvis der er et skriverum, du gerne vil se, så send en anmodning her.",
       "form": {
         "nameLabel": "Rumsnavn",
         "topicLabel": "Emne (valgfrit)",
