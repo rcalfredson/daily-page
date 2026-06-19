@@ -68,6 +68,16 @@
       "on": "il",
       "unknownRoom": "Stanza sconosciuta",
       "empty24h": "Ancora nessun post nelle ultime 24 ore. Torna presto, compa!"
+    },
+    "supportWidget": {
+      "eyebrow": "Supporto al sito",
+      "title": "Il sostegno mensile mantiene Daily Page online.",
+      "text": "Ogni contributo ricorrente aiuta a coprire i costi di base di Daily Page.",
+      "cta": "Sostieni il sito",
+      "ariaLabel": "Avanzamento del sostegno mensile: {raised} promessi su {goal}, {percent} per cento.",
+      "ariaValue": "{raised} promessi su {goal}",
+      "amountSeparator": "su",
+      "amountSuffix": "mensili"
     }
   }
 }

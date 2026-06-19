@@ -68,6 +68,16 @@
       "on": "på",
       "unknownRoom": "Ukendt rum",
       "empty24h": "Ingen indlæg endnu inden for de sidste 24 timer. Kom snart tilbage, compa!"
+    },
+    "supportWidget": {
+      "eyebrow": "Sidestøtte",
+      "title": "Månedlig støtte holder Daily Page online.",
+      "text": "Hvert tilbagevendende bidrag hjælper med at dække Daily Pages grundlæggende omkostninger.",
+      "cta": "Støt siden",
+      "ariaLabel": "Månedlig støttefremdrift: {raised} lovet af {goal}, {percent} procent.",
+      "ariaValue": "{raised} lovet af {goal}",
+      "amountSeparator": "af",
+      "amountSuffix": "månedligt"
     }
   }
 }

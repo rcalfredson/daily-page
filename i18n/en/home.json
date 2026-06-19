@@ -68,6 +68,16 @@
       "on": "on",
       "unknownRoom": "Unknown Room",
       "empty24h": "No posts yet in the last 24 hours. Check back soon, compa!"
+    },
+    "supportWidget": {
+      "eyebrow": "Site support",
+      "title": "Monthly support keeps Daily Page online.",
+      "text": "Every recurring contribution helps cover Daily Page’s basic costs.",
+      "cta": "Support the site",
+      "ariaLabel": "Monthly support progress: {raised} pledged of {goal}, {percent} percent.",
+      "ariaValue": "{raised} pledged of {goal}",
+      "amountSeparator": "of",
+      "amountSuffix": "monthly"
     }
   }
 }

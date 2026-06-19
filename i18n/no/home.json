@@ -68,6 +68,16 @@
       "on": "på",
       "unknownRoom": "Ukjent rom",
       "empty24h": "Ingen innlegg ennå de siste 24 timene. Kom tilbake snart, compa!"
+    },
+    "supportWidget": {
+      "eyebrow": "Nettstedstøtte",
+      "title": "Månedlig støtte holder Daily Page på nett.",
+      "text": "Hvert gjentakende bidrag hjelper med å dekke Daily Pages grunnleggende kostnader.",
+      "cta": "Støtt nettstedet",
+      "ariaLabel": "Månedlig støttefremdrift: {raised} lovet av {goal}, {percent} prosent.",
+      "ariaValue": "{raised} lovet av {goal}",
+      "amountSeparator": "av",
+      "amountSuffix": "månedlig"
     }
   }
 }

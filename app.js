@@ -88,6 +88,42 @@ const port = config.port || 3000;
 const audioHost = 'https://ipod.dailypage.org';
 const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
+const formatUsd = (amount) => {
+  const normalizedAmount = Number.isInteger(amount) ? amount.toFixed(0) : amount.toFixed(2);
+  return `$${normalizedAmount}`;
+};
+
+async function getSupportFundingViewModel() {
+  const configuredMonthlyGoal = Number.parseFloat(config.supportMonthlyGoalUsd);
+  const monthlyGoal = configuredMonthlyGoal > 0 ? configuredMonthlyGoal : 20;
+  let monthlyRaised = Math.max(0, Number.parseFloat(config.supportMonthlyRaisedUsd) || 0);
+
+  try {
+    const stripeMonthlyRaised = await getRecurringSupportMonthlyTotalUsd();
+    if (typeof stripeMonthlyRaised === 'number') {
+      monthlyRaised = Math.max(0, stripeMonthlyRaised);
+    }
+  } catch (error) {
+    console.error('Failed to load Stripe support funding total:', error);
+  }
+
+  const fundingPercent = Math.min(100, Math.round((monthlyRaised / monthlyGoal) * 100));
+  const fundingMeterValue = Math.min(monthlyRaised, monthlyGoal);
+  const monthlyDonateUrl = config.supportMonthlyDonateUrl || config.supportDonateUrl || null;
+  const oneTimeDonateUrl = config.supportOneTimeDonateUrl || null;
+
+  return {
+    monthlyGoal,
+    monthlyRaised,
+    monthlyGoalDisplay: formatUsd(monthlyGoal),
+    monthlyRaisedDisplay: formatUsd(monthlyRaised),
+    meterValue: fundingMeterValue,
+    percent: fundingPercent,
+    monthlyDonateUrl,
+    oneTimeDonateUrl,
+  };
+}
+
 (async () => {
   const dateParam = ':date([0-9]{4}-[0-9]{2}-[0-9]{2})';
 
@@ -439,41 +475,11 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
     app.get('/support', addI18n(['support']), async (_, res) => {
       const { t } = res.locals;
-      const configuredMonthlyGoal = Number.parseFloat(config.supportMonthlyGoalUsd);
-      const monthlyGoal = configuredMonthlyGoal > 0 ? configuredMonthlyGoal : 20;
-      let monthlyRaised = Math.max(0, Number.parseFloat(config.supportMonthlyRaisedUsd) || 0);
-
-      try {
-        const stripeMonthlyRaised = await getRecurringSupportMonthlyTotalUsd();
-        if (typeof stripeMonthlyRaised === 'number') {
-          monthlyRaised = Math.max(0, stripeMonthlyRaised);
-        }
-      } catch (error) {
-        console.error('Failed to load Stripe support funding total:', error);
-      }
-
-      const fundingPercent = Math.min(100, Math.round((monthlyRaised / monthlyGoal) * 100));
-      const fundingMeterValue = Math.min(monthlyRaised, monthlyGoal);
-      const monthlyDonateUrl = config.supportMonthlyDonateUrl || config.supportDonateUrl || null;
-      const oneTimeDonateUrl = config.supportOneTimeDonateUrl || null;
-      const formatUsd = (amount) => {
-        const normalizedAmount = Number.isInteger(amount) ? amount.toFixed(0) : amount.toFixed(2);
-        return `$${normalizedAmount}`;
-      };
 
       res.render('support', {
         title: t('support.meta.title'),
         description: t('support.meta.description'),
-        funding: {
-          monthlyGoal,
-          monthlyRaised,
-          monthlyGoalDisplay: formatUsd(monthlyGoal),
-          monthlyRaisedDisplay: formatUsd(monthlyRaised),
-          meterValue: fundingMeterValue,
-          percent: fundingPercent,
-          monthlyDonateUrl,
-          oneTimeDonateUrl
-        },
+        funding: await getSupportFundingViewModel(),
         repoUrl: 'https://github.com/rcalfredson/daily-page',
         issuesUrl: 'https://github.com/rcalfredson/daily-page/issues'
       })
@@ -614,11 +620,11 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
 
           const PERF = process.env.PERF_HOME === '1';
 
-          let fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions;
+          let fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding;
 
           // Dispara todo en paralelo (con perf opcional por cada llamada)
           if (!PERF) {
-            [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions] = await Promise.all([
+            [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding] = await Promise.all([
               getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }),
               getFeaturedRoomWithFallback(),
               getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang }),
@@ -628,6 +634,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
               getTotalTags(),
               getRecentCommentActivity({ limit: 5, lang: uiLang }),
               getRecentReactionActivity({ limit: 5, lang: uiLang }),
+              getSupportFundingViewModel(),
             ]);
           } else {
             const perfResults = await Promise.all([
@@ -640,6 +647,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
               timeIt('totalTags', () => getTotalTags()),
               timeIt('recentComments', () => getRecentCommentActivity({ limit: 5, lang: uiLang })),
               timeIt('recentReactions', () => getRecentReactionActivity({ limit: 5, lang: uiLang })),
+              timeIt('supportFunding', () => getSupportFundingViewModel()),
             ]);
 
             perfResults
@@ -660,6 +668,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
             totalTagsRes = perfResults.find(r => r.label === 'totalTags')?.value;
             recentComments = perfResults.find(r => r.label === 'recentComments')?.value || [];
             recentReactions = perfResults.find(r => r.label === 'recentReactions')?.value || [];
+            supportFunding = perfResults.find(r => r.label === 'supportFunding')?.value;
           }
 
 
@@ -715,6 +724,7 @@ const ROOM_BASED_CUTOFF = new Date('2024-12-31');
             tagsPeriod,
             recentComments: recentComments || [],
             recentReactions: recentReactions || [],
+            supportFunding,
 
             user: req.user || null,
             uiLang,

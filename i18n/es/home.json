@@ -68,6 +68,16 @@
       "on": "el",
       "unknownRoom": "Sala desconocida",
       "empty24h": "Todavía no hay posts en las últimas 24 horas. ¡Vuelve pronto, compa!"
+    },
+    "supportWidget": {
+      "eyebrow": "Apoyo al sitio",
+      "title": "El apoyo mensual mantiene Daily Page en línea.",
+      "text": "Cada contribución recurrente ayuda a cubrir los costos básicos de Daily Page.",
+      "cta": "Apoyar el sitio",
+      "ariaLabel": "Progreso del apoyo mensual: {raised} comprometidos de {goal}, {percent} por ciento.",
+      "ariaValue": "{raised} comprometidos de {goal}",
+      "amountSeparator": "de",
+      "amountSuffix": "mensuales"
     }
   }
 }

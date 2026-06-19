@@ -68,6 +68,16 @@
       "on": "日付",
       "unknownRoom": "不明なルーム",
       "empty24h": "過去24時間の投稿はまだありません。またすぐ確認してください！"
+    },
+    "supportWidget": {
+      "eyebrow": "サイト支援",
+      "title": "月間支援がDaily Pageをオンラインに保ちます。",
+      "text": "継続的な支援は、Daily Pageの基本費用をまかなう助けになります。",
+      "cta": "サイトを支援する",
+      "ariaLabel": "月間支援の進捗: {goal} のうち {raised}、{percent} パーセント。",
+      "ariaValue": "{goal} のうち {raised}",
+      "amountSeparator": "/",
+      "amountSuffix": "月間"
     }
   }
 }
