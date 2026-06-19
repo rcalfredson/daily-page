@@ -34,5 +34,16 @@ export const config = {
   // App Config
   port: process.env.PORT || 3000,
   backendUrl: process.env.BACKEND_URL,
-  rateLimitSalt: process.env.RATE_LIMIT_SALT
+  rateLimitSalt: process.env.RATE_LIMIT_SALT,
+
+  // Support page funding display
+  supportMonthlyGoalUsd: process.env.SUPPORT_MONTHLY_GOAL_USD,
+  supportMonthlyRaisedUsd: process.env.SUPPORT_MONTHLY_RAISED_USD,
+  supportDonateUrl: process.env.SUPPORT_DONATE_URL,
+  supportMonthlyDonateUrl: process.env.SUPPORT_MONTHLY_DONATE_URL,
+  supportOneTimeDonateUrl: process.env.SUPPORT_ONE_TIME_DONATE_URL,
+  stripeSupportMonthlyPriceId: process.env.STRIPE_SUPPORT_MONTHLY_PRICE_ID,
+  stripeSupportOneTimePriceId: process.env.STRIPE_SUPPORT_ONE_TIME_PRICE_ID,
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY,
+  stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET
 };

@@ -1,121 +1,360 @@
-.room-request-container {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  padding: 30px 20px;
-  background-color: #f9f9f9;
-  /* Keep the container’s background */
-  border: 1px solid transparent;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  width: min(100%, 500px);
-  max-width: 500px;
-  margin: 20px 50px;
+.support-container {
+  max-width: 860px;
+  margin: 4rem auto;
+  padding: 0 1rem;
 }
 
-@media (max-width: 768px) {
-  .room-request-container {
-    margin: 20px auto;
-  }
+.support-hero {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.support-eyebrow {
+  margin: 0 0 0.65rem;
+  color: #1aa7d6;
+  font-family: 'Rubik-Medium', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.page-title {
+  font-family: 'Rubik-Medium', sans-serif;
+  font-size: 2.5rem;
+  line-height: 1.15;
+  text-align: center;
+  margin: 0 0 0.25em;
+}
+
+.tagline {
+  max-width: 640px;
+  margin: 0 auto;
+  color: #777;
+  font-style: italic;
+}
+
+.support-section {
+  padding: 2rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  background-color: #f9f9f9;
+}
+
+.support-section.dark {
+  background-color: #f0f4f8;
+}
+
+.support-funding {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(240px, 0.9fr);
+  gap: 2rem;
+  align-items: center;
+}
+
+.section-title {
+  margin: 0 0 1rem;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  color: #1aa7d6;
+  font-family: 'Rubik-Medium', sans-serif;
+}
+
+.support-section p {
+  line-height: 1.55;
+}
+
+.support-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0;
+}
+
+.support-list li {
+  margin-bottom: 0.75rem;
+  line-height: 1.45;
+}
+
+.support-list b {
+  color: #333;
+}
+
+.support-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 6px;
+  padding: 0.7rem 1.15rem;
+  border: 1px solid transparent;
+  font-size: 1rem;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.btn.primary {
+  background-color: #1aa7d6;
+  color: #fff;
+}
+
+.btn.primary::after {
+  content: "->";
+  margin-inline-start: 0.35rem;
+}
+
+.btn.secondary {
+  background-color: transparent;
+  color: #1aa7d6;
+  border-color: #1aa7d6;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.funding-meter {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1.25rem;
+  border: 1px solid rgba(26, 167, 214, 0.22);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.funding-meter__headline {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 0.85rem;
+}
+
+.funding-meter__label {
+  color: #5f6673;
+  font-family: 'Rubik-Medium', sans-serif;
+  font-size: 0.95rem;
+}
+
+.funding-meter__percent {
+  color: #1aa7d6;
+  font-family: 'Rubik-Medium', sans-serif;
+  font-size: 1.6rem;
+}
+
+.funding-meter__track {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dbeaf0;
+}
+
+.funding-meter__fill {
+  min-width: 8px;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1aa7d6, #efacb8);
+}
+
+.funding-meter__amount {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: baseline;
+  margin: 0.85rem 0 0.25rem;
+  font-family: 'Rubik-Medium', sans-serif;
+  font-style: normal;
+  line-height: 1.35;
+}
+
+.funding-meter__amount strong {
+  color: #333;
+  font-family: 'Rubik-Medium', sans-serif;
+}
+
+.funding-meter__amount span {
+  color: #5f6673;
+  font-family: 'Rubik-Light', sans-serif;
+}
+
+.funding-meter__note {
+  margin: 0;
+  color: #5f6673;
+  font-size: 0.92rem;
+}
+
+.room-request-heading {
+  max-width: 650px;
+}
+
+.room-request-container {
+  box-sizing: border-box;
+  width: min(100%, 560px);
+  margin-top: 1.5rem;
 }
 
 .room-request-form {
   box-sizing: border-box;
   width: 100%;
-  padding: 20px;
-  border-radius: 8px; 
 }
 
 .form-group {
-  margin-bottom: 20px;
-  /* Adds consistent spacing between form elements */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  margin-bottom: 1.1rem;
 }
 
 .room-request-form label {
-  font-size: 15px;
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0 !important;
+  border-radius: 0;
+  color: #5f6673;
+  background: transparent !important;
+  box-shadow: none;
+  font-family: 'Rubik-Medium', sans-serif;
+  font-size: 0.82rem;
   font-weight: 600;
-  color: #444;
-  background-color: unset;
-  border: unset;
-  margin: unset;
-  padding: unset;
-  float: unset;
-  border-radius: unset;
+  line-height: 1.25;
+  text-transform: uppercase;
+  cursor: default;
+  float: none !important;
 }
 
 .room-request-form input,
 .room-request-form textarea {
   box-sizing: border-box;
   width: 100%;
-  padding: 12px;
-  /* Add more padding for better UX */
-  font-size: 14px;
-  border: 1px solid #ddd;
-  /* Softer border color */
-  border-radius: 4px;
-  transition: border-color 0.3s ease;
-  /* Add focus effect */
-}
-
-.room-request-form input:focus,
-.room-request-form textarea:focus {
-  border-color: #007bff;
-  outline: none;
+  padding: 0.8rem 0.85rem;
+  color: #333;
+  font-size: 1rem;
+  border: 1px solid #d6dce2;
+  border-radius: 6px;
+  background: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .room-request-form textarea {
   resize: vertical;
 }
 
+.room-request-form input:focus,
+.room-request-form textarea:focus {
+  border-color: #1aa7d6;
+  box-shadow: 0 0 0 3px rgba(26, 167, 214, 0.16);
+  outline: none;
+}
+
 .submit-button {
-  padding: 12px 18px;
-  /* Increase button size */
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  float: unset;
+  margin: unset;
+  padding: 0.75rem 1.25rem;
+  color: #fff;
+  font-size: 1rem;
+  background-color: #1aa7d6;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  transform: translateY(-2px);
+  opacity: 0.9;
 }
 
-.room-request-form input:focus-visible,
-.room-request-form textarea:focus-visible,
+.form-feedback {
+  margin-top: 1rem;
+  line-height: 1.4;
+}
+
+.btn:focus-visible,
 .submit-button:focus-visible,
-.info a:focus-visible {
+.room-request-form input:focus-visible,
+.room-request-form textarea:focus-visible {
   outline: 3px solid var(--focus-ring);
   outline-offset: 3px;
 }
 
-html[data-theme="dark"] .info h1 {
+html[data-theme="dark"] .support-eyebrow,
+html[data-theme="dark"] .section-title,
+html[data-theme="dark"] .funding-meter__percent {
   color: var(--link-color);
 }
 
-html[data-theme="dark"] .info a {
-  color: var(--link-color);
-  text-decoration-color: color-mix(in srgb, var(--link-color) 65%, transparent);
+html[data-theme="dark"] .tagline,
+html[data-theme="dark"] .funding-meter__label,
+html[data-theme="dark"] .funding-meter__amount span,
+html[data-theme="dark"] .funding-meter__note {
+  color: var(--muted-text-color);
 }
 
-html[data-theme="dark"] .room-request-container {
+html[data-theme="dark"] .support-section,
+html[data-theme="dark"] .funding-meter {
   color: var(--text-color);
   background: var(--surface-bg);
   border-color: var(--border-color);
   box-shadow: var(--box-shadow);
 }
 
-html[data-theme="dark"] .room-request-form {
-  background: transparent;
+html[data-theme="dark"] .support-section.dark {
+  background: var(--surface-raised-bg);
 }
 
+html[data-theme="dark"] .support-list b,
+html[data-theme="dark"] .funding-meter__amount strong,
 html[data-theme="dark"] .room-request-form label {
   color: var(--text-color);
-  background: transparent;
+}
+
+html[data-theme="dark"] .funding-meter__track {
+  background: color-mix(in srgb, var(--highlight-color) 18%, var(--surface-bg));
+}
+
+html[data-theme="dark"] .funding-meter__fill {
+  background: linear-gradient(90deg, var(--highlight-color), #efacb8);
+}
+
+html[data-theme="dark"] .btn.primary,
+html[data-theme="dark"] .submit-button {
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+}
+
+html[data-theme="dark"] .btn.primary:hover,
+html[data-theme="dark"] .submit-button:hover {
+  background: var(--highlight-hover);
+}
+
+html[data-theme="dark"] .btn.secondary {
+  color: var(--link-color);
+  border-color: color-mix(in srgb, var(--highlight-color) 65%, var(--border-color));
+}
+
+html[data-theme="dark"] .btn.secondary:hover {
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-raised-bg));
 }
 
 html[data-theme="dark"] .room-request-form input,
@@ -128,37 +367,53 @@ html[data-theme="dark"] .room-request-form textarea {
 html[data-theme="dark"] .room-request-form input:focus,
 html[data-theme="dark"] .room-request-form textarea:focus {
   border-color: var(--highlight-color);
-}
-
-html[data-theme="dark"] .submit-button {
-  color: var(--highlight-contrast);
-  background: var(--highlight-color);
-}
-
-html[data-theme="dark"] .submit-button:hover {
-  background: var(--highlight-hover);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 html[data-theme="dark"] .form-feedback {
   color: var(--text-color);
 }
 
-@media (max-width: 600px) {
-  .info h1 {
-    padding-left: 1.15em;
-    font-size: 1.65rem;
-    overflow-wrap: anywhere;
+@media (max-width: 720px) {
+  .support-container {
+    margin: 2rem auto;
+    padding: 0;
   }
 
-  .info p {
-    margin-left: 0;
+  .support-funding {
+    grid-template-columns: 1fr;
   }
 
-  .room-request-container {
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .support-section {
+    padding: 1.25rem;
+  }
+
+  .section-title {
+    font-size: 1.45rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .support-actions {
+    flex-direction: column;
+  }
+
+  .btn,
+  .submit-button {
+    width: 100%;
+  }
+
+  .funding-meter {
     padding: 1rem;
   }
 
-  .room-request-form {
-    padding: 0;
+  .funding-meter__headline {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 }

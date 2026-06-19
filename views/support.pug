@@ -1,51 +1,92 @@
 extends layout
+
 block nav
   include navLinks
 
 block append head
-  // (puedes dejarlo tal cual; cambio a /css si quieres más consistencia de rutas)
-  link(rel='stylesheet' href='css/support.css')
+  link(rel="stylesheet" href="/css/support.css")
 
 block scripts
-  script(src='/js/roomRequest.js')
-  
+  script(src="/js/roomRequest.js")
+
 block content
-  .info
-    h1= t('support.contact.h1')
-    p
-      | #{t('support.contact.p1.before')} 
-      a(href="https://github.com/rcalfredson/daily-page/issues" target="_blank")= t('support.contact.p1.link')
-      |  #{t('support.contact.p1.after')}
-    p
-      | #{t('support.contact.p2.before')} 
-      a(href="mailto:ask@dailypage.org")= t('support.contact.p2.link')
-      | #{t('support.contact.p2.after')}
+  .support-container
+    header.support-hero
+      p.support-eyebrow= t('support.hero.eyebrow')
+      h1.page-title= t('support.hero.title')
+      p.tagline= t('support.hero.tagline')
 
-    h1= t('support.contribute.h1')
-    p
-      | #{t('support.contribute.p1.before')} 
-      a(href="https://www.paypal.me/rcAlfredo" target="_blank")= t('support.contribute.p1.paypal')
-      |  #{t('support.contribute.p1.middle')} 
-      s
-        a(href="https://www.amazon.com/dp/B07B4XHVBL" target="_blank")= t('support.contribute.p1.amazon')
-      | #{t('support.contribute.p1.after')}
+    section.support-section.support-funding(aria-labelledby="support-funding-title")
+      .support-section__copy
+        h2#support-funding-title.section-title= t('support.funding.h2')
+        p= t('support.funding.p1')
+        p= t('support.funding.p2')
+        .support-actions
+          if funding.monthlyDonateUrl
+            a.btn.primary(href=funding.monthlyDonateUrl target="_blank" rel="noopener noreferrer")= t('support.funding.ctaMonthly')
+          if funding.oneTimeDonateUrl
+            a.btn.secondary(href=funding.oneTimeDonateUrl target="_blank" rel="noopener noreferrer")= t('support.funding.ctaOneTime')
+          if !funding.monthlyDonateUrl && !funding.oneTimeDonateUrl
+            a.btn.secondary(href="mailto:ask@dailypage.org")= t('support.funding.ctaEmail')
 
-    h1= t('support.rooms.h1')
-    .room-request-container
-      form(id="roomRequestForm" class="room-request-form" enctype="application/x-www-form-urlencoded")
-        .form-group
-          label(for="room-name")= t('support.rooms.form.nameLabel')
-          input#room-name(type="text" name="roomName" required)
-        .form-group
-          label(for="room-topic")= t('support.rooms.form.topicLabel')
-          input#room-topic(type="text" name="roomTopic")
-        .form-group
-          label(for="room-description")= t('support.rooms.form.descriptionLabel')
-          textarea#room-description(name="roomDescription" rows="4" required)
-        button(type="submit" class="submit-button")= t('support.rooms.form.submit')
-      .form-feedback(
-        style="display:none;"
-        data-msg-success=t('support.rooms.form.success')
-        data-msg-error=t('support.rooms.form.errorGeneric')
-        data-msg-unexpected=t('support.rooms.form.errorUnexpected')
-      )= t('support.rooms.form.success')
+      .funding-meter(
+        aria-label=t('support.funding.meter.ariaLabel', {raised: funding.monthlyRaisedDisplay, goal: funding.monthlyGoalDisplay, percent: funding.percent})
+      )
+        .funding-meter__headline
+          span.funding-meter__label= t('support.funding.meter.label')
+          strong.funding-meter__percent #{funding.percent}%
+        .funding-meter__track(role="progressbar" aria-valuemin="0" aria-valuemax=funding.monthlyGoal aria-valuenow=funding.meterValue aria-valuetext=t('support.funding.meter.ariaValue', {raised: funding.monthlyRaisedDisplay, goal: funding.monthlyGoalDisplay}))
+          .funding-meter__fill(style=`width: ${funding.percent}%`)
+        p.funding-meter__amount
+          strong= funding.monthlyRaisedDisplay
+          span= t('support.funding.meter.amountSeparator')
+          strong= funding.monthlyGoalDisplay
+          span= t('support.funding.meter.amountSuffix')
+        p.funding-meter__note= t('support.funding.meter.note')
+
+    section.support-section.dark(aria-labelledby="support-open-source-title")
+      h2#support-open-source-title.section-title= t('support.openSource.h2')
+      p= t('support.openSource.p1')
+      ul.support-list
+        li
+          b= t('support.openSource.items.code.label')
+          |  #{t('support.openSource.items.code.text')}
+        li
+          b= t('support.openSource.items.issues.label')
+          |  #{t('support.openSource.items.issues.text')}
+        li
+          b= t('support.openSource.items.community.label')
+          |  #{t('support.openSource.items.community.text')}
+      .support-actions
+        a.btn.secondary(href=repoUrl target="_blank" rel="noopener noreferrer")= t('support.openSource.repoCta')
+        a.btn.secondary(href=issuesUrl target="_blank" rel="noopener noreferrer")= t('support.openSource.issuesCta')
+
+    section.support-section(aria-labelledby="support-contact-title")
+      h2#support-contact-title.section-title= t('support.contact.h2')
+      p= t('support.contact.p1')
+      .support-actions
+        a.btn.secondary(href="mailto:ask@dailypage.org")= t('support.contact.emailCta')
+        a.btn.secondary(href=issuesUrl target="_blank" rel="noopener noreferrer")= t('support.contact.issueCta')
+
+    section.support-section.dark(aria-labelledby="support-room-title")
+      .room-request-heading
+        h2#support-room-title.section-title= t('support.rooms.h2')
+        p= t('support.rooms.p1')
+      .room-request-container
+        form#roomRequestForm.room-request-form(enctype="application/x-www-form-urlencoded")
+          .form-group
+            label(for="room-name")= t('support.rooms.form.nameLabel')
+            input#room-name(type="text" name="roomName" required autocomplete="off")
+          .form-group
+            label(for="room-topic")= t('support.rooms.form.topicLabel')
+            input#room-topic(type="text" name="roomTopic" autocomplete="off")
+          .form-group
+            label(for="room-description")= t('support.rooms.form.descriptionLabel')
+            textarea#room-description(name="roomDescription" rows="4" required)
+          button.submit-button(type="submit")= t('support.rooms.form.submit')
+        .form-feedback(
+          style="display:none;"
+          data-msg-success=t('support.rooms.form.success')
+          data-msg-error=t('support.rooms.form.errorGeneric')
+          data-msg-unexpected=t('support.rooms.form.errorUnexpected')
+        )= t('support.rooms.form.success')
