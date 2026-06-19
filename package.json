@@ -34,7 +34,7 @@
   "homepage": "https://github.com/rcalfredson/daily-page",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.980.0",
-    "@babel/core": "^7.0.0",
+    "@babel/core": "^7.29.6",
     "@babel/plugin-proposal-class-properties": "^7.0.0",
     "@babel/plugin-proposal-json-strings": "^7.0.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
@@ -83,7 +83,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
-    "@babel/core": "^7.12.3",
+    "@babel/core": "^7.29.6",
     "@babel/node": "^7.0.0",
     "@babel/preset-env": "^7.12.1",
     "@babel/register": "^7.0.0",
