@@ -5,6 +5,13 @@ if (process.env.NODE_ENV !== 'production') {
   dotenv.config();
 }
 
+function parseCsv(value) {
+  return (value || '')
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 export const config = {
   // MongoDB Config
   mongoDbAddr: process.env.MONGO_DB_ADDR,
@@ -43,6 +50,7 @@ export const config = {
   supportMonthlyDonateUrl: process.env.SUPPORT_MONTHLY_DONATE_URL,
   supportOneTimeDonateUrl: process.env.SUPPORT_ONE_TIME_DONATE_URL,
   stripeSupportMonthlyPriceId: process.env.STRIPE_SUPPORT_MONTHLY_PRICE_ID,
+  stripeSupportMonthlyPriceIds: parseCsv(process.env.STRIPE_SUPPORT_MONTHLY_PRICE_IDS || process.env.STRIPE_SUPPORT_MONTHLY_PRICE_ID),
   stripeSupportOneTimePriceId: process.env.STRIPE_SUPPORT_ONE_TIME_PRICE_ID,
   stripeSecretKey: process.env.STRIPE_SECRET_KEY,
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET

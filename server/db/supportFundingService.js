@@ -21,9 +21,14 @@ function getInvoiceSubscriptionId(invoice) {
     objectId(invoice?.parent?.subscription_details?.subscription);
 }
 
-function getSubscriptionItem(subscription, monthlyPriceId = config.stripeSupportMonthlyPriceId) {
+function getSupportMonthlyPriceIds() {
+  return config.stripeSupportMonthlyPriceIds || [];
+}
+
+function getSubscriptionItem(subscription, monthlyPriceIds = getSupportMonthlyPriceIds()) {
   const items = subscription?.items?.data || [];
-  return items.find((item) => item?.price?.id === monthlyPriceId) || null;
+  const eligiblePriceIds = new Set(monthlyPriceIds);
+  return items.find((item) => eligiblePriceIds.has(item?.price?.id)) || null;
 }
 
 function getMonthlyAmountUsd(subscription, item) {
@@ -50,7 +55,7 @@ async function retrieveSubscription(subscriptionId) {
 }
 
 async function upsertSupportSubscription(subscription, eventId = null) {
-  if (!subscription?.id || !config.stripeSupportMonthlyPriceId) return { counted: false };
+  if (!subscription?.id || getSupportMonthlyPriceIds().length === 0) return { counted: false };
 
   const item = getSubscriptionItem(subscription);
   if (!item) return { counted: false };
@@ -152,12 +157,13 @@ export async function processStripeSupportEvent(event) {
 }
 
 export async function getRecurringSupportMonthlyTotalUsd() {
-  if (!config.stripeSupportMonthlyPriceId) return null;
+  const monthlyPriceIds = getSupportMonthlyPriceIds();
+  if (monthlyPriceIds.length === 0) return null;
 
   const rows = await SupportSubscription.aggregate([
     {
       $match: {
-        stripePriceId: config.stripeSupportMonthlyPriceId,
+        stripePriceId: { $in: monthlyPriceIds },
         status: { $in: ACTIVE_SUBSCRIPTION_STATUSES },
       }
     },
