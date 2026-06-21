@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "אנא היכנס",
+      "message": "אתה צריך להיות מחובר כדי להמשיך.",
+      "messageWithAction": "עליך להיות מחובר ל- {action}.",
+      "cta": "התחבר"
+    },
+    "actions": {
+      "voteOnBlock": "להצביע על פוסט",
+      "starRoom": "כוכב החדר הזה",
+      "reactToBlock": "להגיב לפוסט הזה",
+      "commentOnBlock": "להגיב לפוסט הזה",
+      "reportComment": "לדווח על תגובה זו"
+    },
+    "errors": {
+      "starToggleFail": "עדכון סטטוס הכוכב נכשל. אנא נסה שוב."
+    }
+  }
+}

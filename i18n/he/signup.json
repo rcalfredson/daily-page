@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "צור חשבון",
+      "description": "הירשם ל-Daily Page כדי לגשת לכל התכונות."
+    },
+    "header": {
+      "title": "צור את החשבון שלך",
+      "subtitle": "הצטרף ל-Daily Page כדי להתחיל ליצור ולשתף את הכתיבה היומית שלך!"
+    },
+    "form": {
+      "email": {
+        "label": "דוא\"ל",
+        "placeholder": "הזן את המייל שלך"
+      },
+      "username": {
+        "label": "שם משתמש",
+        "placeholder": "הזן את שם המשתמש שלך"
+      },
+      "password": {
+        "label": "סיסמה",
+        "placeholder": "הזן סיסמה"
+      },
+      "submit": "הירשם",
+      "feedback": {
+        "success": "שליחת הטופס הצליחה!",
+        "successCreatedVerify": "החשבון נוצר בהצלחה! אנא בדוק את האימייל שלך כדי לאמת את חשבונך.",
+        "genericError": "יצירת החשבון נכשלה. אנא נסה שוב.",
+        "unexpectedError": "אירעה שגיאה בלתי צפויה. אנא נסה שוב."
+      }
+    }
+  }
+}

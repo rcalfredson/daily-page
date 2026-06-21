@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "התראות",
+      "openMenu": "פתח התראות",
+      "loading": "טוען התראות...",
+      "error": "לא ניתן לטעון התראות כרגע.",
+      "empty": "עדיין אין התראות.",
+      "markRead": "סמן שנקרא",
+      "fallbackActor": "מישהו",
+      "fallbackBlockTitle": "הפוסט שלך",
+      "item": {
+        "blockComment": "{actorUsername} הגיב על הפוסט שלך \"{blockTitle}\".",
+        "commentReply": "{actorUsername} השיב לתגובה שלך על \"{blockTitle}\".",
+        "unknown": "התראה"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "תגובה חדשה על \"{blockTitle}\"",
+        "heading": "תגובה חדשה לפוסט שלך",
+        "headingWithName": "היי {username},",
+        "body": "<strong>{actorUsername}</strong> הגיב על הפוסט שלך <strong>{blockTitle}</strong>.",
+        "cta": "צפה בשיחה ב-Daily Page",
+        "fallbackActor": "מישהו",
+        "fallbackBlockTitle": "הפוסט שלך"
+      },
+      "commentReply": {
+        "subject": "תשובה חדשה בנושא \"{blockTitle}\"",
+        "heading": "תשובה חדשה לתגובה שלך",
+        "headingWithName": "היי {username},",
+        "body": "<strong>{actorUsername}</strong> השיב לתגובה שלך על <strong>{blockTitle}</strong>.",
+        "cta": "צפה בשיחה ב-Daily Page",
+        "fallbackActor": "מישהו",
+        "fallbackBlockTitle": "הפוסט שלך"
+      }
+    }
+  }
+}

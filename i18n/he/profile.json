@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "הפרופיל של {username}",
+      "descriptionUser": "הצג את הפעילות האחרונה של {username}, החדרים המסומנים בכוכב והנתונים הסטטיסטיים."
+    },
+    "profile": {
+      "profilePicAlt": "תמונת פרופיל",
+      "noBio": "(אין ביוגרפיה זמינה.)"
+    },
+    "activity": {
+      "title": "פעילות אחרונה",
+      "updatedOn": "עודכן ב-{date}",
+      "none": "אין פעילות אחרונה.",
+      "viewAllBlocks": "הצג את כל הפוסטים"
+    },
+    "starredRooms": {
+      "title": "חדרים עם כוכבים",
+      "none": "עדיין אין חדרים מסומנים בכוכב.",
+      "unnamedRoom": "חדר ללא שם"
+    },
+    "stats": {
+      "title": "סטטיסטיקות משתמשים",
+      "totalBlocks": "סך כל הפוסטים שנוצרו",
+      "collaborations": "שיתופי פעולה",
+      "daysActive": "ימים פעילים"
+    }
+  }
+}

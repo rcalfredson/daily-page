@@ -1,0 +1,77 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page - ארכיון",
+      "description": "חקור את הארכיון המלא לפי חודש.",
+      "titleRoom": "Daily Page — ארכיון · {roomName}",
+      "descriptionRoom": "חקור כתיבה קודמת בחדר {roomName} - חודש אחר חודש. קפוץ לתאריך כלשהו כדי לראות מה אחרים שיתפו במרחב הזה לאורך זמן."
+    },
+    "nav": {
+      "prev": "הקודם",
+      "next": "הבא"
+    },
+    "title": "📚 עיין בארכיונים",
+    "titleRoom": "📚 {roomName} — ארכיון",
+    "roomViewing": "צופה בארכיון של החדר {roomName}",
+    "viewRoomLink": "צפייה בחדר",
+    "noContent": "עדיין אין תוכן זמין.",
+    "backToRoom": "← חזרה ללוח המחוונים של החדר",
+    "calendar": {
+      "meta": {
+        "description": "הצג את כל הפוסטים היצירתיים שפורסמו ב-{month} {year}—ממחשבות מהירות ועד הרהורים עמוקים. לחץ על תאריך כלשהו כדי לבדוק מה שותף.",
+        "descriptionRoom": "הצג את הפעילות היצירתית ב-{roomName} במהלך {month} {year}. בחר תאריך כדי לחקור את הפוסטים ששותפו באותו יום."
+      },
+      "title": "📆 ארכיון עבור {month} {year}",
+      "prevLabel": "ארכיון עבור {month} {year}",
+      "nextLabel": "ארכיון עבור {month} {year}"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "ארכיון עבור {date}",
+        "titleRoom": "{roomName} — ארכיון עבור {date}",
+        "descriptionSite": "גלו את הפוסטים שנכתבו ב-{date} — מרשימות שקטות ועד וידויים פרועים.",
+        "descriptionRoom": "ב-{date}, כותבים בחדר {roomName} השאירו את חותמם - גלול בין הרהורים, רעיונות וביטויים שחולקו באותו יום."
+      },
+      "heading": "ארכיון עבור {date}",
+      "empty": "לא נמצא תוכן לתאריך זה.",
+      "labels": {
+        "createdBy": "נוצר על ידי:",
+        "in": "ב",
+        "on": "ב-{datetime}",
+        "unknownRoom": "חדר לא ידוע"
+      },
+      "nav": {
+        "prevDay": "היום הקודם",
+        "nextDay": "למחרת"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} - כל הפוסטים",
+        "descriptionRoom": "עיין בכל פוסט שפורסם אי פעם בחדר {roomName}. מיין לפי תאריך, כותרת או הצבעות כדי לחקור את ההיסטוריה שלו."
+      },
+      "header": {
+        "allBlocks": "- כל הפוסטים"
+      },
+      "sort": {
+        "label": "מיין לפי",
+        "options": {
+          "date": "תאריך",
+          "title": "כותרת",
+          "votes": "הצבעות"
+        },
+        "submit": "הצג"
+      }
+    },
+    "pagination": {
+      "prev": "← הקודם",
+      "next": "הבא →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "Daily Pages עבור {time}"
+      },
+      "empty": "לא הצלחנו למצוא דפים במהלך פרק הזמן הזה."
+    }
+  }
+}

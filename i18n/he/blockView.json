@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "פוסט - {blockTitle}",
+      "titleFallback": "פוסט"
+    },
+    "labels": {
+      "room": "חדר",
+      "author": "מחבר",
+      "created": "נוצר",
+      "unknownAuthor": "אנונימי",
+      "authorAvatarAlt": "הדמות של {username}",
+      "viewAuthorProfile": "צפה בפרופיל של {username}",
+      "lang": "תרגומים: ",
+      "available": "זמין"
+    },
+    "buttons": {
+      "edit": "ערוך",
+      "deleteBlock": "מחק פוסט",
+      "share": "שתף",
+      "flagContent": "סמן תוכן"
+    },
+    "description": {
+      "label": "תיאור",
+      "none": "לא סופק תיאור...",
+      "expand": "הרחב",
+      "collapse": "כווץ"
+    },
+    "editorial": {
+      "heading": "מדריך קריאה",
+      "roleLabel": "סוג קריאה",
+      "clusterLabel": "מדריך",
+      "sequence": "חלק {sequence}",
+      "primaryPillarHeading": "התחל כאן",
+      "relatedHeading": "המשיכו לקרוא",
+      "clusterHeading": "עוד במדריך זה",
+      "expandSection": "הצג עוד {count}",
+      "collapseSection": "הצג פחות",
+      "roleNames": {
+        "pillar": "מדריך ליבה",
+        "companion": "צלילה עמוקה",
+        "texture": "רקע"
+      }
+    },
+    "comments": {
+      "heading": "תגובות",
+      "count": "{count} תגובות",
+      "empty": "אף אחד לא ענה עדיין. תגובות יופיעו כאן כשהשיחה תתחיל.",
+      "composer": {
+        "label": "הוסף תגובה",
+        "placeholder": "כתוב תגובה...",
+        "submit": "פרסם תגובה",
+        "submitting": "מפרסם...",
+        "success": "התגובה פורסמה.",
+        "error": "לא ניתן לפרסם את התגובה שלך כרגע.",
+        "loginPrompt": "היכנס כדי להצטרף לשיחה.",
+        "loginCta": "היכנס כדי להגיב",
+        "verifyPrompt": "אמת את האימייל שלך לפני פרסום תגובה.",
+        "verifyCta": "אמת דוא\"ל"
+      },
+      "sort": {
+        "label": "מיון",
+        "oldestFirst": "מהישן לחדש",
+        "newestFirst": "מהחדש לישן"
+      },
+      "by": "מאת",
+      "unknownAuthor": "לא ידוע",
+      "reply": {
+        "action": "השב",
+        "label": "הוסף תשובה",
+        "placeholder": "כתוב תשובה...",
+        "submit": "פרסם תשובה",
+        "submitting": "מפרסם...",
+        "success": "התגובה פורסמה.",
+        "error": "לא ניתן לפרסם את תשובתך כעת.",
+        "cancel": "בטל",
+        "loginPrompt": "היכנס כדי להשיב."
+      },
+      "manage": {
+        "edited": "נערך",
+        "editAction": "ערוך",
+        "deleteAction": "מחק",
+        "deleteConfirm": "למחוק את התגובה הזו? זה גם יסיר את כל התשובות שמתחתיו.",
+        "deleteSuccess": "התגובה נמחקה.",
+        "deleteError": "לא ניתן למחוק את התגובה הזו כרגע.",
+        "forbidden": "אפשר לנהל רק את התגובות שלך.",
+        "edit": {
+          "label": "ערוך תגובה",
+          "save": "שמור",
+          "saving": "שומר...",
+          "cancel": "בטל",
+          "success": "התגובה עודכנה.",
+          "error": "לא ניתן לעדכן את התגובה הזו כרגע."
+        }
+      },
+      "report": {
+        "action": "דווח",
+        "pending": "מדווח...",
+        "success": "תגובה דווחה.",
+        "error": "לא ניתן לדווח על תגובה זו כעת.",
+        "ownError": "אתה לא יכול לדווח על תגובה משלך.",
+        "hidden": "התגובה הוסתרה לאחר הדיווח.",
+        "reported": "דווח"
+      },
+      "deepLink": {
+        "focused": "תגובה מקושרת",
+        "unavailable": "התגובה המקושרת אינה זמינה עוד."
+      },
+      "loadMore": "טען תגובות נוספות",
+      "loading": "טוען...",
+      "loadError": "לא ניתן לטעון תגובות נוספות כרגע."
+    },
+    "share": {
+      "title": "שתפו את הפוסט הזה",
+      "shareOn": "שתף ב:",
+      "nativeText": "בדוק את הפוסט הזה: {title}",
+      "alt": {
+        "facebook": "לוגו של פייסבוק",
+        "reddit": "לוגו של Reddit",
+        "whatsapp": "לוגו וואטסאפ",
+        "twitter": "לוגו של טוויטר"
+      }
+    },
+    "errors": {
+      "notFound": "הפוסט לא נמצא או לא שייך לחדר הזה.",
+      "loadFailed": "שגיאה בטעינת תצוגת פוסט."
+    }
+  }
+}

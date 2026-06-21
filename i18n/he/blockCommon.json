@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "טיוטה"
+    },
+    "deleteModal": {
+      "title": "למחוק פוסט?",
+      "message": "לא ניתן לבטל פעולה זו.",
+      "confirm": "מחק",
+      "cancel": "בטל",
+      "closeAriaLabel": "סגור"
+    },
+    "toasts": {
+      "deleteSuccess": "הפוסט נמחק בהצלחה!",
+      "deleteFailed": "מחיקת הפוסט נכשלה."
+    }
+  }
+}

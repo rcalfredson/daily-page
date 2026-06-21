@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "הטוב ביותר של Daily Page",
+      "description": "הפוסטים האהובים ביותר ב-Daily Page - מצחיקים, כנים, פיוטיים או פשוט מוזרים. ראה מה בלט במהלך היום, השבוע, החודש והלאה.",
+      "titleRoom": "הטוב ביותר של {roomName}",
+      "descriptionRoom": "גלה פוסטים בולטים מחדר {roomName} - אלה שהקוראים הכי אהבו במהלך 24 השעות האחרונות, 7 הימים, 30 הימים, ובכל הזמנים."
+    },
+    "heading": "🏆 הטוב ביותר של Daily Page",
+    "headingRoomPrefix": "🏆 המיטב של ",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 שעות",
+      "7d": "🚀 7 ימים",
+      "30d": "🌕 30 ימים",
+      "all": "👑 כל הזמנים"
+    },
+    "labels": {
+      "createdBy": "נוצר על ידי:",
+      "inRoom": "ב",
+      "onDate": "ב-{date}",
+      "unknownRoom": "חדר לא ידוע",
+      "noBlocks": "לא נמצאו פוסטים.",
+      "viewRoom": "צפייה בחדר"
+    }
+  }
+}

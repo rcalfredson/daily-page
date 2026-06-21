@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "חפש",
+      "description": "חפש בפוסטים ציבוריים."
+    },
+    "title": "חפש",
+    "placeholder": "חפש פוסטים...",
+    "hint": "הקלד לפחות 2 תווים לחיפוש.",
+    "noResults": "לא נמצאו תוצאות.",
+    "untitled": "ללא כותרת",
+    "votesTitle": "הצבעות",
+    "pageLabel": "עמוד",
+    "filters": {
+      "inRoom": "בחדר"
+    },
+    "buttons": {
+      "search": "חפש",
+      "prev": "הקודם",
+      "next": "הבא"
+    }
+  }
+}

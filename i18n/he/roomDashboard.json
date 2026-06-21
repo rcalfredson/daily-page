@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "חקור פוסטים אחרונים ומתקדמים ב-{roomName}."
+    },
+    "links": {
+      "exploreLabel": "חקור:",
+      "allBlocks": "🗂️ כל הפוסטים",
+      "browseByDate": "🗓️ לפי תאריך",
+      "bestOf": "🏅 הטוב ביותר",
+      "searchInRoom": "🔎 חפש"
+    },
+    "actions": {
+      "createBlock": "צור פוסט",
+      "starTitle": "הוספה לחדרים המסומנים בכוכב",
+      "unstarTitle": "הסרה מהחדרים המסומנים בכוכב"
+    },
+    "tabs": {
+      "locked": "פוסטים נעולים",
+      "inProgress": "פוסטים בתהליך"
+    },
+    "sections": {
+      "lockedHeader": "פוסטים נעולים",
+      "inProgressHeader": "פוסטים בתהליך"
+    },
+    "editorial": {
+      "heading": "מדריכים מומלצים",
+      "description": "התחל כאן עם המדריכים המומלצים שנאספו עבור החדר הזה.",
+      "roleNames": {
+        "pillar": "מדריך ליבה",
+        "companion": "מדריך קריאה",
+        "texture": "מדריך רקע"
+      }
+    },
+    "empty": {
+      "noDescription": "אין תיאור זמין.",
+      "noLocked": "אין עדיין פוסטים נעולים! פוסטים ננעלים אוטומטית לאחר שעה ללא פעילות.",
+      "noInProgress": "עדיין אין פוסטים בתהליך! הגיע הזמן להתחיל אחד.",
+      "noBlocks": "עדיין אין פוסטים! צור את הראשון והשאיר את חותמך. 😎"
+    }
+  }
+}

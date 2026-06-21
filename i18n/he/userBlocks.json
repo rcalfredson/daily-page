@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "הפוסטים שלך",
+      "description": "עיין ומיין את כל הפוסטים שיצרת או שיתפת בהם פעולה."
+    },
+    "header": {
+      "dashboardLink": "לוח המחוונים שלך",
+      "profileLink": "הפרופיל של {username}",
+      "allBlocks": "כל הפוסטים"
+    },
+    "empty": "אין עדיין פוסטים.",
+    "pagination": {
+      "prev": "← הקודם",
+      "next": "הבא →"
+    },
+    "titleUser": "הפוסטים של {username}"
+  }
+}

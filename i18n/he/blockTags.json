@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "תגיות:",
+      "noTags": "עדיין אין תגים! הוסף כמה:"
+    },
+    "input": {
+      "placeholder": "תג חדש",
+      "addButton": "הוסף"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

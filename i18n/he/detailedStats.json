@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "סטטיסטיקות מפורטות",
+      "description": "פירוט מפורט של פעילות Daily Page שלך."
+    },
+    "nav": {
+      "backToDashboard": "← חזרה ללוח המחוונים"
+    },
+    "header": {
+      "title": "📊 סקירת הנתונים הסטטיסטיים שלך 📊"
+    },
+    "cards": {
+      "totalBlocks": "סך כל הפוסטים שנוצרו 📝",
+      "collaborations": "שיתופי פעולה 🤝",
+      "votesGiven": "ניתנו הצבעות 👍",
+      "daysActive": "ימים פעילים 📆"
+    },
+    "chart": {
+      "datasetLabel": "הסטטיסטיקה שלך",
+      "labels": {
+        "blocksCreated": "פוסטים נוצרו",
+        "collaborations": "שיתופי פעולה",
+        "votesGiven": "ניתנו קולות",
+        "daysActive": "ימים פעילים"
+      }
+    }
+  }
+}

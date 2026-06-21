@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "בית",
+    "rooms": "חדרים",
+    "tags": "תגים",
+    "archive": "ארכיון",
+    "search": "חפש",
+    "bestOf": "הטוב ביותר של",
+    "about": "בערך",
+    "support": "תמיכה",
+    "otherProjects": "פרויקטים אחרים",
+    "auth": {
+      "welcomePrefix": "ברוך הבא, ",
+      "welcomeFallbackUser": "אתה",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "לוח מחוונים"
+  }
+}

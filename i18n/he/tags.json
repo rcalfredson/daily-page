@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — סקירת תגים",
+      "description": "עיין בכל התגים שבהם נעשה שימוש ב-Daily Page, עם מסננים מהירים לפי זמן."
+    },
+    "title": "סקירת תגים",
+    "intro": "חקור את כל התגים המשמשים ב-Daily Page.",
+    "tagCloudTitle": "תגיות ענן",
+    "timeframe": {
+      "last24h": "24 השעות האחרונות",
+      "last7d": "7 הימים האחרונים",
+      "last30d": "30 הימים האחרונים",
+      "all": "כל הזמן"
+    },
+    "error": {
+      "loading": "שגיאה בטעינת תגים סקירה כללית"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": " | Daily Page",
+        "description": "פוסטים מתויגים עם"
+      },
+      "header": {
+        "label": "תג:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "סך הפוסטים עם",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "נוצר על ידי:",
+        "inRoom": "ב",
+        "unknownRoom": "חדר לא ידוע",
+        "onDate": "בתאריך"
+      },
+      "chart": {
+        "label": "פוסטים שנוצרו עם הזמן"
+      },
+      "empty": {
+        "message": "עדיין לא נמצאו פוסטים עם התג הזה. אולי כדאי ליצור את הראשון? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "שגיאה בטעינת דף התג"
+      }
+    }
+  }
+}
