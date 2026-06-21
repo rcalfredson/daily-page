@@ -1,0 +1,7 @@
+{
+  "blockTags": {
+    "header": { "withTags": "Ετικέτες:", "noTags": "Δεν υπάρχουν ακόμη ετικέτες! Πρόσθεσε μερικές:" },
+    "input": { "placeholder": "Νέα ετικέτα", "addButton": "Προσθήκη" },
+    "buttons": { "removeTag": "x" }
+  }
+}

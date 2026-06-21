@@ -79,7 +79,7 @@ html[data-theme="dark"] {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.72);
   color: var(--rooms-accent-deep);
-  font-family: "Rubik-Regular", sans-serif;
+  font-family: var(--font-rubik-regular);
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -88,7 +88,7 @@ html[data-theme="dark"] {
 
 .rooms-hero__title {
   margin: 0;
-  font-family: "Rubik-Regular", sans-serif;
+  font-family: var(--font-rubik-regular);
   font-size: clamp(2rem, 4vw, 3.5rem);
   line-height: 0.96;
   letter-spacing: -0.03em;
@@ -118,7 +118,7 @@ html[data-theme="dark"] {
   padding: 0.8rem 1.1rem;
   border-radius: 999px;
   border: 1px solid transparent;
-  font-family: "Rubik-Regular", sans-serif;
+  font-family: var(--font-rubik-regular);
   font-weight: 600;
   text-decoration: none;
   transition:
@@ -162,7 +162,7 @@ html[data-theme="dark"] {
 }
 
 .rooms-stat__value {
-  font-family: "Rubik-Regular", sans-serif;
+  font-family: var(--font-rubik-regular);
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 700;
   line-height: 1;
@@ -256,7 +256,7 @@ html[data-theme="dark"] {
 
 .topic-title {
   min-width: 0;
-  font-family: "Rubik-Regular", sans-serif;
+  font-family: var(--font-rubik-regular);
   font-size: 1.18rem;
   font-weight: 700;
   line-height: 1.2;
@@ -356,7 +356,7 @@ html[data-theme="dark"] {
   width: 100%;
   min-width: 0;
   margin: 0;
-  font-family: "Rubik-Regular", sans-serif;
+  font-family: var(--font-rubik-regular);
   font-size: 1.85rem;
   font-weight: 700;
   line-height: 1.05;
@@ -491,7 +491,7 @@ html[data-theme="dark"] {
 
 .modal-title {
   margin: 0 2rem 0.75rem 0;
-  font-family: "Rubik-Regular", sans-serif;
+  font-family: var(--font-rubik-regular);
   font-size: 1.6rem;
   line-height: 1.1;
   overflow-wrap: anywhere;

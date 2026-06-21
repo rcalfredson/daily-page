@@ -1,0 +1,22 @@
+{
+  "detailedStats": {
+    "meta": { "title": "Αναλυτικά στατιστικά", "description": "Αναλυτική παρουσίαση της δραστηριότητάς σου στο Daily Page." },
+    "nav": { "backToDashboard": "← Επιστροφή στον πίνακα ελέγχου" },
+    "header": { "title": "📊 Επισκόπηση των στατιστικών σου 📊" },
+    "cards": {
+      "totalBlocks": "Σύνολο αναρτήσεων που δημιουργήθηκαν 📝",
+      "collaborations": "Συνεργασίες 🤝",
+      "votesGiven": "Ψήφοι που δόθηκαν 👍",
+      "daysActive": "Ημέρες δραστηριότητας 📆"
+    },
+    "chart": {
+      "datasetLabel": "Τα στατιστικά σου",
+      "labels": {
+        "blocksCreated": "Αναρτήσεις που δημιουργήθηκαν",
+        "collaborations": "Συνεργασίες",
+        "votesGiven": "Ψήφοι που δόθηκαν",
+        "daysActive": "Ημέρες δραστηριότητας"
+      }
+    }
+  }
+}

@@ -316,7 +316,7 @@ button#open-insert-img-btn i {
   min-width: 50px;
   max-width: min(300px, 100%);
   font-size: clamp(1.3rem, 3vw, 1.5rem);
-  font-family: 'Rubik-Regular';
+  font-family: var(--font-rubik-regular);
   color: var(--text-color);
   border: 1px solid var(--border-color);
   padding: 4px 8px;
@@ -370,7 +370,7 @@ button#open-insert-img-btn i {
 
 /* Ensure the textarea doesn't overlap the edit button */
 #description-edit {
-  font-family: 'Rubik-Light', sans-serif;
+  font-family: var(--font-rubik-light);
   margin-top: 15px;
 }
 

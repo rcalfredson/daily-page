@@ -12,14 +12,14 @@
 .support-eyebrow {
   margin: 0 0 0.65rem;
   color: #1aa7d6;
-  font-family: 'Rubik-Medium', sans-serif;
+  font-family: var(--font-rubik-medium);
   font-size: 0.85rem;
   letter-spacing: 0;
   text-transform: uppercase;
 }
 
 .page-title {
-  font-family: 'Rubik-Medium', sans-serif;
+  font-family: var(--font-rubik-medium);
   font-size: 2.5rem;
   line-height: 1.15;
   text-align: center;
@@ -57,7 +57,7 @@
   font-size: 1.75rem;
   line-height: 1.2;
   color: #1aa7d6;
-  font-family: 'Rubik-Medium', sans-serif;
+  font-family: var(--font-rubik-medium);
 }
 
 .support-section p {
@@ -95,7 +95,7 @@
 .monthly-support-options__label {
   margin: 0 0 0.5rem;
   color: #5f6673;
-  font-family: 'Rubik-Medium', sans-serif;
+  font-family: var(--font-rubik-medium);
   font-size: 0.9rem;
 }
 
@@ -176,13 +176,13 @@
 
 .funding-meter__label {
   color: #5f6673;
-  font-family: 'Rubik-Medium', sans-serif;
+  font-family: var(--font-rubik-medium);
   font-size: 0.95rem;
 }
 
 .funding-meter__percent {
   color: #1aa7d6;
-  font-family: 'Rubik-Medium', sans-serif;
+  font-family: var(--font-rubik-medium);
   font-size: 1.6rem;
   overflow-wrap: anywhere;
   text-align: end;
@@ -210,19 +210,19 @@
   gap: 0.25rem;
   align-items: baseline;
   margin: 0.85rem 0 0.25rem;
-  font-family: 'Rubik-Medium', sans-serif;
+  font-family: var(--font-rubik-medium);
   font-style: normal;
   line-height: 1.35;
 }
 
 .funding-meter__amount strong {
   color: #333;
-  font-family: 'Rubik-Medium', sans-serif;
+  font-family: var(--font-rubik-medium);
 }
 
 .funding-meter__amount span {
   color: #5f6673;
-  font-family: 'Rubik-Light', sans-serif;
+  font-family: var(--font-rubik-light);
 }
 
 .funding-meter__note {
@@ -265,7 +265,7 @@
   color: #5f6673;
   background: transparent !important;
   box-shadow: none;
-  font-family: 'Rubik-Medium', sans-serif;
+  font-family: var(--font-rubik-medium);
   font-size: 0.82rem;
   font-weight: 600;
   line-height: 1.25;

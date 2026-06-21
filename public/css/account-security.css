@@ -17,7 +17,7 @@
 
 .account-security-header h1 {
   color: #222;
-  font-family: 'Rubik-Medium';
+  font-family: var(--font-rubik-medium);
   margin: 14px 0 8px;
 }
 
@@ -47,7 +47,7 @@
 
 .security-panel h2 {
   color: #333;
-  font-family: 'Rubik-Medium';
+  font-family: var(--font-rubik-medium);
   font-size: 1.25rem;
   margin: 0 0 8px;
 }

@@ -9,7 +9,7 @@
 }
 
 .dashboard-container h1 {
-  font-family: 'Rubik-Medium';
+  font-family: var(--font-rubik-medium);
   color: #333;
   margin-bottom: 15px;
 }
@@ -90,7 +90,7 @@
 
 .profile-section h2 {
   font-size: 20px;
-  font-family: 'Rubik-Medium';
+  font-family: var(--font-rubik-medium);
   color: #333;
 }
 

@@ -1,0 +1,7 @@
+{
+  "reactions": {
+    "aria": "Αντιδράσεις {emoji}: {count}",
+    "loginToReact": "Συνδέσου για να αντιδράσεις",
+    "countsLabel": "Αντιδράσεις"
+  }
+}

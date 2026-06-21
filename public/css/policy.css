@@ -11,7 +11,7 @@
 
 .privacy-container h1, 
 .privacy-container h2 {
-  font-family: "Rubik-Medium";
+  font-family: var(--font-rubik-medium);
   margin-bottom: 1rem;
 }
 
