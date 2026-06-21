@@ -1,0 +1,23 @@
+{
+  "search": {
+    "meta": {
+      "title": "Tìm kiếm",
+      "description": "Tìm kiếm bài viết công khai."
+    },
+    "title": "Tìm kiếm",
+    "placeholder": "Tìm kiếm bài viết...",
+    "hint": "Nhập ít nhất 2 ký tự để tìm kiếm.",
+    "noResults": "Không tìm thấy kết quả nào.",
+    "untitled": "Không có tiêu đề",
+    "votesTitle": "Phiếu bầu",
+    "pageLabel": "Trang",
+    "filters": {
+      "inRoom": "Trong phòng"
+    },
+    "buttons": {
+      "search": "Tìm kiếm",
+      "prev": "Trước đó",
+      "next": "Tiếp theo"
+    }
+  }
+}

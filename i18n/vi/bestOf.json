@@ -1,0 +1,27 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "Trang hay nhất hàng ngày",
+      "description": "Các bài đăng được yêu thích nhất trên Trang Hàng ngày—hài hước, chân thật, thơ mộng hoặc đơn giản là kỳ lạ. Xem những gì nổi bật trong ngày, tuần, tháng qua và hơn thế nữa.",
+      "titleRoom": "Bài viết hay nhất trong {roomName}",
+      "descriptionRoom": "Khám phá những bài viết nổi bật trong phòng {roomName}—được độc giả yêu thích nhất trong 24 giờ, 7 ngày, 30 ngày qua và từ trước đến nay."
+    },
+    "heading": "🏆 Trang hay nhất hàng ngày",
+    "headingRoomPrefix": "🏆 Hay nhất tại ",
+    "headingRoomSuffix": "",
+    "tabs": {
+      "24h": "🔥 24 giờ qua",
+      "7d": "🚀 7 ngày",
+      "30d": "🌕 30 ngày",
+      "all": "👑 Mọi lúc"
+    },
+    "labels": {
+      "createdBy": "Được tạo bởi:",
+      "inRoom": "trong",
+      "onDate": "trên {date}",
+      "unknownRoom": "Phòng không xác định",
+      "noBlocks": "Không tìm thấy bài viết nào",
+      "viewRoom": "Xem phòng"
+    }
+  }
+}

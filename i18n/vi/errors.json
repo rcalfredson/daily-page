@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "generic": {
+      "title": "Ối! Đã xảy ra lỗi.",
+      "message": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau.",
+      "home": "Quay lại trang chủ"
+    },
+    "notFound": {
+      "title": "404 - Không tìm thấy trang",
+      "metaTitle": "Không tìm thấy trang",
+      "message": "Xin lỗi, chúng tôi không thể tìm thấy trang bạn đang tìm kiếm.",
+      "homePrefix": "Bạn có thể quay lại",
+      "homeLink": "trang chủ",
+      "roomsPrefix": "hoặc kiểm tra",
+      "roomsLink": "thư mục phòng."
+    }
+  }
+}

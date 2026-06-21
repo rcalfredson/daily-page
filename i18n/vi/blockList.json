@@ -1,0 +1,11 @@
+{
+  "blockList": {
+    "period": {
+      "all": "từ trước đến nay",
+      "days": "trong những ngày {n} vừa qua",
+      "day": "trong 24 giờ qua"
+    },
+    "createdBy": "Được tạo bởi:",
+    "on": "vào"
+  }
+}

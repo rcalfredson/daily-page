@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "Thống kê chi tiết",
+      "description": "Phân tích chi tiết về hoạt động trên Daily Page của bạn."
+    },
+    "nav": {
+      "backToDashboard": "← Quay lại Bảng điều khiển"
+    },
+    "header": {
+      "title": "📊 Tổng quan về số liệu thống kê của bạn 📊"
+    },
+    "cards": {
+      "totalBlocks": "Tổng số bài viết đã tạo 📝",
+      "collaborations": "Hợp tác 🤝",
+      "votesGiven": "Số phiếu bầu đã đưa ra 👍",
+      "daysActive": "Ngày hoạt động 📆"
+    },
+    "chart": {
+      "datasetLabel": "Số liệu thống kê của bạn",
+      "labels": {
+        "blocksCreated": "Bài viết đã được tạo",
+        "collaborations": "Cộng tác",
+        "votesGiven": "Phiếu bầu đã đưa ra",
+        "daysActive": "Số ngày hoạt động"
+      }
+    }
+  }
+}

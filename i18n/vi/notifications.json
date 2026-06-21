@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Thông báo",
+      "openMenu": "Mở thông báo",
+      "loading": "Đang tải thông báo...",
+      "error": "Không thể tải thông báo ngay bây giờ.",
+      "empty": "Chưa có thông báo nào.",
+      "markRead": "Đánh dấu đã đọc",
+      "fallbackActor": "Người nào đó",
+      "fallbackBlockTitle": "bài đăng của bạn",
+      "item": {
+        "blockComment": "{actorUsername} đã nhận xét về bài đăng của bạn \"{blockTitle}\".",
+        "commentReply": "{actorUsername} đã trả lời bình luận của bạn về \"{blockTitle}\".",
+        "unknown": "Thông báo"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Bình luận mới về \"{blockTitle}\"",
+        "heading": "Bình luận mới về bài viết của bạn",
+        "headingWithName": "Xin chào {username},",
+        "body": "<strong>{actorUsername}</strong> đã nhận xét về bài đăng của bạn <strong>{blockTitle}</strong>.",
+        "cta": "Xem cuộc trò chuyện trên Daily Page",
+        "fallbackActor": "Người nào đó",
+        "fallbackBlockTitle": "bài đăng của bạn"
+      },
+      "commentReply": {
+        "subject": "Trả lời mới về \"{blockTitle}\"",
+        "heading": "Trả lời mới cho bình luận của bạn",
+        "headingWithName": "Xin chào {username},",
+        "body": "<strong>{actorUsername}</strong> đã trả lời bình luận của bạn về <strong>{blockTitle}</strong>.",
+        "cta": "Xem cuộc trò chuyện trên Daily Page",
+        "fallbackActor": "Người nào đó",
+        "fallbackBlockTitle": "bài đăng của bạn"
+      }
+    }
+  }
+}

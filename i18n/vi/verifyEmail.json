@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "Xác minh email",
+      "description": "Xác minh địa chỉ email của bạn cho Daily Page."
+    },
+    "header": {
+      "title": "Đang xác minh email của bạn..."
+    },
+    "status": {
+      "checking": "Đang kiểm tra mã thông báo, vui lòng đợi...",
+      "missingToken": "Mã thông báo xác minh bị thiếu hoặc không hợp lệ.",
+      "genericFailure": "Xác minh không thành công.",
+      "unexpectedError": "Đã xảy ra lỗi không mong muốn.",
+      "success": "Tài khoản của bạn đã được xác minh thành công!",
+      "invalidOrExpired": "Mã thông báo xác minh không hợp lệ hoặc đã hết hạn."
+    },
+    "verificationMsg": {
+      "subject": "Xác minh tài khoản Daily Page của bạn ✨",
+      "heading": "Chào mừng đến với Daily Page, {username}!",
+      "body": "Vui lòng xác minh email của bạn bằng cách nhấp vào bên dưới:",
+      "cta": "Xác minh địa chỉ email",
+      "expires": "Liên kết này hết hạn sau {hours} giờ."
+    }
+  }
+}

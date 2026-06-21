@@ -1,0 +1,50 @@
+{
+  "tags": {
+    "meta": {
+      "title": "Daily Page — Tổng quan về thẻ",
+      "description": "Duyệt qua tất cả các thẻ được sử dụng trên Daily Page, với các bộ lọc nhanh theo thời gian."
+    },
+    "title": "Tổng quan về thẻ",
+    "intro": "Khám phá tất cả các thẻ được sử dụng trong Daily Page.",
+    "tagCloudTitle": "Đám mây thẻ",
+    "timeframe": {
+      "last24h": "24 giờ qua",
+      "last7d": "7 ngày qua",
+      "last30d": "30 ngày qua",
+      "all": "từ trước đến nay"
+    },
+    "error": {
+      "loading": "Không thể tải tổng quan về thẻ"
+    },
+    "detail": {
+      "meta": {
+        "titlePrefix": "#",
+        "titleSuffix": "| Daily Page",
+        "description": "Các bài viết được gắn thẻ"
+      },
+      "header": {
+        "label": "Thẻ:",
+        "icon": "🏷️"
+      },
+      "stats": {
+        "totalBlocks": "Tổng số bài đăng với",
+        "totalBlocksTagSeparator": ":"
+      },
+      "blockInfo": {
+        "createdBy": "Được tạo bởi:",
+        "inRoom": "trong",
+        "unknownRoom": "Phòng không xác định",
+        "onDate": "vào"
+      },
+      "chart": {
+        "label": "Bài viết được tạo theo thời gian"
+      },
+      "empty": {
+        "message": "Chưa tìm thấy bài viết nào có thẻ này. Có lẽ bạn nên tạo cái đầu tiên? 🔥"
+      },
+      "error": {
+        "loadingTagPage": "Không thể tải trang thẻ"
+      }
+    }
+  }
+}

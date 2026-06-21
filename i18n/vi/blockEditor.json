@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(Bạn)"
+    },
+    "meta": {
+      "title": "Chỉnh sửa bài viết - {blockTitle}",
+      "titleFallback": "Chỉnh sửa bài đăng"
+    },
+    "errors": {
+      "imageUrlRequired": "Vui lòng nhập URL hình ảnh.",
+      "notFound": "Không tìm thấy bài đăng hoặc không thuộc về phòng này.",
+      "loadFailed": "Đã xảy ra lỗi khi tải trình chỉnh sửa bài đăng.",
+      "updateTitleFailed": "Lỗi cập nhật tiêu đề."
+    },
+    "roomInfo": {
+      "label": "Phòng:"
+    },
+    "title": {
+      "placeholder": "Nhập tiêu đề bài viết",
+      "editTooltip": "Chỉnh sửa tiêu đề",
+      "lock": "Khóa bài",
+      "delete": "Xóa bài đăng"
+    },
+    "description": {
+      "label": "Mô tả",
+      "editTooltip": "Chỉnh sửa mô tả",
+      "placeholder": "Nhập mô tả",
+      "noDescriptionOwner": "Chưa có mô tả nào...",
+      "noDescriptionViewer": "Chưa có mô tả...",
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "expand": "Mở rộng",
+      "collapse": "Thu gọn",
+      "updateError": "Lỗi cập nhật mô tả."
+    },
+    "status": {
+      "lastBackup": "Lần sao lưu cuối cùng: {datetime}",
+      "lastBackupUnknown": "Lần sao lưu cuối cùng: Không xác định"
+    },
+    "peers": {
+      "label": "Người cùng chỉnh sửa:"
+    },
+    "toasts": {
+      "blockLocked": "Bài đăng này đã bị khóa!"
+    },
+    "editor": {
+      "placeholder": "Trang trống đang chờ giọng nói của bạn; viết một cách không sợ hãi."
+    },
+    "loading": {
+      "label": "Đang tải",
+      "quote": "Hãy để thế giới bùng cháy trong bạn. Ném ánh sáng lăng kính, nóng trắng, lên giấy.<br>—Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "Bạn đã không viết bất cứ điều gì trong 5 phút. Bấm OK để tiếp tục phiên; nếu không, bạn sẽ được chuyển hướng đến kho lưu trữ.",
+      "confirm": "OK"
+    },
+    "sharing": {
+      "label": "Liên kết chia sẻ",
+      "copyTooltip": "Sao chép vào Clipboard",
+      "copied": "Đã sao chép!"
+    },
+    "toolbar": {
+      "insertImage": "Chèn hình ảnh",
+      "insertImageUrlPlaceholder": "Nhập URL hình ảnh",
+      "insertImageAltPlaceholder": "Văn bản thay thế (tùy chọn)",
+      "insertImageConfirm": "Xác nhận",
+      "insertImageCancel": "Hủy"
+    },
+    "buttons": {
+      "downloadFile": "Tải tập tin xuống"
+    },
+    "lockModal": {
+      "messageLine1": "Bạn có chắc chắn muốn khóa bài viết này?",
+      "messageLine2": "Điều này sẽ hoàn thiện nó và ngăn chặn việc chỉnh sửa thêm.",
+      "confirm": "Khóa",
+      "cancel": "Hủy",
+      "successToast": "Bài đăng đã được khóa thành công.",
+      "errorToast": "Lỗi khóa bài viết."
+    },
+    "tags": {
+      "headerWithTags": "thẻ:",
+      "headerNoTags": "Chưa có thẻ nào! Thêm một số:",
+      "updateError": "Lỗi cập nhật thẻ."
+    },
+    "fullBlock": {
+      "headingPrefix": "Rất tiếc, bài viết \"{blockTitle}\" hiện đã",
+      "headingStatus": "đủ người chỉnh sửa.",
+      "retryPrefix": "Vui lòng",
+      "retryLink": "thử một bài viết khác",
+      "retrySuffix": "hoặc quay lại vào lúc khác.",
+      "consolationPrefix": "Trong lúc chờ đợi hãy đọc nhé",
+      "consolationBestOf": "một số bài viết yêu thích của chúng tôi",
+      "consolationMiddle": "hoặc để duyệt",
+      "consolationArchive": "kho lưu trữ."
+    }
+  }
+}

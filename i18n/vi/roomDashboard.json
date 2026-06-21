@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "Daily Page — {roomName}",
+      "description": "Khám phá các bài đăng gần đây và đang được thực hiện trong {roomName}."
+    },
+    "links": {
+      "exploreLabel": "Khám phá:",
+      "allBlocks": "🗂️ Tất cả bài viết",
+      "browseByDate": "🗓️ Theo ngày",
+      "bestOf": "🏅 Hay nhất",
+      "searchInRoom": "🔎 Tìm kiếm"
+    },
+    "actions": {
+      "createBlock": "Tạo một bài đăng",
+      "starTitle": "Gắn dấu sao cho phòng này",
+      "unstarTitle": "Bỏ gắn dấu sao phòng này"
+    },
+    "tabs": {
+      "locked": "Bài viết bị khóa",
+      "inProgress": "Bài viết đang tiến hành"
+    },
+    "sections": {
+      "lockedHeader": "Bài viết bị khóa",
+      "inProgressHeader": "Bài đăng đang được thực hiện"
+    },
+    "editorial": {
+      "heading": "Hướng dẫn nổi bật",
+      "description": "Bắt đầu ở đây với các hướng dẫn nổi bật được tuyển chọn cho căn phòng này.",
+      "roleNames": {
+        "pillar": "Hướng dẫn cốt lõi",
+        "companion": "Hướng dẫn đọc",
+        "texture": "Hướng dẫn nền"
+      }
+    },
+    "empty": {
+      "noDescription": "Chưa có mô tả.",
+      "noLocked": "Chưa có bài viết nào bị khóa! Bài viết tự động khóa sau 1 giờ không hoạt động.",
+      "noInProgress": "Chưa có bài viết nào đang được thực hiện! Đã đến lúc bắt đầu một cái.",
+      "noBlocks": "Chưa có bài viết nào! Tạo cái đầu tiên và để lại dấu ấn của bạn. 😎"
+    }
+  }
+}

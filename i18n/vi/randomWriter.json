@@ -1,0 +1,14 @@
+{
+  "randomWriter": {
+    "meta": {
+      "title": "Daily Page — Người viết ngẫu nhiên",
+      "description": "Tạo vô số văn bản giả ngẫu nhiên để giải trí, truyền cảm hứng hoặc gây hỗn loạn."
+    },
+    "title": "Người viết ngẫu nhiên",
+    "buttons": {
+      "clear": "Thông thoáng",
+      "stop": "Dừng viết",
+      "start": "Bắt đầu viết"
+    }
+  }
+}

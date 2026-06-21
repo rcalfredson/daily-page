@@ -1,0 +1,22 @@
+{
+  "anonymousUser": {
+    "meta": {
+      "title": "Kẻ lang thang vô danh",
+      "description": "Không có hồ sơ. Không có quá khứ. Chỉ là rung cảm."
+    },
+    "ascii": {
+      "ariaLabel": "Nghệ thuật ASCII về sinh vật kỳ quái kèm theo câu trích dẫn"
+    },
+    "header": {
+      "title": "Người ẩn danh"
+    },
+    "body": {
+      "line1": "Bạn đã vấp vào khoảng trống. Chẳng có gì để xem ở đây cả—",
+      "line2": "chỉ là một linh hồn lang thang không có câu chuyện."
+    },
+    "buttons": {
+      "home": "← Trở về nhà",
+      "signup": "Tạo danh tính"
+    }
+  }
+}

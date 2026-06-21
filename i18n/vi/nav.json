@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "rooms": "Phòng",
+    "tags": "Thẻ",
+    "archive": "Lưu trữ",
+    "search": "Tìm kiếm",
+    "bestOf": "Tốt nhất của",
+    "about": "Về",
+    "support": "Ủng hộ",
+    "otherProjects": "Dự án khác",
+    "auth": {
+      "welcomePrefix": "Chào mừng,",
+      "welcomeFallbackUser": "Bạn",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "Trang tổng quan"
+  }
+}

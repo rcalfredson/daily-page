@@ -1,0 +1,67 @@
+{
+  "accountSecurity": {
+    "meta": {
+      "title": "Bảo mật tài khoản",
+      "description": "Quản lý mật khẩu Daily Page của bạn và xác thực hai yếu tố."
+    },
+    "backToDashboard": "Quay lại trang tổng quan",
+    "heading": "Bảo mật tài khoản",
+    "subheading": "Giữ tài khoản của bạn được bảo vệ bằng mật khẩu mạnh và ứng dụng xác thực.",
+    "password": {
+      "title": "Thay đổi mật khẩu",
+      "description": "Sử dụng mật khẩu duy nhất có ít nhất 8 ký tự.",
+      "current": {
+        "label": "Mật khẩu hiện tại"
+      },
+      "new": {
+        "label": "Mật khẩu mới"
+      },
+      "submit": "Cập nhật mật khẩu"
+    },
+    "twoFactor": {
+      "title": "Xác thực hai yếu tố",
+      "statusOn": "Đã bật",
+      "statusOff": "Tắt",
+      "description": "Thêm mã một lần từ ứng dụng xác thực sau mật khẩu của bạn khi bạn đăng nhập.",
+      "currentPassword": {
+        "label": "Mật khẩu hiện tại"
+      },
+      "startSetup": "Thiết lập ứng dụng Authenticator",
+      "qrAlt": "Mã QR ứng dụng xác thực",
+      "manualKey": "Phím thiết lập thủ công",
+      "code": {
+        "label": "mã 6 chữ số"
+      },
+      "enable": "Kích hoạt 2FA",
+      "disableCode": {
+        "label": "Mã xác thực"
+      },
+      "disable": "Vô hiệu hóa 2FA"
+    },
+    "recoveryCodes": {
+      "title": "Lưu mã khôi phục của bạn",
+      "description": "Sử dụng một trong các mã một lần này để đăng nhập nếu bạn mất quyền truy cập vào ứng dụng xác thực của mình.",
+      "regenerateDescription": "Tạo bộ mã khôi phục mới nếu bạn làm mất bộ mã trước đó. Điều này làm mất hiệu lực mọi mã khôi phục cũ.",
+      "regenerate": "Tạo mã khôi phục mới",
+      "warning": "Hãy cất giữ chúng ở nơi nào đó an toàn. Chúng sẽ không được hiển thị lại."
+    },
+    "feedback": {
+      "passwordChanged": "Mật khẩu của bạn đã được cập nhật.",
+      "setupReady": "Quét mã QR, sau đó nhập mã gồm 6 chữ số để hoàn tất thiết lập.",
+      "twoFactorEnabled": "Xác thực hai yếu tố hiện đã được bật.",
+      "twoFactorDisabled": "Xác thực hai yếu tố hiện đã bị vô hiệu hóa.",
+      "recoveryCodesRegenerated": "Mã khôi phục của bạn đã được tạo lại. Lưu mã mới ngay bây giờ.",
+      "missingFields": "Vui lòng điền vào tất cả các trường bắt buộc.",
+      "missingCurrentPassword": "Nhập mật khẩu hiện tại của bạn để tiếp tục.",
+      "passwordTooShort": "Mật khẩu mới của bạn phải có ít nhất 8 ký tự.",
+      "invalidCurrentPassword": "Mật khẩu hiện tại không khớp.",
+      "missingCode": "Nhập mã gồm 6 chữ số từ ứng dụng xác thực của bạn.",
+      "invalidCode": "Mã đó không hoạt động. Vui lòng thử lại.",
+      "noPendingSetup": "Bắt đầu thiết lập lại trước khi nhập mã.",
+      "setupExpired": "Phiên thiết lập đó đã hết hạn. Bắt đầu thiết lập lại để nhận mã QR mới.",
+      "twoFactorNotEnabled": "Xác thực hai yếu tố không được kích hoạt cho tài khoản này.",
+      "genericError": "Đã xảy ra lỗi. Vui lòng thử lại.",
+      "unexpectedError": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại."
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "Bản nháp"
+    },
+    "deleteModal": {
+      "title": "Xóa bài đăng?",
+      "message": "Không thể hoàn tác hành động này.",
+      "confirm": "Xóa bỏ",
+      "cancel": "Hủy",
+      "closeAriaLabel": "Đóng"
+    },
+    "toasts": {
+      "deleteSuccess": "Bài viết đã được xóa thành công!",
+      "deleteFailed": "Không thể xóa bài đăng."
+    }
+  }
+}
