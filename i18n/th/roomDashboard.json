@@ -1,0 +1,43 @@
+{
+  "roomDashboard": {
+    "meta": {
+      "title": "เดลีเพจ — {roomName}",
+      "description": "สํารวจเมื่อเร็ว ๆ นี้และเพิ่มกําลังใน {roomName}."
+    },
+    "links": {
+      "exploreLabel": "การ สํารวจ:",
+      "allBlocks": "○ ทุก เสา",
+      "browseByDate": "○ ตาม วัน",
+      "bestOf": "○ ดีที่สุด",
+      "searchInRoom": "○ ค้นหา"
+    },
+    "actions": {
+      "createBlock": "สร้างโพสต์",
+      "starTitle": "ดาวดวงนี้",
+      "unstarTitle": "ออกจากห้องนี้"
+    },
+    "tabs": {
+      "locked": "โพสต์ที่ถูกล็อค",
+      "inProgress": "โพสต์ที่กำลังเขียน"
+    },
+    "sections": {
+      "lockedHeader": "โพสต์ที่ถูกล็อค",
+      "inProgressHeader": "เคอร์เซอร์ต่อหน้า"
+    },
+    "editorial": {
+      "heading": "แปรงทาสี",
+      "description": "เริ่มที่นี่ด้วย มัคคุเทศก์ที่โดดเด่น รักษาห้องนี้",
+      "roleNames": {
+        "pillar": "ไกด์หลัก",
+        "companion": "คู่มือการอ่าน",
+        "texture": "พื้นหลัง"
+      }
+    },
+    "empty": {
+      "noDescription": "ไม่มีคําบรรยาย",
+      "noLocked": "ยังไม่มีโพสต์ที่ล็อก! โพสต์จะล็อกอัตโนมัติหลังไม่มีการใช้งาน 1 ชั่วโมง",
+      "noInProgress": "ยังไม่มีโพสต์ที่กำลังเขียน! ได้เวลาเริ่มโพสต์แรกแล้ว",
+      "noBlocks": "ยังไม่มีโพสต์! สร้างโพสต์แรกและฝากร่องรอยของคุณไว้ 😎"
+    }
+  }
+}

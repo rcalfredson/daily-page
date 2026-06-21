@@ -1,0 +1,55 @@
+{
+  "layout": {
+    "siteName": "ทุกหน้า",
+    "welcomeUser": "ยินดีต้อนรับ ผู้ใช้!",
+    "logout": "ออกจากระบบ",
+    "login": "ล็อกอิน / เซ็น",
+    "language": "ภาษา",
+    "openMenu": "เปิดเมนูหลัก",
+    "closeMenu": "ปิดเมนูหลัก",
+    "privacy": "ข้อกําหนดปริยาย",
+    "uiFallbackNotice": "{requested} ยังแปลไม่ได้ ปัจจุบันมี {current}.",
+    "copyButton": {
+      "copy": "คัดลอก",
+      "copied": "รับทราบ!"
+    },
+    "copyright": "{year}",
+    "languages": {
+      "en": "English",
+      "es": "Español",
+      "fr": "Français",
+      "ru": "Русский",
+      "id": "Bahasa Indonesia",
+      "de": "Deutsch",
+      "it": "Italiano",
+      "pt": "Português",
+      "zh": "中文",
+      "ja": "日本語",
+      "ko": "한국어",
+      "ar": "العربية",
+      "hi": "हिन्दी",
+      "tr": "Türkçe",
+      "nl": "Nederlands",
+      "sv": "Svenska",
+      "no": "Norsk",
+      "da": "Dansk",
+      "fi": "Suomi",
+      "pl": "Polski",
+      "cs": "Čeština",
+      "el": "Ελληνικά",
+      "he": "עברית",
+      "th": "ไทย",
+      "vi": "Tiếng Việt"
+    },
+    "theme": {
+      "label": "ชุดตกแต่ง",
+      "toggleToDark": "สลับเป็นโหมดมืด",
+      "toggleToLight": "สลับไปยังโหมดแสง"
+    },
+    "blockImages": {
+      "preview": "แสดงตัวอย่างภาพ",
+      "close": "ปิดการแสดงตัวอย่าง",
+      "open": "เปิดตัวอย่างภาพ"
+    }
+  }
+}

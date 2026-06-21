@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "โพรไฟล์ {username}",
+      "descriptionUser": "ดูกิจกรรมล่าสุดของ {username} ห้องเก็บดาว และสถิติ"
+    },
+    "profile": {
+      "profilePicAlt": "ภาพโพรไฟล์",
+      "noBio": "(ไม่มีไบโอ)"
+    },
+    "activity": {
+      "title": "กิจกรรมล่าสุด",
+      "updatedOn": "ปรับปรุงเมื่อ {date}",
+      "none": "ไม่มีกิจกรรมล่าสุด",
+      "viewAllBlocks": "ดูโพสต์ทั้งหมด"
+    },
+    "starredRooms": {
+      "title": "ห้อง อาบ น้ํา",
+      "none": "ไม่มีห้องเก็บดาว",
+      "unnamedRoom": "ไม่มีชื่อห้อง"
+    },
+    "stats": {
+      "title": "ตําแหน่งผู้ใช้",
+      "totalBlocks": "สร้างโพสต์ทั้งหมดขึ้นมา",
+      "collaborations": "ความร่วมมือ",
+      "daysActive": "วันทํางาน"
+    }
+  }
+}

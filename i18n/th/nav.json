@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "บ้าน",
+    "rooms": "ห้อง",
+    "tags": "ป้ายกํากับ",
+    "archive": "แฟ้มจัดเก็บ",
+    "search": "ค้นหา",
+    "bestOf": "ดีที่สุด",
+    "about": "เกี่ยวกับ",
+    "support": "สนับสนุน",
+    "otherProjects": "โครงการอื่น ๆ",
+    "auth": {
+      "welcomePrefix": "ยินดีต้อนรับ",
+      "welcomeFallbackUser": "คุณ",
+      "welcomeSuffix": "!"
+    },
+    "dashboard": "แดชบอร์ด"
+  }
+}

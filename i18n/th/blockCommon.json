@@ -1,0 +1,18 @@
+{
+  "blockCommon": {
+    "badges": {
+      "draft": "แบบร่าง"
+    },
+    "deleteModal": {
+      "title": "ลบโพสต์?",
+      "message": "การกระทํานี้ไม่สามารถยกเลิกได้",
+      "confirm": "ลบ",
+      "cancel": "ยกเลิก",
+      "closeAriaLabel": "ปิด"
+    },
+    "toasts": {
+      "deleteSuccess": "ลบจดหมายเรียบร้อยแล้ว!",
+      "deleteFailed": "ล้มเหลวในการลบตําแหน่ง"
+    }
+  }
+}

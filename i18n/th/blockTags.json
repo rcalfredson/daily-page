@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "ป้ายกํากับ:",
+      "noTags": "ยังไม่มีป้ายกํากับ! เพิ่มบาง:"
+    },
+    "input": {
+      "placeholder": "ป้ายกํากับใหม่",
+      "addButton": "เพิ่ม"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

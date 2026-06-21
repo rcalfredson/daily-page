@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(คุณ)"
+    },
+    "meta": {
+      "title": "แก้ไขโพสต์ - {blockTitle}",
+      "titleFallback": "แก้ไขโพสต์"
+    },
+    "errors": {
+      "imageUrlRequired": "โปรดป้อนที่อยู่ URL ของภาพ",
+      "notFound": "โพสต์ไม่ได้พบหรือไม่ได้เป็นของห้องนี้",
+      "loadFailed": "เกิดข้อผิดพลาดขึ้นระหว่างทําการโหลดเครื่องมือแก้ไขไปรษณีย์",
+      "updateTitleFailed": "เกิดข้อผิดพลาดในการปรับข้อมูลชื่อเพลง"
+    },
+    "roomInfo": {
+      "label": "ห้อง:"
+    },
+    "title": {
+      "placeholder": "ป้อนชื่อตําแหน่ง",
+      "editTooltip": "แก้ไขชื่อเรื่อง",
+      "lock": "ล็อคโพสต์",
+      "delete": "ลบโพสต์"
+    },
+    "description": {
+      "label": "คําอธิบาย",
+      "editTooltip": "แก้ไขรายละเอียด",
+      "placeholder": "เติมรายละเอียด",
+      "noDescriptionOwner": "ยังไม่ได้รายละเอียด...",
+      "noDescriptionViewer": "ยังไม่มีการระบุรายละเอียด...",
+      "save": "บันทึก",
+      "cancel": "ยกเลิก",
+      "expand": "ขยาย",
+      "collapse": "ย่อเก็บ",
+      "updateError": "เกิดข้อผิดพลาดในการปรับข้อมูลรายละเอียด"
+    },
+    "status": {
+      "lastBackup": "สํารองข้อมูลล่าสุด: {datetime}",
+      "lastBackupUnknown": "สํารองข้อมูลล่าสุด: ไม่ทราบ"
+    },
+    "peers": {
+      "label": "เพื่อน:"
+    },
+    "toasts": {
+      "blockLocked": "โพสต์นี้ถูกล็อค!"
+    },
+    "editor": {
+      "placeholder": "หน้า เปล่า รอ ฟัง เสียง ของ คุณ อยู่."
+    },
+    "loading": {
+      "label": "กําลังโหลด",
+      "quote": "ปล่อยให้โลกเผาไหม้ผ่านคุณ โยนแสง pirsm, สีขาวร้อนบนกระดาษ <br> -- Ray Bradbury"
+    },
+    "inactiveWarning": {
+      "message": "คุณยังไม่ได้เขียนอะไรเลยเป็นเวลา 5 นาที คลิก ตกลง เพื่อทําวาระการเขียนต่อ มิฉะนั้น คุณจะถูกสลับไปยังแฟ้มจัดเก็บ",
+      "confirm": "โอเค"
+    },
+    "sharing": {
+      "label": "เชื่อมโยงร่วมกัน",
+      "copyTooltip": "คัดลอกไปยังคลิปบอร์ด",
+      "copied": "รับทราบ!"
+    },
+    "toolbar": {
+      "insertImage": "แทรกรูปภาพ",
+      "insertImageUrlPlaceholder": "ป้อนที่อยู่ URL ของภาพ",
+      "insertImageAltPlaceholder": "ตัวเลือกข้อความ",
+      "insertImageConfirm": "ยืนยัน",
+      "insertImageCancel": "ยกเลิก"
+    },
+    "buttons": {
+      "downloadFile": "ดาวน์โหลดแฟ้ม"
+    },
+    "lockModal": {
+      "messageLine1": "คุณแน่ใจหรือว่าต้องการล็อกโพสต์นี้?",
+      "messageLine2": "นี้จะเสร็จสิ้นและป้องกันการแก้ไขเพิ่มเติม",
+      "confirm": "ล็อค",
+      "cancel": "ยกเลิก",
+      "successToast": "ล็อกประตูเรียบร้อยแล้ว",
+      "errorToast": "เกิดข้อผิดพลาดในการล็อคตําแหน่ง"
+    },
+    "tags": {
+      "headerWithTags": "ป้ายกํากับ:",
+      "headerNoTags": "ยังไม่มีป้ายกํากับ! เพิ่มบาง:",
+      "updateError": "เกิดข้อผิดพลาดในการปรับข้อมูลป้ายกํากับ"
+    },
+    "fullBlock": {
+      "headingPrefix": "ขออภัย โพสต์ \"{blockTitle}\" ในขณะนี้",
+      "headingStatus": "ไม่ว่างเต็มที่",
+      "retryPrefix": "เชิญ",
+      "retryLink": "ลองใหม่ที่โพสต์",
+      "retrySuffix": "หรือกลับมาทีหลัง",
+      "consolationPrefix": "ระหว่างรอ อ่านหนังสือตามสบาย",
+      "consolationBestOf": "โพสต์ที่เราชื่นชอบ",
+      "consolationMiddle": "หรือเรียกดู",
+      "consolationArchive": "โกดัง"
+    }
+  }
+}

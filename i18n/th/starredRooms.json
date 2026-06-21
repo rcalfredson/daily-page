@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "ห้อง ทั้งหมด",
+      "description": "รายชื่อของทุกห้องที่เธอแสดง"
+    },
+    "nav": {
+      "backToDashboard": "○ กลับ ไป ที่ แดช บอร์ด"
+    },
+    "header": {
+      "title": "○ ห้อง ของ คุณ ทุก ห้อง"
+    },
+    "rooms": {
+      "unnamedRoom": "ไม่มีชื่อห้อง",
+      "noDescription": "ไม่มีคําอธิบาย"
+    },
+    "empty": {
+      "message": "คุณยังไม่ได้ติดดาวห้องใดเลย!"
+    }
+  }
+}
