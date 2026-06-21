@@ -177,7 +177,7 @@ const useAuthAPI = (app) => {
           console.error('Error fetching user:', err);
           res.status(500).json({ error: 'Internal server error' });
         });
-    } catch (error) {
+    } catch {
       res.status(401).json({ error: 'Invalid token' });
     }
   });

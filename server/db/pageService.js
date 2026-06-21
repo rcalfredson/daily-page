@@ -153,15 +153,14 @@ export async function getPageMonthYearCombos() {
 export async function getPageForRoom(date, room, options) {
   try {
     const page = await pageByDateAndRoom(date, room, options);
-    if (!page) {
-      throw new Error('Page does not exist.');
-    }
-    return page;
+    if (page) return page;
   } catch (error) {
-    // If we don't find a page, we create it with empty content
-    await updatePage('', room);
-    return pageByDateAndRoom(date, room, options);
+    console.error(`Error fetching page for date ${date} and room ${room}:`, error);
   }
+
+  // If we don't find a page, we create it with empty content
+  await updatePage('', room);
+  return pageByDateAndRoom(date, room, options);
 }
 
 /**

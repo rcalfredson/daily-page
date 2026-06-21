@@ -17,7 +17,6 @@ const artistsFolderID = config.artistsFolderId;
 const { JSDOM } = jsdom;
 
 const scopes = ['https://www.googleapis.com/auth/drive'];
-let credentials;
 let auth;
 let drive;
 let lastRequestTime = 0;
@@ -64,6 +63,7 @@ export async function getDocTitles() {
   try {
     return await cache.get('docMappings', docMappingService.getDocMappings);
   } catch (error) {
+    console.error('Error fetching cached document mappings:', error);
     const queryParams = {
       pageSize: 500,
       fields: 'nextPageToken, files(name,fullFileExtension,id)',
@@ -92,7 +92,7 @@ export async function docText(slug) {
       alt: 'media',
       mimeType: 'text/html',
     });
-  } catch (error) {
+  } catch {
     return 'Not found';
   }
 
@@ -161,7 +161,7 @@ export async function docText(slug) {
 }
 
 export async function throttleAsNeeded(funcToCall, args) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const timeDiff = new Date() - lastRequestTime;
     let timeToWait = 0;
     if (timeDiff < 100) {
