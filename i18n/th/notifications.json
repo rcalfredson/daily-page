@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "การแจ้งให้ทราบComment",
+      "openMenu": "เปิดการแจ้งเตือน",
+      "loading": "กําลังโหลดการแจ้งให้ทราบ...",
+      "error": "ไม่สามารถโหลดการแจ้งให้ทราบได้ในตอนนี้",
+      "empty": "ยังไม่ได้แจ้ง",
+      "markRead": "อ่านจดหมายร่าง",
+      "fallbackActor": "ใครบางคน",
+      "fallbackBlockTitle": "โพสต์ของคุณ",
+      "item": {
+        "blockComment": "{actorUsername} ให้ความเห็นเกี่ยวกับโพสต์ \"{blockTitle}\".",
+        "commentReply": "{actorUsername} ตอบความเห็นของคุณ \"{blockTitle}\".",
+        "unknown": "การแจ้งให้ทราบ"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "ความคิดเห็นใหม่เรื่อง \"{blockTitle}\"",
+        "heading": "ข้อ คิด เห็น ใหม่ เกี่ยว กับ ไปรษณีย์ ของ คุณ",
+        "headingWithName": "ไฮ {username}",
+        "body": "<strong>{actorUsername}</strong> แสดงความคิดเห็นในโพสต์ของคุณ <strong>{blockTitle}</strong>",
+        "cta": "มอง ดู การ สนทนา ใน หน้า ต่าง ๆ",
+        "fallbackActor": "ใครบางคน",
+        "fallbackBlockTitle": "โพสต์ของคุณ"
+      },
+      "commentReply": {
+        "subject": "ตอบกลับใหม่ \"{blockTitle}\"",
+        "heading": "ตอบกลับใหม่ไปยังหมายเหตุของคุณ",
+        "headingWithName": "ไฮ {username}",
+        "body": "<strong>{actorUsername}</strong> ตอบกลับความคิดเห็นของคุณใน <strong>{blockTitle}</strong>",
+        "cta": "มอง ดู การ สนทนา ใน หน้า ต่าง ๆ",
+        "fallbackActor": "ใครบางคน",
+        "fallbackBlockTitle": "โพสต์ของคุณ"
+      }
+    }
+  }
+}

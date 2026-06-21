@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "โพสต์ของคุณ",
+      "description": "เรียก ดู และ จัด เรียง ตําแหน่ง ทุก ตําแหน่ง ที่ คุณ สร้าง ขึ้น หรือ ให้ ความ ร่วม มือ."
+    },
+    "header": {
+      "dashboardLink": "แดชบอร์ดของคุณ",
+      "profileLink": "โพรไฟล์ {username}",
+      "allBlocks": "โพสต์ทั้งหมด"
+    },
+    "empty": "ยังไม่ได้โพสต์",
+    "pagination": {
+      "prev": "○ ก่อน หน้า นั้น",
+      "next": "○ ต่อ ไป"
+    },
+    "titleUser": "{username} โพสต์"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "detailedStats": {
+    "meta": {
+      "title": "ตําแหน่งรายละเอียด",
+      "description": "ความผิดปกติของกิจกรรมเดลี่เพจของคุณ"
+    },
+    "nav": {
+      "backToDashboard": "○ กลับ ไป ที่ แดช บอร์ด"
+    },
+    "header": {
+      "title": "○ คุณ เห็น ทิวทัศน์"
+    },
+    "cards": {
+      "totalBlocks": "โพสต์ทั้งหมดที่ถูกสร้าง ○",
+      "collaborations": "การ ประสาน งาน ○",
+      "votesGiven": "[ ที่ มา ของ ภา",
+      "daysActive": "วัน ที่ ทํา งาน"
+    },
+    "chart": {
+      "datasetLabel": "สแตมป์ของคุณ",
+      "labels": {
+        "blocksCreated": "สร้างโพสต์เมื่อ",
+        "collaborations": "ความร่วมมือ",
+        "votesGiven": "ที่ให้ วอตส์",
+        "daysActive": "วันทํางาน"
+      }
+    }
+  }
+}
