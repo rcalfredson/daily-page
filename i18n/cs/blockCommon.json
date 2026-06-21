@@ -1,0 +1,7 @@
+{
+  "blockCommon": {
+    "badges": { "draft": "Koncept" },
+    "deleteModal": { "title": "Smazat příspěvek?", "message": "Tuto akci nelze vrátit zpět.", "confirm": "Smazat", "cancel": "Zrušit", "closeAriaLabel": "Zavřít" },
+    "toasts": { "deleteSuccess": "Příspěvek byl úspěšně smazán!", "deleteFailed": "Příspěvek se nepodařilo smazat." }
+  }
+}

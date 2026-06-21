@@ -1,0 +1,13 @@
+{
+  "bestOf": {
+    "meta": {
+      "title": "To nejlepší z Daily Page",
+      "description": "Nejoblíbenější příspěvky na Daily Page — vtipné, upřímné, poetické nebo prostě podivné. Podívejte se, co vyniklo za poslední den, týden, měsíc i déle.",
+      "titleRoom": "To nejlepší z {roomName}",
+      "descriptionRoom": "Objevte výjimečné příspěvky z místnosti {roomName} — ty, které si čtenáři nejvíce oblíbili za posledních 24 hodin, 7 dní, 30 dní a za celou dobu."
+    },
+    "heading": "🏆 To nejlepší z Daily Page", "headingRoomPrefix": "🏆 To nejlepší z ", "headingRoomSuffix": "",
+    "tabs": { "24h": "🔥 24 hodin", "7d": "🚀 7 dní", "30d": "🌕 30 dní", "all": "👑 Za celou dobu" },
+    "labels": { "createdBy": "Vytvořil(a):", "inRoom": "v", "onDate": "dne {date}", "unknownRoom": "Neznámá místnost", "noBlocks": "Nebyly nalezeny žádné příspěvky.", "viewRoom": "Zobrazit místnost" }
+  }
+}

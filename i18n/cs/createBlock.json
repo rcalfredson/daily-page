@@ -1,0 +1,25 @@
+{
+  "createBlock": {
+    "meta": { "title": "Vytvořit nový příspěvek — Daily Page", "description": "Začněte nový tvůrčí příspěvek s volitelnými štítky, jazykem a viditelností." },
+    "heading": "Vytvořit nový příspěvek",
+    "roomInfo": { "roomLabel": "Místnost:", "unavailable": "Informace o místnosti nejsou k dispozici.", "noDescription": "Popis není k dispozici." },
+    "form": {
+      "title": { "label": "Název:", "placeholder": { "full": "např. „Moje mistrovské dílo“, „Nejlepší nápad všech dob“, „Clickbait pro nerdy“", "short": "např. „Moje mistrovské dílo“" } },
+      "description": { "label": "Popis (volitelné):", "placeholder": "Vysvětlete svůj geniální nápad… nebo prostě improvizujte." },
+      "initialContent": { "label": "Počáteční obsah (volitelné):", "help": "Začněte psát zde nebo stiskněte „Vytvořit“ a pokračujte v plném editoru, kde můžete vkládat obrázky a spolupracovat v reálném čase.", "placeholder": "Začněte psát příspěvek zde nebo po vytvoření pokračujte v úpravách…" },
+      "visibility": { "label": "Viditelnost:" }, "submit": "Vytvořit příspěvek"
+    },
+    "visibility": {
+      "public": { "label": "Veřejný", "title": "Kdokoli jej může upravovat v reálném čase. Přihlášení není nutné.", "inline": "Kdokoli jej může upravovat v reálném čase. Přihlášení není nutné." },
+      "unlisted": { "label": "Neveřejný koncept", "title": "Během úprav je skrytý před veřejným procházením. Po uzamčení bude viditelný.", "inline": "Během úprav je skrytý před veřejným procházením. Po uzamčení bude viditelný.", "tooltip": "Neveřejné koncepty jsou během úprav skryté před veřejným procházením. Kdokoli s odkazem může spolupracovat a po uzamčení se příspěvek zveřejní." }
+    },
+    "advanced": {
+      "summary": "Pokročilé možnosti",
+      "lang": { "label": "Jazyk:", "options": {
+        "en": "English", "es": "Español", "fr": "Français", "ru": "Русский", "id": "Bahasa Indonesia", "de": "Deutsch", "it": "Italiano", "pt": "Português", "zh": "中文", "ja": "日本語", "ko": "한국어", "ar": "العربية", "hi": "हिन्दी", "tr": "Türkçe", "nl": "Nederlands", "sv": "Svenska", "no": "Norsk", "da": "Dansk", "fi": "Suomi", "pl": "Polski", "cs": "Čeština", "el": "Ελληνικά", "he": "עברית", "th": "ไทย", "vi": "Tiếng Việt"
+      } },
+      "translate": { "label": "Přeložit existující příspěvek (URL nebo ID):", "placeholder": "Vložte URL nebo ID příspěvku (volitelné)", "invalid": "Toto nevypadá jako platná URL nebo ID příspěvku.", "fetchError": "Informace o příspěvku se nepodařilo načíst." }
+    },
+    "messages": { "langExists": "Překlad do tohoto jazyka již existuje. Vyberte jiný jazyk.", "genericError": "Něco se pokazilo. Zkuste to prosím znovu." }
+  }
+}

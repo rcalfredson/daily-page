@@ -1,0 +1,6 @@
+{
+  "nav": {
+    "home": "Domů", "rooms": "Místnosti", "tags": "Štítky", "archive": "Archiv", "search": "Hledat", "bestOf": "To nejlepší", "about": "O nás", "support": "Podpora", "otherProjects": "Další projekty",
+    "auth": { "welcomePrefix": "Vítejte, ", "welcomeFallbackUser": "uživateli", "welcomeSuffix": "!" }, "dashboard": "Přehled"
+  }
+}

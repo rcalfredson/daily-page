@@ -1,0 +1,54 @@
+{
+  "blockView": {
+    "meta": { "title": "Příspěvek – {blockTitle}", "titleFallback": "Příspěvek" },
+    "labels": {
+      "room": "Místnost", "author": "Autor", "created": "Vytvořeno", "unknownAuthor": "Anonym",
+      "authorAvatarAlt": "Avatar uživatele {username}", "viewAuthorProfile": "Zobrazit profil uživatele {username}",
+      "lang": "Překlady: ", "available": "k dispozici"
+    },
+    "buttons": { "edit": "Upravit", "deleteBlock": "Smazat příspěvek", "share": "Sdílet", "flagContent": "Nahlásit obsah" },
+    "description": { "label": "Popis", "none": "Nebyl uveden žádný popis…", "expand": "Rozbalit", "collapse": "Sbalit" },
+    "editorial": {
+      "heading": "Průvodce čtením", "roleLabel": "Typ čtení", "clusterLabel": "Průvodce", "sequence": "Část {sequence}",
+      "primaryPillarHeading": "Začněte zde", "relatedHeading": "Pokračujte ve čtení", "clusterHeading": "Další v tomto průvodci",
+      "expandSection": "Zobrazit dalších {count}", "collapseSection": "Zobrazit méně",
+      "roleNames": { "pillar": "Hlavní průvodce", "companion": "Podrobný rozbor", "texture": "Souvislosti" }
+    },
+    "comments": {
+      "heading": "Komentáře", "count": "Počet komentářů: {count}",
+      "empty": "Zatím nikdo neodpověděl. Komentáře se zde objeví, až začne konverzace.",
+      "composer": {
+        "label": "Přidat komentář", "placeholder": "Napište komentář…", "submit": "Odeslat komentář", "submitting": "Odesílání…",
+        "success": "Komentář byl odeslán.", "error": "Komentář nyní nelze odeslat.",
+        "loginPrompt": "Přihlaste se a zapojte se do konverzace.", "loginCta": "Přihlásit se a komentovat",
+        "verifyPrompt": "Před odesláním komentáře ověřte svůj e-mail.", "verifyCta": "Ověřit e-mail"
+      },
+      "sort": { "label": "Řazení", "oldestFirst": "Nejstarší první", "newestFirst": "Nejnovější první" },
+      "by": "Od", "unknownAuthor": "Neznámý autor",
+      "reply": {
+        "action": "Odpovědět", "label": "Přidat odpověď", "placeholder": "Napište odpověď…", "submit": "Odeslat odpověď",
+        "submitting": "Odesílání…", "success": "Odpověď byla odeslána.", "error": "Odpověď nyní nelze odeslat.",
+        "cancel": "Zrušit", "loginPrompt": "Chcete-li odpovědět, přihlaste se."
+      },
+      "manage": {
+        "edited": "Upraveno", "editAction": "Upravit", "deleteAction": "Smazat",
+        "deleteConfirm": "Smazat tento komentář? Tím se odstraní i všechny odpovědi pod ním.",
+        "deleteSuccess": "Komentář byl smazán.", "deleteError": "Komentář nyní nelze smazat.",
+        "forbidden": "Spravovat můžete pouze své vlastní komentáře.",
+        "edit": { "label": "Upravit komentář", "save": "Uložit", "saving": "Ukládání…", "cancel": "Zrušit", "success": "Komentář byl aktualizován.", "error": "Komentář nyní nelze aktualizovat." }
+      },
+      "report": {
+        "action": "Nahlásit", "pending": "Nahlašování…", "success": "Komentář byl nahlášen.",
+        "error": "Komentář nyní nelze nahlásit.", "ownError": "Nemůžete nahlásit vlastní komentář.",
+        "hidden": "Komentář byl po nahlášení skryt.", "reported": "Nahlášeno"
+      },
+      "deepLink": { "focused": "Odkazovaný komentář", "unavailable": "Odkazovaný komentář již není k dispozici." },
+      "loadMore": "Načíst další komentáře", "loading": "Načítání…", "loadError": "Další komentáře nyní nelze načíst."
+    },
+    "share": {
+      "title": "Sdílet tento příspěvek", "shareOn": "Sdílet na:", "nativeText": "Podívejte se na tento příspěvek: {title}",
+      "alt": { "facebook": "Logo Facebooku", "reddit": "Logo Redditu", "whatsapp": "Logo WhatsAppu", "twitter": "Logo Twitteru" }
+    },
+    "errors": { "notFound": "Příspěvek nebyl nalezen nebo nepatří do této místnosti.", "loadFailed": "Chyba při načítání příspěvku." }
+  }
+}

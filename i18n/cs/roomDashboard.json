@@ -1,0 +1,11 @@
+{
+  "roomDashboard": {
+    "meta": { "title": "Daily Page — {roomName}", "description": "Prozkoumejte nedávné a rozpracované příspěvky v místnosti {roomName}." },
+    "links": { "exploreLabel": "Prozkoumat:", "allBlocks": "🗂️ Všechny příspěvky", "browseByDate": "🗓️ Podle data", "bestOf": "🏅 To nejlepší", "searchInRoom": "🔎 Hledat" },
+    "actions": { "createBlock": "Vytvořit příspěvek", "starTitle": "Přidat místnost do oblíbených", "unstarTitle": "Odebrat místnost z oblíbených" },
+    "tabs": { "locked": "Uzamčené příspěvky", "inProgress": "Rozpracované příspěvky" },
+    "sections": { "lockedHeader": "Uzamčené příspěvky", "inProgressHeader": "Rozpracované příspěvky" },
+    "editorial": { "heading": "Doporučení průvodci", "description": "Začněte doporučenými průvodci vybranými pro tuto místnost.", "roleNames": { "pillar": "Hlavní průvodce", "companion": "Průvodce čtením", "texture": "Průvodce souvislostmi" } },
+    "empty": { "noDescription": "Popis není k dispozici.", "noLocked": "Zatím žádné uzamčené příspěvky! Příspěvky se automaticky uzamknou po 1 hodině nečinnosti.", "noInProgress": "Zatím žádné rozpracované příspěvky! Je čas jeden začít.", "noBlocks": "Zatím žádné příspěvky! Vytvořte první a zanechte svou stopu. 😎" }
+  }
+}

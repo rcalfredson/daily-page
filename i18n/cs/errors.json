@@ -1,0 +1,6 @@
+{
+  "errors": {
+    "generic": { "title": "Jejda! Něco se pokazilo.", "message": "Došlo k neočekávané chybě. Zkuste to prosím později.", "home": "Zpět domů" },
+    "notFound": { "title": "404 – Stránka nenalezena", "metaTitle": "Stránka nenalezena", "message": "Litujeme, hledanou stránku se nepodařilo najít.", "homePrefix": "Můžete se vrátit na", "homeLink": "domovskou stránku", "roomsPrefix": "nebo navštívit", "roomsLink": "seznam místností." }
+  }
+}

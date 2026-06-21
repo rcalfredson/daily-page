@@ -1,0 +1,16 @@
+{
+  "tags": {
+    "meta": { "title": "Daily Page — Přehled štítků", "description": "Procházejte všechny štítky používané na Daily Page s rychlými filtry podle času." },
+    "title": "Přehled štítků", "intro": "Prozkoumejte všechny štítky používané na Daily Page.", "tagCloudTitle": "Mrak štítků",
+    "timeframe": { "last24h": "Posledních 24 hodin", "last7d": "Posledních 7 dní", "last30d": "Posledních 30 dní", "all": "Za celou dobu" },
+    "error": { "loading": "Chyba při načítání přehledu štítků" },
+    "detail": {
+      "meta": { "titlePrefix": "#", "titleSuffix": " | Daily Page", "description": "Příspěvky se štítkem" },
+      "header": { "label": "Štítek:", "icon": "🏷️" }, "stats": { "totalBlocks": "Celkem příspěvků se štítkem", "totalBlocksTagSeparator": ":" },
+      "blockInfo": { "createdBy": "Vytvořil(a):", "inRoom": "v", "unknownRoom": "Neznámá místnost", "onDate": "dne" },
+      "chart": { "label": "Příspěvky vytvořené v průběhu času" },
+      "empty": { "message": "Zatím nebyly nalezeny žádné příspěvky s tímto štítkem. Co takhle vytvořit první? 🔥" },
+      "error": { "loadingTagPage": "Chyba při načítání stránky štítku" }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "random": {
+    "meta": { "title": "Daily Page — Další projekty", "description": "Objevte baseballový deník, náhodné experimenty s psaním a další vedlejší projekty Daily Page." },
+    "title": "Další projekty", "tagline": "Útulný kout pro experimenty a vedlejší výpravy.",
+    "links": { "baseball": "📖 Baseballový deník", "randomWriter": "🎲 Náhodný spisovatel" }, "cta": { "backToRooms": "Zpět do hlavních místností" }
+  }
+}

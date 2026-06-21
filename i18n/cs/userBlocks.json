@@ -1,0 +1,7 @@
+{
+  "userBlocks": {
+    "meta": { "title": "Vaše příspěvky", "description": "Procházejte a řaďte všechny příspěvky, které jste vytvořili nebo na kterých jste spolupracovali." },
+    "header": { "dashboardLink": "Váš přehled", "profileLink": "Profil uživatele {username}", "allBlocks": "Všechny příspěvky" },
+    "empty": "Zatím žádné příspěvky.", "pagination": { "prev": "← Předchozí", "next": "Další →" }, "titleUser": "Příspěvky uživatele {username}"
+  }
+}

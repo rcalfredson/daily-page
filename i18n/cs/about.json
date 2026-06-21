@@ -1,0 +1,37 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — O nás",
+      "description": "Co je Daily Page, jak funguje a proč vznikl jako pomalejší a laskavější kout internetu."
+    },
+    "title": "O Daily Page",
+    "tagline": "Nakrmte svou mysl, ne svůj kanál.",
+    "mission": {
+      "h2": "Poslání",
+      "p1": "Nezávislá laboratoř psaní — začala v mém obýváku a pohání ji zvědavost čtenářů.",
+      "p2": "Nevznikla proto, aby vám kazila mozek, ale aby ho živila: je to místo, kde můžete psát pomalu, chcete-li anonymně, a nemusíte si dělat starosti s tím, zda na někoho zapůsobíte."
+    },
+    "how": {
+      "h2": "Jak to funguje",
+      "features": {
+        "rooms": { "label": "Místnosti", "text": "jsou tematické prostory (představte si „přívětivější subreddit“)." },
+        "blocks": { "label": "Příspěvky", "text": "jsou prostory pro společné psaní — kdokoli (i „anonym“) je může vytvořit, upravovat do uzamčení a hlasovat o ostatních." },
+        "privacy": { "label": "Soukromí a sdílení", "text": "znamená, že veřejné příspěvky jsou ve feedu místnosti. Neveřejné koncepty zůstávají do uzamčení skryté, ale dostanete odkaz ke sdílení s přáteli." },
+        "markdown": { "label": "Markdown a média", "text": "vám umožňují psát v markdownu, vkládat obrázky a spolupracovat jako v Dokumentech Google." },
+        "trends": { "label": "Trendy a štítky", "text": "vám umožní označovat příspěvky, sledovat trendy štítků a objevovat nejlepší obsah (7 dní / 30 dní / od začátku)." },
+        "streaks": { "label": "Série", "text": "udržují vaši každodenní sérii psaní — nejlepší motivaci přijít každý den." }
+      }
+    },
+    "origin": {
+      "h2": "Jak jsme se sem dostali",
+      "p1": "V roce 2018 jsem vytvořil wiki založenou na datech pro „dnešní stránku“ a sledoval, jak z ní několik přemýšlivých autorů udělalo prostor pro své myšlenky. Nikdy se příliš nerozrostla — ale zasela semínko.",
+      "p2": "Přeskočme do současnosti: z tohoto semínka vyrostl Daily Page s mnoha místnostmi — klidná sociální síť pro introverty, idealisty a všechny, kdo touží po pomalejším tempu."
+    },
+    "next": {
+      "h2": "Co bude dál",
+      "p1": "Teprve začínáme: bohatší vkládání obsahu, podrobnější statistiky uživatelů, žebříčky reputace a více způsobů, jak odměnit promyšlenou tvorbu.",
+      "p2": "Děkujeme, že jste součástí tohoto malého nezávislého experimentu."
+    },
+    "cta": { "rooms": "Prozkoumat místnosti", "signup": "Připojit se ke komunitě" }
+  }
+}

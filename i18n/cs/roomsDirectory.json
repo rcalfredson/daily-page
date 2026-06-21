@@ -1,0 +1,12 @@
+{
+  "roomsDirectory": {
+    "meta": { "title": "Seznam místností", "description": "Každá místnost je bránou do jiného světa. Vstupte, sdílejte svůj příběh a přidejte se k ostatním při budování něčeho krásného." },
+    "eyebrow": "Najděte svůj kout", "heading": "Seznam místností",
+    "intro": "Začněte u místností, které právě žijí, nebo procházejte témata, dokud vás něco nezaujme. Každá místnost je jinou výzvou k psaní, fandomem či společnou posedlostí, která čeká na váš hlas.",
+    "empty": "Momentálně nejsou k dispozici žádné místnosti. Vraťte se později!", "jumpToActive": "Zobrazit aktivní místnosti", "jumpToTopics": "Procházet podle tématu",
+    "statsLabel": "Přehled seznamu místností", "liveNow": "Právě živé", "recentlyActive": "Nedávno aktivní", "recentlyActiveSubtitle": "Nejrychlejší způsob, jak najít místnost, ve které jsou právě teď lidé.",
+    "browseByTopic": "Procházet podle tématu", "topicSubtitle": "Otevřete téma a prozkoumejte jeho místnosti.", "roomCount": "Počet místností: {count}",
+    "stats": { "rooms": "místností k prozkoumání", "topics": "tematických skupin", "active": "aktivních tipů" },
+    "activeUsers": "Aktivní uživatelé: {count}", "visitRoom": "Navštívit místnost", "close": "Zavřít", "noTitle": "Název není k dispozici", "noDescription": "Popis není k dispozici"
+  }
+}

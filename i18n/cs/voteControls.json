@@ -1,0 +1,3 @@
+{
+  "voteControls": { "upvote": "Hlasovat pro", "downvote": "Hlasovat proti", "errors": { "failed": "Váš hlas se nepodařilo uložit." } }
+}

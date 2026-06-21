@@ -1,0 +1,38 @@
+{
+  "accountSecurity": {
+    "meta": { "title": "Zabezpečení účtu", "description": "Spravujte heslo a dvoufázové ověření svého účtu Daily Page." },
+    "backToDashboard": "Zpět na přehled",
+    "heading": "Zabezpečení účtu",
+    "subheading": "Chraňte svůj účet silným heslem a ověřovací aplikací.",
+    "password": {
+      "title": "Změnit heslo", "description": "Použijte jedinečné heslo o délce alespoň 8 znaků.",
+      "current": { "label": "Současné heslo" }, "new": { "label": "Nové heslo" }, "submit": "Aktualizovat heslo"
+    },
+    "twoFactor": {
+      "title": "Dvoufázové ověření", "statusOn": "Zapnuto", "statusOff": "Vypnuto",
+      "description": "Při přihlášení po zadání hesla přidejte jednorázový kód z ověřovací aplikace.",
+      "currentPassword": { "label": "Současné heslo" }, "startSetup": "Nastavit ověřovací aplikaci",
+      "qrAlt": "QR kód ověřovací aplikace", "manualKey": "Klíč pro ruční nastavení",
+      "code": { "label": "Šestimístný kód" }, "enable": "Zapnout 2FA",
+      "disableCode": { "label": "Ověřovací kód" }, "disable": "Vypnout 2FA"
+    },
+    "recoveryCodes": {
+      "title": "Uložte si obnovovací kódy",
+      "description": "Pokud ztratíte přístup k ověřovací aplikaci, přihlaste se jedním z těchto jednorázových kódů.",
+      "regenerateDescription": "Pokud jste předchozí sadu ztratili, vygenerujte novou. Všechny staré obnovovací kódy tím přestanou platit.",
+      "regenerate": "Vygenerovat nové obnovovací kódy", "warning": "Uložte je na bezpečné místo. Znovu se již nezobrazí."
+    },
+    "feedback": {
+      "passwordChanged": "Vaše heslo bylo aktualizováno.",
+      "setupReady": "Naskenujte QR kód a poté dokončete nastavení zadáním šestimístného kódu.",
+      "twoFactorEnabled": "Dvoufázové ověření je nyní zapnuto.", "twoFactorDisabled": "Dvoufázové ověření je nyní vypnuto.",
+      "recoveryCodesRegenerated": "Obnovovací kódy byly vygenerovány znovu. Nové kódy si nyní uložte.",
+      "missingFields": "Vyplňte všechna povinná pole.", "missingCurrentPassword": "Pro pokračování zadejte současné heslo.",
+      "passwordTooShort": "Nové heslo musí mít alespoň 8 znaků.", "invalidCurrentPassword": "Současné heslo nesouhlasí.",
+      "missingCode": "Zadejte šestimístný kód z ověřovací aplikace.", "invalidCode": "Tento kód nefungoval. Zkuste to znovu.",
+      "noPendingSetup": "Než zadáte kód, spusťte nastavení znovu.", "setupExpired": "Platnost této relace nastavení vypršela. Spusťte nastavení znovu a získejte nový QR kód.",
+      "twoFactorNotEnabled": "Dvoufázové ověření není pro tento účet zapnuto.",
+      "genericError": "Něco se pokazilo. Zkuste to prosím znovu.", "unexpectedError": "Došlo k neočekávané chybě. Zkuste to prosím znovu."
+    }
+  }
+}

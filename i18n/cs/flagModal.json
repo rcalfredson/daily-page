@@ -1,0 +1,11 @@
+{
+  "flagModal": {
+    "title": "Nahlásit nevhodný obsah",
+    "fields": {
+      "reason": { "label": "Důvod", "options": { "spam": "Spam", "offensive": "Urážlivý obsah (nenávistné výrazy nebo nadávky)", "inappropriate": "Nevhodný obsah (nahota, drastický obsah apod.)", "other": "Jiné" } },
+      "details": { "label": "Podrobnosti (volitelné)", "placeholder": "Popište, co jste viděli…" }
+    },
+    "buttons": { "submit": "Odeslat hlášení", "cancel": "Zrušit" },
+    "toasts": { "success": "Hlášení bylo odesláno — děkujeme!", "failed": "Hlášení se nepodařilo odeslat." }
+  }
+}

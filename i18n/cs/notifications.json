@@ -1,0 +1,12 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Oznámení", "openMenu": "Otevřít oznámení", "loading": "Načítání oznámení…", "error": "Oznámení nyní nelze načíst.", "empty": "Zatím žádná oznámení.", "markRead": "Označit jako přečtené", "fallbackActor": "Někdo", "fallbackBlockTitle": "váš příspěvek",
+      "item": { "blockComment": "{actorUsername} okomentoval(a) váš příspěvek „{blockTitle}“.", "commentReply": "{actorUsername} odpověděl(a) na váš komentář u „{blockTitle}“.", "unknown": "Oznámení" }
+    },
+    "email": {
+      "blockComment": { "subject": "Nový komentář u „{blockTitle}“", "heading": "Nový komentář u vašeho příspěvku", "headingWithName": "Dobrý den, {username},", "body": "<strong>{actorUsername}</strong> okomentoval(a) váš příspěvek <strong>{blockTitle}</strong>.", "cta": "Zobrazit konverzaci na Daily Page", "fallbackActor": "Někdo", "fallbackBlockTitle": "váš příspěvek" },
+      "commentReply": { "subject": "Nová odpověď u „{blockTitle}“", "heading": "Nová odpověď na váš komentář", "headingWithName": "Dobrý den, {username},", "body": "<strong>{actorUsername}</strong> odpověděl(a) na váš komentář u <strong>{blockTitle}</strong>.", "cta": "Zobrazit konverzaci na Daily Page", "fallbackActor": "Někdo", "fallbackBlockTitle": "váš příspěvek" }
+    }
+  }
+}

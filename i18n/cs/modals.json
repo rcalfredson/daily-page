@@ -1,0 +1,7 @@
+{
+  "modals": {
+    "login": { "title": "Přihlaste se", "message": "Chcete-li pokračovat, musíte být přihlášeni.", "messageWithAction": "Chcete-li {action}, musíte být přihlášeni.", "cta": "Přihlásit se" },
+    "actions": { "voteOnBlock": "hlasovat o příspěvku", "starRoom": "přidat tuto místnost do oblíbených", "reactToBlock": "reagovat na tento příspěvek", "commentOnBlock": "komentovat tento příspěvek", "reportComment": "nahlásit tento komentář" },
+    "errors": { "starToggleFail": "Stav oblíbené položky se nepodařilo aktualizovat. Zkuste to znovu." }
+  }
+}
