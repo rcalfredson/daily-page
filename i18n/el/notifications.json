@@ -1,0 +1,39 @@
+{
+  "notifications": {
+    "inSite": {
+      "title": "Ειδοποιήσεις",
+      "openMenu": "Άνοιγμα ειδοποιήσεων",
+      "loading": "Φόρτωση ειδοποιήσεων...",
+      "error": "Δεν είναι δυνατή η φόρτωση ειδοποιήσεων αυτή τη στιγμή.",
+      "empty": "Δεν υπάρχουν ακόμη ειδοποιήσεις.",
+      "markRead": "Σήμανση ως αναγνωσμένη",
+      "fallbackActor": "Κάποιος",
+      "fallbackBlockTitle": "την ανάρτησή σου",
+      "item": {
+        "blockComment": "Ο χρήστης {actorUsername} σχολίασε την ανάρτησή σου «{blockTitle}».",
+        "commentReply": "Ο χρήστης {actorUsername} απάντησε στο σχόλιό σου στην ανάρτηση «{blockTitle}».",
+        "unknown": "Ειδοποίηση"
+      }
+    },
+    "email": {
+      "blockComment": {
+        "subject": "Νέο σχόλιο στην ανάρτηση «{blockTitle}»",
+        "heading": "Νέο σχόλιο στην ανάρτησή σου",
+        "headingWithName": "Γεια σου {username},",
+        "body": "Ο χρήστης <strong>{actorUsername}</strong> σχολίασε την ανάρτησή σου <strong>{blockTitle}</strong>.",
+        "cta": "Προβολή της συζήτησης στο Daily Page",
+        "fallbackActor": "Κάποιος",
+        "fallbackBlockTitle": "την ανάρτησή σου"
+      },
+      "commentReply": {
+        "subject": "Νέα απάντηση στην ανάρτηση «{blockTitle}»",
+        "heading": "Νέα απάντηση στο σχόλιό σου",
+        "headingWithName": "Γεια σου {username},",
+        "body": "Ο χρήστης <strong>{actorUsername}</strong> απάντησε στο σχόλιό σου στην ανάρτηση <strong>{blockTitle}</strong>.",
+        "cta": "Προβολή της συζήτησης στο Daily Page",
+        "fallbackActor": "Κάποιος",
+        "fallbackBlockTitle": "την ανάρτησή σου"
+      }
+    }
+  }
+}

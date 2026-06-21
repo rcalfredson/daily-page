@@ -1,0 +1,28 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "Καλώς ήρθες!",
+    "logout": "Αποσύνδεση",
+    "login": "Σύνδεση / Εγγραφή",
+    "language": "Γλώσσα",
+    "openMenu": "Άνοιγμα κύριου μενού",
+    "closeMenu": "Κλείσιμο κύριου μενού",
+    "privacy": "Πολιτική απορρήτου",
+    "uiFallbackNotice": "Η γλώσσα {requested} δεν έχει μεταφραστεί ακόμη. Προς το παρόν εμφανίζεται η γλώσσα {current}.",
+    "copyButton": { "copy": "Αντιγραφή", "copied": "Αντιγράφηκε!" },
+    "copyright": "© {year}",
+    "languages": {
+      "en": "English", "es": "Español", "fr": "Français", "ru": "Русский", "id": "Bahasa Indonesia", "de": "Deutsch", "it": "Italiano", "pt": "Português", "zh": "中文", "ja": "日本語", "ko": "한국어", "ar": "العربية", "hi": "हिन्दी", "tr": "Türkçe", "nl": "Nederlands", "sv": "Svenska", "no": "Norsk", "da": "Dansk", "fi": "Suomi", "pl": "Polski", "cs": "Čeština", "el": "Ελληνικά", "he": "עברית", "th": "ไทย", "vi": "Tiếng Việt"
+    },
+    "theme": {
+      "label": "Θέμα",
+      "toggleToDark": "Μετάβαση σε σκοτεινή λειτουργία",
+      "toggleToLight": "Μετάβαση σε φωτεινή λειτουργία"
+    },
+    "blockImages": {
+      "preview": "Προεπισκόπηση εικόνας",
+      "close": "Κλείσιμο προεπισκόπησης εικόνας",
+      "open": "Άνοιγμα προεπισκόπησης εικόνας"
+    }
+  }
+}

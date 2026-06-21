@@ -5,16 +5,19 @@ Fonts
 @font-face {
   font-family: 'Rubik-Regular';
   src: url('../assets/fonts/Rubik-Regular.ttf');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Rubik-Medium';
   src: url('../assets/fonts/Rubik-Medium.ttf');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Rubik-Light';
   src: url('../assets/fonts/Rubik-Light.ttf');
+  font-display: swap;
 }
 
 /****************
@@ -56,6 +59,9 @@ General
 ****************/
 
 :root {
+  --font-rubik-light: 'Rubik-Light', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-rubik-regular: 'Rubik-Regular', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-rubik-medium: 'Rubik-Medium', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
   --primary-bg: #ffffff;
   --secondary-bg: #f9f9f9;
   --text-color: #333;
@@ -109,7 +115,7 @@ html {
 }
 
 body {
-  font-family: "Rubik-Light";
+  font-family: var(--font-rubik-light);
   background-color: var(--primary-bg);
   color: var(--text-color);
   margin: 0;
@@ -204,7 +210,7 @@ a.brand {
 h1 {
   margin: 0 0 0 0px;
   padding-bottom: 20px;
-  font-family: "Rubik-Regular";
+  font-family: var(--font-rubik-regular);
 }
 
 h2 {
@@ -431,7 +437,7 @@ tbody tr:last-child {
 }
 
 strong {
-  font-family: 'Rubik-Regular';
+  font-family: var(--font-rubik-regular);
 }
 
 .hide,
@@ -461,7 +467,7 @@ NavBar
 }
 
 .main-menu div a {
-  font-family: 'Rubik-Regular';
+  font-family: var(--font-rubik-regular);
 }
 
 a.brand {
@@ -1011,7 +1017,7 @@ button {
   border-radius: 5px;
   border: 1px solid rgb(17, 87, 170);
   margin: 0 0 10px 10px;
-  font-family: "Rubik-Light";
+  font-family: var(--font-rubik-light);
   font-size: 12px;
   line-height: 32px;
   color: rgb(17, 87, 170);
@@ -1131,7 +1137,7 @@ Archive and static pages
 }
 
 #viewer {
-  font-family: 'Rubik-Light';
+  font-family: var(--font-rubik-light);
   padding-left: 20px;
 }
 
@@ -1214,7 +1220,7 @@ CodeMirror
 }
 
 .CodeMirror pre {
-  font-family: 'Rubik-Regular';
+  font-family: var(--font-rubik-regular);
   font-size: 21px;
 }
 

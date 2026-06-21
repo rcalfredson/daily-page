@@ -15,7 +15,7 @@
   padding: 10px 12px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  font-family: "Rubik-Light";
+  font-family: var(--font-rubik-light);
   font-size: 16px;
 }
 
@@ -36,7 +36,7 @@
 
 .filter-x {
   text-decoration: none;
-  font-family: "Rubik-Regular";
+  font-family: var(--font-rubik-regular);
 }
 
 .search-results {
@@ -63,7 +63,7 @@
 }
 
 .result-title {
-  font-family: "Rubik-Regular";
+  font-family: var(--font-rubik-regular);
   text-decoration: none;
   color: #000;
 }
@@ -118,7 +118,7 @@
 .pager-link {
   text-decoration: none;
   color: rgb(26, 167, 214);
-  font-family: "Rubik-Regular";
+  font-family: var(--font-rubik-regular);
 }
 
 .pager-status {
@@ -143,7 +143,7 @@
 }
 
 #search-btn {
-  font-family: 'Rubik-Medium', sans-serif;
+  font-family: var(--font-rubik-medium);
   font-size: 13px;
   padding: 4px 10px;
   margin: unset;
