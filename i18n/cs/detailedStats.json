@@ -1,0 +1,8 @@
+{
+  "detailedStats": {
+    "meta": { "title": "Podrobné statistiky", "description": "Podrobný rozpis vaší aktivity na Daily Page." },
+    "nav": { "backToDashboard": "← Zpět na přehled" }, "header": { "title": "📊 Přehled vašich statistik 📊" },
+    "cards": { "totalBlocks": "Celkem vytvořených příspěvků 📝", "collaborations": "Spolupráce 🤝", "votesGiven": "Odevzdané hlasy 👍", "daysActive": "Aktivní dny 📆" },
+    "chart": { "datasetLabel": "Vaše statistiky", "labels": { "blocksCreated": "Vytvořené příspěvky", "collaborations": "Spolupráce", "votesGiven": "Odevzdané hlasy", "daysActive": "Aktivní dny" } }
+  }
+}

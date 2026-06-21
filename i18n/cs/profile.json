@@ -1,0 +1,9 @@
+{
+  "profile": {
+    "meta": { "titleUser": "Profil uživatele {username}", "descriptionUser": "Prohlédněte si nedávnou aktivitu, oblíbené místnosti a statistiky uživatele {username}." },
+    "profile": { "profilePicAlt": "Profilový obrázek", "noBio": "(Medailonek není k dispozici.)" },
+    "activity": { "title": "Nedávná aktivita", "updatedOn": "Aktualizováno {date}", "none": "Žádná nedávná aktivita.", "viewAllBlocks": "Zobrazit všechny příspěvky" },
+    "starredRooms": { "title": "Oblíbené místnosti", "none": "Zatím žádné oblíbené místnosti.", "unnamedRoom": "Místnost bez názvu" },
+    "stats": { "title": "Statistiky uživatele", "totalBlocks": "Celkem vytvořených příspěvků", "collaborations": "Spolupráce", "daysActive": "Aktivní dny" }
+  }
+}

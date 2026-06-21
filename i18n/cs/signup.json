@@ -1,0 +1,10 @@
+{
+  "signup": {
+    "meta": { "title": "Vytvořit účet", "description": "Zaregistrujte se na Daily Page a získejte přístup ke všem funkcím." },
+    "header": { "title": "Vytvořte si účet", "subtitle": "Připojte se k Daily Page a začněte tvořit a sdílet své každodenní psaní!" },
+    "form": {
+      "email": { "label": "E-mail", "placeholder": "Zadejte svůj e-mail" }, "username": { "label": "Uživatelské jméno", "placeholder": "Zadejte uživatelské jméno" }, "password": { "label": "Heslo", "placeholder": "Zadejte heslo" }, "submit": "Zaregistrovat se",
+      "feedback": { "success": "Formulář byl úspěšně odeslán!", "successCreatedVerify": "Účet byl úspěšně vytvořen! Zkontrolujte si e-mail a účet ověřte.", "genericError": "Účet se nepodařilo vytvořit. Zkuste to znovu.", "unexpectedError": "Došlo k neočekávané chybě. Zkuste to prosím znovu." }
+    }
+  }
+}

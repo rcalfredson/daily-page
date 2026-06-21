@@ -1,0 +1,37 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Archiv", "description": "Prozkoumejte celý archiv podle měsíců.",
+      "titleRoom": "Daily Page — Archiv · {roomName}",
+      "descriptionRoom": "Procházejte starší texty v místnosti {roomName} měsíc po měsíci. Vyberte libovolné datum a podívejte se, co zde ostatní v průběhu času sdíleli."
+    },
+    "nav": { "prev": "Předchozí", "next": "Další" },
+    "title": "📚 Procházet archivy", "titleRoom": "📚 {roomName} — Archivy",
+    "roomViewing": "Prohlížíte archiv místnosti {roomName}", "viewRoomLink": "Zobrazit místnost",
+    "noContent": "Zatím není k dispozici žádný obsah.", "backToRoom": "← Zpět na přehled místnosti",
+    "calendar": {
+      "meta": {
+        "description": "Prohlédněte si všechny tvůrčí příspěvky publikované v období {month} {year} — od krátkých myšlenek po hluboké úvahy. Kliknutím na datum zjistíte, co bylo sdíleno.",
+        "descriptionRoom": "Prohlédněte si tvůrčí aktivitu v místnosti {roomName} v období {month} {year}. Vyberte datum a prozkoumejte příspěvky sdílené v daný den."
+      },
+      "title": "📆 Archiv pro {month} {year}", "prevLabel": "Archiv pro {month} {year}", "nextLabel": "Archiv pro {month} {year}"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "Archiv pro {date}", "titleRoom": "{roomName} — Archiv pro {date}",
+        "descriptionSite": "Prozkoumejte příspěvky napsané dne {date} — od tichých poznámek po divoká přiznání.",
+        "descriptionRoom": "Dne {date} zanechali autoři v místnosti {roomName} svou stopu — projděte si úvahy, nápady a vyjádření, které toho dne sdíleli."
+      },
+      "heading": "Archiv pro {date}", "empty": "Pro toto datum nebyl nalezen žádný obsah.",
+      "labels": { "createdBy": "Vytvořil(a):", "in": "v", "on": "dne {datetime}", "unknownRoom": "Neznámá místnost" },
+      "nav": { "prevDay": "Předchozí den", "nextDay": "Další den" }
+    },
+    "index": {
+      "meta": { "titleRoom": "{roomName} — Všechny příspěvky", "descriptionRoom": "Procházejte všechny příspěvky, které kdy byly publikovány v místnosti {roomName}. Seřaďte je podle data, názvu nebo hlasů a prozkoumejte její historii." },
+      "header": { "allBlocks": "— Všechny příspěvky" },
+      "sort": { "label": "Seřadit podle", "options": { "date": "Data", "title": "Názvu", "votes": "Hlasů" }, "submit": "Použít" }
+    },
+    "pagination": { "prev": "← Předchozí", "next": "Další →" },
+    "yearMonth": { "meta": { "title": "Stránky Daily Page pro {time}" }, "empty": "V tomto období jsme žádné stránky nenašli." }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "starredRooms": {
+    "meta": { "title": "Všechny oblíbené místnosti", "description": "Seznam všech místností, které jste přidali do oblíbených." },
+    "nav": { "backToDashboard": "← Zpět na přehled" }, "header": { "title": "🌟 Všechny vaše oblíbené místnosti 🌟" },
+    "rooms": { "unnamedRoom": "Místnost bez názvu", "noDescription": "Bez popisu." }, "empty": { "message": "Zatím jste žádnou místnost nepřidali do oblíbených!" }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "blockTags": {
+    "header": { "withTags": "Štítky:", "noTags": "Zatím žádné štítky! Přidejte nějaké:" },
+    "input": { "placeholder": "Nový štítek", "addButton": "Přidat" },
+    "buttons": { "removeTag": "x" }
+  }
+}

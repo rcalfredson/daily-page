@@ -1,0 +1,27 @@
+{
+  "support": {
+    "meta": { "title": "Daily Page – Podpora", "description": "Podpořte Daily Page finančně, přispějte do open-source projektu, nahlaste problémy, kontaktujte nás nebo požádejte o novou místnost." },
+    "hero": { "eyebrow": "Podpořte Daily Page", "title": "Pomozte udržet tento malý prostor pro psaní online.", "tagline": "Daily Page je nezávislý open-source projekt. Několik pravidelných příspěvků výrazně pomáhá s hostingem, e-maily, úložištěm, údržbou a nenápadnou prací, díky níž zůstává užitečný." },
+    "funding": {
+      "h2": "Cíl měsíčního financování", "p1": "Současným cílem je získat každý měsíc 20 USD na pokrytí základních nákladů provozu webu.", "p2": "Ukazatel průběhu odráží potvrzenou pravidelnou měsíční podporu. Vítána je i jednorázová podpora, ukazatel však sleduje cíl měsíční udržitelnosti.",
+      "ctaMonthly": "Přispívat měsíčně", "ctaOneTime": "Přispět jednorázově", "ctaEmail": "Napsat Daily Page",
+      "meter": { "label": "Průběh tohoto měsíce", "amountSeparator": "z cíle", "amountSuffix": "měsíčně", "note": "Aktualizováno podle změn potvrzené měsíční podpory.", "ariaLabel": "Průběh měsíčního financování: vybráno {raised} z {goal}, {percent} procent.", "ariaValue": "vybráno {raised} z {goal}" },
+      "monthlyOptionsLabel": "Vyberte měsíční částku", "monthlyOptionAriaLabel": "Přispívat {amount} měsíčně",
+      "goalReached": { "h2": "Měsíční cíl je pokryt. Děkujeme!", "p1": "Pravidelná podpora nyní pokrývá měsíční základ Daily Page ve výši {goal}.", "p2": "Další podpora je stále vítána a pomáhá vytvářet rezervu na nečekané náklady, údržbu a budoucí vylepšení.", "monthlyOptionsLabel": "Pokračovat v podpoře Daily Page", "ctaMonthly": "Pokračovat v měsíční podpoře", "meterLabel": "Cíl splněn", "meterNote": "Děkujeme, že pomáháte pokrýt měsíční základ.", "meterAriaLabel": "Cíl měsíčního financování splněn: přislíbeno {raised} oproti cíli {goal}.", "meterAriaValue": "Cíl splněn, přislíbeno {raised} oproti {goal}" }
+    },
+    "openSource": {
+      "h2": "Open source", "p1": "Daily Page je vyvíjen veřejně. Můžete si přečíst kód, hlásit chyby, navrhovat funkce nebo otevřít pull request.",
+      "items": {
+        "code": { "label": "Procházet kód", "text": "a podívat se, jak web funguje a kam směřuje." },
+        "issues": { "label": "Použít issues", "text": "pro chyby, nedostatky, problémy s přístupností, mezery v překladech a nápady na nové funkce." },
+        "community": { "label": "Přispívat s rozvahou", "text": "opravami, dokumentací, překlady, vyladěním designu nebo drobnými vylepšeními, která zde usnadní psaní." }
+      },
+      "repoCta": "Zobrazit repozitář", "issuesCta": "Otevřít issues"
+    },
+    "contact": { "h2": "Dotazy a zpětná vazba", "p1": "Pro soukromé dotazy, pomoc s účtem nebo cokoli, co nepatří do veřejného issue, je stále nejlepší e-mail.", "emailCta": "Napsat Daily Page", "issueCta": "Nahlásit problém" },
+    "rooms": {
+      "h2": "Požádat o místnost", "p1": "Místnosti udržují Daily Page uspořádaný podle společných témat. Pokud byste chtěli nový prostor pro psaní, pošlete zde žádost.",
+      "form": { "nameLabel": "Název místnosti", "topicLabel": "Téma (volitelné)", "descriptionLabel": "Popis", "submit": "Odeslat žádost", "success": "Žádost byla úspěšně odeslána!", "errorGeneric": "Žádost se nepodařilo odeslat. Zkuste to znovu.", "errorUnexpected": "Došlo k neočekávané chybě. Zkuste to prosím znovu." }
+    }
+  }
+}

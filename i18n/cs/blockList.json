@@ -1,0 +1,6 @@
+{
+  "blockList": {
+    "period": { "all": "za celou dobu", "days": "za posledních {n} dní", "day": "za posledních 24 hodin" },
+    "createdBy": "Vytvořil(a):", "on": "dne"
+  }
+}

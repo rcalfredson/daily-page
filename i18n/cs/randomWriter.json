@@ -1,0 +1,6 @@
+{
+  "randomWriter": {
+    "meta": { "title": "Daily Page — Náhodný spisovatel", "description": "Generujte nekonečný proud náhodného pseudotextu pro zábavu, inspiraci nebo chaos." },
+    "title": "Náhodný spisovatel", "buttons": { "clear": "Vymazat", "stop": "Přestat psát", "start": "Začít psát" }
+  }
+}

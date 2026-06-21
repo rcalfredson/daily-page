@@ -1,0 +1,8 @@
+{
+  "verifyEmail": {
+    "meta": { "title": "Ověřit e-mail", "description": "Ověřte svou e-mailovou adresu pro Daily Page." },
+    "header": { "title": "Ověřujeme váš e-mail…" },
+    "status": { "checking": "Kontrolujeme token, čekejte prosím…", "missingToken": "Ověřovací token chybí nebo je neplatný.", "genericFailure": "Ověření se nezdařilo.", "unexpectedError": "Došlo k neočekávané chybě.", "success": "Váš účet byl úspěšně ověřen!", "invalidOrExpired": "Ověřovací token je neplatný nebo jeho platnost vypršela." },
+    "verificationMsg": { "subject": "Ověřte svůj účet Daily Page ✨", "heading": "Vítejte na Daily Page, {username}!", "body": "Ověřte svůj e-mail kliknutím níže:", "cta": "Ověřit e-mailovou adresu", "expires": "Platnost tohoto odkazu vyprší za {hours} hod." }
+  }
+}

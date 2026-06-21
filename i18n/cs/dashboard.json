@@ -1,0 +1,13 @@
+{
+  "dashboard": {
+    "meta": { "title": "Přehled", "description": "Váš přehled Daily Page a souhrn účtu." },
+    "profile": { "profilePicAlt": "Profilový obrázek", "noBio": "Zatím nemáte medailonek. Kliknutím na „Upravit“ jej přidejte!", "editBio": "Upravit medailonek", "bioPlaceholder": "Napište sem svůj medailonek", "save": "Uložit", "cancel": "Zrušit" },
+    "activity": { "title": "Nedávná aktivita", "none": "Žádná nedávná aktivita.", "updatedOn": "Aktualizováno {date}", "viewAllBlocks": "Zobrazit všechny příspěvky" },
+    "drafts": { "title": "Pokračovat v psaní", "none": "Žádné otevřené koncepty.", "updatedOn": "Aktualizováno {date}", "unlisted": "Neveřejné", "viewAll": "Zobrazit všechny příspěvky" },
+    "streak": { "title": "Série psaní", "line": "{days} dní v řadě! Jen tak dál!" },
+    "starredRooms": { "title": "Oblíbené místnosti", "none": "Zatím jste žádnou místnost nepřidali do oblíbených. Začněte prozkoumávat a najděte své favority!", "viewAll": "Zobrazit všechny oblíbené místnosti", "unnamedRoom": "Místnost bez názvu" },
+    "security": { "title": "Zabezpečení účtu", "summary": "Změňte heslo a spravujte dvoufázové ověření.", "manage": "Spravovat zabezpečení" },
+    "stats": { "title": "Vaše statistiky", "totalBlocks": "Celkem vytvořených příspěvků", "collaborations": "Spolupráce", "votesGiven": "Odevzdané hlasy", "daysActive": "Aktivní dny", "viewDetailed": "Zobrazit podrobné statistiky 📊" },
+    "alerts": { "uploadFailed": "Profilový obrázek se nepodařilo nahrát. Zkuste to znovu.", "uploadUnexpected": "Došlo k neočekávané chybě. Zkuste to prosím znovu.", "bioUpdateFailed": "Chyba při aktualizaci medailonku. Zkuste to znovu." }
+  }
+}

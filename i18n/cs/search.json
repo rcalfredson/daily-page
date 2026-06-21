@@ -1,0 +1,7 @@
+{
+  "search": {
+    "meta": { "title": "Hledat", "description": "Hledejte ve veřejných příspěvcích." },
+    "title": "Hledat", "placeholder": "Hledat příspěvky…", "hint": "Pro hledání zadejte alespoň 2 znaky.", "noResults": "Nebyly nalezeny žádné výsledky.", "untitled": "Bez názvu", "votesTitle": "Hlasy", "pageLabel": "Stránka",
+    "filters": { "inRoom": "V místnosti" }, "buttons": { "search": "Hledat", "prev": "Předchozí", "next": "Další" }
+  }
+}

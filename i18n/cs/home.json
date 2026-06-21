@@ -1,0 +1,20 @@
+{
+  "home": {
+    "meta": { "title": "Daily Page – Oblíbené příspěvky za posledních 24 hodin", "description": "Daily Page je minimalistický nezávislý web pro psaní, kde může kdokoli zveřejňovat tvůrčí myšlenky, vzpomínky či experimenty — jeden příspěvek po druhém. Objevujte nové nápady, připojte se k místnostem a přidejte svůj hlas." },
+    "hero": { "eyebrow": "Klidné místo pro psaní, čtení a návraty", "title": "Vítejte na Daily Page!", "subtitle": "Prozkoumejte nejoblíbenější příspěvky za posledních 24 hodin.", "ctaPrefix": "Máte inspiraci?", "cta": "Připojte se k místnosti", "ctaSuffix": "a vytvořte vlastní příspěvek!" },
+    "stats": { "blocks": "Příspěvky", "rooms": "Místnosti", "tags": "Štítky", "collabsToday": "Dnešní spolupráce" },
+    "activity": {
+      "title": "Živě na Daily Page", "subtitle": "Nové konverzace a reakce na jednom místě.", "fallbackActor": "Někdo", "inRoom": "v",
+      "comments": { "title": "Nedávné komentáře", "more": "Hledat v diskusích", "commentVerb": "okomentoval(a)", "replyVerb": "odpověděl(a) u", "empty": "Zatím žádné nedávné komentáře. Další konverzace může začít u vašeho příspěvku." },
+      "reactions": { "title": "Nedávné reakce", "more": "Procházet oblíbené příspěvky", "empty": "Zatím žádné nedávné reakce. Dobrý příspěvek to může rychle změnit.", "types": { "heart": "dal(a) srdce", "leaf": "reagoval(a) lístkem na", "wow": "reagoval(a) úžasem na", "laugh": "zasmál(a) se u" } }
+    },
+    "featured": { "roomRibbon": "★ Doporučená místnost", "roomInfoDays": "Aktivita za posledních {days} dní: {blocks} příspěvků, {votes} hlasů.", "roomInfo24h": "Aktivita za posledních 24 hodin: {blocks} příspěvků, {votes} hlasů.", "checkItOut": "Podívat se", "blockRibbon": "★ Doporučený příspěvek", "votes": "Počet hlasů: {n}", "noContent": "(Nebyl uveden žádný obsah…)", "viewBlock": "Zobrazit příspěvek" },
+    "trendingTags": { "title": "Populární štítky", "suffixDays": "(posledních {days} dní)", "suffixAllTime": "(za celou dobu)", "blocks": "Počet příspěvků: {n}", "votes": "Počet hlasů: {n}", "empty": "Zatím žádné populární štítky. Buďte první, kdo označí něco skvělého!" },
+    "trendingBlocks": { "title": "Populární příspěvky", "suffixDays": "(posledních {days} dní)", "createdBy": "Vytvořil(a):", "in": "v", "on": "dne", "unknownRoom": "Neznámá místnost", "empty24h": "Za posledních 24 hodin zatím žádné příspěvky. Brzy se vraťte!" },
+    "supportWidget": {
+      "eyebrow": "Podpora webu", "title": "Měsíční podpora udržuje Daily Page online.", "text": "Každý pravidelný příspěvek pomáhá pokrýt základní náklady Daily Page.", "cta": "Podpořit web",
+      "ariaLabel": "Průběh měsíční podpory: přislíbeno {raised} z {goal}, {percent} procent.", "ariaValue": "přislíbeno {raised} z {goal}", "amountSeparator": "z", "amountSuffix": "měsíčně",
+      "goalReached": { "title": "Cíl podpory pro tento měsíc je splněn.", "text": "Děkujeme! Další podpora pomáhá Daily Page zvládnout budoucí náklady a vylepšení.", "meterLabel": "Cíl splněn", "ariaLabel": "Cíl měsíční podpory splněn: přislíbeno {raised} oproti cíli {goal}.", "ariaValue": "Cíl splněn, přislíbeno {raised} oproti {goal}" }
+    }
+  }
+}

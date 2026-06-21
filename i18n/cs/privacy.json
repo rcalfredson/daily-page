@@ -1,0 +1,14 @@
+{
+  "privacy": {
+    "meta": { "title": "Daily Page — Zásady ochrany osobních údajů", "description": "Jak Daily Page shromažďuje, používá a chrání vaše údaje, srozumitelně vysvětleno." },
+    "title": "Zásady ochrany osobních údajů", "lastUpdated": "Poslední aktualizace: {date}",
+    "intro": { "h2": "Úvod", "p1": "Daily Page („my“, „nás“ nebo „náš“) provozuje web dailypage.org (dále jen „Služba“).", "p2": "Tato stránka vás informuje o našich zásadách shromažďování, používání a zveřejňování osobních údajů při používání naší Služby." },
+    "collection": { "h2": "Shromažďování a používání informací", "p": "Shromažďujeme minimum osobních údajů potřebných ke zlepšování a poskytování naší Služby. Patří sem e-mailové adresy pro správu účtů a obsah dobrovolně poskytnutý uživateli." },
+    "usage": { "h2": "Používání údajů", "p": "Shromážděné údaje se používají výhradně k ověřování účtů, moderování obsahu a zlepšování uživatelského prostředí." },
+    "storage": { "h2": "Ukládání a zabezpečení údajů", "p": "Vaše údaje jsou bezpečně uloženy a bez výslovného souhlasu je nikdy nesdílíme ani neprodáváme třetím stranám, s výjimkou případů vyžadovaných zákonem." },
+    "cookies": { "h2": "Cookies", "p": "Cookies používáme pouze ke správě relací a zlepšování uživatelského prostředí. Cookies můžete zakázat v nastavení prohlížeče." },
+    "rights": { "h2": "Vaše práva", "p": "Kdykoli nás můžete kontaktovat a požádat o smazání nebo úpravu svých osobních údajů." },
+    "changes": { "h2": "Změny těchto zásad ochrany osobních údajů", "p": "Tyto zásady můžeme čas od času aktualizovat. Změny budou zveřejněny na této stránce." },
+    "contact": { "h2": "Kontaktujte nás", "p": "S dotazy k těmto zásadám ochrany osobních údajů nás kontaktujte na adrese:", "emailLabel": "ask@dailypage.org" }
+  }
+}

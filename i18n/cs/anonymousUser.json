@@ -1,0 +1,9 @@
+{
+  "anonymousUser": {
+    "meta": { "title": "Anonymní poutník", "description": "Žádný profil. Žádná minulost. Jen atmosféra." },
+    "ascii": { "ariaLabel": "ASCII obrázek rozmarného tvora s citátem" },
+    "header": { "title": "Anonym" },
+    "body": { "line1": "Zabloudili jste do prázdna. Tady není nic k vidění —", "line2": "jen bloudící duch bez příběhu." },
+    "buttons": { "home": "← Zpět domů", "signup": "Vytvořit si identitu" }
+  }
+}
