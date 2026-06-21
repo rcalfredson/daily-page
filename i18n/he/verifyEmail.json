@@ -1,0 +1,26 @@
+{
+  "verifyEmail": {
+    "meta": {
+      "title": "אמת אימייל",
+      "description": "אמת את כתובת הדוא\"ל שלך עבור Daily Page."
+    },
+    "header": {
+      "title": "מאמת את האימייל שלך..."
+    },
+    "status": {
+      "checking": "בודק אסימון, אנא המתן...",
+      "missingToken": "אסימון אימות חסר או לא חוקי.",
+      "genericFailure": "האימות נכשל.",
+      "unexpectedError": "אירעה שגיאה בלתי צפויה.",
+      "success": "החשבון שלך אומת בהצלחה!",
+      "invalidOrExpired": "אסימון אימות לא חוקי או שפג תוקפו."
+    },
+    "verificationMsg": {
+      "subject": "אמת את חשבון Daily Page שלך ✨",
+      "heading": "ברוכים הבאים אל Daily Page, {username}!",
+      "body": "נא לאמת את הדוא\"ל שלך על ידי לחיצה למטה:",
+      "cta": "אמת את כתובת האימייל",
+      "expires": "קישור זה יפוג בעוד {hours} שעות."
+    }
+  }
+}

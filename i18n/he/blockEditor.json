@@ -1,0 +1,98 @@
+{
+  "blockEditor": {
+    "labels": {
+      "you": "(אתה)"
+    },
+    "meta": {
+      "title": "ערוך פוסט - {blockTitle}",
+      "titleFallback": "ערוך פוסט"
+    },
+    "errors": {
+      "imageUrlRequired": "אנא הזן כתובת אתר של תמונה.",
+      "notFound": "הפוסט לא נמצא או לא שייך לחדר הזה.",
+      "loadFailed": "אירעה שגיאה בעת טעינת עורך הפוסטים.",
+      "updateTitleFailed": "שגיאה בעדכון הכותרת."
+    },
+    "roomInfo": {
+      "label": "חדר:"
+    },
+    "title": {
+      "placeholder": "הזן את כותרת הפוסט",
+      "editTooltip": "ערוך כותרת",
+      "lock": "נעל פוסט",
+      "delete": "מחק פוסט"
+    },
+    "description": {
+      "label": "תיאור",
+      "editTooltip": "ערוך תיאור",
+      "placeholder": "הזן תיאור",
+      "noDescriptionOwner": "עדיין אין תיאור...",
+      "noDescriptionViewer": "לא סופק תיאור...",
+      "save": "שמור",
+      "cancel": "בטל",
+      "expand": "הרחב",
+      "collapse": "כווץ",
+      "updateError": "שגיאה בעדכון התיאור."
+    },
+    "status": {
+      "lastBackup": "גיבוי אחרון: {datetime}",
+      "lastBackupUnknown": "גיבוי אחרון: לא ידוע"
+    },
+    "peers": {
+      "label": "עמיתים:"
+    },
+    "toasts": {
+      "blockLocked": "הפוסט הזה ננעל!"
+    },
+    "editor": {
+      "placeholder": "הדף הריק מחכה לקולך; לכתוב ללא מורא."
+    },
+    "loading": {
+      "label": "טוען",
+      "quote": "תן לעולם לבעור דרכך. זרוק את אור המנסרה, לוהט לבן, על נייר.<br>—ריי ברדבורי"
+    },
+    "inactiveWarning": {
+      "message": "לא כתבת כלום במשך 5 דקות. לחץ על אישור כדי להמשיך בהפעלה; אחרת, אתה תופנה לארכיון.",
+      "confirm": "בסדר"
+    },
+    "sharing": {
+      "label": "קישור לשיתוף",
+      "copyTooltip": "העתק ללוח",
+      "copied": "הועתק!"
+    },
+    "toolbar": {
+      "insertImage": "הכנס תמונה",
+      "insertImageUrlPlaceholder": "הזן את כתובת האתר של התמונה",
+      "insertImageAltPlaceholder": "טקסט חלופי (אופציונלי)",
+      "insertImageConfirm": "אשר",
+      "insertImageCancel": "בטל"
+    },
+    "buttons": {
+      "downloadFile": "הורד קובץ"
+    },
+    "lockModal": {
+      "messageLine1": "האם אתה בטוח שברצונך לנעול את הפוסט הזה?",
+      "messageLine2": "זה יסיים את זה וימנע עריכה נוספת.",
+      "confirm": "מנעול",
+      "cancel": "בטל",
+      "successToast": "הפוסט ננעל בהצלחה.",
+      "errorToast": "שגיאה בנעילת הפוסט."
+    },
+    "tags": {
+      "headerWithTags": "תגיות:",
+      "headerNoTags": "עדיין אין תגים! הוסף כמה:",
+      "updateError": "שגיאה בעדכון התגים."
+    },
+    "fullBlock": {
+      "headingPrefix": "סליחה; הפוסט \"{blockTitle}\" הוא עכשיו",
+      "headingStatus": "תפוסה מלאה.",
+      "retryPrefix": "בבקשה",
+      "retryLink": "נסה פוסט אחר",
+      "retrySuffix": "או לחזור בפעם אחרת.",
+      "consolationPrefix": "בזמן שאתה מחכה, אתה מוזמן לקרוא",
+      "consolationBestOf": "כמה מהפוסטים האהובים עלינו",
+      "consolationMiddle": "או לגלוש",
+      "consolationArchive": "הארכיון."
+    }
+  }
+}

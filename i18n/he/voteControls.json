@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "הצבעה בעד",
+    "downvote": "הצבע נגד",
+    "errors": {
+      "failed": "שמירת ההצבעה שלך נכשלה."
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "כל החדרים עם כוכבים",
+      "description": "רשימה של כל החדרים שסימנת בכוכב."
+    },
+    "nav": {
+      "backToDashboard": "← חזרה ללוח המחוונים"
+    },
+    "header": {
+      "title": "🌟 כל החדרים שלך עם כוכבים 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "חדר ללא שם",
+      "noDescription": "אין תיאור."
+    },
+    "empty": {
+      "message": "עדיין לא סימנת אף חדר בכוכב!"
+    }
+  }
+}

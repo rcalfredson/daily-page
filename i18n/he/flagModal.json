@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "דווח על תוכן בלתי הולם",
+    "fields": {
+      "reason": {
+        "label": "סיבה",
+        "options": {
+          "spam": "ספאם",
+          "offensive": "פוגעני (לשון שנאה או השמצות)",
+          "inappropriate": "לא הולם (עירום, תוכן גרפי וכו')",
+          "other": "אחר"
+        }
+      },
+      "details": {
+        "label": "פרטים (אופציונלי)",
+        "placeholder": "תאר מה ראית..."
+      }
+    },
+    "buttons": {
+      "submit": "שלח דוח",
+      "cancel": "בטל"
+    },
+    "toasts": {
+      "success": "דוח הוגש - תודה!",
+      "failed": "הגשת הדוח נכשלה."
+    }
+  }
+}

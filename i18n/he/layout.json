@@ -1,0 +1,55 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "ברוך הבא, משתמש!",
+    "logout": "התנתק",
+    "login": "התחבר / הרשמה",
+    "language": "שפה",
+    "openMenu": "פתח את התפריט הראשי",
+    "closeMenu": "סגור את התפריט הראשי",
+    "privacy": "מדיניות פרטיות",
+    "uiFallbackNotice": "{requested} עדיין לא תורגם. מציג את {current} לעת עתה.",
+    "copyButton": {
+      "copy": "העתק",
+      "copied": "הועתק!"
+    },
+    "copyright": "© {year}",
+    "languages": {
+      "en": "English",
+      "es": "Español",
+      "fr": "Français",
+      "ru": "Русский",
+      "id": "Bahasa Indonesia",
+      "de": "Deutsch",
+      "it": "Italiano",
+      "pt": "Português",
+      "zh": "中文",
+      "ja": "日本語",
+      "ko": "한국어",
+      "ar": "العربية",
+      "hi": "हिन्दी",
+      "tr": "Türkçe",
+      "nl": "Nederlands",
+      "sv": "Svenska",
+      "no": "Norsk",
+      "da": "Dansk",
+      "fi": "Suomi",
+      "pl": "Polski",
+      "cs": "Čeština",
+      "el": "Ελληνικά",
+      "he": "עברית",
+      "th": "ไทย",
+      "vi": "Tiếng Việt"
+    },
+    "theme": {
+      "label": "ערכת נושא",
+      "toggleToDark": "עבור למצב כהה",
+      "toggleToLight": "עבור למצב בהיר"
+    },
+    "blockImages": {
+      "preview": "תצוגה מקדימה של תמונה",
+      "close": "סגור את התצוגה המקדימה של התמונה",
+      "open": "פתח את התצוגה המקדימה של התמונה"
+    }
+  }
+}
