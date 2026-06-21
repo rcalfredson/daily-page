@@ -1,0 +1,33 @@
+{
+  "signup": {
+    "meta": {
+      "title": "Tạo một tài khoản",
+      "description": "Đăng ký Daily Page để truy cập tất cả các tính năng."
+    },
+    "header": {
+      "title": "Tạo tài khoản của bạn",
+      "subtitle": "Tham gia Daily Page để bắt đầu tạo và chia sẻ bài viết hàng ngày của bạn!"
+    },
+    "form": {
+      "email": {
+        "label": "E-mail",
+        "placeholder": "Nhập email của bạn"
+      },
+      "username": {
+        "label": "Tên người dùng",
+        "placeholder": "Nhập tên người dùng của bạn"
+      },
+      "password": {
+        "label": "Mật khẩu",
+        "placeholder": "Nhập mật khẩu"
+      },
+      "submit": "Đăng ký",
+      "feedback": {
+        "success": "Gửi biểu mẫu thành công!",
+        "successCreatedVerify": "Tài khoản được tạo thành công! Vui lòng kiểm tra email để xác minh tài khoản của bạn.",
+        "genericError": "Không tạo được tài khoản. Vui lòng thử lại.",
+        "unexpectedError": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại."
+      }
+    }
+  }
+}

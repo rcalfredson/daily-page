@@ -1,0 +1,29 @@
+{
+  "profile": {
+    "meta": {
+      "titleUser": "Hồ sơ của {username}",
+      "descriptionUser": "Xem hoạt động gần đây, các phòng được gắn dấu sao và số liệu thống kê của {username}."
+    },
+    "profile": {
+      "profilePicAlt": "Ảnh hồ sơ",
+      "noBio": "(Không có sẵn tiểu sử.)"
+    },
+    "activity": {
+      "title": "Hoạt động gần đây",
+      "updatedOn": "Cập nhật vào {date}",
+      "none": "Không có hoạt động gần đây.",
+      "viewAllBlocks": "Xem tất cả bài viết"
+    },
+    "starredRooms": {
+      "title": "Phòng được gắn dấu sao",
+      "none": "Chưa có phòng được gắn dấu sao.",
+      "unnamedRoom": "Phòng không tên"
+    },
+    "stats": {
+      "title": "Thống kê người dùng",
+      "totalBlocks": "Tổng số bài viết đã tạo",
+      "collaborations": "Cộng tác",
+      "daysActive": "Số ngày hoạt động"
+    }
+  }
+}

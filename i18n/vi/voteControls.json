@@ -1,0 +1,9 @@
+{
+  "voteControls": {
+    "upvote": "ủng hộ",
+    "downvote": "Phản đối",
+    "errors": {
+      "failed": "Không lưu được phiếu bầu của bạn."
+    }
+  }
+}

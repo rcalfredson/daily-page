@@ -1,0 +1,28 @@
+{
+  "flagModal": {
+    "title": "Báo cáo nội dung không phù hợp",
+    "fields": {
+      "reason": {
+        "label": "Lý do",
+        "options": {
+          "spam": "Thư rác",
+          "offensive": "Xúc phạm (ngôn ngữ căm thù hoặc nói xấu)",
+          "inappropriate": "Không phù hợp (ảnh khỏa thân, nội dung phản cảm, v.v.)",
+          "other": "Khác"
+        }
+      },
+      "details": {
+        "label": "Chi tiết (tùy chọn)",
+        "placeholder": "Hãy mô tả những gì bạn đã thấy…"
+      }
+    },
+    "buttons": {
+      "submit": "Gửi báo cáo",
+      "cancel": "Hủy"
+    },
+    "toasts": {
+      "success": "Đã gửi báo cáo—cảm ơn bạn!",
+      "failed": "Không thể gửi báo cáo."
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "createBlock": {
+    "meta": {
+      "title": "Tạo một bài đăng mới - Daily Page",
+      "description": "Bắt đầu một bài đăng sáng tạo mới với các thẻ, ngôn ngữ và khả năng hiển thị tùy chọn."
+    },
+    "heading": "Tạo một bài viết mới",
+    "roomInfo": {
+      "roomLabel": "Phòng:",
+      "unavailable": "Thông tin phòng không có sẵn.",
+      "noDescription": "Chưa có mô tả."
+    },
+    "form": {
+      "title": {
+        "label": "Tiêu đề:",
+        "placeholder": {
+          "full": "ví dụ. 'Kiệt tác của tôi', 'Ý tưởng hay nhất từ ​​trước đến nay', 'Clickbait dành cho những người mọt sách'",
+          "short": "ví dụ. 'Kiệt tác của tôi'"
+        }
+      },
+      "description": {
+        "label": "Mô tả (tùy chọn):",
+        "placeholder": "Giải thích sự xuất sắc của bạn… hoặc chỉ chắp cánh cho nó."
+      },
+      "initialContent": {
+        "label": "Nội dung ban đầu (tùy chọn):",
+        "help": "Bắt đầu viết tại đây hoặc nhấn “Tạo” để tiếp tục trên trang biên tập đầy đủ, nơi bạn có thể nhúng hình ảnh và cộng tác trong thời gian thực.",
+        "placeholder": "Bắt đầu bài đăng của bạn tại đây hoặc tiếp tục chỉnh sửa sau khi tạo…"
+      },
+      "visibility": {
+        "label": "Chế độ hiển thị:"
+      },
+      "submit": "Tạo bài đăng"
+    },
+    "visibility": {
+      "public": {
+        "label": "Công khai",
+        "title": "Có thể chỉnh sửa bởi bất cứ ai trong thời gian thực. Không cần đăng nhập.",
+        "inline": "Có thể chỉnh sửa bởi bất cứ ai trong thời gian thực. Không cần đăng nhập."
+      },
+      "unlisted": {
+        "label": "Bản nháp không công khai",
+        "title": "Ẩn khỏi trình duyệt công khai trong khi có thể chỉnh sửa. Hiển thị sau khi khóa.",
+        "inline": "Ẩn khỏi trình duyệt công khai trong khi có thể chỉnh sửa. Hiển thị sau khi khóa.",
+        "tooltip": "Các bản nháp không công khai bị ẩn khỏi trình duyệt công khai trong khi có thể chỉnh sửa. Bất kỳ ai có liên kết đều có thể cộng tác và bài đăng sẽ được công khai khi bị khóa."
+      }
+    },
+    "advanced": {
+      "summary": "Tùy chọn nâng cao",
+      "lang": {
+        "label": "Ngôn ngữ:",
+        "options": {
+          "en": "English",
+          "es": "Español",
+          "fr": "Français",
+          "ru": "Русский",
+          "id": "Bahasa Indonesia",
+          "de": "Deutsch",
+          "it": "Italiano",
+          "pt": "Português",
+          "zh": "中文",
+          "ja": "日本語",
+          "ko": "한국어",
+          "ar": "العربية",
+          "hi": "हिन्दी",
+          "tr": "Türkçe",
+          "nl": "Nederlands",
+          "sv": "Svenska",
+          "no": "Norsk",
+          "da": "Dansk",
+          "fi": "Suomi",
+          "pl": "Polski",
+          "cs": "Čeština",
+          "el": "Ελληνικά",
+          "he": "עברית",
+          "th": "ไทย",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "translate": {
+        "label": "Dịch bài đăng hiện có (URL hoặc ID):",
+        "placeholder": "Dán URL hoặc ID bài đăng (tùy chọn)",
+        "invalid": "Có vẻ như đó không phải là URL hoặc ID bài đăng hợp lệ.",
+        "fetchError": "Không thể tìm nạp thông tin bài đăng."
+      }
+    },
+    "messages": {
+      "langExists": "Bản dịch cho ngôn ngữ đó đã tồn tại. Vui lòng chọn ngôn ngữ khác.",
+      "genericError": "Đã xảy ra lỗi. Vui lòng thử lại."
+    }
+  }
+}

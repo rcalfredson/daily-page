@@ -1,0 +1,90 @@
+{
+  "home": {
+    "meta": {
+      "title": "Daily Page - Bài viết phổ biến trong 24 giờ qua",
+      "description": "Daily Page là một trang web viết lách độc lập, tối giản, nơi mọi người có thể đăng những suy nghĩ, kỷ niệm hoặc thử nghiệm sáng tạo—mỗi lần một bài. Khám phá những ý tưởng mới, tham gia phòng và đóng góp tiếng nói của bạn."
+    },
+    "hero": {
+      "eyebrow": "Một nơi yên tĩnh để viết, đọc và trở về",
+      "title": "Chào mừng đến với Daily Page!",
+      "subtitle": "Khám phá các bài đăng phổ biến nhất trong 24 giờ qua.",
+      "ctaPrefix": "Cảm thấy được truyền cảm hứng?",
+      "cta": "Tham gia một phòng",
+      "ctaSuffix": "và tạo bài đăng của riêng bạn!"
+    },
+    "stats": {
+      "blocks": "bài viết",
+      "rooms": "Phòng",
+      "tags": "Thẻ",
+      "collabsToday": "Hợp tác hôm nay"
+    },
+    "activity": {
+      "title": "Trực tiếp trên Daily Page",
+      "subtitle": "Cuộc trò chuyện và phản ứng mới mẻ, tất cả chỉ trong nháy mắt.",
+      "fallbackActor": "Người nào đó",
+      "inRoom": "trong",
+      "comments": {
+        "title": "Bình luận gần đây",
+        "more": "Khám phá cuộc trò chuyện",
+        "commentVerb": "đã bình luận về",
+        "replyVerb": "đã trả lời trên",
+        "empty": "Chưa có bình luận nào gần đây Cuộc trò chuyện tiếp theo có thể bắt đầu với bài viết của bạn."
+      },
+      "reactions": {
+        "title": "Phản ứng gần đây",
+        "more": "Xem các bài viết phổ biến",
+        "empty": "Chưa có phản ứng nào gần đây. Một bài viết hay có thể đánh thức điều này một cách nhanh chóng.",
+        "types": {
+          "heart": "đã thả tim cho",
+          "leaf": "đã thả lá cho",
+          "wow": "đã bày tỏ sự ngạc nhiên với",
+          "laugh": "đã thả cười cho"
+        }
+      }
+    },
+    "featured": {
+      "roomRibbon": "★ Phòng nổi bật",
+      "roomInfoDays": "Hoạt động trong những ngày {days} vừa qua: bài đăng {blocks}, phiếu bầu {votes}.",
+      "roomInfo24h": "Hoạt động trong 24 giờ qua: bài đăng {blocks}, phiếu bầu {votes}.",
+      "checkItOut": "Khám phá ngay",
+      "blockRibbon": "★ Bài đăng nổi bật",
+      "votes": "phiếu {n}",
+      "noContent": "(Không có nội dung được cung cấp...)",
+      "viewBlock": "Xem bài viết"
+    },
+    "trendingTags": {
+      "title": "Thẻ xu hướng",
+      "suffixDays": "({days} ngày qua)",
+      "suffixAllTime": "(từ trước đến nay)",
+      "blocks": "bài viết {n}",
+      "votes": "phiếu {n}",
+      "empty": "Chưa có thẻ xu hướng nào. Hãy là người đầu tiên gắn thẻ thứ gì đó thú vị!"
+    },
+    "trendingBlocks": {
+      "title": "Bài viết thịnh hành",
+      "suffixDays": "({days} ngày qua)",
+      "createdBy": "Được tạo bởi:",
+      "in": "trong",
+      "on": "vào",
+      "unknownRoom": "Phòng không xác định",
+      "empty24h": "Chưa có bài viết nào trong 24 giờ qua. Hãy quay lại sớm nhé!"
+    },
+    "supportWidget": {
+      "eyebrow": "Hỗ trợ trang web",
+      "title": "Hỗ trợ hàng tháng giúp Daily Page luôn trực tuyến.",
+      "text": "Mỗi khoản đóng góp định kỳ đều giúp trang trải chi phí cơ bản của Daily Page.",
+      "cta": "Hỗ trợ trang web",
+      "ariaLabel": "Tiến độ hỗ trợ hàng tháng: đã cam kết {raised} trên mục tiêu {goal}, đạt {percent}%.",
+      "ariaValue": "Đã cam kết {raised} trên mục tiêu {goal}",
+      "amountSeparator": "của",
+      "amountSuffix": "hàng tháng",
+      "goalReached": {
+        "title": "Mục tiêu hỗ trợ của tháng này đã được đáp ứng.",
+        "text": "Cảm ơn! Hỗ trợ bổ sung giúp Daily Page xử lý các chi phí và cải tiến trong tương lai.",
+        "meterLabel": "Đã đạt được mục tiêu",
+        "ariaLabel": "Đã đạt được mục tiêu hỗ trợ hàng tháng: {raised} đã cam kết thực hiện mục tiêu {goal}.",
+        "ariaValue": "Đã đạt mục tiêu; cam kết {raised} trên mục tiêu {goal}"
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "layout": {
+    "siteName": "Daily Page",
+    "welcomeUser": "Chào mừng bạn!",
+    "logout": "Đăng xuất",
+    "login": "Đăng nhập / Đăng ký",
+    "language": "Ngôn ngữ",
+    "openMenu": "Mở menu chính",
+    "closeMenu": "Đóng menu chính",
+    "privacy": "Chính sách bảo mật",
+    "uiFallbackNotice": "{requested} chưa được dịch. Hiện đang hiển thị {current}.",
+    "copyButton": {
+      "copy": "Sao chép",
+      "copied": "Đã sao chép!"
+    },
+    "copyright": "© {year}",
+    "languages": {
+      "en": "English",
+      "es": "Español",
+      "fr": "Français",
+      "ru": "Русский",
+      "id": "Bahasa Indonesia",
+      "de": "Deutsch",
+      "it": "Italiano",
+      "pt": "Português",
+      "zh": "中文",
+      "ja": "日本語",
+      "ko": "한국어",
+      "ar": "العربية",
+      "hi": "हिन्दी",
+      "tr": "Türkçe",
+      "nl": "Nederlands",
+      "sv": "Svenska",
+      "no": "Norsk",
+      "da": "Dansk",
+      "fi": "Suomi",
+      "pl": "Polski",
+      "cs": "Čeština",
+      "el": "Ελληνικά",
+      "he": "עברית",
+      "th": "ไทย",
+      "vi": "Tiếng Việt"
+    },
+    "theme": {
+      "label": "chủ đề",
+      "toggleToDark": "Chuyển sang chế độ tối",
+      "toggleToLight": "Chuyển sang chế độ sáng"
+    },
+    "blockImages": {
+      "preview": "Xem trước hình ảnh",
+      "close": "Đóng bản xem trước hình ảnh",
+      "open": "Mở xem trước hình ảnh"
+    }
+  }
+}

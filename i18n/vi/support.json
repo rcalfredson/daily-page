@@ -1,0 +1,81 @@
+{
+  "support": {
+    "meta": {
+      "title": "Daily Page - Hỗ trợ",
+      "description": "Hỗ trợ Daily Page về mặt tài chính, đóng góp cho dự án nguồn mở, báo cáo sự cố, liên hệ hoặc yêu cầu phòng mới."
+    },
+    "hero": {
+      "eyebrow": "Hỗ trợ Daily Page",
+      "title": "Giúp giữ không gian viết nhỏ này trực tuyến.",
+      "tagline": "Daily Page là một dự án độc lập, mã nguồn mở. Một vài đóng góp ổn định sẽ giúp ích rất nhiều cho việc lưu trữ, email, lưu trữ, bảo trì và công việc thầm lặng để giữ cho nó luôn hữu ích."
+    },
+    "funding": {
+      "h2": "Mục tiêu tài trợ hàng tháng",
+      "p1": "Mục tiêu hiện tại là quyên góp được 20 USD mỗi tháng để trang trải các chi phí cơ bản để vận hành trang web.",
+      "p2": "Đồng hồ đo tiến độ phản ánh hỗ trợ định kỳ hàng tháng đã được xác nhận. Hỗ trợ một lần cũng được hoan nghênh nhưng đồng hồ đo sẽ theo dõi mục tiêu bền vững hàng tháng.",
+      "ctaMonthly": "Đóng góp hàng tháng",
+      "ctaOneTime": "Ủng hộ một lần",
+      "ctaEmail": "Gửi email cho Daily Page",
+      "meter": {
+        "label": "Tiến độ tháng này",
+        "amountSeparator": "đã quyên góp trên",
+        "amountSuffix": "hàng tháng",
+        "note": "Cập nhật khi có sự thay đổi hỗ trợ hàng tháng đã được xác nhận.",
+        "ariaLabel": "Tiến độ gây quỹ hàng tháng: đã quyên góp {raised} trên mục tiêu {goal}, đạt {percent}%.",
+        "ariaValue": "Đã quyên góp {raised} trên mục tiêu {goal}"
+      },
+      "monthlyOptionsLabel": "Chọn số tiền hàng tháng",
+      "monthlyOptionAriaLabel": "Đóng góp {amount} hàng tháng",
+      "goalReached": {
+        "h2": "Mục tiêu hàng tháng đã được đáp ứng. Xin cảm ơn!",
+        "p1": "Khoản hỗ trợ định kỳ hiện đã trang trải mức chi phí cơ bản {goal} mỗi tháng của Daily Page.",
+        "p2": "Hỗ trợ bổ sung vẫn được hoan nghênh và giúp xây dựng một khoản dự phòng cho các chi phí, bảo trì và cải tiến không mong muốn trong tương lai.",
+        "monthlyOptionsLabel": "Tiếp tục ủng hộ Daily Page",
+        "ctaMonthly": "Tiếp tục ủng hộ hàng tháng",
+        "meterLabel": "Đã đạt được mục tiêu",
+        "meterNote": "Cảm ơn bạn đã giúp trang trải chi phí cơ bản hàng tháng.",
+        "meterAriaLabel": "Đã đạt mục tiêu gây quỹ hàng tháng: cam kết {raised} trên mục tiêu {goal}.",
+        "meterAriaValue": "Đã đạt mục tiêu; cam kết {raised} trên mục tiêu {goal}"
+      }
+    },
+    "openSource": {
+      "h2": "Nguồn mở",
+      "p1": "Daily Page được phát triển công khai. Bạn có thể xem mã nguồn, báo lỗi, đề xuất tính năng hoặc mở pull request.",
+      "items": {
+        "code": {
+          "label": "Duyệt mã",
+          "text": "để xem trang web hoạt động như thế nào và nó sẽ dẫn đến đâu."
+        },
+        "issues": {
+          "label": "Sử dụng mục Issues",
+          "text": "để tìm lỗi, các góc cạnh thô, vấn đề về khả năng truy cập, lỗ hổng dịch thuật và ý tưởng về tính năng."
+        },
+        "community": {
+          "label": "Đóng góp thiết thực",
+          "text": "với các bản sửa lỗi, tài liệu, bản dịch, cải tiến thiết kế hoặc những cải tiến nhỏ giúp việc viết ở đây trở nên dễ dàng hơn."
+        }
+      },
+      "repoCta": "Xem repository",
+      "issuesCta": "Xem các issue đang mở"
+    },
+    "contact": {
+      "h2": "Câu hỏi và phản hồi",
+      "p1": "Đối với các câu hỏi riêng tư, trợ giúp về tài khoản hoặc bất kỳ điều gì không thuộc vấn đề công khai, email vẫn là con đường tốt nhất.",
+      "emailCta": "Gửi email cho Daily Page",
+      "issueCta": "Báo cáo sự cố"
+    },
+    "rooms": {
+      "h2": "Yêu cầu phòng",
+      "p1": "Các phòng giúp sắp xếp Daily Page theo những chủ đề chung. Nếu bạn muốn có một không gian viết mới, hãy gửi yêu cầu tại đây.",
+      "form": {
+        "nameLabel": "Tên phòng",
+        "topicLabel": "Chủ đề (tùy chọn)",
+        "descriptionLabel": "Mô tả",
+        "submit": "Gửi yêu cầu",
+        "success": "Yêu cầu được gửi thành công!",
+        "errorGeneric": "Không thể gửi yêu cầu. Vui lòng thử lại.",
+        "errorUnexpected": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại."
+      }
+    }
+  }
+}

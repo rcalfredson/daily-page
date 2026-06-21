@@ -1,0 +1,57 @@
+{
+  "dashboard": {
+    "meta": {
+      "title": "Trang tổng quan",
+      "description": "Tổng quan về tài khoản và bảng điều khiển Daily Page của bạn."
+    },
+    "profile": {
+      "profilePicAlt": "Ảnh hồ sơ",
+      "noBio": "Chưa có tiểu sử. Nhấp vào \"Chỉnh sửa\" để thêm một!",
+      "editBio": "Chỉnh sửa tiểu sử",
+      "bioPlaceholder": "Nhập tiểu sử của bạn ở đây",
+      "save": "Lưu",
+      "cancel": "Hủy"
+    },
+    "activity": {
+      "title": "Hoạt động gần đây",
+      "none": "Không có hoạt động gần đây.",
+      "updatedOn": "Cập nhật vào {date}",
+      "viewAllBlocks": "Xem tất cả bài viết"
+    },
+    "drafts": {
+      "title": "Tiếp tục viết",
+      "none": "Không có bản nháp mở.",
+      "updatedOn": "Cập nhật vào {date}",
+      "unlisted": "Không công khai",
+      "viewAll": "Xem tất cả bài viết"
+    },
+    "streak": {
+      "title": "Chuỗi ngày viết",
+      "line": "{days} ngày liên tiếp! Tiếp tục đi!"
+    },
+    "starredRooms": {
+      "title": "Phòng được gắn dấu sao",
+      "none": "Bạn chưa gắn dấu sao cho bất kỳ phòng nào. Bắt đầu khám phá để tìm mục yêu thích của bạn!",
+      "viewAll": "Xem tất cả các phòng được gắn sao",
+      "unnamedRoom": "Phòng không tên"
+    },
+    "security": {
+      "title": "Bảo mật tài khoản",
+      "summary": "Thay đổi mật khẩu của bạn và quản lý xác thực hai yếu tố.",
+      "manage": "Quản lý bảo mật"
+    },
+    "stats": {
+      "title": "Số liệu thống kê của bạn",
+      "totalBlocks": "Tổng số bài viết đã tạo",
+      "collaborations": "Cộng tác",
+      "votesGiven": "Phiếu bầu đã đưa ra",
+      "daysActive": "Số ngày hoạt động",
+      "viewDetailed": "Xem số liệu thống kê chi tiết 📊"
+    },
+    "alerts": {
+      "uploadFailed": "Không thể tải lên ảnh hồ sơ. Vui lòng thử lại.",
+      "uploadUnexpected": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.",
+      "bioUpdateFailed": "Lỗi cập nhật tiểu sử. Vui lòng thử lại."
+    }
+  }
+}

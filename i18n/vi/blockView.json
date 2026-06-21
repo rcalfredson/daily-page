@@ -1,0 +1,129 @@
+{
+  "blockView": {
+    "meta": {
+      "title": "Bài viết - {blockTitle}",
+      "titleFallback": "Bài viết"
+    },
+    "labels": {
+      "room": "Phòng",
+      "author": "Tác giả",
+      "created": "Đã tạo",
+      "unknownAuthor": "Vô danh",
+      "authorAvatarAlt": "Hình đại diện của {username}",
+      "viewAuthorProfile": "Xem hồ sơ của {username}",
+      "lang": "Bản dịch:",
+      "available": "có sẵn"
+    },
+    "buttons": {
+      "edit": "Chỉnh sửa",
+      "deleteBlock": "Xóa bài đăng",
+      "share": "Chia sẻ",
+      "flagContent": "Gắn cờ nội dung"
+    },
+    "description": {
+      "label": "Mô tả",
+      "none": "Chưa có mô tả...",
+      "expand": "Mở rộng",
+      "collapse": "Thu gọn"
+    },
+    "editorial": {
+      "heading": "Hướng dẫn đọc",
+      "roleLabel": "Kiểu đọc",
+      "clusterLabel": "Hướng dẫn",
+      "sequence": "Phần {sequence}",
+      "primaryPillarHeading": "Bắt đầu ở đây",
+      "relatedHeading": "Tiếp tục đọc",
+      "clusterHeading": "Thêm trong hướng dẫn này",
+      "expandSection": "Hiển thị thêm {count}",
+      "collapseSection": "Hiển thị ít hơn",
+      "roleNames": {
+        "pillar": "Hướng dẫn cốt lõi",
+        "companion": "Bài đọc chuyên sâu",
+        "texture": "Bối cảnh"
+      }
+    },
+    "comments": {
+      "heading": "Bình luận",
+      "count": "Bình luận {count}",
+      "empty": "Chưa có ai trả lời. Nhận xét sẽ hiển thị ở đây khi cuộc trò chuyện bắt đầu.",
+      "composer": {
+        "label": "Thêm một bình luận",
+        "placeholder": "Viết bình luận...",
+        "submit": "Đăng bình luận",
+        "submitting": "Đang đăng...",
+        "success": "Bình luận được đăng.",
+        "error": "Không thể gửi bình luận của bạn ngay bây giờ.",
+        "loginPrompt": "Đăng nhập để tham gia cuộc trò chuyện.",
+        "loginCta": "Đăng nhập để bình luận",
+        "verifyPrompt": "Xác minh email của bạn trước khi đăng bình luận.",
+        "verifyCta": "Xác minh email"
+      },
+      "sort": {
+        "label": "Sắp xếp",
+        "oldestFirst": "Cũ nhất đầu tiên",
+        "newestFirst": "Mới nhất đầu tiên"
+      },
+      "by": "Bởi",
+      "unknownAuthor": "Không xác định",
+      "reply": {
+        "action": "Hồi đáp",
+        "label": "Thêm câu trả lời",
+        "placeholder": "Viết thư trả lời...",
+        "submit": "Đăng trả lời",
+        "submitting": "Đang đăng...",
+        "success": "Trả lời được đăng.",
+        "error": "Không thể gửi câu trả lời của bạn ngay bây giờ.",
+        "cancel": "Hủy",
+        "loginPrompt": "Đăng nhập để trả lời."
+      },
+      "manage": {
+        "edited": "Đã chỉnh sửa",
+        "editAction": "Chỉnh sửa",
+        "deleteAction": "Xóa bỏ",
+        "deleteConfirm": "Xóa nhận xét này? Thao tác này cũng sẽ xóa mọi câu trả lời bên dưới nó.",
+        "deleteSuccess": "Bình luận đã bị xóa.",
+        "deleteError": "Không thể xóa bình luận này ngay bây giờ.",
+        "forbidden": "Bạn chỉ có thể quản lý nhận xét của riêng bạn.",
+        "edit": {
+          "label": "Chỉnh sửa nhận xét",
+          "save": "Lưu",
+          "saving": "Đang lưu...",
+          "cancel": "Hủy",
+          "success": "Đã cập nhật bình luận.",
+          "error": "Không thể cập nhật nhận xét này ngay bây giờ."
+        }
+      },
+      "report": {
+        "action": "Báo cáo",
+        "pending": "Báo cáo...",
+        "success": "Đã báo cáo bình luận.",
+        "error": "Không thể báo cáo bình luận này ngay bây giờ.",
+        "ownError": "Bạn không thể báo cáo bình luận của riêng bạn.",
+        "hidden": "Bình luận bị ẩn sau khi báo cáo.",
+        "reported": "Đã báo cáo"
+      },
+      "deepLink": {
+        "focused": "Nhận xét được liên kết",
+        "unavailable": "Nhận xét được liên kết không còn tồn tại."
+      },
+      "loadMore": "Tải thêm bình luận",
+      "loading": "Đang tải...",
+      "loadError": "Không thể tải thêm bình luận ngay bây giờ."
+    },
+    "share": {
+      "title": "Chia sẻ bài đăng này",
+      "shareOn": "Chia sẻ trên:",
+      "nativeText": "Hãy xem bài đăng này: {title}",
+      "alt": {
+        "facebook": "Biểu tượng Facebook",
+        "reddit": "Biểu tượng Reddit",
+        "whatsapp": "Biểu tượng WhatsApp",
+        "twitter": "Biểu tượng Twitter"
+      }
+    },
+    "errors": {
+      "notFound": "Không tìm thấy bài đăng hoặc không thuộc về phòng này.",
+      "loadFailed": "Lỗi tải chế độ xem bài đăng."
+    }
+  }
+}

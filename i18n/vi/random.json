@@ -1,0 +1,17 @@
+{
+  "random": {
+    "meta": {
+      "title": "Daily Page — Các dự án khác",
+      "description": "Khám phá nhật ký bóng chày, thí nghiệm viết ngẫu nhiên và các dự án phụ khác từ Daily Page."
+    },
+    "title": "Dự án khác",
+    "tagline": "Một góc ấm cúng cho các thí nghiệm và nhiệm vụ phụ.",
+    "links": {
+      "baseball": "📖 Tạp chí bóng chày",
+      "randomWriter": "🎲 Người viết ngẫu nhiên"
+    },
+    "cta": {
+      "backToRooms": "Quay lại Phòng chính"
+    }
+  }
+}

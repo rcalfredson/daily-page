@@ -1,0 +1,77 @@
+{
+  "archive": {
+    "meta": {
+      "title": "Daily Page — Lưu trữ",
+      "description": "Khám phá kho lưu trữ đầy đủ theo tháng.",
+      "titleRoom": "Daily Page — Lưu trữ · {roomName}",
+      "descriptionRoom": "Khám phá các bài viết trước đây trong phòng {roomName}—từng tháng. Chuyển đến bất kỳ ngày nào để xem những gì người khác đã chia sẻ trong không gian này theo thời gian."
+    },
+    "nav": {
+      "prev": "Trước đó",
+      "next": "Tiếp theo"
+    },
+    "title": "📚 Duyệt qua kho lưu trữ",
+    "titleRoom": "📚 {roomName} — Lưu trữ",
+    "roomViewing": "Xem kho lưu trữ của phòng {roomName}",
+    "viewRoomLink": "Xem phòng",
+    "noContent": "Chưa có nội dung nào.",
+    "backToRoom": "← Quay lại Bảng điều khiển phòng",
+    "calendar": {
+      "meta": {
+        "description": "Xem tất cả các bài đăng sáng tạo được xuất bản trong {month} {year}—từ những suy nghĩ nhanh chóng đến những suy ngẫm sâu sắc. Nhấp vào bất kỳ ngày nào để khám phá những gì đã được chia sẻ.",
+        "descriptionRoom": "Xem hoạt động sáng tạo trong {roomName} trong {month} {year}. Chọn một ngày để khám phá các bài viết được chia sẻ ngày hôm đó."
+      },
+      "title": "📆 Lưu trữ cho {month} {year}",
+      "prevLabel": "Lưu trữ cho {month} {year}",
+      "nextLabel": "Lưu trữ cho {month} {year}"
+    },
+    "date": {
+      "meta": {
+        "titleSite": "Lưu trữ cho {date}",
+        "titleRoom": "{roomName} — Lưu trữ cho {date}",
+        "descriptionSite": "Khám phá các bài đăng được viết trên {date}—từ những ghi chú thầm lặng đến những lời thú nhận hoang dã.",
+        "descriptionRoom": "Trên {date}, những người viết trong phòng {roomName} đã để lại dấu ấn của mình—xem qua những phản ánh, ý tưởng và cách diễn đạt được chia sẻ ngày hôm đó."
+      },
+      "heading": "Lưu trữ cho {date}",
+      "empty": "Không tìm thấy nội dung cho ngày này.",
+      "labels": {
+        "createdBy": "Được tạo bởi:",
+        "in": "trong",
+        "on": "trên {datetime}",
+        "unknownRoom": "Phòng không xác định"
+      },
+      "nav": {
+        "prevDay": "Ngày hôm trước",
+        "nextDay": "Ngày hôm sau"
+      }
+    },
+    "index": {
+      "meta": {
+        "titleRoom": "{roomName} — Tất cả bài viết",
+        "descriptionRoom": "Duyệt qua mọi bài đăng từng được xuất bản trong phòng {roomName}. Sắp xếp theo ngày, tiêu đề hoặc phiếu bầu để khám phá lịch sử của nó."
+      },
+      "header": {
+        "allBlocks": "— Tất cả bài viết"
+      },
+      "sort": {
+        "label": "Sắp xếp theo",
+        "options": {
+          "date": "Ngày",
+          "title": "Tiêu đề",
+          "votes": "Phiếu bầu"
+        },
+        "submit": "Áp dụng"
+      }
+    },
+    "pagination": {
+      "prev": "← Trước đó",
+      "next": "Tiếp theo →"
+    },
+    "yearMonth": {
+      "meta": {
+        "title": "Daily Page cho {time}"
+      },
+      "empty": "Chúng tôi không thể tìm thấy bất kỳ trang nào trong khoảng thời gian đó."
+    }
+  }
+}

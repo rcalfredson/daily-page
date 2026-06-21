@@ -1,0 +1,15 @@
+{
+  "blockTags": {
+    "header": {
+      "withTags": "thẻ:",
+      "noTags": "Chưa có thẻ nào! Thêm một số:"
+    },
+    "input": {
+      "placeholder": "Thẻ mới",
+      "addButton": "Thêm vào"
+    },
+    "buttons": {
+      "removeTag": "x"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "starredRooms": {
+    "meta": {
+      "title": "Tất cả các phòng được gắn dấu sao",
+      "description": "Danh sách tất cả các phòng bạn đã gắn dấu sao."
+    },
+    "nav": {
+      "backToDashboard": "← Quay lại Bảng điều khiển"
+    },
+    "header": {
+      "title": "🌟 Tất cả các phòng được gắn dấu sao của bạn 🌟"
+    },
+    "rooms": {
+      "unnamedRoom": "Phòng không tên",
+      "noDescription": "Không có mô tả."
+    },
+    "empty": {
+      "message": "Bạn chưa gắn dấu sao cho bất kỳ phòng nào!"
+    }
+  }
+}

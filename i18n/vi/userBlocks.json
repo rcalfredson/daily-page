@@ -1,0 +1,19 @@
+{
+  "userBlocks": {
+    "meta": {
+      "title": "Bài đăng của bạn",
+      "description": "Duyệt và sắp xếp tất cả các bài đăng bạn đã tạo hoặc cộng tác."
+    },
+    "header": {
+      "dashboardLink": "Trang tổng quan của bạn",
+      "profileLink": "Hồ sơ của {username}",
+      "allBlocks": "Tất cả bài viết"
+    },
+    "empty": "Chưa có bài viết nào",
+    "pagination": {
+      "prev": "← Trước đó",
+      "next": "Tiếp theo →"
+    },
+    "titleUser": "Bài viết của {username}"
+  }
+}

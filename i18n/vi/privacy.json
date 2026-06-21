@@ -1,0 +1,44 @@
+{
+  "privacy": {
+    "meta": {
+      "title": "Daily Page — Chính sách bảo mật",
+      "description": "Cách Daily Page thu thập, sử dụng và bảo vệ dữ liệu của bạn bằng ngôn ngữ đơn giản."
+    },
+    "title": "Chính sách bảo mật",
+    "lastUpdated": "Cập nhật lần cuối: {date}",
+    "intro": {
+      "h2": "Giới thiệu",
+      "p1": "Daily Page (\"chúng tôi\", \"chúng tôi\" hoặc \"của chúng tôi\") vận hành trang web dailypage.org (sau đây gọi là \"Dịch vụ\").",
+      "p2": "Trang này thông báo cho bạn về các chính sách của chúng tôi về việc thu thập, sử dụng và tiết lộ dữ liệu cá nhân khi bạn sử dụng Dịch vụ của chúng tôi."
+    },
+    "collection": {
+      "h2": "Thu thập và sử dụng thông tin",
+      "p": "Chúng tôi thu thập dữ liệu cá nhân tối thiểu để cải thiện và cung cấp Dịch vụ của mình. Điều này bao gồm các địa chỉ email để quản lý tài khoản và nội dung do người dùng tự nguyện gửi."
+    },
+    "usage": {
+      "h2": "Sử dụng dữ liệu",
+      "p": "Dữ liệu được thu thập chỉ được sử dụng để xác thực tài khoản, kiểm duyệt nội dung và nâng cao trải nghiệm người dùng."
+    },
+    "storage": {
+      "h2": "Lưu trữ & bảo mật dữ liệu",
+      "p": "Dữ liệu của bạn được lưu trữ an toàn và không bao giờ được chia sẻ hoặc bán cho bên thứ ba mà không có sự đồng ý rõ ràng, trừ khi pháp luật yêu cầu."
+    },
+    "cookies": {
+      "h2": "Cookie",
+      "p": "Chúng tôi chỉ sử dụng cookie để quản lý phiên và cải thiện trải nghiệm người dùng. Bạn có thể tắt cookie thông qua cài đặt trình duyệt của mình."
+    },
+    "rights": {
+      "h2": "Quyền của bạn",
+      "p": "Bạn có thể yêu cầu xóa hoặc sửa đổi dữ liệu cá nhân của mình bất cứ lúc nào bằng cách liên hệ với chúng tôi."
+    },
+    "changes": {
+      "h2": "Những thay đổi đối với Chính sách quyền riêng tư này",
+      "p": "Thỉnh thoảng chúng tôi có thể cập nhật Chính sách quyền riêng tư của mình. Những thay đổi sẽ được đăng trên trang này."
+    },
+    "contact": {
+      "h2": "Liên hệ với chúng tôi",
+      "p": "Nếu có thắc mắc về Chính sách quyền riêng tư này, hãy liên hệ với chúng tôi tại:",
+      "emailLabel": "hỏi@dailypage.org"
+    }
+  }
+}

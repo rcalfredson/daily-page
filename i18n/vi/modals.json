@@ -1,0 +1,20 @@
+{
+  "modals": {
+    "login": {
+      "title": "Vui lòng đăng nhập",
+      "message": "Bạn cần phải đăng nhập để tiếp tục.",
+      "messageWithAction": "Bạn cần phải đăng nhập vào {action}.",
+      "cta": "Đăng nhập"
+    },
+    "actions": {
+      "voteOnBlock": "bỏ phiếu cho một bài viết",
+      "starRoom": "đánh dấu sao căn phòng này",
+      "reactToBlock": "phản ứng với bài viết này",
+      "commentOnBlock": "bình luận về bài viết này",
+      "reportComment": "báo cáo bình luận này"
+    },
+    "errors": {
+      "starToggleFail": "Không cập nhật được trạng thái sao. Vui lòng thử lại."
+    }
+  }
+}

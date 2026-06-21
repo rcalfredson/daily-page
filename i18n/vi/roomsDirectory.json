@@ -1,0 +1,31 @@
+{
+  "roomsDirectory": {
+    "meta": {
+      "title": "Danh mục phòng",
+      "description": "Mỗi căn phòng là một cánh cửa dẫn vào một thế giới khác nhau. Bước vào bên trong, chia sẻ câu chuyện của bạn và cùng những người khác xây dựng một điều gì đó đẹp đẽ."
+    },
+    "eyebrow": "Tìm góc của bạn",
+    "heading": "Danh mục phòng",
+    "intro": "Bắt đầu với những căn phòng mà bạn cảm thấy sống động ngay bây giờ hoặc đi lang thang theo chủ đề cho đến khi có điều gì đó thú vị. Mỗi phòng là một gợi ý viết lách, fandom hoặc nỗi ám ảnh chung khác nhau đang chờ tiếng nói của bạn.",
+    "empty": "Hiện tại không có phòng trống. Hãy kiểm tra lại sau!",
+    "jumpToActive": "Xem phòng đang hoạt động",
+    "jumpToTopics": "Duyệt theo chủ đề",
+    "statsLabel": "Điểm nổi bật của thư mục phòng",
+    "liveNow": "Đang sôi nổi",
+    "recentlyActive": "Hoạt động gần đây",
+    "recentlyActiveSubtitle": "Cách nhanh nhất để tìm phòng có người ở trong đó ngay bây giờ.",
+    "browseByTopic": "Duyệt theo chủ đề",
+    "topicSubtitle": "Mở một chủ đề để khám phá các phòng của nó.",
+    "roomCount": "Phòng {count}",
+    "stats": {
+      "rooms": "phòng để khám phá",
+      "topics": "nhóm chủ đề",
+      "active": "phòng đang hoạt động"
+    },
+    "activeUsers": "Người dùng đang hoạt động: {count}",
+    "visitRoom": "Vào phòng",
+    "close": "Đóng",
+    "noTitle": "Không có tiêu đề nào",
+    "noDescription": "Không có mô tả nào"
+  }
+}

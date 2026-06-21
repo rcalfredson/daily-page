@@ -1,0 +1,58 @@
+{
+  "about": {
+    "meta": {
+      "title": "Daily Page — Giới thiệu",
+      "description": "Daily Page là gì, nó hoạt động như thế nào và tại sao nó được xây dựng như một góc chậm hơn, tử tế hơn trên web."
+    },
+    "title": "Giới thiệu về Daily Page",
+    "tagline": "Hãy nuôi dưỡng tâm trí của bạn, không phải thức ăn của bạn.",
+    "mission": {
+      "h2": "Nhiệm vụ",
+      "p1": "Một phòng thí nghiệm viết lách độc lập—bắt đầu từ phòng khách của tôi, được thúc đẩy bởi sự tò mò của độc giả.",
+      "p2": "Nó được xây dựng không phải để làm bộ não bạn mục nát mà để nuôi dưỡng nó: một nơi mà bạn có thể viết chậm rãi, ẩn danh nếu muốn và không bao giờ lo lắng về việc gây ấn tượng với bất kỳ ai."
+    },
+    "how": {
+      "h2": "Nó hoạt động như thế nào",
+      "features": {
+        "rooms": {
+          "label": "Phòng",
+          "text": "là các chủ đề riêng biệt (hãy nghĩ “subreddit, nhưng thân thiện hơn”)."
+        },
+        "blocks": {
+          "label": "bài viết",
+          "text": "là không gian viết lách cộng tác—bất kỳ ai (kể cả “ẩn danh”) đều có thể tạo một không gian, chỉnh sửa nó cho đến khi nó bị khóa và bỏ phiếu cho những người khác."
+        },
+        "privacy": {
+          "label": "Quyền riêng tư và chia sẻ",
+          "text": "có nghĩa là các bài đăng công khai hiển thị trong nguồn cấp dữ liệu của phòng. Các bản nháp không công khai sẽ ẩn cho đến khi bị khóa nhưng bạn sẽ nhận được liên kết chia sẻ để mời bạn bè."
+        },
+        "markdown": {
+          "label": "Đánh dấu & Truyền thông",
+          "text": "cho phép bạn viết bằng markdown, nhúng hình ảnh và đồng chỉnh sửa như trong Google Docs."
+        },
+        "trends": {
+          "label": "Xu hướng & Thẻ",
+          "text": "cho phép bạn gắn thẻ bài đăng của mình, theo dõi xu hướng thẻ và khám phá nội dung hàng đầu (7 ngày / 30 ngày / mọi lúc)."
+        },
+        "streaks": {
+          "label": "Vệt",
+          "text": "duy trì chuỗi bài viết hàng ngày của bạn—động lực tốt nhất để bạn xuất hiện mỗi ngày."
+        }
+      }
+    },
+    "origin": {
+      "h2": "Làm thế nào chúng tôi đến được đây",
+      "p1": "Năm 2018, tôi xây dựng một wiki theo ngày cho “trang hôm nay” và chứng kiến vài người viết hướng nội biến nó thành nơi giãi bày suy nghĩ. Nó chưa bao giờ trở nên lớn mạnh—nhưng đã gieo một hạt giống.",
+      "p2": "Chuyển nhanh đến thời điểm hiện tại và Daily Page là hạt giống đã được trồng thành nhiều phòng—một mạng xã hội yên tĩnh dành cho những người hướng nội, những người theo chủ nghĩa lý tưởng và bất kỳ ai khao khát tốc độ chậm hơn."
+    },
+    "next": {
+      "h2": "Điều gì tiếp theo",
+      "p1": "Chúng tôi chỉ mới bắt đầu: nội dung nhúng phong phú hơn, số liệu thống kê người dùng sâu hơn, bảng xếp hạng danh tiếng và nhiều cách khác để khen thưởng sự sáng tạo chu đáo.",
+      "p2": "Cảm ơn bạn đã tham gia thử nghiệm indie nhỏ này."
+    },
+    "cta": {
+      "rooms": "Khám phá phòng",
+      "signup": "Tham gia cộng đồng"
+    }
+  }
+}
