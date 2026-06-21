@@ -447,7 +447,7 @@ async function getSupportFundingViewModel() {
 
           const roomContents = rooms.map((room) => {
             const page = pages.find((p) => p.room === room._id); // Find the page matching the room
-            const [errorMessage, text] = viewHelper.archiveContent(page)
+            const [, text] = viewHelper.archiveContent(page)
             return {
               name: room.name,
               id: room._id,
@@ -472,7 +472,7 @@ async function getSupportFundingViewModel() {
       }
     });
 
-    app.get(`/rooms/:room([a-zA-Z0-9\-]+)/${dateParam}`, async (req, res) => {
+    app.get(`/rooms/:room([a-zA-Z0-9-]+)/${dateParam}`, async (req, res) => {
       const roomReq = req.params.room;
       let roomMetdata = await getRoomMetadata(roomReq);
       const dateAndRoom = `${DateHelper.formatDate(req.params.date, 'long')} - ${roomMetdata.name} Room`;

@@ -435,13 +435,9 @@ describe("CRDT", () => {
   });
 
   describe('insertText', () => {
-    let siteId;
-    let siteCounter;
     let crdt;
 
     beforeEach(() => {
-      siteId = Math.floor(Math.random() * 1000);
-      siteCounter = Math.floor(Math.random() * 1000);
       crdt = new CRDT(mockController);
     });
 
@@ -453,13 +449,9 @@ describe("CRDT", () => {
   });
 
   describe('deleteText', () => {
-    let siteId;
-    let siteCounter;
     let crdt;
 
     beforeEach(() => {
-      siteId = Math.floor(Math.random() * 1000);
-      siteCounter = Math.floor(Math.random() * 1000);
       crdt = new CRDT(mockController);
     });
 
