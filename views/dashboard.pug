@@ -53,7 +53,13 @@ block content
                 a(href=`/rooms/${draft.roomId}/blocks/${draft._id}/edit`)= draft.title
                 .draft-meta
                   - const updated = new Date(draft.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-                  span= t('dashboard.drafts.updatedOn', { date: updated })
+                  time(
+                    datetime=new Date(draft.updatedAt).toISOString()
+                    data-local-date-time
+                    data-date-style='medium'
+                    data-time-style='short'
+                    data-date-template=t('dashboard.drafts.updatedOn', { date: '__DATE__' })
+                  )= t('dashboard.drafts.updatedOn', { date: updated })
                   if draft.visibility === 'unlisted'
                     span.draft-pill= t('dashboard.drafts.unlisted')
         else
@@ -68,7 +74,14 @@ block content
               li.activity-item
                 a(href=`/rooms/${activity.roomId}/blocks/${activity._id}`)= activity.title
                 - const formatted = new Date(activity.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-                p= t('dashboard.activity.updatedOn', { date: formatted })
+                p
+                  time(
+                    datetime=new Date(activity.updatedAt).toISOString()
+                    data-local-date-time
+                    data-date-style='medium'
+                    data-time-style='short'
+                    data-date-template=t('dashboard.activity.updatedOn', { date: '__DATE__' })
+                  )= t('dashboard.activity.updatedOn', { date: formatted })
         else
           p= t('dashboard.activity.none')
         a(href=uiPath("/dashboard/blocks")).btn.stats-btn= t('dashboard.activity.viewAllBlocks')

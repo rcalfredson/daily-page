@@ -25,7 +25,13 @@ mixin blockList(blocks, period, label, room_id)
             - const u = encodeURIComponent(block.creator || '')
             a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
             |  #{t('blockList.on')} 
-            = new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
+            - const blockCreatedAt = new Date(block.createdAt)
+            time(
+              datetime=blockCreatedAt.toISOString()
+              data-local-date-time
+              data-date-style='medium'
+              data-time-style='short'
+            )= blockCreatedAt.toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
 
           +translationAttribution(block)
 

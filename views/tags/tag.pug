@@ -53,7 +53,13 @@ block content
               |  #{t('tags.detail.blockInfo.inRoom')} 
               a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('tags.detail.blockInfo.unknownRoom')
               |  #{t('tags.detail.blockInfo.onDate')} 
-              = new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
+              - const blockCreatedAt = new Date(block.createdAt)
+              time(
+                datetime=blockCreatedAt.toISOString()
+                data-local-date-time
+                data-date-style='medium'
+                data-time-style='short'
+              )= blockCreatedAt.toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
             +translationAttribution(block)
             if block.contentHTML
               div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML

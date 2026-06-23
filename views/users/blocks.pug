@@ -39,7 +39,14 @@ block content
           li(lang=(b.lang || 'en'))
             a(href=`/rooms/${b.roomId}/blocks/${b._id}` lang=(b.lang || 'en'))= b.title
             span.meta(lang=(uiLang || 'en'))
-              | (#{b.voteCount} ★ • #{b.createdAt.toLocaleDateString(uiLang || undefined)})
+              | (#{b.voteCount} ★ •
+              = ' '
+              time(
+                datetime=b.createdAt.toISOString()
+                data-local-date-time
+                data-date-style='medium'
+              )= b.createdAt.toLocaleDateString(uiLang || undefined)
+              | )
     else
       p= t('userBlocks.empty')
 

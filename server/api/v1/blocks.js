@@ -97,7 +97,8 @@ const useBlockAPI = (app) => {
       lang,
       groupId,
       originalBlock,
-      editorial
+      editorial,
+      timeZone
     } = req.body;
 
     if (!title || title.length < 3) {
@@ -163,7 +164,7 @@ const useBlockAPI = (app) => {
       // 2️⃣ Si hubo contenido inicial, actualizamos el streak
       if (req.user && content && content.trim() !== '') {
         try {
-          const updatedUser = await updateUserStreak(req.user.id);
+          const updatedUser = await updateUserStreak(req.user.id, { timeZone });
           // Re-generar el JWT con el nuevo streakLength
           refreshAuthToken(res, updatedUser)
         } catch (streakErr) {
