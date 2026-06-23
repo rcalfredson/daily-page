@@ -114,7 +114,12 @@ block content
               if createdAtLabel
                 .meta-item
                   span.meta-label= t('blockView.labels.created')
-                  time(datetime=createdAt.toISOString())= createdAtLabel
+                  time(
+                    datetime=createdAt.toISOString()
+                    data-local-date-time
+                    data-date-style='medium'
+                    data-time-style='short'
+                  )= createdAtLabel
               if editorialRole
                 .meta-item
                   span.meta-label= t('blockView.editorial.roleLabel')

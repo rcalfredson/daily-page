@@ -77,8 +77,16 @@ mixin renderBlockList(blocks)
               else
                 span.room-link= t('bestOf.labels.unknownRoom')
               - const _ui = (typeof uiLang === 'string' ? uiLang : 'en');
-              - const _date = new Date(block.createdAt).toLocaleString(_ui, { dateStyle: 'medium', timeStyle: 'short' });
-              |  #{t('bestOf.labels.onDate', { date: _date })}
+              - const _createdAt = new Date(block.createdAt);
+              - const _date = _createdAt.toLocaleString(_ui, { dateStyle: 'medium', timeStyle: 'short' });
+              = ' '
+              time(
+                datetime=_createdAt.toISOString()
+                data-local-date-time
+                data-date-style='medium'
+                data-time-style='short'
+                data-date-template=t('bestOf.labels.onDate', { date: '__DATE__' })
+              )= t('bestOf.labels.onDate', { date: _date })
             +translationAttribution(block)
             if block.contentHTML
               div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML

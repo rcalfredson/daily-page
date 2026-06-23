@@ -65,7 +65,16 @@ block content
                 a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
                 |  #{t('archive.date.labels.in')} 
                 a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('archive.date.labels.unknownRoom')
-                |  #{t('archive.date.labels.on', { datetime: formatDateTime(block.createdAt) })}
+                - const blockCreatedAt = new Date(block.createdAt)
+                - const blockCreatedAtFallback = formatDateTime(blockCreatedAt)
+                = ' '
+                time(
+                  datetime=blockCreatedAt.toISOString()
+                  data-local-date-time
+                  data-date-style='medium'
+                  data-time-style='short'
+                  data-date-template=t('archive.date.labels.on', { datetime: '__DATE__' })
+                )= t('archive.date.labels.on', { datetime: blockCreatedAtFallback })
               +translationAttribution(block)
               if block.contentHTML
                 div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML

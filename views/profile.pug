@@ -28,7 +28,14 @@ block content
               li.activity-item
                 a(href=`/rooms/${activity.roomId}/blocks/${activity._id}`)= activity.title
                 - const formatted = new Date(activity.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-                p= t('profile.activity.updatedOn', { date: formatted })
+                p
+                  time(
+                    datetime=new Date(activity.updatedAt).toISOString()
+                    data-local-date-time
+                    data-date-style='medium'
+                    data-time-style='short'
+                    data-date-template=t('profile.activity.updatedOn', { date: '__DATE__' })
+                  )= t('profile.activity.updatedOn', { date: formatted })
         else
           p= t('profile.activity.none')
 

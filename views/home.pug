@@ -245,7 +245,15 @@ block content
                 a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
                 |  #{t('home.trendingBlocks.in')} 
                 a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('home.trendingBlocks.unknownRoom')
-                |  #{t('home.trendingBlocks.on')} #{new Date(block.createdAt).toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+                |  #{t('home.trendingBlocks.on')}
+                = ' '
+                - const blockCreatedAt = new Date(block.createdAt)
+                time(
+                  datetime=blockCreatedAt.toISOString()
+                  data-local-date-time
+                  data-date-style='medium'
+                  data-time-style='short'
+                )= blockCreatedAt.toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
               +translationAttribution(block)
               if block.contentHTML
                 div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))!= block.contentHTML

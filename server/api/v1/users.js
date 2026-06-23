@@ -195,7 +195,7 @@ const useUserAPI = (app) => {
   router.post('/:userId/streakPing', isAuthenticated, mustMatchLoggedInUser, async (req, res) => {
     const userId = req.user.id;
     try {
-      const updatedUser = await updateUserStreak(userId);
+      const updatedUser = await updateUserStreak(userId, { timeZone: req.body?.timeZone });
       refreshAuthToken(res, updatedUser);
 
       res.status(200).json({ streakLength: updatedUser.streakLength });

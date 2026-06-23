@@ -18,6 +18,7 @@ const userSchema = new Schema({
   bio: { type: String, default: '' },
   streakLength: { type: Number, default: 0 },
   streakLastUpdatedAt: { type: Date, default: null },
+  streakTimeZone: { type: String, default: 'UTC' },
   starredRooms: { type: [String], default: [] },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },

@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     data.tags = tagsArray;
     if (!data.content) data.content = '';
+    data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
     try {
       const response = await fetch(form.action, {
@@ -139,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       bumpIfDup();
-    } catch (err) {
+    } catch {
       alert(t('createBlock.advanced.translate.fetchError'));
       groupIdField.value = '';
     }
