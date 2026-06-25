@@ -1,19 +1,19 @@
-import { verifyJWT } from '../services/jwt.js'; // Adjust path as needed
+import { authenticateRequest } from '../services/authSessions.js';
 
-export function isAuthenticated(req, res, next) {
-  const token = req.cookies.auth_token;
-
-  if (!token) {
-    return res.redirect('/login'); // Redirect to login if no token exists
-  }
-
+export async function isAuthenticated(req, res, next) {
   try {
-    const userData = verifyJWT(token); // Decode and verify the JWT
-    req.user = userData; // Attach decoded user data to `req` for downstream use
-    return next(); // Let the next middleware/route handler run
+    const auth = await authenticateRequest(req, res);
+    if (!auth) {
+      return res.redirect('/login');
+    }
+
+    req.user = auth.user;
+    req.authSession = auth.session;
+    req.dbUser = auth.dbUser;
+    return next();
   } catch (error) {
     console.error('Authentication error:', error);
-    return res.redirect('/login'); // Redirect if token is invalid
+    return res.redirect('/login');
   }
 }
 
@@ -23,4 +23,3 @@ export function noCache(req, res, next) {
   res.set('Vary', 'Cookie');
   next();
 }
-

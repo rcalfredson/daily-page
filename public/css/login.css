@@ -58,6 +58,23 @@ p {
   display: none;
 }
 
+.remember-me-field {
+  margin-top: -4px;
+}
+
+.login-form .remember-me-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  line-height: 1.3;
+}
+
+.login-form .remember-me-label input {
+  width: auto;
+  margin: 0;
+}
+
 .login-button {
   display: block;
   width: 100%;

@@ -41,6 +41,13 @@ block content
           autocomplete="one-time-code"
           placeholder=t('auth.login.fields.totpCode.placeholder')
         )
+      .form-group.remember-me-field
+        label.remember-me-label(for="rememberMe")
+          input#rememberMe(
+            type="checkbox"
+            name="rememberMe"
+          )
+          span= t('auth.login.fields.rememberMe.label')
       button.login-button(type="submit")= t('auth.login.actions.submit')
     .form-feedback(
       style="display:none;"

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { verifyJWT } from '../../services/jwt.js';
+import optionalAuth from '../../middleware/optionalAuth.js';
 import {
   toggleReaction,
   getReactionCounts,
@@ -36,25 +36,22 @@ const useReactionsAPI = (app) => {
   // Toggle a reaction
   // POST /api/v1/reactions/:blockId
   // body: { type: "heart" }
-  router.post('/:blockId', async (req, res) => {
+  router.post('/:blockId', optionalAuth, async (req, res) => {
     const { blockId } = req.params;
     const { type } = req.body;
-    const token = req.cookies.auth_token;
 
-    if (!token) return res.status(401).json({ error: 'User not authenticated' });
+    if (!req.user) return res.status(401).json({ error: 'User not authenticated' });
     if (!ALLOWED_REACTIONS.includes(type)) {
       return res.status(400).json({ error: 'Invalid reaction type' });
     }
 
     try {
-      const user = verifyJWT(token);
-
-      await toggleReaction({ blockId, userId: user.id, type });
+      await toggleReaction({ blockId, userId: req.user.id, type });
 
       // Return updated state for a single block
       const [counts, userReactions] = await Promise.all([
         getReactionCounts(blockId),
-        getUserReactionsForBlock({ blockId, userId: user.id })
+        getUserReactionsForBlock({ blockId, userId: req.user.id })
       ]);
 
       return res.status(200).json({ counts, userReactions });

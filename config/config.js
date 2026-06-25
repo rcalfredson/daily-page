@@ -68,7 +68,6 @@ export const config = {
   musicFolderId: process.env.MUSIC_FOLDER_ID,
   artistsFolderId: process.env.ARTISTS_FOLDER_ID,
   albumsFolderId: process.env.ALBUMS_FOLDER_ID,
-  appAuth: process.env.APP_AUTH,
   googCreds: process.env.GOOG_CREDS,
 
   // AWS S3

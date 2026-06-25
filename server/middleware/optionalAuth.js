@@ -1,15 +1,13 @@
-import { verifyJWT } from '../services/jwt.js';
+import { authenticateRequest } from '../services/authSessions.js';
 
-function optionalAuth(req, res, next) {
-  const token = req.cookies.auth_token;
-
-  if (!token) {
-    return next();
-  }
-
+async function optionalAuth(req, res, next) {
   try {
-    const userData = verifyJWT(token);
-    req.user = userData; 
+    const auth = await authenticateRequest(req, res);
+    if (auth) {
+      req.user = auth.user;
+      req.authSession = auth.session;
+      req.dbUser = auth.dbUser;
+    }
   } catch (error) {
     console.error('Optional auth error:', error);
   }
