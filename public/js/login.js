@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Failure: Show error
         show(waitingForTwoFactor ? msgTwoFactorFailed : msgFailedGeneric, false);
       }
-    } catch (error) {
+    } catch {
       // Unexpected error
       show(msgUnexpected, false);
     }

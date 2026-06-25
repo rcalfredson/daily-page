@@ -18,7 +18,6 @@ import {
 } from '../../db/flagService.js';
 import { updateUserStreak } from '../../db/userService.js';
 import optionalAuth from '../../middleware/optionalAuth.js';
-import { refreshAuthToken } from '../../utils/jwtHelper.js';
 import { normalizeEditorialInput } from '../../db/editorial.js';
 import { generateAnonymousId } from '../../utils/anonymousId.js';
 import {
@@ -164,9 +163,7 @@ const useBlockAPI = (app) => {
       // 2️⃣ Si hubo contenido inicial, actualizamos el streak
       if (req.user && content && content.trim() !== '') {
         try {
-          const updatedUser = await updateUserStreak(req.user.id, { timeZone });
-          // Re-generar el JWT con el nuevo streakLength
-          refreshAuthToken(res, updatedUser)
+          await updateUserStreak(req.user.id, { timeZone });
         } catch (streakErr) {
           console.error('Error updating streak on block create:', streakErr);
         }

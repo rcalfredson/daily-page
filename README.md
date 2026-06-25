@@ -19,7 +19,7 @@ The long-term direction is less "private notes app" and more "small civic/cultur
 - Rooms and topical dashboards for browsing in-progress and locked writing posts.
 - Automatic locking of inactive posts after roughly seven days.
 - Public archives by date, room, month, and year.
-- User accounts with JWT cookies, email verification, password reset, profile editing, writing streaks, and starred rooms.
+- User accounts with server-side auth sessions, remembered-device login, email verification, password reset, profile editing, writing streaks, and starred rooms.
 - Anonymous post creation/editing with short-lived edit tokens.
 - Comments, comment notifications, reactions, votes, reports, and basic rate limiting.
 - Tags, text search, trending tags, featured content, and homepage activity modules.
@@ -51,7 +51,7 @@ server/routes/             Rendered page routes
 server/db/                 Mongoose models, schemas, and data services
 server/services/           Email, Google, cron jobs, i18n, uploads, etc.
 server/middleware/         Auth, locale, SEO, and routing middleware
-server/utils/              Rendering, URL, JWT, block, and archive helpers
+server/utils/              Rendering, URL, block, and archive helpers
 views/                     Pug templates
 public/                    Static CSS, images, fonts, and generated bundles
 i18n/                      Locale JSON files
@@ -104,7 +104,6 @@ For a personal dev instance, MongoDB Atlas is the path of least resistance becau
 4. Create a `.env` file. For a minimal bootable local instance:
 
    ```sh
-   APP_AUTH=replace-with-a-long-random-secret
    MONGO_DB_ADDR=your-cluster.mongodb.net
    MONGO_DB_PW=your-mongodb-password
    PORT=3000
@@ -148,7 +147,6 @@ Then visit `/rooms/general/blocks/new` to create posts through the UI, or use th
 
 | Variable | Purpose |
 | --- | --- |
-| `APP_AUTH` | Secret used to sign/verify JWT auth tokens. Use a long random value. |
 | `MONGO_DB_ADDR` | MongoDB Atlas host, for example `cluster0.example.mongodb.net`. |
 | `MONGO_DB_PW` | Password for the hard-coded Mongo user `daily-page-admin`. |
 

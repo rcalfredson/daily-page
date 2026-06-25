@@ -2,25 +2,25 @@ import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import QRCode from 'qrcode';
-import { findUserById } from '../../db/userService.js';
 import User from '../../db/models/User.js';
 import { isAuthenticated, noCache } from '../../middleware/auth.js'
-import { verifyJWT } from '../../services/jwt.js';
-import { makeUserJWT } from '../../utils/jwtHelper.js';
 import { getUiLangFromReq } from '../../services/localeContext.js';
 import { sendEmail } from '../../services/mailgunService.js';
 import { buildPasswordResetEmail } from '../../services/emailTemplates/passwordReset.js';
 import { consumeRecoveryCode, generateRecoveryCodes, hashRecoveryCodes } from '../../services/recoveryCodes.js';
 import { generateTotpSecret, makeOtpAuthUrl, verifyTotp } from '../../services/totp.js';
+import {
+  authenticateRequest,
+  createAuthSession,
+  revokeAuthSessionForRequest,
+  revokeAuthSessionsForUser
+} from '../../services/authSessions.js';
 
 const router = Router();
 
-const authCookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'Lax',
-  maxAge: 24 * 60 * 60 * 1000,
-};
+function isRememberMeEnabled(value) {
+  return value === true || value === 'true' || value === 'on' || value === '1';
+}
 
 const useAuthAPI = (app) => {
   app.use('/api/v1/auth', router);
@@ -62,15 +62,12 @@ const useAuthAPI = (app) => {
         }
       }
 
-      const token = makeUserJWT({
-        id: user._id,
-        username: user.username,
-        profilePic: user.profilePic,
-        bio: user.bio,
-        streakLength: user.streakLength
+      await createAuthSession({
+        user,
+        rememberMe: isRememberMeEnabled(req.body.rememberMe),
+        req,
+        res,
       });
-
-      res.cookie('auth_token', token, authCookieOptions);
 
       res.status(200).json({ message: 'Login successful!' });
     } catch (error) {
@@ -79,8 +76,8 @@ const useAuthAPI = (app) => {
     }
   });
 
-  router.post('/logout', (req, res) => {
-    res.clearCookie('auth_token', { httpOnly: true, sameSite: 'Lax', secure: process.env.NODE_ENV === 'production', path: '/' });
+  router.post('/logout', async (req, res) => {
+    await revokeAuthSessionForRequest(req, res);
     return res.sendStatus(204);
   });
 
@@ -145,6 +142,7 @@ const useAuthAPI = (app) => {
       user.twoFactorPendingSecret = null;
       user.twoFactorPendingSecretExpires = null;
       await user.save();
+      await revokeAuthSessionsForUser(user._id);
 
       return res.status(200).json({ ok: true, code: 'RESET_OK' });
     } catch (error) {
@@ -153,32 +151,22 @@ const useAuthAPI = (app) => {
     }
   });
 
-  router.get('/me', noCache, (req, res) => {
-    const token = req.cookies.auth_token;
-    if (!token) {
-      return res.status(401).json({ error: 'Not authenticated' });
-    }
-
+  router.get('/me', noCache, async (req, res) => {
     try {
-      const userData = verifyJWT(token);
-      findUserById(userData.id)
-        .then((user) => {
-          if (!user) {
-            return res.status(401).json({ error: 'Invalid token' });
-          }
-          res.status(200).json({
-            id: user._id,
-            username: user.username,
-            email: user.email,
-            profilePic: user.profilePic
-          });
-        })
-        .catch((err) => {
-          console.error('Error fetching user:', err);
-          res.status(500).json({ error: 'Internal server error' });
-        });
-    } catch {
-      res.status(401).json({ error: 'Invalid token' });
+      const auth = await authenticateRequest(req, res);
+      if (!auth) {
+        return res.status(401).json({ error: 'Not authenticated' });
+      }
+
+      res.status(200).json({
+        id: auth.user.id,
+        username: auth.user.username,
+        email: auth.user.email,
+        profilePic: auth.user.profilePic
+      });
+    } catch (error) {
+      console.error('Error fetching authenticated user:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 
@@ -211,6 +199,7 @@ const useAuthAPI = (app) => {
       user.twoFactorPendingSecretExpires = null;
       user.updatedAt = new Date();
       await user.save();
+      await revokeAuthSessionsForUser(user._id, { exceptSessionId: req.authSession?._id });
 
       return res.status(200).json({ ok: true, code: 'PASSWORD_CHANGED' });
     } catch (error) {
@@ -301,6 +290,7 @@ const useAuthAPI = (app) => {
       user.twoFactorRecoveryCodes = await hashRecoveryCodes(recoveryCodes);
       user.updatedAt = new Date();
       await user.save();
+      await revokeAuthSessionsForUser(user._id, { exceptSessionId: req.authSession?._id });
 
       return res.status(200).json({ ok: true, code: 'TWO_FACTOR_ENABLED', recoveryCodes });
     } catch (error) {
@@ -342,6 +332,7 @@ const useAuthAPI = (app) => {
       user.twoFactorRecoveryCodes = [];
       user.updatedAt = new Date();
       await user.save();
+      await revokeAuthSessionsForUser(user._id, { exceptSessionId: req.authSession?._id });
 
       return res.status(200).json({ ok: true, code: 'TWO_FACTOR_DISABLED' });
     } catch (error) {

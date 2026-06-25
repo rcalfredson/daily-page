@@ -12,7 +12,6 @@ import { isAuthenticated } from '../../middleware/auth.js'
 import { getUiLangFromReq } from '../../services/localeContext.js';
 import { uploadProfilePic } from '../../services/uploadProfilePic.js';
 import { buildVerifyEmail } from '../../services/emailTemplates/verifyEmail.js';
-import { makeUserJWT, refreshAuthToken } from '../../utils/jwtHelper.js';
 import { sendEmail } from '../../services/mailgunService.js';
 
 const router = Router();
@@ -169,22 +168,6 @@ const useUserAPI = (app) => {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      const newToken = makeUserJWT({
-        id: updatedUser._id,
-        username: updatedUser.username,
-        profilePic: updatedUser.profilePic,
-        bio: updatedUser.bio,
-        streakLength: updatedUser.streakLength
-      });
-
-      // Setear la cookie con el nuevo token
-      res.cookie('auth_token', newToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Lax',
-        maxAge: 24 * 60 * 60 * 1000,
-      });
-
       res.status(200).json({ message: 'Profile updated successfully' });
     } catch (error) {
       console.error(`Error updating user profile for ID: ${userId}`, error.message);
@@ -196,7 +179,6 @@ const useUserAPI = (app) => {
     const userId = req.user.id;
     try {
       const updatedUser = await updateUserStreak(userId, { timeZone: req.body?.timeZone });
-      refreshAuthToken(res, updatedUser);
 
       res.status(200).json({ streakLength: updatedUser.streakLength });
     } catch (error) {
@@ -231,15 +213,7 @@ const useUserAPI = (app) => {
       const { userId } = req.params;
 
       try {
-        const { imageUrl, newToken } = await uploadProfilePic(req, userId);
-
-        // Set the new JWT in the cookies
-        res.cookie('auth_token', newToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'Lax',
-          maxAge: 24 * 60 * 60 * 1000,
-        });
+        const { imageUrl } = await uploadProfilePic(req, userId);
 
         res.status(200).json({ success: true, imageUrl });
       } catch (error) {
