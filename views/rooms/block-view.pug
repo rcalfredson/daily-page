@@ -143,46 +143,75 @@ block content
               i.fa.fa-flag(aria-hidden="true")
               | #{t('blockView.buttons.flagContent')}
 
-    // Description block, read-only style
-    if descriptionHTML
-      .block-description-card(lang=lang dir=blockDir)
-        span.description-label= t('blockView.description.label')
-        .description-body.collapsed
-          div#description-view!= descriptionHTML
-        .expand-toggle
-          span(
-            data-expand-label=t('blockView.description.expand')
-            data-collapse-label=t('blockView.description.collapse')
-          )= t('blockView.description.expand')
+    .block-view-layout(class=recommendations && recommendations.length ? 'block-view-layout--with-recommendations' : '')
+      .block-view-primary
+        // Description block, read-only style
+        if descriptionHTML
+          .block-description-card(lang=lang dir=blockDir)
+            span.description-label= t('blockView.description.label')
+            .description-body.collapsed
+              div#description-view!= descriptionHTML
+            .expand-toggle
+              span(
+                data-expand-label=t('blockView.description.expand')
+                data-collapse-label=t('blockView.description.collapse')
+              )= t('blockView.description.expand')
 
-    if editorialContext
-      aside.block-editorial-card(lang=(uiLang || 'en'))
-        .block-editorial-card__header
-          h2.block-editorial-card__title= t('blockView.editorial.heading')
-          if editorialCluster && editorialCluster.label
-            p.block-editorial-card__cluster
-              span.meta-label= t('blockView.editorial.clusterLabel')
-              span.block-editorial-card__cluster-name= editorialCluster.label
+        if editorialContext
+          aside.block-editorial-card(lang=(uiLang || 'en'))
+            .block-editorial-card__header
+              h2.block-editorial-card__title= t('blockView.editorial.heading')
+              if editorialCluster && editorialCluster.label
+                p.block-editorial-card__cluster
+                  span.meta-label= t('blockView.editorial.clusterLabel')
+                  span.block-editorial-card__cluster-name= editorialCluster.label
 
-        if editorialPrimaryPillar
-          section.block-editorial-section
-            h3.block-editorial-section__title= t('blockView.editorial.primaryPillarHeading')
-            +editorialLink(editorialPrimaryPillar)
+            if editorialPrimaryPillar
+              section.block-editorial-section
+                h3.block-editorial-section__title= t('blockView.editorial.primaryPillarHeading')
+                +editorialLink(editorialPrimaryPillar)
 
-        if editorialRelated.length
-          +editorialListSection('blockView.editorial.relatedHeading', editorialRelated, editorialPreviewCount)
+            if editorialRelated.length
+              +editorialListSection('blockView.editorial.relatedHeading', editorialRelated, editorialPreviewCount)
 
-        if editorialCluster && editorialCluster.nearby && editorialCluster.nearby.length
-          +editorialListSection('blockView.editorial.clusterHeading', editorialCluster.nearby, editorialPreviewCount)
+            if editorialCluster && editorialCluster.nearby && editorialCluster.nearby.length
+              +editorialListSection('blockView.editorial.clusterHeading', editorialCluster.nearby, editorialPreviewCount)
 
-    // The main content, already rendered to HTML on the server
-    if block.contentHTML
-      .block-content(lang=lang dir=blockDir)
-        != block.contentHTML
-    include ../partials/_reaction_bar
-    hr
-    +tagSection(block.tags, false)
-    include ../partials/_comments_section
+        // The main content, already rendered to HTML on the server
+        if block.contentHTML
+          .block-content(lang=lang dir=blockDir)
+            != block.contentHTML
+        include ../partials/_reaction_bar
+        hr
+        +tagSection(block.tags, false)
+
+      if recommendations && recommendations.length
+        aside.block-recommendations(aria-labelledby='recommendations-heading' lang=(uiLang || 'en'))
+          .block-recommendations__header
+            p.block-recommendations__eyebrow= t('blockView.recommendations.eyebrow')
+            h2#recommendations-heading.block-recommendations__heading= t('blockView.recommendations.heading')
+            p.block-recommendations__description= t('blockView.recommendations.description')
+          ol.block-recommendations__list
+            each recommendation in recommendations
+              - const recommendationDate = recommendation.createdAt ? new Date(recommendation.createdAt) : null;
+              li.block-recommendation
+                a.block-recommendation__link(href=uiPath(`/rooms/${recommendation.roomId}/blocks/${recommendation.id}`))
+                  span.block-recommendation__room= t('blockView.recommendations.roomLabel', { room: recommendation.roomName })
+                  span.block-recommendation__title(lang=(recommendation.lang || 'en') dir=(textDirForLang ? textDirForLang(recommendation.lang || 'en') : 'ltr'))= recommendation.title
+                  if recommendation.description
+                    span.block-recommendation__summary(lang=(recommendation.lang || 'en') dir=(textDirForLang ? textDirForLang(recommendation.lang || 'en') : 'ltr'))= recommendation.description
+                  span.block-recommendation__meta
+                    if recommendation.creator
+                      span= t('blockView.recommendations.byAuthor', { author: recommendation.creator })
+                    if recommendationDate
+                      time(datetime=recommendationDate.toISOString())= recommendationDate.toLocaleDateString(uiLang || undefined, { dateStyle: 'medium' })
+                  if recommendation.tags && recommendation.tags.length
+                    span.block-recommendation__tags(lang=(recommendation.lang || 'en') dir=(textDirForLang ? textDirForLang(recommendation.lang || 'en') : 'ltr'))
+                      each tag in recommendation.tags
+                        span.block-recommendation__tag= tag
+
+      .block-view-conversation
+        include ../partials/_comments_section
 
   // Reuse your login modal partial if needed
   include ../partials/_login_modal
