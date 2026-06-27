@@ -42,6 +42,13 @@
         "texture": "Background"
       }
     },
+    "recommendations": {
+      "eyebrow": "Discover something related",
+      "heading": "Keep reading",
+      "description": "Posts connected by topic, language, and community signals.",
+      "roomLabel": "In {room}",
+      "byAuthor": "By {author}"
+    },
     "comments": {
       "heading": "Comments",
       "count": "{count} comments",

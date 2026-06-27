@@ -5,6 +5,7 @@ import {
   getPublicTranslationByGroupAndLang
 } from '../db/blockService.js';
 import { getBlockEditorialContext } from '../db/blockEditorialContextService.js';
+import { getBlockRecommendations } from '../db/blockRecommendationService.js';
 import {
   getCommentsForBlockView,
   getFocusedCommentThreadForBlockView
@@ -74,7 +75,22 @@ router.get(
       const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
       const translations = await getPublicTranslations(block.groupId);
 
-      const [reactionCounts, commentsData, focusedCommentData, dbUser, authorUser, editorialContext] = await Promise.all([
+      const recommendationsPromise = getBlockRecommendations(block, { limit: 5 })
+        .catch((error) => {
+          console.error(`Error loading recommendations for block ${block_id}:`, error);
+          return [];
+        });
+
+      const [
+        reactionCounts,
+        commentsData,
+        focusedCommentData,
+        dbUser,
+        authorUser,
+        editorialContext,
+        roomMetadata,
+        recommendations
+      ] = await Promise.all([
         getReactionCounts(block_id),
         getCommentsForBlockView({
           blockId: block_id,
@@ -99,7 +115,9 @@ router.get(
         block.creator && block.creator !== 'anonymous'
           ? findUserByUsername(block.creator)
           : Promise.resolve(null),
-        getBlockEditorialContext(block)
+        getBlockEditorialContext(block),
+        getRoomMetadata(room_id, uiLang || 'en'),
+        recommendationsPromise
       ]);
 
       let userReactions = [];
@@ -112,9 +130,29 @@ router.get(
         block.userVote = userVote;
       }
 
-      // Room metadata localized (match your editor approach)
-      const roomMetadata = await getRoomMetadata(room_id, uiLang || 'en');
       const roomName = roomMetadata?.displayName || roomMetadata?.name || room_id;
+      const recommendationRoomIds = Array.from(new Set(
+        recommendations.map((recommendation) => recommendation.roomId)
+      ));
+      const recommendationRoomNames = new Map(await Promise.all(
+        recommendationRoomIds.map(async (recommendationRoomId) => {
+          try {
+            const metadata = recommendationRoomId === room_id
+              ? roomMetadata
+              : await getRoomMetadata(recommendationRoomId, uiLang || 'en');
+            return [
+              recommendationRoomId,
+              metadata?.displayName || metadata?.name || recommendationRoomId
+            ];
+          } catch {
+            return [recommendationRoomId, recommendationRoomId];
+          }
+        })
+      ));
+      const recommendationItems = recommendations.map((recommendation) => ({
+        ...recommendation,
+        roomName: recommendationRoomNames.get(recommendation.roomId) || recommendation.roomId
+      }));
       const authorProfile = block.creator
         ? {
           username: block.creator,
@@ -143,6 +181,7 @@ router.get(
         roomName,
         authorProfile,
         block,
+        recommendations: recommendationItems,
         editorialContext,
         descriptionHTML,
         title,
