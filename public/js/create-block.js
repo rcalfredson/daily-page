@@ -44,6 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
+    data.bannerImage = {
+      url: data.bannerImageUrl || '',
+      caption: data.bannerImageCaption || ''
+    };
+    delete data.bannerImageUrl;
+    delete data.bannerImageCaption;
+
     // tags desde el partial
     const tagContainer = document.getElementById('tag-container');
     let tagsArray = [];

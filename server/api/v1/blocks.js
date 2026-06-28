@@ -19,6 +19,7 @@ import {
 import { updateUserStreak } from '../../db/userService.js';
 import optionalAuth from '../../middleware/optionalAuth.js';
 import { normalizeEditorialInput } from '../../db/editorial.js';
+import { normalizeBannerImageInput } from '../../db/bannerImage.js';
 import { generateAnonymousId } from '../../utils/anonymousId.js';
 import {
   canEditBlockContent,
@@ -97,6 +98,7 @@ const useBlockAPI = (app) => {
       groupId,
       originalBlock,
       editorial,
+      bannerImage,
       timeZone
     } = req.body;
 
@@ -115,8 +117,10 @@ const useBlockAPI = (app) => {
     const existingTokens = parseEditTokens(req.cookies.edit_tokens);
 
     let normalizedEditorial;
+    let normalizedBannerImage;
     try {
       normalizedEditorial = normalizeEditorialInput(editorial);
+      normalizedBannerImage = normalizeBannerImageInput(bannerImage);
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
@@ -137,6 +141,9 @@ const useBlockAPI = (app) => {
 
     if (normalizedEditorial?.value !== undefined) {
       blockData.editorial = normalizedEditorial.value;
+    }
+    if (normalizedBannerImage?.value !== undefined) {
+      blockData.bannerImage = normalizedBannerImage.value;
     }
 
     existingTokens.push(blockData.editToken);
@@ -309,7 +316,7 @@ const useBlockAPI = (app) => {
   // 📌 Update the **metadata** of a block (Title, Description, Tags) → Requires Authentication or Edit Token
   globalRouter.post('/:block_id/metadata', optionalAuth, async (req, res) => {
     const { block_id } = req.params;
-    const { title, description, tags, status, editorial } = req.body;
+    const { title, description, tags, status, editorial, bannerImage } = req.body;
 
     try {
       const block = await getBlockById(block_id);
@@ -331,6 +338,20 @@ const useBlockAPI = (app) => {
       if (status !== undefined) fieldUpdates.status = status;
 
       const updates = {};
+      if (bannerImage !== undefined) {
+        let normalizedBannerImage;
+        try {
+          normalizedBannerImage = normalizeBannerImageInput(bannerImage);
+        } catch (error) {
+          return res.status(400).json({ error: error.message });
+        }
+
+        if (normalizedBannerImage.shouldUnset) {
+          updates.$unset = { ...(updates.$unset || {}), bannerImage: 1 };
+        } else if (normalizedBannerImage.value !== undefined) {
+          fieldUpdates.bannerImage = normalizedBannerImage.value;
+        }
+      }
       if (editorial !== undefined) {
         let normalizedEditorial;
         try {
@@ -340,7 +361,7 @@ const useBlockAPI = (app) => {
         }
 
         if (normalizedEditorial.shouldUnset) {
-          updates.$unset = { editorial: 1 };
+          updates.$unset = { ...(updates.$unset || {}), editorial: 1 };
         } else if (normalizedEditorial.value !== undefined) {
           fieldUpdates.editorial = normalizedEditorial.value;
         }

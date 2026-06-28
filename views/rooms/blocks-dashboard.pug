@@ -3,6 +3,7 @@ extends ../layout
 include ../partials/_translation_attribution
 include ../partials/_block_list
 include ../partials/_read_more
+include ../partials/_banner_image
 
 block nav
   include ../navLinks
@@ -16,6 +17,7 @@ block append scripts
   script(src="/js/star-room.js")
   script(src='/js/adjust-date-margin.js')
   script(src='/js/table-scroll-fade.js')
+  script(src='/js/banner-images.js')
 
 block append head
   link(rel='stylesheet' href='/css/block-common.css')
@@ -28,6 +30,7 @@ block append head
   link(rel="stylesheet" href="/css/star-room.css")
   link(rel='stylesheet' href='/css/translation-attribution.css')
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
+  link(rel='stylesheet' href='/css/banner-images.css')
 
 prepend content
   -

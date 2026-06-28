@@ -1,0 +1,70 @@
+.block-banner {
+  margin: 0;
+  overflow: hidden;
+  background: var(--secondary-bg, #f3f5f7);
+}
+
+.block-banner__link {
+  display: block;
+}
+
+.block-banner__image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.block-banner--hero {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 18px;
+}
+
+.block-banner--hero .block-banner__image {
+  max-height: min(68vh, 46rem);
+  aspect-ratio: 16 / 9;
+}
+
+.block-banner__caption {
+  padding: 0.65rem 0.9rem;
+  color: var(--muted-text-color, #667085);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.block-banner--card {
+  margin: -15px -20px 15px;
+  border-radius: 8px 8px 0 0;
+}
+
+.block-banner--card .block-banner__image {
+  aspect-ratio: 2.4 / 1;
+}
+
+.block-banner--featured {
+  margin: -2rem -1.5rem 1rem;
+  border-radius: inherit;
+}
+
+.block-banner--featured .block-banner__image {
+  aspect-ratio: 2 / 1;
+}
+
+[data-banner-image][hidden] {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .block-banner--hero {
+    margin-right: -0.5rem;
+    margin-left: -0.5rem;
+    border-radius: 10px;
+  }
+
+  .block-banner--hero .block-banner__image,
+  .block-banner--card .block-banner__image {
+    aspect-ratio: 16 / 9;
+  }
+}

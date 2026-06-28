@@ -58,6 +58,7 @@ a {
 }
 
 input[type="text"],
+input[type="url"],
 textarea {
   width: 100%;
   box-sizing: border-box;
@@ -68,6 +69,7 @@ textarea {
 }
 
 input[type="text"]:focus-visible,
+input[type="url"]:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 .btn-primary:focus-visible,
@@ -91,6 +93,28 @@ textarea {
   padding: 0;
   margin-left: 0;
   margin-right: 0;
+}
+
+.banner-image-fields {
+  padding: 1rem;
+  border: 1px solid #d7dde4;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.banner-image-fields legend {
+  padding: 0 0.35rem;
+  font-weight: bold;
+}
+
+.banner-image-fields .form-help {
+  margin-top: 0;
+  color: #5f6b7a;
+  line-height: 1.4;
+}
+
+.banner-image-fields input + label {
+  margin-top: 0.8rem !important;
 }
 
 .visibility-legend {

@@ -22,6 +22,14 @@
         "label": "Description (optional):",
         "placeholder": "Explain your brilliance… or just wing it."
       },
+      "bannerImage": {
+        "legend": "Banner image (optional)",
+        "help": "Use an externally hosted image. It will appear above the post and on spacious post cards.",
+        "urlLabel": "Image URL:",
+        "urlPlaceholder": "https://example.com/image.jpg",
+        "captionLabel": "Caption / image description (optional):",
+        "captionPlaceholder": "Describe or credit the image"
+      },
       "initialContent": {
         "label": "Initial Content (optional):",
         "help": "Start writing here or press “Create” to continue on the full editor page, where you can embed images and collaborate in real time.",

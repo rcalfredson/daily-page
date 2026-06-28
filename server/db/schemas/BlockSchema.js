@@ -1,4 +1,24 @@
 import { Schema } from 'mongoose';
+import { isValidBannerImageUrl } from '../bannerImage.js';
+
+const bannerImageSchema = new Schema({
+  url: {
+    type: String,
+    required: true,
+    trim: true,
+    maxlength: 2048,
+    validate: {
+      validator: isValidBannerImageUrl,
+      message: 'Banner image URL must be a valid http or https URL.'
+    }
+  },
+  caption: {
+    type: String,
+    trim: true,
+    maxlength: 300,
+    default: undefined
+  }
+}, { _id: false });
 
 const editorialSchema = new Schema({
   clusterKey: {
@@ -48,6 +68,11 @@ const blockSchema = new Schema({
   description: { type: String, default: '' },
   tags: { type: [String], default: [], index: true },
   content: { type: String, default: '' },
+  bannerImage: {
+    type: bannerImageSchema,
+    required: false,
+    default: undefined
+  },
   roomId: { type: String, required: true, index: true },
   creator: { type: String, required: true },
   userId: { type: String, required: false, index: true },

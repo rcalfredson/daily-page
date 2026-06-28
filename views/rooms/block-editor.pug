@@ -9,6 +9,7 @@ block append head
   link(rel='stylesheet' href='/css/toast.css')
   link(rel='stylesheet' href='/css/modal.css')
   link(rel='stylesheet' href='/css/delete-block.css')
+  link(rel='stylesheet' href='/css/banner-images.css')
 
 block content
   include ../partials/_tag_section
@@ -73,6 +74,18 @@ block content
               // Expand/Collapse toggle at the bottom
               .expand-toggle
                 span= t('blockEditor.description.expand')
+
+            if canManageBlock
+              .block-banner-editor
+                h3.block-banner-editor__title= t('blockEditor.bannerImage.label')
+                p.banner-image-help= t('blockEditor.bannerImage.help')
+                .block-banner-editor__field
+                  label.block-banner-editor__label(for='banner-image-url')= t('blockEditor.bannerImage.urlLabel')
+                  input.block-banner-editor__input#banner-image-url(type='url' maxlength='2048' value=(block.bannerImage && block.bannerImage.url) || '' placeholder=t('blockEditor.bannerImage.urlPlaceholder'))
+                .block-banner-editor__field
+                  label.block-banner-editor__label(for='banner-image-caption')= t('blockEditor.bannerImage.captionLabel')
+                  input.block-banner-editor__input#banner-image-caption(type='text' maxlength='300' value=(block.bannerImage && block.bannerImage.caption) || '' placeholder=t('blockEditor.bannerImage.captionPlaceholder'))
+                button#save-banner-image-btn(type='button')= t('blockEditor.bannerImage.save')
 
             +tagSection(block.tags, canManageBlock)
           .header
@@ -144,6 +157,7 @@ block scripts
   script(src='/js/editor.js')
   script(src='/js/modal.js')
   script(src='/js/edit-block-description.js')
+  script(src='/js/edit-banner-image.js')
   script(src='/js/lock-block.js')
   script(src='/js/set-share-link.js')
   if canManageBlock

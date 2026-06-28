@@ -11,6 +11,7 @@ mixin blockList(blocks, period, label, room_id)
   ul
     each block in blocks
       li.block-preview(lang=(block.lang || 'en'))
+        +blockBanner(block, 'card', room_id)
         div.content
           .title-row
             a.block-title(

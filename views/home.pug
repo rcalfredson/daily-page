@@ -2,6 +2,7 @@ extends layout
 
 include partials/_read_more
 include partials/_translation_attribution
+include partials/_banner_image
 
 block nav
   include navLinks
@@ -12,6 +13,7 @@ block append scripts
   script(src='/js/reaction-counts-hydrate.js')
   script(src="/js/modal.js")
   script(src='/js/table-scroll-fade.js')
+  script(src='/js/banner-images.js')
 
 block append head
   link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
@@ -24,6 +26,7 @@ block append head
   link(rel='stylesheet' href='/css/home.css')
   link(rel='stylesheet' href='/css/translation-attribution.css')
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
+  link(rel='stylesheet' href='/css/banner-images.css')
 
 block content
 
@@ -186,6 +189,7 @@ block content
   if featuredBlock
     .featured-section
       .featured-card
+        +blockBanner(featuredBlock, 'featured', featuredBlock.roomId)
         .featured-ribbon= t('home.featured.blockRibbon')
         // Título del block
         h2.card-title
@@ -235,6 +239,7 @@ block content
       ul.block-list
         each block in topBlocks
           li.block-preview(lang=(block.lang || 'en'))
+            +blockBanner(block, 'card', block.roomId)
             div.content
               .title-row
                 a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))= block.title

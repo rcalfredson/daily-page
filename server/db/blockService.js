@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import Block from './models/Block.js';
 import * as cache from '../services/cache.js';
 import { normalizeEditorialInput } from './editorial.js';
+import { normalizeBannerImageInput } from './bannerImage.js';
 
 const DEFAULT_TTL = 5000; // Cache for 5 seconds (adjust as needed)
 
@@ -52,6 +53,11 @@ export async function createBlock(data) {
     const { value } = normalizeEditorialInput(data.editorial);
     if (value !== undefined) data.editorial = value;
     else delete data.editorial;
+  }
+  if (Object.prototype.hasOwnProperty.call(data, 'bannerImage')) {
+    const { value } = normalizeBannerImageInput(data.bannerImage);
+    if (value !== undefined) data.bannerImage = value;
+    else delete data.bannerImage;
   }
   const block = new Block(data);
   return await block.save();

@@ -5,6 +5,7 @@ block nav
 
 block append head
   link(rel='stylesheet' href='/css/create-block.css')
+  link(rel='stylesheet' href='/css/banner-images.css')
   link(rel='stylesheet' href='/css/block-tags.css')
   link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css')
 
@@ -36,6 +37,13 @@ block content
     .form-group
       label(for='description')= t('createBlock.form.description.label')
       textarea#description(name='description' placeholder=t('createBlock.form.description.placeholder'))
+    fieldset.form-group.banner-image-fields
+      legend= t('createBlock.form.bannerImage.legend')
+      p.form-help= t('createBlock.form.bannerImage.help')
+      label(for='banner-image-url')= t('createBlock.form.bannerImage.urlLabel')
+      input#banner-image-url(type='url' name='bannerImageUrl' maxlength='2048' placeholder=t('createBlock.form.bannerImage.urlPlaceholder'))
+      label(for='banner-image-caption')= t('createBlock.form.bannerImage.captionLabel')
+      input#banner-image-caption(type='text' name='bannerImageCaption' maxlength='300' placeholder=t('createBlock.form.bannerImage.captionPlaceholder'))
     .form-group
       label(for='initial-content')= t('createBlock.form.initialContent.label')
       p.form-help= t('createBlock.form.initialContent.help')
