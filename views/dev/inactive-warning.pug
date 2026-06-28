@@ -1,0 +1,12 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block content
+  main
+    h1 Inactivity warning preview
+    p Use the theme control in the navigation bar to compare the warning in light and dark modes.
+
+  include ../inactiveWarning
+  +inactiveWarning(true)

@@ -956,6 +956,7 @@ Editor
   background-color: rgb(232, 243, 231);
   border: 5px solid rgb(191, 243, 230);
   border-radius: 4px;
+  color: var(--text-color);
   font-size: 20px;
   height: 170px;
   left: 32%;
@@ -982,6 +983,19 @@ button.inactive-dismiss {
   float: unset;
   margin: 0 auto;
   width: 60px;
+}
+
+html[data-theme="dark"] #inactive-warning {
+  background-color: var(--surface-raised-bg);
+  border-color: color-mix(in srgb, var(--success-color) 45%, var(--border-color));
+  color: var(--text-color);
+  box-shadow: var(--box-shadow);
+}
+
+html[data-theme="dark"] button.inactive-dismiss {
+  background-color: color-mix(in srgb, var(--success-color) 18%, var(--secondary-bg));
+  border-color: color-mix(in srgb, var(--success-color) 45%, var(--border-color));
+  color: var(--text-color);
 }
 
 #ownName {

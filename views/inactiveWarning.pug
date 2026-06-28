@@ -1,5 +1,6 @@
-#inactive-warning(style="visibility: hidden;")
-  strong!= t('blockEditor.inactiveWarning.message')
-  .inactive-dismiss#box
-    button.inactive-dismiss
-      span.inactive-dismiss= t('blockEditor.inactiveWarning.confirm')
+mixin inactiveWarning(isVisible = false)
+  #inactive-warning(style=`visibility: ${isVisible ? 'visible' : 'hidden'};`)
+    strong!= t('blockEditor.inactiveWarning.message')
+    .inactive-dismiss#box
+      button.inactive-dismiss(type='button')
+        span.inactive-dismiss= t('blockEditor.inactiveWarning.confirm')

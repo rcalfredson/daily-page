@@ -224,6 +224,7 @@ Rare UI states can be previewed without manufacturing matching database or colla
 - `/en/__dev/views/tag-detail` to preview the tag-detail trend chart with representative fixture data.
 - `/en/__dev/views/full-post-capacity` to preview the message shown when a post editor has reached its collaborator limit.
 - `/en/__dev/views/toasts` to trigger neutral, success, error, long-message, and stacked toast states.
+- `/en/__dev/views/inactive-warning` to preview the editor inactivity warning in light and dark modes.
 
 Replace `/en/` with another supported UI-language prefix when checking localized layout behavior. These routes render the real application templates and shared frontend assets, but use development fixture data where needed.
 
