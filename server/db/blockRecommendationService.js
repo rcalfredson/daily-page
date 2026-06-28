@@ -21,6 +21,19 @@ const CANDIDATE_LIMIT = 80;
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const CACHE_STALE_TTL_MS = 60 * 60 * 1000;
 
+function recommendationCacheKey(block, limit) {
+  return `block-recommendations-${block._id}-${new Date(block.updatedAt || 0).getTime()}-${limit}`;
+}
+
+async function calculateBlockRecommendations(block, limit) {
+  const candidates = await fetchCandidates(block);
+  return rankBlockRecommendations(block, candidates, { limit }).map(toViewModel);
+}
+
+function cacheOptions() {
+  return { ttlMs: CACHE_TTL_MS, jitterMs: 60 * 1000, staleTtlMs: CACHE_STALE_TTL_MS };
+}
+
 function recommendationMatch(block) {
   return publiclyVisibleBlockMatch({
     _id: { $ne: block._id },
@@ -91,15 +104,30 @@ function toViewModel(block) {
 export async function getBlockRecommendations(block, options = {}) {
   if (!block?._id) return [];
   const limit = options.limit || 5;
-  const cacheKey = `block-recommendations-${block._id}-${new Date(block.updatedAt || 0).getTime()}-${limit}`;
+  const cacheKey = recommendationCacheKey(block, limit);
 
   return cache.get(
     cacheKey,
-    async () => {
-      const candidates = await fetchCandidates(block);
-      return rankBlockRecommendations(block, candidates, { limit }).map(toViewModel);
-    },
-    [],
-    { ttlMs: CACHE_TTL_MS, jitterMs: 60 * 1000, staleTtlMs: CACHE_STALE_TTL_MS }
+    calculateBlockRecommendations,
+    [block, limit],
+    cacheOptions()
   );
+}
+
+// Optional recommendations must never hold up the main post response. A cache
+// miss starts the same deduplicated calculation used by the hydration endpoint
+// and reports null so the view can render a loading shell.
+export function getBlockRecommendationsNonBlocking(block, options = {}) {
+  if (!block?._id) return [];
+  const limit = options.limit || 5;
+  const cacheKey = recommendationCacheKey(block, limit);
+
+  const recommendations = cache.getNonBlocking(
+    cacheKey,
+    calculateBlockRecommendations,
+    [block, limit],
+    cacheOptions()
+  );
+
+  return recommendations === undefined ? null : recommendations;
 }

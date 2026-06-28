@@ -220,6 +220,40 @@ hr {
   margin-bottom: 1rem;
 }
 
+.block-recommendations--loading {
+  overflow: hidden;
+}
+
+.block-recommendations__skeleton {
+  height: 5.25rem;
+  margin-bottom: 0.75rem;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #e8edf5 25%, #f5f7fb 50%, #e8edf5 75%);
+  background-size: 200% 100%;
+  animation: recommendation-shimmer 1.4s ease-in-out infinite;
+}
+
+.block-recommendations__skeleton--heading {
+  width: 62%;
+  height: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.block-recommendations__skeleton:last-child {
+  margin-bottom: 0;
+}
+
+@keyframes recommendation-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .block-recommendations__skeleton {
+    animation: none;
+  }
+}
+
 .block-recommendations__eyebrow {
   margin: 0 0 0.25rem;
   color: #596a82;
@@ -992,6 +1026,16 @@ html[data-theme="dark"] .block-recommendation__room {
 html[data-theme="dark"] .block-recommendation__tag {
   color: var(--text-color);
   background: color-mix(in srgb, var(--highlight-color) 13%, var(--surface-raised-bg));
+}
+
+html[data-theme="dark"] .block-recommendations__skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-raised-bg) 25%,
+    color-mix(in srgb, var(--highlight-color) 9%, var(--surface-raised-bg)) 50%,
+    var(--surface-raised-bg) 75%
+  );
+  background-size: 200% 100%;
 }
 
 html[data-theme="dark"] .block-description-card {
