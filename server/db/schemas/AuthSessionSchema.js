@@ -8,7 +8,7 @@ const authSessionSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   lastSeenAt: { type: Date, default: Date.now },
   expiresAt: { type: Date, required: true, index: true },
-  absoluteExpiresAt: { type: Date, required: true, index: true },
+  absoluteExpiresAt: { type: Date, required: true },
   revokedAt: { type: Date, default: null, index: true },
 }, {
   toObject: {
