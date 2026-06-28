@@ -953,7 +953,7 @@ html[data-theme="dark"] .cm-s-easymde .cm-attribute {
   border: 1px solid var(--highlight-color);
   border-radius: 6px;
   background: var(--highlight-color);
-  color: #fff;
+  color: var(--highlight-contrast);
   font-size: 0.9rem;
   font-weight: 600;
   line-height: 1.2;
