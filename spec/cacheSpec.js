@@ -46,4 +46,22 @@ describe('cache service', () => {
     expect(second).toBe('value');
     expect(calls).toBe(1);
   });
+
+  it('returns immediately and deduplicates refreshes on non-blocking cold misses', async () => {
+    let calls = 0;
+    const refresh = async () => {
+      calls += 1;
+      await delay(20);
+      return 'ready';
+    };
+
+    expect(cache.getNonBlocking('optional-key', refresh, [], { ttlMs: 50 })).toBeUndefined();
+    expect(cache.getNonBlocking('optional-key', refresh, [], { ttlMs: 50 })).toBeUndefined();
+    expect(calls).toBe(1);
+
+    await delay(30);
+
+    expect(cache.getNonBlocking('optional-key', refresh, [], { ttlMs: 50 })).toBe('ready');
+    expect(calls).toBe(1);
+  });
 });

@@ -69,6 +69,34 @@ export async function get(key, refresh, args = [], timeOrOpts = DEFAULT_TTL_MS) 
   return p;
 }
 
+/**
+ * Return a cached value immediately, including a stale value. On a cold miss,
+ * start one deduplicated refresh and return undefined instead of making the
+ * caller wait for it. This is useful for optional content on latency-sensitive
+ * page renders.
+ */
+export function getNonBlocking(key, refresh, args = [], timeOrOpts = DEFAULT_TTL_MS) {
+  const { ttlMs, jitterMs, staleTtlMs } = readOptions(timeOrOpts);
+  const finalTtlMs = calculateTtl(ttlMs, jitterMs);
+  const existing = cache.get(key);
+
+  if (existing !== null) {
+    if (!isManagedEntry(existing)) return existing;
+
+    if (Date.now() >= existing.expiresAt && !inFlight.has(key)) {
+      refreshInBackground(key, refresh, args, finalTtlMs, staleTtlMs);
+    }
+
+    return existing.value;
+  }
+
+  if (!inFlight.has(key)) {
+    refreshInBackground(key, refresh, args, finalTtlMs, staleTtlMs);
+  }
+
+  return undefined;
+}
+
 function putValue(key, value, ttlMs, staleTtlMs) {
   if (!staleTtlMs) {
     cache.put(key, value, ttlMs);

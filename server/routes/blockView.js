@@ -5,7 +5,10 @@ import {
   getPublicTranslationByGroupAndLang
 } from '../db/blockService.js';
 import { getBlockEditorialContext } from '../db/blockEditorialContextService.js';
-import { getBlockRecommendations } from '../db/blockRecommendationService.js';
+import {
+  getBlockRecommendations,
+  getBlockRecommendationsNonBlocking
+} from '../db/blockRecommendationService.js';
 import {
   getCommentsForBlockView,
   getFocusedCommentThreadForBlockView
@@ -31,6 +34,63 @@ function normalizeCommentId(commentId) {
   const value = String(commentId || '').trim();
   return value || null;
 }
+
+async function addRecommendationRoomNames(recommendations, currentRoomId, roomMetadata, uiLang) {
+  const roomIds = Array.from(new Set(
+    recommendations.map((recommendation) => recommendation.roomId)
+  ));
+  const roomNames = new Map(await Promise.all(
+    roomIds.map(async (roomId) => {
+      try {
+        const metadata = roomId === currentRoomId
+          ? roomMetadata
+          : await getRoomMetadata(roomId, uiLang);
+        return [roomId, metadata?.displayName || metadata?.name || roomId];
+      } catch {
+        return [roomId, roomId];
+      }
+    })
+  ));
+
+  return recommendations.map((recommendation) => ({
+    ...recommendation,
+    roomName: roomNames.get(recommendation.roomId) || recommendation.roomId
+  }));
+}
+
+router.get(
+  '/rooms/:room_id/blocks/:block_id/recommendations',
+  optionalAuth,
+  addI18n(['blockView']),
+  async (req, res) => {
+    try {
+      const { room_id, block_id } = req.params;
+      const block = await getBlockById(block_id);
+      if (!block || block.roomId !== room_id) return res.sendStatus(404);
+
+      const uiLang = res.locals.uiLang || res.locals.lang || 'en';
+      const recommendations = await getBlockRecommendations(block, { limit: 5 });
+      if (!recommendations.length) return res.status(204).end();
+
+      const roomMetadata = await getRoomMetadata(room_id, uiLang);
+      const recommendationItems = await addRecommendationRoomNames(
+        recommendations,
+        room_id,
+        roomMetadata,
+        uiLang
+      );
+
+      res.set('Cache-Control', 'private, no-store');
+      return res.render('partials/_block_recommendations', {
+        recommendations: recommendationItems,
+        uiLang
+      });
+    } catch (error) {
+      console.error(`Error loading recommendations for block ${req.params.block_id}:`, error);
+      return res.sendStatus(500);
+    }
+  }
+);
 
 router.get(
   '/rooms/:room_id/blocks/:block_id',
@@ -75,11 +135,7 @@ router.get(
       const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
       const translations = await getPublicTranslations(block.groupId);
 
-      const recommendationsPromise = getBlockRecommendations(block, { limit: 5 })
-        .catch((error) => {
-          console.error(`Error loading recommendations for block ${block_id}:`, error);
-          return [];
-        });
+      const recommendations = getBlockRecommendationsNonBlocking(block, { limit: 5 });
 
       const [
         reactionCounts,
@@ -88,8 +144,7 @@ router.get(
         dbUser,
         authorUser,
         editorialContext,
-        roomMetadata,
-        recommendations
+        roomMetadata
       ] = await Promise.all([
         getReactionCounts(block_id),
         getCommentsForBlockView({
@@ -116,8 +171,7 @@ router.get(
           ? findUserByUsername(block.creator)
           : Promise.resolve(null),
         getBlockEditorialContext(block),
-        getRoomMetadata(room_id, uiLang || 'en'),
-        recommendationsPromise
+        getRoomMetadata(room_id, uiLang || 'en')
       ]);
 
       let userReactions = [];
@@ -131,28 +185,9 @@ router.get(
       }
 
       const roomName = roomMetadata?.displayName || roomMetadata?.name || room_id;
-      const recommendationRoomIds = Array.from(new Set(
-        recommendations.map((recommendation) => recommendation.roomId)
-      ));
-      const recommendationRoomNames = new Map(await Promise.all(
-        recommendationRoomIds.map(async (recommendationRoomId) => {
-          try {
-            const metadata = recommendationRoomId === room_id
-              ? roomMetadata
-              : await getRoomMetadata(recommendationRoomId, uiLang || 'en');
-            return [
-              recommendationRoomId,
-              metadata?.displayName || metadata?.name || recommendationRoomId
-            ];
-          } catch {
-            return [recommendationRoomId, recommendationRoomId];
-          }
-        })
-      ));
-      const recommendationItems = recommendations.map((recommendation) => ({
-        ...recommendation,
-        roomName: recommendationRoomNames.get(recommendation.roomId) || recommendation.roomId
-      }));
+      const recommendationItems = recommendations === null
+        ? null
+        : await addRecommendationRoomNames(recommendations, room_id, roomMetadata, uiLang || 'en');
       const authorProfile = block.creator
         ? {
           username: block.creator,

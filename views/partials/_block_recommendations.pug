@@ -1,0 +1,23 @@
+aside.block-recommendations(aria-labelledby='recommendations-heading' lang=(uiLang || 'en'))
+  .block-recommendations__header
+    p.block-recommendations__eyebrow= t('blockView.recommendations.eyebrow')
+    h2#recommendations-heading.block-recommendations__heading= t('blockView.recommendations.heading')
+    p.block-recommendations__description= t('blockView.recommendations.description')
+  ol.block-recommendations__list
+    each recommendation in recommendations
+      - const recommendationDate = recommendation.createdAt ? new Date(recommendation.createdAt) : null;
+      li.block-recommendation
+        a.block-recommendation__link(href=uiPath(`/rooms/${recommendation.roomId}/blocks/${recommendation.id}`))
+          span.block-recommendation__room= t('blockView.recommendations.roomLabel', { room: recommendation.roomName })
+          span.block-recommendation__title(lang=(recommendation.lang || 'en') dir=(textDirForLang ? textDirForLang(recommendation.lang || 'en') : 'ltr'))= recommendation.title
+          if recommendation.description
+            span.block-recommendation__summary(lang=(recommendation.lang || 'en') dir=(textDirForLang ? textDirForLang(recommendation.lang || 'en') : 'ltr'))= recommendation.description
+          span.block-recommendation__meta
+            if recommendation.creator
+              span= t('blockView.recommendations.byAuthor', { author: recommendation.creator })
+            if recommendationDate
+              time(datetime=recommendationDate.toISOString())= recommendationDate.toLocaleDateString(uiLang || undefined, { dateStyle: 'medium' })
+          if recommendation.tags && recommendation.tags.length
+            span.block-recommendation__tags(lang=(recommendation.lang || 'en') dir=(textDirForLang ? textDirForLang(recommendation.lang || 'en') : 'ltr'))
+              each tag in recommendation.tags
+                span.block-recommendation__tag= tag
