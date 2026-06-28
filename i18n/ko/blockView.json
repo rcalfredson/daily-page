@@ -42,6 +42,13 @@
         "texture": "배경"
       }
     },
+    "recommendations": {
+      "eyebrow": "관련 글 둘러보기",
+      "heading": "계속 읽기",
+      "description": "주제, 언어 및 커뮤니티 신호를 바탕으로 연결된 게시물입니다.",
+      "roomLabel": "{room}에서",
+      "byAuthor": "{author} 작성"
+    },
     "comments": {
       "heading": "댓글",
       "count": "댓글 {count}개",

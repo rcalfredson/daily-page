@@ -42,6 +42,13 @@
         "texture": "Baggrund"
       }
     },
+    "recommendations": {
+      "eyebrow": "Find noget relateret",
+      "heading": "Læs videre",
+      "description": "Indlæg forbundet via emne, sprog og signaler fra fællesskabet.",
+      "roomLabel": "I {room}",
+      "byAuthor": "Af {author}"
+    },
     "comments": {
       "heading": "Kommentarer",
       "count": "{count} kommentarer",

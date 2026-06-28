@@ -42,6 +42,13 @@
         "texture": "Arka plan"
       }
     },
+    "recommendations": {
+      "eyebrow": "İlgili bir şey keşfedin",
+      "heading": "Okumaya devam edin",
+      "description": "Konu, dil ve topluluk sinyalleriyle bağlantılı gönderiler.",
+      "roomLabel": "{room} içinde",
+      "byAuthor": "Yazan: {author}"
+    },
     "comments": {
       "heading": "Yorumlar",
       "count": "{count} yorum",

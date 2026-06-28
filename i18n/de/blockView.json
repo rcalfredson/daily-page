@@ -42,6 +42,13 @@
         "texture": "Hintergrund"
       }
     },
+    "recommendations": {
+      "eyebrow": "Entdecke etwas Ähnliches",
+      "heading": "Weiterlesen",
+      "description": "Beiträge, die durch Thema, Sprache und Signale der Community verbunden sind.",
+      "roomLabel": "In {room}",
+      "byAuthor": "Von {author}"
+    },
     "comments": {
       "heading": "Kommentare",
       "count": "{count} Kommentare",

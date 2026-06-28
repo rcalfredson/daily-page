@@ -42,6 +42,13 @@
         "texture": "Achtergrond"
       }
     },
+    "recommendations": {
+      "eyebrow": "Ontdek iets verwants",
+      "heading": "Lees verder",
+      "description": "Berichten die verbonden zijn door onderwerp, taal en signalen uit de community.",
+      "roomLabel": "In {room}",
+      "byAuthor": "Door {author}"
+    },
     "comments": {
       "heading": "Opmerkingen",
       "count": "{count} opmerkingen",

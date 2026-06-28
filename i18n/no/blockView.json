@@ -42,6 +42,13 @@
         "texture": "Bakgrunn"
       }
     },
+    "recommendations": {
+      "eyebrow": "Finn noe relatert",
+      "heading": "Les videre",
+      "description": "Innlegg knyttet sammen av emne, språk og signaler fra fellesskapet.",
+      "roomLabel": "I {room}",
+      "byAuthor": "Av {author}"
+    },
     "comments": {
       "heading": "Kommentarer",
       "count": "{count} kommentarer",

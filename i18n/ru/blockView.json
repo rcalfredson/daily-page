@@ -42,6 +42,13 @@
         "texture": "Фон"
       }
     },
+    "recommendations": {
+      "eyebrow": "Найдите что-нибудь по теме",
+      "heading": "Читайте дальше",
+      "description": "Публикации, связанные темой, языком и сигналами сообщества.",
+      "roomLabel": "В комнате {room}",
+      "byAuthor": "Автор: {author}"
+    },
     "comments": {
       "heading": "Комментарии",
       "count": "{count} комментариев",

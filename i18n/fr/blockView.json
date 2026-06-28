@@ -42,6 +42,13 @@
         "texture": "Contexte"
       }
     },
+    "recommendations": {
+      "eyebrow": "Découvrez un contenu similaire",
+      "heading": "Poursuivre la lecture",
+      "description": "Des publications reliées par leur sujet, leur langue et les signaux de la communauté.",
+      "roomLabel": "Dans {room}",
+      "byAuthor": "Par {author}"
+    },
     "comments": {
       "heading": "Commentaires",
       "count": "{count} commentaires",

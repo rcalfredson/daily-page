@@ -42,6 +42,13 @@
         "texture": "Bakgrund"
       }
     },
+    "recommendations": {
+      "eyebrow": "Upptäck något relaterat",
+      "heading": "Läs vidare",
+      "description": "Inlägg som hör ihop genom ämne, språk och signaler från gemenskapen.",
+      "roomLabel": "I {room}",
+      "byAuthor": "Av {author}"
+    },
     "comments": {
       "heading": "Kommentarer",
       "count": "{count} kommentarer",

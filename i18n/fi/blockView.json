@@ -42,6 +42,13 @@
         "texture": "Tausta"
       }
     },
+    "recommendations": {
+      "eyebrow": "Löydä aiheeseen liittyvää",
+      "heading": "Jatka lukemista",
+      "description": "Julkaisuja yhdistävät aihe, kieli ja yhteisön signaalit.",
+      "roomLabel": "Huoneessa {room}",
+      "byAuthor": "Kirjoittanut {author}"
+    },
     "comments": {
       "heading": "Kommentit",
       "count": "{count} kommenttia",

@@ -42,6 +42,13 @@
         "texture": "背景"
       }
     },
+    "recommendations": {
+      "eyebrow": "发现相关内容",
+      "heading": "继续阅读",
+      "description": "根据主题、语言和社区反馈关联的帖子。",
+      "roomLabel": "位于 {room}",
+      "byAuthor": "作者：{author}"
+    },
     "comments": {
       "heading": "评论",
       "count": "{count} 条评论",

@@ -14,6 +14,13 @@
       "expandSection": "Zobrazit dalších {count}", "collapseSection": "Zobrazit méně",
       "roleNames": { "pillar": "Hlavní průvodce", "companion": "Podrobný rozbor", "texture": "Souvislosti" }
     },
+    "recommendations": {
+      "eyebrow": "Objevte něco souvisejícího",
+      "heading": "Čtěte dál",
+      "description": "Příspěvky propojené tématem, jazykem a signály komunity.",
+      "roomLabel": "V místnosti {room}",
+      "byAuthor": "Autor: {author}"
+    },
     "comments": {
       "heading": "Komentáře", "count": "Počet komentářů: {count}",
       "empty": "Zatím nikdo neodpověděl. Komentáře se zde objeví, až začne konverzace.",

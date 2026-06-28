@@ -42,6 +42,13 @@
         "texture": "Contexto"
       }
     },
+    "recommendations": {
+      "eyebrow": "Descubra algo relacionado",
+      "heading": "Continue lendo",
+      "description": "Publicações conectadas por tema, idioma e sinais da comunidade.",
+      "roomLabel": "Em {room}",
+      "byAuthor": "Por {author}"
+    },
     "comments": {
       "heading": "Comentários",
       "count": "{count} comentários",

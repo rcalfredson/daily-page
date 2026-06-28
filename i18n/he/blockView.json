@@ -42,6 +42,13 @@
         "texture": "רקע"
       }
     },
+    "recommendations": {
+      "eyebrow": "גילוי תוכן קשור",
+      "heading": "המשך קריאה",
+      "description": "פוסטים המקושרים לפי נושא, שפה ואותות מהקהילה.",
+      "roomLabel": "ב־{room}",
+      "byAuthor": "מאת {author}"
+    },
     "comments": {
       "heading": "תגובות",
       "count": "{count} תגובות",
