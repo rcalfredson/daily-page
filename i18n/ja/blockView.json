@@ -42,6 +42,13 @@
         "texture": "背景"
       }
     },
+    "recommendations": {
+      "eyebrow": "関連する投稿を見つける",
+      "heading": "続きを読む",
+      "description": "トピック、言語、コミュニティの反応に基づいて関連付けられた投稿です。",
+      "roomLabel": "{room} の投稿",
+      "byAuthor": "{author} による投稿"
+    },
     "comments": {
       "heading": "コメント",
       "count": "{count} 件のコメント",

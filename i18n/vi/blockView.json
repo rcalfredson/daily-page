@@ -42,6 +42,13 @@
         "texture": "Bối cảnh"
       }
     },
+    "recommendations": {
+      "eyebrow": "Khám phá nội dung liên quan",
+      "heading": "Đọc tiếp",
+      "description": "Các bài viết được kết nối theo chủ đề, ngôn ngữ và tín hiệu từ cộng đồng.",
+      "roomLabel": "Trong {room}",
+      "byAuthor": "Bởi {author}"
+    },
     "comments": {
       "heading": "Bình luận",
       "count": "Bình luận {count}",

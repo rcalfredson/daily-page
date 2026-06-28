@@ -42,6 +42,13 @@
         "texture": "पृष्ठभूमि"
       }
     },
+    "recommendations": {
+      "eyebrow": "कुछ संबंधित खोजें",
+      "heading": "पढ़ना जारी रखें",
+      "description": "विषय, भाषा और समुदाय के संकेतों से जुड़ी पोस्ट।",
+      "roomLabel": "{room} में",
+      "byAuthor": "{author} द्वारा"
+    },
     "comments": {
       "heading": "टिप्पणियाँ",
       "count": "{count} टिप्पणियाँ",

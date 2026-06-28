@@ -42,6 +42,13 @@
         "texture": "Tło"
       }
     },
+    "recommendations": {
+      "eyebrow": "Odkryj coś powiązanego",
+      "heading": "Czytaj dalej",
+      "description": "Posty połączone na podstawie tematu, języka i sygnałów społeczności.",
+      "roomLabel": "W pokoju {room}",
+      "byAuthor": "Autor: {author}"
+    },
     "comments": {
       "heading": "Komentarze",
       "count": "Komentarze: {count}",

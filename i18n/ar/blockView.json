@@ -42,6 +42,13 @@
         "texture": "خلفية"
       }
     },
+    "recommendations": {
+      "eyebrow": "اكتشف شيئًا ذا صلة",
+      "heading": "تابع القراءة",
+      "description": "منشورات مترابطة حسب الموضوع واللغة وإشارات المجتمع.",
+      "roomLabel": "في {room}",
+      "byAuthor": "بقلم {author}"
+    },
     "comments": {
       "heading": "تعليقات",
       "count": "{count} التعليقات",

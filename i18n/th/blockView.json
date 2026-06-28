@@ -42,6 +42,13 @@
         "texture": "พื้นหลัง"
       }
     },
+    "recommendations": {
+      "eyebrow": "ค้นพบเนื้อหาที่เกี่ยวข้อง",
+      "heading": "อ่านต่อ",
+      "description": "โพสต์ที่เชื่อมโยงกันตามหัวข้อ ภาษา และสัญญาณจากชุมชน",
+      "roomLabel": "ใน {room}",
+      "byAuthor": "โดย {author}"
+    },
     "comments": {
       "heading": "หมายเหตุ",
       "count": "{count} ความเห็น",

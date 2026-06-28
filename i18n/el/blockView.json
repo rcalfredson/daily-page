@@ -30,6 +30,13 @@
       "collapseSection": "Εμφάνιση λιγότερων",
       "roleNames": { "pillar": "Βασικός οδηγός", "companion": "Εμβάθυνση", "texture": "Υπόβαθρο" }
     },
+    "recommendations": {
+      "eyebrow": "Ανακαλύψτε κάτι σχετικό",
+      "heading": "Συνεχίστε την ανάγνωση",
+      "description": "Αναρτήσεις που συνδέονται βάσει θέματος, γλώσσας και σημάτων της κοινότητας.",
+      "roomLabel": "Στο {room}",
+      "byAuthor": "Από {author}"
+    },
     "comments": {
       "heading": "Σχόλια",
       "count": "{count} σχόλια",

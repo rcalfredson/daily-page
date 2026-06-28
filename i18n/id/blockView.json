@@ -42,6 +42,13 @@
         "texture": "Latar belakang"
       }
     },
+    "recommendations": {
+      "eyebrow": "Temukan hal terkait",
+      "heading": "Lanjut membaca",
+      "description": "Postingan yang terhubung berdasarkan topik, bahasa, dan sinyal komunitas.",
+      "roomLabel": "Di {room}",
+      "byAuthor": "Oleh {author}"
+    },
     "comments": {
       "heading": "Komentar",
       "count": "{count} komentar",

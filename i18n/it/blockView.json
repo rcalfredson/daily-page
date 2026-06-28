@@ -42,6 +42,13 @@
         "texture": "Contesto"
       }
     },
+    "recommendations": {
+      "eyebrow": "Scopri qualcosa di correlato",
+      "heading": "Continua a leggere",
+      "description": "Post collegati per argomento, lingua e segnali della community.",
+      "roomLabel": "In {room}",
+      "byAuthor": "Di {author}"
+    },
     "comments": {
       "heading": "Commenti",
       "count": "{count} commenti",
