@@ -61,4 +61,17 @@ router.get(
   }
 );
 
+router.get(
+  '/__dev/views/inactive-warning',
+  optionalAuth,
+  addI18n(['blockEditor']),
+  (req, res) => {
+    res.render('dev/inactive-warning', {
+      title: 'Inactivity warning preview',
+      user: req.user || null,
+      uiLang: res.locals.uiLang,
+    });
+  }
+);
+
 export default router;
