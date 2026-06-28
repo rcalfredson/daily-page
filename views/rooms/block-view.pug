@@ -48,6 +48,8 @@ block content
   - const editorialCluster = editorialContext && editorialContext.cluster ? editorialContext.cluster : null;
   - const editorialPrimaryPillar = editorialContext && editorialContext.primaryPillar ? editorialContext.primaryPillar : null;
   - const editorialRelated = editorialContext && editorialContext.related ? editorialContext.related : [];
+  - const editorialClusterNearby = editorialCluster && editorialCluster.nearby ? editorialCluster.nearby : [];
+  - const hasEditorialGuideContent = Boolean(editorialPrimaryPillar || editorialRelated.length || editorialClusterNearby.length);
   - const editorialPreviewCount = 4;
   - const getEditorialPreviewItems = (items, previewCount = editorialPreviewCount) => Array.isArray(items) ? items.slice(0, previewCount) : [];
   - const getEditorialOverflowItems = (items, previewCount = editorialPreviewCount) => Array.isArray(items) ? items.slice(previewCount) : [];
@@ -78,6 +80,13 @@ block content
           summary.block-editorial-more__summary
             span.block-editorial-more__label= t('blockView.editorial.expandSection', { count: overflowItems.length })
           +editorialList(overflowItems)
+  mixin editorialHeader()
+    span.block-editorial-card__header
+      span.block-editorial-card__title(role='heading' aria-level='2')= t('blockView.editorial.heading')
+      if editorialCluster && editorialCluster.label
+        span.block-editorial-card__cluster
+          span.meta-label= t('blockView.editorial.clusterLabel')
+          span.block-editorial-card__cluster-name= editorialCluster.label
   include ../partials/_tag_section
   #block-page
     .block-header
@@ -159,23 +168,24 @@ block content
 
         if editorialContext
           aside.block-editorial-card(lang=(uiLang || 'en'))
-            .block-editorial-card__header
-              h2.block-editorial-card__title= t('blockView.editorial.heading')
-              if editorialCluster && editorialCluster.label
-                p.block-editorial-card__cluster
-                  span.meta-label= t('blockView.editorial.clusterLabel')
-                  span.block-editorial-card__cluster-name= editorialCluster.label
+            if hasEditorialGuideContent
+              details.block-editorial-details
+                summary.block-editorial-card__summary
+                  +editorialHeader()
 
-            if editorialPrimaryPillar
-              section.block-editorial-section
-                h3.block-editorial-section__title= t('blockView.editorial.primaryPillarHeading')
-                +editorialLink(editorialPrimaryPillar)
+                .block-editorial-card__body
+                  if editorialPrimaryPillar
+                    section.block-editorial-section
+                      h3.block-editorial-section__title= t('blockView.editorial.primaryPillarHeading')
+                      +editorialLink(editorialPrimaryPillar)
 
-            if editorialRelated.length
-              +editorialListSection('blockView.editorial.relatedHeading', editorialRelated, editorialPreviewCount)
+                  if editorialRelated.length
+                    +editorialListSection('blockView.editorial.relatedHeading', editorialRelated, editorialPreviewCount)
 
-            if editorialCluster && editorialCluster.nearby && editorialCluster.nearby.length
-              +editorialListSection('blockView.editorial.clusterHeading', editorialCluster.nearby, editorialPreviewCount)
+                  if editorialClusterNearby.length
+                    +editorialListSection('blockView.editorial.clusterHeading', editorialClusterNearby, editorialPreviewCount)
+            else
+              +editorialHeader()
 
         // The main content, already rendered to HTML on the server
         if block.contentHTML
