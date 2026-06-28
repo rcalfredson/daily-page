@@ -1,0 +1,12 @@
+mixin blockBanner(post, variant, linkRoomId)
+  if post && post.bannerImage && post.bannerImage.url
+    - const bannerVariant = variant || 'card';
+    - const bannerAlt = post.bannerImage.caption || post.title;
+    figure(class=`block-banner block-banner--${bannerVariant}` data-banner-image)
+      if linkRoomId
+        a.block-banner__link(href=`/rooms/${linkRoomId}/blocks/${post._id}` tabindex='-1' aria-hidden='true')
+          img.block-banner__image(src=post.bannerImage.url alt='' loading='lazy' decoding='async' referrerpolicy='no-referrer')
+      else
+        img.block-banner__image(src=post.bannerImage.url alt=bannerAlt loading=bannerVariant === 'hero' ? 'eager' : 'lazy' decoding='async' referrerpolicy='no-referrer')
+      if bannerVariant === 'hero' && post.bannerImage.caption
+        figcaption.block-banner__caption= post.bannerImage.caption

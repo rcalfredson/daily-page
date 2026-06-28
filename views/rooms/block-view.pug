@@ -23,6 +23,7 @@ block append head
   link(rel='stylesheet' href='/css/table-scroll-fade.css')
   link(rel='stylesheet' href='/css/reactions.css')
   link(rel='stylesheet' href='/css/comments.css')
+  link(rel='stylesheet' href='/css/banner-images.css')
 
 block append scripts
   include ../envImport
@@ -39,8 +40,10 @@ block append scripts
   script(src='/js/comments.js')
   script(src='/js/block-editorial-guide.js')
   script(src='/js/block-recommendations.js')
+  script(src='/js/banner-images.js')
 
 block content
+  include ../partials/_banner_image
   - const blockDir = textDirForLang ? textDirForLang(lang) : 'ltr';
   - const createdAt = block.createdAt ? new Date(block.createdAt) : null;
   - const createdAtLabel = createdAt ? createdAt.toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' }) : null;
@@ -155,6 +158,8 @@ block content
 
     .block-view-layout(class=recommendations === null || recommendations.length ? 'block-view-layout--with-recommendations' : '')
       .block-view-primary
+        +blockBanner(block, 'hero')
+
         // Description block, read-only style
         if descriptionHTML
           .block-description-card(lang=lang dir=blockDir)

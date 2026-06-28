@@ -34,6 +34,18 @@
       "collapse": "Collapse",
       "updateError": "Error updating description."
     },
+    "bannerImage": {
+      "label": "Banner image",
+      "help": "Use an externally hosted image. Clear the URL and save to remove the banner.",
+      "urlLabel": "Image URL:",
+      "urlPlaceholder": "https://example.com/image.jpg",
+      "captionLabel": "Caption / image description (optional):",
+      "captionPlaceholder": "Describe or credit the image",
+      "save": "Save banner",
+      "saved": "Banner image saved.",
+      "removed": "Banner image removed.",
+      "updateError": "Could not update the banner image."
+    },
     "status": {
       "lastBackup": "Last backup: {datetime}",
       "lastBackupUnknown": "Last backup: Unknown"
