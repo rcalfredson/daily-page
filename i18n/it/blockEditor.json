@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Inserisci l'URL di un'immagine.",
+      "streetViewEmbedUrlInvalid": "Inserisci un URL di incorporamento Google Maps Street View valido.",
       "notFound": "Post non trovato o non appartenente a questa stanza.",
       "loadFailed": "Si e verificato un errore durante il caricamento dell'editor del post.",
       "updateTitleFailed": "Errore durante l'aggiornamento del titolo."
@@ -33,6 +34,21 @@
       "expand": "Espandi",
       "collapse": "Comprimi",
       "updateError": "Errore durante l'aggiornamento della descrizione."
+    },
+    "bannerImage": {
+      "label": "Contenuto multimediale del banner",
+      "help": "Usa un’immagine ospitata esternamente o un URL di incorporamento di Google Maps Street View. Cancella l’URL e salva per rimuovere il banner.",
+      "kindLabel": "Tipo di banner:",
+      "kindImage": "Immagine",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "URL del banner:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Didascalia / descrizione (facoltativa):",
+      "captionPlaceholder": "Descrivi o attribuisci il banner",
+      "save": "Salva banner",
+      "saved": "Banner salvato.",
+      "removed": "Banner rimosso.",
+      "updateError": "Impossibile aggiornare il banner."
     },
     "status": {
       "lastBackup": "Ultimo backup: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Inserisci URL immagine",
       "insertImageAltPlaceholder": "Testo alternativo (opzionale)",
       "insertImageConfirm": "Conferma",
-      "insertImageCancel": "Annulla"
+      "insertImageCancel": "Annulla",
+      "insertStreetView": "Inserisci Street View",
+      "insertStreetViewHelp": "Incolla l’URL https://www.google.com/maps/embed dall’attributo src dell’iframe.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Scarica file"

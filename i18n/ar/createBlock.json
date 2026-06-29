@@ -22,6 +22,17 @@
         "label": "الوصف (اختياري):",
         "placeholder": "اشرح تألقك... أو فقط قم بجناحه."
       },
+      "bannerImage": {
+        "legend": "وسائط اللافتة (اختياري)",
+        "help": "استخدم صورة مستضافة خارجيًا أو رابط تضمين Google Maps Street View. ستظهر فوق المنشور وعلى بطاقات المنشورات الواسعة.",
+        "kindLabel": "نوع اللافتة:",
+        "kindImage": "صورة",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "رابط اللافتة:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "التسمية التوضيحية / الوصف (اختياري):",
+        "captionPlaceholder": "صِف اللافتة أو اذكر مصدرها"
+      },
       "initialContent": {
         "label": "المحتوى الأولي (اختياري):",
         "help": "ابدأ الكتابة هنا أو اضغط على \"إنشاء\" للاستمرار في صفحة المحرر الكاملة، حيث يمكنك تضمين الصور والتعاون في الوقت الفعلي.",

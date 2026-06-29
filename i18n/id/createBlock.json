@@ -22,6 +22,17 @@
         "label": "Deskripsi (opsional):",
         "placeholder": "Jelaskan kecemerlanganmu… atau langsung saja."
       },
+      "bannerImage": {
+        "legend": "Media banner (opsional)",
+        "help": "Gunakan gambar yang dihosting secara eksternal atau URL sematan Google Maps Street View. Banner akan muncul di atas postingan dan pada kartu postingan yang luas.",
+        "kindLabel": "Jenis banner:",
+        "kindImage": "Gambar",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "URL banner:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Keterangan / deskripsi (opsional):",
+        "captionPlaceholder": "Jelaskan atau beri kredit untuk banner"
+      },
       "initialContent": {
         "label": "Konten Awal (opsional):",
         "help": "Mulai menulis di sini atau tekan “Buat” untuk melanjutkan di halaman editor penuh, tempat kamu bisa menyematkan gambar dan berkolaborasi secara real time.",

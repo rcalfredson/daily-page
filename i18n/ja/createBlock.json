@@ -22,6 +22,17 @@
         "label": "説明（任意）:",
         "placeholder": "あなたのひらめきを説明してもいいし、その場の勢いでも構いません。"
       },
+      "bannerImage": {
+        "legend": "バナーメディア（任意）",
+        "help": "外部でホストされている画像、または Google Maps Street View の埋め込み URL を使用します。投稿の上部や広い投稿カードに表示されます。",
+        "kindLabel": "バナーの種類：",
+        "kindImage": "画像",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "バナー URL：",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "キャプション / 説明（任意）：",
+        "captionPlaceholder": "バナーの説明またはクレジットを入力"
+      },
       "initialContent": {
         "label": "初期コンテンツ（任意）:",
         "help": "ここで書き始めるか、「作成」を押してフルエディターのページで続けられます。そこでは画像の埋め込みやリアルタイム共同編集ができます。",

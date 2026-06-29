@@ -42,7 +42,7 @@
       "kindImage": "Image",
       "kindStreetView": "Google Street View",
       "urlLabel": "Banner URL:",
-      "urlPlaceholder": "https://example.com/image.jpg or https://www.google.com/maps/embed?pb=...",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
       "captionLabel": "Caption / description (optional):",
       "captionPlaceholder": "Describe or credit the banner",
       "save": "Save banner",

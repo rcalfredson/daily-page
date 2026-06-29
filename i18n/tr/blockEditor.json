@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Lütfen bir resim URL'si girin.",
+      "streetViewEmbedUrlInvalid": "Geçerli bir Google Maps Street View yerleştirme URL’si girin.",
       "notFound": "Gönderi bulunamadı veya bu odaya ait değil.",
       "loadFailed": "Gönderi düzenleyici yüklenirken bir hata oluştu.",
       "updateTitleFailed": "Başlık güncellenirken hata oluştu."
@@ -33,6 +34,21 @@
       "expand": "Genişlet",
       "collapse": "Daralt",
       "updateError": "Açıklama güncellenirken hata oluştu."
+    },
+    "bannerImage": {
+      "label": "Banner medyası",
+      "help": "Harici olarak barındırılan bir görsel veya Google Maps Street View yerleştirme URL’si kullanın. Bannerı kaldırmak için URL’yi temizleyip kaydedin.",
+      "kindLabel": "Banner türü:",
+      "kindImage": "Görsel",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "Banner URL’si:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Altyazı / açıklama (isteğe bağlı):",
+      "captionPlaceholder": "Bannerı açıklayın veya kaynağını belirtin",
+      "save": "Bannerı kaydet",
+      "saved": "Banner kaydedildi.",
+      "removed": "Banner kaldırıldı.",
+      "updateError": "Banner güncellenemedi."
     },
     "status": {
       "lastBackup": "Son yedekleme: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Resim URL'sini girin",
       "insertImageAltPlaceholder": "Alternatif metin (isteğe bağlı)",
       "insertImageConfirm": "Onayla",
-      "insertImageCancel": "İptal"
+      "insertImageCancel": "İptal",
+      "insertStreetView": "Street View ekle",
+      "insertStreetViewHelp": "iframe öğesinin src özelliğindeki https://www.google.com/maps/embed URL’sini yapıştırın.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Dosyayı indir"

@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Vui lòng nhập URL hình ảnh.",
+      "streetViewEmbedUrlInvalid": "Nhập URL nhúng Google Maps Street View hợp lệ.",
       "notFound": "Không tìm thấy bài đăng hoặc không thuộc về phòng này.",
       "loadFailed": "Đã xảy ra lỗi khi tải trình chỉnh sửa bài đăng.",
       "updateTitleFailed": "Lỗi cập nhật tiêu đề."
@@ -33,6 +34,21 @@
       "expand": "Mở rộng",
       "collapse": "Thu gọn",
       "updateError": "Lỗi cập nhật mô tả."
+    },
+    "bannerImage": {
+      "label": "Phương tiện biểu ngữ",
+      "help": "Sử dụng hình ảnh được lưu trữ bên ngoài hoặc URL nhúng Google Maps Street View. Xóa URL rồi lưu để gỡ biểu ngữ.",
+      "kindLabel": "Loại biểu ngữ:",
+      "kindImage": "Hình ảnh",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "URL biểu ngữ:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Chú thích / mô tả (tùy chọn):",
+      "captionPlaceholder": "Mô tả hoặc ghi nguồn cho biểu ngữ",
+      "save": "Lưu biểu ngữ",
+      "saved": "Đã lưu biểu ngữ.",
+      "removed": "Đã gỡ biểu ngữ.",
+      "updateError": "Không thể cập nhật biểu ngữ."
     },
     "status": {
       "lastBackup": "Lần sao lưu cuối cùng: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Nhập URL hình ảnh",
       "insertImageAltPlaceholder": "Văn bản thay thế (tùy chọn)",
       "insertImageConfirm": "Xác nhận",
-      "insertImageCancel": "Hủy"
+      "insertImageCancel": "Hủy",
+      "insertStreetView": "Chèn Street View",
+      "insertStreetViewHelp": "Dán URL https://www.google.com/maps/embed từ thuộc tính src của iframe.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Tải tập tin xuống"

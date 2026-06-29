@@ -22,6 +22,17 @@
         "label": "Beschreibung (optional):",
         "placeholder": "Erklare deine Genialitat... oder improvisiere einfach."
       },
+      "bannerImage": {
+        "legend": "Bannermedium (optional)",
+        "help": "Verwende ein extern gehostetes Bild oder eine Google-Maps-Street-View-Einbettungs-URL. Es erscheint über dem Beitrag und auf großzügigen Beitragskarten.",
+        "kindLabel": "Bannertyp:",
+        "kindImage": "Bild",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "Banner-URL:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Bildunterschrift / Beschreibung (optional):",
+        "captionPlaceholder": "Banner beschreiben oder Quelle angeben"
+      },
       "initialContent": {
         "label": "Anfangsinhalt (optional):",
         "help": "Beginne hier zu schreiben oder drucke auf \"Erstellen\", um auf der vollstandigen Editorseite weiterzumachen, wo du Bilder einbetten und in Echtzeit zusammenarbeiten kannst.",

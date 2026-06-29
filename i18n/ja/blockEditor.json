@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "画像 URL を入力してください。",
+      "streetViewEmbedUrlInvalid": "有効な Google Maps Street View の埋め込み URL を入力してください。",
       "notFound": "投稿が見つからないか、このルームに属していません。",
       "loadFailed": "投稿エディターの読み込み中にエラーが発生しました。",
       "updateTitleFailed": "タイトルの更新中にエラーが発生しました。"
@@ -33,6 +34,21 @@
       "expand": "展開",
       "collapse": "折りたたむ",
       "updateError": "説明の更新中にエラーが発生しました。"
+    },
+    "bannerImage": {
+      "label": "バナーメディア",
+      "help": "外部でホストされている画像、または Google Maps Street View の埋め込み URL を使用します。バナーを削除するには、URL を消去して保存してください。",
+      "kindLabel": "バナーの種類：",
+      "kindImage": "画像",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "バナー URL：",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "キャプション / 説明（任意）：",
+      "captionPlaceholder": "バナーの説明またはクレジットを入力",
+      "save": "バナーを保存",
+      "saved": "バナーを保存しました。",
+      "removed": "バナーを削除しました。",
+      "updateError": "バナーを更新できませんでした。"
     },
     "status": {
       "lastBackup": "最終バックアップ: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "画像 URL を入力",
       "insertImageAltPlaceholder": "代替テキスト（任意）",
       "insertImageConfirm": "確認",
-      "insertImageCancel": "キャンセル"
+      "insertImageCancel": "キャンセル",
+      "insertStreetView": "Street View を挿入",
+      "insertStreetViewHelp": "iframe の src 属性から https://www.google.com/maps/embed URL を貼り付けてください。",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "ファイルをダウンロード"

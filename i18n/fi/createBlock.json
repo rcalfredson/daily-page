@@ -22,6 +22,17 @@
         "label": "Kuvaus (valinnainen):",
         "placeholder": "Selitä neroutesi… tai improvisoi."
       },
+      "bannerImage": {
+        "legend": "Bannerimedia (valinnainen)",
+        "help": "Käytä ulkoisesti ylläpidettyä kuvaa tai Google Maps Street View -upotusosoitetta. Se näkyy julkaisun yläpuolella ja tilavissa julkaisukorteissa.",
+        "kindLabel": "Bannerin tyyppi:",
+        "kindImage": "Kuva",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "Bannerin URL-osoite:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Kuvateksti / kuvaus (valinnainen):",
+        "captionPlaceholder": "Kuvaile banneria tai mainitse lähde"
+      },
       "initialContent": {
         "label": "Alustava sisältö (valinnainen):",
         "help": "Aloita kirjoittaminen tässä tai jatka koko editorisivulle painamalla “Luo”, missä voit upottaa kuvia ja tehdä yhteistyötä reaaliajassa.",

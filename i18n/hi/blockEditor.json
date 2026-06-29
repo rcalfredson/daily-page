@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "कृपया एक छवि URL दर्ज करें।",
+      "streetViewEmbedUrlInvalid": "एक मान्य Google Maps Street View एम्बेड URL दर्ज करें।",
       "notFound": "पोस्ट नहीं मिला या इस कमरे से संबंधित नहीं है.",
       "loadFailed": "पोस्ट संपादक को लोड करते समय एक त्रुटि उत्पन्न हुई.",
       "updateTitleFailed": "शीर्षक अद्यतन करने में त्रुटि."
@@ -33,6 +34,21 @@
       "expand": "बढ़ाना",
       "collapse": "गिर जाना",
       "updateError": "विवरण अपडेट करने में त्रुटि."
+    },
+    "bannerImage": {
+      "label": "बैनर मीडिया",
+      "help": "बाहरी रूप से होस्ट की गई इमेज या Google Maps Street View एम्बेड URL का उपयोग करें। बैनर हटाने के लिए URL साफ़ करके सेव करें।",
+      "kindLabel": "बैनर का प्रकार:",
+      "kindImage": "इमेज",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "बैनर URL:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "कैप्शन / विवरण (वैकल्पिक):",
+      "captionPlaceholder": "बैनर का वर्णन करें या श्रेय दें",
+      "save": "बैनर सेव करें",
+      "saved": "बैनर सेव हो गया।",
+      "removed": "बैनर हटा दिया गया।",
+      "updateError": "बैनर अपडेट नहीं हो सका।"
     },
     "status": {
       "lastBackup": "अंतिम बैकअप: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "छवि दर्ज करें URL",
       "insertImageAltPlaceholder": "वैकल्पिक पाठ (वैकल्पिक)",
       "insertImageConfirm": "पुष्टि करना",
-      "insertImageCancel": "रद्द करना"
+      "insertImageCancel": "रद्द करना",
+      "insertStreetView": "Street View डालें",
+      "insertStreetViewHelp": "iframe के src एट्रिब्यूट से https://www.google.com/maps/embed URL पेस्ट करें।",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "डाउनलोड फ़ाइल"

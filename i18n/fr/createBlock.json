@@ -22,6 +22,17 @@
         "label": "Description (facultatif) :",
         "placeholder": "Expliquez votre génie... ou improvisez."
       },
+      "bannerImage": {
+        "legend": "Média de bannière (facultatif)",
+        "help": "Utilisez une image hébergée à l’extérieur ou une URL d’intégration Google Maps Street View. Elle apparaîtra au-dessus de la publication et sur les grandes cartes de publication.",
+        "kindLabel": "Type de bannière :",
+        "kindImage": "Image",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "URL de la bannière :",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Légende / description (facultatif) :",
+        "captionPlaceholder": "Décrivez ou créditez la bannière"
+      },
       "initialContent": {
         "label": "Contenu initial (facultatif) :",
         "help": "Commencez à écrire ici ou appuyez sur Créer pour continuer dans l'éditeur complet, où vous pourrez intégrer des images et collaborer en temps réel.",

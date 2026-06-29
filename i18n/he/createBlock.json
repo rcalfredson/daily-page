@@ -22,6 +22,17 @@
         "label": "תיאור (אופציונלי):",
         "placeholder": "הסבר את הברק שלך... או פשוט כנף אותו."
       },
+      "bannerImage": {
+        "legend": "מדיית באנר (אופציונלי)",
+        "help": "השתמשו בתמונה שמתארחת חיצונית או בכתובת הטמעה של Google Maps Street View. היא תופיע מעל הפוסט ובכרטיסי פוסט מרווחים.",
+        "kindLabel": "סוג הבאנר:",
+        "kindImage": "תמונה",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "כתובת הבאנר:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "כיתוב / תיאור (אופציונלי):",
+        "captionPlaceholder": "תארו את הבאנר או ציינו קרדיט"
+      },
       "initialContent": {
         "label": "תוכן ראשוני (אופציונלי):",
         "help": "התחל לכתוב כאן או לחץ על \"צור\" כדי להמשיך בעמוד העורך המלא, שבו תוכל להטמיע תמונות ולשתף פעולה בזמן אמת.",

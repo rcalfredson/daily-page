@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "请输入图片 URL。",
+      "streetViewEmbedUrlInvalid": "请输入有效的 Google Maps Street View 嵌入网址。",
       "notFound": "未找到帖子，或该帖子不属于此房间。",
       "loadFailed": "加载帖子编辑器时出错。",
       "updateTitleFailed": "更新标题出错。"
@@ -33,6 +34,21 @@
       "expand": "展开",
       "collapse": "收起",
       "updateError": "更新描述出错。"
+    },
+    "bannerImage": {
+      "label": "横幅媒体",
+      "help": "使用外部托管的图片或 Google Maps Street View 嵌入网址。清空网址并保存即可移除横幅。",
+      "kindLabel": "横幅类型：",
+      "kindImage": "图片",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "横幅网址：",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "说明文字 / 描述（可选）：",
+      "captionPlaceholder": "描述横幅或注明来源",
+      "save": "保存横幅",
+      "saved": "横幅已保存。",
+      "removed": "横幅已移除。",
+      "updateError": "无法更新横幅。"
     },
     "status": {
       "lastBackup": "上次备份：{datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "输入图片 URL",
       "insertImageAltPlaceholder": "替代文本（可选）",
       "insertImageConfirm": "确认",
-      "insertImageCancel": "取消"
+      "insertImageCancel": "取消",
+      "insertStreetView": "插入 Street View",
+      "insertStreetViewHelp": "请粘贴 iframe 的 src 属性中的 https://www.google.com/maps/embed 网址。",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "下载文件"

@@ -22,6 +22,17 @@
         "label": "विवरण (वैकल्पिक):",
         "placeholder": "अपनी प्रतिभा को स्पष्ट करें... या बस इसे पंख लगाएँ।"
       },
+      "bannerImage": {
+        "legend": "बैनर मीडिया (वैकल्पिक)",
+        "help": "बाहरी रूप से होस्ट की गई इमेज या Google Maps Street View एम्बेड URL का उपयोग करें। यह पोस्ट के ऊपर और बड़े पोस्ट कार्ड पर दिखाई देगा।",
+        "kindLabel": "बैनर का प्रकार:",
+        "kindImage": "इमेज",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "बैनर URL:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "कैप्शन / विवरण (वैकल्पिक):",
+        "captionPlaceholder": "बैनर का वर्णन करें या श्रेय दें"
+      },
       "initialContent": {
         "label": "प्रारंभिक सामग्री (वैकल्पिक):",
         "help": "यहां लिखना शुरू करें या पूर्ण संपादक पृष्ठ पर जारी रखने के लिए \"बनाएं\" दबाएं, जहां आप छवियां एम्बेड कर सकते हैं और वास्तविक समय में सहयोग कर सकते हैं।",

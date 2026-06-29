@@ -22,6 +22,17 @@
         "label": "คําอธิบาย (ตัวเลือกเสริม):",
         "placeholder": "อธิบายความยอดเยี่ยมของคุณ… หรือจะเขียนสด ๆ ก็ได้"
       },
+      "bannerImage": {
+        "legend": "สื่อแบนเนอร์ (ไม่บังคับ)",
+        "help": "ใช้รูปภาพที่โฮสต์ภายนอกหรือ URL สำหรับฝัง Google Maps Street View โดยจะแสดงเหนือโพสต์และบนการ์ดโพสต์ขนาดกว้าง",
+        "kindLabel": "ประเภทแบนเนอร์:",
+        "kindImage": "รูปภาพ",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "URL แบนเนอร์:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "คำบรรยาย / รายละเอียด (ไม่บังคับ):",
+        "captionPlaceholder": "อธิบายหรือระบุเครดิตของแบนเนอร์"
+      },
       "initialContent": {
         "label": "เนื้อหาเริ่มต้น (ตัวเลือก):",
         "help": "เริ่มเขียนที่นี่ หรือกด \"สร้าง\" เพื่อทําต่อบนหน้าบรรณาธิการแบบเต็มหน้า โดยคุณสามารถฝังภาพและความร่วมมือได้ตามเวลาจริง",

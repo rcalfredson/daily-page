@@ -4,6 +4,7 @@
     "meta": { "title": "Επεξεργασία ανάρτησης - {blockTitle}", "titleFallback": "Επεξεργασία ανάρτησης" },
     "errors": {
       "imageUrlRequired": "Εισαγάγετε μια διεύθυνση URL εικόνας.",
+      "streetViewEmbedUrlInvalid": "Εισαγάγετε ένα έγκυρο URL ενσωμάτωσης Google Maps Street View.",
       "notFound": "Η ανάρτηση δεν βρέθηκε ή δεν ανήκει σε αυτό το δωμάτιο.",
       "loadFailed": "Παρουσιάστηκε σφάλμα κατά τη φόρτωση του επεξεργαστή ανάρτησης.",
       "updateTitleFailed": "Σφάλμα κατά την ενημέρωση του τίτλου."
@@ -27,6 +28,21 @@
       "collapse": "Σύμπτυξη",
       "updateError": "Σφάλμα κατά την ενημέρωση της περιγραφής."
     },
+    "bannerImage": {
+      "label": "Πολυμέσο banner",
+      "help": "Χρησιμοποιήστε μια εικόνα εξωτερικής φιλοξενίας ή ένα URL ενσωμάτωσης Google Maps Street View. Διαγράψτε το URL και αποθηκεύστε για να αφαιρέσετε το banner.",
+      "kindLabel": "Τύπος banner:",
+      "kindImage": "Εικόνα",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "URL banner:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Λεζάντα / περιγραφή (προαιρετικά):",
+      "captionPlaceholder": "Περιγράψτε ή αναφέρετε την πηγή του banner",
+      "save": "Αποθήκευση banner",
+      "saved": "Το banner αποθηκεύτηκε.",
+      "removed": "Το banner αφαιρέθηκε.",
+      "updateError": "Δεν ήταν δυνατή η ενημέρωση του banner."
+    },
     "status": { "lastBackup": "Τελευταίο αντίγραφο ασφαλείας: {datetime}", "lastBackupUnknown": "Τελευταίο αντίγραφο ασφαλείας: Άγνωστο" },
     "peers": { "label": "Συνεργάτες:" },
     "toasts": { "blockLocked": "Αυτή η ανάρτηση κλειδώθηκε!" },
@@ -45,7 +61,10 @@
       "insertImageUrlPlaceholder": "Εισαγωγή URL εικόνας",
       "insertImageAltPlaceholder": "Εναλλακτικό κείμενο (προαιρετικό)",
       "insertImageConfirm": "Επιβεβαίωση",
-      "insertImageCancel": "Ακύρωση"
+      "insertImageCancel": "Ακύρωση",
+      "insertStreetView": "Εισαγωγή Street View",
+      "insertStreetViewHelp": "Επικολλήστε το URL https://www.google.com/maps/embed από το γνώρισμα src του iframe.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": { "downloadFile": "Λήψη αρχείου" },
     "lockModal": {

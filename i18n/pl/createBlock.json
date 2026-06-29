@@ -22,6 +22,17 @@
         "label": "Opis (opcjonalnie):",
         "placeholder": "Wyjaśnij swój geniusz… albo po prostu improwizuj."
       },
+      "bannerImage": {
+        "legend": "Multimedia banera (opcjonalne)",
+        "help": "Użyj obrazu hostowanego zewnętrznie lub adresu osadzania Google Maps Street View. Pojawi się nad postem i na przestronnych kartach postów.",
+        "kindLabel": "Typ banera:",
+        "kindImage": "Obraz",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "Adres URL banera:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Podpis / opis (opcjonalny):",
+        "captionPlaceholder": "Opisz baner lub podaj źródło"
+      },
       "initialContent": {
         "label": "Treść początkowa (opcjonalnie):",
         "help": "Zacznij pisać tutaj albo naciśnij „Utwórz”, aby kontynuować na pełnej stronie edytora, gdzie możesz osadzać obrazy i współpracować w czasie rzeczywistym.",

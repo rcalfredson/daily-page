@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Voer een afbeeldings-URL in.",
+      "streetViewEmbedUrlInvalid": "Voer een geldige insluit-URL van Google Maps Street View in.",
       "notFound": "Bericht niet gevonden of hoort niet bij deze kamer.",
       "loadFailed": "Er is een fout opgetreden bij het laden van de berichteditor.",
       "updateTitleFailed": "Fout bij updaten van titel."
@@ -33,6 +34,21 @@
       "expand": "Uitbreiden",
       "collapse": "Inklappen",
       "updateError": "Fout bij updaten van beschrijving."
+    },
+    "bannerImage": {
+      "label": "Bannermedia",
+      "help": "Gebruik een extern gehoste afbeelding of een insluit-URL van Google Maps Street View. Wis de URL en sla op om de banner te verwijderen.",
+      "kindLabel": "Bannertype:",
+      "kindImage": "Afbeelding",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "Banner-URL:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Bijschrift / beschrijving (optioneel):",
+      "captionPlaceholder": "Beschrijf of vermeld de bron van de banner",
+      "save": "Banner opslaan",
+      "saved": "Banner opgeslagen.",
+      "removed": "Banner verwijderd.",
+      "updateError": "De banner kon niet worden bijgewerkt."
     },
     "status": {
       "lastBackup": "Laatste back-up: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Voer de afbeeldings-URL in",
       "insertImageAltPlaceholder": "Alt-tekst (optioneel)",
       "insertImageConfirm": "Bevestigen",
-      "insertImageCancel": "Annuleren"
+      "insertImageCancel": "Annuleren",
+      "insertStreetView": "Street View invoegen",
+      "insertStreetViewHelp": "Plak de URL https://www.google.com/maps/embed uit het src-attribuut van het iframe.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Bestand downloaden"

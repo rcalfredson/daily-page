@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Veuillez saisir l'URL d'une image.",
+      "streetViewEmbedUrlInvalid": "Saisissez une URL d’intégration Google Maps Street View valide.",
       "notFound": "Publication introuvable ou n'appartenant pas à ce salon.",
       "loadFailed": "Une erreur est survenue lors du chargement de l'éditeur de publication.",
       "updateTitleFailed": "Erreur lors de la mise à jour du titre."
@@ -33,6 +34,21 @@
       "expand": "Développer",
       "collapse": "Réduire",
       "updateError": "Erreur lors de la mise à jour de la description."
+    },
+    "bannerImage": {
+      "label": "Média de bannière",
+      "help": "Utilisez une image hébergée à l’extérieur ou une URL d’intégration Google Maps Street View. Effacez l’URL et enregistrez pour supprimer la bannière.",
+      "kindLabel": "Type de bannière :",
+      "kindImage": "Image",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "URL de la bannière :",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Légende / description (facultatif) :",
+      "captionPlaceholder": "Décrivez ou créditez la bannière",
+      "save": "Enregistrer la bannière",
+      "saved": "Bannière enregistrée.",
+      "removed": "Bannière supprimée.",
+      "updateError": "Impossible de mettre à jour la bannière."
     },
     "status": {
       "lastBackup": "Dernière sauvegarde : {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Saisissez l'URL de l'image",
       "insertImageAltPlaceholder": "Texte alternatif (facultatif)",
       "insertImageConfirm": "Confirmer",
-      "insertImageCancel": "Annuler"
+      "insertImageCancel": "Annuler",
+      "insertStreetView": "Insérer Street View",
+      "insertStreetViewHelp": "Collez l’URL https://www.google.com/maps/embed provenant de l’attribut src de l’iframe.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Télécharger le fichier"

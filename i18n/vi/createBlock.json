@@ -22,6 +22,17 @@
         "label": "Mô tả (tùy chọn):",
         "placeholder": "Giải thích sự xuất sắc của bạn… hoặc chỉ chắp cánh cho nó."
       },
+      "bannerImage": {
+        "legend": "Phương tiện biểu ngữ (tùy chọn)",
+        "help": "Sử dụng hình ảnh được lưu trữ bên ngoài hoặc URL nhúng Google Maps Street View. Nội dung này sẽ xuất hiện phía trên bài đăng và trên các thẻ bài đăng rộng.",
+        "kindLabel": "Loại biểu ngữ:",
+        "kindImage": "Hình ảnh",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "URL biểu ngữ:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Chú thích / mô tả (tùy chọn):",
+        "captionPlaceholder": "Mô tả hoặc ghi nguồn cho biểu ngữ"
+      },
       "initialContent": {
         "label": "Nội dung ban đầu (tùy chọn):",
         "help": "Bắt đầu viết tại đây hoặc nhấn “Tạo” để tiếp tục trên trang biên tập đầy đủ, nơi bạn có thể nhúng hình ảnh và cộng tác trong thời gian thực.",

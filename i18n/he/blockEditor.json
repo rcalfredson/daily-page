@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "אנא הזן כתובת אתר של תמונה.",
+      "streetViewEmbedUrlInvalid": "הזינו כתובת הטמעה תקינה של Google Maps Street View.",
       "notFound": "הפוסט לא נמצא או לא שייך לחדר הזה.",
       "loadFailed": "אירעה שגיאה בעת טעינת עורך הפוסטים.",
       "updateTitleFailed": "שגיאה בעדכון הכותרת."
@@ -33,6 +34,21 @@
       "expand": "הרחב",
       "collapse": "כווץ",
       "updateError": "שגיאה בעדכון התיאור."
+    },
+    "bannerImage": {
+      "label": "מדיית באנר",
+      "help": "השתמשו בתמונה שמתארחת חיצונית או בכתובת הטמעה של Google Maps Street View. כדי להסיר את הבאנר, נקו את הכתובת ושמרו.",
+      "kindLabel": "סוג הבאנר:",
+      "kindImage": "תמונה",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "כתובת הבאנר:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "כיתוב / תיאור (אופציונלי):",
+      "captionPlaceholder": "תארו את הבאנר או ציינו קרדיט",
+      "save": "שמירת הבאנר",
+      "saved": "הבאנר נשמר.",
+      "removed": "הבאנר הוסר.",
+      "updateError": "לא ניתן לעדכן את הבאנר."
     },
     "status": {
       "lastBackup": "גיבוי אחרון: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "הזן את כתובת האתר של התמונה",
       "insertImageAltPlaceholder": "טקסט חלופי (אופציונלי)",
       "insertImageConfirm": "אשר",
-      "insertImageCancel": "בטל"
+      "insertImageCancel": "בטל",
+      "insertStreetView": "הוספת Street View",
+      "insertStreetViewHelp": "הדביקו את כתובת https://www.google.com/maps/embed מתוך המאפיין src של ה-iframe.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "הורד קובץ"
