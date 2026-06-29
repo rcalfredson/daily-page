@@ -960,11 +960,12 @@ html[data-theme="dark"] .cm-s-easymde .cm-attribute {
 }
 
 #save-banner-image-btn:hover {
-  background: #0056b3;
+  border-color: var(--highlight-hover);
+  background: var(--highlight-hover);
 }
 
 #save-banner-image-btn:focus-visible {
-  outline: 3px solid rgba(0, 123, 255, 0.22);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
 }
 

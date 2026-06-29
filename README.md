@@ -234,6 +234,22 @@ The preview router is mounted only when `NODE_ENV !== 'production'`; these route
 
 The editor traces back to Conclave's CRDT approach. Posts are edited in Markdown, local edits become CRDT operations, and peers exchange updates through the collaboration layer. The server also exposes endpoints for persistence and session/peer discovery.
 
+Post bodies support Google Maps Street View embeds with a restricted Markdown
+directive:
+
+```md
+@[streetview](https://www.google.com/maps/embed?pb=...)
+```
+
+Only HTTPS URLs on `www.google.com` with the exact `/maps/embed` path and a
+single `pb` parameter are accepted. Raw iframe HTML remains disabled. Full post
+pages render the interactive panorama, while post-list previews render a link.
+
+Post banners may also use the same validated Google Maps embed URL by selecting
+the Google Street View banner type. Street View banners render as interactive
+panoramas on full posts and as lazy-loaded, click-through panoramas on cards.
+Existing banner metadata without a type continues to render as an image.
+
 When a post has been inactive for about seven days, a cron job marks it `locked`. Locked posts are treated as archive/browsing material rather than active writing surfaces. `public` posts appear in public browsing while editable; `unlisted` drafts stay out of public browsing until they lock.
 
 ## Internationalization

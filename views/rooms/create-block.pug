@@ -40,8 +40,12 @@ block content
     fieldset.form-group.banner-image-fields
       legend= t('createBlock.form.bannerImage.legend')
       p.form-help= t('createBlock.form.bannerImage.help')
+      label(for='banner-image-kind')= t('createBlock.form.bannerImage.kindLabel')
+      select#banner-image-kind(name='bannerImageKind')
+        option(value='image')= t('createBlock.form.bannerImage.kindImage')
+        option(value='streetview')= t('createBlock.form.bannerImage.kindStreetView')
       label(for='banner-image-url')= t('createBlock.form.bannerImage.urlLabel')
-      input#banner-image-url(type='url' name='bannerImageUrl' maxlength='2048' placeholder=t('createBlock.form.bannerImage.urlPlaceholder'))
+      input#banner-image-url(type='url' name='bannerImageUrl' maxlength='8192' placeholder=t('createBlock.form.bannerImage.urlPlaceholder'))
       label(for='banner-image-caption')= t('createBlock.form.bannerImage.captionLabel')
       input#banner-image-caption(type='text' name='bannerImageCaption' maxlength='300' placeholder=t('createBlock.form.bannerImage.captionPlaceholder'))
     .form-group

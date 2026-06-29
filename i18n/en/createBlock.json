@@ -23,12 +23,15 @@
         "placeholder": "Explain your brilliance… or just wing it."
       },
       "bannerImage": {
-        "legend": "Banner image (optional)",
-        "help": "Use an externally hosted image. It will appear above the post and on spacious post cards.",
-        "urlLabel": "Image URL:",
-        "urlPlaceholder": "https://example.com/image.jpg",
-        "captionLabel": "Caption / image description (optional):",
-        "captionPlaceholder": "Describe or credit the image"
+        "legend": "Banner media (optional)",
+        "help": "Use an externally hosted image or a Google Maps Street View embed URL. It will appear above the post and on spacious post cards.",
+        "kindLabel": "Banner type:",
+        "kindImage": "Image",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "Banner URL:",
+        "urlPlaceholder": "https://example.com/image.jpg or https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Caption / description (optional):",
+        "captionPlaceholder": "Describe or credit the banner"
       },
       "initialContent": {
         "label": "Initial Content (optional):",

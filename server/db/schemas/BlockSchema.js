@@ -1,15 +1,27 @@
 import { Schema } from 'mongoose';
-import { isValidBannerImageUrl } from '../bannerImage.js';
+import {
+  isValidBannerImageUrl,
+  isValidBannerStreetViewUrl
+} from '../bannerImage.js';
 
 const bannerImageSchema = new Schema({
+  kind: {
+    type: String,
+    enum: ['image', 'streetview'],
+    default: 'image'
+  },
   url: {
     type: String,
     required: true,
     trim: true,
-    maxlength: 2048,
+    maxlength: 8192,
     validate: {
-      validator: isValidBannerImageUrl,
-      message: 'Banner image URL must be a valid http or https URL.'
+      validator(value) {
+        return this.kind === 'streetview'
+          ? isValidBannerStreetViewUrl(value)
+          : isValidBannerImageUrl(value);
+      },
+      message: 'Banner URL is not valid for the selected banner type.'
     }
   },
   caption: {

@@ -1,5 +1,6 @@
 // server/utils/markdownHelper.js
 import MarkdownIt from 'markdown-it';
+import { streetViewEmbedPlugin } from '../../lib/streetViewEmbed.js';
 
 /**
  * Instancia de Markdown-It.
@@ -11,7 +12,7 @@ const md = new MarkdownIt({
   html: false,
   linkify: true,
   breaks: false
-});
+}).use(streetViewEmbedPlugin);
 
 /** ---------- Helpers de HTML post-render ---------- */
 
@@ -40,14 +41,21 @@ function wrapTables(html) {
  * @param {{ mode?: 'full'|'preview', previewOpts?: PreviewOptions }} [opts]
  * @returns {string}
  */
-function renderCore(content, { mode = 'full', previewOpts = {}, emptyHtml } = {}) {
+function renderCore(content, {
+  mode = 'full',
+  previewOpts = {},
+  emptyHtml,
+  allowStreetViewEmbeds = true
+} = {}) {
   const cleaned = content ? content.replace(/\u200B/g, '').trim() : '';
 
   const defaultEmptyHtml = '<p><em>(No content yet)</em></p>';
   const empty = (emptyHtml != null) ? emptyHtml : defaultEmptyHtml;
 
   if (mode === 'full') {
-    const html = cleaned ? md.render(cleaned) : empty;
+    const html = cleaned
+      ? md.render(cleaned, { allowStreetViewEmbeds })
+      : empty;
     return wrapTables(html);
   }
 
@@ -188,7 +196,11 @@ function renderPreviewFromTokens(tokens, opts, mdInstance) {
     }
   }
 
-  let html = mdInstance.renderer.render(slice, mdInstance.options, {});
+  let html = mdInstance.renderer.render(
+    slice,
+    mdInstance.options,
+    { allowStreetViewEmbeds: false }
+  );
   if (truncated && ellipsis) {
     html += `<p class="preview-ellipsis">${ellipsis}</p>`;
   }
@@ -203,8 +215,12 @@ function renderPreviewFromTokens(tokens, opts, mdInstance) {
  * @returns {string}
  */
 export function renderMarkdownFull(content, opts = {}) {
-  const { emptyHtml } = opts;
-  return renderCore(content, { mode: 'full', emptyHtml });
+  const { emptyHtml, allowStreetViewEmbeds = true } = opts;
+  return renderCore(content, {
+    mode: 'full',
+    emptyHtml,
+    allowStreetViewEmbeds
+  });
 }
 
 /**

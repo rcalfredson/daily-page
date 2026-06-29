@@ -80,8 +80,13 @@ block content
                 h3.block-banner-editor__title= t('blockEditor.bannerImage.label')
                 p.banner-image-help= t('blockEditor.bannerImage.help')
                 .block-banner-editor__field
+                  label.block-banner-editor__label(for='banner-image-kind')= t('blockEditor.bannerImage.kindLabel')
+                  select.block-banner-editor__input#banner-image-kind
+                    option(value='image' selected=!block.bannerImage || !block.bannerImage.kind || block.bannerImage.kind === 'image')= t('blockEditor.bannerImage.kindImage')
+                    option(value='streetview' selected=block.bannerImage && block.bannerImage.kind === 'streetview')= t('blockEditor.bannerImage.kindStreetView')
+                .block-banner-editor__field
                   label.block-banner-editor__label(for='banner-image-url')= t('blockEditor.bannerImage.urlLabel')
-                  input.block-banner-editor__input#banner-image-url(type='url' maxlength='2048' value=(block.bannerImage && block.bannerImage.url) || '' placeholder=t('blockEditor.bannerImage.urlPlaceholder'))
+                  input.block-banner-editor__input#banner-image-url(type='url' maxlength='8192' value=(block.bannerImage && block.bannerImage.url) || '' placeholder=t('blockEditor.bannerImage.urlPlaceholder'))
                 .block-banner-editor__field
                   label.block-banner-editor__label(for='banner-image-caption')= t('blockEditor.bannerImage.captionLabel')
                   input.block-banner-editor__input#banner-image-caption(type='text' maxlength='300' value=(block.bannerImage && block.bannerImage.caption) || '' placeholder=t('blockEditor.bannerImage.captionPlaceholder'))

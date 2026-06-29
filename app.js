@@ -172,6 +172,10 @@ async function getSupportFundingViewModel() {
     }
 
     app.use(cookieParser());
+    app.use((req, res, next) => {
+      res.set('Content-Security-Policy', "frame-src 'self' https://www.google.com;");
+      next();
+    });
     app.use(cors(corsOptions));
     app.use(uiPrefixAndLangContext);
     app.use(uiLangFallbackNotice);
