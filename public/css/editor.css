@@ -163,7 +163,7 @@ textarea {
   border-color: var(--border-color);
 }
 
-button#open-insert-img-btn {
+button.toolbar-insert-button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -176,13 +176,13 @@ button#open-insert-img-btn {
   margin: unset;
 }
 
-button#open-insert-img-btn i {
+button.toolbar-insert-button i {
   width: 20px;
   height: 20px;
 }
 
 /* Tooltip */
-#insert-img-tooltip {
+.insert-tooltip {
   position: absolute;
   top: 50px;
   left: 0;
@@ -200,12 +200,18 @@ button#open-insert-img-btn i {
   max-width: calc(100vw - 2rem);
 }
 
-#insert-img-tooltip.hidden {
+.insert-tooltip.hidden {
   display: none;
 }
 
+.insert-tooltip form {
+  display: grid;
+  gap: 10px;
+}
+
 /* Tooltip Input Fields */
-#insert-img-tooltip input[type="text"] {
+.insert-tooltip input[type="text"],
+.insert-tooltip input[type="url"] {
   width: 100%;
   padding: 10px;
   border: 1px solid var(--border-color);
@@ -214,24 +220,25 @@ button#open-insert-img-btn i {
   line-height: 1.2;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: border-color 0.2s;
-  margin-bottom: 10px;
+  margin-bottom: 0;
 }
 
 /* Focus Effect for Input Fields */
-#insert-img-tooltip input[type="text"]:focus {
+.insert-tooltip input[type="text"]:focus,
+.insert-tooltip input[type="url"]:focus {
   border-color: var(--highlight-color);
   outline: none;
 }
 
 /* Tooltip Buttons Container */
-#insert-img-tooltip div {
+.insert-tooltip__actions {
   display: flex;
   justify-content: space-between;
   gap: 10px;
 }
 
 /* Tooltip Buttons */
-#insert-img-tooltip button {
+.insert-tooltip button {
   flex: 1;
   padding: 8px 16px;
   font-size: 0.9rem;
@@ -243,23 +250,30 @@ button#open-insert-img-btn i {
 }
 
 /* Confirm Button Styling */
-#insert-img-tooltip button#insert-img-confirm {
+.insert-tooltip button.insert-tooltip__confirm {
   background-color: #007bff;
   color: white;
 }
 
-#insert-img-tooltip button#insert-img-confirm:hover {
+.insert-tooltip button.insert-tooltip__confirm:hover {
   background-color: #0056b3;
 }
 
 /* Cancel Button Styling */
-#insert-img-tooltip button#insert-img-cancel {
+.insert-tooltip button.insert-tooltip__cancel {
   background-color: #6c757d;
   color: white;
 }
 
-#insert-img-tooltip button#insert-img-cancel:hover {
+.insert-tooltip button.insert-tooltip__cancel:hover {
   background-color: #5a6268;
+}
+
+.insert-tooltip__help {
+  margin: 0;
+  color: var(--editor-text-muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
 }
 
 #block-title-container {
@@ -546,9 +560,9 @@ button#open-insert-img-btn i {
   word-break: normal;
 }
 
-button#open-insert-img-btn:focus-visible,
-#insert-img-tooltip input[type="text"]:focus-visible,
-#insert-img-tooltip button:focus-visible,
+button.toolbar-insert-button:focus-visible,
+.insert-tooltip input:focus-visible,
+.insert-tooltip button:focus-visible,
 #edit-title-btn:focus-visible,
 #block-title-input:focus-visible,
 .description-edit-button:focus-visible,
@@ -623,7 +637,8 @@ html[data-theme="dark"] .modal-message {
 
 html[data-theme="dark"] #block-title-input,
 html[data-theme="dark"] #description-edit,
-html[data-theme="dark"] #insert-img-tooltip input[type="text"] {
+html[data-theme="dark"] .insert-tooltip input[type="text"],
+html[data-theme="dark"] .insert-tooltip input[type="url"] {
   color: var(--text-color);
   background: var(--input-bg);
   border-color: var(--border-color);
@@ -649,26 +664,26 @@ html[data-theme="dark"] .toolbar.sticky {
   backdrop-filter: blur(8px);
 }
 
-html[data-theme="dark"] button#open-insert-img-btn {
+html[data-theme="dark"] button.toolbar-insert-button {
   color: var(--link-color);
   background: var(--surface-bg);
   border-color: var(--border-color);
 }
 
-html[data-theme="dark"] button#open-insert-img-btn:hover {
+html[data-theme="dark"] button.toolbar-insert-button:hover {
   color: var(--text-color);
   background: var(--surface-raised-bg);
   border-color: color-mix(in srgb, var(--border-color) 45%, var(--highlight-color));
 }
 
-html[data-theme="dark"] #insert-img-tooltip {
+html[data-theme="dark"] .insert-tooltip {
   color: var(--text-color);
   background: var(--surface-bg);
   border-color: var(--border-color);
   box-shadow: var(--box-shadow);
 }
 
-html[data-theme="dark"] #insert-img-tooltip button#insert-img-confirm,
+html[data-theme="dark"] .insert-tooltip button.insert-tooltip__confirm,
 html[data-theme="dark"] #save-description-btn,
 html[data-theme="dark"] #lock-block-btn {
   color: var(--highlight-contrast);
@@ -676,7 +691,7 @@ html[data-theme="dark"] #lock-block-btn {
   border-color: var(--highlight-color);
 }
 
-html[data-theme="dark"] #insert-img-tooltip button#insert-img-confirm:hover,
+html[data-theme="dark"] .insert-tooltip button.insert-tooltip__confirm:hover,
 html[data-theme="dark"] #save-description-btn:hover,
 html[data-theme="dark"] #lock-block-btn:hover {
   color: var(--highlight-contrast);
@@ -684,7 +699,7 @@ html[data-theme="dark"] #lock-block-btn:hover {
   border-color: var(--highlight-hover);
 }
 
-html[data-theme="dark"] #insert-img-tooltip button#insert-img-cancel,
+html[data-theme="dark"] .insert-tooltip button.insert-tooltip__cancel,
 html[data-theme="dark"] #cancel-description-btn,
 html[data-theme="dark"] #lock-cancel-btn {
   color: var(--muted-text-color);
@@ -692,7 +707,7 @@ html[data-theme="dark"] #lock-cancel-btn {
   border: 1px solid var(--border-color);
 }
 
-html[data-theme="dark"] #insert-img-tooltip button#insert-img-cancel:hover,
+html[data-theme="dark"] .insert-tooltip button.insert-tooltip__cancel:hover,
 html[data-theme="dark"] #cancel-description-btn:hover,
 html[data-theme="dark"] #lock-cancel-btn:hover {
   color: var(--text-color);
@@ -827,12 +842,12 @@ html[data-theme="dark"] .cm-s-easymde .cm-attribute {
     left: 0.7rem;
   }
 
-  #insert-img-tooltip {
+  .insert-tooltip {
     left: 50%;
     transform: translateX(-50%);
   }
 
-  #insert-img-tooltip div {
+  .insert-tooltip__actions {
     flex-direction: column;
   }
 

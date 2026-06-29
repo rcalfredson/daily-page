@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Please enter an image URL.",
+      "streetViewEmbedUrlInvalid": "Enter a valid Google Maps Street View embed URL.",
       "notFound": "Post not found or does not belong to this room.",
       "loadFailed": "An error occurred while loading the post editor.",
       "updateTitleFailed": "Error updating title."
@@ -80,7 +81,10 @@
       "insertImageUrlPlaceholder": "Enter image URL",
       "insertImageAltPlaceholder": "Alt text (optional)",
       "insertImageConfirm": "Confirm",
-      "insertImageCancel": "Cancel"
+      "insertImageCancel": "Cancel",
+      "insertStreetView": "Insert Street View",
+      "insertStreetViewHelp": "Paste the https://www.google.com/maps/embed URL from the iframe's src attribute.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Download file"
