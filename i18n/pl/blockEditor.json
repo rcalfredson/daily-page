@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Wpisz adres URL obrazu.",
+      "streetViewEmbedUrlInvalid": "Wprowadź prawidłowy adres osadzania Google Maps Street View.",
       "notFound": "Nie znaleziono posta albo nie należy on do tego pokoju.",
       "loadFailed": "Wystąpił błąd podczas ładowania edytora posta.",
       "updateTitleFailed": "Błąd podczas aktualizacji tytułu."
@@ -33,6 +34,21 @@
       "expand": "Rozwiń",
       "collapse": "Zwiń",
       "updateError": "Błąd podczas aktualizacji opisu."
+    },
+    "bannerImage": {
+      "label": "Multimedia banera",
+      "help": "Użyj obrazu hostowanego zewnętrznie lub adresu osadzania Google Maps Street View. Wyczyść adres i zapisz, aby usunąć baner.",
+      "kindLabel": "Typ banera:",
+      "kindImage": "Obraz",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "Adres URL banera:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Podpis / opis (opcjonalny):",
+      "captionPlaceholder": "Opisz baner lub podaj źródło",
+      "save": "Zapisz baner",
+      "saved": "Baner został zapisany.",
+      "removed": "Baner został usunięty.",
+      "updateError": "Nie udało się zaktualizować banera."
     },
     "status": {
       "lastBackup": "Ostatnia kopia zapasowa: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Wpisz adres URL obrazu",
       "insertImageAltPlaceholder": "Tekst alternatywny (opcjonalnie)",
       "insertImageConfirm": "Potwierdź",
-      "insertImageCancel": "Anuluj"
+      "insertImageCancel": "Anuluj",
+      "insertStreetView": "Wstaw Street View",
+      "insertStreetViewHelp": "Wklej adres https://www.google.com/maps/embed z atrybutu src elementu iframe.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Pobierz plik"

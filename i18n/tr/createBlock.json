@@ -22,6 +22,17 @@
         "label": "Açıklama (isteğe bağlı):",
         "placeholder": "Harika fikrinizi açıklayın… ya da doğaçlama yapın."
       },
+      "bannerImage": {
+        "legend": "Banner medyası (isteğe bağlı)",
+        "help": "Harici olarak barındırılan bir görsel veya Google Maps Street View yerleştirme URL’si kullanın. Gönderinin üzerinde ve geniş gönderi kartlarında görünür.",
+        "kindLabel": "Banner türü:",
+        "kindImage": "Görsel",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "Banner URL’si:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Altyazı / açıklama (isteğe bağlı):",
+        "captionPlaceholder": "Bannerı açıklayın veya kaynağını belirtin"
+      },
       "initialContent": {
         "label": "Başlangıç ​​İçeriği (isteğe bağlı):",
         "help": "Buradan yazmaya başlayın veya görüntüleri ekleyebileceğiniz ve gerçek zamanlı olarak işbirliği yapabileceğiniz tam düzenleyici sayfasında devam etmek için \"Oluştur\"a basın.",

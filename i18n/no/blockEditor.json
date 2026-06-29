@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Vennligst skriv inn en bilde-URL.",
+      "streetViewEmbedUrlInvalid": "Skriv inn en gyldig innbyggingsadresse for Google Maps Street View.",
       "notFound": "Finner ikke innlegget eller tilhører ikke dette rommet.",
       "loadFailed": "Det oppsto en feil under innlasting av innleggsredigeringsprogrammet.",
       "updateTitleFailed": "Feil under oppdatering av tittel."
@@ -33,6 +34,21 @@
       "expand": "Vis mer",
       "collapse": "Vis mindre",
       "updateError": "Feil under oppdatering av beskrivelse."
+    },
+    "bannerImage": {
+      "label": "Bannermedium",
+      "help": "Bruk et eksternt lagret bilde eller en innbyggingsadresse for Google Maps Street View. Tøm adressen og lagre for å fjerne banneret.",
+      "kindLabel": "Bannertype:",
+      "kindImage": "Bilde",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "Banneradresse:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Bildetekst / beskrivelse (valgfritt):",
+      "captionPlaceholder": "Beskriv eller krediter banneret",
+      "save": "Lagre banner",
+      "saved": "Banneret er lagret.",
+      "removed": "Banneret er fjernet.",
+      "updateError": "Banneret kunne ikke oppdateres."
     },
     "status": {
       "lastBackup": "Siste sikkerhetskopi: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Skriv inn bilde-URL",
       "insertImageAltPlaceholder": "Alt tekst (valgfritt)",
       "insertImageConfirm": "Bekreft",
-      "insertImageCancel": "Avbryt"
+      "insertImageCancel": "Avbryt",
+      "insertStreetView": "Sett inn Street View",
+      "insertStreetViewHelp": "Lim inn https://www.google.com/maps/embed-adressen fra iframe-elementets src-attributt.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Last ned fil"

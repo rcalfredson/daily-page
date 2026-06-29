@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Masukkan URL gambar.",
+      "streetViewEmbedUrlInvalid": "Masukkan URL sematan Google Maps Street View yang valid.",
       "notFound": "Postingan tidak ditemukan atau bukan milik ruang ini.",
       "loadFailed": "Terjadi kesalahan saat memuat editor postingan.",
       "updateTitleFailed": "Kesalahan saat memperbarui judul."
@@ -33,6 +34,21 @@
       "expand": "Perluas",
       "collapse": "Ciutkan",
       "updateError": "Kesalahan saat memperbarui deskripsi."
+    },
+    "bannerImage": {
+      "label": "Media banner",
+      "help": "Gunakan gambar yang dihosting secara eksternal atau URL sematan Google Maps Street View. Kosongkan URL lalu simpan untuk menghapus banner.",
+      "kindLabel": "Jenis banner:",
+      "kindImage": "Gambar",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "URL banner:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Keterangan / deskripsi (opsional):",
+      "captionPlaceholder": "Jelaskan atau beri kredit untuk banner",
+      "save": "Simpan banner",
+      "saved": "Banner disimpan.",
+      "removed": "Banner dihapus.",
+      "updateError": "Banner tidak dapat diperbarui."
     },
     "status": {
       "lastBackup": "Cadangan terakhir: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Masukkan URL gambar",
       "insertImageAltPlaceholder": "Teks alt (opsional)",
       "insertImageConfirm": "Konfirmasi",
-      "insertImageCancel": "Batal"
+      "insertImageCancel": "Batal",
+      "insertStreetView": "Sisipkan Street View",
+      "insertStreetViewHelp": "Tempel URL https://www.google.com/maps/embed dari atribut src iframe.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Unduh file"

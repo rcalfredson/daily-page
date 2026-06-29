@@ -22,6 +22,17 @@
         "label": "Beschrijving (optioneel):",
         "placeholder": "Leg je genialiteit uit... of doe er gewoon mee."
       },
+      "bannerImage": {
+        "legend": "Bannermedia (optioneel)",
+        "help": "Gebruik een extern gehoste afbeelding of een insluit-URL van Google Maps Street View. Deze verschijnt boven het bericht en op ruime berichtkaarten.",
+        "kindLabel": "Bannertype:",
+        "kindImage": "Afbeelding",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "Banner-URL:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Bijschrift / beschrijving (optioneel):",
+        "captionPlaceholder": "Beschrijf of vermeld de bron van de banner"
+      },
       "initialContent": {
         "label": "Initiële inhoud (optioneel):",
         "help": "Begin hier met schrijven of druk op 'Maken' om door te gaan naar de volledige editorpagina, waar u afbeeldingen kunt insluiten en in realtime kunt samenwerken.",

@@ -22,6 +22,17 @@
         "label": "描述（可选）：",
         "placeholder": "解释你的精彩想法……或者直接随性发挥。"
       },
+      "bannerImage": {
+        "legend": "横幅媒体（可选）",
+        "help": "使用外部托管的图片或 Google Maps Street View 嵌入网址。它将显示在帖子上方和宽版帖子卡片中。",
+        "kindLabel": "横幅类型：",
+        "kindImage": "图片",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "横幅网址：",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "说明文字 / 描述（可选）：",
+        "captionPlaceholder": "描述横幅或注明来源"
+      },
       "initialContent": {
         "label": "初始内容（可选）：",
         "help": "在这里开始写作，或按“创建”继续到完整编辑器页面，在那里你可以嵌入图片并实时协作。",

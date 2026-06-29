@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "โปรดป้อนที่อยู่ URL ของภาพ",
+      "streetViewEmbedUrlInvalid": "ป้อน URL สำหรับฝัง Google Maps Street View ที่ถูกต้อง",
       "notFound": "โพสต์ไม่ได้พบหรือไม่ได้เป็นของห้องนี้",
       "loadFailed": "เกิดข้อผิดพลาดขึ้นระหว่างทําการโหลดเครื่องมือแก้ไขไปรษณีย์",
       "updateTitleFailed": "เกิดข้อผิดพลาดในการปรับข้อมูลชื่อเพลง"
@@ -33,6 +34,21 @@
       "expand": "ขยาย",
       "collapse": "ย่อเก็บ",
       "updateError": "เกิดข้อผิดพลาดในการปรับข้อมูลรายละเอียด"
+    },
+    "bannerImage": {
+      "label": "สื่อแบนเนอร์",
+      "help": "ใช้รูปภาพที่โฮสต์ภายนอกหรือ URL สำหรับฝัง Google Maps Street View ล้าง URL แล้วบันทึกเพื่อลบแบนเนอร์",
+      "kindLabel": "ประเภทแบนเนอร์:",
+      "kindImage": "รูปภาพ",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "URL แบนเนอร์:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "คำบรรยาย / รายละเอียด (ไม่บังคับ):",
+      "captionPlaceholder": "อธิบายหรือระบุเครดิตของแบนเนอร์",
+      "save": "บันทึกแบนเนอร์",
+      "saved": "บันทึกแบนเนอร์แล้ว",
+      "removed": "ลบแบนเนอร์แล้ว",
+      "updateError": "ไม่สามารถอัปเดตแบนเนอร์ได้"
     },
     "status": {
       "lastBackup": "สํารองข้อมูลล่าสุด: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "ป้อนที่อยู่ URL ของภาพ",
       "insertImageAltPlaceholder": "ตัวเลือกข้อความ",
       "insertImageConfirm": "ยืนยัน",
-      "insertImageCancel": "ยกเลิก"
+      "insertImageCancel": "ยกเลิก",
+      "insertStreetView": "แทรก Street View",
+      "insertStreetViewHelp": "วาง URL https://www.google.com/maps/embed จากแอตทริบิวต์ src ของ iframe",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "ดาวน์โหลดแฟ้ม"

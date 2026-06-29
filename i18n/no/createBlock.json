@@ -22,6 +22,17 @@
         "label": "Beskrivelse (valgfritt):",
         "placeholder": "Forklar briljansen din ... eller bare ving den."
       },
+      "bannerImage": {
+        "legend": "Bannermedium (valgfritt)",
+        "help": "Bruk et eksternt lagret bilde eller en innbyggingsadresse for Google Maps Street View. Det vises over innlegget og på romslige innleggskort.",
+        "kindLabel": "Bannertype:",
+        "kindImage": "Bilde",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "Banneradresse:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Bildetekst / beskrivelse (valgfritt):",
+        "captionPlaceholder": "Beskriv eller krediter banneret"
+      },
       "initialContent": {
         "label": "Opprinnelig innhold (valgfritt):",
         "help": "Begynn å skrive her eller trykk \"Opprett\" for å fortsette på hele redigeringssiden, hvor du kan legge inn bilder og samarbeide i sanntid.",

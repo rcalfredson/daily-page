@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "이미지 URL을 입력하세요.",
+      "streetViewEmbedUrlInvalid": "올바른 Google Maps Street View 삽입 URL을 입력하세요.",
       "notFound": "게시물을 찾을 수 없거나 이 방에 속하지 않습니다.",
       "loadFailed": "게시물 편집기를 불러오는 중 오류가 발생했습니다.",
       "updateTitleFailed": "제목 업데이트 오류."
@@ -33,6 +34,21 @@
       "expand": "펼치기",
       "collapse": "접기",
       "updateError": "설명 업데이트 오류."
+    },
+    "bannerImage": {
+      "label": "배너 미디어",
+      "help": "외부에서 호스팅되는 이미지 또는 Google Maps Street View 삽입 URL을 사용하세요. 배너를 제거하려면 URL을 지우고 저장하세요.",
+      "kindLabel": "배너 유형:",
+      "kindImage": "이미지",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "배너 URL:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "캡션 / 설명(선택 사항):",
+      "captionPlaceholder": "배너를 설명하거나 출처를 표시하세요",
+      "save": "배너 저장",
+      "saved": "배너가 저장되었습니다.",
+      "removed": "배너가 제거되었습니다.",
+      "updateError": "배너를 업데이트할 수 없습니다."
     },
     "status": {
       "lastBackup": "마지막 백업: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "이미지 URL 입력",
       "insertImageAltPlaceholder": "대체 텍스트(선택 사항)",
       "insertImageConfirm": "확인",
-      "insertImageCancel": "취소"
+      "insertImageCancel": "취소",
+      "insertStreetView": "Street View 삽입",
+      "insertStreetViewHelp": "iframe의 src 속성에서 https://www.google.com/maps/embed URL을 붙여 넣으세요.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "파일 다운로드"

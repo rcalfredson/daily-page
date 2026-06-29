@@ -22,6 +22,17 @@
         "label": "Descripción (opcional):",
         "placeholder": "Explica tu genialidad… o improvísala."
       },
+      "bannerImage": {
+        "legend": "Contenido multimedia del banner (opcional)",
+        "help": "Usa una imagen alojada externamente o una URL de inserción de Google Maps Street View. Aparecerá sobre el post y en las tarjetas de post espaciosas.",
+        "kindLabel": "Tipo de banner:",
+        "kindImage": "Imagen",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "URL del banner:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Leyenda / descripción (opcional):",
+        "captionPlaceholder": "Describe o acredita el banner"
+      },
       "initialContent": {
         "label": "Contenido Inicial (opcional):",
         "help": "Escribe aquí o pulsa «Crear» para seguir en el editor completo, donde puedes incrustar imágenes y colaborar en tiempo real.",

@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Ange en bildadress.",
+      "streetViewEmbedUrlInvalid": "Ange en giltig inbäddningsadress för Google Maps Street View.",
       "notFound": "Inlägg hittades inte eller tillhör inte detta rum.",
       "loadFailed": "Ett fel uppstod när inläggsredigeraren laddades.",
       "updateTitleFailed": "Fel vid uppdatering av titel."
@@ -33,6 +34,21 @@
       "expand": "Expandera",
       "collapse": "Kollaps",
       "updateError": "Fel vid uppdatering av beskrivning."
+    },
+    "bannerImage": {
+      "label": "Bannermedia",
+      "help": "Använd en externt lagrad bild eller en inbäddningsadress för Google Maps Street View. Rensa adressen och spara för att ta bort bannern.",
+      "kindLabel": "Bannertyp:",
+      "kindImage": "Bild",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "Banneradress:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Bildtext / beskrivning (valfritt):",
+      "captionPlaceholder": "Beskriv eller ange källa för bannern",
+      "save": "Spara banner",
+      "saved": "Bannern har sparats.",
+      "removed": "Bannern har tagits bort.",
+      "updateError": "Det gick inte att uppdatera bannern."
     },
     "status": {
       "lastBackup": "Senaste säkerhetskopiering: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Ange bildens URL",
       "insertImageAltPlaceholder": "Alt text (valfritt)",
       "insertImageConfirm": "Bekräfta",
-      "insertImageCancel": "Avbryt"
+      "insertImageCancel": "Avbryt",
+      "insertStreetView": "Infoga Street View",
+      "insertStreetViewHelp": "Klistra in adressen https://www.google.com/maps/embed från iframe-elementets src-attribut.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Ladda ner fil"

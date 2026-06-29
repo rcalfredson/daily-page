@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "الرجاء إدخال عنوان URL للصورة.",
+      "streetViewEmbedUrlInvalid": "أدخل رابط تضمين صالحًا من Google Maps Street View.",
       "notFound": "لم يتم العثور على المنشور أو أنها لا تنتمي إلى هذه الغرفة.",
       "loadFailed": "حدث خطأ أثناء تحميل محرر المنشور.",
       "updateTitleFailed": "حدث خطأ أثناء تحديث العنوان."
@@ -33,6 +34,21 @@
       "expand": "يوسع",
       "collapse": "ينهار",
       "updateError": "حدث خطأ أثناء تحديث الوصف."
+    },
+    "bannerImage": {
+      "label": "وسائط اللافتة",
+      "help": "استخدم صورة مستضافة خارجيًا أو رابط تضمين Google Maps Street View. امسح الرابط واحفظ لإزالة اللافتة.",
+      "kindLabel": "نوع اللافتة:",
+      "kindImage": "صورة",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "رابط اللافتة:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "التسمية التوضيحية / الوصف (اختياري):",
+      "captionPlaceholder": "صِف اللافتة أو اذكر مصدرها",
+      "save": "حفظ اللافتة",
+      "saved": "تم حفظ اللافتة.",
+      "removed": "تمت إزالة اللافتة.",
+      "updateError": "تعذر تحديث اللافتة."
     },
     "status": {
       "lastBackup": "آخر نسخة احتياطية: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "أدخل عنوان URL للصورة",
       "insertImageAltPlaceholder": "نص بديل (اختياري)",
       "insertImageConfirm": "يتأكد",
-      "insertImageCancel": "يلغي"
+      "insertImageCancel": "يلغي",
+      "insertStreetView": "إدراج Street View",
+      "insertStreetViewHelp": "الصق رابط https://www.google.com/maps/embed من سمة src في iframe.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "تنزيل الملف"

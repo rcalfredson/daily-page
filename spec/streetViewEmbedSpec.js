@@ -25,6 +25,7 @@ describe('Street View Markdown embeds', () => {
     expect(html).not.toContain('<iframe');
     expect(html).toContain('class="street-view-embed-link"');
     expect(html).toContain(`href="${embedUrl}"`);
+    expect(html).toContain('>Google Street View</a>');
   });
 
   it('can disable embeds for Markdown fields such as post descriptions', () => {

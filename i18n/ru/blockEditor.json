@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Пожалуйста, введите URL изображения.",
+      "streetViewEmbedUrlInvalid": "Введите допустимый URL для встраивания Google Maps Street View.",
       "notFound": "Блок не найден или не принадлежит этой комнате.",
       "loadFailed": "При загрузке редактора публикации произошла ошибка.",
       "updateTitleFailed": "Ошибка при обновлении заголовка."
@@ -33,6 +34,21 @@
       "expand": "Развернуть",
       "collapse": "Свернуть",
       "updateError": "Ошибка при обновлении описания."
+    },
+    "bannerImage": {
+      "label": "Медиа для баннера",
+      "help": "Используйте изображение с внешнего хостинга или URL для встраивания Google Maps Street View. Чтобы удалить баннер, очистите URL и сохраните изменения.",
+      "kindLabel": "Тип баннера:",
+      "kindImage": "Изображение",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "URL баннера:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Подпись / описание (необязательно):",
+      "captionPlaceholder": "Опишите баннер или укажите источник",
+      "save": "Сохранить баннер",
+      "saved": "Баннер сохранён.",
+      "removed": "Баннер удалён.",
+      "updateError": "Не удалось обновить баннер."
     },
     "status": {
       "lastBackup": "Последняя резервная копия: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Введите URL изображения",
       "insertImageAltPlaceholder": "Альтернативный текст (необязательно)",
       "insertImageConfirm": "Подтвердить",
-      "insertImageCancel": "Отмена"
+      "insertImageCancel": "Отмена",
+      "insertStreetView": "Вставить Street View",
+      "insertStreetViewHelp": "Вставьте URL https://www.google.com/maps/embed из атрибута src элемента iframe.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Скачать файл"

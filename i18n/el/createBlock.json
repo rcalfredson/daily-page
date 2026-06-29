@@ -19,6 +19,17 @@
         }
       },
       "description": { "label": "Περιγραφή (προαιρετική):", "placeholder": "Εξήγησε την ιδιοφυΐα σου… ή απλώς αυτοσχεδίασε." },
+      "bannerImage": {
+        "legend": "Πολυμέσο banner (προαιρετικό)",
+        "help": "Χρησιμοποιήστε μια εικόνα εξωτερικής φιλοξενίας ή ένα URL ενσωμάτωσης Google Maps Street View. Θα εμφανίζεται πάνω από την ανάρτηση και στις ευρύχωρες κάρτες αναρτήσεων.",
+        "kindLabel": "Τύπος banner:",
+        "kindImage": "Εικόνα",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "URL banner:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Λεζάντα / περιγραφή (προαιρετικά):",
+        "captionPlaceholder": "Περιγράψτε ή αναφέρετε την πηγή του banner"
+      },
       "initialContent": {
         "label": "Αρχικό περιεχόμενο (προαιρετικό):",
         "help": "Ξεκίνα να γράφεις εδώ ή πάτησε «Δημιουργία» για να συνεχίσεις στην πλήρη σελίδα επεξεργασίας, όπου μπορείς να ενσωματώνεις εικόνες και να συνεργάζεσαι σε πραγματικό χρόνο.",

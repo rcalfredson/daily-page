@@ -22,6 +22,17 @@
         "label": "Beskrivning (valfritt):",
         "placeholder": "Förklara din briljans... eller bara ving den."
       },
+      "bannerImage": {
+        "legend": "Bannermedia (valfritt)",
+        "help": "Använd en externt lagrad bild eller en inbäddningsadress för Google Maps Street View. Den visas ovanför inlägget och på rymliga inläggskort.",
+        "kindLabel": "Bannertyp:",
+        "kindImage": "Bild",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "Banneradress:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Bildtext / beskrivning (valfritt):",
+        "captionPlaceholder": "Beskriv eller ange källa för bannern"
+      },
       "initialContent": {
         "label": "Initialt innehåll (valfritt):",
         "help": "Börja skriva här eller tryck på \"Skapa\" för att fortsätta på hela redigeringssidan, där du kan bädda in bilder och samarbeta i realtid.",

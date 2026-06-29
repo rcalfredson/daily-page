@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Bitte gib eine Bild-URL ein.",
+      "streetViewEmbedUrlInvalid": "Gib eine gültige Google-Maps-Street-View-Einbettungs-URL ein.",
       "notFound": "Beitrag nicht gefunden oder gehort nicht zu diesem Raum.",
       "loadFailed": "Beim Laden des Beitrag-Editors ist ein Fehler aufgetreten.",
       "updateTitleFailed": "Fehler beim Aktualisieren des Titels."
@@ -33,6 +34,21 @@
       "expand": "Erweitern",
       "collapse": "Einklappen",
       "updateError": "Fehler beim Aktualisieren der Beschreibung."
+    },
+    "bannerImage": {
+      "label": "Bannermedium",
+      "help": "Verwende ein extern gehostetes Bild oder eine Google-Maps-Street-View-Einbettungs-URL. Leere die URL und speichere, um das Banner zu entfernen.",
+      "kindLabel": "Bannertyp:",
+      "kindImage": "Bild",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "Banner-URL:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Bildunterschrift / Beschreibung (optional):",
+      "captionPlaceholder": "Banner beschreiben oder Quelle angeben",
+      "save": "Banner speichern",
+      "saved": "Banner gespeichert.",
+      "removed": "Banner entfernt.",
+      "updateError": "Das Banner konnte nicht aktualisiert werden."
     },
     "status": {
       "lastBackup": "Letzte Sicherung: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Bild-URL eingeben",
       "insertImageAltPlaceholder": "Alternativtext (optional)",
       "insertImageConfirm": "Bestatigen",
-      "insertImageCancel": "Abbrechen"
+      "insertImageCancel": "Abbrechen",
+      "insertStreetView": "Street View einfügen",
+      "insertStreetViewHelp": "Füge die https://www.google.com/maps/embed-URL aus dem src-Attribut des iframe ein.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Datei herunterladen"

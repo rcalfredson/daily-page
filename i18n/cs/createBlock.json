@@ -6,6 +6,17 @@
     "form": {
       "title": { "label": "Název:", "placeholder": { "full": "např. „Moje mistrovské dílo“, „Nejlepší nápad všech dob“, „Clickbait pro nerdy“", "short": "např. „Moje mistrovské dílo“" } },
       "description": { "label": "Popis (volitelné):", "placeholder": "Vysvětlete svůj geniální nápad… nebo prostě improvizujte." },
+      "bannerImage": {
+        "legend": "Médium banneru (volitelné)",
+        "help": "Použijte externě hostovaný obrázek nebo adresu pro vložení Google Maps Street View. Zobrazí se nad příspěvkem a na prostorných kartách příspěvků.",
+        "kindLabel": "Typ banneru:",
+        "kindImage": "Obrázek",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "Adresa URL banneru:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Titulek / popis (volitelné):",
+        "captionPlaceholder": "Popište banner nebo uveďte zdroj"
+      },
       "initialContent": { "label": "Počáteční obsah (volitelné):", "help": "Začněte psát zde nebo stiskněte „Vytvořit“ a pokračujte v plném editoru, kde můžete vkládat obrázky a spolupracovat v reálném čase.", "placeholder": "Začněte psát příspěvek zde nebo po vytvoření pokračujte v úpravách…" },
       "visibility": { "label": "Viditelnost:" }, "submit": "Vytvořit příspěvek"
     },

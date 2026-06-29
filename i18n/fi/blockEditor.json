@@ -9,6 +9,7 @@
     },
     "errors": {
       "imageUrlRequired": "Syötä kuvan URL-osoite.",
+      "streetViewEmbedUrlInvalid": "Anna kelvollinen Google Maps Street View -upotusosoite.",
       "notFound": "Julkaisua ei löytynyt tai se ei kuulu tähän huoneeseen.",
       "loadFailed": "Julkaisueditoria ladattaessa tapahtui virhe.",
       "updateTitleFailed": "Otsikon päivittäminen epäonnistui."
@@ -33,6 +34,21 @@
       "expand": "Laajenna",
       "collapse": "Supista",
       "updateError": "Kuvauksen päivittäminen epäonnistui."
+    },
+    "bannerImage": {
+      "label": "Bannerimedia",
+      "help": "Käytä ulkoisesti ylläpidettyä kuvaa tai Google Maps Street View -upotusosoitetta. Poista banneri tyhjentämällä osoite ja tallentamalla.",
+      "kindLabel": "Bannerin tyyppi:",
+      "kindImage": "Kuva",
+      "kindStreetView": "Google Street View",
+      "urlLabel": "Bannerin URL-osoite:",
+      "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+      "captionLabel": "Kuvateksti / kuvaus (valinnainen):",
+      "captionPlaceholder": "Kuvaile banneria tai mainitse lähde",
+      "save": "Tallenna banneri",
+      "saved": "Banneri tallennettu.",
+      "removed": "Banneri poistettu.",
+      "updateError": "Bannerin päivittäminen epäonnistui."
     },
     "status": {
       "lastBackup": "Viimeisin varmuuskopio: {datetime}",
@@ -65,7 +81,10 @@
       "insertImageUrlPlaceholder": "Syötä kuvan URL-osoite",
       "insertImageAltPlaceholder": "Vaihtoehtoinen teksti (valinnainen)",
       "insertImageConfirm": "Vahvista",
-      "insertImageCancel": "Peruuta"
+      "insertImageCancel": "Peruuta",
+      "insertStreetView": "Lisää Street View",
+      "insertStreetViewHelp": "Liitä iframe-elementin src-attribuutissa oleva https://www.google.com/maps/embed-osoite.",
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
     },
     "buttons": {
       "downloadFile": "Lataa tiedosto"

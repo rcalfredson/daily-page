@@ -22,6 +22,17 @@
         "label": "Beskrivelse (valgfrit):",
         "placeholder": "Forklar din glans ... eller bare ving den."
       },
+      "bannerImage": {
+        "legend": "Bannermedie (valgfrit)",
+        "help": "Brug et eksternt hostet billede eller en Google Maps Street View-integreringsadresse. Det vises over indlægget og på rummelige indlægskort.",
+        "kindLabel": "Bannertype:",
+        "kindImage": "Billede",
+        "kindStreetView": "Google Street View",
+        "urlLabel": "Banneradresse:",
+        "urlPlaceholder": "https://example.com/image.jpg | https://www.google.com/maps/embed?pb=...",
+        "captionLabel": "Billedtekst / beskrivelse (valgfrit):",
+        "captionPlaceholder": "Beskriv eller krediter banneret"
+      },
       "initialContent": {
         "label": "Indledende indhold (valgfrit):",
         "help": "Begynd at skrive her eller tryk på \"Opret\" for at fortsætte på hele editorsiden, hvor du kan indlejre billeder og samarbejde i realtid.",
