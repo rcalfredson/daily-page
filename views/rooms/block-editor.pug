@@ -102,9 +102,18 @@ block content
               span.copy-status= t('blockEditor.sharing.copied')
             #sync-infobox
           .toolbar.sticky
-            button#open-insert-img-btn(data-tooltip=t('blockEditor.toolbar.insertImage'))
+            button#open-insert-img-btn.toolbar-insert-button(
+              type='button'
+              data-tooltip=t('blockEditor.toolbar.insertImage')
+              aria-label=t('blockEditor.toolbar.insertImage')
+              aria-expanded='false'
+              aria-controls='insert-img-tooltip'
+            )
               i(data-feather="image")
-            div#insert-img-tooltip.hidden
+            div#insert-img-tooltip.insert-tooltip.hidden(
+              role='dialog'
+              aria-label=t('blockEditor.toolbar.insertImage')
+            )
               form
                 input#img-url(
                   type="text"
@@ -114,9 +123,30 @@ block content
                   type="text"
                   placeholder=t('blockEditor.toolbar.insertImageAltPlaceholder')
                 )
-                div
-                  button#insert-img-confirm(type="button")= t('blockEditor.toolbar.insertImageConfirm')
-                  button#insert-img-cancel(type="button")= t('blockEditor.toolbar.insertImageCancel')
+                .insert-tooltip__actions
+                  button#insert-img-confirm.insert-tooltip__confirm(type="button")= t('blockEditor.toolbar.insertImageConfirm')
+                  button#insert-img-cancel.insert-tooltip__cancel(type="button")= t('blockEditor.toolbar.insertImageCancel')
+            button#open-insert-street-view-btn.toolbar-insert-button(
+              type='button'
+              data-tooltip=t('blockEditor.toolbar.insertStreetView')
+              aria-label=t('blockEditor.toolbar.insertStreetView')
+              aria-expanded='false'
+              aria-controls='insert-street-view-tooltip'
+            )
+              i(data-feather='map')
+            div#insert-street-view-tooltip.insert-tooltip.hidden(
+              role='dialog'
+              aria-label=t('blockEditor.toolbar.insertStreetView')
+            )
+              form
+                p.insert-tooltip__help= t('blockEditor.toolbar.insertStreetViewHelp')
+                input#street-view-url(
+                  type='url'
+                  placeholder=t('blockEditor.toolbar.insertStreetViewUrlPlaceholder')
+                )
+                .insert-tooltip__actions
+                  button#insert-street-view-confirm.insert-tooltip__confirm(type='button')= t('blockEditor.toolbar.insertImageConfirm')
+                  button#insert-street-view-cancel.insert-tooltip__cancel(type='button')= t('blockEditor.toolbar.insertImageCancel')
           textarea#editor-content(lang=contentLang dir=contentDir)= block.content
         p#peerId= t('blockEditor.peers.label')
     .video-modal.hide
