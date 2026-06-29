@@ -45,9 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = Object.fromEntries(formData.entries());
 
     data.bannerImage = {
+      kind: data.bannerImageKind || 'image',
       url: data.bannerImageUrl || '',
       caption: data.bannerImageCaption || ''
     };
+    delete data.bannerImageKind;
     delete data.bannerImageUrl;
     delete data.bannerImageCaption;
 

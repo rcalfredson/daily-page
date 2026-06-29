@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   const saveButton = document.getElementById('save-banner-image-btn');
+  const kindInput = document.getElementById('banner-image-kind');
   const urlInput = document.getElementById('banner-image-url');
   const captionInput = document.getElementById('banner-image-caption');
-  if (!saveButton || !urlInput || !captionInput) return;
+  if (!saveButton || !kindInput || !urlInput || !captionInput) return;
 
   const t = typeof window.i18nT === 'function' ? window.i18nT : (key) => key;
 
@@ -14,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           bannerImage: {
+            kind: kindInput.value,
             url: urlInput.value,
             caption: captionInput.value
           }

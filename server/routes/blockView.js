@@ -132,7 +132,10 @@ router.get(
       const uiLang = res.locals.uiLang || res.locals.lang || 'en';
 
       block.contentHTML = renderMarkdownContent(block.content, { emptyHtml: '' });
-      const descriptionHTML = renderMarkdownContent(block.description, { emptyHtml: '' });
+      const descriptionHTML = renderMarkdownContent(block.description, {
+        emptyHtml: '',
+        allowStreetViewEmbeds: false
+      });
       const translations = await getPublicTranslations(block.groupId);
 
       const recommendations = getBlockRecommendationsNonBlocking(block, { limit: 5 });

@@ -1,12 +1,29 @@
 mixin blockBanner(post, variant, linkRoomId)
   if post && post.bannerImage && post.bannerImage.url
     - const bannerVariant = variant || 'card';
+    - const bannerKind = post.bannerImage.kind || 'image';
     - const bannerAlt = post.bannerImage.caption || post.title;
-    figure(class=`block-banner block-banner--${bannerVariant}` data-banner-image)
-      if linkRoomId
-        a.block-banner__link(href=`/rooms/${linkRoomId}/blocks/${post._id}` tabindex='-1' aria-hidden='true')
-          img.block-banner__image(src=post.bannerImage.url alt='' loading='lazy' decoding='async' referrerpolicy='no-referrer')
+    figure(class=`block-banner block-banner--${bannerVariant} block-banner--${bannerKind}` data-banner-image=(bannerKind === 'image' ? true : null) data-banner-street-view=(bannerKind === 'streetview' ? true : null))
+      if bannerKind === 'streetview'
+        iframe.block-banner__street-view(
+          src=post.bannerImage.url
+          title=linkRoomId ? '' : bannerAlt
+          loading='lazy'
+          referrerpolicy='strict-origin-when-cross-origin'
+          allowfullscreen=!linkRoomId
+          tabindex=linkRoomId ? '-1' : null
+          aria-hidden=linkRoomId ? 'true' : null
+        )
+        if linkRoomId
+          a.block-banner__link.block-banner__link--overlay(
+            href=`/rooms/${linkRoomId}/blocks/${post._id}`
+            aria-label=post.title
+          )
       else
-        img.block-banner__image(src=post.bannerImage.url alt=bannerAlt loading=bannerVariant === 'hero' ? 'eager' : 'lazy' decoding='async' referrerpolicy='no-referrer')
+        if linkRoomId
+          a.block-banner__link(href=`/rooms/${linkRoomId}/blocks/${post._id}` tabindex='-1' aria-hidden='true')
+            img.block-banner__image(src=post.bannerImage.url alt='' loading='lazy' decoding='async' referrerpolicy='no-referrer')
+        else
+          img.block-banner__image(src=post.bannerImage.url alt=bannerAlt loading=bannerVariant === 'hero' ? 'eager' : 'lazy' decoding='async' referrerpolicy='no-referrer')
       if bannerVariant === 'hero' && post.bannerImage.caption
         figcaption.block-banner__caption= post.bannerImage.caption
