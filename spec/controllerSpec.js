@@ -865,6 +865,22 @@ describe("Controller", () => {
       controller.localInsert("a", { line: 0, ch: 5 });
       expect(controller.crdt.handleLocalInsert).toHaveBeenCalledWith("a", { line: 0, ch: 6 });
     });
+
+    it("decomposes a multiline editor change into positioned character insertions", () => {
+      controller.isReadyForLocalEdits = true;
+      const insertions = [];
+      spyOn(controller.crdt, "handleLocalInsert").and.callFake((char, pos) => {
+        insertions.push({ char, pos: { ...pos } });
+      });
+
+      controller.localInsert("A\nB", { line: 2, ch: 4 });
+
+      expect(insertions).toEqual([
+        { char: 'A', pos: { line: 2, ch: 4 } },
+        { char: '\n', pos: { line: 2, ch: 5 } },
+        { char: 'B', pos: { line: 3, ch: 0 } }
+      ]);
+    });
   });
 
   describe("broadcastInsertion", () => {

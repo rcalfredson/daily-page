@@ -45,6 +45,7 @@ describe("Editor", () => {
     let dom;
     let toolbarEditor;
     let alertSpy;
+    let codemirror;
 
     beforeEach(() => {
       dom = new JSDOM(`
@@ -57,12 +58,13 @@ describe("Editor", () => {
       alertSpy = jasmine.createSpy('alert');
       globalThis.alert = alertSpy;
 
-      toolbarEditor = new Editor({
-        codemirror: {
-          setOption() {},
-          getCursor() { return { line: 2, ch: 3 }; }
-        }
-      });
+      codemirror = {
+        setOption() {},
+        getCursor() { return { line: 2, ch: 3 }; },
+        replaceRange: jasmine.createSpy('replaceRange'),
+        focus: jasmine.createSpy('focus')
+      };
+      toolbarEditor = new Editor({ codemirror });
     });
 
     afterEach(() => {
@@ -75,17 +77,19 @@ describe("Editor", () => {
       else globalThis.alert = originalAlert;
     });
 
-    it('inserts a validated Street View directive through simulated typing', () => {
+    it('inserts a validated Street View directive as one editor change', () => {
       const embedUrl = 'https://www.google.com/maps/embed?pb=!4v123!6m8';
       document.getElementById('street-view-url').value = ` ${embedUrl} `;
-      spyOn(toolbarEditor, 'simulateTyping');
 
       toolbarEditor.insertStreetView();
 
-      expect(toolbarEditor.simulateTyping).toHaveBeenCalledWith(
+      expect(codemirror.replaceRange).toHaveBeenCalledWith(
         `@[streetview](${embedUrl})`,
-        { line: 2, ch: 3 }
+        { line: 2, ch: 3 },
+        { line: 2, ch: 3 },
+        '+input'
       );
+      expect(codemirror.focus).toHaveBeenCalled();
       expect(document.getElementById('insert-street-view-tooltip').classList)
         .toContain('hidden');
       expect(document.getElementById('street-view-url').value).toBe('');
@@ -96,14 +100,60 @@ describe("Editor", () => {
     it('rejects a non-embed or untrusted URL', () => {
       document.getElementById('street-view-url').value =
         'https://www.google.com.evil.example/maps/embed?pb=value';
-      spyOn(toolbarEditor, 'simulateTyping');
 
       toolbarEditor.insertStreetView();
 
       expect(alertSpy).toHaveBeenCalledWith(
         'Enter a valid Google Maps Street View embed URL.'
       );
-      expect(toolbarEditor.simulateTyping).not.toHaveBeenCalled();
+      expect(codemirror.replaceRange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('image toolbar insertion', () => {
+    const originalWindow = globalThis.window;
+    const originalDocument = globalThis.document;
+    let dom;
+    let imageEditor;
+    let codemirror;
+
+    beforeEach(() => {
+      dom = new JSDOM(`
+        <div id="insert-img-tooltip"></div>
+        <input id="img-url" value=" https://example.com/photo.jpg ">
+        <input id="img-alt" value=" A view ">
+      `);
+      globalThis.window = dom.window;
+      globalThis.document = dom.window.document;
+      codemirror = {
+        setOption() {},
+        getCursor() { return { line: 4, ch: 1 }; },
+        replaceRange: jasmine.createSpy('replaceRange'),
+        focus: jasmine.createSpy('focus')
+      };
+      imageEditor = new Editor({ codemirror });
+      spyOn(imageEditor, 'markImages');
+    });
+
+    afterEach(() => {
+      dom.window.close();
+      if (originalWindow === undefined) delete globalThis.window;
+      else globalThis.window = originalWindow;
+      if (originalDocument === undefined) delete globalThis.document;
+      else globalThis.document = originalDocument;
+    });
+
+    it('inserts image Markdown as one editor change', () => {
+      imageEditor.insertImage();
+
+      expect(codemirror.replaceRange).toHaveBeenCalledWith(
+        '![A view](https://example.com/photo.jpg)',
+        { line: 4, ch: 1 },
+        { line: 4, ch: 1 },
+        '+input'
+      );
+      expect(codemirror.focus).toHaveBeenCalled();
+      expect(imageEditor.markImages).toHaveBeenCalled();
     });
   });
 
