@@ -84,7 +84,12 @@
       "insertImageCancel": "Annuler",
       "insertStreetView": "Insérer Street View",
       "insertStreetViewHelp": "Collez l’URL https://www.google.com/maps/embed provenant de l’attribut src de l’iframe.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "Insérer un tableau",
+      "insertTableHelp": "Choisissez la taille du tableau et si les lecteurs peuvent trier ses colonnes.",
+      "tableRows": "Lignes de données",
+      "tableColumns": "Colonnes",
+      "tableSortable": "Permettre aux lecteurs de trier les colonnes"
     },
     "buttons": {
       "downloadFile": "Télécharger le fichier"

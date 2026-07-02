@@ -84,7 +84,12 @@
       "insertImageCancel": "Peruuta",
       "insertStreetView": "Lisää Street View",
       "insertStreetViewHelp": "Liitä iframe-elementin src-attribuutissa oleva https://www.google.com/maps/embed-osoite.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "Lisää taulukko",
+      "insertTableHelp": "Valitse taulukon koko ja voivatko lukijat lajitella sen sarakkeita.",
+      "tableRows": "Tietorivit",
+      "tableColumns": "Sarakkeet",
+      "tableSortable": "Salli lukijoiden lajitella sarakkeita"
     },
     "buttons": {
       "downloadFile": "Lataa tiedosto"

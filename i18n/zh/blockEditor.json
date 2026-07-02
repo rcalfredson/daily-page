@@ -84,7 +84,12 @@
       "insertImageCancel": "取消",
       "insertStreetView": "插入 Street View",
       "insertStreetViewHelp": "请粘贴 iframe 的 src 属性中的 https://www.google.com/maps/embed 网址。",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "插入表格",
+      "insertTableHelp": "选择表格大小，以及是否允许读者对列进行排序。",
+      "tableRows": "数据行",
+      "tableColumns": "列",
+      "tableSortable": "允许读者对列进行排序"
     },
     "buttons": {
       "downloadFile": "下载文件"

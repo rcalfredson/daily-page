@@ -84,7 +84,12 @@
       "insertImageCancel": "İptal",
       "insertStreetView": "Street View ekle",
       "insertStreetViewHelp": "iframe öğesinin src özelliğindeki https://www.google.com/maps/embed URL’sini yapıştırın.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "Tablo ekle",
+      "insertTableHelp": "Tablo boyutunu ve okuyucuların sütunları sıralayıp sıralayamayacağını seçin.",
+      "tableRows": "Veri satırları",
+      "tableColumns": "Sütunlar",
+      "tableSortable": "Okuyucuların sütunları sıralamasına izin ver"
     },
     "buttons": {
       "downloadFile": "Dosyayı indir"

@@ -84,7 +84,12 @@
       "insertImageCancel": "Avbryt",
       "insertStreetView": "Sett inn Street View",
       "insertStreetViewHelp": "Lim inn https://www.google.com/maps/embed-adressen fra iframe-elementets src-attributt.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "Sett inn tabell",
+      "insertTableHelp": "Velg tabellstørrelse og om leserne kan sortere kolonnene.",
+      "tableRows": "Datarader",
+      "tableColumns": "Kolonner",
+      "tableSortable": "Tillat leserne å sortere kolonner"
     },
     "buttons": {
       "downloadFile": "Last ned fil"

@@ -64,7 +64,12 @@
       "insertImageCancel": "Ακύρωση",
       "insertStreetView": "Εισαγωγή Street View",
       "insertStreetViewHelp": "Επικολλήστε το URL https://www.google.com/maps/embed από το γνώρισμα src του iframe.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "Εισαγωγή πίνακα",
+      "insertTableHelp": "Επιλέξτε το μέγεθος του πίνακα και αν οι αναγνώστες μπορούν να ταξινομούν τις στήλες του.",
+      "tableRows": "Γραμμές δεδομένων",
+      "tableColumns": "Στήλες",
+      "tableSortable": "Να επιτρέπεται η ταξινόμηση στηλών από τους αναγνώστες"
     },
     "buttons": { "downloadFile": "Λήψη αρχείου" },
     "lockModal": {

@@ -147,6 +147,32 @@ block content
                 .insert-tooltip__actions
                   button#insert-street-view-confirm.insert-tooltip__confirm(type='button')= t('blockEditor.toolbar.insertImageConfirm')
                   button#insert-street-view-cancel.insert-tooltip__cancel(type='button')= t('blockEditor.toolbar.insertImageCancel')
+            button#open-insert-table-btn.toolbar-insert-button(
+              type='button'
+              data-tooltip=t('blockEditor.toolbar.insertTable')
+              aria-label=t('blockEditor.toolbar.insertTable')
+              aria-expanded='false'
+              aria-controls='insert-table-tooltip'
+            )
+              i(data-feather='grid')
+            div#insert-table-tooltip.insert-tooltip.insert-table-dialog.hidden(
+              role='dialog'
+              aria-labelledby='insert-table-title'
+            )
+              form#insert-table-form
+                p#insert-table-title.insert-tooltip__title= t('blockEditor.toolbar.insertTable')
+                p.insert-tooltip__help= t('blockEditor.toolbar.insertTableHelp')
+                .insert-tooltip__fields
+                  label.insert-table-dialog__label(for='table-rows')= t('blockEditor.toolbar.tableRows')
+                  input#table-rows.insert-table-dialog__input(type='number' min='1' max='20' value='3' required)
+                  label.insert-table-dialog__label(for='table-columns')= t('blockEditor.toolbar.tableColumns')
+                  input#table-columns.insert-table-dialog__input(type='number' min='1' max='10' value='3' required)
+                label.insert-tooltip__checkbox.insert-table-dialog__checkbox(for='table-sortable')
+                  input#table-sortable(type='checkbox' checked)
+                  span= t('blockEditor.toolbar.tableSortable')
+                .insert-tooltip__actions
+                  button#insert-table-confirm.insert-tooltip__confirm(type='submit')= t('blockEditor.toolbar.insertImageConfirm')
+                  button#insert-table-cancel.insert-tooltip__cancel(type='button')= t('blockEditor.toolbar.insertImageCancel')
           textarea#editor-content(lang=contentLang dir=contentDir)= block.content
         p#peerId= t('blockEditor.peers.label')
     .video-modal.hide

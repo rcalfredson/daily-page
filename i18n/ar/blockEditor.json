@@ -84,7 +84,12 @@
       "insertImageCancel": "يلغي",
       "insertStreetView": "إدراج Street View",
       "insertStreetViewHelp": "الصق رابط https://www.google.com/maps/embed من سمة src في iframe.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "إدراج جدول",
+      "insertTableHelp": "اختر حجم الجدول وما إذا كان يمكن للقراء فرز أعمدته.",
+      "tableRows": "صفوف البيانات",
+      "tableColumns": "الأعمدة",
+      "tableSortable": "السماح للقراء بفرز الأعمدة"
     },
     "buttons": {
       "downloadFile": "تنزيل الملف"

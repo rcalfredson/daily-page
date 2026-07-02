@@ -84,7 +84,12 @@
       "insertImageCancel": "Отмена",
       "insertStreetView": "Вставить Street View",
       "insertStreetViewHelp": "Вставьте URL https://www.google.com/maps/embed из атрибута src элемента iframe.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "Вставить таблицу",
+      "insertTableHelp": "Выберите размер таблицы и возможность сортировки столбцов читателями.",
+      "tableRows": "Строки данных",
+      "tableColumns": "Столбцы",
+      "tableSortable": "Разрешить читателям сортировать столбцы"
     },
     "buttons": {
       "downloadFile": "Скачать файл"

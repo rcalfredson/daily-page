@@ -84,7 +84,12 @@
       "insertImageCancel": "취소",
       "insertStreetView": "Street View 삽입",
       "insertStreetViewHelp": "iframe의 src 속성에서 https://www.google.com/maps/embed URL을 붙여 넣으세요.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "표 삽입",
+      "insertTableHelp": "표 크기와 독자가 열을 정렬할 수 있는지 선택하세요.",
+      "tableRows": "데이터 행",
+      "tableColumns": "열",
+      "tableSortable": "독자가 열을 정렬하도록 허용"
     },
     "buttons": {
       "downloadFile": "파일 다운로드"

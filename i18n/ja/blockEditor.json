@@ -84,7 +84,12 @@
       "insertImageCancel": "キャンセル",
       "insertStreetView": "Street View を挿入",
       "insertStreetViewHelp": "iframe の src 属性から https://www.google.com/maps/embed URL を貼り付けてください。",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "表を挿入",
+      "insertTableHelp": "表のサイズと、読者が列を並べ替えられるかどうかを選択します。",
+      "tableRows": "データ行",
+      "tableColumns": "列",
+      "tableSortable": "読者による列の並べ替えを許可"
     },
     "buttons": {
       "downloadFile": "ファイルをダウンロード"

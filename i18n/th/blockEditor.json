@@ -84,7 +84,12 @@
       "insertImageCancel": "ยกเลิก",
       "insertStreetView": "แทรก Street View",
       "insertStreetViewHelp": "วาง URL https://www.google.com/maps/embed จากแอตทริบิวต์ src ของ iframe",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "แทรกตาราง",
+      "insertTableHelp": "เลือกขนาดตารางและกำหนดว่าผู้อ่านสามารถเรียงลำดับคอลัมน์ได้หรือไม่",
+      "tableRows": "แถวข้อมูล",
+      "tableColumns": "คอลัมน์",
+      "tableSortable": "อนุญาตให้ผู้อ่านเรียงลำดับคอลัมน์"
     },
     "buttons": {
       "downloadFile": "ดาวน์โหลดแฟ้ม"

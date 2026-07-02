@@ -84,7 +84,12 @@
       "insertImageCancel": "בטל",
       "insertStreetView": "הוספת Street View",
       "insertStreetViewHelp": "הדביקו את כתובת https://www.google.com/maps/embed מתוך המאפיין src של ה-iframe.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "הוספת טבלה",
+      "insertTableHelp": "בחרו את גודל הטבלה והאם הקוראים יוכלו למיין את העמודות שלה.",
+      "tableRows": "שורות נתונים",
+      "tableColumns": "עמודות",
+      "tableSortable": "לאפשר לקוראים למיין עמודות"
     },
     "buttons": {
       "downloadFile": "הורד קובץ"

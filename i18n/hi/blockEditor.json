@@ -84,7 +84,12 @@
       "insertImageCancel": "रद्द करना",
       "insertStreetView": "Street View डालें",
       "insertStreetViewHelp": "iframe के src एट्रिब्यूट से https://www.google.com/maps/embed URL पेस्ट करें।",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "तालिका डालें",
+      "insertTableHelp": "तालिका का आकार चुनें और तय करें कि पाठक उसके स्तंभों को क्रमबद्ध कर सकते हैं या नहीं।",
+      "tableRows": "डेटा पंक्तियाँ",
+      "tableColumns": "स्तंभ",
+      "tableSortable": "पाठकों को स्तंभ क्रमबद्ध करने दें"
     },
     "buttons": {
       "downloadFile": "डाउनलोड फ़ाइल"
