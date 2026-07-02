@@ -1,0 +1,35 @@
+.sortable-table__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.sortable-table__button::after {
+  content: "↕";
+  font-size: 0.75em;
+  opacity: 0.45;
+}
+
+.sortable-table th[aria-sort="ascending"] .sortable-table__button::after {
+  content: "▲";
+  opacity: 1;
+}
+
+.sortable-table th[aria-sort="descending"] .sortable-table__button::after {
+  content: "▼";
+  opacity: 1;
+}
+
+.sortable-table__button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
