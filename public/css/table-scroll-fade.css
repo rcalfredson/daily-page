@@ -22,6 +22,14 @@
   table-layout: auto;
 }
 
+/* Keep one content-heavy column from becoming wider than the viewport. */
+.table-scroll-wrapper th,
+.table-scroll-wrapper td {
+  max-width: min(36rem, 75vw);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 /* Fade izquierdo */
 .table-scroll-container::before {
   content: "";
