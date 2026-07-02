@@ -1,5 +1,7 @@
 /* Contenedor estático que “overlayea” las sombras */
 .table-scroll-container {
+  --table-scroll-fade-edge: var(--surface-bg, #fff);
+  --table-scroll-fade-clear: color-mix(in srgb, var(--table-scroll-fade-edge) 0%, transparent);
   position: relative;
   overflow: hidden; /* importante: el scroll lo hace el hijo */
 }
@@ -27,7 +29,7 @@
   top: 0; bottom: 0; left: 0;
   width: 30px;
   pointer-events: none;
-  background: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0));
+  background: linear-gradient(to right, var(--table-scroll-fade-edge), var(--table-scroll-fade-clear));
   opacity: 0; transition: opacity 0.3s;
   z-index: 2;
 }
@@ -39,7 +41,7 @@
   top: 0; bottom: 0; right: 0;
   width: 30px;
   pointer-events: none;
-  background: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0));
+  background: linear-gradient(to left, var(--table-scroll-fade-edge), var(--table-scroll-fade-clear));
   opacity: 0; transition: opacity 0.3s;
   z-index: 2;
 }
