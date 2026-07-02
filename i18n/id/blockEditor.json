@@ -84,7 +84,12 @@
       "insertImageCancel": "Batal",
       "insertStreetView": "Sisipkan Street View",
       "insertStreetViewHelp": "Tempel URL https://www.google.com/maps/embed dari atribut src iframe.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "Sisipkan tabel",
+      "insertTableHelp": "Pilih ukuran tabel dan apakah pembaca dapat mengurutkan kolomnya.",
+      "tableRows": "Baris data",
+      "tableColumns": "Kolom",
+      "tableSortable": "Izinkan pembaca mengurutkan kolom"
     },
     "buttons": {
       "downloadFile": "Unduh file"

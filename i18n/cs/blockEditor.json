@@ -30,7 +30,12 @@
     "toolbar": { "insertImage": "Vložit obrázek", "insertImageUrlPlaceholder": "Zadejte adresu URL obrázku", "insertImageAltPlaceholder": "Alternativní text (volitelné)", "insertImageConfirm": "Potvrdit", "insertImageCancel": "Zrušit",
       "insertStreetView": "Vložit Street View",
       "insertStreetViewHelp": "Vložte adresu https://www.google.com/maps/embed z atributu src prvku iframe.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "Vložit tabulku",
+      "insertTableHelp": "Zvolte velikost tabulky a zda mohou čtenáři řadit její sloupce.",
+      "tableRows": "Datové řádky",
+      "tableColumns": "Sloupce",
+      "tableSortable": "Povolit čtenářům řazení sloupců"
     },
     "buttons": { "downloadFile": "Stáhnout soubor" },
     "lockModal": { "messageLine1": "Opravdu chcete tento příspěvek uzamknout?", "messageLine2": "Tím jej dokončíte a zabráníte dalším úpravám.", "confirm": "Uzamknout", "cancel": "Zrušit", "successToast": "Příspěvek byl úspěšně uzamčen.", "errorToast": "Chyba při uzamykání příspěvku." },

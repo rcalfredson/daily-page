@@ -84,7 +84,12 @@
       "insertImageCancel": "Hủy",
       "insertStreetView": "Chèn Street View",
       "insertStreetViewHelp": "Dán URL https://www.google.com/maps/embed từ thuộc tính src của iframe.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "Chèn bảng",
+      "insertTableHelp": "Chọn kích thước bảng và liệu người đọc có thể sắp xếp các cột hay không.",
+      "tableRows": "Hàng dữ liệu",
+      "tableColumns": "Cột",
+      "tableSortable": "Cho phép người đọc sắp xếp các cột"
     },
     "buttons": {
       "downloadFile": "Tải tập tin xuống"

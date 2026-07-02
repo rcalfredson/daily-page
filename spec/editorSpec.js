@@ -1,4 +1,4 @@
-import Editor from '../lib/editor.js';
+import Editor, { createMarkdownTable } from '../lib/editor.js';
 import { JSDOM } from 'jsdom';
 
 describe("Editor", () => {
@@ -104,6 +104,85 @@ describe("Editor", () => {
         'Enter a valid Google Maps Street View embed URL.'
       );
       expect(toolbarEditor.simulateTyping).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('table toolbar insertion', () => {
+    const originalWindow = globalThis.window;
+    const originalDocument = globalThis.document;
+    let dom;
+    let tableEditor;
+    let codemirror;
+
+    beforeEach(() => {
+      dom = new JSDOM(`
+        <button id="open-insert-table-btn" aria-expanded="true"></button>
+        <div id="insert-table-tooltip">
+          <form id="insert-table-form">
+            <input id="table-rows" type="number" min="1" max="20" value="2" required>
+            <input id="table-columns" type="number" min="1" max="10" value="3" required>
+            <input id="table-sortable" type="checkbox">
+          </form>
+        </div>
+      `);
+      globalThis.window = dom.window;
+      globalThis.document = dom.window.document;
+      codemirror = {
+        setOption() {},
+        getCursor() { return { line: 1, ch: 4 }; },
+        replaceRange: jasmine.createSpy('replaceRange'),
+        focus: jasmine.createSpy('focus')
+      };
+      tableEditor = new Editor({ codemirror });
+    });
+
+    afterEach(() => {
+      dom.window.close();
+      if (originalWindow === undefined) delete globalThis.window;
+      else globalThis.window = originalWindow;
+      if (originalDocument === undefined) delete globalThis.document;
+      else globalThis.document = originalDocument;
+    });
+
+    it('builds a sortable Markdown table with the requested dimensions', () => {
+      expect(createMarkdownTable(2, 3)).toBe(
+        '|  |  |  |\n| --- | --- | --- |\n|  |  |  |\n|  |  |  |'
+      );
+    });
+
+    it('adds the no-sort marker when sorting is disabled', () => {
+      tableEditor.insertTable({ preventDefault() {} });
+
+      expect(codemirror.replaceRange).toHaveBeenCalledWith(
+        '\n\n{.no-sort}\n\n|  |  |  |\n| --- | --- | --- |\n|  |  |  |\n|  |  |  |\n\n',
+        { line: 1, ch: 4 },
+        { line: 1, ch: 4 },
+        '+input'
+      );
+      expect(document.getElementById('insert-table-tooltip').classList)
+        .toContain('hidden');
+      expect(document.getElementById('open-insert-table-btn')
+        .getAttribute('aria-expanded')).toBe('false');
+      expect(codemirror.focus).toHaveBeenCalled();
+    });
+
+    it('rejects dimensions outside the supported limits', () => {
+      expect(() => createMarkdownTable(0, 2)).toThrowError(RangeError);
+      expect(() => createMarkdownTable(2, 11)).toThrowError(RangeError);
+    });
+
+    it('closes on Escape and restores focus to the toolbar button', () => {
+      const button = document.getElementById('open-insert-table-btn');
+      spyOn(button, 'focus');
+
+      tableEditor.handleTableInsertionKeydown({
+        key: 'Escape',
+        preventDefault() {}
+      });
+
+      expect(document.getElementById('insert-table-tooltip').classList)
+        .toContain('hidden');
+      expect(button.focus).toHaveBeenCalled();
     });
   });
 

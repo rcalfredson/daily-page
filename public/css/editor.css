@@ -211,7 +211,8 @@ button.toolbar-insert-button i {
 
 /* Tooltip Input Fields */
 .insert-tooltip input[type="text"],
-.insert-tooltip input[type="url"] {
+.insert-tooltip input[type="url"],
+.insert-tooltip input[type="number"] {
   width: 100%;
   padding: 10px;
   border: 1px solid var(--border-color);
@@ -225,7 +226,8 @@ button.toolbar-insert-button i {
 
 /* Focus Effect for Input Fields */
 .insert-tooltip input[type="text"]:focus,
-.insert-tooltip input[type="url"]:focus {
+.insert-tooltip input[type="url"]:focus,
+.insert-tooltip input[type="number"]:focus {
   border-color: var(--highlight-color);
   outline: none;
 }
@@ -274,6 +276,84 @@ button.toolbar-insert-button i {
   color: var(--editor-text-muted);
   font-size: 0.88rem;
   line-height: 1.4;
+}
+
+.insert-tooltip__title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.insert-tooltip__fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5rem;
+  align-items: center;
+  gap: 10px;
+}
+
+.insert-tooltip__fields input[type="number"] {
+  text-align: end;
+}
+
+.insert-table-dialog .insert-table-dialog__label {
+  float: none;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-color);
+  cursor: default;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.insert-table-dialog .insert-table-dialog__input {
+  float: none;
+  box-sizing: border-box;
+  margin: 0;
+  background: var(--input-bg, #fff);
+  color: var(--text-color);
+  font-family: inherit;
+}
+
+.insert-tooltip__checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  line-height: 1.35;
+}
+
+.insert-tooltip__checkbox input {
+  margin-top: 0.15em;
+  flex: 0 0 auto;
+}
+
+.insert-table-dialog .insert-table-dialog__checkbox {
+  float: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-color);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.insert-table-dialog .insert-table-dialog__checkbox input {
+  accent-color: var(--highlight-color);
+}
+
+.insert-table-dialog button {
+  float: none;
+  margin: 0;
+  font-family: inherit;
+  line-height: 1.2;
 }
 
 #block-title-container {
@@ -638,7 +718,8 @@ html[data-theme="dark"] .modal-message {
 html[data-theme="dark"] #block-title-input,
 html[data-theme="dark"] #description-edit,
 html[data-theme="dark"] .insert-tooltip input[type="text"],
-html[data-theme="dark"] .insert-tooltip input[type="url"] {
+html[data-theme="dark"] .insert-tooltip input[type="url"],
+html[data-theme="dark"] .insert-tooltip input[type="number"] {
   color: var(--text-color);
   background: var(--input-bg);
   border-color: var(--border-color);

@@ -84,7 +84,12 @@
       "insertImageCancel": "Avbryt",
       "insertStreetView": "Infoga Street View",
       "insertStreetViewHelp": "Klistra in adressen https://www.google.com/maps/embed från iframe-elementets src-attribut.",
-      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=..."
+      "insertStreetViewUrlPlaceholder": "https://www.google.com/maps/embed?pb=...",
+      "insertTable": "Infoga tabell",
+      "insertTableHelp": "Välj tabellens storlek och om läsare får sortera kolumnerna.",
+      "tableRows": "Datarader",
+      "tableColumns": "Kolumner",
+      "tableSortable": "Tillåt läsare att sortera kolumner"
     },
     "buttons": {
       "downloadFile": "Ladda ner fil"
