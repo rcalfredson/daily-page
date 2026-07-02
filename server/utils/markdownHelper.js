@@ -2,6 +2,37 @@
 import MarkdownIt from 'markdown-it';
 import { streetViewEmbedPlugin } from '../../lib/streetViewEmbed.js';
 
+const NO_SORT_MARKER = '{.no-sort}';
+
+/**
+ * Convierte un marcador independiente antes de una tabla en una clase HTML.
+ * Mantiene la extensión deliberadamente limitada a `{.no-sort}`.
+ * @param {MarkdownIt} mdInstance
+ */
+function tableSortOptOutPlugin(mdInstance) {
+  mdInstance.core.ruler.after('block', 'table_sort_opt_out', (state) => {
+    for (let i = 3; i < state.tokens.length; i++) {
+      const table = state.tokens[i];
+      const paragraphOpen = state.tokens[i - 3];
+      const marker = state.tokens[i - 2];
+      const paragraphClose = state.tokens[i - 1];
+
+      const isMarkerBeforeTable = table.type === 'table_open'
+        && paragraphOpen.type === 'paragraph_open'
+        && marker.type === 'inline'
+        && marker.content.trim() === NO_SORT_MARKER
+        && paragraphClose.type === 'paragraph_close'
+        && paragraphOpen.level === table.level;
+
+      if (!isMarkerBeforeTable) continue;
+
+      table.attrJoin('class', 'no-sort');
+      state.tokens.splice(i - 3, 3);
+      i -= 3;
+    }
+  });
+}
+
 /**
  * Instancia de Markdown-It.
  * - html: false (por seguridad, evita HTML crudo)
@@ -12,7 +43,9 @@ const md = new MarkdownIt({
   html: false,
   linkify: true,
   breaks: false
-}).use(streetViewEmbedPlugin);
+})
+  .use(streetViewEmbedPlugin)
+  .use(tableSortOptOutPlugin);
 
 /** ---------- Helpers de HTML post-render ---------- */
 
@@ -25,8 +58,8 @@ const md = new MarkdownIt({
 function wrapTables(html) {
   return html
     .replace(
-      /<table>/g,
-      '<div class="table-scroll-container"><div class="table-scroll-wrapper"><table>'
+      /<table([^>]*)>/g,
+      '<div class="table-scroll-container"><div class="table-scroll-wrapper"><table$1>'
     )
     .replace(/<\/table>/g, '</table></div></div>');
 }
