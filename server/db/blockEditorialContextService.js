@@ -17,8 +17,8 @@ const REFERENCE_BLOCK_FIELDS = [
 
 const CLUSTER_ROLES = {
   pillar: 0,
-  companion: 1,
-  texture: 2
+  texture: 1,
+  companion: 2
 };
 
 function toId(value) {
@@ -56,13 +56,13 @@ function toEditorialLink(block) {
 }
 
 function compareClusterBlocks(a, b) {
-  const aSeq = Number.isInteger(a.editorial?.sequence) ? a.editorial.sequence : Number.POSITIVE_INFINITY;
-  const bSeq = Number.isInteger(b.editorial?.sequence) ? b.editorial.sequence : Number.POSITIVE_INFINITY;
-  if (aSeq !== bSeq) return aSeq - bSeq;
-
   const aRole = CLUSTER_ROLES[a.editorial?.role] ?? Number.POSITIVE_INFINITY;
   const bRole = CLUSTER_ROLES[b.editorial?.role] ?? Number.POSITIVE_INFINITY;
   if (aRole !== bRole) return aRole - bRole;
+
+  const aSeq = Number.isInteger(a.editorial?.sequence) ? a.editorial.sequence : Number.POSITIVE_INFINITY;
+  const bSeq = Number.isInteger(b.editorial?.sequence) ? b.editorial.sequence : Number.POSITIVE_INFINITY;
+  if (aSeq !== bSeq) return aSeq - bSeq;
 
   const aCreated = a.createdAt ? new Date(a.createdAt).getTime() : 0;
   const bCreated = b.createdAt ? new Date(b.createdAt).getTime() : 0;

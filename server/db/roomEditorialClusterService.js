@@ -18,8 +18,8 @@ const ROOM_EDITORIAL_FIELDS = [
 
 const CLUSTER_ROLES = {
   pillar: 0,
-  companion: 1,
-  texture: 2
+  texture: 1,
+  companion: 2
 };
 
 function toId(value) {

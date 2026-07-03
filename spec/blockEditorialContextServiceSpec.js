@@ -244,4 +244,64 @@ describe('getBlockEditorialContext', () => {
     expect(context?.cluster?.label).toBe('Forces and motion');
     expect(context?.cluster?.key).toBe('forces-path');
   });
+
+  it('places background articles before deep dives regardless of sequence or creation time', async () => {
+    spyOn(Block, 'find').and.callFake((filter) => {
+      const query = baseFilter(filter);
+
+      if (query._id?.$in) return makeQueryResult([]);
+
+      if (query['editorial.clusterKey'] === 'dimensions-guide') {
+        return makeQueryResult([
+          {
+            _id: '507f1f77bcf86cd799439311',
+            title: 'First deep dive',
+            roomId: 'physics',
+            lang: 'en',
+            visibility: 'public',
+            createdAt: '2026-01-01T00:00:00.000Z',
+            editorial: { role: 'companion', sequence: 1 }
+          },
+          {
+            _id: '507f1f77bcf86cd799439312',
+            title: 'Human background',
+            roomId: 'physics',
+            lang: 'en',
+            visibility: 'public',
+            createdAt: '2026-01-03T00:00:00.000Z',
+            editorial: { role: 'texture', sequence: 3 }
+          },
+          {
+            _id: '507f1f77bcf86cd799439313',
+            title: 'Second deep dive',
+            roomId: 'physics',
+            lang: 'en',
+            visibility: 'public',
+            createdAt: '2026-01-02T00:00:00.000Z',
+            editorial: { role: 'companion', sequence: 2 }
+          }
+        ]);
+      }
+
+      throw new Error(`Unexpected Block.find call: ${JSON.stringify(filter)}`);
+    });
+
+    const context = await getBlockEditorialContext({
+      _id: '507f1f77bcf86cd799439399',
+      title: 'Core guide',
+      roomId: 'physics',
+      lang: 'en',
+      editorial: {
+        clusterKey: 'dimensions-guide',
+        role: 'pillar',
+        sequence: 0
+      }
+    });
+
+    expect(context.cluster.nearby.map((item) => item.title)).toEqual([
+      'Human background',
+      'First deep dive',
+      'Second deep dive'
+    ]);
+  });
 });
