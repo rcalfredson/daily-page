@@ -98,4 +98,19 @@ describe('quest schemas', () => {
     });
     await expectAsync(submission.validate()).toBeRejectedWithError(/actorUserId/);
   });
+
+  it('declares partial unique indexes for live block and translation-group submissions', () => {
+    const indexes = QuestSubmission.schema.indexes();
+    const byName = new Map(indexes.map(([, options]) => [options.name, options]));
+
+    expect(byName.get('one_live_quest_submission_per_block')).toEqual(jasmine.objectContaining({
+      unique: true,
+      partialFilterExpression: {
+        status: { $in: ['draft', 'pending', 'changes-requested', 'approved'] }
+      }
+    }));
+    expect(byName.get('one_live_quest_submission_per_translation_group')).toEqual(
+      jasmine.objectContaining({ unique: true })
+    );
+  });
 });

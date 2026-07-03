@@ -14,6 +14,10 @@ import {
   toQuestI18nDTO
 } from './questDomain.js';
 import { QUEST_ERROR_CODES, questError } from './questErrors.js';
+import {
+  expireQuestItemClaim,
+  withdrawQuestSubmission
+} from './questSubmissionService.js';
 
 function id(value) {
   return value == null ? '' : String(value);
@@ -110,6 +114,7 @@ export async function addQuestItems({ questId, items }) {
 }
 
 export async function claimQuestItem({ questId, itemId, userId, now = new Date() }) {
+  await expireQuestItemClaim({ questId, itemId, now });
   const [quest, userExists] = await Promise.all([
     requireQuest(questId),
     User.exists({ _id: id(userId) })
@@ -153,7 +158,7 @@ export async function claimQuestItem({ questId, itemId, userId, now = new Date()
   return claimed;
 }
 
-export async function releaseQuestItem({ questId, itemId, userId }) {
+export async function releaseQuestItem({ questId, itemId, userId, now = new Date() }) {
   const released = await QuestItem.findOneAndUpdate({
     _id: id(itemId),
     questId: id(questId),
@@ -169,6 +174,14 @@ export async function releaseQuestItem({ questId, itemId, userId }) {
   if (!item) throw questError(QUEST_ERROR_CODES.ITEM_NOT_FOUND, { status: 404 });
   if (id(item.reservedByUserId) !== id(userId)) {
     throw questError(QUEST_ERROR_CODES.FORBIDDEN, { status: 403 });
+  }
+  if (item.activeSubmissionId && !item.approvedSubmissionId) {
+    await withdrawQuestSubmission({
+      submissionId: item.activeSubmissionId,
+      ownerUserId: userId,
+      now
+    });
+    return QuestItem.findById(id(itemId)).lean();
   }
   throw questError(QUEST_ERROR_CODES.SUBMISSION_INVALID_STATE, { status: 409 });
 }

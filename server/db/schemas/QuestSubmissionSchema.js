@@ -77,5 +77,25 @@ questSubmissionSchema.index({ questId: 1, blockId: 1, status: 1 });
 questSubmissionSchema.index({ questId: 1, questItemId: 1, status: 1 });
 questSubmissionSchema.index({ contributorUserIds: 1, status: 1, approvedAt: 1 });
 questSubmissionSchema.index({ questId: 1, approvedSequence: 1 });
+questSubmissionSchema.index(
+  { questId: 1, blockId: 1 },
+  {
+    unique: true,
+    name: 'one_live_quest_submission_per_block',
+    partialFilterExpression: {
+      status: { $in: ['draft', 'pending', 'changes-requested', 'approved'] }
+    }
+  }
+);
+questSubmissionSchema.index(
+  { questId: 1, blockGroupId: 1 },
+  {
+    unique: true,
+    name: 'one_live_quest_submission_per_translation_group',
+    partialFilterExpression: {
+      status: { $in: ['draft', 'pending', 'changes-requested', 'approved'] }
+    }
+  }
+);
 
 export default questSubmissionSchema;
