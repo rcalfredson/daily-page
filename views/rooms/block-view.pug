@@ -145,9 +145,9 @@ block content
         // Show edit link for open collaboration or post owners with manage access
         .interact-section
           .action-buttons
-            if block.status === 'in-progress' || canManageBlock
+            if canMutateBlock && (block.status === 'in-progress' || canManageBlock)
               a.block-edit-btn(href=`/rooms/${room_id}/blocks/${block._id}/edit`)= t('blockView.buttons.edit')
-            if canManageBlock
+            if canManageBlock && canMutateBlock
               button#delete-block-btn.delete-btn(
                 data-block-id=block._id
               )= t('blockView.buttons.deleteBlock')

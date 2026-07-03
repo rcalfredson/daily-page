@@ -7,7 +7,9 @@ import User from './models/User.js';
 import { questAcceptsNewWork } from './questDomain.js';
 import { QUEST_ERROR_CODES, questError } from './questErrors.js';
 import {
+  QUEST_BLOCK_OPERATIONS,
   QUEST_SUBMISSION_ACTIONS,
+  assertQuestBlockMutationAllowed,
   assertQuestSubmissionTransition
 } from './questSubmissionPolicy.js';
 
@@ -765,6 +767,53 @@ export function buildQuestSubmissionService({
     });
   }
 
+  async function deleteBlockWithQuestReconciliation({ blockId, now = new Date() }) {
+    return transactionRunner(async session => {
+      const block = requireFound(
+        await BlockModel.findById(id(blockId), null, { session }),
+        QUEST_ERROR_CODES.SUBMISSION_BLOCK_INELIGIBLE
+      );
+      const submissions = await QuestSubmissionModel.find({
+        blockId: id(blockId), status: { $in: LIVE_SUBMISSION_STATUSES }
+      }, null, { session });
+      assertQuestBlockMutationAllowed({
+        submissions,
+        operation: QUEST_BLOCK_OPERATIONS.DELETE
+      });
+
+      for (const submission of submissions) {
+        const quest = requireFound(
+          await QuestModel.findById(id(submission.questId), null, { session }),
+          QUEST_ERROR_CODES.NOT_FOUND
+        );
+        const transition = assertQuestSubmissionTransition({
+          action: QUEST_SUBMISSION_ACTIONS.INVALIDATE,
+          submission,
+          quest,
+          actor: systemActor(),
+          reasonCode: 'block-deleted',
+          now
+        });
+        await updateSubmissionForTransition({
+          QuestSubmissionModel, submission, transition, session
+        });
+        await releaseSubmissionItem({ QuestItemModel, submission, session });
+      }
+
+      const deleted = await BlockModel.findOneAndDelete(
+        { _id: block._id },
+        { session }
+      );
+      if (!deleted) {
+        throw questError(QUEST_ERROR_CODES.SUBMISSION_BLOCK_INELIGIBLE, {
+          status: 409,
+          details: { reason: 'concurrent-block-deletion' }
+        });
+      }
+      return deleted;
+    });
+  }
+
   return {
     createQuestSubmission,
     submitQuestSubmission,
@@ -778,7 +827,8 @@ export function buildQuestSubmissionService({
     reconcileQuestSubmissionForBlock,
     expireQuestClaims,
     expireQuestItemClaim,
-    getActiveQuestSubmissionsForBlock
+    getActiveQuestSubmissionsForBlock,
+    deleteBlockWithQuestReconciliation
   };
 }
 
@@ -797,5 +847,7 @@ export const reconcileQuestSubmissionForBlock = questSubmissionService.reconcile
 export const expireQuestClaims = questSubmissionService.expireQuestClaims;
 export const expireQuestItemClaim = questSubmissionService.expireQuestItemClaim;
 export const getActiveQuestSubmissionsForBlock = questSubmissionService.getActiveQuestSubmissionsForBlock;
+export const deleteBlockWithQuestReconciliation =
+  questSubmissionService.deleteBlockWithQuestReconciliation;
 
 export { resolveContributorUserIds };

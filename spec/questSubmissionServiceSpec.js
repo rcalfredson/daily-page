@@ -86,6 +86,11 @@ function makeCollection(initial = [], prefix = 'id') {
       found.forEach(document => applyUpdate(document, update));
       return { matchedCount: found.length, modifiedCount: found.length };
     },
+    async findOneAndDelete(filter) {
+      const index = documents.findIndex(document => matches(document, filter));
+      if (index < 0) return null;
+      return documents.splice(index, 1)[0];
+    },
     async countDocuments(filter) {
       return documents.filter(document => matches(document, filter)).length;
     },
@@ -452,6 +457,45 @@ describe('transactional quest submission service', () => {
     })).toBeTrue();
     expect(draft.status).toBe('withdrawn');
     expect(harness.questItems.documents[0].activeSubmissionId).toBeNull();
+  });
+
+  it('deletes draft quest blocks while atomically withdrawing their submission', async () => {
+    const harness = makeHarness();
+    const draft = await harness.service.createQuestSubmission({
+      questId: 'quest-1', itemId: 'item-1', blockId: 'block-1', ownerUserId: 'owner-1', now: NOW
+    });
+
+    const deleted = await harness.service.deleteBlockWithQuestReconciliation({
+      blockId: 'block-1', now: NOW
+    });
+    expect(deleted._id).toBe('block-1');
+    expect(harness.blocks.documents.some(block => block._id === 'block-1')).toBeFalse();
+    expect(draft.status).toBe('withdrawn');
+    expect(draft.reviewHistory.at(-1).reasonCode).toBe('block-deleted');
+    expect(harness.questItems.documents[0].activeSubmissionId).toBeNull();
+  });
+
+  it('refuses ordinary deletion during review and leaves both records unchanged', async () => {
+    const harness = makeHarness();
+    const [pending] = await harness.submissions.create([{
+      questId: 'quest-1',
+      questItemId: 'item-1',
+      ownerUserId: 'owner-1',
+      blockId: 'block-2',
+      blockGroupId: 'group-2',
+      status: 'pending',
+      reviewHistory: []
+    }]);
+    Object.assign(harness.questItems.documents[0], {
+      activeSubmissionId: pending._id,
+      reservedUntil: null
+    });
+
+    await expectQuestError(harness.service.deleteBlockWithQuestReconciliation({
+      blockId: 'block-2', now: NOW
+    }), QUEST_ERROR_CODES.SUBMISSION_INVALID_STATE);
+    expect(harness.blocks.documents.some(block => block._id === 'block-2')).toBeTrue();
+    expect(pending.status).toBe('pending');
   });
 });
 

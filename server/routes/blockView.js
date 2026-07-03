@@ -16,6 +16,8 @@ import {
 import { getReactionCounts, getUserReactionsForBlock } from '../db/reactionService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { findUserById, findUserByUsername } from '../db/userService.js';
+import { getQuestMutationPolicyForBlock } from '../db/questBlockMutationService.js';
+import { QUEST_BLOCK_OPERATIONS } from '../db/questSubmissionPolicy.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
@@ -147,7 +149,8 @@ router.get(
         dbUser,
         authorUser,
         editorialContext,
-        roomMetadata
+        roomMetadata,
+        questMutationPolicy
       ] = await Promise.all([
         getReactionCounts(block_id),
         getCommentsForBlockView({
@@ -174,7 +177,11 @@ router.get(
           ? findUserByUsername(block.creator)
           : Promise.resolve(null),
         getBlockEditorialContext(block),
-        getRoomMetadata(room_id, uiLang || 'en')
+        getRoomMetadata(room_id, uiLang || 'en'),
+        getQuestMutationPolicyForBlock({
+          blockId: block_id,
+          operation: QUEST_BLOCK_OPERATIONS.CONTENT
+        })
       ]);
 
       let userReactions = [];
@@ -226,6 +233,7 @@ router.get(
         header: block.title,
         translations,
         canManageBlock: canManageBlock(req.user, block, editTokens),
+        canMutateBlock: questMutationPolicy.allowed,
         user: req.user,
         reactionCounts,
         userReactions,
