@@ -6,7 +6,6 @@ import {
   getAllBlockYearMonthCombos,
   createBlock,
   updateBlock,
-  deleteBlock,
   getPublicTranslations,
   findByRoomWithLangPref,
   findByDateWithLangPref
@@ -21,6 +20,10 @@ import optionalAuth from '../../middleware/optionalAuth.js';
 import { normalizeEditorialInput } from '../../db/editorial.js';
 import { normalizeBannerImageInput } from '../../db/bannerImage.js';
 import { generateAnonymousId } from '../../utils/anonymousId.js';
+import { QuestDomainError } from '../../db/questErrors.js';
+import { assertQuestMutationAllowedForBlock } from '../../db/questBlockMutationService.js';
+import { deleteBlockWithQuestReconciliation } from '../../db/questSubmissionService.js';
+import { QUEST_BLOCK_OPERATIONS } from '../../db/questSubmissionPolicy.js';
 import {
   canEditBlockContent,
   canManageBlock,
@@ -35,6 +38,16 @@ function getValidationMessage(error, fallbackMessage) {
     return error.message;
   }
   return fallbackMessage;
+}
+
+function sendQuestMutationError(res, error) {
+  if (!(error instanceof QuestDomainError)) return false;
+  res.status(error.status || 409).json({
+    error: 'This block cannot be changed during its current quest review state.',
+    code: error.code,
+    details: error.details
+  });
+  return true;
 }
 
 function normalizeVisibility(value, user) {
@@ -278,6 +291,10 @@ const useBlockAPI = (app) => {
       }
 
       if (collaboratorId !== block.creator) {
+        await assertQuestMutationAllowedForBlock({
+          blockId: block_id,
+          operation: QUEST_BLOCK_OPERATIONS.COLLABORATORS
+        });
         await updateBlock(block_id, {
           $addToSet: { collaborators: collaboratorId }
         });
@@ -285,6 +302,7 @@ const useBlockAPI = (app) => {
 
       res.status(200).json({ message: 'Block collaborator updated successfully.' });
     } catch (error) {
+      if (sendQuestMutationError(res, error)) return;
       console.error('Error updating block collaborator:', error.message);
       res.status(500).json({ error: 'Failed to update block collaborator.' });
     }
@@ -305,9 +323,14 @@ const useBlockAPI = (app) => {
         return res.status(403).json({ error: 'You are not authorized to update this block.' });
       }
 
+      await assertQuestMutationAllowedForBlock({
+        blockId: block_id,
+        operation: QUEST_BLOCK_OPERATIONS.CONTENT
+      });
       await updateBlock(block_id, { content });
       res.status(200).json({ message: 'Block content updated successfully.' });
     } catch (error) {
+      if (sendQuestMutationError(res, error)) return;
       console.error('Error updating block content:', error.message);
       res.status(500).json({ error: 'Failed to update block content.' });
     }
@@ -330,6 +353,11 @@ const useBlockAPI = (app) => {
       if (!canManageBlock(req.user, block, editTokens)) {
         return res.status(403).json({ error: 'You are not authorized to update this block.' });
       }
+
+      await assertQuestMutationAllowedForBlock({
+        blockId: block_id,
+        operation: QUEST_BLOCK_OPERATIONS.METADATA
+      });
 
       const fieldUpdates = {};
       if (title !== undefined) fieldUpdates.title = title;
@@ -378,6 +406,7 @@ const useBlockAPI = (app) => {
       await updateBlock(block_id, updates);
       res.status(200).json({ message: 'Block metadata updated successfully.' });
     } catch (error) {
+      if (sendQuestMutationError(res, error)) return;
       const message = getValidationMessage(error, 'Failed to update block metadata.');
       const statusCode = message === 'Failed to update block metadata.' ? 500 : 400;
       if (statusCode === 500) {
@@ -403,9 +432,14 @@ const useBlockAPI = (app) => {
         return res.status(403).json({ error: 'You are not authorized to delete this block.' });
       }
 
-      await deleteBlock(block_id);
+      await assertQuestMutationAllowedForBlock({
+        blockId: block_id,
+        operation: QUEST_BLOCK_OPERATIONS.DELETE
+      });
+      await deleteBlockWithQuestReconciliation({ blockId: block_id });
       res.status(200).json({ message: 'Block deleted successfully.' });
     } catch (error) {
+      if (sendQuestMutationError(res, error)) return;
       console.error('Error deleting block:', error.message);
       res.status(500).json({ error: 'Failed to delete block.' });
     }

@@ -20,6 +20,7 @@ export const QUEST_SUBMISSION_ACTIONS = Object.freeze({
 export const QUEST_BLOCK_OPERATIONS = Object.freeze({
   CONTENT: 'content',
   METADATA: 'metadata',
+  COLLABORATORS: 'collaborators',
   DELETE: 'delete'
 });
 

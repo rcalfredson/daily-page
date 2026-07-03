@@ -6,6 +6,8 @@ import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
 import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
 import { getBlockById, getTranslationByGroupAndLang } from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
+import { getQuestMutationPolicyForBlock } from '../db/questBlockMutationService.js';
+import { QUEST_BLOCK_OPERATIONS } from '../db/questSubmissionPolicy.js';
 import { getPeerIDs } from '../db/sessionService.js';
 import { addI18n } from '../services/i18n.js';
 import { getUiLang } from '../services/localeContext.js';
@@ -98,8 +100,12 @@ router.get(
 
       const peerIDs = await getPeerIDs(block_id);
       const canManage = canManageBlock(user, block, editTokens);
+      const questMutationPolicy = await getQuestMutationPolicyForBlock({
+        blockId: block_id,
+        operation: QUEST_BLOCK_OPERATIONS.CONTENT
+      });
 
-      if (block.status === 'locked' && !canManage) {
+      if ((block.status === 'locked' && !canManage) || !questMutationPolicy.allowed) {
         return res.redirect(`/rooms/${room_id}/blocks/${block_id}`);
       }
 
