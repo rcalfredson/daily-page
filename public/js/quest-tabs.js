@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadPanel(value, { push = true } = {}) {
     const url = new URL(value, window.location.href);
+    const currentContributionPage = new URL(window.location.href)
+      .searchParams.get('contributionsPage');
+    if (push && currentContributionPage && !url.searchParams.has('contributionsPage')) {
+      url.searchParams.set('contributionsPage', currentContributionPage);
+    }
     controller?.abort();
     controller = new window.AbortController();
     panel.setAttribute('aria-busy', 'true');

@@ -122,13 +122,17 @@ export function buildQuestSubmissionReadService({
   }
 
   async function listUserQuestSubmissions({
-    questId, userId, status = null, page = 1, limit = 20, uiLang = 'en'
+    questId, userId, status = null, statuses = null, page = 1, limit = 20, uiLang = 'en'
   }) {
     const quest = await QuestModel.findById(id(questId)).lean();
     if (!quest) throw questError(QUEST_ERROR_CODES.NOT_FOUND, { status: 404 });
     const paging = pagination(page, limit);
     const filter = { questId: id(questId), ownerUserId: id(userId) };
-    if (SUBMISSION_STATUSES.has(status)) filter.status = status;
+    const normalizedStatuses = Array.isArray(statuses)
+      ? [...new Set(statuses.filter(value => SUBMISSION_STATUSES.has(value)))]
+      : [];
+    if (normalizedStatuses.length) filter.status = { $in: normalizedStatuses };
+    else if (SUBMISSION_STATUSES.has(status)) filter.status = status;
     const [submissions, total] = await Promise.all([
       QuestSubmissionModel.find(filter)
         .sort({ updatedAt: -1 })
@@ -140,7 +144,8 @@ export function buildQuestSubmissionReadService({
     return {
       submissions: await hydrate(submissions, uiLang),
       total,
-      status: filter.status || null,
+      status: normalizedStatuses.length ? null : filter.status || null,
+      statuses: normalizedStatuses,
       ...paging
     };
   }
