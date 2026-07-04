@@ -1,0 +1,49 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/quests.css')
+  link(rel='stylesheet' href='/css/pagination.css')
+
+block content
+  main.quests-page
+    header.quests-hero
+      p.quests-eyebrow= t('quests.overview.eyebrow')
+      h1= t('quests.overview.heading')
+      p.quests-lede= t('quests.overview.intro')
+
+    if quests.length
+      .quest-grid
+        each quest in quests
+          article.quest-card
+            a.quest-card__link(href=uiPath(`/quests/${quest.slug}`))
+              .quest-card__header
+                if quest.badgeAssetPath
+                  img.quest-badge(src=quest.badgeAssetPath alt=t('quests.badge.alt', { questName: quest.displayName }))
+                .quest-card__titles
+                  span.quest-status(class=`quest-status--${quest.status}`)= t(`quests.status.${quest.status}`)
+                  h2= quest.displayName
+              if quest.displayDescription
+                p.quest-card__description= quest.displayDescription
+              .quest-progress
+                .quest-progress__labels
+                  span= t('quests.progress.label')
+                  strong= t('quests.progress.count', { completed: quest.progress.completedCount, target: quest.progress.targetCount })
+                progress.quest-progress__bar(value=quest.progress.displayRatio max='1')
+                span.quest-progress__percent= t('quests.progress.percent', { percent: Math.round(quest.progress.displayRatio * 100) })
+              span.quest-card__cta= t('quests.overview.viewQuest')
+    else
+      .quest-empty
+        h2= t('quests.overview.empty.title')
+        p= t('quests.overview.empty.body')
+
+    - const baseUrl = uiPath(paginationBaseUrl)
+    include ../partials/_compact_pagination
+    +compactPagination(currentPage, totalPages, baseUrl, {
+      label: t('quests.pagination.label'),
+      previous: t('quests.pagination.previous'),
+      next: t('quests.pagination.next'),
+      status: t('quests.pagination.status', { current: currentPage, total: totalPages })
+    })

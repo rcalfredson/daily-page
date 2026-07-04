@@ -34,6 +34,16 @@ export function toQuestI18nDTO(quest, uiLang = 'en') {
   };
 }
 
+export function resolveQuestItemLabel(item, uiLang = 'en') {
+  const entries = entriesOf(item?.label_i18n);
+  const byLanguage = new Map(entries);
+  return byLanguage.get(uiLang) ||
+    byLanguage.get('en') ||
+    entries.find(([, value]) => String(value || '').trim())?.[1] ||
+    item?.label ||
+    '';
+}
+
 export function questAcceptsNewWork(quest) {
   return quest?.status === 'active' || (
     quest?.status === 'completed' && quest?.acceptingSubmissionsAfterCompletion === true

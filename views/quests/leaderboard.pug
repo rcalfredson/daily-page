@@ -1,0 +1,49 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/quests.css')
+  link(rel='stylesheet' href='/css/pagination.css')
+
+block content
+  main.quests-page.quest-leaderboard
+    nav.quest-breadcrumb(aria-label=t('quests.detail.breadcrumbLabel'))
+      a(href=uiPath('/quests'))= t('quests.detail.allQuests')
+      span(aria-hidden='true') /
+      a(href=uiPath(`/quests/${quest.slug}`))= quest.displayName
+      span(aria-hidden='true') /
+      span= t('quests.leaderboard.heading')
+
+    header.quest-leaderboard__header
+      if quest.badgeAssetPath
+        img.quest-badge(src=quest.badgeAssetPath alt=t('quests.badge.alt', { questName: quest.displayName }))
+      div
+        p.quests-eyebrow= quest.displayName
+        h1= t('quests.leaderboard.heading')
+        p= t('quests.leaderboard.intro')
+
+    if entries.length
+      ol.quest-leaderboard-list(start=((currentPage - 1) * pageSize + 1))
+        each entry, index in entries
+          li.quest-leaderboard-entry
+            span.quest-leaderboard-rank= ((currentPage - 1) * pageSize) + index + 1
+            img.quest-leaderboard-avatar(src=entry.profilePic || '/assets/img/default-pic.png' alt='')
+            .quest-leaderboard-user
+              a(href=uiPath(`/users/${encodeURIComponent(entry.username)}`))= entry.username
+              span= t('quests.leaderboard.contributions', { count: entry.contributionCount, target: targetCount })
+            span.quest-medal(class=`quest-medal--${entry.medalTier}`)= t(`quests.medals.${entry.medalTier}`)
+    else
+      .quest-empty
+        h2= t('quests.leaderboard.empty.title')
+        p= t('quests.leaderboard.empty.body')
+
+    - const baseUrl = uiPath(paginationBaseUrl)
+    include ../partials/_compact_pagination
+    +compactPagination(currentPage, totalPages, baseUrl, {
+      label: t('quests.pagination.label'),
+      previous: t('quests.pagination.previous'),
+      next: t('quests.pagination.next'),
+      status: t('quests.pagination.status', { current: currentPage, total: totalPages })
+    })

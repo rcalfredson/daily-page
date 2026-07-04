@@ -5,6 +5,7 @@ import {
   getQuestProgressSummary,
   isQuestBlockEligible,
   questAcceptsNewWork,
+  resolveQuestItemLabel,
   resolveQuestLocalizedField,
   toQuestI18nDTO
 } from '../server/db/questDomain.js';
@@ -21,6 +22,14 @@ describe('quest domain helpers', () => {
     expect(resolveQuestLocalizedField(quest, 'name', 'de')).toBe('Road trip');
     expect(resolveQuestLocalizedField(quest, 'instructions', 'de')).toBe('Écrivez quelque chose');
     expect(toQuestI18nDTO(quest, 'es').displayDescription).toBe('Explore the country');
+  });
+
+  it('localizes item labels while retaining their source label fallback', () => {
+    expect(resolveQuestItemLabel({
+      label: 'Tioga, PA',
+      label_i18n: { es: 'Tioga, Pensilvania' }
+    }, 'es')).toBe('Tioga, Pensilvania');
+    expect(resolveQuestItemLabel({ label: 'Tioga, PA' }, 'fr')).toBe('Tioga, PA');
   });
 
   it('accepts new work according to quest lifecycle configuration', () => {

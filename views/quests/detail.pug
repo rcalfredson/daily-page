@@ -1,0 +1,130 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/quests.css')
+  link(rel='stylesheet' href='/css/pagination.css')
+
+block content
+  main.quests-page.quest-detail
+    nav.quest-breadcrumb(aria-label=t('quests.detail.breadcrumbLabel'))
+      a(href=uiPath('/quests'))= t('quests.detail.allQuests')
+      span(aria-hidden='true') /
+      span= quest.displayName
+
+    header.quest-detail__hero
+      if quest.badgeAssetPath
+        img.quest-badge.quest-badge--large(src=quest.badgeAssetPath alt=t('quests.badge.alt', { questName: quest.displayName }))
+      .quest-detail__intro
+        .quest-detail__status
+          span.quest-status(class=`quest-status--${quest.status}`)= t(`quests.status.${quest.status}`)
+          span.quest-type= t(`quests.type.${quest.type}`)
+        h1= quest.displayName
+        if administrator
+          p.quest-administrator
+            | #{t('quests.detail.administeredBy')} 
+            a(href=uiPath(`/users/${encodeURIComponent(administrator.username)}`))= administrator.username
+
+    .quest-progress.quest-progress--hero
+      .quest-progress__labels
+        span= t('quests.progress.label')
+        strong= t('quests.progress.count', { completed: progress.completedCount, target: progress.targetCount })
+      progress.quest-progress__bar(value=progress.displayRatio max='1')
+      span.quest-progress__percent= t('quests.progress.percent', { percent: Math.round(progress.displayRatio * 100) })
+
+    .quest-detail__copy
+      if descriptionHTML
+        section.quest-copy-card
+          h2= t('quests.detail.aboutHeading')
+          .quest-rich-text!= descriptionHTML
+      if instructionsHTML
+        details.quest-copy-card.quest-instructions
+          summary= t('quests.detail.instructionsHeading')
+          .quest-rich-text!= instructionsHTML
+
+    nav.quest-tabs(aria-label=t('quests.detail.sectionsLabel'))
+      if quest.type === 'set'
+        a(class=view === 'items' ? 'active' : '' href=uiPath(`/quests/${quest.slug}?view=items`))= t('quests.detail.tabs.items')
+      a(class=view === 'posts' ? 'active' : '' href=uiPath(`/quests/${quest.slug}?view=posts`))= t('quests.detail.tabs.posts')
+      a(href=uiPath(`/quests/${quest.slug}/leaderboard`))= t('quests.detail.tabs.leaderboard')
+
+    if view === 'items'
+      section.quest-content-section
+        .quest-section-heading
+          div
+            p.quests-eyebrow= t('quests.items.eyebrow')
+            h2= t('quests.items.heading')
+          span.quest-result-count= t('quests.items.resultCount', { count: items.length })
+
+        form.quest-filters(action=uiPath(`/quests/${quest.slug}`) method='get')
+          input(type='hidden' name='view' value='items')
+          label(for='quest-item-search')= t('quests.items.searchLabel')
+          input#quest-item-search(type='search' name='q' value=searchQuery placeholder=t('quests.items.searchPlaceholder'))
+          label(for='quest-item-state')= t('quests.items.stateLabel')
+          select#quest-item-state(name='state')
+            option(value='' selected=!itemState)= t('quests.items.states.all')
+            each stateName in ['available', 'reserved', 'draft', 'pending', 'changes-requested', 'completed']
+              option(value=stateName selected=itemState === stateName)= t(`quests.items.states.${stateName}`)
+          button.quest-button(type='submit')= t('quests.items.filter')
+          if searchQuery || itemState
+            a.quest-button.quest-button--secondary(href=uiPath(`/quests/${quest.slug}?view=items`))= t('quests.items.clear')
+
+        if items.length
+          ul.quest-item-grid
+            each item in items
+              li.quest-item-card
+                .quest-item-card__top
+                  h3= item.label
+                  span.quest-item-state(class=`quest-item-state--${item.state}`)= t(`quests.items.states.${item.state}`)
+                if item.post
+                  a.quest-item-post(href=uiPath(`/rooms/${item.post.roomId}/blocks/${item.post.id}`))
+                    span= item.post.title
+                    small= t('quests.items.byCreator', { username: item.post.creator })
+                else if item.state === 'available'
+                  p.quest-item-note= t('quests.items.availableNote')
+                else
+                  p.quest-item-note= t('quests.items.inProgressNote')
+        else
+          .quest-empty
+            h3= t('quests.items.empty.title')
+            p= t('quests.items.empty.body')
+
+    else
+      section.quest-content-section
+        .quest-section-heading
+          div
+            p.quests-eyebrow= t('quests.posts.eyebrow')
+            h2= t('quests.posts.heading')
+          span.quest-result-count= t('quests.posts.resultCount', { count: posts.length })
+        if posts.length
+          .quest-post-grid
+            each post in posts
+              article.quest-post-card(lang=post.lang || 'en')
+                if post.bannerImage && post.bannerImage.kind !== 'streetview'
+                  a.quest-post-card__image(href=uiPath(`/rooms/${post.roomId}/blocks/${post._id}`))
+                    img(src=post.bannerImage.url alt=(post.bannerImage.caption || post.title) loading='lazy')
+                .quest-post-card__body
+                  h3
+                    a(href=uiPath(`/rooms/${post.roomId}/blocks/${post._id}`))= post.title
+                  p= t('quests.posts.byCreator', { username: post.creator })
+                  if post.approvedAt
+                    - const approvedDate = new Date(post.approvedAt)
+                    p
+                      | #{t('quests.posts.approved')} 
+                      time(datetime=approvedDate.toISOString() data-local-date-time data-date-style='medium')= approvedDate.toLocaleDateString(uiLang || undefined, { dateStyle: 'medium' })
+                  p= t('quests.posts.contributors', { count: post.contributorCount })
+        else
+          .quest-empty
+            h3= t('quests.posts.empty.title')
+            p= t('quests.posts.empty.body')
+
+    - const baseUrl = uiPath(paginationBaseUrl)
+    include ../partials/_compact_pagination
+    +compactPagination(currentPage, totalPages, baseUrl, {
+      label: t('quests.pagination.label'),
+      previous: t('quests.pagination.previous'),
+      next: t('quests.pagination.next'),
+      status: t('quests.pagination.status', { current: currentPage, total: totalPages })
+    })
