@@ -13,6 +13,7 @@ import {
   listQuestItems
 } from '../db/questService.js';
 import {
+  getQuestSubmissionForUser,
   listAdministratorReviewQueue,
   listUserQuestSubmissions
 } from '../db/questSubmissionReadService.js';
@@ -51,9 +52,11 @@ export function buildQuestReviewPageHandler({
     try {
       const page = positivePage(req.query.page);
       const questId = String(req.query.questId || '').trim() || null;
+      const submissionId = String(req.query.submission || '').trim() || null;
       const result = await listReviewQueue({
         administratorUserId: req.user.id,
         questId,
+        submissionId,
         page,
         limit: 20,
         uiLang
@@ -66,6 +69,7 @@ export function buildQuestReviewPageHandler({
         currentPage: result.page,
         totalPages: Math.ceil(result.total / result.limit),
         paginationBaseUrl: paginationBase('/quests/review', { questId }),
+        highlightedSubmissionId: submissionId,
         uiLang,
         user: req.user
       });
@@ -176,7 +180,8 @@ router.get(
       const view = quest.type === 'count' ? 'posts' : requestedView;
       const state = String(req.query.state || '').trim() || null;
       const searchQuery = String(req.query.q || '').trim();
-      const [progress, administrator, content, mine] = await Promise.all([
+      const selectedSubmissionId = String(req.query.submission || '').trim() || null;
+      const [progress, administrator, content, mine, selectedSubmission] = await Promise.all([
         getQuestProgress({ questId: quest._id }),
         findUserById(quest.administratorUserId),
         view === 'items'
@@ -194,15 +199,33 @@ router.get(
           ? listUserQuestSubmissions({
               questId: quest._id, userId: req.user.id, page: 1, limit: 100, uiLang
             })
-          : Promise.resolve({ submissions: [] })
+          : Promise.resolve({ submissions: [] }),
+        req.user && selectedSubmissionId
+          ? getQuestSubmissionForUser({
+              submissionId: selectedSubmissionId,
+              userId: req.user.id,
+              uiLang
+            })
+          : Promise.resolve(null)
       ]);
       const totalPages = Math.ceil(content.total / content.limit);
       const visibleMine = mine.submissions.filter(submission =>
         ['draft', 'pending', 'changes-requested', 'approved'].includes(submission.status)
       );
+      if (
+        selectedSubmission &&
+        String(selectedSubmission.quest?.id) === String(quest._id) &&
+        !visibleMine.some(submission => submission.id === selectedSubmission.id)
+      ) {
+        visibleMine.unshift(selectedSubmission);
+      }
       const submissionByItemId = {};
       for (const submission of visibleMine) {
-        if (submission.item && !submissionByItemId[submission.item.id]) {
+        if (
+          submission.item &&
+          ['draft', 'pending', 'changes-requested', 'approved'].includes(submission.status) &&
+          !submissionByItemId[submission.item.id]
+        ) {
           submissionByItemId[submission.item.id] = submission;
         }
       }
@@ -235,6 +258,7 @@ router.get(
         canContribute: Boolean(req.user) && questAcceptsNewWork(quest),
         mySubmissions: visibleMine,
         mySubmissionByItemId: submissionByItemId,
+        highlightedSubmissionId: selectedSubmission?.id || null,
         canReviewQuest: Boolean(req.user) &&
           String(req.user.id) === String(quest.administratorUserId)
       });

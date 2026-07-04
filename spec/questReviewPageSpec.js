@@ -30,6 +30,7 @@ describe('quest review page', () => {
     expect(listReviewQueue).toHaveBeenCalledOnceWith({
       administratorUserId: 'admin-1',
       questId: 'quest-1',
+      submissionId: null,
       page: 2,
       limit: 20,
       uiLang: 'en'
@@ -68,5 +69,24 @@ describe('quest review page', () => {
     expect(res.view).toBe('quests/review');
     expect(res.data.submissions).toEqual([]);
     expect(res.data.totalPages).toBe(0);
+  });
+
+  it('passes a notification submission through for a focused anchored queue', async () => {
+    const listReviewQueue = jasmine.createSpy('listReviewQueue').and.resolveTo({
+      submissions: [{ id: 'submission-1' }], total: 1, page: 1, limit: 20
+    });
+    const handler = buildQuestReviewPageHandler({ listReviewQueue });
+    const res = response();
+    await handler({
+      user: { id: 'admin-1' },
+      query: { questId: 'quest-1', submission: 'submission-1' }
+    }, res);
+
+    expect(listReviewQueue).toHaveBeenCalledWith(jasmine.objectContaining({
+      administratorUserId: 'admin-1',
+      questId: 'quest-1',
+      submissionId: 'submission-1'
+    }));
+    expect(res.data.highlightedSubmissionId).toBe('submission-1');
   });
 });

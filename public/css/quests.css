@@ -407,6 +407,18 @@
   background: var(--surface-bg);
 }
 
+.quest-submission-card,
+.quest-item-card,
+.quest-review-card {
+  scroll-margin-top: 1rem;
+}
+
+.quest-submission-card--highlighted,
+.quest-review-card--highlighted {
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--highlight-color) 22%, transparent);
+}
+
 .quest-submission-card__heading,
 .quest-submission-actions,
 .quest-item-actions {

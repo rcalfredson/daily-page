@@ -26,7 +26,11 @@ block content
     if submissions.length
       ol.quest-review-list
         each submission in submissions
-          li.quest-review-card(data-review-card=submission.id)
+          li.quest-review-card(
+            id=`quest-review-submission-${submission.id}`
+            data-review-card=submission.id
+            class=highlightedSubmissionId === submission.id ? 'quest-review-card--highlighted' : ''
+          )
             header.quest-review-card__header
               div
                 a.quest-review-card__quest(href=uiPath(`/quests/${submission.quest.slug}`))= submission.quest.name

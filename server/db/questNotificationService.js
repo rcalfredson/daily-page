@@ -9,7 +9,7 @@ import {
 import { resolveQuestLocalizedField } from './questDomain.js';
 import { buildQuestNotificationEmail } from '../services/emailTemplates/questNotification.js';
 import { sendEmail } from '../services/mailgunService.js';
-import { canonicalBlockPath } from '../utils/canonical.js';
+import { buildQuestNotificationPath } from '../utils/questNotificationPath.js';
 
 export const QUEST_NOTIFICATION_EVENTS = Object.freeze({
   REVIEW_REQUESTED: 'quest_review_requested',
@@ -27,14 +27,6 @@ function id(value) {
 function latestHistoryEvent(submission) {
   const history = submission?.reviewHistory || [];
   return history[history.length - 1] || null;
-}
-
-function notificationTargetPath({ type, quest, submission, block }) {
-  if (type === QUEST_NOTIFICATION_EVENTS.REVIEW_REQUESTED) {
-    return `/quests/${quest.slug}/review?submission=${encodeURIComponent(id(submission?._id))}`;
-  }
-  if (block?.roomId) return canonicalBlockPath(block);
-  return `/quests/${quest.slug}`;
 }
 
 function dedupeKeyFor({ type, userId, submission, itemId, token }) {
@@ -106,7 +98,13 @@ export function buildQuestNotificationService({
 
     if (!notification || notification.emailedAt || !recipient?.email) return notification;
 
-    const path = notificationTargetPath({ type, quest, submission, block });
+    const path = buildQuestNotificationPath({
+      type,
+      questId: quest._id,
+      questSlug: quest.slug,
+      submissionId: submission?._id,
+      itemId
+    });
     const baseUrl = (process.env.BASE_URL || 'http://localhost:3000').replace(/\/$/, '');
     const questName = resolveQuestLocalizedField(quest, 'name', 'en');
     const { subject, html } = await buildEmail({

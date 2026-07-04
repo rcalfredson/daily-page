@@ -75,7 +75,10 @@ block content
           h3.quest-contributor-panel__subheading= t('quests.contribute.mineHeading')
           ul.quest-submission-list
             each submission in mySubmissions
-              li.quest-submission-card
+              li.quest-submission-card(
+                id=`quest-submission-${submission.id}`
+                class=highlightedSubmissionId === submission.id ? 'quest-submission-card--highlighted' : ''
+              )
                 .quest-submission-card__heading
                   strong= submission.item ? submission.item.label : (submission.block ? submission.block.title : quest.displayName)
                   span.quest-item-state(class=`quest-item-state--${submission.status}`)= t(`quests.contribute.status.${submission.status}`)
@@ -129,7 +132,7 @@ block content
           ul.quest-item-grid
             each item in items
               - const mySubmission = mySubmissionByItemId[item.id]
-              li.quest-item-card
+              li.quest-item-card(id=`quest-item-${item.id}`)
                 .quest-item-card__top
                   h3= item.label
                   span.quest-item-state(class=`quest-item-state--${item.state}`)= t(`quests.items.states.${item.state}`)

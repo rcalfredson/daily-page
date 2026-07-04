@@ -66,9 +66,11 @@ describe('quest notification serialization', () => {
 
     expect(serialized[0].message).toBe('Alice submitted Tioga, PA for Virtual road trip.');
     expect(serialized[0].path)
-      .toBe('/quests/virtual-road-trip/review?submission=submission-1');
+      .toBe(`/quests/review?questId=${questId}&submission=submission-1` +
+        '#quest-review-submission-submission-1');
     expect(serialized[1].message)
       .toBe('Your reservation for Tioga County, PA in Virtual road trip expired.');
-    expect(serialized[1].path).toBe('/quests/virtual-road-trip');
+    expect(serialized[1].path)
+      .toBe(`/quests/virtual-road-trip?view=items#quest-item-${itemId}`);
   });
 });

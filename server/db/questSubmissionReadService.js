@@ -148,6 +148,7 @@ export function buildQuestSubmissionReadService({
   async function listAdministratorReviewQueue({
     administratorUserId,
     questId = null,
+    submissionId = null,
     page = 1,
     limit = 20,
     uiLang = 'en'
@@ -165,6 +166,7 @@ export function buildQuestSubmissionReadService({
     const paging = pagination(page, limit);
     if (!questIds.length) return { submissions: [], total: 0, ...paging };
     const filter = { questId: { $in: questIds }, status: 'pending' };
+    if (submissionId) filter._id = id(submissionId);
     const [submissions, total] = await Promise.all([
       QuestSubmissionModel.find(filter)
         .sort({ submittedAt: 1, createdAt: 1 })

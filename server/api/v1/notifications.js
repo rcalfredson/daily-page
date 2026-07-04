@@ -11,7 +11,8 @@ import {
   getUnreadNotificationCount,
   markNotificationRead
 } from '../../db/notificationService.js';
-import { canonicalBlockPath, canonicalCommentPath } from '../../utils/canonical.js';
+import { canonicalCommentPath } from '../../utils/canonical.js';
+import { buildQuestNotificationPath } from '../../utils/questNotificationPath.js';
 
 const router = Router();
 
@@ -96,33 +97,34 @@ export async function serializeNotifications(notifications, { t, uiLang = 'en' }
           blockTitle,
           questName
         });
-        if (quest?.slug) {
-          path = `/quests/${quest.slug}/review?submission=${encodeURIComponent(notification.questSubmissionId)}`;
-        }
         break;
       case 'quest_changes_requested':
         message = t('notifications.inSite.item.questChangesRequested', { blockTitle, questName });
-        if (block?.roomId) path = canonicalBlockPath(block);
         break;
       case 'quest_submission_approved':
         message = t('notifications.inSite.item.questSubmissionApproved', { blockTitle, questName });
-        if (block?.roomId) path = canonicalBlockPath(block);
         break;
       case 'quest_submission_rejected':
         message = t('notifications.inSite.item.questSubmissionRejected', { blockTitle, questName });
-        if (block?.roomId) path = canonicalBlockPath(block);
         break;
       case 'quest_submission_revoked':
         message = t('notifications.inSite.item.questSubmissionRevoked', { blockTitle, questName });
-        if (block?.roomId) path = canonicalBlockPath(block);
-        else if (quest?.slug) path = `/quests/${quest.slug}`;
         break;
       case 'quest_claim_expired':
         message = t('notifications.inSite.item.questClaimExpired', { itemLabel, questName });
-        if (quest?.slug) path = `/quests/${quest.slug}`;
         break;
       default:
         break;
+    }
+
+    if (notification.type.startsWith('quest_')) {
+      path = buildQuestNotificationPath({
+        type: notification.type,
+        questId: notification.questId,
+        questSlug: quest?.slug,
+        submissionId: notification.questSubmissionId,
+        itemId: notification.questItemId
+      });
     }
 
     return {
