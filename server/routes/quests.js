@@ -22,6 +22,9 @@ import { findUserById } from '../db/userService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 
 const router = express.Router();
+const DISPLAYED_USER_SUBMISSION_STATUSES = Object.freeze([
+  'draft', 'pending', 'changes-requested', 'approved'
+]);
 
 function positivePage(value) {
   return Math.max(1, Number.parseInt(value, 10) || 1);
@@ -183,6 +186,7 @@ router.get(
       if (!quest) return renderQuestNotFound(res);
 
       const page = positivePage(req.query.page);
+      const contributionsPage = positivePage(req.query.contributionsPage);
       const view = resolveQuestDetailView(req.query.view, quest.type);
       const state = String(req.query.state || '').trim() || null;
       const searchQuery = String(req.query.q || '').trim();
@@ -203,7 +207,12 @@ router.get(
           : listApprovedQuestPosts({ questId: quest._id, page, limit: 12 }),
         req.user
           ? listUserQuestSubmissions({
-              questId: quest._id, userId: req.user.id, page: 1, limit: 100, uiLang
+              questId: quest._id,
+              userId: req.user.id,
+              statuses: DISPLAYED_USER_SUBMISSION_STATUSES,
+              page: contributionsPage,
+              limit: 6,
+              uiLang
             })
           : Promise.resolve({ submissions: [] }),
         req.user && selectedSubmissionId
@@ -215,9 +224,7 @@ router.get(
           : Promise.resolve(null)
       ]);
       const totalPages = Math.ceil(content.total / content.limit);
-      const visibleMine = mine.submissions.filter(submission =>
-        ['draft', 'pending', 'changes-requested', 'approved'].includes(submission.status)
-      );
+      const visibleMine = [...mine.submissions];
       if (
         selectedSubmission &&
         String(selectedSubmission.quest?.id) === String(quest._id) &&
@@ -229,7 +236,7 @@ router.get(
       for (const submission of visibleMine) {
         if (
           submission.item &&
-          ['draft', 'pending', 'changes-requested', 'approved'].includes(submission.status) &&
+          DISPLAYED_USER_SUBMISSION_STATUSES.includes(submission.status) &&
           !submissionByItemId[submission.item.id]
         ) {
           submissionByItemId[submission.item.id] = submission;
@@ -238,6 +245,10 @@ router.get(
       const baseParams = view === 'items'
         ? { view: 'items', state: content.state, q: content.query }
         : { view };
+      const contributionBaseParams = {
+        ...baseParams,
+        ...(page > 1 ? { page } : {})
+      };
 
       return res.render('quests/detail', {
         title: t('quests.detail.meta.title', { questName: quest.displayName }),
@@ -266,6 +277,13 @@ router.get(
         user: req.user || null,
         canContribute: Boolean(req.user) && questAcceptsNewWork(quest),
         mySubmissions: visibleMine,
+        mySubmissionTotal: mine.total || 0,
+        mySubmissionPage: mine.page || 1,
+        mySubmissionTotalPages: mine.total ? Math.ceil(mine.total / mine.limit) : 0,
+        mySubmissionPaginationBaseUrl: paginationBase(
+          `/quests/${quest.slug}`,
+          contributionBaseParams
+        ),
         mySubmissionByItemId: submissionByItemId,
         highlightedSubmissionId: selectedSubmission?.id || null,
         canReviewQuest: Boolean(req.user) &&

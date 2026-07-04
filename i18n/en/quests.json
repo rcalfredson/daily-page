@@ -95,6 +95,8 @@
       "signInPrompt": "Sign in to claim an item and submit a post for review.",
       "signIn": "Sign in to contribute",
       "countPrompt": "Create a new post in this quest’s default room, then develop and lock it before requesting review.",
+      "setPrompt": "Choose an available quest item to claim and begin your first contribution.",
+      "browseItems": "Browse available items",
       "createPost": "Create quest post",
       "closed": "This quest is not accepting new contributions right now.",
       "mineHeading": "Your quest posts",
@@ -106,6 +108,12 @@
       "resumeEditing": "Resume editing",
       "startRevision": "Revise approved post",
       "confirmWithdraw": "Withdraw this quest submission? The post itself will remain on the site.",
+      "pagination": {
+        "label": "Your quest posts pages",
+        "previous": "← Newer posts",
+        "next": "Older posts →",
+        "status": "Page {current} of {total} · {count} posts"
+      },
       "status": {
         "draft": "Draft",
         "pending": "Under review",

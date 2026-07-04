@@ -117,6 +117,22 @@ describe('quest submission read service', () => {
     expect(result.submissions[0].block.title).toBe('Tioga, PA');
   });
 
+  it('supports a paginated set of displayable personal workflow states', async () => {
+    const { service, submissions } = makeHarness();
+    const statuses = ['draft', 'pending', 'changes-requested', 'approved'];
+    const result = await service.listUserQuestSubmissions({
+      questId: 'quest-1', userId: 'owner-1', statuses, page: 2, limit: 6
+    });
+    expect(submissions.find.calls.mostRecent().args[0]).toEqual({
+      questId: 'quest-1',
+      ownerUserId: 'owner-1',
+      status: { $in: statuses }
+    });
+    expect(result.statuses).toEqual(statuses);
+    expect(result.page).toBe(2);
+    expect(result.limit).toBe(6);
+  });
+
   it('rejects a quest-specific review queue for a non-administrator', async () => {
     const { service } = makeHarness();
     await expectCode(service.listAdministratorReviewQueue({

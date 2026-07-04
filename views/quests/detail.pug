@@ -50,7 +50,7 @@ block content
           summary= t('quests.detail.instructionsHeading')
           .quest-rich-text!= instructionsHTML
 
-    section.quest-contributor-panel(
+    section#quest-contributions.quest-contributor-panel(
       data-quest-contributor
       data-quest-id=quest._id
       data-error-message=t('quests.contribute.errors.generic')
@@ -61,7 +61,7 @@ block content
       .quest-section-heading
         div
           p.quests-eyebrow= t('quests.contribute.eyebrow')
-          h2= t('quests.contribute.heading')
+          h2= t(user && (mySubmissionTotal || mySubmissions.length) ? 'quests.contribute.mineHeading' : 'quests.contribute.heading')
         if canReviewQuest
           a.quest-button.quest-button--secondary(href=uiPath(`/quests/review?questId=${encodeURIComponent(quest._id)}`))= t('quests.review.openPanel')
       if !user
@@ -71,11 +71,13 @@ block content
         if canContribute && quest.type === 'count'
           p= t('quests.contribute.countPrompt')
           a.quest-button(href=uiPath(`/rooms/${quest.defaultRoomId}/blocks/new?questId=${encodeURIComponent(quest._id)}`))= t('quests.contribute.createPost')
-        else if !canContribute && !mySubmissions.length
+        else if canContribute && quest.type === 'set' && !mySubmissionTotal && !mySubmissions.length
+          p= t('quests.contribute.setPrompt')
+          a.quest-button(href=uiPath(`/quests/${quest.slug}?view=items&state=available#quest-sections`))= t('quests.contribute.browseItems')
+        else if !canContribute && !mySubmissionTotal && !mySubmissions.length
           p= t('quests.contribute.closed')
 
         if mySubmissions.length
-          h3.quest-contributor-panel__subheading= t('quests.contribute.mineHeading')
           ul.quest-submission-list
             each submission in mySubmissions
               li.quest-submission-card(
@@ -103,6 +105,15 @@ block content
                     button.quest-button.quest-button--secondary(type='button' data-quest-action='withdraw' data-submission-id=submission.id)= t('quests.contribute.withdraw')
                   else if submission.status === 'approved'
                     button.quest-button.quest-button--secondary(type='button' data-quest-action='revision' data-submission-id=submission.id)= t('quests.contribute.startRevision')
+
+          if mySubmissionTotalPages > 1
+            - const contributionSeparator = mySubmissionPaginationBaseUrl.includes('?') ? '&' : '?'
+            nav.quest-contribution-pagination(aria-label=t('quests.contribute.pagination.label'))
+              if mySubmissionPage > 1
+                a.quest-button.quest-button--secondary(href=uiPath(`${mySubmissionPaginationBaseUrl}${contributionSeparator}contributionsPage=${mySubmissionPage - 1}#quest-contributions`))= t('quests.contribute.pagination.previous')
+              span= t('quests.contribute.pagination.status', { current: mySubmissionPage, total: mySubmissionTotalPages, count: mySubmissionTotal })
+              if mySubmissionPage < mySubmissionTotalPages
+                a.quest-button.quest-button--secondary(href=uiPath(`${mySubmissionPaginationBaseUrl}${contributionSeparator}contributionsPage=${mySubmissionPage + 1}#quest-contributions`))= t('quests.contribute.pagination.next')
 
     nav#quest-sections.quest-tabs(data-quest-tabs aria-label=t('quests.detail.sectionsLabel'))
       if quest.type === 'set'
