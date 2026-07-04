@@ -15,6 +15,11 @@ block content
       img.profile-pic(
         src=profileUser.profilePic || '/assets/img/default-pic.png',
         alt=t('profile.profile.profilePicAlt')
+        width="120"
+        height="120"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
       )
       h2 #{profileUser.username}
       if profileUser.bio

@@ -20,7 +20,15 @@ block content
 
     header.quest-leaderboard__header
       if quest.badgeAssetPath
-        img.quest-badge(src=quest.badgeAssetPath alt=t('quests.badge.alt', { questName: quest.displayName }))
+        img.quest-badge(
+          src=quest.badgeAssetPath
+          alt=t('quests.badge.alt', { questName: quest.displayName })
+          width="58"
+          height="58"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        )
       div
         p.quests-eyebrow= quest.displayName
         h1= t('quests.leaderboard.heading')

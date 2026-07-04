@@ -21,7 +21,14 @@ block content
             a.quest-card__link(href=uiPath(`/quests/${quest.slug}`))
               .quest-card__header
                 if quest.badgeAssetPath
-                  img.quest-badge(src=quest.badgeAssetPath alt=t('quests.badge.alt', { questName: quest.displayName }))
+                  img.quest-badge(
+                    src=quest.badgeAssetPath
+                    alt=t('quests.badge.alt', { questName: quest.displayName })
+                    width="58"
+                    height="58"
+                    loading="eager"
+                    decoding="async"
+                  )
                 .quest-card__titles
                   span.quest-status(class=`quest-status--${quest.status}`)= t(`quests.status.${quest.status}`)
                   h2= quest.displayName

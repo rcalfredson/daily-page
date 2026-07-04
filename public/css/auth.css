@@ -64,7 +64,6 @@ html[data-theme="dark"] .welcome-message__user {
   color: #333;
   display: inline-flex;
   align-items: baseline;
-  gap: 0.2rem;
   max-width: 100%;
   white-space: nowrap;
 }
@@ -74,8 +73,14 @@ html[data-theme="dark"] .welcome-message__user {
   flex: 0 0 auto;
 }
 
+.welcome-message__prefix {
+  white-space: pre;
+}
+
 .welcome-message__user {
   display: inline-block;
+  color: var(--link-color);
+  text-decoration: underline dotted;
   min-width: 0;
   max-width: min(18ch, 100%);
   overflow: hidden;

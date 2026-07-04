@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const prefix = welcomeMessage?.dataset.welcomePrefix ?? 'Welcome, ';
   const fallbackUser = welcomeMessage?.dataset.welcomeFallback ?? 'you';
   const suffix = welcomeMessage?.dataset.welcomeSuffix ?? '!';
+  const serverUserId = document.body?.dataset.userId || '';
+  const serverUsername = document.body?.dataset.username || '';
+  const serverRenderedUser = document.body?.dataset.isLoggedIn === 'true'
+    && serverUserId
+    && serverUsername
+    ? { id: serverUserId, username: serverUsername }
+    : null;
   let headerLayoutFrame = null;
 
   const uiBaseRaw = document.body?.dataset.uiBase || '';
@@ -180,25 +187,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     publishAuthState(true, user);
   };
 
-  try {
-    const res = await fetch('/api/v1/auth/me', { credentials: 'include' });
+  if (serverRenderedUser) {
+    publishAuthState(true, serverRenderedUser);
+  } else {
+    try {
+      const res = await fetch('/api/v1/auth/me', { credentials: 'include' });
 
-    if (res.status === 401) {            // estado normal: no autenticado
+      if (res.status === 401) {            // estado normal: no autenticado
+        setLoggedOutUI();
+      } else if (!res.ok) {                // errores reales (500, etc.)
+        console.warn('auth/me non-OK:', res.status);
+        setLoggedOutUI();
+      } else {
+        const user = await res.json();
+        setLoggedInUI(user);
+      }
+    } catch (e) {
+      console.warn('auth/me network error:', e);  // solo log “suave”
       setLoggedOutUI();
-      return;
     }
-
-    if (!res.ok) {                       // errores reales (500, etc.)
-      console.warn('auth/me non-OK:', res.status);
-      setLoggedOutUI();
-      return;
-    }
-
-    const user = await res.json();
-    setLoggedInUI(user);
-  } catch (e) {
-    console.warn('auth/me network error:', e);  // solo log “suave”
-    setLoggedOutUI();
   }
 
   navLogout?.addEventListener('click', doLogout);
