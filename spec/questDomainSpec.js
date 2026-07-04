@@ -2,6 +2,8 @@ import {
   compareQuestLeaderboardEntries,
   deriveQuestItemState,
   getQuestMedalTier,
+  getQuestMedalThresholdCounts,
+  getNextQuestMedalTier,
   getQuestProgressSummary,
   isQuestBlockEligible,
   questAcceptsNewWork,
@@ -87,6 +89,15 @@ describe('quest domain helpers', () => {
     expect(getQuestMedalTier({ contributionCount: 3, targetCount: 10 })).toBe('bronze');
     expect(getQuestMedalTier({ contributionCount: 5, targetCount: 10 })).toBe('silver');
     expect(getQuestMedalTier({ contributionCount: 8, targetCount: 10 })).toBe('gold');
+  });
+
+  it('exposes threshold bookkeeping and the next earnable tier', () => {
+    expect(getQuestMedalThresholdCounts({ targetCount: 10 })).toEqual({
+      bronze: 3, silver: 5, gold: 8
+    });
+    expect(getNextQuestMedalTier('base')).toBe('bronze');
+    expect(getNextQuestMedalTier('silver')).toBe('gold');
+    expect(getNextQuestMedalTier('gold')).toBeNull();
   });
 
   it('derives item state with approval and submission state taking precedence', () => {

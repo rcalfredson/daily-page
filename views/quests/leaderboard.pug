@@ -7,6 +7,8 @@ block append head
   link(rel='stylesheet' href='/css/quests.css')
   link(rel='stylesheet' href='/css/pagination.css')
 
+include ../partials/_quest_badge
+
 block content
   main.quests-page.quest-leaderboard
     nav.quest-breadcrumb(aria-label=t('quests.detail.breadcrumbLabel'))
@@ -33,7 +35,9 @@ block content
             .quest-leaderboard-user
               a(href=uiPath(`/users/${encodeURIComponent(entry.username)}`))= entry.username
               span= t('quests.leaderboard.contributions', { count: entry.contributionCount, target: targetCount })
-            span.quest-medal(class=`quest-medal--${entry.medalTier}`)= t(`quests.medals.${entry.medalTier}`)
+            .quest-leaderboard-achievement
+              +questBadge(quest, entry.medalTier, 'quest-badge-frame--leaderboard')
+              span.quest-medal(class=`quest-medal--${entry.medalTier}`)= t(`quests.medals.${entry.medalTier}`)
     else
       .quest-empty
         h2= t('quests.leaderboard.empty.title')

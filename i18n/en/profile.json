@@ -19,6 +19,13 @@
       "none": "No starred rooms yet.",
       "unnamedRoom": "Unnamed Room"
     },
+    "quests": {
+      "title": "Quest Achievements",
+      "contributions": "{count} of {target} contributions",
+      "nextTier": "{tier} at {count} contributions",
+      "highestTier": "Highest medal tier earned",
+      "none": "No quest badges earned yet."
+    },
     "stats": {
       "title": "User Stats",
       "totalBlocks": "Total Posts Created",

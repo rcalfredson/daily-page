@@ -13,6 +13,7 @@ import {
   publiclyVisibleBlockMatch
 } from '../db/blockService.js';
 import Block from '../db/models/Block.js';
+import { getUserQuestContributions } from '../db/questService.js';
 import { getRoomMetadata } from "../db/roomService.js";
 
 const router = express.Router();
@@ -120,7 +121,7 @@ router.get(
 router.get(
   '/users/:username',
   optionalAuth,
-  addI18n(['profile']),
+  addI18n(['profile', 'quests']),
   stripLegacyLang({ canonicalPath: (req) => `/users/${req.params.username}` }),
   async (req, res) => {
     try {
@@ -137,11 +138,14 @@ router.get(
       const isOwnProfile = !!(req.user && req.user.username === profileUsername);
       const publicOnly = !isOwnProfile;
 
-      const recentActivity = await getRecentActivityByUser(profileUsername, {
-        days: 7,
-        limit: 10,
-        publicOnly
-      });
+      const [recentActivity, questAchievements] = await Promise.all([
+        getRecentActivityByUser(profileUsername, {
+          days: 7,
+          limit: 10,
+          publicOnly
+        }),
+        getUserQuestContributions({ userId: profileUser._id, uiLang })
+      ]);
 
       const starredRoomsPreview = await Promise.all(
         (profileUser.starredRooms || []).slice(0, 3).map(async (roomId) => {
@@ -182,6 +186,7 @@ router.get(
         recentActivity,
         starredRooms: starredRoomsPreview,
         userStats: { totalBlocks, totalCollaborations, daysActive },
+        questAchievements,
         isOwnProfile
       });
     } catch (error) {

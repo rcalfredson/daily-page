@@ -123,6 +123,112 @@
   height: 92px;
 }
 
+.quest-badge-frame {
+  --quest-badge-size: 58px;
+  position: relative;
+  display: inline-grid;
+  width: var(--quest-badge-size);
+  height: var(--quest-badge-size);
+  flex: 0 0 auto;
+  place-items: center;
+  isolation: isolate;
+}
+
+.quest-badge-frame .quest-badge {
+  width: 100%;
+  height: 100%;
+}
+
+.quest-badge-frame--profile {
+  --quest-badge-size: 76px;
+}
+
+.quest-badge-frame--leaderboard {
+  --quest-badge-size: 42px;
+}
+
+@supports ((mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000))) {
+  .quest-badge-frame--bronze .quest-badge,
+  .quest-badge-frame--silver .quest-badge,
+  .quest-badge-frame--gold .quest-badge {
+    filter: grayscale(1) contrast(1.3) brightness(0.78);
+  }
+
+  .quest-badge-frame--bronze .quest-badge {
+    filter: grayscale(1) sepia(1) saturate(2.1) hue-rotate(338deg) brightness(0.78) contrast(1.25);
+  }
+
+  .quest-badge-frame--silver .quest-badge {
+    filter: grayscale(1) brightness(1.02) contrast(1.3);
+  }
+
+  .quest-badge-frame--gold .quest-badge {
+    filter: grayscale(1) sepia(1) saturate(2.7) hue-rotate(355deg) brightness(1.02) contrast(1.2);
+  }
+
+  .quest-badge-frame--bronze::before,
+  .quest-badge-frame--silver::before,
+  .quest-badge-frame--gold::before,
+  .quest-badge-frame--bronze::after,
+  .quest-badge-frame--silver::after,
+  .quest-badge-frame--gold::after {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    content: '';
+    pointer-events: none;
+    -webkit-mask-image: var(--quest-badge-image);
+    mask-image: var(--quest-badge-image);
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
+
+  .quest-badge-frame--bronze::before {
+    background: linear-gradient(135deg, #5f2f16 5%, #e4a06c 35%, #713819 58%, #f0bb8b 82%);
+    opacity: 0.48;
+    mix-blend-mode: screen;
+  }
+
+  .quest-badge-frame--silver::before {
+    background: linear-gradient(135deg, #5c6570 5%, #fff 34%, #77818d 58%, #e8edf3 82%);
+    opacity: 0.58;
+    mix-blend-mode: screen;
+  }
+
+  .quest-badge-frame--gold::before {
+    background: linear-gradient(135deg, #7a4d00 5%, #fff0a0 34%, #a96600 58%, #ffe27a 82%);
+    opacity: 0.58;
+    mix-blend-mode: screen;
+  }
+
+  .quest-badge-frame--bronze::after,
+  .quest-badge-frame--silver::after,
+  .quest-badge-frame--gold::after {
+    z-index: 2;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.85) 47%, transparent 61%);
+    background-size: 240% 100%;
+    opacity: 0.55;
+    animation: quest-badge-glint 5.5s ease-in-out infinite;
+  }
+}
+
+@keyframes quest-badge-glint {
+  0%, 68% { background-position: 130% 0; }
+  88%, 100% { background-position: -90% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quest-badge-frame::after {
+    animation: none;
+    background-position: center;
+  }
+}
+
 .quest-status,
 .quest-type,
 .quest-item-state,
@@ -136,6 +242,50 @@
   color: var(--muted-text-color);
   font-family: var(--font-rubik-medium);
   font-size: 0.76rem;
+}
+
+.quest-achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quest-achievement-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--surface-bg);
+}
+
+.dashboard-container .quest-achievement-card {
+  margin: 0;
+}
+
+.quest-achievement-card__copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.18rem;
+}
+
+.quest-achievement-card__copy a {
+  font-family: var(--font-rubik-medium);
+}
+
+.quest-achievement-card__copy span,
+.quest-achievement-card__copy small {
+  color: var(--muted-text-color);
+}
+
+.quest-leaderboard-achievement {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .quest-status--active,
@@ -691,7 +841,8 @@
     height: 42px;
   }
 
-  .quest-medal {
+  .quest-leaderboard-achievement {
     grid-column: 2 / -1;
+    justify-self: start;
   }
 }
