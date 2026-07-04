@@ -18,6 +18,12 @@
       "tags": "Tags",
       "collabsToday": "Collaborations Today"
     },
+    "quests": {
+      "eyebrow": "Create together",
+      "title": "Take part in a community quest",
+      "description": "Choose a shared goal, claim a contribution, and help the community complete something ambitious.",
+      "cta": "Explore quests"
+    },
     "activity": {
       "title": "Live on Daily Page",
       "subtitle": "Fresh conversation and reactions, all in one glance.",

@@ -23,6 +23,67 @@ hr {
   margin-bottom: 1.5rem;
 }
 
+.block-quest-links {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+}
+
+.block-quest-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--highlight-color) 32%, var(--border-color));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--highlight-color) 6%, var(--surface-bg));
+}
+
+.block-quest-card__copy,
+.block-quest-card__actions {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.65rem;
+  min-width: 0;
+}
+
+.block-quest-card__actions {
+  justify-content: flex-end;
+}
+
+.block-quest-card__eyebrow {
+  color: var(--muted-text-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.block-quest-card__name,
+.block-quest-card__action {
+  color: var(--link-color);
+  font-family: var(--font-rubik-medium);
+}
+
+.block-quest-card__item,
+.block-quest-card__prompt {
+  color: var(--muted-text-color);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 700px) {
+  .block-quest-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .block-quest-card__actions {
+    justify-content: flex-start;
+  }
+}
+
 .header-top {
   display: flex;
   align-items: flex-start;

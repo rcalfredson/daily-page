@@ -20,6 +20,14 @@
       "share": "Share",
       "flagContent": "Flag Content"
     },
+    "quest": {
+      "heading": "Quest connections",
+      "eyebrow": "Community quest",
+      "item": "Quest item: {item}",
+      "readyForReview": "Finished editing this post?",
+      "requestReview": "Request quest review",
+      "viewQuest": "View quest"
+    },
     "description": {
       "label": "Description",
       "none": "No description provided...",

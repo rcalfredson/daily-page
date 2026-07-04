@@ -158,6 +158,25 @@ block content
               i.fa.fa-flag(aria-hidden="true")
               | #{t('blockView.buttons.flagContent')}
 
+    if questSubmissions && questSubmissions.length
+      .block-quest-links(aria-label=t('blockView.quest.heading'))
+        each submission in questSubmissions
+          - const questPath = `/quests/${submission.quest.slug}`;
+          - const submissionPath = `${questPath}?submission=${encodeURIComponent(submission.id)}#quest-submission-${encodeURIComponent(submission.id)}`;
+          - const isOwnerDraft = user && submission.owner && String(user.id) === String(submission.owner.id) && submission.status === 'draft' && block.status === 'locked';
+          aside.block-quest-card
+            .block-quest-card__copy
+              span.block-quest-card__eyebrow= t('blockView.quest.eyebrow')
+              a.block-quest-card__name(href=uiPath(questPath))= submission.quest.name
+              if submission.item
+                span.block-quest-card__item= t('blockView.quest.item', { item: submission.item.label })
+            .block-quest-card__actions
+              if isOwnerDraft
+                span.block-quest-card__prompt= t('blockView.quest.readyForReview')
+                a.block-quest-card__action(href=uiPath(submissionPath))= t('blockView.quest.requestReview')
+              else
+                a.block-quest-card__action(href=uiPath(questPath))= t('blockView.quest.viewQuest')
+
     .block-view-layout(class=recommendations === null || recommendations.length ? 'block-view-layout--with-recommendations' : '')
       .block-view-primary
         +blockBanner(block, 'hero')
