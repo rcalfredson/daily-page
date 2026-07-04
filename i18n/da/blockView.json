@@ -20,6 +20,14 @@
       "share": "Dele",
       "flagContent": "Flag indhold"
     },
+    "quest": {
+      "heading": "Forbindelser til missioner",
+      "eyebrow": "Fællesskabsmission",
+      "item": "Missionselement: {item}",
+      "readyForReview": "Er du færdig med at redigere dette indlæg?",
+      "requestReview": "Anmod om gennemgang af mission",
+      "viewQuest": "Se mission"
+    },
     "description": {
       "label": "Beskrivelse",
       "none": "Ingen beskrivelse angivet...",

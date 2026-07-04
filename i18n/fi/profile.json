@@ -19,6 +19,13 @@
       "none": "Ei tähdellä merkittyjä huoneita vielä.",
       "unnamedRoom": "Nimetön huone"
     },
+    "quests": {
+      "title": "Tehtäväsaavutukset",
+      "contributions": "{count}/{target} panosta",
+      "nextTier": "{tier}, kun panoksia on {count}",
+      "highestTier": "Korkein saavutettu mitalitaso",
+      "none": "Et ole vielä ansainnut tehtävämerkkejä."
+    },
     "stats": {
       "title": "Käyttäjätilastot",
       "totalBlocks": "Luotuja julkaisuja yhteensä",

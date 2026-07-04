@@ -20,6 +20,14 @@
       "share": "Del",
       "flagContent": "Flagg innhold"
     },
+    "quest": {
+      "heading": "Forbindelser til oppdrag",
+      "eyebrow": "Fellesskapsoppdrag",
+      "item": "Oppdragspunkt: {item}",
+      "readyForReview": "Ferdig med å redigere dette innlegget?",
+      "requestReview": "Be om gjennomgang av oppdraget",
+      "viewQuest": "Vis oppdrag"
+    },
     "description": {
       "label": "Beskrivelse",
       "none": "Ingen beskrivelse oppgitt...",

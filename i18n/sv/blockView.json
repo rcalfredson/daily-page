@@ -20,6 +20,14 @@
       "share": "Dela",
       "flagContent": "Anmäl innehåll"
     },
+    "quest": {
+      "heading": "Kopplingar till uppdrag",
+      "eyebrow": "Gemenskapsuppdrag",
+      "item": "Uppdragspunkt: {item}",
+      "readyForReview": "Klar med redigeringen av det här inlägget?",
+      "requestReview": "Begär granskning av uppdraget",
+      "viewQuest": "Visa uppdrag"
+    },
     "description": {
       "label": "Beskrivning",
       "none": "Ingen beskrivning tillhandahållen...",

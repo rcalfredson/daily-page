@@ -20,6 +20,14 @@
       "share": "Deel",
       "flagContent": "Markeer inhoud"
     },
+    "quest": {
+      "heading": "Verwijzingen naar missies",
+      "eyebrow": "Communitymissie",
+      "item": "Missieonderdeel: {item}",
+      "readyForReview": "Klaar met het bewerken van dit bericht?",
+      "requestReview": "Missiebeoordeling aanvragen",
+      "viewQuest": "Missie bekijken"
+    },
     "description": {
       "label": "Beschrijving",
       "none": "Er is geen beschrijving opgegeven...",

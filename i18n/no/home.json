@@ -18,6 +18,12 @@
       "tags": "Tagger",
       "collabsToday": "Samarbeid i dag"
     },
+    "quests": {
+      "eyebrow": "Skap sammen",
+      "title": "Delta i et fellesskapsoppdrag",
+      "description": "Velg et felles mål, gjør krav på et bidrag og hjelp fellesskapet med å fullføre noe ambisiøst.",
+      "cta": "Utforsk oppdrag"
+    },
     "activity": {
       "title": "Live på Daily Page",
       "subtitle": "Friske samtaler og reaksjoner, alt i ett blikk.",

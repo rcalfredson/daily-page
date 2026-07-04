@@ -19,6 +19,13 @@
       "none": "Inga stjärnmärkta rum än.",
       "unnamedRoom": "Namnlöst rum"
     },
+    "quests": {
+      "title": "Uppdragsprestationer",
+      "contributions": "{count} av {target} bidrag",
+      "nextTier": "{tier} vid {count} bidrag",
+      "highestTier": "Högsta uppnådda medaljnivå",
+      "none": "Inga uppdragsmärken har tjänats in ännu."
+    },
     "stats": {
       "title": "Användarstatistik",
       "totalBlocks": "Totalt antal inlägg skapade",

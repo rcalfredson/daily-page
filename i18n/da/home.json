@@ -18,6 +18,12 @@
       "tags": "Tags",
       "collabsToday": "Samarbejde i dag"
     },
+    "quests": {
+      "eyebrow": "Skab sammen",
+      "title": "Deltag i en fællesskabsmission",
+      "description": "Vælg et fælles mål, gør krav på et bidrag, og hjælp fællesskabet med at fuldføre noget ambitiøst.",
+      "cta": "Udforsk missioner"
+    },
     "activity": {
       "title": "Live på Daily Page",
       "subtitle": "Frisk samtale og reaktioner, alt sammen i ét blik.",

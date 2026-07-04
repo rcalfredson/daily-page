@@ -18,6 +18,12 @@
       "tags": "Tags",
       "collabsToday": "Samenwerkingen vandaag"
     },
+    "quests": {
+      "eyebrow": "Samen creëren",
+      "title": "Doe mee aan een communitymissie",
+      "description": "Kies een gezamenlijk doel, claim een bijdrage en help de community iets ambitieus te voltooien.",
+      "cta": "Missies ontdekken"
+    },
     "activity": {
       "title": "Live op Daily Page",
       "subtitle": "Frisse gesprekken en reacties, alles in één oogopslag.",
