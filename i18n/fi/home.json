@@ -18,6 +18,12 @@
       "tags": "Tunnisteet",
       "collabsToday": "Yhteistöitä tänään"
     },
+    "quests": {
+      "eyebrow": "Luodaan yhdessä",
+      "title": "Osallistu yhteisötehtävään",
+      "description": "Valitse yhteinen tavoite, varaa oma panoksesi ja auta yhteisöä toteuttamaan jotakin kunnianhimoista.",
+      "cta": "Tutustu tehtäviin"
+    },
     "activity": {
       "title": "Elossa Daily Pagessa",
       "subtitle": "Tuoreet keskustelut ja reaktiot yhdellä silmäyksellä.",

@@ -20,6 +20,14 @@
       "share": "Jaa",
       "flagContent": "Ilmianna sisältö"
     },
+    "quest": {
+      "heading": "Yhteydet tehtäviin",
+      "eyebrow": "Yhteisötehtävä",
+      "item": "Tehtävän kohde: {item}",
+      "readyForReview": "Onko tämän julkaisun muokkaus valmis?",
+      "requestReview": "Pyydä tehtävän tarkistusta",
+      "viewQuest": "Näytä tehtävä"
+    },
     "description": {
       "label": "Kuvaus",
       "none": "Kuvausta ei annettu...",

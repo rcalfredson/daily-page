@@ -19,6 +19,13 @@
       "none": "Ingen stjernemerkede rom ennå.",
       "unnamedRoom": "Rom uten navn"
     },
+    "quests": {
+      "title": "Oppdragsprestasjoner",
+      "contributions": "{count} av {target} bidrag",
+      "nextTier": "{tier} ved {count} bidrag",
+      "highestTier": "Høyeste oppnådde medaljenivå",
+      "none": "Ingen oppdragsmerker opptjent ennå."
+    },
     "stats": {
       "title": "Brukerstatistikk",
       "totalBlocks": "Totalt antall innlegg opprettet",

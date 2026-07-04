@@ -19,6 +19,13 @@
       "none": "Er zijn nog geen kamers met ster.",
       "unnamedRoom": "Naamloze kamer"
     },
+    "quests": {
+      "title": "Missieprestaties",
+      "contributions": "{count} van {target} bijdragen",
+      "nextTier": "{tier} bij {count} bijdragen",
+      "highestTier": "Hoogste behaalde medailleniveau",
+      "none": "Nog geen missiebadges verdiend."
+    },
     "stats": {
       "title": "Gebruikersstatistieken",
       "totalBlocks": "Totaal aantal berichten gemaakt",

@@ -19,6 +19,13 @@
       "none": "Ingen stjernemarkerede rum endnu.",
       "unnamedRoom": "Unavngivet rum"
     },
+    "quests": {
+      "title": "Missionspræstationer",
+      "contributions": "{count} ud af {target} bidrag",
+      "nextTier": "{tier} ved {count} bidrag",
+      "highestTier": "Højeste opnåede medaljeniveau",
+      "none": "Ingen missionsbadges optjent endnu."
+    },
     "stats": {
       "title": "Brugerstatistik",
       "totalBlocks": "Samlet antal oprettede indlæg",
