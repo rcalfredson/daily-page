@@ -9,10 +9,13 @@ import {
   getQuestMedalTier,
   getQuestProgressSummary,
   getQuestTargetCount,
+  deriveQuestItemState,
   isQuestBlockEligible,
   questAcceptsNewWork,
+  resolveQuestItemLabel,
   toQuestI18nDTO
 } from './questDomain.js';
+import { publiclyVisibleBlockMatch } from './blockService.js';
 import { QUEST_ERROR_CODES, questError } from './questErrors.js';
 import {
   expireQuestItemClaim,
@@ -28,6 +31,10 @@ function requirePositivePagination(page, limit) {
     page: Math.max(1, Number(page) || 1),
     limit: Math.max(1, Math.min(Number(limit) || 20, 100))
   };
+}
+
+function escapeRegExp(value) {
+  return String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 async function requireQuest(questId) {
@@ -86,6 +93,148 @@ export async function listPublicQuests({ uiLang = 'en', page = 1, limit = 20 } =
 
   return {
     quests: quests.map(quest => toQuestI18nDTO(quest, uiLang)),
+    total,
+    ...pagination
+  };
+}
+
+export async function listPublicQuestsOverview(options = {}) {
+  const result = await listPublicQuests(options);
+  const quests = await Promise.all(result.quests.map(async quest => ({
+    ...quest,
+    progress: await getQuestProgress({ questId: quest._id })
+  })));
+  return { ...result, quests };
+}
+
+export async function listQuestItems({
+  questId,
+  state = null,
+  query = '',
+  page = 1,
+  limit = 24,
+  uiLang = 'en',
+  now = new Date()
+}) {
+  const quest = await requireQuest(questId);
+  if (quest.type !== 'set') {
+    throw questError(QUEST_ERROR_CODES.TYPE_MISMATCH, { status: 409 });
+  }
+
+  const pagination = requirePositivePagination(page, limit);
+  const normalizedState = [
+    'available', 'reserved', 'draft', 'pending', 'changes-requested', 'completed'
+  ].includes(state) ? state : null;
+  const filter = { questId: id(quest._id), active: true };
+  const search = String(query || '').trim();
+  if (search) {
+    filter.$or = [
+      { label: { $regex: escapeRegExp(search), $options: 'i' } },
+      { key: { $regex: escapeRegExp(search), $options: 'i' } }
+    ];
+  }
+
+  if (normalizedState === 'completed') {
+    filter.approvedSubmissionId = { $ne: null };
+  } else if (normalizedState === 'available') {
+    filter.activeSubmissionId = null;
+    filter.approvedSubmissionId = null;
+    filter.$and = [{
+      $or: [{ reservedUntil: null }, { reservedUntil: { $lte: now } }]
+    }];
+  } else if (normalizedState === 'reserved') {
+    filter.activeSubmissionId = null;
+    filter.approvedSubmissionId = null;
+    filter.reservedUntil = { $gt: now };
+  } else if (['draft', 'pending', 'changes-requested'].includes(normalizedState)) {
+    const submissions = await QuestSubmission.find({
+      questId: id(quest._id), status: normalizedState
+    }).select('_id').lean();
+    if (!submissions.length) {
+      return { items: [], total: 0, state: normalizedState, query: search, ...pagination };
+    }
+    filter.activeSubmissionId = { $in: submissions.map(submission => id(submission._id)) };
+  }
+
+  const [items, total] = await Promise.all([
+    QuestItem.find(filter)
+      .sort({ label: 1, key: 1 })
+      .skip((pagination.page - 1) * pagination.limit)
+      .limit(pagination.limit)
+      .lean(),
+    QuestItem.countDocuments(filter)
+  ]);
+  const submissionIds = [...new Set(items.map(item => id(item.activeSubmissionId)).filter(Boolean))];
+  const submissions = submissionIds.length
+    ? await QuestSubmission.find({ _id: { $in: submissionIds } }).lean()
+    : [];
+  const submissionById = new Map(submissions.map(submission => [id(submission._id), submission]));
+  const blockIds = [...new Set(submissions.map(submission => id(submission.blockId)).filter(Boolean))];
+  const blocks = blockIds.length
+    ? await Block.find(publiclyVisibleBlockMatch({ _id: { $in: blockIds } }))
+      .select('_id title roomId lang creator')
+      .lean()
+    : [];
+  const blockById = new Map(blocks.map(block => [id(block._id), block]));
+
+  return {
+    items: items.map(item => {
+      const submission = submissionById.get(id(item.activeSubmissionId)) || null;
+      const block = submission ? blockById.get(id(submission.blockId)) || null : null;
+      return {
+        id: id(item._id),
+        key: item.key,
+        label: resolveQuestItemLabel(item, uiLang),
+        state: deriveQuestItemState({ item, submission, now }),
+        reservedUntil: item.reservedUntil || null,
+        post: block ? {
+          id: id(block._id),
+          title: block.title,
+          roomId: block.roomId,
+          lang: block.lang,
+          creator: block.creator
+        } : null
+      };
+    }),
+    total,
+    state: normalizedState,
+    query: search,
+    ...pagination
+  };
+}
+
+export async function listApprovedQuestPosts({ questId, page = 1, limit = 12 }) {
+  const quest = await requireQuest(questId);
+  const pagination = requirePositivePagination(page, limit);
+  const filter = { questId: id(quest._id), status: 'approved' };
+  const [submissions, total] = await Promise.all([
+    QuestSubmission.find(filter)
+      .sort({ approvedAt: -1, approvedSequence: -1 })
+      .skip((pagination.page - 1) * pagination.limit)
+      .limit(pagination.limit)
+      .lean(),
+    QuestSubmission.countDocuments(filter)
+  ]);
+  const blockIds = submissions.map(submission => id(submission.blockId));
+  const blocks = blockIds.length
+    ? await Block.find(publiclyVisibleBlockMatch({ _id: { $in: blockIds } }))
+      .select('_id title description roomId lang creator bannerImage createdAt')
+      .lean()
+    : [];
+  const blockById = new Map(blocks.map(block => [id(block._id), block]));
+
+  return {
+    posts: submissions.map(submission => {
+      const block = blockById.get(id(submission.blockId));
+      if (!block) return null;
+      return {
+        ...block,
+        _id: id(block._id),
+        approvedAt: submission.approvedAt,
+        approvedSequence: submission.approvedSequence,
+        contributorCount: (submission.contributorUserIds || []).length
+      };
+    }).filter(Boolean),
     total,
     ...pagination
   };

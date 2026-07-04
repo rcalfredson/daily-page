@@ -32,6 +32,7 @@ import loginRoute from './server/routes/login.js';
 import blocksRoute from './server/routes/blocks.js';
 import archiveRoutes from './server/routes/archive.js';
 import blockViewRoute from './server/routes/blockView.js';
+import questsRoute from './server/routes/quests.js';
 import devViewsRoute from './server/routes/devViews.js';
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
@@ -208,6 +209,7 @@ async function getSupportFundingViewModel() {
     app.use('/', tagsRoute);
     app.use('/', loginRoute);
     app.use('/', blocksRoute);
+    app.use('/', questsRoute);
     app.use('/', archiveRoutes);
     app.use('/', blockViewRoute);
     if (process.env.NODE_ENV !== 'production') {

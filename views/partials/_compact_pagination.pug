@@ -1,0 +1,15 @@
+mixin compactPagination(currentPage, totalPages, urlPrefix, labels)
+  if totalPages > 1
+    - const separator = urlPrefix.includes('?') ? '&' : '?'
+    nav.pagination.quest-compact-pagination(aria-label=labels.label)
+      if currentPage > 1
+        a.page-link(href=`${urlPrefix}${separator}page=${currentPage - 1}`)= labels.previous
+      else
+        span.page-link.disabled= labels.previous
+
+      span.quest-compact-pagination__status= labels.status
+
+      if currentPage < totalPages
+        a.page-link(href=`${urlPrefix}${separator}page=${currentPage + 1}`)= labels.next
+      else
+        span.page-link.disabled= labels.next

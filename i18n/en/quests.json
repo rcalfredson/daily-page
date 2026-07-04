@@ -1,0 +1,122 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Community Quests | Daily Page",
+        "description": "Join collaborative community quests and help complete shared creative goals."
+      },
+      "eyebrow": "Create together",
+      "heading": "Community Quests",
+      "intro": "Join a shared project, contribute to collaborative posts, and help the community reach an ambitious goal.",
+      "viewQuest": "Explore quest →",
+      "empty": {
+        "title": "No active quests yet",
+        "body": "The first community quests are still being prepared. Check back soon."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Community Quests",
+        "description": "Explore this community quest on Daily Page."
+      },
+      "breadcrumbLabel": "Quest navigation",
+      "allQuests": "All quests",
+      "administeredBy": "Administered by",
+      "aboutHeading": "About this quest",
+      "instructionsHeading": "Contribution guidelines",
+      "sectionsLabel": "Quest sections",
+      "tabs": {
+        "items": "Quest items",
+        "posts": "Approved posts",
+        "leaderboard": "Leaderboard"
+      }
+    },
+    "progress": {
+      "label": "Quest progress",
+      "count": "{completed} of {target}",
+      "percent": "{percent}% complete"
+    },
+    "status": {
+      "draft": "Draft",
+      "active": "Active",
+      "completed": "Completed",
+      "archived": "Archived"
+    },
+    "type": {
+      "count": "Count-based quest",
+      "set": "Set-based quest"
+    },
+    "badge": {
+      "alt": "Badge for {questName}"
+    },
+    "items": {
+      "eyebrow": "The checklist",
+      "heading": "Quest items",
+      "resultCount": "{count} shown",
+      "searchLabel": "Search items",
+      "searchPlaceholder": "Search by name",
+      "stateLabel": "Status",
+      "filter": "Apply filters",
+      "clear": "Clear",
+      "states": {
+        "all": "All statuses",
+        "available": "Available",
+        "reserved": "Reserved",
+        "draft": "In progress",
+        "pending": "Under review",
+        "changes-requested": "Changes requested",
+        "completed": "Completed",
+        "inactive": "Inactive"
+      },
+      "byCreator": "By {username}",
+      "availableNote": "Open for a future contribution.",
+      "inProgressNote": "A community member is working on this item.",
+      "empty": {
+        "title": "No matching items",
+        "body": "Try a different search or status filter."
+      }
+    },
+    "posts": {
+      "eyebrow": "Community work",
+      "heading": "Approved posts",
+      "resultCount": "{count} shown",
+      "byCreator": "Created by {username}",
+      "approved": "Approved",
+      "contributors": "{count} credited contributors",
+      "empty": {
+        "title": "No approved posts yet",
+        "body": "This quest is waiting for its first approved contribution."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "{questName} Leaderboard | Daily Page",
+        "description": "See the leading contributors to {questName}."
+      },
+      "heading": "Quest leaderboard",
+      "intro": "Contributors are ranked by approved quest posts, then by when they reached their current total.",
+      "contributions": "{count} of {target} posts",
+      "empty": {
+        "title": "The leaderboard is waiting",
+        "body": "Contributors will appear after the first post is approved."
+      }
+    },
+    "medals": {
+      "base": "Contributor",
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold"
+    },
+    "pagination": {
+      "label": "Quest results pages",
+      "previous": "← Previous",
+      "next": "Next →",
+      "status": "Page {current} of {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Quest not found",
+      "notFound": "That quest could not be found.",
+      "loadFailed": "The quest could not be loaded right now."
+    }
+  }
+}
