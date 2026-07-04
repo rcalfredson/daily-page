@@ -7,6 +7,9 @@ block append head
   link(rel='stylesheet' href='/css/quests.css')
   link(rel='stylesheet' href='/css/pagination.css')
 
+block append scripts
+  script(src='/js/quest-contributor.js')
+
 block content
   main.quests-page.quest-detail
     nav.quest-breadcrumb(aria-label=t('quests.detail.breadcrumbLabel'))
@@ -44,6 +47,55 @@ block content
           summary= t('quests.detail.instructionsHeading')
           .quest-rich-text!= instructionsHTML
 
+    section.quest-contributor-panel(
+      data-quest-contributor
+      data-quest-id=quest._id
+      data-error-message=t('quests.contribute.errors.generic')
+      data-block-ineligible-message=t('quests.contribute.errors.blockIneligible')
+      data-item-unavailable-message=t('quests.contribute.errors.itemUnavailable')
+      data-confirm-withdraw=t('quests.contribute.confirmWithdraw')
+    )
+      .quest-section-heading
+        div
+          p.quests-eyebrow= t('quests.contribute.eyebrow')
+          h2= t('quests.contribute.heading')
+      if !user
+        p= t('quests.contribute.signInPrompt')
+        a.quest-button(href=uiPath('/login'))= t('quests.contribute.signIn')
+      else
+        if canContribute && quest.type === 'count'
+          p= t('quests.contribute.countPrompt')
+          a.quest-button(href=uiPath(`/rooms/${quest.defaultRoomId}/blocks/new?questId=${encodeURIComponent(quest._id)}`))= t('quests.contribute.createPost')
+        else if !canContribute && !mySubmissions.length
+          p= t('quests.contribute.closed')
+
+        if mySubmissions.length
+          h3.quest-contributor-panel__subheading= t('quests.contribute.mineHeading')
+          ul.quest-submission-list
+            each submission in mySubmissions
+              li.quest-submission-card
+                .quest-submission-card__heading
+                  strong= submission.item ? submission.item.label : (submission.block ? submission.block.title : quest.displayName)
+                  span.quest-item-state(class=`quest-item-state--${submission.status}`)= t(`quests.contribute.status.${submission.status}`)
+                if submission.block
+                  a(href=uiPath(`/rooms/${submission.block.roomId}/blocks/${submission.block.id}`))= submission.block.title
+                - const latestComment = [...(submission.reviewHistory || [])].reverse().find(event => event.comment)
+                if latestComment
+                  p.quest-review-comment= latestComment.comment
+                .quest-submission-actions
+                  if submission.block && (submission.status === 'draft' || submission.status === 'changes-requested')
+                    a.quest-button.quest-button--secondary(href=uiPath(`/rooms/${submission.block.roomId}/blocks/${submission.block.id}/edit`))= t('quests.contribute.editPost')
+                  if submission.status === 'draft'
+                    button.quest-button(type='button' data-quest-action='submit' data-submission-id=submission.id)= t('quests.contribute.requestReview')
+                    button.quest-button.quest-button--secondary(type='button' data-quest-action='withdraw' data-submission-id=submission.id)= t('quests.contribute.withdraw')
+                  else if submission.status === 'pending'
+                    button.quest-button.quest-button--secondary(type='button' data-quest-action='withdraw' data-submission-id=submission.id)= t('quests.contribute.withdraw')
+                  else if submission.status === 'changes-requested'
+                    button.quest-button(type='button' data-quest-action='reopen' data-submission-id=submission.id)= t('quests.contribute.resumeEditing')
+                    button.quest-button.quest-button--secondary(type='button' data-quest-action='withdraw' data-submission-id=submission.id)= t('quests.contribute.withdraw')
+                  else if submission.status === 'approved'
+                    button.quest-button.quest-button--secondary(type='button' data-quest-action='revision' data-submission-id=submission.id)= t('quests.contribute.startRevision')
+
     nav.quest-tabs(aria-label=t('quests.detail.sectionsLabel'))
       if quest.type === 'set'
         a(class=view === 'items' ? 'active' : '' href=uiPath(`/quests/${quest.slug}?view=items`))= t('quests.detail.tabs.items')
@@ -74,6 +126,7 @@ block content
         if items.length
           ul.quest-item-grid
             each item in items
+              - const mySubmission = mySubmissionByItemId[item.id]
               li.quest-item-card
                 .quest-item-card__top
                   h3= item.label
@@ -86,6 +139,13 @@ block content
                   p.quest-item-note= t('quests.items.availableNote')
                 else
                   p.quest-item-note= t('quests.items.inProgressNote')
+                if user && canContribute && !mySubmission
+                  .quest-item-actions
+                    if item.state === 'available'
+                      button.quest-button(type='button' data-quest-action='claim' data-item-id=item.id)= t('quests.contribute.claim')
+                    else if item.reservedByCurrentUser
+                      a.quest-button(href=uiPath(`/rooms/${quest.defaultRoomId}/blocks/new?questId=${encodeURIComponent(quest._id)}&itemId=${encodeURIComponent(item.id)}`))= t('quests.contribute.createPost')
+                      button.quest-button.quest-button--secondary(type='button' data-quest-action='release' data-item-id=item.id)= t('quests.contribute.release')
         else
           .quest-empty
             h3= t('quests.items.empty.title')

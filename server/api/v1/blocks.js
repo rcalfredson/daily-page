@@ -22,7 +22,10 @@ import { normalizeBannerImageInput } from '../../db/bannerImage.js';
 import { generateAnonymousId } from '../../utils/anonymousId.js';
 import { QuestDomainError } from '../../db/questErrors.js';
 import { assertQuestMutationAllowedForBlock } from '../../db/questBlockMutationService.js';
-import { deleteBlockWithQuestReconciliation } from '../../db/questSubmissionService.js';
+import {
+  createQuestSubmission,
+  deleteBlockWithQuestReconciliation
+} from '../../db/questSubmissionService.js';
 import { QUEST_BLOCK_OPERATIONS } from '../../db/questSubmissionPolicy.js';
 import {
   canEditBlockContent,
@@ -54,6 +57,31 @@ function normalizeVisibility(value, user) {
   if (!user) return 'public';
   return value === 'unlisted' ? 'unlisted' : 'public';
 }
+
+export function buildQuestAwareBlockCreator({
+  createBlockFn = createBlock,
+  createSubmissionFn = createQuestSubmission,
+  BlockModel = Block
+} = {}) {
+  return async function createQuestAwareBlock({ blockData, questId = null, questItemId = null, userId }) {
+    const block = await createBlockFn(blockData);
+    if (!questId) return { block, questSubmission: null };
+    try {
+      const questSubmission = await createSubmissionFn({
+        questId,
+        itemId: questItemId || null,
+        blockId: block._id,
+        ownerUserId: userId
+      });
+      return { block, questSubmission };
+    } catch (error) {
+      await BlockModel.deleteOne({ _id: block._id });
+      throw error;
+    }
+  };
+}
+
+const createQuestAwareBlock = buildQuestAwareBlockCreator();
 
 const useBlockAPI = (app) => {
   // 🏠 Room-specific block routes
@@ -112,13 +140,18 @@ const useBlockAPI = (app) => {
       originalBlock,
       editorial,
       bannerImage,
-      timeZone
+      timeZone,
+      questId,
+      questItemId
     } = req.body;
 
     if (!title || title.length < 3) {
       return res
         .status(400)
         .json({ error: 'Title is required and must be at least 3 characters long.' });
+    }
+    if (questId && !req.user) {
+      return res.status(401).json({ error: 'Sign in to create a quest contribution.' });
     }
 
     if (groupId) {
@@ -172,7 +205,12 @@ const useBlockAPI = (app) => {
     }
 
     try {
-      const newBlock = await createBlock(blockData);
+      const { block: newBlock, questSubmission } = await createQuestAwareBlock({
+        blockData,
+        questId: questId || null,
+        questItemId: questItemId || null,
+        userId: req.user?.id || null
+      });
 
       // 1️⃣ Guardar el token de edición
       res.cookie('edit_tokens', JSON.stringify(existingTokens), {
@@ -190,8 +228,17 @@ const useBlockAPI = (app) => {
       }
 
       // 3️⃣ Responder al cliente
-      res.status(201).json(newBlock);
+      const response = typeof newBlock.toObject === 'function' ? newBlock.toObject() : { ...newBlock };
+      if (questSubmission) response.questSubmissionId = String(questSubmission._id);
+      res.status(201).json(response);
     } catch (error) {
+      if (error instanceof QuestDomainError) {
+        return res.status(error.status || 409).json({
+          error: error.message,
+          code: error.code,
+          details: error.details
+        });
+      }
       // Duplicate translation => friendly 409
       if ([11000, 11001].includes(error.code)) {
         return res

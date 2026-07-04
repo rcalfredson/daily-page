@@ -11,6 +11,8 @@ import {
   listPublicQuestsOverview,
   listQuestItems
 } from '../db/questService.js';
+import { listUserQuestSubmissions } from '../db/questSubmissionReadService.js';
+import { questAcceptsNewWork } from '../db/questDomain.js';
 import { findUserById } from '../db/userService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 
@@ -122,7 +124,7 @@ router.get(
       const view = quest.type === 'count' ? 'posts' : requestedView;
       const state = String(req.query.state || '').trim() || null;
       const searchQuery = String(req.query.q || '').trim();
-      const [progress, administrator, content] = await Promise.all([
+      const [progress, administrator, content, mine] = await Promise.all([
         getQuestProgress({ questId: quest._id }),
         findUserById(quest.administratorUserId),
         view === 'items'
@@ -132,11 +134,26 @@ router.get(
               query: searchQuery,
               page,
               limit: 24,
-              uiLang
+              uiLang,
+              userId: req.user?.id || null
             })
-          : listApprovedQuestPosts({ questId: quest._id, page, limit: 12 })
+          : listApprovedQuestPosts({ questId: quest._id, page, limit: 12 }),
+        req.user
+          ? listUserQuestSubmissions({
+              questId: quest._id, userId: req.user.id, page: 1, limit: 100, uiLang
+            })
+          : Promise.resolve({ submissions: [] })
       ]);
       const totalPages = Math.ceil(content.total / content.limit);
+      const visibleMine = mine.submissions.filter(submission =>
+        ['draft', 'pending', 'changes-requested', 'approved'].includes(submission.status)
+      );
+      const submissionByItemId = {};
+      for (const submission of visibleMine) {
+        if (submission.item && !submissionByItemId[submission.item.id]) {
+          submissionByItemId[submission.item.id] = submission;
+        }
+      }
       const baseParams = view === 'items'
         ? { view: 'items', state: content.state, q: content.query }
         : { view: 'posts' };
@@ -162,7 +179,10 @@ router.get(
         totalPages,
         paginationBaseUrl: paginationBase(`/quests/${quest.slug}`, baseParams),
         uiLang,
-        user: req.user || null
+        user: req.user || null,
+        canContribute: Boolean(req.user) && questAcceptsNewWork(quest),
+        mySubmissions: visibleMine,
+        mySubmissionByItemId: submissionByItemId
       });
     } catch (error) {
       console.error(`Error loading quest ${req.params.slug}:`, error);

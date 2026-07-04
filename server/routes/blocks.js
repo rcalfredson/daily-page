@@ -7,6 +7,7 @@ import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
 import { getBlockById, getTranslationByGroupAndLang } from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { getQuestMutationPolicyForBlock } from '../db/questBlockMutationService.js';
+import { getQuestContributionStartContext } from '../db/questService.js';
 import { QUEST_BLOCK_OPERATIONS } from '../db/questSubmissionPolicy.js';
 import { getPeerIDs } from '../db/sessionService.js';
 import { addI18n } from '../services/i18n.js';
@@ -26,7 +27,7 @@ const router = express.Router();
 router.get(
   '/rooms/:room_id/blocks/new',
   optionalAuth,
-  addI18n(['createBlock', 'blockTags']),
+  addI18n(['createBlock', 'blockTags', 'quests']),
   stripLegacyLang({ canonicalPath: (req) => `/rooms/${req.params.room_id}/blocks/new` }),
   async (req, res) => {
     try {
@@ -35,6 +36,17 @@ router.get(
 
       const uiLang = getUiLang(res);
       const roomMetadata = await getRoomMetadata(room_id, uiLang);
+      let questContribution = null;
+      if (req.query.questId) {
+        if (!req.user) return res.redirect('/login');
+        questContribution = await getQuestContributionStartContext({
+          questId: req.query.questId,
+          itemId: req.query.itemId || null,
+          userId: req.user.id,
+          uiLang
+        });
+        if (questContribution.roomId !== room_id) return res.sendStatus(404);
+      }
 
       res.render('rooms/create-block', {
         title: t('createBlock.meta.title'),
@@ -43,10 +55,13 @@ router.get(
         roomMetadata: roomMetadata || { _id: room_id, name: room_id, displayName: room_id },
         user: req.user || null,
         uiLang,
+        questContribution,
       });
     } catch (error) {
       console.error('Error loading create-block page:', error);
-      return res.status(500).render('error', { message: 'Error loading create-block page.' });
+      return res.status(error?.status || 500).render('error', {
+        message: error?.status ? error.message : 'Error loading create-block page.'
+      });
     }
   }
 );

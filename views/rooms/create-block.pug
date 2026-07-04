@@ -7,6 +7,8 @@ block append head
   link(rel='stylesheet' href='/css/create-block.css')
   link(rel='stylesheet' href='/css/banner-images.css')
   link(rel='stylesheet' href='/css/block-tags.css')
+  if questContribution
+    link(rel='stylesheet' href='/css/quests.css')
   link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css')
 
 block append scripts
@@ -15,6 +17,12 @@ block append scripts
 
 block content
   h1= t('createBlock.heading')
+
+  if questContribution
+    aside.quest-contribution-context
+      strong= questContribution.quest.displayName
+      if questContribution.item
+        span= questContribution.item.label
 
   - let descriptionFallback = t('createBlock.roomInfo.unavailable')
   if roomMetadata
@@ -25,11 +33,20 @@ block content
 
   p#room-description= descriptionFallback
 
-  form#block-form(action=`/api/v1/rooms/${room_id}/blocks` method='POST')
+  form#block-form(
+    action=`/api/v1/rooms/${room_id}/blocks`
+    method='POST'
+    data-quest-error=questContribution ? t('quests.contribute.errors.createFailed') : null
+  )
+    if questContribution
+      input(type='hidden' name='questId' value=questContribution.quest._id)
+      if questContribution.item
+        input(type='hidden' name='questItemId' value=questContribution.item.id)
     .form-group
       label(for='title')= t('createBlock.form.title.label')
       input#title(
         type='text' name='title' required minlength='3' maxlength='100'
+        value=(questContribution && questContribution.suggestedTitle) || ''
         placeholder=t('createBlock.form.title.placeholder.full')
         data-ph-full=t('createBlock.form.title.placeholder.full')
         data-ph-short=t('createBlock.form.title.placeholder.short')
