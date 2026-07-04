@@ -1,5 +1,6 @@
 import express from 'express';
 import optionalAuth from '../middleware/optionalAuth.js';
+import { isAuthenticated, noCache } from '../middleware/auth.js';
 import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
 import { addI18n } from '../services/i18n.js';
 import { getUiLang } from '../services/localeContext.js';
@@ -11,7 +12,10 @@ import {
   listPublicQuestsOverview,
   listQuestItems
 } from '../db/questService.js';
-import { listUserQuestSubmissions } from '../db/questSubmissionReadService.js';
+import {
+  listAdministratorReviewQueue,
+  listUserQuestSubmissions
+} from '../db/questSubmissionReadService.js';
 import { questAcceptsNewWork } from '../db/questDomain.js';
 import { findUserById } from '../db/userService.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
@@ -36,6 +40,45 @@ function renderQuestNotFound(res) {
     title: res.locals.t('quests.errors.notFoundTitle'),
     message: res.locals.t('quests.errors.notFound')
   });
+}
+
+export function buildQuestReviewPageHandler({
+  listReviewQueue = listAdministratorReviewQueue
+} = {}) {
+  return async function questReviewPage(req, res) {
+    const { t } = res.locals;
+    const uiLang = getUiLang(res);
+    try {
+      const page = positivePage(req.query.page);
+      const questId = String(req.query.questId || '').trim() || null;
+      const result = await listReviewQueue({
+        administratorUserId: req.user.id,
+        questId,
+        page,
+        limit: 20,
+        uiLang
+      });
+      return res.render('quests/review', {
+        title: t('quests.review.meta.title'),
+        description: t('quests.review.meta.description'),
+        submissions: result.submissions,
+        pendingTotal: result.total,
+        currentPage: result.page,
+        totalPages: Math.ceil(result.total / result.limit),
+        paginationBaseUrl: paginationBase('/quests/review', { questId }),
+        uiLang,
+        user: req.user
+      });
+    } catch (error) {
+      console.error('Error loading quest review queue:', error);
+      const status = error?.status || 500;
+      return res.status(status).render('error', {
+        message: status === 403
+          ? t('quests.review.errors.forbidden')
+          : t('quests.review.errors.loadFailed')
+      });
+    }
+  };
 }
 
 router.get(
@@ -67,6 +110,15 @@ router.get(
       });
     }
   }
+);
+
+router.get(
+  '/quests/review',
+  isAuthenticated,
+  noCache,
+  addI18n(['quests']),
+  stripLegacyLang({ canonicalPath: '/quests/review' }),
+  buildQuestReviewPageHandler()
 );
 
 router.get(
@@ -182,7 +234,9 @@ router.get(
         user: req.user || null,
         canContribute: Boolean(req.user) && questAcceptsNewWork(quest),
         mySubmissions: visibleMine,
-        mySubmissionByItemId: submissionByItemId
+        mySubmissionByItemId: submissionByItemId,
+        canReviewQuest: Boolean(req.user) &&
+          String(req.user.id) === String(quest.administratorUserId)
       });
     } catch (error) {
       console.error(`Error loading quest ${req.params.slug}:`, error);

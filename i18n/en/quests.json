@@ -121,6 +121,57 @@
         "createFailed": "The post could not be attached to this quest. Your claim may have expired; return to the quest and try again."
       }
     },
+    "review": {
+      "meta": {
+        "title": "Quest Review Queue | Daily Page",
+        "description": "Review pending submissions for the community quests you administer."
+      },
+      "eyebrow": "Administrator workspace",
+      "heading": "Quest review queue",
+      "intro": "Review the submitted post and its history before approving it or sending it back to the contributor.",
+      "pendingCount": "{count} pending submissions",
+      "openPanel": "Open review queue",
+      "owner": "Submission owner",
+      "unknownOwner": "Unknown user",
+      "item": "Quest item",
+      "requestedAt": "Review requested",
+      "revision": "Submitted revision",
+      "unknownRevision": "Unknown revision",
+      "openPost": "Open submitted post",
+      "missingPost": "Post unavailable",
+      "history": "Review history ({count})",
+      "reason": "Reason: {reason}",
+      "commentLabel": "Review comment",
+      "commentPlaceholder": "Explain your decision or leave helpful revision notes.",
+      "commentHelp": "A comment is required when requesting changes or rejecting. It is optional when approving.",
+      "approve": "Approve",
+      "requestChanges": "Request changes",
+      "reject": "Reject",
+      "events": {
+        "created": "Submission created",
+        "review-requested": "Review requested",
+        "changes-requested": "Changes requested",
+        "editing-reopened": "Editing resumed",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "withdrawn": "Withdrawn",
+        "revision-started": "Revision started",
+        "revoked": "Approval revoked",
+        "claim-expired": "Claim expired",
+        "invalidated": "Submission invalidated"
+      },
+      "empty": {
+        "title": "The queue is clear",
+        "body": "There are no pending submissions for the quests you administer."
+      },
+      "errors": {
+        "forbidden": "You do not administer that quest.",
+        "loadFailed": "The quest review queue could not be loaded right now.",
+        "actionFailed": "That review decision could not be saved. Please try again.",
+        "commentRequired": "Please add a review comment before requesting changes or rejecting.",
+        "stale": "This submission or its post changed before the decision was saved. The queue will be refreshed."
+      }
+    },
     "leaderboard": {
       "meta": {
         "title": "{questName} Leaderboard | Daily Page",

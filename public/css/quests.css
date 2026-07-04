@@ -294,6 +294,143 @@
   background: var(--secondary-bg);
 }
 
+.quest-review-header {
+  margin-bottom: 1.5rem;
+}
+
+.quest-review-header h1 {
+  margin: 0;
+}
+
+.quest-review-header p {
+  max-width: 720px;
+  color: var(--muted-text-color);
+  line-height: 1.6;
+}
+
+.quest-review-list {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.quest-review-card {
+  padding: 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  background: var(--surface-raised-bg);
+  box-shadow: var(--box-shadow);
+}
+
+.quest-review-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.quest-review-card__header h2 {
+  margin: 0.25rem 0 0;
+  font-size: 1.25rem;
+}
+
+.quest-review-card__quest {
+  color: var(--muted-text-color);
+  font-size: 0.9rem;
+}
+
+.quest-review-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.quest-review-facts div {
+  padding: 0.7rem;
+  border-radius: 9px;
+  background: var(--secondary-bg);
+}
+
+.quest-review-facts dt {
+  color: var(--muted-text-color);
+  font-size: 0.78rem;
+}
+
+.quest-review-facts dd {
+  margin: 0.2rem 0 0;
+}
+
+.quest-review-history {
+  margin: 1rem 0;
+  padding: 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+}
+
+.quest-review-history summary {
+  cursor: pointer;
+  font-family: var(--font-rubik-medium);
+}
+
+.quest-review-history ol {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.8rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.quest-review-history time {
+  display: block;
+  color: var(--muted-text-color);
+  font-size: 0.82rem;
+}
+
+.quest-review-history blockquote {
+  margin: 0.4rem 0 0;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--highlight-color);
+}
+
+.quest-review-form {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.quest-review-form textarea {
+  min-height: 110px;
+  box-sizing: border-box;
+  resize: vertical;
+  border: 1px solid var(--border-color);
+  border-radius: 9px;
+  padding: 0.7rem;
+  background: var(--input-bg);
+  color: var(--text-color);
+  font: inherit;
+}
+
+.quest-review-form__help {
+  margin: 0;
+  color: var(--muted-text-color);
+  font-size: 0.85rem;
+}
+
+.quest-review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.quest-button--danger {
+  border-color: var(--danger-color, #b42318);
+  background: transparent;
+  color: var(--danger-color, #b42318);
+}
+
 .quest-copy-card {
   padding: 1.25rem;
 }
