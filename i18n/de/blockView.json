@@ -20,6 +20,14 @@
       "share": "Teilen",
       "flagContent": "Inhalt melden"
     },
+    "quest": {
+      "heading": "Verbindungen zu Quests",
+      "eyebrow": "Community-Quest",
+      "item": "Quest-Aufgabe: {item}",
+      "readyForReview": "Bist du mit der Bearbeitung dieses Beitrags fertig?",
+      "requestReview": "Quest-Prüfung anfordern",
+      "viewQuest": "Quest ansehen"
+    },
     "description": {
       "label": "Beschreibung",
       "none": "Keine Beschreibung angegeben...",

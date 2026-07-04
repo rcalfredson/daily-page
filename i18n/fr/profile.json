@@ -19,6 +19,13 @@
       "none": "Aucun salon favori pour le moment.",
       "unnamedRoom": "Salon sans nom"
     },
+    "quests": {
+      "title": "Réussites de quête",
+      "contributions": "{count} contributions sur {target}",
+      "nextTier": "{tier} à partir de {count} contributions",
+      "highestTier": "Plus haut niveau de médaille obtenu",
+      "none": "Aucun badge de quête obtenu pour le moment."
+    },
     "stats": {
       "title": "Statistiques utilisateur",
       "totalBlocks": "Total de publications créées",

@@ -19,6 +19,13 @@
       "none": "Noch keine markierten Raume.",
       "unnamedRoom": "Unbenannter Raum"
     },
+    "quests": {
+      "title": "Quest-Erfolge",
+      "contributions": "{count} von {target} Beiträgen",
+      "nextTier": "{tier} bei {count} Beiträgen",
+      "highestTier": "Höchste erreichte Medaillenstufe",
+      "none": "Noch keine Quest-Abzeichen verdient."
+    },
     "stats": {
       "title": "Benutzerstatistiken",
       "totalBlocks": "Erstellte Beitrage insgesamt",

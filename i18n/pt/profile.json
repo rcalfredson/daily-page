@@ -19,6 +19,13 @@
       "none": "Ainda não há salas favoritadas.",
       "unnamedRoom": "Sala sem Nome"
     },
+    "quests": {
+      "title": "Conquistas de missões",
+      "contributions": "{count} de {target} contribuições",
+      "nextTier": "{tier} com {count} contribuições",
+      "highestTier": "Nível de medalha mais alto alcançado",
+      "none": "Ainda não ganhou emblemas de missões."
+    },
     "stats": {
       "title": "Estatísticas do Usuário",
       "totalBlocks": "Total de posts criados",

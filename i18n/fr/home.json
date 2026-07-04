@@ -18,6 +18,12 @@
       "tags": "Tags",
       "collabsToday": "Collaborations aujourd'hui"
     },
+    "quests": {
+      "eyebrow": "Créer ensemble",
+      "title": "Participez à une quête communautaire",
+      "description": "Choisissez un objectif commun, revendiquez une contribution et aidez la communauté à accomplir un projet ambitieux.",
+      "cta": "Découvrir les quêtes"
+    },
     "activity": {
       "title": "En direct sur Daily Page",
       "subtitle": "Conversations et réactions récentes, en un coup d'œil.",

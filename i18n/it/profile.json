@@ -19,6 +19,13 @@
       "none": "Ancora nessuna stanza preferita.",
       "unnamedRoom": "Stanza senza nome"
     },
+    "quests": {
+      "title": "Traguardi delle missioni",
+      "contributions": "{count} contributi su {target}",
+      "nextTier": "{tier} a {count} contributi",
+      "highestTier": "Livello di medaglia più alto ottenuto",
+      "none": "Non hai ancora ottenuto badge delle missioni."
+    },
     "stats": {
       "title": "Statistiche utente",
       "totalBlocks": "Post creati in totale",
