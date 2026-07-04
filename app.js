@@ -16,6 +16,7 @@ import useAuthAPI from './server/api/v1/auth.js';
 import useBlockAPI from './server/api/v1/blocks.js';
 import useCommentsAPI from './server/api/v1/comments.js';
 import useNotificationsAPI from './server/api/v1/notifications.js';
+import useQuestAPI from './server/api/v1/quests.js';
 import usePeersAPI from './server/api/v1/peers.js';
 import useReactionsAPI from './server/api/v1/reactions.js';
 import useRoomAPI from './server/api/v1/rooms.js';
@@ -197,6 +198,7 @@ async function getSupportFundingViewModel() {
     useBlockAPI(app);
     useCommentsAPI(app);
     useNotificationsAPI(app);
+    useQuestAPI(app);
     useReactionsAPI(app);
     useRoomAPI(app);
     usePeersAPI(app);
