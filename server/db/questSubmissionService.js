@@ -4,6 +4,10 @@ import Quest from './models/Quest.js';
 import QuestItem from './models/QuestItem.js';
 import QuestSubmission from './models/QuestSubmission.js';
 import User from './models/User.js';
+import {
+  QUEST_NOTIFICATION_EVENTS,
+  notifyQuestEvent
+} from './questNotificationService.js';
 import { questAcceptsNewWork } from './questDomain.js';
 import { QUEST_ERROR_CODES, questError } from './questErrors.js';
 import {
@@ -663,56 +667,30 @@ export function buildQuestSubmissionService({
 
   async function expireQuestClaims({ now = new Date(), limit = 100 } = {}) {
     const safeLimit = Math.max(1, Math.min(Number(limit) || 100, 1000));
-    const unattached = await QuestItemModel.updateMany({
-      activeSubmissionId: null,
-      approvedSubmissionId: null,
-      reservedUntil: { $lte: now }
-    }, {
-      $set: { reservedByUserId: null, reservedUntil: null }
-    });
-    const attachedItems = await QuestItemModel.find({
-      activeSubmissionId: { $ne: null },
+    const candidates = await QuestItemModel.find({
       approvedSubmissionId: null,
       reservedUntil: { $lte: now }
     }, null, { limit: safeLimit });
+    let releasedUnattachedClaims = 0;
     let withdrawnDrafts = 0;
+    const expiredClaims = [];
 
-    for (const candidate of attachedItems) {
-      const expired = await transactionRunner(async session => {
-        const item = await QuestItemModel.findOne({
-          _id: candidate._id,
-          activeSubmissionId: id(candidate.activeSubmissionId),
-          approvedSubmissionId: null,
-          reservedUntil: { $lte: now }
-        }, null, { session });
-        if (!item) return false;
-        const { submission, quest } = await loadTransitionContext({
-          QuestModel,
-          QuestSubmissionModel,
-          BlockModel,
-          submissionId: item.activeSubmissionId,
-          session
-        });
-        if (submission.status !== 'draft') return false;
-        const transition = assertQuestSubmissionTransition({
-          action: QUEST_SUBMISSION_ACTIONS.EXPIRE,
-          submission,
-          quest,
-          actor: systemActor(),
-          now
-        });
-        await updateSubmissionForTransition({
-          QuestSubmissionModel, submission, transition, session
-        });
-        await releaseSubmissionItem({ QuestItemModel, submission, session });
-        return true;
+    for (const candidate of candidates) {
+      const expired = await expireQuestItemClaim({
+        questId: candidate.questId,
+        itemId: candidate._id,
+        now
       });
-      if (expired) withdrawnDrafts += 1;
+      if (!expired) continue;
+      expiredClaims.push(expired);
+      if (expired.submission) withdrawnDrafts += 1;
+      else releasedUnattachedClaims += 1;
     }
 
     return {
-      releasedUnattachedClaims: unattached.modifiedCount || 0,
-      withdrawnDrafts
+      releasedUnattachedClaims,
+      withdrawnDrafts,
+      expiredClaims
     };
   }
 
@@ -724,7 +702,8 @@ export function buildQuestSubmissionService({
         approvedSubmissionId: null,
         reservedUntil: { $lte: now }
       }, null, { session });
-      if (!item) return false;
+      if (!item) return null;
+      const eventToken = `expired-${new Date(item.reservedUntil).toISOString()}`;
 
       if (!item.activeSubmissionId) {
         const released = await QuestItemModel.updateOne({
@@ -735,7 +714,15 @@ export function buildQuestSubmissionService({
         }, {
           $set: { reservedByUserId: null, reservedUntil: null }
         }, { session });
-        return released.matchedCount === 1;
+        if (released.matchedCount !== 1) return null;
+        return {
+          questId: id(item.questId),
+          itemId: id(item._id),
+          ownerUserId: id(item.reservedByUserId),
+          blockId: null,
+          submission: null,
+          eventToken
+        };
       }
 
       const { submission, quest } = await loadTransitionContext({
@@ -745,7 +732,7 @@ export function buildQuestSubmissionService({
         submissionId: item.activeSubmissionId,
         session
       });
-      if (submission.status !== 'draft') return false;
+      if (submission.status !== 'draft') return null;
       const transition = assertQuestSubmissionTransition({
         action: QUEST_SUBMISSION_ACTIONS.EXPIRE,
         submission,
@@ -753,11 +740,18 @@ export function buildQuestSubmissionService({
         actor: systemActor(),
         now
       });
-      await updateSubmissionForTransition({
+      const updated = await updateSubmissionForTransition({
         QuestSubmissionModel, submission, transition, session
       });
       await releaseSubmissionItem({ QuestItemModel, submission, session });
-      return true;
+      return {
+        questId: id(item.questId),
+        itemId: id(item._id),
+        ownerUserId: id(submission.ownerUserId),
+        blockId: id(submission.blockId),
+        submission: updated,
+        eventToken
+      };
     });
   }
 
@@ -832,7 +826,84 @@ export function buildQuestSubmissionService({
   };
 }
 
-const questSubmissionService = buildQuestSubmissionService();
+export function buildNotifyingQuestSubmissionService({
+  coreService,
+  notify = notifyQuestEvent,
+  logger = console
+}) {
+  async function dispatch(payload) {
+    try {
+      await notify(payload);
+    } catch (error) {
+      logger.error('Failed to create quest workflow notification:', error);
+    }
+  }
+
+  return {
+    ...coreService,
+    async submitQuestSubmission(args) {
+      const result = await coreService.submitQuestSubmission(args);
+      await dispatch({ type: QUEST_NOTIFICATION_EVENTS.REVIEW_REQUESTED, submission: result });
+      return result;
+    },
+    async requestQuestSubmissionChanges(args) {
+      const result = await coreService.requestQuestSubmissionChanges(args);
+      await dispatch({ type: QUEST_NOTIFICATION_EVENTS.CHANGES_REQUESTED, submission: result });
+      return result;
+    },
+    async approveQuestSubmission(args) {
+      const result = await coreService.approveQuestSubmission(args);
+      await dispatch({ type: QUEST_NOTIFICATION_EVENTS.APPROVED, submission: result.submission });
+      return result;
+    },
+    async rejectQuestSubmission(args) {
+      const result = await coreService.rejectQuestSubmission(args);
+      await dispatch({ type: QUEST_NOTIFICATION_EVENTS.REJECTED, submission: result });
+      return result;
+    },
+    async revokeQuestSubmission(args) {
+      const result = await coreService.revokeQuestSubmission(args);
+      await dispatch({ type: QUEST_NOTIFICATION_EVENTS.REVOKED, submission: result });
+      return result;
+    },
+    async reconcileQuestSubmissionForBlock(args) {
+      const results = await coreService.reconcileQuestSubmissionForBlock(args);
+      for (const submission of results.filter(result => result.status === 'revoked')) {
+        await dispatch({ type: QUEST_NOTIFICATION_EVENTS.REVOKED, submission });
+      }
+      return results;
+    },
+    async expireQuestClaims(args) {
+      const result = await coreService.expireQuestClaims(args);
+      for (const expiry of result.expiredClaims || []) {
+        await dispatch({
+          type: QUEST_NOTIFICATION_EVENTS.CLAIM_EXPIRED,
+          submission: expiry.submission,
+          expiry,
+          token: expiry.eventToken
+        });
+      }
+      return result;
+    },
+    async expireQuestItemClaim(args) {
+      const result = await coreService.expireQuestItemClaim(args);
+      if (result) {
+        await dispatch({
+          type: QUEST_NOTIFICATION_EVENTS.CLAIM_EXPIRED,
+          submission: result.submission,
+          expiry: result,
+          token: result.eventToken
+        });
+      }
+      return result;
+    }
+  };
+}
+
+const coreQuestSubmissionService = buildQuestSubmissionService();
+const questSubmissionService = buildNotifyingQuestSubmissionService({
+  coreService: coreQuestSubmissionService
+});
 
 export const createQuestSubmission = questSubmissionService.createQuestSubmission;
 export const submitQuestSubmission = questSubmissionService.submitQuestSubmission;

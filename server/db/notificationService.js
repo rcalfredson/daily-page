@@ -12,20 +12,60 @@ export async function createNotification({
   type,
   actorUserId,
   blockId,
-  commentId = null
+  commentId = null,
+  questId = null,
+  questSubmissionId = null,
+  questItemId = null,
+  dedupeKey = null
 }) {
   const doc = await Notification.create({
     userId: String(userId),
     type,
-    actorUserId: String(actorUserId),
-    blockId: String(blockId),
+    actorUserId: actorUserId ? String(actorUserId) : null,
+    blockId: blockId ? String(blockId) : null,
     commentId: commentId ? String(commentId) : null,
+    questId: questId ? String(questId) : null,
+    questSubmissionId: questSubmissionId ? String(questSubmissionId) : null,
+    questItemId: questItemId ? String(questItemId) : null,
+    dedupeKey: dedupeKey ? String(dedupeKey) : null,
     readAt: null,
     emailedAt: null,
     createdAt: new Date()
   });
 
   return doc.toObject();
+}
+
+export async function createQuestNotification({
+  userId,
+  type,
+  actorUserId = null,
+  blockId = null,
+  questId,
+  questSubmissionId = null,
+  questItemId = null,
+  dedupeKey
+}) {
+  const normalizedDedupeKey = String(dedupeKey || '').trim();
+  if (!normalizedDedupeKey) throw new Error('Quest notification dedupeKey is required.');
+  const existing = await Notification.findOne({ dedupeKey: normalizedDedupeKey }).lean();
+  if (existing) return existing;
+
+  try {
+    return await createNotification({
+      userId,
+      type,
+      actorUserId,
+      blockId,
+      questId,
+      questSubmissionId,
+      questItemId,
+      dedupeKey: normalizedDedupeKey
+    });
+  } catch (error) {
+    if (![11000, 11001].includes(error?.code)) throw error;
+    return Notification.findOne({ dedupeKey: normalizedDedupeKey }).lean();
+  }
 }
 
 export async function getNotificationsForUser({ userId, limit = 20 }) {
@@ -59,6 +99,13 @@ export async function markNotificationRead({ notificationId, userId }) {
   }
 
   return updated;
+}
+
+export async function markNotificationEmailed(notificationId, emailedAt = new Date()) {
+  return Notification.updateOne(
+    { _id: notificationId, emailedAt: null },
+    { $set: { emailedAt } }
+  );
 }
 
 async function resolveBlockNotificationRecipient(block) {

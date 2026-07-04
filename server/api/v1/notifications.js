@@ -2,13 +2,16 @@ import { Router } from 'express';
 import mongoose from 'mongoose';
 import optionalAuth from '../../middleware/optionalAuth.js';
 import Block from '../../db/models/Block.js';
+import Quest from '../../db/models/Quest.js';
+import QuestItem from '../../db/models/QuestItem.js';
 import User from '../../db/models/User.js';
+import { resolveQuestLocalizedField } from '../../db/questDomain.js';
 import {
   getNotificationsForUser,
   getUnreadNotificationCount,
   markNotificationRead
 } from '../../db/notificationService.js';
-import { canonicalCommentPath } from '../../utils/canonical.js';
+import { canonicalBlockPath, canonicalCommentPath } from '../../utils/canonical.js';
 
 const router = Router();
 
@@ -16,7 +19,7 @@ function uniqueStrings(values = []) {
   return [...new Set(values.map((value) => String(value || '')).filter(Boolean))];
 }
 
-async function serializeNotifications(notifications, { t }) {
+export async function serializeNotifications(notifications, { t, uiLang = 'en' }) {
   const actorIds = uniqueStrings(
     notifications
       .map((notification) => notification.actorUserId)
@@ -27,25 +30,43 @@ async function serializeNotifications(notifications, { t }) {
       .map((notification) => notification.blockId)
       .filter((id) => mongoose.isValidObjectId(id))
   );
+  const questIds = uniqueStrings(notifications.map(notification => notification.questId));
+  const itemIds = uniqueStrings(notifications.map(notification => notification.questItemId));
 
-  const [actors, blocks] = await Promise.all([
+  const [actors, blocks, quests, items] = await Promise.all([
     actorIds.length
       ? User.find({ _id: { $in: actorIds } }).select({ username: 1 }).lean()
       : Promise.resolve([]),
     blockIds.length
       ? Block.find({ _id: { $in: blockIds } }).select({ title: 1, roomId: 1 }).lean()
+      : Promise.resolve([]),
+    questIds.length
+      ? Quest.find({ _id: { $in: questIds } }).lean()
+      : Promise.resolve([]),
+    itemIds.length
+      ? QuestItem.find({ _id: { $in: itemIds } }).select({ label: 1 }).lean()
       : Promise.resolve([])
   ]);
 
   const actorsById = new Map(actors.map((actor) => [String(actor._id), actor.username]));
   const blocksById = new Map(blocks.map((block) => [String(block._id), block]));
+  const questsById = new Map(quests.map((quest) => [String(quest._id), quest]));
+  const itemsById = new Map(items.map((item) => [String(item._id), item]));
   const fallbackActor = t('notifications.inSite.fallbackActor');
   const fallbackBlockTitle = t('notifications.inSite.fallbackBlockTitle');
+  const fallbackQuestName = t('notifications.inSite.fallbackQuestName');
+  const fallbackItemLabel = t('notifications.inSite.fallbackItemLabel');
 
   return notifications.map((notification) => {
     const actorUsername = actorsById.get(String(notification.actorUserId)) || fallbackActor;
     const block = blocksById.get(String(notification.blockId));
     const blockTitle = block?.title || fallbackBlockTitle;
+    const quest = questsById.get(String(notification.questId));
+    const questName = quest
+      ? resolveQuestLocalizedField(quest, 'name', uiLang)
+      : fallbackQuestName;
+    const item = itemsById.get(String(notification.questItemId));
+    const itemLabel = item?.label || fallbackItemLabel;
 
     let message = t('notifications.inSite.item.unknown');
     let path = null;
@@ -68,6 +89,37 @@ async function serializeNotifications(notifications, { t }) {
         if (block?.roomId) {
           path = canonicalCommentPath(block, notification.commentId);
         }
+        break;
+      case 'quest_review_requested':
+        message = t('notifications.inSite.item.questReviewRequested', {
+          actorUsername,
+          blockTitle,
+          questName
+        });
+        if (quest?.slug) {
+          path = `/quests/${quest.slug}/review?submission=${encodeURIComponent(notification.questSubmissionId)}`;
+        }
+        break;
+      case 'quest_changes_requested':
+        message = t('notifications.inSite.item.questChangesRequested', { blockTitle, questName });
+        if (block?.roomId) path = canonicalBlockPath(block);
+        break;
+      case 'quest_submission_approved':
+        message = t('notifications.inSite.item.questSubmissionApproved', { blockTitle, questName });
+        if (block?.roomId) path = canonicalBlockPath(block);
+        break;
+      case 'quest_submission_rejected':
+        message = t('notifications.inSite.item.questSubmissionRejected', { blockTitle, questName });
+        if (block?.roomId) path = canonicalBlockPath(block);
+        break;
+      case 'quest_submission_revoked':
+        message = t('notifications.inSite.item.questSubmissionRevoked', { blockTitle, questName });
+        if (block?.roomId) path = canonicalBlockPath(block);
+        else if (quest?.slug) path = `/quests/${quest.slug}`;
+        break;
+      case 'quest_claim_expired':
+        message = t('notifications.inSite.item.questClaimExpired', { itemLabel, questName });
+        if (quest?.slug) path = `/quests/${quest.slug}`;
         break;
       default:
         break;
@@ -96,7 +148,8 @@ const useNotificationsAPI = (app) => {
         limit: req.query.limit
       });
       const notifications = await serializeNotifications(rawNotifications, {
-        t: res.locals.t || ((key) => key)
+        t: res.locals.t || ((key) => key),
+        uiLang: res.locals.uiLang || res.locals.lang || 'en'
       });
       return res.status(200).json({ notifications });
     } catch (error) {
