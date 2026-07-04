@@ -18,6 +18,12 @@
       "tags": "Tags",
       "collabsToday": "Zusammenarbeiten heute"
     },
+    "quests": {
+      "eyebrow": "Gemeinsam gestalten",
+      "title": "Mach bei einer Community-Quest mit",
+      "description": "Wähle ein gemeinsames Ziel, reserviere einen Beitrag und hilf der Community, etwas Großes zu vollenden.",
+      "cta": "Quests entdecken"
+    },
     "activity": {
       "title": "Live auf Daily Page",
       "subtitle": "Neue Gesprache und Reaktionen auf einen Blick.",

@@ -18,6 +18,12 @@
       "tags": "Tags",
       "collabsToday": "Colaborações Hoje"
     },
+    "quests": {
+      "eyebrow": "Criar em conjunto",
+      "title": "Participe numa missão da comunidade",
+      "description": "Escolha um objetivo partilhado, reserve uma contribuição e ajude a comunidade a concluir algo ambicioso.",
+      "cta": "Explorar missões"
+    },
     "activity": {
       "title": "Ao vivo no Daily Page",
       "subtitle": "Conversas e reações frescas, tudo num só olhar.",

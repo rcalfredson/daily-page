@@ -20,6 +20,14 @@
       "share": "Partager",
       "flagContent": "Signaler le contenu"
     },
+    "quest": {
+      "heading": "Liens avec les quêtes",
+      "eyebrow": "Quête communautaire",
+      "item": "Élément de quête : {item}",
+      "readyForReview": "Vous avez terminé de modifier cette publication ?",
+      "requestReview": "Demander l’évaluation de la quête",
+      "viewQuest": "Voir la quête"
+    },
     "description": {
       "label": "Description",
       "none": "Aucune description fournie...",

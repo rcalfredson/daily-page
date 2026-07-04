@@ -20,6 +20,14 @@
       "share": "Compartir",
       "flagContent": "Reportar contenido"
     },
+    "quest": {
+      "heading": "Conexiones con misiones",
+      "eyebrow": "Misión comunitaria",
+      "item": "Elemento de la misión: {item}",
+      "readyForReview": "¿Has terminado de editar este post?",
+      "requestReview": "Solicitar revisión de la misión",
+      "viewQuest": "Ver misión"
+    },
     "description": {
       "label": "Descripción",
       "none": "No se proporcionó ninguna descripción...",

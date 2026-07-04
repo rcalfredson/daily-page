@@ -20,6 +20,14 @@
       "share": "Condividi",
       "flagContent": "Segnala contenuto"
     },
+    "quest": {
+      "heading": "Collegamenti alle missioni",
+      "eyebrow": "Missione della community",
+      "item": "Elemento della missione: {item}",
+      "readyForReview": "Hai finito di modificare questo post?",
+      "requestReview": "Richiedi la revisione della missione",
+      "viewQuest": "Vedi missione"
+    },
     "description": {
       "label": "Descrizione",
       "none": "Nessuna descrizione fornita...",
