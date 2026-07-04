@@ -59,6 +59,8 @@ block content
         div
           p.quests-eyebrow= t('quests.contribute.eyebrow')
           h2= t('quests.contribute.heading')
+        if canReviewQuest
+          a.quest-button.quest-button--secondary(href=uiPath(`/quests/review?questId=${encodeURIComponent(quest._id)}`))= t('quests.review.openPanel')
       if !user
         p= t('quests.contribute.signInPrompt')
         a.quest-button(href=uiPath('/login'))= t('quests.contribute.signIn')

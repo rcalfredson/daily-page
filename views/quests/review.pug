@@ -1,0 +1,106 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/quests.css')
+  link(rel='stylesheet' href='/css/pagination.css')
+
+block append scripts
+  script(src='/js/quest-review.js')
+
+block content
+  main.quests-page.quest-review-page(
+    data-quest-review
+    data-generic-error=t('quests.review.errors.actionFailed')
+    data-comment-required=t('quests.review.errors.commentRequired')
+    data-stale-error=t('quests.review.errors.stale')
+  )
+    header.quest-review-header
+      p.quests-eyebrow= t('quests.review.eyebrow')
+      h1= t('quests.review.heading')
+      p= t('quests.review.intro')
+      strong= t('quests.review.pendingCount', { count: pendingTotal })
+
+    if submissions.length
+      ol.quest-review-list
+        each submission in submissions
+          li.quest-review-card(data-review-card=submission.id)
+            header.quest-review-card__header
+              div
+                a.quest-review-card__quest(href=uiPath(`/quests/${submission.quest.slug}`))= submission.quest.name
+                h2= submission.item ? submission.item.label : (submission.block ? submission.block.title : t('quests.review.missingPost'))
+              span.quest-item-state.quest-item-state--pending= t('quests.contribute.status.pending')
+
+            dl.quest-review-facts
+              div
+                dt= t('quests.review.owner')
+                dd
+                  if submission.owner
+                    a(href=uiPath(`/users/${encodeURIComponent(submission.owner.username)}`))= submission.owner.username
+                  else
+                    = t('quests.review.unknownOwner')
+              if submission.item
+                div
+                  dt= t('quests.review.item')
+                  dd= submission.item.label
+              div
+                dt= t('quests.review.requestedAt')
+                dd
+                  if submission.submittedAt
+                    time(datetime=new Date(submission.submittedAt).toISOString() data-local-date-time data-date-style='medium' data-time-style='short')= new Date(submission.submittedAt).toLocaleString(uiLang || undefined)
+              div
+                dt= t('quests.review.revision')
+                dd
+                  if submission.reviewedBlockUpdatedAt
+                    time(datetime=new Date(submission.reviewedBlockUpdatedAt).toISOString() data-local-date-time data-date-style='medium' data-time-style='short')= new Date(submission.reviewedBlockUpdatedAt).toLocaleString(uiLang || undefined)
+                  else
+                    = t('quests.review.unknownRevision')
+
+            if submission.block
+              a.quest-review-post-link.quest-button.quest-button--secondary(
+                href=uiPath(`/rooms/${submission.block.roomId}/blocks/${submission.block.id}`)
+                target='_blank'
+                rel='noopener'
+              )= t('quests.review.openPost')
+
+            details.quest-review-history
+              summary= t('quests.review.history', { count: submission.reviewHistory.length })
+              ol
+                each event in submission.reviewHistory
+                  li
+                    strong= t(`quests.review.events.${event.type}`)
+                    if event.occurredAt
+                      time(datetime=new Date(event.occurredAt).toISOString() data-local-date-time data-date-style='medium' data-time-style='short')= new Date(event.occurredAt).toLocaleString(uiLang || undefined)
+                    if event.comment
+                      blockquote= event.comment
+                    if event.reasonCode
+                      small= t('quests.review.reason', { reason: event.reasonCode })
+
+            form.quest-review-form(data-submission-id=submission.id)
+              label(for=`review-comment-${submission.id}`)= t('quests.review.commentLabel')
+              textarea(
+                id=`review-comment-${submission.id}`
+                name='comment'
+                maxlength='4000'
+                placeholder=t('quests.review.commentPlaceholder')
+              )
+              p.quest-review-form__help= t('quests.review.commentHelp')
+              .quest-review-actions
+                button.quest-button(type='submit' data-review-action='approve')= t('quests.review.approve')
+                button.quest-button.quest-button--secondary(type='submit' data-review-action='request-changes')= t('quests.review.requestChanges')
+                button.quest-button.quest-button--danger(type='submit' data-review-action='reject')= t('quests.review.reject')
+    else
+      .quest-empty
+        h2= t('quests.review.empty.title')
+        p= t('quests.review.empty.body')
+
+    - const baseUrl = uiPath(paginationBaseUrl)
+    include ../partials/_compact_pagination
+    +compactPagination(currentPage, totalPages, baseUrl, {
+      label: t('quests.pagination.label'),
+      previous: t('quests.pagination.previous'),
+      next: t('quests.pagination.next'),
+      status: t('quests.pagination.status', { current: currentPage, total: totalPages })
+    })
