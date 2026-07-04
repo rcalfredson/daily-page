@@ -23,24 +23,7 @@ block content
         p.bio-text= t('profile.profile.noBio')
 
     .dashboard-main
-      .quest-achievements.dashboard-card
-        h3= t('profile.quests.title')
-        if questAchievements.length
-          ul.quest-achievement-grid
-            each achievement in questAchievements
-              li.quest-achievement-card
-                +questBadge(achievement.quest, achievement.medalTier, 'quest-badge-frame--profile')
-                .quest-achievement-card__copy
-                  a(href=uiPath(`/quests/${achievement.quest.slug}`))= achievement.quest.displayName
-                  strong= t(`quests.medals.${achievement.medalTier}`)
-                  span= t('profile.quests.contributions', { count: achievement.contributionCount, target: achievement.targetCount })
-                  if achievement.nextTier
-                    - const nextTierLabel = t(`quests.medals.${achievement.nextTier}`)
-                    small= t('profile.quests.nextTier', { tier: nextTierLabel, count: achievement.nextTierContributionCount })
-                  else
-                    small= t('profile.quests.highestTier')
-        else
-          p= t('profile.quests.none')
+      include partials/_quest_achievements
 
       .activity-section.dashboard-card
         h3= t('profile.activity.title')
