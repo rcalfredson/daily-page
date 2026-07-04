@@ -12,7 +12,7 @@
     "auth": {
       "welcomePrefix": "Bienvenue, ",
       "welcomeFallbackUser": "vous",
-      "welcomeSuffix": "!"
+      "welcomeSuffix": " !"
     },
     "dashboard": "Tableau de bord"
   }

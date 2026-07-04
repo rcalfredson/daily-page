@@ -13,6 +13,8 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
         each alt in hreflang
           link(rel="alternate" hreflang=alt.lang href=alt.href)
       meta(name="viewport" content="width=device-width, initial-scale=1.0")
+      link(rel="preload" href="/assets/fonts/Rubik-Light.ttf" as="font" type="font/ttf" crossorigin)
+      link(rel="preload" href="/assets/fonts/Rubik-Medium.ttf" as="font" type="font/ttf" crossorigin)
       script.
         (function () {
           try {
@@ -37,7 +39,7 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
       link(rel="stylesheet" href="/css/notifications.css")
       link(rel="stylesheet" href="/css/ui-lang-switcher.css")
       link(rel="stylesheet" href="/css/copy-btn.css")
-      script(src="/js/auth.js")
+      script(defer src="/js/auth.js")
       link(rel="icon" type="image/svg+xml" href="/assets/img/logo.svg")
       link(rel="apple-touch-icon" href="/assets/img/logo.svg")
       include schema.pug
@@ -49,9 +51,10 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
   body(
     data-is-logged-in=user ? "true" : "false"
     data-user-id=user ? user.id : null
+    data-username=user ? user.username : null
     data-ui-base=uiPath("")
   )
-    header.site-header
+    header.site-header.site-header--nav-inline
       .navbar
         header.navbar-header
           a.brand(href=uiPath('/'))
@@ -79,12 +82,17 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
           .navbar-right
             .auth-wrapper
               p#welcome-message(
+                style=user ? null : 'display:none;'
                 data-welcome-prefix=t('nav.auth.welcomePrefix')
                 data-welcome-fallback=t('nav.auth.welcomeFallbackUser')
                 data-welcome-suffix=t('nav.auth.welcomeSuffix')
-              )= t('layout.welcomeUser')
-              button#nav-logout(type="button" style="display:none;")= t('layout.logout')
-              a#nav-login(href=uiPath("/login") style="display:none;")= t('layout.login')
+              )
+                if user
+                  span.welcome-message__prefix= t('nav.auth.welcomePrefix')
+                  a.welcome-message__user(href=uiPath('/dashboard'))= user.username
+                  span.welcome-message__suffix= t('nav.auth.welcomeSuffix')
+              button#nav-logout(type="button" style=user ? null : 'display:none;')= t('layout.logout')
+              a#nav-login(href=uiPath("/login") style=user ? 'display:none;' : null)= t('layout.login')
             details#nav-notifications.notifications-menu(
               style=user ? null : 'display:none;'
               data-notifications-root

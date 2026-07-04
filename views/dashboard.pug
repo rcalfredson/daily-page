@@ -27,6 +27,11 @@ block content
         img.profile-pic(
           src=user.profilePic || '/assets/img/default-pic.png',
           alt=t('dashboard.profile.profilePicAlt')
+          width="120"
+          height="120"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
         )
         i.fa.fa-pencil.edit-icon
       input#profilePicInput(type="file", accept="image/*", hidden)

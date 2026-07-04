@@ -22,7 +22,15 @@ block content
 
     header.quest-detail__hero
       if quest.badgeAssetPath
-        img.quest-badge.quest-badge--large(src=quest.badgeAssetPath alt=t('quests.badge.alt', { questName: quest.displayName }))
+        img.quest-badge.quest-badge--large(
+          src=quest.badgeAssetPath
+          alt=t('quests.badge.alt', { questName: quest.displayName })
+          width="92"
+          height="92"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        )
       .quest-detail__intro
         .quest-detail__status
           span.quest-status(class=`quest-status--${quest.status}`)= t(`quests.status.${quest.status}`)
