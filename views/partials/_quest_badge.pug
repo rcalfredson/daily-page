@@ -1,6 +1,7 @@
 mixin questBadge(quest, medalTier, modifierClass)
   - const tier = medalTier || 'base'
   - const badgeClass = modifierClass || ''
+  - const badgeSize = badgeClass.includes('quest-badge-frame--profile') ? 76 : badgeClass.includes('quest-badge-frame--leaderboard') ? 42 : 58
   if quest && quest.badgeAssetPath
     span.quest-badge-frame(
       class=`quest-badge-frame--${tier} ${badgeClass}`
@@ -9,4 +10,8 @@ mixin questBadge(quest, medalTier, modifierClass)
       img.quest-badge(
         src=quest.badgeAssetPath
         alt=t('quests.badge.tierAlt', { questName: quest.displayName, tier: t(`quests.medals.${tier}`) })
+        width=badgeSize
+        height=badgeSize
+        loading='lazy'
+        decoding='async'
       )
