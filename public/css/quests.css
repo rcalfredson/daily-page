@@ -4,6 +4,38 @@
   padding: 2rem 0 4rem;
 }
 
+/* Isolate quest controls from the legacy global label/button rules in style.css. */
+.quests-page button,
+.quests-page label {
+  float: none;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: normal;
+}
+
+.quests-page label {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  cursor: default;
+}
+
+html[data-theme="dark"] .quests-page label {
+  float: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: normal;
+  cursor: default;
+}
+
 .quests-hero,
 .quest-detail__hero,
 .quest-leaderboard__header {
@@ -562,6 +594,13 @@
   margin-top: 1rem;
 }
 
+.quest-review-form > label {
+  width: fit-content;
+  color: var(--text-color);
+  font-family: var(--font-rubik-medium);
+  font-size: 0.9rem;
+}
+
 .quest-review-form textarea {
   min-height: 110px;
   box-sizing: border-box;
@@ -585,12 +624,6 @@
   flex-wrap: wrap;
   gap: 0.6rem;
   margin-top: 0.4rem;
-}
-
-.quest-button--danger {
-  border-color: var(--danger-color, #b42318);
-  background: transparent;
-  color: var(--danger-color, #b42318);
 }
 
 .quest-copy-card {
@@ -697,22 +730,53 @@
   color: var(--text-color);
 }
 
-.quest-button {
+.quests-page .quest-button {
+  display: inline-flex;
+  width: fit-content;
   min-height: 42px;
   box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  float: none;
   border: 1px solid var(--highlight-color);
   border-radius: 9px;
+  margin: 0;
   padding: 0.62rem 0.9rem;
   background: var(--highlight-color);
   color: var(--highlight-contrast);
   font: inherit;
+  line-height: 1.2;
   text-decoration: none;
   cursor: pointer;
 }
 
-.quest-button--secondary {
+.quests-page .quest-button--secondary {
   background: transparent;
   color: var(--highlight-color);
+}
+
+.quests-page .quest-button--danger {
+  border-color: var(--danger-color, #b42318);
+  background: transparent;
+  color: var(--danger-color, #b42318);
+}
+
+html[data-theme="dark"] .quests-page .quest-button {
+  border-color: var(--highlight-color);
+  background: var(--highlight-color);
+  color: var(--highlight-contrast);
+}
+
+html[data-theme="dark"] .quests-page .quest-button--secondary {
+  border-color: var(--highlight-color);
+  background: transparent;
+  color: var(--highlight-color);
+}
+
+html[data-theme="dark"] .quests-page .quest-button--danger {
+  border-color: var(--danger-color, #b42318);
+  background: transparent;
+  color: var(--danger-color, #b42318);
 }
 
 .quest-item-grid,
