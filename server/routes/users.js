@@ -199,7 +199,7 @@ router.get(
 router.get(
   '/dashboard',
   isAuthenticated,
-  addI18n(['dashboard']),
+  addI18n(['dashboard', 'profile', 'quests']),
   stripLegacyLang({ canonicalPath: '/dashboard' }),
   async (req, res) => {
     try {
@@ -209,13 +209,14 @@ router.get(
       const username = req.user.username;
       const userId = req.user.id;
 
-      const [recentActivity, draftBlocks] = await Promise.all([
+      const [recentActivity, draftBlocks, questAchievements] = await Promise.all([
         getRecentActivityByUser(username, { days: 7, limit: 10 }),
         findDraftsByUser({
           username,
           preferredLang: getPreferredContentLang(res),
           limit: 5
-        })
+        }),
+        getUserQuestContributions({ userId, uiLang })
       ]);
       const dbUser = await findUserById(userId);
       const starredRooms = dbUser.starredRooms || [];
@@ -250,6 +251,7 @@ router.get(
         user: req.user,
         recentActivity,
         draftBlocks,
+        questAchievements,
         streakLength: req.user.streakLength,
         starredRooms: starredRoomsPreview,
         totalStarredRooms: starredRooms.length,

@@ -5,6 +5,9 @@ block nav
 
 block append head
   link(rel='stylesheet' href='/css/dashboard.css')
+  link(rel='stylesheet' href='/css/quests.css')
+
+include partials/_quest_badge
 
 block append scripts
   script(src='/js/dashboard.js')
@@ -44,6 +47,8 @@ block content
           button#cancel-bio-btn.btn= t('dashboard.profile.cancel')
 
     .dashboard-main
+      include partials/_quest_achievements
+
       .drafts-section.dashboard-card
         h3= t('dashboard.drafts.title')
         if draftBlocks && draftBlocks.length
