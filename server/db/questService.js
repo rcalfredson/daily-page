@@ -6,7 +6,9 @@ import Room from './models/Room.js';
 import User from './models/User.js';
 import {
   compareQuestLeaderboardEntries,
+  getNextQuestMedalTier,
   getQuestMedalTier,
+  getQuestMedalThresholdCounts,
   getQuestProgressSummary,
   getQuestTargetCount,
   deriveQuestItemState,
@@ -484,18 +486,29 @@ export async function getUserQuestContributions({ userId, uiLang = 'en' }) {
     const targetCount = quest.type === 'set'
       ? await QuestItem.countDocuments({ questId: id(quest._id), active: true })
       : getQuestTargetCount(quest);
+    const medalTier = getQuestMedalTier({
+      contributionCount: row.contributionCount,
+      targetCount,
+      thresholds: quest.medalThresholds
+    });
+    const thresholdCounts = getQuestMedalThresholdCounts({
+      targetCount,
+      thresholds: quest.medalThresholds
+    });
+    const nextTier = getNextQuestMedalTier(medalTier);
     return {
       quest: toQuestI18nDTO(quest, uiLang),
       contributionCount: row.contributionCount,
       reachedCurrentCountAt: row.reachedCurrentCountAt,
       targetCount,
-      medalTier: getQuestMedalTier({
-        contributionCount: row.contributionCount,
-        targetCount,
-        thresholds: quest.medalThresholds
-      })
+      medalTier,
+      thresholdCounts,
+      nextTier,
+      nextTierContributionCount: nextTier ? thresholdCounts[nextTier] : null
     };
-  })).then(results => results.filter(Boolean));
+  })).then(results => results.filter(Boolean).sort((left, right) =>
+    String(left.quest.displayName).localeCompare(String(right.quest.displayName), uiLang)
+  ));
 }
 
 export async function validateQuestSubmissionBlock({ questId, blockId }) {

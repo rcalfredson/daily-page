@@ -47,7 +47,8 @@
       "set": "Set-based quest"
     },
     "badge": {
-      "alt": "Badge for {questName}"
+      "alt": "Badge for {questName}",
+      "tierAlt": "{tier} badge for {questName}"
     },
     "items": {
       "eyebrow": "The checklist",

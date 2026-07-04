@@ -99,6 +99,22 @@ export function getQuestMedalTier({
   return 'base';
 }
 
+export function getQuestMedalThresholdCounts({
+  targetCount,
+  thresholds = DEFAULT_QUEST_MEDAL_THRESHOLDS
+}) {
+  const target = Math.max(0, Number(targetCount) || 0);
+  return {
+    bronze: Math.ceil(target * thresholds.bronze),
+    silver: Math.ceil(target * thresholds.silver),
+    gold: Math.ceil(target * thresholds.gold)
+  };
+}
+
+export function getNextQuestMedalTier(medalTier) {
+  return ({ base: 'bronze', bronze: 'silver', silver: 'gold' })[medalTier] || null;
+}
+
 export function deriveQuestItemState({ item, submission = null, now = new Date() }) {
   if (!item?.active) return 'inactive';
   if (item.approvedSubmissionId) return 'completed';

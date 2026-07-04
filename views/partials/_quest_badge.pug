@@ -1,0 +1,12 @@
+mixin questBadge(quest, medalTier, modifierClass)
+  - const tier = medalTier || 'base'
+  - const badgeClass = modifierClass || ''
+  if quest && quest.badgeAssetPath
+    span.quest-badge-frame(
+      class=`quest-badge-frame--${tier} ${badgeClass}`
+      style=`--quest-badge-image: url('${quest.badgeAssetPath}')`
+    )
+      img.quest-badge(
+        src=quest.badgeAssetPath
+        alt=t('quests.badge.tierAlt', { questName: quest.displayName, tier: t(`quests.medals.${tier}`) })
+      )
