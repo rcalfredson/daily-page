@@ -80,7 +80,8 @@ describe('quest notification service', () => {
       to: 'admin@example.com'
     }));
     expect(harness.buildEmail).toHaveBeenCalledWith(jasmine.objectContaining({
-      targetUrl: 'http://localhost:3000/en/quests/virtual-road-trip/review?submission=submission-1'
+      targetUrl: 'http://localhost:3000/en/quests/review?questId=quest-1&submission=submission-1' +
+        '#quest-review-submission-submission-1'
     }));
     expect(harness.markEmailed).toHaveBeenCalledWith('notification-1');
   });
@@ -101,6 +102,10 @@ describe('quest notification service', () => {
       userId: 'owner-1',
       actorUserId: null,
       type: 'quest_submission_revoked'
+    }));
+    expect(harness.buildEmail).toHaveBeenCalledWith(jasmine.objectContaining({
+      targetUrl: 'http://localhost:3000/en/quests/virtual-road-trip?submission=submission-1' +
+        '#quest-submission-submission-1'
     }));
   });
 

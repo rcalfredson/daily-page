@@ -2,7 +2,7 @@ import pug from 'pug';
 import { isLocalizedPath } from '../server/services/localizedPaths.js';
 
 describe('quest views', () => {
-  for (const view of ['index', 'detail', 'leaderboard']) {
+  for (const view of ['index', 'detail', 'leaderboard', 'review']) {
     it(`compiles the ${view} page`, () => {
       expect(() => pug.compileFile(`${process.cwd()}/views/quests/${view}.pug`))
         .not.toThrow();

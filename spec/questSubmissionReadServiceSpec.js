@@ -134,4 +134,18 @@ describe('quest submission read service', () => {
     });
     expect(result.submissions[0].owner.username).toBe('Owner');
   });
+
+  it('can focus an administrator queue read on one pending notification submission', async () => {
+    const { service, submissions } = makeHarness();
+    await service.listAdministratorReviewQueue({
+      administratorUserId: 'admin-1',
+      questId: 'quest-1',
+      submissionId: 'submission-1'
+    });
+    expect(submissions.find.calls.mostRecent().args[0]).toEqual({
+      questId: { $in: ['quest-1'] },
+      status: 'pending',
+      _id: 'submission-1'
+    });
+  });
 });
