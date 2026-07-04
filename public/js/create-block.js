@@ -75,8 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!response.ok) {
         const errJson = await response.json().catch(() => ({}));
-        const message =
-          errJson?.error || t('createBlock.messages.genericError');
+        const message = (errJson?.code && form.dataset.questError)
+          ? form.dataset.questError
+          : (errJson?.error || t('createBlock.messages.genericError'));
         throw new Error(message);
       }
 

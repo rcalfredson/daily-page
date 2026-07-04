@@ -109,6 +109,7 @@ export async function listPublicQuestsOverview(options = {}) {
 
 export async function listQuestItems({
   questId,
+  userId = null,
   state = null,
   query = '',
   page = 1,
@@ -187,6 +188,10 @@ export async function listQuestItems({
         label: resolveQuestItemLabel(item, uiLang),
         state: deriveQuestItemState({ item, submission, now }),
         reservedUntil: item.reservedUntil || null,
+        ...(userId ? {
+          reservedByCurrentUser: id(item.reservedByUserId) === id(userId) &&
+            Boolean(item.reservedUntil) && new Date(item.reservedUntil) > now
+        } : {}),
         post: block ? {
           id: id(block._id),
           title: block.title,
@@ -202,6 +207,54 @@ export async function listQuestItems({
     ...pagination
   };
 }
+
+export function buildQuestContributionStartService({
+  QuestModel = Quest, QuestItemModel = QuestItem, UserModel = User
+} = {}) {
+  return async function getContributionStartContext({
+    questId, itemId = null, userId, uiLang = 'en', now = new Date()
+  }) {
+    const [quest, userExists] = await Promise.all([
+      QuestModel.findById(id(questId)).lean(),
+      UserModel.exists({ _id: id(userId) })
+    ]);
+    if (!quest) throw questError(QUEST_ERROR_CODES.NOT_FOUND, { status: 404 });
+    if (!userExists) throw questError(QUEST_ERROR_CODES.FORBIDDEN, { status: 403 });
+    assertAcceptsNewWork(quest);
+
+    let item = null;
+    if (quest.type === 'set') {
+      if (!itemId) throw questError(QUEST_ERROR_CODES.ITEM_NOT_FOUND, { status: 404 });
+      item = await QuestItemModel.findOne({
+        _id: id(itemId), questId: id(quest._id), active: true
+      }).lean();
+      if (!item) throw questError(QUEST_ERROR_CODES.ITEM_NOT_FOUND, { status: 404 });
+      if (
+        id(item.reservedByUserId) !== id(userId) ||
+        !item.reservedUntil || new Date(item.reservedUntil) <= now ||
+        item.activeSubmissionId || item.approvedSubmissionId
+      ) {
+        throw questError(QUEST_ERROR_CODES.ITEM_UNAVAILABLE, { status: 409 });
+      }
+    } else if (itemId) {
+      throw questError(QUEST_ERROR_CODES.TYPE_MISMATCH, { status: 409 });
+    }
+
+    return {
+      quest: toQuestI18nDTO(quest, uiLang),
+      item: item ? {
+        id: id(item._id),
+        key: item.key,
+        label: resolveQuestItemLabel(item, uiLang),
+        reservedUntil: item.reservedUntil
+      } : null,
+      roomId: quest.defaultRoomId,
+      suggestedTitle: item ? resolveQuestItemLabel(item, uiLang) : ''
+    };
+  };
+}
+
+export const getQuestContributionStartContext = buildQuestContributionStartService();
 
 export async function listApprovedQuestPosts({ questId, page = 1, limit = 12 }) {
   const quest = await requireQuest(questId);

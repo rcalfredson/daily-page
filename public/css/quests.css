@@ -228,6 +228,72 @@
   margin-bottom: 2rem;
 }
 
+.quest-contributor-panel {
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  background: var(--surface-raised-bg);
+  box-shadow: var(--box-shadow);
+}
+
+.quest-contributor-panel__subheading {
+  margin: 1.25rem 0 0.75rem;
+}
+
+.quest-submission-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quest-submission-card {
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--surface-bg);
+}
+
+.quest-submission-card__heading,
+.quest-submission-actions,
+.quest-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.quest-submission-card__heading {
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.quest-submission-actions,
+.quest-item-actions {
+  margin-top: 0.9rem;
+}
+
+.quest-review-comment {
+  padding: 0.7rem;
+  border-left: 3px solid var(--highlight-color);
+  background: var(--secondary-bg);
+  color: var(--muted-text-color);
+  font-size: 0.9rem;
+}
+
+.quest-contribution-context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  padding: 0.8rem 1rem;
+  border-left: 4px solid var(--highlight-color);
+  background: var(--secondary-bg);
+}
+
 .quest-copy-card {
   padding: 1.25rem;
 }

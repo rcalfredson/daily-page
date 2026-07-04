@@ -88,6 +88,39 @@
         "body": "This quest is waiting for its first approved contribution."
       }
     },
+    "contribute": {
+      "eyebrow": "Your contribution",
+      "heading": "Join this quest",
+      "signInPrompt": "Sign in to claim an item and submit a post for review.",
+      "signIn": "Sign in to contribute",
+      "countPrompt": "Create a new post in this quest’s default room, then develop and lock it before requesting review.",
+      "createPost": "Create quest post",
+      "closed": "This quest is not accepting new contributions right now.",
+      "mineHeading": "Your quest posts",
+      "claim": "Claim this item",
+      "release": "Release claim",
+      "editPost": "Edit post",
+      "requestReview": "Request review",
+      "withdraw": "Withdraw",
+      "resumeEditing": "Resume editing",
+      "startRevision": "Revise approved post",
+      "confirmWithdraw": "Withdraw this quest submission? The post itself will remain on the site.",
+      "status": {
+        "draft": "Draft",
+        "pending": "Under review",
+        "changes-requested": "Changes requested",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "withdrawn": "Withdrawn",
+        "revoked": "Revoked"
+      },
+      "errors": {
+        "generic": "That quest action could not be completed. Please try again.",
+        "blockIneligible": "Before requesting review, lock the post and make sure it still meets the quest requirements.",
+        "itemUnavailable": "That item is no longer available to this contribution. Refresh the page and try again.",
+        "createFailed": "The post could not be attached to this quest. Your claim may have expired; return to the quest and try again."
+      }
+    },
     "leaderboard": {
       "meta": {
         "title": "{questName} Leaderboard | Daily Page",

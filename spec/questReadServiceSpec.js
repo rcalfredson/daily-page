@@ -52,6 +52,28 @@ describe('quest read services', () => {
     expect(JSON.stringify(result)).not.toContain('private-user-id');
   });
 
+  it('identifies a reservation only to its authenticated claimant', async () => {
+    const now = new Date('2026-07-03T12:00:00.000Z');
+    spyOn(Quest, 'findById').and.resolveTo({ _id: 'quest-1', type: 'set' });
+    spyOn(QuestItem, 'find').and.returnValue(queryResult([{
+      _id: 'item-1',
+      questId: 'quest-1',
+      key: 'tioga-pa',
+      label: 'Tioga, PA',
+      active: true,
+      reservedByUserId: 'user-1',
+      reservedUntil: new Date('2026-07-04T12:00:00.000Z'),
+      activeSubmissionId: null,
+      approvedSubmissionId: null
+    }]));
+    spyOn(QuestItem, 'countDocuments').and.resolveTo(1);
+    spyOn(QuestSubmission, 'find').and.returnValue(queryResult([]));
+    spyOn(Block, 'find').and.returnValue(queryResult([]));
+
+    const owner = await listQuestItems({ questId: 'quest-1', userId: 'user-1', now });
+    expect(owner.items[0].reservedByCurrentUser).toBeTrue();
+  });
+
   it('filters workflow states through submission assignments and links visible posts', async () => {
     spyOn(Quest, 'findById').and.resolveTo({ _id: 'quest-1', type: 'set' });
     spyOn(QuestSubmission, 'find').and.callFake(filter => {
