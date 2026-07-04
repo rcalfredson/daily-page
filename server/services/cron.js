@@ -1,5 +1,6 @@
 import { CronJob } from 'cron';
 import { cleanUpExpiredSessions } from '../db/sessionService.js';
+import { expireQuestClaims } from '../db/questSubmissionService.js';
 import { getFeaturedContent } from './featuredContent.js';
 import { startBlockJobs } from './blockService.js';
 
@@ -35,6 +36,33 @@ async function warmHomeCache({ preferredLang }) {
   ]);
 }
 
+export async function cleanUpExpiredQuestClaims({
+  expire = expireQuestClaims,
+  batchSize = 100,
+  maxBatches = 10
+} = {}) {
+  const totals = {
+    releasedUnattachedClaims: 0,
+    withdrawnDrafts: 0,
+    batches: 0
+  };
+
+  for (let batch = 0; batch < maxBatches; batch += 1) {
+    const result = await expire({ limit: batchSize });
+    const released = result?.releasedUnattachedClaims || 0;
+    const withdrawn = result?.withdrawnDrafts || 0;
+    const processed = released + withdrawn;
+
+    totals.releasedUnattachedClaims += released;
+    totals.withdrawnDrafts += withdrawn;
+    totals.batches += 1;
+
+    if (processed < batchSize) break;
+  }
+
+  return totals;
+}
+
 const jobs = [
   new CronJob('3 * * * *', async () => {
     await cleanUpExpiredSessions();
@@ -42,6 +70,16 @@ const jobs = [
 
   new CronJob('0 * * * *', async () => {
     await getFeaturedContent();
+  }, null),
+
+  // Expiry is also checked lazily during claim operations. This bounded
+  // background drain ensures abandoned claims clear without user activity.
+  new CronJob('13 * * * *', async () => {
+    try {
+      await cleanUpExpiredQuestClaims();
+    } catch (error) {
+      console.error('Failed to clean up expired quest claims:', error);
+    }
   }, null),
 
   // Warm homepage caches every 2 minutes.
