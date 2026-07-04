@@ -1,0 +1,111 @@
+if view === 'items'
+  section.quest-content-section
+    .quest-section-heading
+      div
+        p.quests-eyebrow= t('quests.items.eyebrow')
+        h2= t('quests.items.heading')
+      span.quest-result-count= t('quests.items.resultCount', { count: items.length })
+
+    form.quest-filters(action=uiPath(`/quests/${quest.slug}#quest-sections`) method='get')
+      input(type='hidden' name='view' value='items')
+      label(for='quest-item-search')= t('quests.items.searchLabel')
+      input#quest-item-search(type='search' name='q' value=searchQuery placeholder=t('quests.items.searchPlaceholder'))
+      label(for='quest-item-state')= t('quests.items.stateLabel')
+      select#quest-item-state(name='state')
+        option(value='' selected=!itemState)= t('quests.items.states.all')
+        each stateName in ['available', 'reserved', 'draft', 'pending', 'changes-requested', 'completed']
+          option(value=stateName selected=itemState === stateName)= t(`quests.items.states.${stateName}`)
+      button.quest-button(type='submit')= t('quests.items.filter')
+      if searchQuery || itemState
+        a.quest-button.quest-button--secondary(href=uiPath(`/quests/${quest.slug}?view=items#quest-sections`))= t('quests.items.clear')
+
+    if items.length
+      ul.quest-item-grid
+        each item in items
+          - const mySubmission = mySubmissionByItemId[item.id]
+          li.quest-item-card(id=`quest-item-${item.id}`)
+            .quest-item-card__top
+              h3= item.label
+              span.quest-item-state(class=`quest-item-state--${item.state}`)= t(`quests.items.states.${item.state}`)
+            if item.post
+              a.quest-item-post(href=uiPath(`/rooms/${item.post.roomId}/blocks/${item.post.id}`))
+                span= item.post.title
+                small= t('quests.items.byCreator', { username: item.post.creator })
+            else if item.state === 'available'
+              p.quest-item-note= t('quests.items.availableNote')
+            else
+              p.quest-item-note= t('quests.items.inProgressNote')
+            if user && canContribute && !mySubmission
+              .quest-item-actions
+                if item.state === 'available'
+                  button.quest-button(type='button' data-quest-action='claim' data-item-id=item.id)= t('quests.contribute.claim')
+                else if item.reservedByCurrentUser
+                  a.quest-button(href=uiPath(`/rooms/${quest.defaultRoomId}/blocks/new?questId=${encodeURIComponent(quest._id)}&itemId=${encodeURIComponent(item.id)}`))= t('quests.contribute.createPost')
+                  button.quest-button.quest-button--secondary(type='button' data-quest-action='release' data-item-id=item.id)= t('quests.contribute.release')
+    else
+      .quest-empty
+        h3= t('quests.items.empty.title')
+        p= t('quests.items.empty.body')
+
+else if view === 'leaderboard'
+  section.quest-content-section
+    .quest-section-heading
+      div
+        p.quests-eyebrow= quest.displayName
+        h2= t('quests.leaderboard.heading')
+      span.quest-result-count= t('quests.items.resultCount', { count: entries.length })
+    p.quest-tab-intro= t('quests.leaderboard.intro')
+    if entries.length
+      ol.quest-leaderboard-list(start=((currentPage - 1) * pageSize + 1))
+        each entry, index in entries
+          li.quest-leaderboard-entry
+            span.quest-leaderboard-rank= ((currentPage - 1) * pageSize) + index + 1
+            img.quest-leaderboard-avatar(src=entry.profilePic || '/assets/img/default-pic.png' alt='')
+            .quest-leaderboard-user
+              a(href=uiPath(`/users/${encodeURIComponent(entry.username)}`))= entry.username
+              span= t('quests.leaderboard.contributions', { count: entry.contributionCount, target: targetCount })
+            .quest-leaderboard-achievement
+              +questBadge(quest, entry.medalTier, 'quest-badge-frame--leaderboard')
+              span.quest-medal(class=`quest-medal--${entry.medalTier}`)= t(`quests.medals.${entry.medalTier}`)
+    else
+      .quest-empty
+        h2= t('quests.leaderboard.empty.title')
+        p= t('quests.leaderboard.empty.body')
+
+else
+  section.quest-content-section
+    .quest-section-heading
+      div
+        p.quests-eyebrow= t('quests.posts.eyebrow')
+        h2= t('quests.posts.heading')
+      span.quest-result-count= t('quests.posts.resultCount', { count: posts.length })
+    if posts.length
+      .quest-post-grid
+        each post in posts
+          article.quest-post-card(lang=post.lang || 'en')
+            if post.bannerImage && post.bannerImage.kind !== 'streetview'
+              a.quest-post-card__image(href=uiPath(`/rooms/${post.roomId}/blocks/${post._id}`))
+                img(src=post.bannerImage.url alt=(post.bannerImage.caption || post.title) loading='lazy')
+            .quest-post-card__body
+              h3
+                a(href=uiPath(`/rooms/${post.roomId}/blocks/${post._id}`))= post.title
+              p= t('quests.posts.byCreator', { username: post.creator })
+              if post.approvedAt
+                - const approvedDate = new Date(post.approvedAt)
+                p
+                  | #{t('quests.posts.approved')} 
+                  time(datetime=approvedDate.toISOString() data-local-date-time data-date-style='medium')= approvedDate.toLocaleDateString(uiLang || undefined, { dateStyle: 'medium' })
+              p= t('quests.posts.contributors', { count: post.contributorCount })
+    else
+      .quest-empty
+        h3= t('quests.posts.empty.title')
+        p= t('quests.posts.empty.body')
+
+- const baseUrl = uiPath(paginationBaseUrl)
+include ../partials/_compact_pagination
++compactPagination(currentPage, totalPages, baseUrl, {
+  label: t('quests.pagination.label'),
+  previous: t('quests.pagination.previous'),
+  next: t('quests.pagination.next'),
+  status: t('quests.pagination.status', { current: currentPage, total: totalPages })
+})

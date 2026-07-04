@@ -636,6 +636,27 @@
   font-family: var(--font-rubik-medium);
 }
 
+.quest-tab-panel {
+  transition: opacity 120ms ease;
+}
+
+.quest-tab-panel--loading {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.quest-tab-intro {
+  margin: -0.35rem 0 1.25rem;
+  color: var(--muted-text-color);
+  line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quest-tab-panel {
+    transition: none;
+  }
+}
+
 .quest-section-heading {
   justify-content: space-between;
   margin-bottom: 1rem;
