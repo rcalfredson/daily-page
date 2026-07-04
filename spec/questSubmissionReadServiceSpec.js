@@ -105,6 +105,23 @@ describe('quest submission read service', () => {
     }), QUEST_ERROR_CODES.FORBIDDEN);
   });
 
+  it('provides public quest context for a linked post', async () => {
+    const { service, submissions } = makeHarness();
+    const result = await service.listQuestSubmissionsForBlock({
+      blockId: 'block-1', uiLang: 'en'
+    });
+
+    expect(submissions.find.calls.mostRecent().args[0]).toEqual({
+      blockId: 'block-1',
+      status: { $in: ['draft', 'pending', 'changes-requested', 'approved'] }
+    });
+    expect(result[0]).toEqual(jasmine.objectContaining({
+      id: 'submission-1',
+      quest: jasmine.objectContaining({ slug: 'road-trip', name: 'Road trip' }),
+      item: jasmine.objectContaining({ label: 'Tioga, PA' })
+    }));
+  });
+
   it('scopes personal submission listings to quest and authenticated owner', async () => {
     const { service, submissions } = makeHarness();
     const result = await service.listUserQuestSubmissions({

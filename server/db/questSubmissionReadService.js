@@ -121,6 +121,16 @@ export function buildQuestSubmissionReadService({
     return (await hydrate([submission], uiLang))[0];
   }
 
+  async function listQuestSubmissionsForBlock({ blockId, uiLang = 'en' }) {
+    const submissions = await QuestSubmissionModel.find({
+      blockId: id(blockId),
+      status: { $in: ['draft', 'pending', 'changes-requested', 'approved'] }
+    })
+      .sort({ createdAt: 1 })
+      .lean();
+    return hydrate(submissions, uiLang);
+  }
+
   async function listUserQuestSubmissions({
     questId, userId, status = null, statuses = null, page = 1, limit = 20, uiLang = 'en'
   }) {
@@ -189,6 +199,7 @@ export function buildQuestSubmissionReadService({
 
   return {
     getQuestSubmissionForUser,
+    listQuestSubmissionsForBlock,
     listUserQuestSubmissions,
     listAdministratorReviewQueue
   };
@@ -197,6 +208,8 @@ export function buildQuestSubmissionReadService({
 const questSubmissionReadService = buildQuestSubmissionReadService();
 
 export const getQuestSubmissionForUser = questSubmissionReadService.getQuestSubmissionForUser;
+export const listQuestSubmissionsForBlock =
+  questSubmissionReadService.listQuestSubmissionsForBlock;
 export const listUserQuestSubmissions = questSubmissionReadService.listUserQuestSubmissions;
 export const listAdministratorReviewQueue =
   questSubmissionReadService.listAdministratorReviewQueue;

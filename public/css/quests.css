@@ -411,7 +411,7 @@ html[data-theme="dark"] .quests-page label {
 }
 
 .quest-contributor-panel {
-  scroll-margin-top: 1rem;
+  scroll-margin-top: var(--quest-anchor-clearance, 7rem);
   margin-bottom: 2rem;
   padding: 1.25rem;
   border: 1px solid var(--border-color);
@@ -453,7 +453,7 @@ html[data-theme="dark"] .quests-page label {
 .quest-submission-card,
 .quest-item-card,
 .quest-review-card {
-  scroll-margin-top: 1rem;
+  scroll-margin-top: var(--quest-anchor-clearance, 7rem);
 }
 
 .quest-submission-card--highlighted,
@@ -658,12 +658,25 @@ html[data-theme="dark"] .quests-page label {
 }
 
 .quest-tabs {
+  scroll-margin-top: var(--quest-anchor-clearance, 7rem);
   display: flex;
   overflow-x: auto;
   gap: 0.4rem;
   margin: 0 0 1.75rem;
   padding-bottom: 0.35rem;
   border-bottom: 1px solid var(--border-color);
+}
+
+@media (max-width: 979px) {
+  :root {
+    --quest-anchor-clearance: 8.5rem;
+  }
+}
+
+@media (max-width: 700px) {
+  :root {
+    --quest-anchor-clearance: 10.5rem;
+  }
 }
 
 .quest-tabs a {

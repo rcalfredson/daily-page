@@ -17,6 +17,7 @@ import { getReactionCounts, getUserReactionsForBlock } from '../db/reactionServi
 import { getRoomMetadata } from '../db/roomService.js';
 import { findUserById, findUserByUsername } from '../db/userService.js';
 import { getQuestMutationPolicyForBlock } from '../db/questBlockMutationService.js';
+import { listQuestSubmissionsForBlock } from '../db/questSubmissionReadService.js';
 import { QUEST_BLOCK_OPERATIONS } from '../db/questSubmissionPolicy.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
@@ -104,7 +105,8 @@ router.get(
     'modals',
     'flagModal',
     'voteControls',
-    'reactions']),
+    'reactions',
+    'quests']),
   resolveBlockLangParam({
     loadBlock: async (req) => {
       const block = await getBlockById(req.params.block_id);
@@ -150,7 +152,8 @@ router.get(
         authorUser,
         editorialContext,
         roomMetadata,
-        questMutationPolicy
+        questMutationPolicy,
+        questSubmissions
       ] = await Promise.all([
         getReactionCounts(block_id),
         getCommentsForBlockView({
@@ -181,7 +184,8 @@ router.get(
         getQuestMutationPolicyForBlock({
           blockId: block_id,
           operation: QUEST_BLOCK_OPERATIONS.CONTENT
-        })
+        }),
+        listQuestSubmissionsForBlock({ blockId: block_id, uiLang })
       ]);
 
       let userReactions = [];
@@ -234,6 +238,7 @@ router.get(
         translations,
         canManageBlock: canManageBlock(req.user, block, editTokens),
         canMutateBlock: questMutationPolicy.allowed,
+        questSubmissions,
         user: req.user,
         reactionCounts,
         userReactions,

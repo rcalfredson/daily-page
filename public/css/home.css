@@ -18,6 +18,61 @@
   margin-bottom: 2rem;
 }
 
+.home-quests-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--highlight-color) 30%, var(--border-color));
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--highlight-color) 15%, transparent), transparent 40%),
+    var(--surface-bg);
+  box-shadow: var(--box-shadow);
+}
+
+.home-quests-card__icon {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+  place-items: center;
+}
+
+.home-quests-card__copy {
+  min-width: 0;
+}
+
+.home-quests-card__eyebrow {
+  margin: 0 0 0.2rem;
+  color: var(--link-color);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-quests-card h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.home-quests-card__copy p:last-child {
+  margin: 0.25rem 0 0;
+  color: var(--muted-text-color);
+  line-height: 1.45;
+}
+
+.home-quests-card__link {
+  color: var(--link-color);
+  font-family: var(--font-rubik-medium);
+  white-space: nowrap;
+}
+
 .homepage-header {
   margin-bottom: 1.5rem;
   padding: 1.5rem;
@@ -730,6 +785,15 @@ html[data-theme="dark"] .home-support-widget__fill {
   .homepage-header {
     padding-left: 0.9rem;
     padding-right: 0.9rem;
+  }
+
+  .home-quests-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .home-quests-card__link {
+    grid-column: 2;
+    white-space: normal;
   }
 
   .activity-card__header {

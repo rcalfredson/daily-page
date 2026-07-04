@@ -85,6 +85,15 @@ block content
               span= t('home.supportWidget.amountSuffix')
           a.home-support-widget__link(href=uiPath('/support'))= t('home.supportWidget.cta')
 
+    aside.home-quests-card(aria-labelledby='home-quests-title')
+      .home-quests-card__icon(aria-hidden='true')
+        i.fas.fa-compass
+      .home-quests-card__copy
+        p.home-quests-card__eyebrow= t('home.quests.eyebrow')
+        h2#home-quests-title= t('home.quests.title')
+        p= t('home.quests.description')
+      a.home-quests-card__link(href=uiPath('/quests'))= t('home.quests.cta')
+
     .global-stats
       a.stat-item(href=uiPath('/archive'))
         i.fas.fa-layer-group
