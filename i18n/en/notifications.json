@@ -9,9 +9,17 @@
       "markRead": "Mark read",
       "fallbackActor": "Someone",
       "fallbackBlockTitle": "your post",
+      "fallbackQuestName": "the quest",
+      "fallbackItemLabel": "your reserved item",
       "item": {
         "blockComment": "{actorUsername} commented on your post \"{blockTitle}\".",
         "commentReply": "{actorUsername} replied to your comment on \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} submitted \"{blockTitle}\" for review in {questName}.",
+        "questChangesRequested": "Changes were requested for \"{blockTitle}\" in {questName}.",
+        "questSubmissionApproved": "Your post \"{blockTitle}\" was approved for {questName}.",
+        "questSubmissionRejected": "Your post \"{blockTitle}\" was not accepted for {questName}.",
+        "questSubmissionRevoked": "Your post \"{blockTitle}\" is no longer counted toward {questName}.",
+        "questClaimExpired": "Your reservation for {itemLabel} in {questName} expired.",
         "unknown": "Notification"
       }
     },
@@ -33,6 +41,49 @@
         "cta": "View the conversation on Daily Page",
         "fallbackActor": "Someone",
         "fallbackBlockTitle": "your post"
+      },
+      "quest": {
+        "headingWithName": "Hi {username},",
+        "fallbackActor": "Someone",
+        "fallbackQuestName": "the quest",
+        "fallbackBlockTitle": "your post",
+        "fallbackItemLabel": "your reserved item"
+      },
+      "questReviewRequested": {
+        "subject": "New submission for {questName}",
+        "heading": "A quest post is ready for review",
+        "body": "<strong>{actorUsername}</strong> submitted <strong>{blockTitle}</strong> for review in <strong>{questName}</strong>.",
+        "cta": "Review the submission"
+      },
+      "questChangesRequested": {
+        "subject": "Changes requested for {blockTitle}",
+        "heading": "Your quest post needs changes",
+        "body": "Changes were requested for <strong>{blockTitle}</strong> in <strong>{questName}</strong>.",
+        "cta": "View the post"
+      },
+      "questSubmissionApproved": {
+        "subject": "Your post was approved for {questName}",
+        "heading": "Quest submission approved",
+        "body": "Your post <strong>{blockTitle}</strong> was approved for <strong>{questName}</strong>.",
+        "cta": "View the approved post"
+      },
+      "questSubmissionRejected": {
+        "subject": "Update on your {questName} submission",
+        "heading": "Quest submission not accepted",
+        "body": "Your post <strong>{blockTitle}</strong> was not accepted for <strong>{questName}</strong>.",
+        "cta": "View the post"
+      },
+      "questSubmissionRevoked": {
+        "subject": "Your post is no longer counted toward {questName}",
+        "heading": "Quest contribution updated",
+        "body": "Your post <strong>{blockTitle}</strong> is no longer counted toward <strong>{questName}</strong>.",
+        "cta": "View the quest"
+      },
+      "questClaimExpired": {
+        "subject": "Your {questName} reservation expired",
+        "heading": "Quest reservation expired",
+        "body": "Your reservation for <strong>{itemLabel}</strong> in <strong>{questName}</strong> expired.",
+        "cta": "View available quest items"
       }
     }
   }

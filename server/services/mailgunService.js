@@ -3,16 +3,22 @@ import Mailgun from 'mailgun.js';
 
 
 
-// Carga esto desde variables de entorno para seguridad.
-const MAILGUN_API_KEY = process.env.MAILGUN_API_KEY;
 const MAILGUN_DOMAIN = 'dailypage.org'; // como lo configuraste en Mailgun
 
-const mailgun = new Mailgun(formData);
-const client = mailgun.client({ username: 'api', key: MAILGUN_API_KEY });
+let client;
+
+function getClient() {
+  if (client) return client;
+  const apiKey = process.env.MAILGUN_API_KEY;
+  if (!apiKey) throw new Error('MAILGUN_API_KEY is not configured.');
+  const mailgun = new Mailgun(formData);
+  client = mailgun.client({ username: 'api', key: apiKey });
+  return client;
+}
 
 export async function sendEmail({ to, subject, html }) {
   try {
-    await client.messages.create(MAILGUN_DOMAIN, {
+    await getClient().messages.create(MAILGUN_DOMAIN, {
       from: `Daily Page <noreply@${MAILGUN_DOMAIN}>`,
       to,
       subject,

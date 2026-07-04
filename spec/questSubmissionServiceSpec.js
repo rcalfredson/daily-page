@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import {
+  buildNotifyingQuestSubmissionService,
   buildQuestSubmissionService,
   runQuestTransaction,
   resolveContributorUserIds
@@ -430,7 +431,9 @@ describe('transactional quest submission service', () => {
     });
 
     const result = await harness.service.expireQuestClaims({ now: NOW });
-    expect(result).toEqual({ releasedUnattachedClaims: 1, withdrawnDrafts: 1 });
+    expect(result.releasedUnattachedClaims).toBe(1);
+    expect(result.withdrawnDrafts).toBe(1);
+    expect(result.expiredClaims.length).toBe(2);
     expect(draft.status).toBe('withdrawn');
     expect(harness.questItems.documents[0].activeSubmissionId).toBeNull();
     expect(harness.blocks.documents.some(block => block._id === 'block-1')).toBeTrue();
@@ -452,9 +455,10 @@ describe('transactional quest submission service', () => {
       reservedUntil: new Date('2026-07-03T11:00:00.000Z')
     });
 
-    expect(await harness.service.expireQuestItemClaim({
+    const expired = await harness.service.expireQuestItemClaim({
       questId: 'quest-1', itemId: 'item-1', now: NOW
-    })).toBeTrue();
+    });
+    expect(expired.submission._id).toBe(draft._id);
     expect(draft.status).toBe('withdrawn');
     expect(harness.questItems.documents[0].activeSubmissionId).toBeNull();
   });
@@ -539,5 +543,52 @@ describe('quest transaction runner', () => {
       throw failure;
     })).toBeRejectedWith(failure);
     expect(session.endSession).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('post-commit quest notifications', () => {
+  it('returns a committed transition even when notification delivery fails', async () => {
+    const committed = { _id: 'submission-1', status: 'pending' };
+    const coreService = {
+      submitQuestSubmission: jasmine.createSpy('submitQuestSubmission').and.resolveTo(committed)
+    };
+    const notify = jasmine.createSpy('notify').and.rejectWith(new Error('notification unavailable'));
+    const logger = { error: jasmine.createSpy('error') };
+    const service = buildNotifyingQuestSubmissionService({ coreService, notify, logger });
+
+    await expectAsync(service.submitQuestSubmission({ submissionId: 'submission-1' }))
+      .toBeResolvedTo(committed);
+    expect(coreService.submitQuestSubmission).toHaveBeenCalledBefore(notify);
+    expect(notify).toHaveBeenCalledWith(jasmine.objectContaining({
+      type: 'quest_review_requested',
+      submission: committed
+    }));
+    expect(logger.error).toHaveBeenCalled();
+  });
+
+  it('dispatches one expiry event per committed claim result', async () => {
+    const result = {
+      releasedUnattachedClaims: 1,
+      withdrawnDrafts: 0,
+      expiredClaims: [{
+        questId: 'quest-1', itemId: 'item-1', ownerUserId: 'owner-1',
+        submission: null, eventToken: 'expiry-1'
+      }]
+    };
+    const coreService = {
+      expireQuestClaims: jasmine.createSpy('expireQuestClaims').and.resolveTo(result)
+    };
+    const notify = jasmine.createSpy('notify').and.resolveTo();
+    const service = buildNotifyingQuestSubmissionService({
+      coreService,
+      notify,
+      logger: { error: jasmine.createSpy('error') }
+    });
+
+    await expectAsync(service.expireQuestClaims({})).toBeResolvedTo(result);
+    expect(notify).toHaveBeenCalledOnceWith(jasmine.objectContaining({
+      type: 'quest_claim_expired',
+      expiry: result.expiredClaims[0]
+    }));
   });
 });
