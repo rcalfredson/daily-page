@@ -27,6 +27,13 @@ function positivePage(value) {
   return Math.max(1, Number.parseInt(value, 10) || 1);
 }
 
+export function resolveQuestDetailView(requestedView, questType) {
+  const normalized = ['posts', 'leaderboard'].includes(requestedView)
+    ? requestedView
+    : 'items';
+  return questType === 'count' && normalized === 'items' ? 'posts' : normalized;
+}
+
 function paginationBase(path, params = {}) {
   const query = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
@@ -176,16 +183,14 @@ router.get(
       if (!quest) return renderQuestNotFound(res);
 
       const page = positivePage(req.query.page);
-      const requestedView = req.query.view === 'posts' ? 'posts' : 'items';
-      const view = quest.type === 'count' ? 'posts' : requestedView;
+      const view = resolveQuestDetailView(req.query.view, quest.type);
       const state = String(req.query.state || '').trim() || null;
       const searchQuery = String(req.query.q || '').trim();
       const selectedSubmissionId = String(req.query.submission || '').trim() || null;
       const [progress, administrator, content, mine, selectedSubmission] = await Promise.all([
         getQuestProgress({ questId: quest._id }),
         findUserById(quest.administratorUserId),
-        view === 'items'
-          ? listQuestItems({
+        view === 'items' ? listQuestItems({
               questId: quest._id,
               state,
               query: searchQuery,
@@ -193,7 +198,8 @@ router.get(
               limit: 24,
               uiLang,
               userId: req.user?.id || null
-            })
+            }) : view === 'leaderboard'
+          ? getQuestLeaderboard({ questId: quest._id, page, limit: 25 })
           : listApprovedQuestPosts({ questId: quest._id, page, limit: 12 }),
         req.user
           ? listUserQuestSubmissions({
@@ -231,7 +237,7 @@ router.get(
       }
       const baseParams = view === 'items'
         ? { view: 'items', state: content.state, q: content.query }
-        : { view: 'posts' };
+        : { view };
 
       return res.render('quests/detail', {
         title: t('quests.detail.meta.title', { questName: quest.displayName }),
@@ -248,6 +254,9 @@ router.get(
         view,
         items: content.items || [],
         posts: content.posts || [],
+        entries: content.entries || [],
+        targetCount: content.targetCount || progress.targetCount,
+        pageSize: content.limit,
         itemState: content.state || null,
         searchQuery: content.query || '',
         currentPage: content.page,
