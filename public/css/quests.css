@@ -1,5 +1,7 @@
 .quests-page {
   width: min(1120px, 100%);
+  min-width: 0;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 2rem 0 4rem;
 }
@@ -87,12 +89,19 @@ html[data-theme="dark"] .quests-page label {
 }
 
 .quest-card {
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
   overflow: hidden;
+  padding: 0;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .quest-card__link {
   display: flex;
   min-height: 100%;
+  min-width: 0;
   box-sizing: border-box;
   flex-direction: column;
   gap: 1rem;
@@ -339,7 +348,8 @@ html[data-theme="dark"] .quests-page label {
 
 .quest-progress {
   display: grid;
-  grid-template-columns: 1fr auto;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.45rem 0.8rem;
 }
 
@@ -352,6 +362,7 @@ html[data-theme="dark"] .quests-page label {
 }
 
 .quest-progress__bar {
+  min-width: 0;
   width: 100%;
   height: 0.8rem;
   overflow: hidden;
@@ -955,6 +966,12 @@ html[data-theme="dark"] .quests-page .quest-button--danger {
     padding-top: 1.25rem;
   }
 
+  .quest-grid,
+  .quest-post-grid,
+  .quest-submission-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .quest-detail__hero,
   .quest-leaderboard__header {
     align-items: flex-start;
@@ -976,5 +993,56 @@ html[data-theme="dark"] .quests-page .quest-button--danger {
   .quest-leaderboard-achievement {
     grid-column: 2 / -1;
     justify-self: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .quest-card__link {
+    padding: 1rem;
+  }
+
+  .quest-card h2,
+  .quest-card__description,
+  .quest-submission-card,
+  .quest-submission-card a,
+  .quest-item-card,
+  .quest-item-card a,
+  .quest-review-comment {
+    overflow-wrap: anywhere;
+  }
+
+  .quest-progress__labels {
+    flex-wrap: wrap;
+  }
+
+  .quest-contributor-panel {
+    padding: 0.9rem;
+  }
+
+  .quest-section-heading,
+  .quest-submission-card__heading,
+  .quest-item-card__top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .quest-submission-card,
+  .quest-item-card {
+    padding: 0.85rem;
+  }
+
+  .quest-review-comment {
+    margin: 0.75rem 0;
+  }
+
+  .quest-submission-actions,
+  .quest-item-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .quest-submission-actions .quest-button,
+  .quest-item-actions .quest-button {
+    width: 100%;
   }
 }
