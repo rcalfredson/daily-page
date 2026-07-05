@@ -18,6 +18,12 @@
       "tags": "Thẻ",
       "collabsToday": "Hợp tác hôm nay"
     },
+    "quests": {
+      "eyebrow": "Cùng nhau sáng tạo",
+      "title": "Tham gia nhiệm vụ cộng đồng",
+      "description": "Chọn một mục tiêu chung, nhận một phần đóng góp và giúp cộng đồng hoàn thành một dự án đầy tham vọng.",
+      "cta": "Khám phá nhiệm vụ"
+    },
     "activity": {
       "title": "Trực tiếp trên Daily Page",
       "subtitle": "Cuộc trò chuyện và phản ứng mới mẻ, tất cả chỉ trong nháy mắt.",

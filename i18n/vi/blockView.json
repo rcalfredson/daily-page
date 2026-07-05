@@ -20,6 +20,14 @@
       "share": "Chia sẻ",
       "flagContent": "Gắn cờ nội dung"
     },
+    "quest": {
+      "heading": "Liên kết nhiệm vụ",
+      "eyebrow": "Nhiệm vụ cộng đồng",
+      "item": "Hạng mục nhiệm vụ: {item}",
+      "readyForReview": "Bạn đã chỉnh sửa xong bài viết này chưa?",
+      "requestReview": "Yêu cầu duyệt nhiệm vụ",
+      "viewQuest": "Xem nhiệm vụ"
+    },
     "description": {
       "label": "Mô tả",
       "none": "Chưa có mô tả...",

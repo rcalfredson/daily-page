@@ -19,6 +19,13 @@
       "none": "아직 별표한 방이 없습니다.",
       "unnamedRoom": "이름 없는 방"
     },
+    "quests": {
+      "title": "퀘스트 업적",
+      "contributions": "{target}개 중 {count}개 기여",
+      "nextTier": "{count}개 기여 시 {tier}",
+      "highestTier": "획득한 최고 메달 등급",
+      "none": "아직 획득한 퀘스트 배지가 없습니다."
+    },
     "stats": {
       "title": "사용자 통계",
       "totalBlocks": "생성한 전체 게시물",

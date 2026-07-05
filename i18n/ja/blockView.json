@@ -20,6 +20,14 @@
       "share": "共有",
       "flagContent": "コンテンツを報告"
     },
+    "quest": {
+      "heading": "クエストとのつながり",
+      "eyebrow": "コミュニティクエスト",
+      "item": "クエスト項目：{item}",
+      "readyForReview": "この投稿の編集は完了しましたか？",
+      "requestReview": "クエストのレビューを依頼",
+      "viewQuest": "クエストを見る"
+    },
     "description": {
       "label": "説明",
       "none": "説明はありません...",

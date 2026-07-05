@@ -19,6 +19,13 @@
       "none": "スター付きルームはまだありません。",
       "unnamedRoom": "名前のないルーム"
     },
+    "quests": {
+      "title": "クエスト実績",
+      "contributions": "{target}件中{count}件の貢献",
+      "nextTier": "{count}件の貢献で{tier}",
+      "highestTier": "獲得した最高メダルランク",
+      "none": "クエストバッジはまだありません。"
+    },
     "stats": {
       "title": "ユーザー統計",
       "totalBlocks": "作成した投稿数",

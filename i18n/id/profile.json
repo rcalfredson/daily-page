@@ -19,6 +19,13 @@
       "none": "Belum ada ruang berbintang.",
       "unnamedRoom": "Ruang Tanpa Nama"
     },
+    "quests": {
+      "title": "Pencapaian misi",
+      "contributions": "{count} dari {target} kontribusi",
+      "nextTier": "{tier} pada {count} kontribusi",
+      "highestTier": "Tingkat medali tertinggi yang diraih",
+      "none": "Belum ada lencana misi yang diraih."
+    },
     "stats": {
       "title": "Statistik Pengguna",
       "totalBlocks": "Total postingan yang dibuat",

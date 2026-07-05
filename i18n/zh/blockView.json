@@ -20,6 +20,14 @@
       "share": "分享",
       "flagContent": "举报内容"
     },
+    "quest": {
+      "heading": "任务关联",
+      "eyebrow": "社区任务",
+      "item": "任务项目：{item}",
+      "readyForReview": "已完成这篇帖子的编辑吗？",
+      "requestReview": "请求任务审核",
+      "viewQuest": "查看任务"
+    },
     "description": {
       "label": "描述",
       "none": "未提供描述...",
