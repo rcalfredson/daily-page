@@ -9,9 +9,17 @@
       "markRead": "Marcar como leída",
       "fallbackActor": "Alguien",
       "fallbackBlockTitle": "tu post",
+      "fallbackQuestName": "la misión",
+      "fallbackItemLabel": "tu elemento reservado",
       "item": {
         "blockComment": "{actorUsername} comentó en tu post \"{blockTitle}\".",
         "commentReply": "{actorUsername} respondió a tu comentario en \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} envió \"{blockTitle}\" para revisión en {questName}.",
+        "questChangesRequested": "Se solicitaron cambios para \"{blockTitle}\" en {questName}.",
+        "questSubmissionApproved": "Tu post \"{blockTitle}\" fue aprobado para {questName}.",
+        "questSubmissionRejected": "Tu post \"{blockTitle}\" no fue aceptado para {questName}.",
+        "questSubmissionRevoked": "Tu post \"{blockTitle}\" ya no cuenta para {questName}.",
+        "questClaimExpired": "Tu reserva de {itemLabel} en {questName} venció.",
         "unknown": "Notificación"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Ver la conversación en Daily Page",
         "fallbackActor": "Alguien",
         "fallbackBlockTitle": "tu post"
-      }
+      },
+      "quest": {"headingWithName": "Hola {username},", "fallbackActor": "Alguien", "fallbackQuestName": "la misión", "fallbackBlockTitle": "tu post", "fallbackItemLabel": "tu elemento reservado"},
+      "questReviewRequested": {"subject": "Nueva entrega para {questName}", "heading": "Un post de misión está listo para revisión", "body": "<strong>{actorUsername}</strong> envió <strong>{blockTitle}</strong> para revisión en <strong>{questName}</strong>.", "cta": "Revisar la entrega"},
+      "questChangesRequested": {"subject": "Cambios solicitados para {blockTitle}", "heading": "Tu post de misión necesita cambios", "body": "Se solicitaron cambios para <strong>{blockTitle}</strong> en <strong>{questName}</strong>.", "cta": "Ver el post"},
+      "questSubmissionApproved": {"subject": "Tu post fue aprobado para {questName}", "heading": "Entrega de misión aprobada", "body": "Tu post <strong>{blockTitle}</strong> fue aprobado para <strong>{questName}</strong>.", "cta": "Ver el post aprobado"},
+      "questSubmissionRejected": {"subject": "Actualización sobre tu entrega para {questName}", "heading": "Entrega de misión no aceptada", "body": "Tu post <strong>{blockTitle}</strong> no fue aceptado para <strong>{questName}</strong>.", "cta": "Ver el post"},
+      "questSubmissionRevoked": {"subject": "Tu post ya no cuenta para {questName}", "heading": "Contribución a la misión actualizada", "body": "Tu post <strong>{blockTitle}</strong> ya no cuenta para <strong>{questName}</strong>.", "cta": "Ver la misión"},
+      "questClaimExpired": {"subject": "Tu reserva en {questName} venció", "heading": "Reserva de misión vencida", "body": "Tu reserva de <strong>{itemLabel}</strong> en <strong>{questName}</strong> venció.", "cta": "Ver elementos disponibles"}
     }
   }
 }

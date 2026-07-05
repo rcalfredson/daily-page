@@ -9,9 +9,17 @@
       "markRead": "Marquer comme lu",
       "fallbackActor": "Quelqu'un",
       "fallbackBlockTitle": "votre publication",
+      "fallbackQuestName": "la quête",
+      "fallbackItemLabel": "votre élément réservé",
       "item": {
         "blockComment": "{actorUsername} a commenté votre publication \"{blockTitle}\".",
         "commentReply": "{actorUsername} a répondu à votre commentaire sur \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} a soumis \"{blockTitle}\" pour évaluation dans {questName}.",
+        "questChangesRequested": "Des modifications ont été demandées pour \"{blockTitle}\" dans {questName}.",
+        "questSubmissionApproved": "Votre publication \"{blockTitle}\" a été approuvée pour {questName}.",
+        "questSubmissionRejected": "Votre publication \"{blockTitle}\" n’a pas été acceptée pour {questName}.",
+        "questSubmissionRevoked": "Votre publication \"{blockTitle}\" ne compte plus pour {questName}.",
+        "questClaimExpired": "Votre réservation de {itemLabel} dans {questName} a expiré.",
         "unknown": "Notification"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Voir la conversation sur Daily Page",
         "fallbackActor": "Quelqu'un",
         "fallbackBlockTitle": "votre publication"
-      }
+      },
+      "quest": {"headingWithName": "Bonjour {username},", "fallbackActor": "Quelqu’un", "fallbackQuestName": "la quête", "fallbackBlockTitle": "votre publication", "fallbackItemLabel": "votre élément réservé"},
+      "questReviewRequested": {"subject": "Nouvelle soumission pour {questName}", "heading": "Une publication de quête est prête à être évaluée", "body": "<strong>{actorUsername}</strong> a soumis <strong>{blockTitle}</strong> pour évaluation dans <strong>{questName}</strong>.", "cta": "Évaluer la soumission"},
+      "questChangesRequested": {"subject": "Modifications demandées pour {blockTitle}", "heading": "Votre publication de quête doit être modifiée", "body": "Des modifications ont été demandées pour <strong>{blockTitle}</strong> dans <strong>{questName}</strong>.", "cta": "Voir la publication"},
+      "questSubmissionApproved": {"subject": "Votre publication a été approuvée pour {questName}", "heading": "Soumission de quête approuvée", "body": "Votre publication <strong>{blockTitle}</strong> a été approuvée pour <strong>{questName}</strong>.", "cta": "Voir la publication approuvée"},
+      "questSubmissionRejected": {"subject": "Mise à jour de votre soumission pour {questName}", "heading": "Soumission de quête non acceptée", "body": "Votre publication <strong>{blockTitle}</strong> n’a pas été acceptée pour <strong>{questName}</strong>.", "cta": "Voir la publication"},
+      "questSubmissionRevoked": {"subject": "Votre publication ne compte plus pour {questName}", "heading": "Contribution à la quête mise à jour", "body": "Votre publication <strong>{blockTitle}</strong> ne compte plus pour <strong>{questName}</strong>.", "cta": "Voir la quête"},
+      "questClaimExpired": {"subject": "Votre réservation dans {questName} a expiré", "heading": "Réservation de quête expirée", "body": "Votre réservation de <strong>{itemLabel}</strong> dans <strong>{questName}</strong> a expiré.", "cta": "Voir les éléments disponibles"}
     }
   }
 }
