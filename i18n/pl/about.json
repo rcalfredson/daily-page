@@ -22,6 +22,10 @@
           "label": "Posty",
           "text": "to wspólne przestrzenie pisania — każdy, nawet osoba anonimowa, może je tworzyć, edytować do momentu zablokowania i głosować na inne."
         },
+        "quests": {
+          "label": "Misje społecznościowe",
+          "text": "zmieniają wspólne cele w prowadzone projekty pisarskie, z elementami do zarezerwowania, przeglądem, postępem i odznakami."
+        },
         "privacy": {
           "label": "Prywatność i udostępnianie",
           "text": "oznacza, że publiczne posty trafiają do kanału pokoju. Niepubliczne wersje robocze są ukryte do czasu zablokowania, ale dostajesz link do zaproszenia znajomych."

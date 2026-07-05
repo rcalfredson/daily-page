@@ -22,6 +22,10 @@
           "label": "Julkaisut",
           "text": "ovat yhteisiä kirjoitustiloja. Kuka tahansa, myös “nimetön”, voi luoda sellaisen, muokata sitä lukitsemiseen asti ja äänestää muiden julkaisuja."
         },
+        "quests": {
+          "label": "Yhteisötehtävät",
+          "text": "muuttavat yhteiset tavoitteet ohjatuiksi kirjoitusprojekteiksi, joissa on varattavia kohteita, arviointi, edistymisen seuranta ja merkkejä."
+        },
         "privacy": {
           "label": "Yksityisyys ja jakaminen",
           "text": "tarkoittaa, että julkiset julkaisut näkyvät huoneen syötteessä. Listaamattomat luonnokset pysyvät piilossa lukitsemiseen asti, mutta saat jakolinkin ystävien kutsumista varten."

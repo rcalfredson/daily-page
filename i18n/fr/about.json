@@ -22,6 +22,10 @@
           "label": "Publications",
           "text": "sont des espaces d’écriture collaborative : n'importe qui, même en anonyme, peut en créer un, le modifier jusqu'à son verrouillage et voter pour les autres."
         },
+        "quests": {
+          "label": "Quêtes communautaires",
+          "text": "transforment des objectifs communs en projets d’écriture guidés, avec des éléments à revendiquer, une évaluation, une progression et des badges."
+        },
         "privacy": {
           "label": "Confidentialité et partage",
           "text": "Les publications publiques apparaissent dans le fil du salon. Les brouillons non répertoriés restent masqués jusqu’à leur verrouillage, mais vous recevez un lien de partage pour inviter des amis."

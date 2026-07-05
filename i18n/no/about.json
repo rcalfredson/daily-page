@@ -22,6 +22,10 @@
           "label": "Innlegg",
           "text": "er samarbeidende skriverom – hvem som helst (selv \"anonyme\") kan opprette en, redigere den til den er låst og stemme på andre."
         },
+        "quests": {
+          "label": "Fellesskapsoppdrag",
+          "text": "gjør felles mål til veiledede skriveprosjekter med elementer som kan reserveres, vurdering, framdrift og merker."
+        },
         "privacy": {
           "label": "Personvern og deling",
           "text": "betyr at offentlige innlegg vises i rommets feed. Uoppførte utkast skjules til de er låst, men du får en delingslink for å invitere venner."

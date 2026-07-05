@@ -22,6 +22,10 @@
           "label": "Posts",
           "text": "são espaços de escrita colaborativa: qualquer pessoa (até “anônima”) pode criar um, editá-lo até que seja bloqueado e votar nos outros."
         },
+        "quests": {
+          "label": "Missões comunitárias",
+          "text": "transformam objetivos compartilhados em projetos de escrita guiados, com itens que podem ser reservados, revisão, progresso e badges."
+        },
         "privacy": {
           "label": "Privacidade e Compartilhamento",
           "text": "Posts públicos ficam no feed da sala. Rascunhos não listados ficam ocultos até serem bloqueados, mas você recebe um link de compartilhamento para convidar amigos."
