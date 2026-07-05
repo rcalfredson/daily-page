@@ -7,6 +7,7 @@
       "lang": "Překlady: ", "available": "k dispozici"
     },
     "buttons": { "edit": "Upravit", "deleteBlock": "Smazat příspěvek", "share": "Sdílet", "flagContent": "Nahlásit obsah" },
+    "quest": { "heading": "Propojení s výpravami", "eyebrow": "Komunitní výprava", "item": "Položka výpravy: {item}", "readyForReview": "Dokončili jste úpravy tohoto příspěvku?", "requestReview": "Požádat o kontrolu výpravy", "viewQuest": "Zobrazit výpravu" },
     "description": { "label": "Popis", "none": "Nebyl uveden žádný popis…", "expand": "Rozbalit", "collapse": "Sbalit" },
     "editorial": {
       "heading": "Průvodce čtením", "roleLabel": "Typ čtení", "clusterLabel": "Průvodce", "sequence": "Část {sequence}",

@@ -4,6 +4,7 @@
     "profile": { "profilePicAlt": "Profilový obrázek", "noBio": "(Medailonek není k dispozici.)" },
     "activity": { "title": "Nedávná aktivita", "updatedOn": "Aktualizováno {date}", "none": "Žádná nedávná aktivita.", "viewAllBlocks": "Zobrazit všechny příspěvky" },
     "starredRooms": { "title": "Oblíbené místnosti", "none": "Zatím žádné oblíbené místnosti.", "unnamedRoom": "Místnost bez názvu" },
+    "quests": { "title": "Úspěchy ve výpravách", "contributions": "{count} z {target} příspěvků", "nextTier": "{tier} při {count} příspěvcích", "highestTier": "Nejvyšší dosažená úroveň medaile", "none": "Zatím jste nezískali žádné odznaky za výpravy." },
     "stats": { "title": "Statistiky uživatele", "totalBlocks": "Celkem vytvořených příspěvků", "collaborations": "Spolupráce", "daysActive": "Aktivní dny" }
   }
 }

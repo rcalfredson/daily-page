@@ -19,6 +19,7 @@
       "none": "Henüz yıldızlı oda yok.",
       "unnamedRoom": "İsimsiz Oda"
     },
+    "quests": {"title": "Görev başarıları", "contributions": "{target} katkıdan {count} tanesi", "nextTier": "{count} katkıda {tier}", "highestTier": "Kazanılan en yüksek madalya seviyesi", "none": "Henüz görev rozeti kazanılmadı."},
     "stats": {
       "title": "Kullanıcı İstatistikleri",
       "totalBlocks": "Oluşturulan Toplam Gönderi",

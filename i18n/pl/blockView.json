@@ -20,6 +20,7 @@
       "share": "Udostępnij",
       "flagContent": "Zgłoś treść"
     },
+    "quest": {"heading": "Połączenia z misjami", "eyebrow": "Misja społeczności", "item": "Element misji: {item}", "readyForReview": "Edycja tego wpisu jest już zakończona?", "requestReview": "Poproś o recenzję misji", "viewQuest": "Zobacz misję"},
     "description": {
       "label": "Opis",
       "none": "Nie podano opisu...",

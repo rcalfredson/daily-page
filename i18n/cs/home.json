@@ -3,6 +3,7 @@
     "meta": { "title": "Daily Page – Oblíbené příspěvky za posledních 24 hodin", "description": "Daily Page je minimalistický nezávislý web pro psaní, kde může kdokoli zveřejňovat tvůrčí myšlenky, vzpomínky či experimenty — jeden příspěvek po druhém. Objevujte nové nápady, připojte se k místnostem a přidejte svůj hlas." },
     "hero": { "eyebrow": "Klidné místo pro psaní, čtení a návraty", "title": "Vítejte na Daily Page!", "subtitle": "Prozkoumejte nejoblíbenější příspěvky za posledních 24 hodin.", "ctaPrefix": "Máte inspiraci?", "cta": "Připojte se k místnosti", "ctaSuffix": "a vytvořte vlastní příspěvek!" },
     "stats": { "blocks": "Příspěvky", "rooms": "Místnosti", "tags": "Štítky", "collabsToday": "Dnešní spolupráce" },
+    "quests": { "eyebrow": "Tvořme společně", "title": "Zapojte se do komunitní výpravy", "description": "Vyberte společný cíl, rezervujte si příspěvek a pomozte komunitě dokončit něco ambiciózního.", "cta": "Prozkoumat výpravy" },
     "activity": {
       "title": "Živě na Daily Page", "subtitle": "Nové konverzace a reakce na jednom místě.", "fallbackActor": "Někdo", "inRoom": "v",
       "comments": { "title": "Nedávné komentáře", "more": "Hledat v diskusích", "commentVerb": "okomentoval(a)", "replyVerb": "odpověděl(a) u", "empty": "Zatím žádné nedávné komentáře. Další konverzace může začít u vašeho příspěvku." },

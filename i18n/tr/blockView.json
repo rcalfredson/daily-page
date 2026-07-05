@@ -20,6 +20,7 @@
       "share": "Paylaş",
       "flagContent": "İçeriği İşaretle"
     },
+    "quest": {"heading": "Görev bağlantıları", "eyebrow": "Topluluk görevi", "item": "Görev öğesi: {item}", "readyForReview": "Bu gönderiyi düzenlemeyi bitirdiniz mi?", "requestReview": "Görevi incelemeye gönder", "viewQuest": "Görevi görüntüle"},
     "description": {
       "label": "Açıklama",
       "none": "Açıklama sağlanmadı...",

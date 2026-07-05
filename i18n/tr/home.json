@@ -18,6 +18,7 @@
       "tags": "Etiketler",
       "collabsToday": "Bugünkü İşbirlikleri"
     },
+    "quests": {"eyebrow": "Birlikte üret", "title": "Bir topluluk görevine katıl", "description": "Ortak bir hedef seçin, bir katkıyı üstlenin ve topluluğun iddialı bir şeyi tamamlamasına yardımcı olun.", "cta": "Görevleri keşfet"},
     "activity": {
       "title": "Daily Page'de canlı",
       "subtitle": "Tek bakışta yeni konuşmalar ve tepkiler.",
