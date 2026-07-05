@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Quêtes communautaires | Daily Page",
+        "description": "Participez à des quêtes communautaires collaboratives et contribuez à des objectifs créatifs communs."
+      },
+      "eyebrow": "Créer ensemble",
+      "heading": "Quêtes communautaires",
+      "intro": "Rejoignez un projet commun, contribuez à des publications collaboratives et aidez la communauté à atteindre un objectif ambitieux.",
+      "viewQuest": "Découvrir la quête →",
+      "empty": {
+        "title": "Aucune quête active pour le moment",
+        "body": "Les premières quêtes communautaires sont encore en préparation. Revenez bientôt."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Quêtes communautaires",
+        "description": "Découvrez cette quête communautaire sur Daily Page."
+      },
+      "breadcrumbLabel": "Navigation de la quête",
+      "allQuests": "Toutes les quêtes",
+      "administeredBy": "Administrée par",
+      "aboutHeading": "À propos de cette quête",
+      "instructionsHeading": "Consignes de contribution",
+      "sectionsLabel": "Sections de la quête",
+      "tabs": {
+        "items": "Éléments de quête",
+        "posts": "Publications approuvées",
+        "leaderboard": "Classement"
+      }
+    },
+    "progress": {
+      "label": "Progression de la quête",
+      "count": "{completed} sur {target}",
+      "percent": "{percent} % terminés"
+    },
+    "status": {
+      "draft": "Brouillon",
+      "active": "Active",
+      "completed": "Terminée",
+      "archived": "Archivée"
+    },
+    "type": {
+      "count": "Quête basée sur un nombre",
+      "set": "Quête basée sur un ensemble"
+    },
+    "badge": {
+      "alt": "Badge de {questName}",
+      "tierAlt": "Badge {tier} de {questName}"
+    },
+    "items": {
+      "eyebrow": "La liste",
+      "heading": "Éléments de quête",
+      "resultCount": "{count} affichés",
+      "searchLabel": "Rechercher des éléments",
+      "searchPlaceholder": "Rechercher par nom",
+      "stateLabel": "Statut",
+      "filter": "Appliquer les filtres",
+      "clear": "Effacer",
+      "states": {
+        "all": "Tous les statuts",
+        "available": "Disponible",
+        "reserved": "Réservé",
+        "draft": "En cours",
+        "pending": "En cours d’évaluation",
+        "changes-requested": "Modifications demandées",
+        "completed": "Terminé",
+        "inactive": "Inactif"
+      },
+      "byCreator": "Par {username}",
+      "availableNote": "Ouvert à une future contribution.",
+      "inProgressNote": "Un membre de la communauté travaille sur cet élément.",
+      "empty": {
+        "title": "Aucun élément correspondant",
+        "body": "Essayez une autre recherche ou un autre filtre de statut."
+      }
+    },
+    "posts": {
+      "eyebrow": "Travail communautaire",
+      "heading": "Publications approuvées",
+      "resultCount": "{count} affichées",
+      "byCreator": "Créée par {username}",
+      "approved": "Approuvée",
+      "contributors": "{count} contributeurs crédités",
+      "empty": {
+        "title": "Aucune publication approuvée pour le moment",
+        "body": "Cette quête attend sa première contribution approuvée."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Votre contribution",
+      "heading": "Rejoindre cette quête",
+      "signInPrompt": "Connectez-vous pour revendiquer un élément et soumettre une publication à l’évaluation.",
+      "signIn": "Se connecter pour contribuer",
+      "countPrompt": "Créez une nouvelle publication dans le salon par défaut de cette quête, puis développez-la et verrouillez-la avant de demander une évaluation.",
+      "setPrompt": "Choisissez un élément disponible de la quête à revendiquer et commencez votre première contribution.",
+      "browseItems": "Parcourir les éléments disponibles",
+      "createPost": "Créer une publication de quête",
+      "closed": "Cette quête n’accepte pas de nouvelles contributions pour le moment.",
+      "mineHeading": "Vos publications de quête",
+      "claim": "Revendiquer cet élément",
+      "release": "Libérer la revendication",
+      "editPost": "Modifier la publication",
+      "requestReview": "Demander une évaluation",
+      "withdraw": "Retirer",
+      "resumeEditing": "Reprendre la modification",
+      "startRevision": "Réviser la publication approuvée",
+      "confirmWithdraw": "Retirer cette soumission de quête ? La publication elle-même restera sur le site.",
+      "pagination": {
+        "label": "Pages de vos publications de quête",
+        "previous": "← Publications plus récentes",
+        "next": "Publications plus anciennes →",
+        "status": "Page {current} sur {total} · {count} publications"
+      },
+      "status": {
+        "draft": "Brouillon",
+        "pending": "En cours d’évaluation",
+        "changes-requested": "Modifications demandées",
+        "approved": "Approuvée",
+        "rejected": "Rejetée",
+        "withdrawn": "Retirée",
+        "revoked": "Révoquée"
+      },
+      "errors": {
+        "generic": "Cette action de quête n’a pas pu être effectuée. Veuillez réessayer.",
+        "blockIneligible": "Avant de demander une évaluation, verrouillez la publication et vérifiez qu’elle répond toujours aux exigences de la quête.",
+        "itemUnavailable": "Cet élément n’est plus disponible pour cette contribution. Actualisez la page et réessayez.",
+        "createFailed": "La publication n’a pas pu être rattachée à cette quête. Votre revendication a peut-être expiré ; revenez à la quête et réessayez."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "File d’évaluation des quêtes | Daily Page",
+        "description": "Évaluez les soumissions en attente pour les quêtes communautaires que vous administrez."
+      },
+      "eyebrow": "Espace d’administration",
+      "heading": "File d’évaluation des quêtes",
+      "intro": "Évaluez la publication soumise et son historique avant de l’approuver ou de la renvoyer au contributeur.",
+      "pendingCount": "{count} soumissions en attente",
+      "openPanel": "Ouvrir la file d’évaluation",
+      "owner": "Propriétaire de la soumission",
+      "unknownOwner": "Utilisateur inconnu",
+      "item": "Élément de quête",
+      "requestedAt": "Évaluation demandée",
+      "revision": "Révision soumise",
+      "unknownRevision": "Révision inconnue",
+      "openPost": "Ouvrir la publication soumise",
+      "missingPost": "Publication indisponible",
+      "history": "Historique d’évaluation ({count})",
+      "reason": "Motif : {reason}",
+      "commentLabel": "Commentaire d’évaluation",
+      "commentPlaceholder": "Expliquez votre décision ou laissez des notes utiles pour la révision.",
+      "commentHelp": "Un commentaire est requis lorsque vous demandez des modifications ou rejetez la soumission. Il est facultatif lors de l’approbation.",
+      "approve": "Approuver",
+      "requestChanges": "Demander des modifications",
+      "reject": "Rejeter",
+      "events": {
+        "created": "Soumission créée",
+        "review-requested": "Évaluation demandée",
+        "changes-requested": "Modifications demandées",
+        "editing-reopened": "Modification reprise",
+        "approved": "Approuvée",
+        "rejected": "Rejetée",
+        "withdrawn": "Retirée",
+        "revision-started": "Révision commencée",
+        "revoked": "Approbation révoquée",
+        "claim-expired": "Revendication expirée",
+        "invalidated": "Soumission invalidée"
+      },
+      "empty": {
+        "title": "La file est vide",
+        "body": "Il n’y a aucune soumission en attente pour les quêtes que vous administrez."
+      },
+      "errors": {
+        "forbidden": "Vous n’administrez pas cette quête.",
+        "loadFailed": "La file d’évaluation des quêtes n’a pas pu être chargée pour le moment.",
+        "actionFailed": "Cette décision d’évaluation n’a pas pu être enregistrée. Veuillez réessayer.",
+        "commentRequired": "Veuillez ajouter un commentaire d’évaluation avant de demander des modifications ou de rejeter la soumission.",
+        "stale": "Cette soumission ou sa publication a changé avant l’enregistrement de la décision. La file va être actualisée."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "Classement de {questName} | Daily Page",
+        "description": "Découvrez les principaux contributeurs à {questName}."
+      },
+      "heading": "Classement de la quête",
+      "intro": "Les contributeurs sont classés selon le nombre de publications de quête approuvées, puis selon le moment où ils ont atteint leur total actuel.",
+      "contributions": "{count} publications sur {target}",
+      "empty": {
+        "title": "Le classement est en attente",
+        "body": "Les contributeurs apparaîtront après l’approbation de la première publication."
+      }
+    },
+    "medals": {
+      "base": "Contributeur",
+      "bronze": "Bronze",
+      "silver": "Argent",
+      "gold": "Or"
+    },
+    "pagination": {
+      "label": "Pages de résultats de quête",
+      "previous": "← Précédent",
+      "next": "Suivant →",
+      "status": "Page {current} sur {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Quête introuvable",
+      "notFound": "Cette quête est introuvable.",
+      "loadFailed": "La quête n’a pas pu être chargée pour le moment."
+    }
+  }
+}
