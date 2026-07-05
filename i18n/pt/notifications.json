@@ -9,9 +9,17 @@
       "markRead": "Marcar como lida",
       "fallbackActor": "Alguém",
       "fallbackBlockTitle": "seu post",
+      "fallbackQuestName": "a missão",
+      "fallbackItemLabel": "seu item reservado",
       "item": {
         "blockComment": "{actorUsername} comentou no seu post \"{blockTitle}\".",
         "commentReply": "{actorUsername} respondeu ao seu comentário em \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} enviou \"{blockTitle}\" para revisão em {questName}.",
+        "questChangesRequested": "Foram solicitadas alterações para \"{blockTitle}\" em {questName}.",
+        "questSubmissionApproved": "Seu post \"{blockTitle}\" foi aprovado para {questName}.",
+        "questSubmissionRejected": "Seu post \"{blockTitle}\" não foi aceito para {questName}.",
+        "questSubmissionRevoked": "Seu post \"{blockTitle}\" não conta mais para {questName}.",
+        "questClaimExpired": "Sua reserva de {itemLabel} em {questName} expirou.",
         "unknown": "Notificação"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Ver a conversa no Daily Page",
         "fallbackActor": "Alguém",
         "fallbackBlockTitle": "seu post"
-      }
+      },
+      "quest": {"headingWithName": "Olá {username},", "fallbackActor": "Alguém", "fallbackQuestName": "a missão", "fallbackBlockTitle": "seu post", "fallbackItemLabel": "seu item reservado"},
+      "questReviewRequested": {"subject": "Nova contribuição para {questName}", "heading": "Um post da missão está pronto para revisão", "body": "<strong>{actorUsername}</strong> enviou <strong>{blockTitle}</strong> para revisão em <strong>{questName}</strong>.", "cta": "Revisar a contribuição"},
+      "questChangesRequested": {"subject": "Alterações solicitadas para {blockTitle}", "heading": "Seu post da missão precisa de alterações", "body": "Foram solicitadas alterações para <strong>{blockTitle}</strong> em <strong>{questName}</strong>.", "cta": "Ver o post"},
+      "questSubmissionApproved": {"subject": "Seu post foi aprovado para {questName}", "heading": "Contribuição para a missão aprovada", "body": "Seu post <strong>{blockTitle}</strong> foi aprovado para <strong>{questName}</strong>.", "cta": "Ver o post aprovado"},
+      "questSubmissionRejected": {"subject": "Atualização sobre sua contribuição para {questName}", "heading": "Contribuição para a missão não aceita", "body": "Seu post <strong>{blockTitle}</strong> não foi aceito para <strong>{questName}</strong>.", "cta": "Ver o post"},
+      "questSubmissionRevoked": {"subject": "Seu post não conta mais para {questName}", "heading": "Contribuição para a missão atualizada", "body": "Seu post <strong>{blockTitle}</strong> não conta mais para <strong>{questName}</strong>.", "cta": "Ver a missão"},
+      "questClaimExpired": {"subject": "Sua reserva em {questName} expirou", "heading": "Reserva da missão expirada", "body": "Sua reserva de <strong>{itemLabel}</strong> em <strong>{questName}</strong> expirou.", "cta": "Ver itens disponíveis"}
     }
   }
 }

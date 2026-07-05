@@ -9,9 +9,17 @@
       "markRead": "Markeer gelezen",
       "fallbackActor": "Iemand",
       "fallbackBlockTitle": "jouw bericht",
+      "fallbackQuestName": "de missie",
+      "fallbackItemLabel": "jouw gereserveerde onderdeel",
       "item": {
         "blockComment": "{actorUsername} heeft gereageerd op uw bericht \"{blockTitle}\".",
         "commentReply": "{actorUsername} heeft gereageerd op uw opmerking over \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} heeft \"{blockTitle}\" ter beoordeling ingediend voor {questName}.",
+        "questChangesRequested": "Er zijn wijzigingen gevraagd voor \"{blockTitle}\" in {questName}.",
+        "questSubmissionApproved": "Jouw bericht \"{blockTitle}\" is goedgekeurd voor {questName}.",
+        "questSubmissionRejected": "Jouw bericht \"{blockTitle}\" is niet geaccepteerd voor {questName}.",
+        "questSubmissionRevoked": "Jouw bericht \"{blockTitle}\" telt niet langer mee voor {questName}.",
+        "questClaimExpired": "Jouw reservering voor {itemLabel} in {questName} is verlopen.",
         "unknown": "Kennisgeving"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Bekijk het gesprek op Daily Page",
         "fallbackActor": "Iemand",
         "fallbackBlockTitle": "jouw bericht"
-      }
+      },
+      "quest": {"headingWithName": "Hallo {username},", "fallbackActor": "Iemand", "fallbackQuestName": "de missie", "fallbackBlockTitle": "jouw bericht", "fallbackItemLabel": "jouw gereserveerde onderdeel"},
+      "questReviewRequested": {"subject": "Nieuwe inzending voor {questName}", "heading": "Een missiebericht staat klaar voor beoordeling", "body": "<strong>{actorUsername}</strong> heeft <strong>{blockTitle}</strong> ter beoordeling ingediend voor <strong>{questName}</strong>.", "cta": "Inzending beoordelen"},
+      "questChangesRequested": {"subject": "Wijzigingen gevraagd voor {blockTitle}", "heading": "Jouw missiebericht moet worden aangepast", "body": "Er zijn wijzigingen gevraagd voor <strong>{blockTitle}</strong> in <strong>{questName}</strong>.", "cta": "Bericht bekijken"},
+      "questSubmissionApproved": {"subject": "Jouw bericht is goedgekeurd voor {questName}", "heading": "Missie-inzending goedgekeurd", "body": "Jouw bericht <strong>{blockTitle}</strong> is goedgekeurd voor <strong>{questName}</strong>.", "cta": "Goedgekeurd bericht bekijken"},
+      "questSubmissionRejected": {"subject": "Update over jouw inzending voor {questName}", "heading": "Missie-inzending niet geaccepteerd", "body": "Jouw bericht <strong>{blockTitle}</strong> is niet geaccepteerd voor <strong>{questName}</strong>.", "cta": "Bericht bekijken"},
+      "questSubmissionRevoked": {"subject": "Jouw bericht telt niet langer mee voor {questName}", "heading": "Missiebijdrage bijgewerkt", "body": "Jouw bericht <strong>{blockTitle}</strong> telt niet langer mee voor <strong>{questName}</strong>.", "cta": "Missie bekijken"},
+      "questClaimExpired": {"subject": "Jouw reservering in {questName} is verlopen", "heading": "Missiereservering verlopen", "body": "Jouw reservering voor <strong>{itemLabel}</strong> in <strong>{questName}</strong> is verlopen.", "cta": "Beschikbare onderdelen bekijken"}
     }
   }
 }
