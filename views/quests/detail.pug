@@ -38,7 +38,7 @@ block content
         h1= quest.displayName
         if administrator
           p.quest-administrator
-            | #{t('quests.detail.administeredBy')} 
+            | #{t('quests.detail.administeredBy') + ' '}
             a(href=uiPath(`/users/${encodeURIComponent(administrator.username)}`))= administrator.username
 
     .quest-progress.quest-progress--hero

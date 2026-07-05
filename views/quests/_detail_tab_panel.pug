@@ -93,7 +93,7 @@ else
               if post.approvedAt
                 - const approvedDate = new Date(post.approvedAt)
                 p
-                  | #{t('quests.posts.approved')} 
+                  | #{t('quests.posts.approved') + ' '}
                   time(datetime=approvedDate.toISOString() data-local-date-time data-date-style='medium')= approvedDate.toLocaleDateString(uiLang || undefined, { dateStyle: 'medium' })
               p= t('quests.posts.contributors', { count: post.contributorCount })
     else
