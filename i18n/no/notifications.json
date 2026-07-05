@@ -9,9 +9,17 @@
       "markRead": "Merk lest",
       "fallbackActor": "Noen",
       "fallbackBlockTitle": "innlegget ditt",
+      "fallbackQuestName": "oppdraget",
+      "fallbackItemLabel": "det reserverte oppdragspunktet ditt",
       "item": {
         "blockComment": "{actorUsername} kommenterte innlegget ditt \"{blockTitle}\".",
         "commentReply": "{actorUsername} svarte på kommentaren din om \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} sendte inn \"{blockTitle}\" til gjennomgang i {questName}.",
+        "questChangesRequested": "Det ble bedt om endringer i \"{blockTitle}\" for {questName}.",
+        "questSubmissionApproved": "Innlegget ditt \"{blockTitle}\" ble godkjent for {questName}.",
+        "questSubmissionRejected": "Innlegget ditt \"{blockTitle}\" ble ikke godkjent for {questName}.",
+        "questSubmissionRevoked": "Innlegget ditt \"{blockTitle}\" teller ikke lenger med i {questName}.",
+        "questClaimExpired": "Reservasjonen din av {itemLabel} i {questName} er utløpt.",
         "unknown": "Melding"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Se samtalen på Daily Page",
         "fallbackActor": "Noen",
         "fallbackBlockTitle": "innlegget ditt"
-      }
+      },
+      "quest": {"headingWithName": "Hei {username},", "fallbackActor": "Noen", "fallbackQuestName": "oppdraget", "fallbackBlockTitle": "innlegget ditt", "fallbackItemLabel": "det reserverte oppdragspunktet ditt"},
+      "questReviewRequested": {"subject": "Nytt bidrag til {questName}", "heading": "Et oppdragsinnlegg er klart for gjennomgang", "body": "<strong>{actorUsername}</strong> sendte inn <strong>{blockTitle}</strong> til gjennomgang i <strong>{questName}</strong>.", "cta": "Gjennomgå bidraget"},
+      "questChangesRequested": {"subject": "Endringer ønskes i {blockTitle}", "heading": "Oppdragsinnlegget ditt må endres", "body": "Det ble bedt om endringer i <strong>{blockTitle}</strong> for <strong>{questName}</strong>.", "cta": "Se innlegget"},
+      "questSubmissionApproved": {"subject": "Innlegget ditt ble godkjent for {questName}", "heading": "Oppdragsbidrag godkjent", "body": "Innlegget ditt <strong>{blockTitle}</strong> ble godkjent for <strong>{questName}</strong>.", "cta": "Se det godkjente innlegget"},
+      "questSubmissionRejected": {"subject": "Oppdatering om bidraget ditt til {questName}", "heading": "Oppdragsbidrag ikke godkjent", "body": "Innlegget ditt <strong>{blockTitle}</strong> ble ikke godkjent for <strong>{questName}</strong>.", "cta": "Se innlegget"},
+      "questSubmissionRevoked": {"subject": "Innlegget ditt teller ikke lenger med i {questName}", "heading": "Oppdragsbidrag oppdatert", "body": "Innlegget ditt <strong>{blockTitle}</strong> teller ikke lenger med i <strong>{questName}</strong>.", "cta": "Se oppdraget"},
+      "questClaimExpired": {"subject": "Reservasjonen din i {questName} er utløpt", "heading": "Oppdragsreservasjon utløpt", "body": "Reservasjonen din av <strong>{itemLabel}</strong> i <strong>{questName}</strong> er utløpt.", "cta": "Se tilgjengelige oppdragspunkter"}
     }
   }
 }
