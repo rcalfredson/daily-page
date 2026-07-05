@@ -9,9 +9,17 @@
       "markRead": "Segna come letta",
       "fallbackActor": "Qualcuno",
       "fallbackBlockTitle": "il tuo post",
+      "fallbackQuestName": "la missione",
+      "fallbackItemLabel": "l’elemento che hai prenotato",
       "item": {
         "blockComment": "{actorUsername} ha commentato il tuo post \"{blockTitle}\".",
         "commentReply": "{actorUsername} ha risposto al tuo commento su \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} ha inviato \"{blockTitle}\" per la revisione in {questName}.",
+        "questChangesRequested": "Sono state richieste modifiche per \"{blockTitle}\" in {questName}.",
+        "questSubmissionApproved": "Il tuo post \"{blockTitle}\" è stato approvato per {questName}.",
+        "questSubmissionRejected": "Il tuo post \"{blockTitle}\" non è stato accettato per {questName}.",
+        "questSubmissionRevoked": "Il tuo post \"{blockTitle}\" non conta più per {questName}.",
+        "questClaimExpired": "La prenotazione di {itemLabel} in {questName} è scaduta.",
         "unknown": "Notifica"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Vedi la conversazione su Daily Page",
         "fallbackActor": "Qualcuno",
         "fallbackBlockTitle": "il tuo post"
-      }
+      },
+      "quest": {"headingWithName": "Ciao {username},", "fallbackActor": "Qualcuno", "fallbackQuestName": "la missione", "fallbackBlockTitle": "il tuo post", "fallbackItemLabel": "l’elemento che hai prenotato"},
+      "questReviewRequested": {"subject": "Nuovo contributo per {questName}", "heading": "Un post della missione è pronto per la revisione", "body": "<strong>{actorUsername}</strong> ha inviato <strong>{blockTitle}</strong> per la revisione in <strong>{questName}</strong>.", "cta": "Revisiona il contributo"},
+      "questChangesRequested": {"subject": "Modifiche richieste per {blockTitle}", "heading": "Il tuo post della missione deve essere modificato", "body": "Sono state richieste modifiche per <strong>{blockTitle}</strong> in <strong>{questName}</strong>.", "cta": "Vedi il post"},
+      "questSubmissionApproved": {"subject": "Il tuo post è stato approvato per {questName}", "heading": "Contributo alla missione approvato", "body": "Il tuo post <strong>{blockTitle}</strong> è stato approvato per <strong>{questName}</strong>.", "cta": "Vedi il post approvato"},
+      "questSubmissionRejected": {"subject": "Aggiornamento sul tuo contributo per {questName}", "heading": "Contributo alla missione non accettato", "body": "Il tuo post <strong>{blockTitle}</strong> non è stato accettato per <strong>{questName}</strong>.", "cta": "Vedi il post"},
+      "questSubmissionRevoked": {"subject": "Il tuo post non conta più per {questName}", "heading": "Contributo alla missione aggiornato", "body": "Il tuo post <strong>{blockTitle}</strong> non conta più per <strong>{questName}</strong>.", "cta": "Vedi la missione"},
+      "questClaimExpired": {"subject": "La tua prenotazione in {questName} è scaduta", "heading": "Prenotazione della missione scaduta", "body": "La prenotazione di <strong>{itemLabel}</strong> in <strong>{questName}</strong> è scaduta.", "cta": "Vedi gli elementi disponibili"}
     }
   }
 }
