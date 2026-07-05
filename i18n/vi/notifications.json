@@ -9,9 +9,17 @@
       "markRead": "Đánh dấu đã đọc",
       "fallbackActor": "Người nào đó",
       "fallbackBlockTitle": "bài đăng của bạn",
+      "fallbackQuestName": "nhiệm vụ",
+      "fallbackItemLabel": "hạng mục bạn đã giữ chỗ",
       "item": {
         "blockComment": "{actorUsername} đã nhận xét về bài đăng của bạn \"{blockTitle}\".",
         "commentReply": "{actorUsername} đã trả lời bình luận của bạn về \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} đã gửi \"{blockTitle}\" để duyệt trong {questName}.",
+        "questChangesRequested": "\"{blockTitle}\" trong {questName} được yêu cầu chỉnh sửa.",
+        "questSubmissionApproved": "Bài đăng \"{blockTitle}\" của bạn đã được duyệt cho {questName}.",
+        "questSubmissionRejected": "Bài đăng \"{blockTitle}\" của bạn không được chấp nhận cho {questName}.",
+        "questSubmissionRevoked": "Bài đăng \"{blockTitle}\" của bạn không còn được tính vào {questName}.",
+        "questClaimExpired": "Chỗ giữ hạng mục {itemLabel} của bạn trong {questName} đã hết hạn.",
         "unknown": "Thông báo"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Xem cuộc trò chuyện trên Daily Page",
         "fallbackActor": "Người nào đó",
         "fallbackBlockTitle": "bài đăng của bạn"
-      }
+      },
+      "quest": {"headingWithName": "Xin chào {username},", "fallbackActor": "Người nào đó", "fallbackQuestName": "nhiệm vụ", "fallbackBlockTitle": "bài đăng của bạn", "fallbackItemLabel": "hạng mục bạn đã giữ chỗ"},
+      "questReviewRequested": {"subject": "Bài gửi mới cho {questName}", "heading": "Một bài đăng nhiệm vụ đã sẵn sàng để duyệt", "body": "<strong>{actorUsername}</strong> đã gửi <strong>{blockTitle}</strong> để duyệt trong <strong>{questName}</strong>.", "cta": "Duyệt bài gửi"},
+      "questChangesRequested": {"subject": "Yêu cầu chỉnh sửa {blockTitle}", "heading": "Bài đăng nhiệm vụ của bạn cần chỉnh sửa", "body": "<strong>{blockTitle}</strong> trong <strong>{questName}</strong> được yêu cầu chỉnh sửa.", "cta": "Xem bài đăng"},
+      "questSubmissionApproved": {"subject": "Bài đăng của bạn đã được duyệt cho {questName}", "heading": "Bài gửi nhiệm vụ đã được duyệt", "body": "Bài đăng <strong>{blockTitle}</strong> của bạn đã được duyệt cho <strong>{questName}</strong>.", "cta": "Xem bài đăng đã duyệt"},
+      "questSubmissionRejected": {"subject": "Cập nhật bài gửi của bạn cho {questName}", "heading": "Bài gửi nhiệm vụ không được chấp nhận", "body": "Bài đăng <strong>{blockTitle}</strong> của bạn không được chấp nhận cho <strong>{questName}</strong>.", "cta": "Xem bài đăng"},
+      "questSubmissionRevoked": {"subject": "Bài đăng của bạn không còn được tính vào {questName}", "heading": "Đóng góp nhiệm vụ đã được cập nhật", "body": "Bài đăng <strong>{blockTitle}</strong> của bạn không còn được tính vào <strong>{questName}</strong>.", "cta": "Xem nhiệm vụ"},
+      "questClaimExpired": {"subject": "Chỗ giữ của bạn trong {questName} đã hết hạn", "heading": "Chỗ giữ nhiệm vụ đã hết hạn", "body": "Chỗ giữ hạng mục <strong>{itemLabel}</strong> của bạn trong <strong>{questName}</strong> đã hết hạn.", "cta": "Xem các hạng mục còn trống"}
     }
   }
 }
