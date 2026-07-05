@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Nhiệm vụ cộng đồng | Daily Page",
+        "description": "Tham gia các nhiệm vụ cộng đồng hợp tác và giúp hoàn thành những mục tiêu sáng tạo chung."
+      },
+      "eyebrow": "Cùng nhau sáng tạo",
+      "heading": "Nhiệm vụ cộng đồng",
+      "intro": "Tham gia một dự án chung, đóng góp vào các bài viết hợp tác và giúp cộng đồng đạt được một mục tiêu đầy tham vọng.",
+      "viewQuest": "Khám phá nhiệm vụ →",
+      "empty": {
+        "title": "Chưa có nhiệm vụ nào đang hoạt động",
+        "body": "Các nhiệm vụ cộng đồng đầu tiên vẫn đang được chuẩn bị. Hãy quay lại sớm."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Nhiệm vụ cộng đồng",
+        "description": "Khám phá nhiệm vụ cộng đồng này trên Daily Page."
+      },
+      "breadcrumbLabel": "Điều hướng nhiệm vụ",
+      "allQuests": "Tất cả nhiệm vụ",
+      "administeredBy": "Quản lý bởi",
+      "aboutHeading": "Giới thiệu về nhiệm vụ này",
+      "instructionsHeading": "Hướng dẫn đóng góp",
+      "sectionsLabel": "Các phần của nhiệm vụ",
+      "tabs": {
+        "items": "Mục nhiệm vụ",
+        "posts": "Bài viết đã duyệt",
+        "leaderboard": "Bảng xếp hạng"
+      }
+    },
+    "progress": {
+      "label": "Tiến độ nhiệm vụ",
+      "count": "{completed} trên {target}",
+      "percent": "Hoàn thành {percent}%"
+    },
+    "status": {
+      "draft": "Bản nháp",
+      "active": "Đang hoạt động",
+      "completed": "Đã hoàn thành",
+      "archived": "Đã lưu trữ"
+    },
+    "type": {
+      "count": "Nhiệm vụ theo số lượng",
+      "set": "Nhiệm vụ theo tập hợp"
+    },
+    "badge": {
+      "alt": "Huy hiệu cho {questName}",
+      "tierAlt": "Huy hiệu {tier} cho {questName}"
+    },
+    "items": {
+      "eyebrow": "Danh sách kiểm tra",
+      "heading": "Mục nhiệm vụ",
+      "resultCount": "Hiển thị {count}",
+      "searchLabel": "Tìm kiếm mục",
+      "searchPlaceholder": "Tìm theo tên",
+      "stateLabel": "Trạng thái",
+      "filter": "Áp dụng bộ lọc",
+      "clear": "Xóa",
+      "states": {
+        "all": "Tất cả trạng thái",
+        "available": "Có sẵn",
+        "reserved": "Đã giữ chỗ",
+        "draft": "Đang thực hiện",
+        "pending": "Đang xét duyệt",
+        "changes-requested": "Yêu cầu chỉnh sửa",
+        "completed": "Đã hoàn thành",
+        "inactive": "Không hoạt động"
+      },
+      "byCreator": "Bởi {username}",
+      "availableNote": "Đang mở cho một đóng góp trong tương lai.",
+      "inProgressNote": "Một thành viên cộng đồng đang làm mục này.",
+      "empty": {
+        "title": "Không có mục phù hợp",
+        "body": "Hãy thử tìm kiếm khác hoặc bộ lọc trạng thái khác."
+      }
+    },
+    "posts": {
+      "eyebrow": "Công việc cộng đồng",
+      "heading": "Bài viết đã duyệt",
+      "resultCount": "Hiển thị {count}",
+      "byCreator": "Tạo bởi {username}",
+      "approved": "Đã duyệt",
+      "contributors": "{count} người đóng góp được ghi nhận",
+      "empty": {
+        "title": "Chưa có bài viết nào được duyệt",
+        "body": "Nhiệm vụ này đang chờ đóng góp được duyệt đầu tiên."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Đóng góp của bạn",
+      "heading": "Tham gia nhiệm vụ này",
+      "signInPrompt": "Đăng nhập để nhận một mục và gửi bài viết để xét duyệt.",
+      "signIn": "Đăng nhập để đóng góp",
+      "countPrompt": "Tạo một bài viết mới trong phòng mặc định của nhiệm vụ này, rồi phát triển và khóa bài trước khi yêu cầu xét duyệt.",
+      "setPrompt": "Chọn một mục nhiệm vụ còn trống để nhận và bắt đầu đóng góp đầu tiên của bạn.",
+      "browseItems": "Xem các mục còn trống",
+      "createPost": "Tạo bài viết nhiệm vụ",
+      "closed": "Nhiệm vụ này hiện không nhận đóng góp mới.",
+      "mineHeading": "Bài viết nhiệm vụ của bạn",
+      "claim": "Nhận mục này",
+      "release": "Bỏ giữ chỗ",
+      "editPost": "Chỉnh sửa bài viết",
+      "requestReview": "Yêu cầu xét duyệt",
+      "withdraw": "Rút lại",
+      "resumeEditing": "Tiếp tục chỉnh sửa",
+      "startRevision": "Sửa bài đã duyệt",
+      "confirmWithdraw": "Rút bài gửi cho nhiệm vụ này? Bản thân bài viết vẫn sẽ ở lại trên trang.",
+      "pagination": {
+        "label": "Các trang bài viết nhiệm vụ của bạn",
+        "previous": "← Bài mới hơn",
+        "next": "Bài cũ hơn →",
+        "status": "Trang {current} trên {total} · {count} bài viết"
+      },
+      "status": {
+        "draft": "Bản nháp",
+        "pending": "Đang xét duyệt",
+        "changes-requested": "Yêu cầu chỉnh sửa",
+        "approved": "Đã duyệt",
+        "rejected": "Bị từ chối",
+        "withdrawn": "Đã rút lại",
+        "revoked": "Đã thu hồi"
+      },
+      "errors": {
+        "generic": "Không thể hoàn tất hành động nhiệm vụ đó. Vui lòng thử lại.",
+        "blockIneligible": "Trước khi yêu cầu xét duyệt, hãy khóa bài viết và đảm bảo bài vẫn đáp ứng yêu cầu của nhiệm vụ.",
+        "itemUnavailable": "Mục đó không còn khả dụng cho đóng góp này. Hãy làm mới trang và thử lại.",
+        "createFailed": "Không thể gắn bài viết vào nhiệm vụ này. Quyền giữ chỗ của bạn có thể đã hết hạn; hãy quay lại nhiệm vụ và thử lại."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Hàng đợi xét duyệt nhiệm vụ | Daily Page",
+        "description": "Xét duyệt các bài gửi đang chờ cho những nhiệm vụ cộng đồng mà bạn quản lý."
+      },
+      "eyebrow": "Không gian quản trị",
+      "heading": "Hàng đợi xét duyệt nhiệm vụ",
+      "intro": "Xem bài viết đã gửi và lịch sử của bài trước khi duyệt hoặc gửi lại cho người đóng góp chỉnh sửa.",
+      "pendingCount": "{count} bài gửi đang chờ",
+      "openPanel": "Mở hàng đợi xét duyệt",
+      "owner": "Chủ bài gửi",
+      "unknownOwner": "Người dùng không xác định",
+      "item": "Mục nhiệm vụ",
+      "requestedAt": "Đã yêu cầu xét duyệt",
+      "revision": "Bản sửa đã gửi",
+      "unknownRevision": "Bản sửa không xác định",
+      "openPost": "Mở bài viết đã gửi",
+      "missingPost": "Bài viết không khả dụng",
+      "history": "Lịch sử xét duyệt ({count})",
+      "reason": "Lý do: {reason}",
+      "commentLabel": "Nhận xét xét duyệt",
+      "commentPlaceholder": "Giải thích quyết định của bạn hoặc để lại ghi chú hữu ích cho việc chỉnh sửa.",
+      "commentHelp": "Cần có nhận xét khi yêu cầu chỉnh sửa hoặc từ chối. Nhận xét là tùy chọn khi duyệt.",
+      "approve": "Duyệt",
+      "requestChanges": "Yêu cầu chỉnh sửa",
+      "reject": "Từ chối",
+      "events": {
+        "created": "Bài gửi đã được tạo",
+        "review-requested": "Đã yêu cầu xét duyệt",
+        "changes-requested": "Đã yêu cầu chỉnh sửa",
+        "editing-reopened": "Đã tiếp tục chỉnh sửa",
+        "approved": "Đã duyệt",
+        "rejected": "Đã từ chối",
+        "withdrawn": "Đã rút lại",
+        "revision-started": "Đã bắt đầu bản sửa",
+        "revoked": "Phê duyệt đã bị thu hồi",
+        "claim-expired": "Quyền giữ chỗ đã hết hạn",
+        "invalidated": "Bài gửi đã bị vô hiệu hóa"
+      },
+      "empty": {
+        "title": "Hàng đợi trống",
+        "body": "Không có bài gửi nào đang chờ cho các nhiệm vụ mà bạn quản lý."
+      },
+      "errors": {
+        "forbidden": "Bạn không quản lý nhiệm vụ đó.",
+        "loadFailed": "Hiện không thể tải hàng đợi xét duyệt nhiệm vụ.",
+        "actionFailed": "Không thể lưu quyết định xét duyệt đó. Vui lòng thử lại.",
+        "commentRequired": "Vui lòng thêm nhận xét xét duyệt trước khi yêu cầu chỉnh sửa hoặc từ chối.",
+        "stale": "Bài gửi này hoặc bài viết của nó đã thay đổi trước khi quyết định được lưu. Hàng đợi sẽ được làm mới."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "Bảng xếp hạng {questName} | Daily Page",
+        "description": "Xem những người đóng góp dẫn đầu cho {questName}."
+      },
+      "heading": "Bảng xếp hạng nhiệm vụ",
+      "intro": "Người đóng góp được xếp hạng theo số bài viết nhiệm vụ đã duyệt, rồi theo thời điểm họ đạt tổng hiện tại.",
+      "contributions": "{count} trên {target} bài viết",
+      "empty": {
+        "title": "Bảng xếp hạng đang chờ",
+        "body": "Người đóng góp sẽ xuất hiện sau khi bài viết đầu tiên được duyệt."
+      }
+    },
+    "medals": {
+      "base": "Người đóng góp",
+      "bronze": "Đồng",
+      "silver": "Bạc",
+      "gold": "Vàng"
+    },
+    "pagination": {
+      "label": "Các trang kết quả nhiệm vụ",
+      "previous": "← Trước",
+      "next": "Tiếp →",
+      "status": "Trang {current} trên {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Không tìm thấy nhiệm vụ",
+      "notFound": "Không thể tìm thấy nhiệm vụ đó.",
+      "loadFailed": "Hiện không thể tải nhiệm vụ."
+    }
+  }
+}
