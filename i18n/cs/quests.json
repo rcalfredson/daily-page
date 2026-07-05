@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Komunitní výzvy | Daily Page",
+        "description": "Zapojte se do společných komunitních výzev a pomozte plnit sdílené tvůrčí cíle."
+      },
+      "eyebrow": "Tvořte společně",
+      "heading": "Komunitní výzvy",
+      "intro": "Připojte se ke společnému projektu, přispívejte do spolupracujících příspěvků a pomozte komunitě dosáhnout ambiciózního cíle.",
+      "viewQuest": "Prozkoumat výzvu →",
+      "empty": {
+        "title": "Zatím nejsou aktivní žádné výzvy",
+        "body": "První komunitní výzvy se ještě připravují. Vraťte se brzy."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Komunitní výzvy",
+        "description": "Prozkoumejte tuto komunitní výzvu na Daily Page."
+      },
+      "breadcrumbLabel": "Navigace výzvy",
+      "allQuests": "Všechny výzvy",
+      "administeredBy": "Spravuje",
+      "aboutHeading": "O této výzvě",
+      "instructionsHeading": "Pokyny pro přispívání",
+      "sectionsLabel": "Sekce výzvy",
+      "tabs": {
+        "items": "Položky výzvy",
+        "posts": "Schválené příspěvky",
+        "leaderboard": "Žebříček"
+      }
+    },
+    "progress": {
+      "label": "Průběh výzvy",
+      "count": "{completed} z {target}",
+      "percent": "Dokončeno {percent} %"
+    },
+    "status": {
+      "draft": "Koncept",
+      "active": "Aktivní",
+      "completed": "Dokončená",
+      "archived": "Archivovaná"
+    },
+    "type": {
+      "count": "Výzva založená na počtu",
+      "set": "Výzva založená na sadě"
+    },
+    "badge": {
+      "alt": "Odznak pro {questName}",
+      "tierAlt": "Odznak {tier} pro {questName}"
+    },
+    "items": {
+      "eyebrow": "Kontrolní seznam",
+      "heading": "Položky výzvy",
+      "resultCount": "Zobrazeno: {count}",
+      "searchLabel": "Hledat položky",
+      "searchPlaceholder": "Hledat podle názvu",
+      "stateLabel": "Stav",
+      "filter": "Použít filtry",
+      "clear": "Vymazat",
+      "states": {
+        "all": "Všechny stavy",
+        "available": "Dostupné",
+        "reserved": "Rezervováno",
+        "draft": "Probíhá",
+        "pending": "Čeká na kontrolu",
+        "changes-requested": "Vyžádány úpravy",
+        "completed": "Dokončeno",
+        "inactive": "Neaktivní"
+      },
+      "byCreator": "Od {username}",
+      "availableNote": "Otevřeno pro budoucí příspěvek.",
+      "inProgressNote": "Na této položce pracuje člen komunity.",
+      "empty": {
+        "title": "Žádné odpovídající položky",
+        "body": "Zkuste jiné hledání nebo filtr stavu."
+      }
+    },
+    "posts": {
+      "eyebrow": "Komunitní práce",
+      "heading": "Schválené příspěvky",
+      "resultCount": "Zobrazeno: {count}",
+      "byCreator": "Vytvořil/a {username}",
+      "approved": "Schváleno",
+      "contributors": "{count} připsaných přispěvatelů",
+      "empty": {
+        "title": "Zatím žádné schválené příspěvky",
+        "body": "Tato výzva čeká na svůj první schválený příspěvek."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Váš příspěvek",
+      "heading": "Zapojte se do této výzvy",
+      "signInPrompt": "Přihlaste se, abyste si mohli rezervovat položku a odeslat příspěvek ke kontrole.",
+      "signIn": "Přihlásit se a přispět",
+      "countPrompt": "Vytvořte nový příspěvek ve výchozí místnosti této výzvy, pak jej rozpracujte a uzamkněte před žádostí o kontrolu.",
+      "setPrompt": "Vyberte dostupnou položku výzvy, rezervujte si ji a začněte svůj první příspěvek.",
+      "browseItems": "Procházet dostupné položky",
+      "createPost": "Vytvořit příspěvek výzvy",
+      "closed": "Tato výzva teď nepřijímá nové příspěvky.",
+      "mineHeading": "Vaše příspěvky výzvy",
+      "claim": "Rezervovat tuto položku",
+      "release": "Uvolnit rezervaci",
+      "editPost": "Upravit příspěvek",
+      "requestReview": "Požádat o kontrolu",
+      "withdraw": "Stáhnout",
+      "resumeEditing": "Pokračovat v úpravách",
+      "startRevision": "Upravit schválený příspěvek",
+      "confirmWithdraw": "Stáhnout toto odeslání do výzvy? Samotný příspěvek na webu zůstane.",
+      "pagination": {
+        "label": "Stránky vašich příspěvků výzvy",
+        "previous": "← Novější příspěvky",
+        "next": "Starší příspěvky →",
+        "status": "Strana {current} z {total} · {count} příspěvků"
+      },
+      "status": {
+        "draft": "Koncept",
+        "pending": "Čeká na kontrolu",
+        "changes-requested": "Vyžádány úpravy",
+        "approved": "Schváleno",
+        "rejected": "Zamítnuto",
+        "withdrawn": "Staženo",
+        "revoked": "Odvoláno"
+      },
+      "errors": {
+        "generic": "Tuto akci výzvy se nepodařilo dokončit. Zkuste to prosím znovu.",
+        "blockIneligible": "Před žádostí o kontrolu příspěvek uzamkněte a ujistěte se, že stále splňuje požadavky výzvy.",
+        "itemUnavailable": "Tato položka už pro tento příspěvek není dostupná. Obnovte stránku a zkuste to znovu.",
+        "createFailed": "Příspěvek se nepodařilo připojit k této výzvě. Vaše rezervace možná vypršela; vraťte se k výzvě a zkuste to znovu."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Fronta kontroly výzev | Daily Page",
+        "description": "Kontrolujte čekající odeslání pro komunitní výzvy, které spravujete."
+      },
+      "eyebrow": "Administrátorský prostor",
+      "heading": "Fronta kontroly výzev",
+      "intro": "Zkontrolujte odeslaný příspěvek a jeho historii, než jej schválíte nebo vrátíte přispěvateli.",
+      "pendingCount": "{count} čekajících odeslání",
+      "openPanel": "Otevřít frontu kontroly",
+      "owner": "Vlastník odeslání",
+      "unknownOwner": "Neznámý uživatel",
+      "item": "Položka výzvy",
+      "requestedAt": "Kontrola vyžádána",
+      "revision": "Odeslaná revize",
+      "unknownRevision": "Neznámá revize",
+      "openPost": "Otevřít odeslaný příspěvek",
+      "missingPost": "Příspěvek není dostupný",
+      "history": "Historie kontroly ({count})",
+      "reason": "Důvod: {reason}",
+      "commentLabel": "Komentář ke kontrole",
+      "commentPlaceholder": "Vysvětlete své rozhodnutí nebo zanechte užitečné poznámky k úpravám.",
+      "commentHelp": "Komentář je povinný při žádosti o úpravy nebo při zamítnutí. Při schválení je volitelný.",
+      "approve": "Schválit",
+      "requestChanges": "Vyžádat úpravy",
+      "reject": "Zamítnout",
+      "events": {
+        "created": "Odeslání vytvořeno",
+        "review-requested": "Kontrola vyžádána",
+        "changes-requested": "Úpravy vyžádány",
+        "editing-reopened": "Úpravy obnoveny",
+        "approved": "Schváleno",
+        "rejected": "Zamítnuto",
+        "withdrawn": "Staženo",
+        "revision-started": "Revize zahájena",
+        "revoked": "Schválení odvoláno",
+        "claim-expired": "Rezervace vypršela",
+        "invalidated": "Odeslání zneplatněno"
+      },
+      "empty": {
+        "title": "Fronta je prázdná",
+        "body": "Pro výzvy, které spravujete, nejsou žádná čekající odeslání."
+      },
+      "errors": {
+        "forbidden": "Tuto výzvu nespravujete.",
+        "loadFailed": "Frontu kontroly výzev se teď nepodařilo načíst.",
+        "actionFailed": "Toto rozhodnutí kontroly se nepodařilo uložit. Zkuste to prosím znovu.",
+        "commentRequired": "Před vyžádáním úprav nebo zamítnutím přidejte komentář ke kontrole.",
+        "stale": "Toto odeslání nebo jeho příspěvek se změnily před uložením rozhodnutí. Fronta se obnoví."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "Žebříček {questName} | Daily Page",
+        "description": "Podívejte se na přední přispěvatele do {questName}."
+      },
+      "heading": "Žebříček výzvy",
+      "intro": "Přispěvatelé jsou seřazeni podle schválených příspěvků výzvy a poté podle toho, kdy dosáhli svého aktuálního součtu.",
+      "contributions": "{count} z {target} příspěvků",
+      "empty": {
+        "title": "Žebříček čeká",
+        "body": "Přispěvatelé se objeví po schválení prvního příspěvku."
+      }
+    },
+    "medals": {
+      "base": "Přispěvatel",
+      "bronze": "Bronz",
+      "silver": "Stříbro",
+      "gold": "Zlato"
+    },
+    "pagination": {
+      "label": "Stránky výsledků výzvy",
+      "previous": "← Předchozí",
+      "next": "Další →",
+      "status": "Strana {current} z {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Výzva nenalezena",
+      "notFound": "Tuto výzvu se nepodařilo najít.",
+      "loadFailed": "Výzvu se teď nepodařilo načíst."
+    }
+  }
+}
