@@ -22,6 +22,10 @@
           "label": "Posts",
           "text": "are collaborative writing spaces—anyone (even “anonymous”) can create one, edit it until it’s locked, and vote on others."
         },
+        "quests": {
+          "label": "Community Quests",
+          "text": "turn shared goals into guided writing projects, with claimable items, review, progress, and badges."
+        },
         "privacy": {
           "label": "Privacy & Sharing",
           "text": "means public posts live in the room’s feed. Unlisted drafts hide until locked, but you get a share-link to invite friends."
