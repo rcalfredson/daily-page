@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Misi Komunitas | Daily Page",
+        "description": "Ikuti misi komunitas kolaboratif dan bantu menyelesaikan tujuan kreatif bersama."
+      },
+      "eyebrow": "Berkreasi bersama",
+      "heading": "Misi Komunitas",
+      "intro": "Bergabunglah dengan proyek bersama, berkontribusi pada postingan kolaboratif, dan bantu komunitas mencapai tujuan yang ambisius.",
+      "viewQuest": "Jelajahi misi →",
+      "empty": {
+        "title": "Belum ada misi aktif",
+        "body": "Misi komunitas pertama masih sedang disiapkan. Periksa lagi nanti."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Misi Komunitas",
+        "description": "Jelajahi misi komunitas ini di Daily Page."
+      },
+      "breadcrumbLabel": "Navigasi misi",
+      "allQuests": "Semua misi",
+      "administeredBy": "Dikelola oleh",
+      "aboutHeading": "Tentang misi ini",
+      "instructionsHeading": "Panduan kontribusi",
+      "sectionsLabel": "Bagian misi",
+      "tabs": {
+        "items": "Item misi",
+        "posts": "Postingan yang disetujui",
+        "leaderboard": "Papan peringkat"
+      }
+    },
+    "progress": {
+      "label": "Kemajuan misi",
+      "count": "{completed} dari {target}",
+      "percent": "{percent}% selesai"
+    },
+    "status": {
+      "draft": "Draf",
+      "active": "Aktif",
+      "completed": "Selesai",
+      "archived": "Diarsipkan"
+    },
+    "type": {
+      "count": "Misi berbasis jumlah",
+      "set": "Misi berbasis himpunan"
+    },
+    "badge": {
+      "alt": "Lencana untuk {questName}",
+      "tierAlt": "Lencana {tier} untuk {questName}"
+    },
+    "items": {
+      "eyebrow": "Daftar periksa",
+      "heading": "Item misi",
+      "resultCount": "{count} ditampilkan",
+      "searchLabel": "Cari item",
+      "searchPlaceholder": "Cari berdasarkan nama",
+      "stateLabel": "Status",
+      "filter": "Terapkan filter",
+      "clear": "Hapus",
+      "states": {
+        "all": "Semua status",
+        "available": "Tersedia",
+        "reserved": "Dipesan",
+        "draft": "Sedang dikerjakan",
+        "pending": "Dalam peninjauan",
+        "changes-requested": "Perubahan diminta",
+        "completed": "Selesai",
+        "inactive": "Tidak aktif"
+      },
+      "byCreator": "Oleh {username}",
+      "availableNote": "Terbuka untuk kontribusi mendatang.",
+      "inProgressNote": "Seorang anggota komunitas sedang mengerjakan item ini.",
+      "empty": {
+        "title": "Tidak ada item yang cocok",
+        "body": "Coba pencarian atau filter status yang berbeda."
+      }
+    },
+    "posts": {
+      "eyebrow": "Karya komunitas",
+      "heading": "Postingan yang disetujui",
+      "resultCount": "{count} ditampilkan",
+      "byCreator": "Dibuat oleh {username}",
+      "approved": "Disetujui",
+      "contributors": "{count} kontributor yang dikreditkan",
+      "empty": {
+        "title": "Belum ada postingan yang disetujui",
+        "body": "Misi ini menunggu kontribusi pertama yang disetujui."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Kontribusi Anda",
+      "heading": "Bergabung dengan misi ini",
+      "signInPrompt": "Masuk untuk mengklaim item dan mengirimkan postingan untuk ditinjau.",
+      "signIn": "Masuk untuk berkontribusi",
+      "countPrompt": "Buat postingan baru di ruang default misi ini, lalu kembangkan dan kunci sebelum meminta peninjauan.",
+      "setPrompt": "Pilih item misi yang tersedia untuk diklaim dan mulai kontribusi pertama Anda.",
+      "browseItems": "Jelajahi item yang tersedia",
+      "createPost": "Buat postingan misi",
+      "closed": "Misi ini tidak menerima kontribusi baru saat ini.",
+      "mineHeading": "Postingan misi Anda",
+      "claim": "Klaim item ini",
+      "release": "Lepaskan klaim",
+      "editPost": "Edit postingan",
+      "requestReview": "Minta peninjauan",
+      "withdraw": "Tarik kembali",
+      "resumeEditing": "Lanjutkan pengeditan",
+      "startRevision": "Revisi postingan yang disetujui",
+      "confirmWithdraw": "Tarik pengajuan misi ini? Postingan itu sendiri akan tetap ada di situs.",
+      "pagination": {
+        "label": "Halaman postingan misi Anda",
+        "previous": "← Postingan lebih baru",
+        "next": "Postingan lebih lama →",
+        "status": "Halaman {current} dari {total} · {count} postingan"
+      },
+      "status": {
+        "draft": "Draf",
+        "pending": "Dalam peninjauan",
+        "changes-requested": "Perubahan diminta",
+        "approved": "Disetujui",
+        "rejected": "Ditolak",
+        "withdrawn": "Ditarik kembali",
+        "revoked": "Dicabut"
+      },
+      "errors": {
+        "generic": "Tindakan misi itu tidak dapat diselesaikan. Silakan coba lagi.",
+        "blockIneligible": "Sebelum meminta peninjauan, kunci postingan dan pastikan postingan itu masih memenuhi persyaratan misi.",
+        "itemUnavailable": "Item itu tidak lagi tersedia untuk kontribusi ini. Segarkan halaman dan coba lagi.",
+        "createFailed": "Postingan tidak dapat dilampirkan ke misi ini. Klaim Anda mungkin telah kedaluwarsa; kembali ke misi dan coba lagi."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Antrean Peninjauan Misi | Daily Page",
+        "description": "Tinjau pengajuan tertunda untuk misi komunitas yang Anda kelola."
+      },
+      "eyebrow": "Ruang kerja administrator",
+      "heading": "Antrean peninjauan misi",
+      "intro": "Tinjau postingan yang diajukan dan riwayatnya sebelum menyetujuinya atau mengembalikannya kepada kontributor.",
+      "pendingCount": "{count} pengajuan tertunda",
+      "openPanel": "Buka antrean peninjauan",
+      "owner": "Pemilik pengajuan",
+      "unknownOwner": "Pengguna tidak dikenal",
+      "item": "Item misi",
+      "requestedAt": "Peninjauan diminta",
+      "revision": "Revisi yang diajukan",
+      "unknownRevision": "Revisi tidak dikenal",
+      "openPost": "Buka postingan yang diajukan",
+      "missingPost": "Postingan tidak tersedia",
+      "history": "Riwayat peninjauan ({count})",
+      "reason": "Alasan: {reason}",
+      "commentLabel": "Komentar peninjauan",
+      "commentPlaceholder": "Jelaskan keputusan Anda atau tinggalkan catatan revisi yang membantu.",
+      "commentHelp": "Komentar wajib saat meminta perubahan atau menolak. Komentar bersifat opsional saat menyetujui.",
+      "approve": "Setujui",
+      "requestChanges": "Minta perubahan",
+      "reject": "Tolak",
+      "events": {
+        "created": "Pengajuan dibuat",
+        "review-requested": "Peninjauan diminta",
+        "changes-requested": "Perubahan diminta",
+        "editing-reopened": "Pengeditan dilanjutkan",
+        "approved": "Disetujui",
+        "rejected": "Ditolak",
+        "withdrawn": "Ditarik kembali",
+        "revision-started": "Revisi dimulai",
+        "revoked": "Persetujuan dicabut",
+        "claim-expired": "Klaim kedaluwarsa",
+        "invalidated": "Pengajuan dibatalkan"
+      },
+      "empty": {
+        "title": "Antrean kosong",
+        "body": "Tidak ada pengajuan tertunda untuk misi yang Anda kelola."
+      },
+      "errors": {
+        "forbidden": "Anda tidak mengelola misi itu.",
+        "loadFailed": "Antrean peninjauan misi tidak dapat dimuat saat ini.",
+        "actionFailed": "Keputusan peninjauan itu tidak dapat disimpan. Silakan coba lagi.",
+        "commentRequired": "Tambahkan komentar peninjauan sebelum meminta perubahan atau menolak.",
+        "stale": "Pengajuan ini atau postingannya berubah sebelum keputusan disimpan. Antrean akan disegarkan."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "Papan Peringkat {questName} | Daily Page",
+        "description": "Lihat kontributor teratas untuk {questName}."
+      },
+      "heading": "Papan peringkat misi",
+      "intro": "Kontributor diberi peringkat berdasarkan postingan misi yang disetujui, lalu berdasarkan waktu mereka mencapai total saat ini.",
+      "contributions": "{count} dari {target} postingan",
+      "empty": {
+        "title": "Papan peringkat masih menunggu",
+        "body": "Kontributor akan muncul setelah postingan pertama disetujui."
+      }
+    },
+    "medals": {
+      "base": "Kontributor",
+      "bronze": "Perunggu",
+      "silver": "Perak",
+      "gold": "Emas"
+    },
+    "pagination": {
+      "label": "Halaman hasil misi",
+      "previous": "← Sebelumnya",
+      "next": "Berikutnya →",
+      "status": "Halaman {current} dari {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Misi tidak ditemukan",
+      "notFound": "Misi itu tidak dapat ditemukan.",
+      "loadFailed": "Misi tidak dapat dimuat saat ini."
+    }
+  }
+}
