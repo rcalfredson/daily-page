@@ -9,9 +9,17 @@
       "markRead": "Als gelesen markieren",
       "fallbackActor": "Jemand",
       "fallbackBlockTitle": "dein Beitrag",
+      "fallbackQuestName": "die Quest",
+      "fallbackItemLabel": "deine reservierte Aufgabe",
       "item": {
         "blockComment": "{actorUsername} hat deinen Beitrag \"{blockTitle}\" kommentiert.",
         "commentReply": "{actorUsername} hat auf deinen Kommentar zu \"{blockTitle}\" geantwortet.",
+        "questReviewRequested": "{actorUsername} hat \"{blockTitle}\" zur Prüfung für {questName} eingereicht.",
+        "questChangesRequested": "Für \"{blockTitle}\" in {questName} wurden Änderungen angefordert.",
+        "questSubmissionApproved": "Dein Beitrag \"{blockTitle}\" wurde für {questName} genehmigt.",
+        "questSubmissionRejected": "Dein Beitrag \"{blockTitle}\" wurde für {questName} nicht angenommen.",
+        "questSubmissionRevoked": "Dein Beitrag \"{blockTitle}\" zählt nicht mehr für {questName}.",
+        "questClaimExpired": "Deine Reservierung für {itemLabel} bei {questName} ist abgelaufen.",
         "unknown": "Benachrichtigung"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Gesprach auf Daily Page ansehen",
         "fallbackActor": "Jemand",
         "fallbackBlockTitle": "dein Beitrag"
-      }
+      },
+      "quest": {"headingWithName": "Hallo {username},", "fallbackActor": "Jemand", "fallbackQuestName": "die Quest", "fallbackBlockTitle": "dein Beitrag", "fallbackItemLabel": "deine reservierte Aufgabe"},
+      "questReviewRequested": {"subject": "Neue Einreichung für {questName}", "heading": "Ein Quest-Beitrag kann geprüft werden", "body": "<strong>{actorUsername}</strong> hat <strong>{blockTitle}</strong> zur Prüfung für <strong>{questName}</strong> eingereicht.", "cta": "Einreichung prüfen"},
+      "questChangesRequested": {"subject": "Änderungen für {blockTitle} angefordert", "heading": "Dein Quest-Beitrag muss geändert werden", "body": "Für <strong>{blockTitle}</strong> in <strong>{questName}</strong> wurden Änderungen angefordert.", "cta": "Beitrag ansehen"},
+      "questSubmissionApproved": {"subject": "Dein Beitrag wurde für {questName} genehmigt", "heading": "Quest-Einreichung genehmigt", "body": "Dein Beitrag <strong>{blockTitle}</strong> wurde für <strong>{questName}</strong> genehmigt.", "cta": "Genehmigten Beitrag ansehen"},
+      "questSubmissionRejected": {"subject": "Aktualisierung zu deiner Einreichung für {questName}", "heading": "Quest-Einreichung nicht angenommen", "body": "Dein Beitrag <strong>{blockTitle}</strong> wurde für <strong>{questName}</strong> nicht angenommen.", "cta": "Beitrag ansehen"},
+      "questSubmissionRevoked": {"subject": "Dein Beitrag zählt nicht mehr für {questName}", "heading": "Quest-Beitrag aktualisiert", "body": "Dein Beitrag <strong>{blockTitle}</strong> zählt nicht mehr für <strong>{questName}</strong>.", "cta": "Quest ansehen"},
+      "questClaimExpired": {"subject": "Deine Reservierung bei {questName} ist abgelaufen", "heading": "Quest-Reservierung abgelaufen", "body": "Deine Reservierung für <strong>{itemLabel}</strong> bei <strong>{questName}</strong> ist abgelaufen.", "cta": "Verfügbare Quest-Aufgaben ansehen"}
     }
   }
 }
