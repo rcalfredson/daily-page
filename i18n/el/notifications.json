@@ -9,9 +9,17 @@
       "markRead": "Σήμανση ως αναγνωσμένη",
       "fallbackActor": "Κάποιος",
       "fallbackBlockTitle": "την ανάρτησή σου",
+      "fallbackQuestName": "την αποστολή",
+      "fallbackItemLabel": "το δεσμευμένο στοιχείο σου",
       "item": {
         "blockComment": "Ο χρήστης {actorUsername} σχολίασε την ανάρτησή σου «{blockTitle}».",
         "commentReply": "Ο χρήστης {actorUsername} απάντησε στο σχόλιό σου στην ανάρτηση «{blockTitle}».",
+        "questReviewRequested": "Ο χρήστης {actorUsername} υπέβαλε την ανάρτηση «{blockTitle}» για έλεγχο στην αποστολή {questName}.",
+        "questChangesRequested": "Ζητήθηκαν αλλαγές για την ανάρτηση «{blockTitle}» στην αποστολή {questName}.",
+        "questSubmissionApproved": "Η ανάρτησή σου «{blockTitle}» εγκρίθηκε για την αποστολή {questName}.",
+        "questSubmissionRejected": "Η ανάρτησή σου «{blockTitle}» δεν έγινε δεκτή για την αποστολή {questName}.",
+        "questSubmissionRevoked": "Η ανάρτησή σου «{blockTitle}» δεν προσμετράται πλέον στην αποστολή {questName}.",
+        "questClaimExpired": "Η κράτησή σου για το στοιχείο {itemLabel} στην αποστολή {questName} έληξε.",
         "unknown": "Ειδοποίηση"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Προβολή της συζήτησης στο Daily Page",
         "fallbackActor": "Κάποιος",
         "fallbackBlockTitle": "την ανάρτησή σου"
-      }
+      },
+      "quest": {"headingWithName": "Γεια σου {username},", "fallbackActor": "Κάποιος", "fallbackQuestName": "την αποστολή", "fallbackBlockTitle": "την ανάρτησή σου", "fallbackItemLabel": "το δεσμευμένο στοιχείο σου"},
+      "questReviewRequested": {"subject": "Νέα υποβολή για την αποστολή {questName}", "heading": "Μια ανάρτηση αποστολής είναι έτοιμη για έλεγχο", "body": "Ο χρήστης <strong>{actorUsername}</strong> υπέβαλε την ανάρτηση <strong>{blockTitle}</strong> για έλεγχο στην αποστολή <strong>{questName}</strong>.", "cta": "Έλεγχος υποβολής"},
+      "questChangesRequested": {"subject": "Ζητήθηκαν αλλαγές για την ανάρτηση {blockTitle}", "heading": "Η ανάρτηση αποστολής σου χρειάζεται αλλαγές", "body": "Ζητήθηκαν αλλαγές για την ανάρτηση <strong>{blockTitle}</strong> στην αποστολή <strong>{questName}</strong>.", "cta": "Προβολή ανάρτησης"},
+      "questSubmissionApproved": {"subject": "Η ανάρτησή σου εγκρίθηκε για την αποστολή {questName}", "heading": "Η υποβολή αποστολής εγκρίθηκε", "body": "Η ανάρτησή σου <strong>{blockTitle}</strong> εγκρίθηκε για την αποστολή <strong>{questName}</strong>.", "cta": "Προβολή εγκεκριμένης ανάρτησης"},
+      "questSubmissionRejected": {"subject": "Ενημέρωση για την υποβολή σου στην αποστολή {questName}", "heading": "Η υποβολή αποστολής δεν έγινε δεκτή", "body": "Η ανάρτησή σου <strong>{blockTitle}</strong> δεν έγινε δεκτή για την αποστολή <strong>{questName}</strong>.", "cta": "Προβολή ανάρτησης"},
+      "questSubmissionRevoked": {"subject": "Η ανάρτησή σου δεν προσμετράται πλέον στην αποστολή {questName}", "heading": "Η συνεισφορά στην αποστολή ενημερώθηκε", "body": "Η ανάρτησή σου <strong>{blockTitle}</strong> δεν προσμετράται πλέον στην αποστολή <strong>{questName}</strong>.", "cta": "Προβολή αποστολής"},
+      "questClaimExpired": {"subject": "Η κράτησή σου στην αποστολή {questName} έληξε", "heading": "Η κράτηση αποστολής έληξε", "body": "Η κράτησή σου για το στοιχείο <strong>{itemLabel}</strong> στην αποστολή <strong>{questName}</strong> έληξε.", "cta": "Προβολή διαθέσιμων στοιχείων"}
     }
   }
 }

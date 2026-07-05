@@ -9,9 +9,17 @@
       "markRead": "Отметить как прочитанное",
       "fallbackActor": "Кто-то",
       "fallbackBlockTitle": "ваша публикация",
+      "fallbackQuestName": "квест",
+      "fallbackItemLabel": "ваше зарезервированное задание",
       "item": {
         "blockComment": "{actorUsername} прокомментировал(а) вашу публикацию \"{blockTitle}\".",
         "commentReply": "{actorUsername} ответил(а) на ваш комментарий в \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} отправил(а) \"{blockTitle}\" на проверку в квесте {questName}.",
+        "questChangesRequested": "Для \"{blockTitle}\" в квесте {questName} запрошены изменения.",
+        "questSubmissionApproved": "Ваша публикация \"{blockTitle}\" одобрена для квеста {questName}.",
+        "questSubmissionRejected": "Ваша публикация \"{blockTitle}\" не принята для квеста {questName}.",
+        "questSubmissionRevoked": "Ваша публикация \"{blockTitle}\" больше не засчитывается в квесте {questName}.",
+        "questClaimExpired": "Срок резервирования задания {itemLabel} в квесте {questName} истёк.",
         "unknown": "Уведомление"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Открыть разговор на Daily Page",
         "fallbackActor": "Кто-то",
         "fallbackBlockTitle": "ваша публикация"
-      }
+      },
+      "quest": {"headingWithName": "Здравствуйте, {username}!", "fallbackActor": "Кто-то", "fallbackQuestName": "квест", "fallbackBlockTitle": "ваша публикация", "fallbackItemLabel": "ваше зарезервированное задание"},
+      "questReviewRequested": {"subject": "Новая заявка для квеста {questName}", "heading": "Публикация квеста готова к проверке", "body": "<strong>{actorUsername}</strong> отправил(а) <strong>{blockTitle}</strong> на проверку в квесте <strong>{questName}</strong>.", "cta": "Проверить заявку"},
+      "questChangesRequested": {"subject": "Для {blockTitle} запрошены изменения", "heading": "Публикацию для квеста нужно изменить", "body": "Для <strong>{blockTitle}</strong> в квесте <strong>{questName}</strong> запрошены изменения.", "cta": "Открыть публикацию"},
+      "questSubmissionApproved": {"subject": "Ваша публикация одобрена для квеста {questName}", "heading": "Заявка для квеста одобрена", "body": "Ваша публикация <strong>{blockTitle}</strong> одобрена для квеста <strong>{questName}</strong>.", "cta": "Открыть одобренную публикацию"},
+      "questSubmissionRejected": {"subject": "Обновление вашей заявки для квеста {questName}", "heading": "Заявка для квеста не принята", "body": "Ваша публикация <strong>{blockTitle}</strong> не принята для квеста <strong>{questName}</strong>.", "cta": "Открыть публикацию"},
+      "questSubmissionRevoked": {"subject": "Ваша публикация больше не засчитывается в квесте {questName}", "heading": "Вклад в квест обновлён", "body": "Ваша публикация <strong>{blockTitle}</strong> больше не засчитывается в квесте <strong>{questName}</strong>.", "cta": "Открыть квест"},
+      "questClaimExpired": {"subject": "Срок вашей резервации в квесте {questName} истёк", "heading": "Резервация в квесте истекла", "body": "Срок резервирования задания <strong>{itemLabel}</strong> в квесте <strong>{questName}</strong> истёк.", "cta": "Посмотреть доступные задания"}
     }
   }
 }
