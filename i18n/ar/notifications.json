@@ -9,9 +9,17 @@
       "markRead": "مارك اقرأ",
       "fallbackActor": "شخص ما",
       "fallbackBlockTitle": "المنشور الخاصة بك",
+      "fallbackQuestName": "المهمة",
+      "fallbackItemLabel": "العنصر الذي حجزته",
       "item": {
         "blockComment": "علق {actorUsername} على المنشور الخاصة بك \"{blockTitle}\".",
         "commentReply": "رد {actorUsername} على تعليقك على \"{blockTitle}\".",
+        "questReviewRequested": "قدّم {actorUsername} المنشور \"{blockTitle}\" للمراجعة ضمن {questName}.",
+        "questChangesRequested": "طُلبت تعديلات على \"{blockTitle}\" ضمن {questName}.",
+        "questSubmissionApproved": "تمت الموافقة على منشورك \"{blockTitle}\" ضمن {questName}.",
+        "questSubmissionRejected": "لم يُقبل منشورك \"{blockTitle}\" ضمن {questName}.",
+        "questSubmissionRevoked": "لم يعد منشورك \"{blockTitle}\" يُحتسب ضمن {questName}.",
+        "questClaimExpired": "انتهت صلاحية حجزك للعنصر {itemLabel} ضمن {questName}.",
         "unknown": "إشعار"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "عرض المحادثة على Daily Page",
         "fallbackActor": "شخص ما",
         "fallbackBlockTitle": "المنشور الخاصة بك"
-      }
+      },
+      "quest": {"headingWithName": "مرحبًا {username}،", "fallbackActor": "شخص ما", "fallbackQuestName": "المهمة", "fallbackBlockTitle": "منشورك", "fallbackItemLabel": "العنصر الذي حجزته"},
+      "questReviewRequested": {"subject": "مشاركة جديدة في {questName}", "heading": "منشور المهمة جاهز للمراجعة", "body": "قدّم <strong>{actorUsername}</strong> المنشور <strong>{blockTitle}</strong> للمراجعة ضمن <strong>{questName}</strong>.", "cta": "مراجعة المشاركة"},
+      "questChangesRequested": {"subject": "طُلبت تعديلات على {blockTitle}", "heading": "منشور المهمة يحتاج إلى تعديلات", "body": "طُلبت تعديلات على <strong>{blockTitle}</strong> ضمن <strong>{questName}</strong>.", "cta": "عرض المنشور"},
+      "questSubmissionApproved": {"subject": "تمت الموافقة على منشورك ضمن {questName}", "heading": "تمت الموافقة على مشاركة المهمة", "body": "تمت الموافقة على منشورك <strong>{blockTitle}</strong> ضمن <strong>{questName}</strong>.", "cta": "عرض المنشور الموافق عليه"},
+      "questSubmissionRejected": {"subject": "تحديث بشأن مشاركتك في {questName}", "heading": "لم تُقبل مشاركة المهمة", "body": "لم يُقبل منشورك <strong>{blockTitle}</strong> ضمن <strong>{questName}</strong>.", "cta": "عرض المنشور"},
+      "questSubmissionRevoked": {"subject": "لم يعد منشورك يُحتسب ضمن {questName}", "heading": "تم تحديث المساهمة في المهمة", "body": "لم يعد منشورك <strong>{blockTitle}</strong> يُحتسب ضمن <strong>{questName}</strong>.", "cta": "عرض المهمة"},
+      "questClaimExpired": {"subject": "انتهت صلاحية حجزك ضمن {questName}", "heading": "انتهت صلاحية حجز المهمة", "body": "انتهت صلاحية حجزك للعنصر <strong>{itemLabel}</strong> ضمن <strong>{questName}</strong>.", "cta": "عرض عناصر المهمة المتاحة"}
     }
   }
 }

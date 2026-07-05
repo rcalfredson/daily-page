@@ -9,9 +9,17 @@
       "markRead": "סמן שנקרא",
       "fallbackActor": "מישהו",
       "fallbackBlockTitle": "הפוסט שלך",
+      "fallbackQuestName": "המשימה",
+      "fallbackItemLabel": "הפריט ששמרת",
       "item": {
         "blockComment": "{actorUsername} הגיב על הפוסט שלך \"{blockTitle}\".",
         "commentReply": "{actorUsername} השיב לתגובה שלך על \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} הגיש את \"{blockTitle}\" לבדיקה במשימה {questName}.",
+        "questChangesRequested": "התבקשו שינויים ב-\"{blockTitle}\" במשימה {questName}.",
+        "questSubmissionApproved": "הפוסט שלך \"{blockTitle}\" אושר למשימה {questName}.",
+        "questSubmissionRejected": "הפוסט שלך \"{blockTitle}\" לא התקבל למשימה {questName}.",
+        "questSubmissionRevoked": "הפוסט שלך \"{blockTitle}\" כבר לא נספר במשימה {questName}.",
+        "questClaimExpired": "תוקף השמירה שלך לפריט {itemLabel} במשימה {questName} פג.",
         "unknown": "התראה"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "צפה בשיחה ב-Daily Page",
         "fallbackActor": "מישהו",
         "fallbackBlockTitle": "הפוסט שלך"
-      }
+      },
+      "quest": {"headingWithName": "היי {username},", "fallbackActor": "מישהו", "fallbackQuestName": "המשימה", "fallbackBlockTitle": "הפוסט שלך", "fallbackItemLabel": "הפריט ששמרת"},
+      "questReviewRequested": {"subject": "הגשה חדשה למשימה {questName}", "heading": "פוסט במשימה מוכן לבדיקה", "body": "<strong>{actorUsername}</strong> הגיש את <strong>{blockTitle}</strong> לבדיקה במשימה <strong>{questName}</strong>.", "cta": "בדיקת ההגשה"},
+      "questChangesRequested": {"subject": "התבקשו שינויים ב-{blockTitle}", "heading": "הפוסט שלך במשימה דורש שינויים", "body": "התבקשו שינויים ב-<strong>{blockTitle}</strong> במשימה <strong>{questName}</strong>.", "cta": "צפייה בפוסט"},
+      "questSubmissionApproved": {"subject": "הפוסט שלך אושר למשימה {questName}", "heading": "ההגשה למשימה אושרה", "body": "הפוסט שלך <strong>{blockTitle}</strong> אושר למשימה <strong>{questName}</strong>.", "cta": "צפייה בפוסט שאושר"},
+      "questSubmissionRejected": {"subject": "עדכון לגבי ההגשה שלך למשימה {questName}", "heading": "ההגשה למשימה לא התקבלה", "body": "הפוסט שלך <strong>{blockTitle}</strong> לא התקבל למשימה <strong>{questName}</strong>.", "cta": "צפייה בפוסט"},
+      "questSubmissionRevoked": {"subject": "הפוסט שלך כבר לא נספר במשימה {questName}", "heading": "התרומה למשימה עודכנה", "body": "הפוסט שלך <strong>{blockTitle}</strong> כבר לא נספר במשימה <strong>{questName}</strong>.", "cta": "צפייה במשימה"},
+      "questClaimExpired": {"subject": "תוקף השמירה שלך במשימה {questName} פג", "heading": "תוקף השמירה במשימה פג", "body": "תוקף השמירה שלך לפריט <strong>{itemLabel}</strong> במשימה <strong>{questName}</strong> פג.", "cta": "צפייה בפריטי משימה זמינים"}
     }
   }
 }
