@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Community-Quests | Daily Page",
+        "description": "Nimm an gemeinsamen Community-Quests teil und hilf dabei, geteilte kreative Ziele zu erreichen."
+      },
+      "eyebrow": "Gemeinsam gestalten",
+      "heading": "Community-Quests",
+      "intro": "Schließe dich einem gemeinsamen Projekt an, trage zu kollaborativen Beiträgen bei und hilf der Community, ein ehrgeiziges Ziel zu erreichen.",
+      "viewQuest": "Quest ansehen →",
+      "empty": {
+        "title": "Noch keine aktiven Quests",
+        "body": "Die ersten Community-Quests werden noch vorbereitet. Schau bald wieder vorbei."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Community-Quests",
+        "description": "Erkunde diese Community-Quest auf Daily Page."
+      },
+      "breadcrumbLabel": "Quest-Navigation",
+      "allQuests": "Alle Quests",
+      "administeredBy": "Verwaltet von",
+      "aboutHeading": "Über diese Quest",
+      "instructionsHeading": "Richtlinien für Beiträge",
+      "sectionsLabel": "Quest-Bereiche",
+      "tabs": {
+        "items": "Quest-Elemente",
+        "posts": "Genehmigte Beiträge",
+        "leaderboard": "Bestenliste"
+      }
+    },
+    "progress": {
+      "label": "Quest-Fortschritt",
+      "count": "{completed} von {target}",
+      "percent": "{percent} % abgeschlossen"
+    },
+    "status": {
+      "draft": "Entwurf",
+      "active": "Aktiv",
+      "completed": "Abgeschlossen",
+      "archived": "Archiviert"
+    },
+    "type": {
+      "count": "Zählbasierte Quest",
+      "set": "Set-basierte Quest"
+    },
+    "badge": {
+      "alt": "Abzeichen für {questName}",
+      "tierAlt": "{tier}-Abzeichen für {questName}"
+    },
+    "items": {
+      "eyebrow": "Die Checkliste",
+      "heading": "Quest-Elemente",
+      "resultCount": "{count} angezeigt",
+      "searchLabel": "Elemente suchen",
+      "searchPlaceholder": "Nach Name suchen",
+      "stateLabel": "Status",
+      "filter": "Filter anwenden",
+      "clear": "Löschen",
+      "states": {
+        "all": "Alle Status",
+        "available": "Verfügbar",
+        "reserved": "Reserviert",
+        "draft": "In Bearbeitung",
+        "pending": "In Prüfung",
+        "changes-requested": "Änderungen angefordert",
+        "completed": "Abgeschlossen",
+        "inactive": "Inaktiv"
+      },
+      "byCreator": "Von {username}",
+      "availableNote": "Offen für einen zukünftigen Beitrag.",
+      "inProgressNote": "Ein Community-Mitglied arbeitet an diesem Element.",
+      "empty": {
+        "title": "Keine passenden Elemente",
+        "body": "Versuche es mit einer anderen Suche oder einem anderen Statusfilter."
+      }
+    },
+    "posts": {
+      "eyebrow": "Community-Arbeit",
+      "heading": "Genehmigte Beiträge",
+      "resultCount": "{count} angezeigt",
+      "byCreator": "Erstellt von {username}",
+      "approved": "Genehmigt",
+      "contributors": "{count} gutgeschriebene Mitwirkende",
+      "empty": {
+        "title": "Noch keine genehmigten Beiträge",
+        "body": "Diese Quest wartet auf ihren ersten genehmigten Beitrag."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Dein Beitrag",
+      "heading": "An dieser Quest teilnehmen",
+      "signInPrompt": "Melde dich an, um ein Element zu beanspruchen und einen Beitrag zur Prüfung einzureichen.",
+      "signIn": "Anmelden, um beizutragen",
+      "countPrompt": "Erstelle einen neuen Beitrag im Standardraum dieser Quest, arbeite ihn dann aus und sperre ihn, bevor du eine Prüfung anforderst.",
+      "setPrompt": "Wähle ein verfügbares Quest-Element aus, beanspruche es und beginne mit deinem ersten Beitrag.",
+      "browseItems": "Verfügbare Elemente durchsuchen",
+      "createPost": "Quest-Beitrag erstellen",
+      "closed": "Diese Quest nimmt derzeit keine neuen Beiträge an.",
+      "mineHeading": "Deine Quest-Beiträge",
+      "claim": "Dieses Element beanspruchen",
+      "release": "Anspruch freigeben",
+      "editPost": "Beitrag bearbeiten",
+      "requestReview": "Prüfung anfordern",
+      "withdraw": "Zurückziehen",
+      "resumeEditing": "Bearbeitung fortsetzen",
+      "startRevision": "Genehmigten Beitrag überarbeiten",
+      "confirmWithdraw": "Diese Quest-Einreichung zurückziehen? Der Beitrag selbst bleibt auf der Website.",
+      "pagination": {
+        "label": "Seiten deiner Quest-Beiträge",
+        "previous": "← Neuere Beiträge",
+        "next": "Ältere Beiträge →",
+        "status": "Seite {current} von {total} · {count} Beiträge"
+      },
+      "status": {
+        "draft": "Entwurf",
+        "pending": "In Prüfung",
+        "changes-requested": "Änderungen angefordert",
+        "approved": "Genehmigt",
+        "rejected": "Abgelehnt",
+        "withdrawn": "Zurückgezogen",
+        "revoked": "Widerrufen"
+      },
+      "errors": {
+        "generic": "Diese Quest-Aktion konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
+        "blockIneligible": "Bevor du eine Prüfung anforderst, sperre den Beitrag und stelle sicher, dass er die Quest-Anforderungen weiterhin erfüllt.",
+        "itemUnavailable": "Dieses Element ist für diesen Beitrag nicht mehr verfügbar. Aktualisiere die Seite und versuche es erneut.",
+        "createFailed": "Der Beitrag konnte nicht mit dieser Quest verknüpft werden. Dein Anspruch ist möglicherweise abgelaufen; kehre zur Quest zurück und versuche es erneut."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Quest-Prüfwarteschlange | Daily Page",
+        "description": "Prüfe ausstehende Einreichungen für die Community-Quests, die du verwaltest."
+      },
+      "eyebrow": "Administrationsbereich",
+      "heading": "Quest-Prüfwarteschlange",
+      "intro": "Prüfe den eingereichten Beitrag und seinen Verlauf, bevor du ihn genehmigst oder an die mitwirkende Person zurücksendest.",
+      "pendingCount": "{count} ausstehende Einreichungen",
+      "openPanel": "Prüfwarteschlange öffnen",
+      "owner": "Eigentümer der Einreichung",
+      "unknownOwner": "Unbekannter Benutzer",
+      "item": "Quest-Element",
+      "requestedAt": "Prüfung angefordert",
+      "revision": "Eingereichte Revision",
+      "unknownRevision": "Unbekannte Revision",
+      "openPost": "Eingereichten Beitrag öffnen",
+      "missingPost": "Beitrag nicht verfügbar",
+      "history": "Prüfverlauf ({count})",
+      "reason": "Grund: {reason}",
+      "commentLabel": "Prüfkommentar",
+      "commentPlaceholder": "Erkläre deine Entscheidung oder hinterlasse hilfreiche Überarbeitungshinweise.",
+      "commentHelp": "Ein Kommentar ist erforderlich, wenn du Änderungen anforderst oder ablehnst. Beim Genehmigen ist er optional.",
+      "approve": "Genehmigen",
+      "requestChanges": "Änderungen anfordern",
+      "reject": "Ablehnen",
+      "events": {
+        "created": "Einreichung erstellt",
+        "review-requested": "Prüfung angefordert",
+        "changes-requested": "Änderungen angefordert",
+        "editing-reopened": "Bearbeitung fortgesetzt",
+        "approved": "Genehmigt",
+        "rejected": "Abgelehnt",
+        "withdrawn": "Zurückgezogen",
+        "revision-started": "Revision gestartet",
+        "revoked": "Genehmigung widerrufen",
+        "claim-expired": "Anspruch abgelaufen",
+        "invalidated": "Einreichung ungültig gemacht"
+      },
+      "empty": {
+        "title": "Die Warteschlange ist leer",
+        "body": "Es gibt keine ausstehenden Einreichungen für die Quests, die du verwaltest."
+      },
+      "errors": {
+        "forbidden": "Du verwaltest diese Quest nicht.",
+        "loadFailed": "Die Quest-Prüfwarteschlange konnte derzeit nicht geladen werden.",
+        "actionFailed": "Diese Prüfentscheidung konnte nicht gespeichert werden. Bitte versuche es erneut.",
+        "commentRequired": "Bitte füge einen Prüfkommentar hinzu, bevor du Änderungen anforderst oder ablehnst.",
+        "stale": "Diese Einreichung oder ihr Beitrag wurde geändert, bevor die Entscheidung gespeichert wurde. Die Warteschlange wird aktualisiert."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "{questName}-Bestenliste | Daily Page",
+        "description": "Sieh dir die führenden Mitwirkenden für {questName} an."
+      },
+      "heading": "Quest-Bestenliste",
+      "intro": "Mitwirkende werden nach genehmigten Quest-Beiträgen sortiert und danach, wann sie ihre aktuelle Gesamtzahl erreicht haben.",
+      "contributions": "{count} von {target} Beiträgen",
+      "empty": {
+        "title": "Die Bestenliste wartet noch",
+        "body": "Mitwirkende erscheinen, nachdem der erste Beitrag genehmigt wurde."
+      }
+    },
+    "medals": {
+      "base": "Mitwirkende Person",
+      "bronze": "Bronze",
+      "silver": "Silber",
+      "gold": "Gold"
+    },
+    "pagination": {
+      "label": "Quest-Ergebnisseiten",
+      "previous": "← Zurück",
+      "next": "Weiter →",
+      "status": "Seite {current} von {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Quest nicht gefunden",
+      "notFound": "Diese Quest konnte nicht gefunden werden.",
+      "loadFailed": "Die Quest konnte derzeit nicht geladen werden."
+    }
+  }
+}
