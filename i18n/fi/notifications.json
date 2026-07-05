@@ -9,9 +9,17 @@
       "markRead": "Merkitse luetuksi",
       "fallbackActor": "Joku",
       "fallbackBlockTitle": "julkaisusi",
+      "fallbackQuestName": "tehtävä",
+      "fallbackItemLabel": "varaamasi tehtävän kohde",
       "item": {
         "blockComment": "{actorUsername} kommentoi julkaisuasi \"{blockTitle}\".",
         "commentReply": "{actorUsername} vastasi kommenttiisi julkaisussa \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} lähetti julkaisun \"{blockTitle}\" tarkistettavaksi tehtävään {questName}.",
+        "questChangesRequested": "Julkaisuun \"{blockTitle}\" pyydettiin muutoksia tehtävässä {questName}.",
+        "questSubmissionApproved": "Julkaisusi \"{blockTitle}\" hyväksyttiin tehtävään {questName}.",
+        "questSubmissionRejected": "Julkaisuasi \"{blockTitle}\" ei hyväksytty tehtävään {questName}.",
+        "questSubmissionRevoked": "Julkaisuasi \"{blockTitle}\" ei enää lasketa tehtävään {questName}.",
+        "questClaimExpired": "Kohteen {itemLabel} varauksesi tehtävässä {questName} vanheni.",
         "unknown": "Ilmoitus"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Näytä keskustelu Daily Pagessa",
         "fallbackActor": "Joku",
         "fallbackBlockTitle": "julkaisusi"
-      }
+      },
+      "quest": {"headingWithName": "Hei {username},", "fallbackActor": "Joku", "fallbackQuestName": "tehtävä", "fallbackBlockTitle": "julkaisusi", "fallbackItemLabel": "varaamasi tehtävän kohde"},
+      "questReviewRequested": {"subject": "Uusi ehdotus tehtävään {questName}", "heading": "Tehtäväjulkaisu on valmis tarkistettavaksi", "body": "<strong>{actorUsername}</strong> lähetti julkaisun <strong>{blockTitle}</strong> tarkistettavaksi tehtävään <strong>{questName}</strong>.", "cta": "Tarkista ehdotus"},
+      "questChangesRequested": {"subject": "Julkaisuun {blockTitle} pyydettiin muutoksia", "heading": "Tehtäväjulkaisusi tarvitsee muutoksia", "body": "Julkaisuun <strong>{blockTitle}</strong> pyydettiin muutoksia tehtävässä <strong>{questName}</strong>.", "cta": "Näytä julkaisu"},
+      "questSubmissionApproved": {"subject": "Julkaisusi hyväksyttiin tehtävään {questName}", "heading": "Tehtäväehdotus hyväksytty", "body": "Julkaisusi <strong>{blockTitle}</strong> hyväksyttiin tehtävään <strong>{questName}</strong>.", "cta": "Näytä hyväksytty julkaisu"},
+      "questSubmissionRejected": {"subject": "Päivitys ehdotukseesi tehtävässä {questName}", "heading": "Tehtäväehdotusta ei hyväksytty", "body": "Julkaisuasi <strong>{blockTitle}</strong> ei hyväksytty tehtävään <strong>{questName}</strong>.", "cta": "Näytä julkaisu"},
+      "questSubmissionRevoked": {"subject": "Julkaisuasi ei enää lasketa tehtävään {questName}", "heading": "Tehtäväpanos päivitetty", "body": "Julkaisuasi <strong>{blockTitle}</strong> ei enää lasketa tehtävään <strong>{questName}</strong>.", "cta": "Näytä tehtävä"},
+      "questClaimExpired": {"subject": "Varauksesi tehtävässä {questName} vanheni", "heading": "Tehtävävaraus vanheni", "body": "Kohteen <strong>{itemLabel}</strong> varauksesi tehtävässä <strong>{questName}</strong> vanheni.", "cta": "Näytä vapaat tehtävän kohteet"}
     }
   }
 }

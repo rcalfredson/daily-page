@@ -9,9 +9,17 @@
       "markRead": "Markera läst",
       "fallbackActor": "Någon",
       "fallbackBlockTitle": "ditt inlägg",
+      "fallbackQuestName": "uppdraget",
+      "fallbackItemLabel": "din reserverade uppdragspunkt",
       "item": {
         "blockComment": "{actorUsername} kommenterade ditt inlägg \"{blockTitle}\".",
         "commentReply": "{actorUsername} svarade på din kommentar om \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} skickade in \"{blockTitle}\" för granskning i {questName}.",
+        "questChangesRequested": "Ändringar begärdes för \"{blockTitle}\" i {questName}.",
+        "questSubmissionApproved": "Ditt inlägg \"{blockTitle}\" godkändes för {questName}.",
+        "questSubmissionRejected": "Ditt inlägg \"{blockTitle}\" godkändes inte för {questName}.",
+        "questSubmissionRevoked": "Ditt inlägg \"{blockTitle}\" räknas inte längre till {questName}.",
+        "questClaimExpired": "Din reservation av {itemLabel} i {questName} har löpt ut.",
         "unknown": "Underrättelse"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Se konversationen på Daily Page",
         "fallbackActor": "Någon",
         "fallbackBlockTitle": "ditt inlägg"
-      }
+      },
+      "quest": {"headingWithName": "Hej {username},", "fallbackActor": "Någon", "fallbackQuestName": "uppdraget", "fallbackBlockTitle": "ditt inlägg", "fallbackItemLabel": "din reserverade uppdragspunkt"},
+      "questReviewRequested": {"subject": "Nytt bidrag till {questName}", "heading": "Ett uppdragsinlägg är klart för granskning", "body": "<strong>{actorUsername}</strong> skickade in <strong>{blockTitle}</strong> för granskning i <strong>{questName}</strong>.", "cta": "Granska bidraget"},
+      "questChangesRequested": {"subject": "Ändringar begärda för {blockTitle}", "heading": "Ditt uppdragsinlägg behöver ändras", "body": "Ändringar begärdes för <strong>{blockTitle}</strong> i <strong>{questName}</strong>.", "cta": "Visa inlägget"},
+      "questSubmissionApproved": {"subject": "Ditt inlägg godkändes för {questName}", "heading": "Uppdragsbidrag godkänt", "body": "Ditt inlägg <strong>{blockTitle}</strong> godkändes för <strong>{questName}</strong>.", "cta": "Visa det godkända inlägget"},
+      "questSubmissionRejected": {"subject": "Uppdatering om ditt bidrag till {questName}", "heading": "Uppdragsbidrag inte godkänt", "body": "Ditt inlägg <strong>{blockTitle}</strong> godkändes inte för <strong>{questName}</strong>.", "cta": "Visa inlägget"},
+      "questSubmissionRevoked": {"subject": "Ditt inlägg räknas inte längre till {questName}", "heading": "Uppdragsbidrag uppdaterat", "body": "Ditt inlägg <strong>{blockTitle}</strong> räknas inte längre till <strong>{questName}</strong>.", "cta": "Visa uppdraget"},
+      "questClaimExpired": {"subject": "Din reservation i {questName} har löpt ut", "heading": "Uppdragsreservationen har löpt ut", "body": "Din reservation av <strong>{itemLabel}</strong> i <strong>{questName}</strong> har löpt ut.", "cta": "Visa tillgängliga uppdragspunkter"}
     }
   }
 }
