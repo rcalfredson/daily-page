@@ -19,6 +19,7 @@
       "none": "Brak wyróżnionych pokoi.",
       "unnamedRoom": "Pokój bez nazwy"
     },
+    "quests": {"title": "Osiągnięcia w misjach", "contributions": "{count} z {target} wkładów", "nextTier": "{tier} przy {count} wkładach", "highestTier": "Najwyższy zdobyty poziom medalu", "none": "Nie zdobyto jeszcze odznak misji."},
     "stats": {
       "title": "Statystyki użytkownika",
       "totalBlocks": "Łączna liczba utworzonych postów",
