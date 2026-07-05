@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Fellesskapsoppdrag | Daily Page",
+        "description": "Bli med på samarbeidende fellesskapsoppdrag og hjelp til med å fullføre felles kreative mål."
+      },
+      "eyebrow": "Skap sammen",
+      "heading": "Fellesskapsoppdrag",
+      "intro": "Bli med i et felles prosjekt, bidra til samarbeidende innlegg og hjelp fellesskapet med å nå et ambisiøst mål.",
+      "viewQuest": "Utforsk oppdrag →",
+      "empty": {
+        "title": "Ingen aktive oppdrag ennå",
+        "body": "De første fellesskapsoppdragene er fortsatt under forberedelse. Kom tilbake snart."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Fellesskapsoppdrag",
+        "description": "Utforsk dette fellesskapsoppdraget på Daily Page."
+      },
+      "breadcrumbLabel": "Oppdragsnavigasjon",
+      "allQuests": "Alle oppdrag",
+      "administeredBy": "Administrert av",
+      "aboutHeading": "Om dette oppdraget",
+      "instructionsHeading": "Retningslinjer for bidrag",
+      "sectionsLabel": "Oppdragsseksjoner",
+      "tabs": {
+        "items": "Oppdragselementer",
+        "posts": "Godkjente innlegg",
+        "leaderboard": "Toppliste"
+      }
+    },
+    "progress": {
+      "label": "Oppdragsfremdrift",
+      "count": "{completed} av {target}",
+      "percent": "{percent} % fullført"
+    },
+    "status": {
+      "draft": "Utkast",
+      "active": "Aktivt",
+      "completed": "Fullført",
+      "archived": "Arkivert"
+    },
+    "type": {
+      "count": "Antallsbasert oppdrag",
+      "set": "Settbasert oppdrag"
+    },
+    "badge": {
+      "alt": "Merke for {questName}",
+      "tierAlt": "{tier}-merke for {questName}"
+    },
+    "items": {
+      "eyebrow": "Sjekklisten",
+      "heading": "Oppdragselementer",
+      "resultCount": "{count} vist",
+      "searchLabel": "Søk i elementer",
+      "searchPlaceholder": "Søk etter navn",
+      "stateLabel": "Status",
+      "filter": "Bruk filtre",
+      "clear": "Tøm",
+      "states": {
+        "all": "Alle statuser",
+        "available": "Tilgjengelig",
+        "reserved": "Reservert",
+        "draft": "Pågår",
+        "pending": "Til vurdering",
+        "changes-requested": "Endringer bedt om",
+        "completed": "Fullført",
+        "inactive": "Inaktiv"
+      },
+      "byCreator": "Av {username}",
+      "availableNote": "Åpent for et fremtidig bidrag.",
+      "inProgressNote": "Et medlem av fellesskapet arbeider med dette elementet.",
+      "empty": {
+        "title": "Ingen samsvarende elementer",
+        "body": "Prøv et annet søk eller statusfilter."
+      }
+    },
+    "posts": {
+      "eyebrow": "Fellesskapsarbeid",
+      "heading": "Godkjente innlegg",
+      "resultCount": "{count} vist",
+      "byCreator": "Opprettet av {username}",
+      "approved": "Godkjent",
+      "contributors": "{count} krediterte bidragsytere",
+      "empty": {
+        "title": "Ingen godkjente innlegg ennå",
+        "body": "Dette oppdraget venter på sitt første godkjente bidrag."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Ditt bidrag",
+      "heading": "Bli med på dette oppdraget",
+      "signInPrompt": "Logg inn for å reservere et element og sende inn et innlegg til vurdering.",
+      "signIn": "Logg inn for å bidra",
+      "countPrompt": "Opprett et nytt innlegg i dette oppdragets standardrom, utvikle det og lås det før du ber om vurdering.",
+      "setPrompt": "Velg et tilgjengelig oppdragselement for å reservere det og begynne på ditt første bidrag.",
+      "browseItems": "Bla gjennom tilgjengelige elementer",
+      "createPost": "Opprett oppdragsinnlegg",
+      "closed": "Dette oppdraget tar ikke imot nye bidrag akkurat nå.",
+      "mineHeading": "Dine oppdragsinnlegg",
+      "claim": "Reserver dette elementet",
+      "release": "Frigi reservasjon",
+      "editPost": "Rediger innlegg",
+      "requestReview": "Be om vurdering",
+      "withdraw": "Trekk tilbake",
+      "resumeEditing": "Fortsett redigering",
+      "startRevision": "Revider godkjent innlegg",
+      "confirmWithdraw": "Trekke tilbake denne oppdragsinnsendelsen? Selve innlegget blir værende på nettstedet.",
+      "pagination": {
+        "label": "Sider for dine oppdragsinnlegg",
+        "previous": "← Nyere innlegg",
+        "next": "Eldre innlegg →",
+        "status": "Side {current} av {total} · {count} innlegg"
+      },
+      "status": {
+        "draft": "Utkast",
+        "pending": "Til vurdering",
+        "changes-requested": "Endringer bedt om",
+        "approved": "Godkjent",
+        "rejected": "Avvist",
+        "withdrawn": "Trukket tilbake",
+        "revoked": "Tilbakekalt"
+      },
+      "errors": {
+        "generic": "Denne oppdragshandlingen kunne ikke fullføres. Prøv på nytt.",
+        "blockIneligible": "Før du ber om vurdering, må du låse innlegget og forsikre deg om at det fortsatt oppfyller oppdragskravene.",
+        "itemUnavailable": "Dette elementet er ikke lenger tilgjengelig for dette bidraget. Oppdater siden og prøv på nytt.",
+        "createFailed": "Innlegget kunne ikke knyttes til dette oppdraget. Reservasjonen din kan ha utløpt; gå tilbake til oppdraget og prøv på nytt."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Vurderingskø for oppdrag | Daily Page",
+        "description": "Vurder ventende innsendelser for fellesskapsoppdragene du administrerer."
+      },
+      "eyebrow": "Administratorarbeidsområde",
+      "heading": "Vurderingskø for oppdrag",
+      "intro": "Gå gjennom det innsendte innlegget og historikken før du godkjenner det eller sender det tilbake til bidragsyteren.",
+      "pendingCount": "{count} ventende innsendelser",
+      "openPanel": "Åpne vurderingskø",
+      "owner": "Eier av innsendelsen",
+      "unknownOwner": "Ukjent bruker",
+      "item": "Oppdragselement",
+      "requestedAt": "Vurdering bedt om",
+      "revision": "Innsendt revisjon",
+      "unknownRevision": "Ukjent revisjon",
+      "openPost": "Åpne innsendt innlegg",
+      "missingPost": "Innlegg utilgjengelig",
+      "history": "Vurderingshistorikk ({count})",
+      "reason": "Årsak: {reason}",
+      "commentLabel": "Vurderingskommentar",
+      "commentPlaceholder": "Forklar beslutningen din eller legg igjen nyttige revisjonsnotater.",
+      "commentHelp": "En kommentar kreves når du ber om endringer eller avviser. Den er valgfri ved godkjenning.",
+      "approve": "Godkjenn",
+      "requestChanges": "Be om endringer",
+      "reject": "Avvis",
+      "events": {
+        "created": "Innsendelse opprettet",
+        "review-requested": "Vurdering bedt om",
+        "changes-requested": "Endringer bedt om",
+        "editing-reopened": "Redigering gjenopptatt",
+        "approved": "Godkjent",
+        "rejected": "Avvist",
+        "withdrawn": "Trukket tilbake",
+        "revision-started": "Revisjon startet",
+        "revoked": "Godkjenning tilbakekalt",
+        "claim-expired": "Reservasjon utløpt",
+        "invalidated": "Innsendelse ugyldiggjort"
+      },
+      "empty": {
+        "title": "Køen er tom",
+        "body": "Det finnes ingen ventende innsendelser for oppdragene du administrerer."
+      },
+      "errors": {
+        "forbidden": "Du administrerer ikke dette oppdraget.",
+        "loadFailed": "Vurderingskøen for oppdrag kunne ikke lastes akkurat nå.",
+        "actionFailed": "Denne vurderingsbeslutningen kunne ikke lagres. Prøv på nytt.",
+        "commentRequired": "Legg til en vurderingskommentar før du ber om endringer eller avviser.",
+        "stale": "Denne innsendelsen eller innlegget ble endret før beslutningen ble lagret. Køen blir oppdatert."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "Toppliste for {questName} | Daily Page",
+        "description": "Se de ledende bidragsyterne til {questName}."
+      },
+      "heading": "Oppdragets toppliste",
+      "intro": "Bidragsytere rangeres etter godkjente oppdragsinnlegg, deretter etter når de nådde sin nåværende total.",
+      "contributions": "{count} av {target} innlegg",
+      "empty": {
+        "title": "Topplisten venter",
+        "body": "Bidragsytere vises etter at det første innlegget er godkjent."
+      }
+    },
+    "medals": {
+      "base": "Bidragsyter",
+      "bronze": "Bronse",
+      "silver": "Sølv",
+      "gold": "Gull"
+    },
+    "pagination": {
+      "label": "Sider med oppdragsresultater",
+      "previous": "← Forrige",
+      "next": "Neste →",
+      "status": "Side {current} av {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Oppdrag ikke funnet",
+      "notFound": "Dette oppdraget ble ikke funnet.",
+      "loadFailed": "Oppdraget kunne ikke lastes akkurat nå."
+    }
+  }
+}
