@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Fællesskabsquests | Daily Page",
+        "description": "Deltag i samarbejdende fællesskabsquests, og hjælp med at fuldføre fælles kreative mål."
+      },
+      "eyebrow": "Skab sammen",
+      "heading": "Fællesskabsquests",
+      "intro": "Deltag i et fælles projekt, bidrag til samarbejdende opslag, og hjælp fællesskabet med at nå et ambitiøst mål.",
+      "viewQuest": "Udforsk quest →",
+      "empty": {
+        "title": "Ingen aktive quests endnu",
+        "body": "De første fællesskabsquests er stadig under forberedelse. Kig forbi snart igen."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Fællesskabsquests",
+        "description": "Udforsk denne fællesskabsquest på Daily Page."
+      },
+      "breadcrumbLabel": "Questnavigation",
+      "allQuests": "Alle quests",
+      "administeredBy": "Administreres af",
+      "aboutHeading": "Om denne quest",
+      "instructionsHeading": "Retningslinjer for bidrag",
+      "sectionsLabel": "Questsektioner",
+      "tabs": {
+        "items": "Questelementer",
+        "posts": "Godkendte opslag",
+        "leaderboard": "Rangliste"
+      }
+    },
+    "progress": {
+      "label": "Questfremgang",
+      "count": "{completed} af {target}",
+      "percent": "{percent} % fuldført"
+    },
+    "status": {
+      "draft": "Kladde",
+      "active": "Aktiv",
+      "completed": "Fuldført",
+      "archived": "Arkiveret"
+    },
+    "type": {
+      "count": "Antalsbaseret quest",
+      "set": "Sætbaseret quest"
+    },
+    "badge": {
+      "alt": "Badge for {questName}",
+      "tierAlt": "{tier}-badge for {questName}"
+    },
+    "items": {
+      "eyebrow": "Tjeklisten",
+      "heading": "Questelementer",
+      "resultCount": "{count} vist",
+      "searchLabel": "Søg i elementer",
+      "searchPlaceholder": "Søg efter navn",
+      "stateLabel": "Status",
+      "filter": "Anvend filtre",
+      "clear": "Ryd",
+      "states": {
+        "all": "Alle statusser",
+        "available": "Tilgængelig",
+        "reserved": "Reserveret",
+        "draft": "I gang",
+        "pending": "Til gennemgang",
+        "changes-requested": "Ændringer ønsket",
+        "completed": "Fuldført",
+        "inactive": "Inaktiv"
+      },
+      "byCreator": "Af {username}",
+      "availableNote": "Åben for et fremtidigt bidrag.",
+      "inProgressNote": "Et medlem af fællesskabet arbejder på dette element.",
+      "empty": {
+        "title": "Ingen matchende elementer",
+        "body": "Prøv en anden søgning eller et andet statusfilter."
+      }
+    },
+    "posts": {
+      "eyebrow": "Fællesskabets arbejde",
+      "heading": "Godkendte opslag",
+      "resultCount": "{count} vist",
+      "byCreator": "Oprettet af {username}",
+      "approved": "Godkendt",
+      "contributors": "{count} krediterede bidragydere",
+      "empty": {
+        "title": "Ingen godkendte opslag endnu",
+        "body": "Denne quest venter på sit første godkendte bidrag."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Dit bidrag",
+      "heading": "Deltag i denne quest",
+      "signInPrompt": "Log ind for at reservere et element og indsende et opslag til gennemgang.",
+      "signIn": "Log ind for at bidrage",
+      "countPrompt": "Opret et nyt opslag i denne quests standardrum, udvikl det, og lås det, før du anmoder om gennemgang.",
+      "setPrompt": "Vælg et tilgængeligt questelement, reserver det, og begynd på dit første bidrag.",
+      "browseItems": "Gennemse tilgængelige elementer",
+      "createPost": "Opret questopslag",
+      "closed": "Denne quest modtager ikke nye bidrag lige nu.",
+      "mineHeading": "Dine questopslag",
+      "claim": "Reserver dette element",
+      "release": "Frigiv reservation",
+      "editPost": "Rediger opslag",
+      "requestReview": "Anmod om gennemgang",
+      "withdraw": "Træk tilbage",
+      "resumeEditing": "Fortsæt redigering",
+      "startRevision": "Revider godkendt opslag",
+      "confirmWithdraw": "Træk denne questindsendelse tilbage? Selve opslaget bliver på siden.",
+      "pagination": {
+        "label": "Sider med dine questopslag",
+        "previous": "← Nyere opslag",
+        "next": "Ældre opslag →",
+        "status": "Side {current} af {total} · {count} opslag"
+      },
+      "status": {
+        "draft": "Kladde",
+        "pending": "Til gennemgang",
+        "changes-requested": "Ændringer ønsket",
+        "approved": "Godkendt",
+        "rejected": "Afvist",
+        "withdrawn": "Trukket tilbage",
+        "revoked": "Tilbagekaldt"
+      },
+      "errors": {
+        "generic": "Den questhandling kunne ikke gennemføres. Prøv igen.",
+        "blockIneligible": "Før du anmoder om gennemgang, skal du låse opslaget og sikre, at det stadig opfylder questkravene.",
+        "itemUnavailable": "Dette element er ikke længere tilgængeligt for dette bidrag. Opdater siden, og prøv igen.",
+        "createFailed": "Opslaget kunne ikke knyttes til denne quest. Din reservation kan være udløbet; vend tilbage til questen, og prøv igen."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Gennemgangskø for quests | Daily Page",
+        "description": "Gennemgå afventende indsendelser til de fællesskabsquests, du administrerer."
+      },
+      "eyebrow": "Administratorarbejdsrum",
+      "heading": "Gennemgangskø for quests",
+      "intro": "Gennemgå det indsendte opslag og dets historik, før du godkender det eller sender det tilbage til bidragyderen.",
+      "pendingCount": "{count} afventende indsendelser",
+      "openPanel": "Åbn gennemgangskø",
+      "owner": "Indsendelsens ejer",
+      "unknownOwner": "Ukendt bruger",
+      "item": "Questelement",
+      "requestedAt": "Gennemgang anmodet",
+      "revision": "Indsendt revision",
+      "unknownRevision": "Ukendt revision",
+      "openPost": "Åbn indsendt opslag",
+      "missingPost": "Opslag utilgængeligt",
+      "history": "Gennemgangshistorik ({count})",
+      "reason": "Årsag: {reason}",
+      "commentLabel": "Gennemgangskommentar",
+      "commentPlaceholder": "Forklar din beslutning, eller giv hjælpsomme revisionsnoter.",
+      "commentHelp": "En kommentar er påkrævet, når du anmoder om ændringer eller afviser. Den er valgfri ved godkendelse.",
+      "approve": "Godkend",
+      "requestChanges": "Anmod om ændringer",
+      "reject": "Afvis",
+      "events": {
+        "created": "Indsendelse oprettet",
+        "review-requested": "Gennemgang anmodet",
+        "changes-requested": "Ændringer ønsket",
+        "editing-reopened": "Redigering genoptaget",
+        "approved": "Godkendt",
+        "rejected": "Afvist",
+        "withdrawn": "Trukket tilbage",
+        "revision-started": "Revision startet",
+        "revoked": "Godkendelse tilbagekaldt",
+        "claim-expired": "Reservation udløbet",
+        "invalidated": "Indsendelse ugyldiggjort"
+      },
+      "empty": {
+        "title": "Køen er tom",
+        "body": "Der er ingen afventende indsendelser til de quests, du administrerer."
+      },
+      "errors": {
+        "forbidden": "Du administrerer ikke den quest.",
+        "loadFailed": "Gennemgangskøen for quests kunne ikke indlæses lige nu.",
+        "actionFailed": "Den gennemgangsbeslutning kunne ikke gemmes. Prøv igen.",
+        "commentRequired": "Tilføj en gennemgangskommentar, før du anmoder om ændringer eller afviser.",
+        "stale": "Denne indsendelse eller dens opslag blev ændret, før beslutningen blev gemt. Køen bliver opdateret."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "{questName}-rangliste | Daily Page",
+        "description": "Se de førende bidragydere til {questName}."
+      },
+      "heading": "Questrangliste",
+      "intro": "Bidragydere rangeres efter godkendte questopslag og derefter efter, hvornår de nåede deres nuværende total.",
+      "contributions": "{count} af {target} opslag",
+      "empty": {
+        "title": "Ranglisten venter",
+        "body": "Bidragydere vises, når det første opslag er godkendt."
+      }
+    },
+    "medals": {
+      "base": "Bidragyder",
+      "bronze": "Bronze",
+      "silver": "Sølv",
+      "gold": "Guld"
+    },
+    "pagination": {
+      "label": "Sider med questresultater",
+      "previous": "← Forrige",
+      "next": "Næste →",
+      "status": "Side {current} af {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Quest ikke fundet",
+      "notFound": "Den quest kunne ikke findes.",
+      "loadFailed": "Questen kunne ikke indlæses lige nu."
+    }
+  }
+}
