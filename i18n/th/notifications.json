@@ -9,9 +9,17 @@
       "markRead": "อ่านจดหมายร่าง",
       "fallbackActor": "ใครบางคน",
       "fallbackBlockTitle": "โพสต์ของคุณ",
+      "fallbackQuestName": "ภารกิจ",
+      "fallbackItemLabel": "รายการที่คุณจองไว้",
       "item": {
         "blockComment": "{actorUsername} ให้ความเห็นเกี่ยวกับโพสต์ \"{blockTitle}\".",
         "commentReply": "{actorUsername} ตอบความเห็นของคุณ \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} ส่ง \"{blockTitle}\" เพื่อขอรับการตรวจทานใน {questName}",
+        "questChangesRequested": "มีการขอให้แก้ไข \"{blockTitle}\" ใน {questName}",
+        "questSubmissionApproved": "โพสต์ \"{blockTitle}\" ของคุณได้รับอนุมัติสำหรับ {questName}",
+        "questSubmissionRejected": "โพสต์ \"{blockTitle}\" ของคุณไม่ได้รับการยอมรับสำหรับ {questName}",
+        "questSubmissionRevoked": "โพสต์ \"{blockTitle}\" ของคุณไม่ถูกนับใน {questName} อีกต่อไป",
+        "questClaimExpired": "การจอง {itemLabel} ของคุณใน {questName} หมดอายุแล้ว",
         "unknown": "การแจ้งให้ทราบ"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "มอง ดู การ สนทนา ใน หน้า ต่าง ๆ",
         "fallbackActor": "ใครบางคน",
         "fallbackBlockTitle": "โพสต์ของคุณ"
-      }
+      },
+      "quest": {"headingWithName": "สวัสดี {username}", "fallbackActor": "ใครบางคน", "fallbackQuestName": "ภารกิจ", "fallbackBlockTitle": "โพสต์ของคุณ", "fallbackItemLabel": "รายการที่คุณจองไว้"},
+      "questReviewRequested": {"subject": "มีผลงานใหม่สำหรับ {questName}", "heading": "โพสต์ภารกิจพร้อมรับการตรวจทานแล้ว", "body": "<strong>{actorUsername}</strong> ส่ง <strong>{blockTitle}</strong> เพื่อขอรับการตรวจทานใน <strong>{questName}</strong>", "cta": "ตรวจทานผลงาน"},
+      "questChangesRequested": {"subject": "มีการขอให้แก้ไข {blockTitle}", "heading": "โพสต์ภารกิจของคุณต้องแก้ไข", "body": "มีการขอให้แก้ไข <strong>{blockTitle}</strong> ใน <strong>{questName}</strong>", "cta": "ดูโพสต์"},
+      "questSubmissionApproved": {"subject": "โพสต์ของคุณได้รับอนุมัติสำหรับ {questName}", "heading": "ผลงานภารกิจได้รับอนุมัติ", "body": "โพสต์ <strong>{blockTitle}</strong> ของคุณได้รับอนุมัติสำหรับ <strong>{questName}</strong>", "cta": "ดูโพสต์ที่ได้รับอนุมัติ"},
+      "questSubmissionRejected": {"subject": "อัปเดตผลงานของคุณสำหรับ {questName}", "heading": "ผลงานภารกิจไม่ได้รับการยอมรับ", "body": "โพสต์ <strong>{blockTitle}</strong> ของคุณไม่ได้รับการยอมรับสำหรับ <strong>{questName}</strong>", "cta": "ดูโพสต์"},
+      "questSubmissionRevoked": {"subject": "โพสต์ของคุณไม่ถูกนับใน {questName} อีกต่อไป", "heading": "อัปเดตผลงานภารกิจแล้ว", "body": "โพสต์ <strong>{blockTitle}</strong> ของคุณไม่ถูกนับใน <strong>{questName}</strong> อีกต่อไป", "cta": "ดูภารกิจ"},
+      "questClaimExpired": {"subject": "การจองของคุณใน {questName} หมดอายุแล้ว", "heading": "การจองภารกิจหมดอายุแล้ว", "body": "การจอง <strong>{itemLabel}</strong> ของคุณใน <strong>{questName}</strong> หมดอายุแล้ว", "cta": "ดูรายการภารกิจที่ยังว่าง"}
     }
   }
 }
