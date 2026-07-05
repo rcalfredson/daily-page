@@ -9,9 +9,17 @@
       "markRead": "Oznacz jako przeczytane",
       "fallbackActor": "Ktoś",
       "fallbackBlockTitle": "Twój post",
+      "fallbackQuestName": "misja",
+      "fallbackItemLabel": "zarezerwowany element",
       "item": {
         "blockComment": "{actorUsername} skomentował(a) Twój post „{blockTitle}”.",
         "commentReply": "{actorUsername} odpowiedział(a) na Twój komentarz do „{blockTitle}”.",
+        "questReviewRequested": "{actorUsername} przesłał(a) „{blockTitle}” do recenzji w misji {questName}.",
+        "questChangesRequested": "Poproszono o zmiany w „{blockTitle}” w misji {questName}.",
+        "questSubmissionApproved": "Twój post „{blockTitle}” został zatwierdzony dla misji {questName}.",
+        "questSubmissionRejected": "Twój post „{blockTitle}” nie został zaakceptowany dla misji {questName}.",
+        "questSubmissionRevoked": "Twój post „{blockTitle}” nie jest już zaliczany do misji {questName}.",
+        "questClaimExpired": "Twoja rezerwacja elementu {itemLabel} w misji {questName} wygasła.",
         "unknown": "Powiadomienie"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Zobacz rozmowę w Daily Page",
         "fallbackActor": "Ktoś",
         "fallbackBlockTitle": "Twój post"
-      }
+      },
+      "quest": {"headingWithName": "Cześć {username},", "fallbackActor": "Ktoś", "fallbackQuestName": "misja", "fallbackBlockTitle": "Twój post", "fallbackItemLabel": "zarezerwowany element"},
+      "questReviewRequested": {"subject": "Nowe zgłoszenie do misji {questName}", "heading": "Post misji jest gotowy do recenzji", "body": "<strong>{actorUsername}</strong> przesłał(a) <strong>{blockTitle}</strong> do recenzji w misji <strong>{questName}</strong>.", "cta": "Oceń zgłoszenie"},
+      "questChangesRequested": {"subject": "Poproszono o zmiany w {blockTitle}", "heading": "Twój post misji wymaga zmian", "body": "Poproszono o zmiany w <strong>{blockTitle}</strong> w misji <strong>{questName}</strong>.", "cta": "Zobacz post"},
+      "questSubmissionApproved": {"subject": "Twój post został zatwierdzony dla misji {questName}", "heading": "Zgłoszenie do misji zatwierdzone", "body": "Twój post <strong>{blockTitle}</strong> został zatwierdzony dla misji <strong>{questName}</strong>.", "cta": "Zobacz zatwierdzony post"},
+      "questSubmissionRejected": {"subject": "Aktualizacja zgłoszenia do misji {questName}", "heading": "Zgłoszenie do misji nie zostało zaakceptowane", "body": "Twój post <strong>{blockTitle}</strong> nie został zaakceptowany dla misji <strong>{questName}</strong>.", "cta": "Zobacz post"},
+      "questSubmissionRevoked": {"subject": "Twój post nie jest już zaliczany do misji {questName}", "heading": "Wkład w misję zaktualizowany", "body": "Twój post <strong>{blockTitle}</strong> nie jest już zaliczany do misji <strong>{questName}</strong>.", "cta": "Zobacz misję"},
+      "questClaimExpired": {"subject": "Twoja rezerwacja w misji {questName} wygasła", "heading": "Rezerwacja w misji wygasła", "body": "Twoja rezerwacja elementu <strong>{itemLabel}</strong> w misji <strong>{questName}</strong> wygasła.", "cta": "Zobacz dostępne elementy misji"}
     }
   }
 }
