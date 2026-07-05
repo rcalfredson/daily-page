@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Misje społecznościowe | Daily Page",
+        "description": "Dołącz do wspólnych misji społecznościowych i pomóż realizować wspólne cele twórcze."
+      },
+      "eyebrow": "Twórzmy razem",
+      "heading": "Misje społecznościowe",
+      "intro": "Dołącz do wspólnego projektu, współtwórz publikacje i pomóż społeczności osiągnąć ambitny cel.",
+      "viewQuest": "Poznaj misję →",
+      "empty": {
+        "title": "Brak aktywnych misji",
+        "body": "Pierwsze misje społecznościowe są jeszcze przygotowywane. Zajrzyj ponownie wkrótce."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Misje społecznościowe",
+        "description": "Poznaj tę misję społecznościową w Daily Page."
+      },
+      "breadcrumbLabel": "Nawigacja misji",
+      "allQuests": "Wszystkie misje",
+      "administeredBy": "Administrowana przez",
+      "aboutHeading": "O tej misji",
+      "instructionsHeading": "Wytyczne dotyczące wkładu",
+      "sectionsLabel": "Sekcje misji",
+      "tabs": {
+        "items": "Elementy misji",
+        "posts": "Zatwierdzone publikacje",
+        "leaderboard": "Ranking"
+      }
+    },
+    "progress": {
+      "label": "Postęp misji",
+      "count": "{completed} z {target}",
+      "percent": "Ukończono {percent}%"
+    },
+    "status": {
+      "draft": "Szkic",
+      "active": "Aktywna",
+      "completed": "Ukończona",
+      "archived": "Zarchiwizowana"
+    },
+    "type": {
+      "count": "Misja oparta na liczbie",
+      "set": "Misja oparta na zestawie"
+    },
+    "badge": {
+      "alt": "Odznaka dla {questName}",
+      "tierAlt": "Odznaka {tier} dla {questName}"
+    },
+    "items": {
+      "eyebrow": "Lista kontrolna",
+      "heading": "Elementy misji",
+      "resultCount": "Wyświetlono: {count}",
+      "searchLabel": "Szukaj elementów",
+      "searchPlaceholder": "Szukaj według nazwy",
+      "stateLabel": "Status",
+      "filter": "Zastosuj filtry",
+      "clear": "Wyczyść",
+      "states": {
+        "all": "Wszystkie statusy",
+        "available": "Dostępne",
+        "reserved": "Zarezerwowane",
+        "draft": "W toku",
+        "pending": "W trakcie przeglądu",
+        "changes-requested": "Poproszono o zmiany",
+        "completed": "Ukończone",
+        "inactive": "Nieaktywne"
+      },
+      "byCreator": "Autor: {username}",
+      "availableNote": "Otwarte na przyszły wkład.",
+      "inProgressNote": "Członek społeczności pracuje nad tym elementem.",
+      "empty": {
+        "title": "Brak pasujących elementów",
+        "body": "Spróbuj użyć innego wyszukiwania lub filtra statusu."
+      }
+    },
+    "posts": {
+      "eyebrow": "Praca społeczności",
+      "heading": "Zatwierdzone publikacje",
+      "resultCount": "Wyświetlono: {count}",
+      "byCreator": "Utworzone przez {username}",
+      "approved": "Zatwierdzono",
+      "contributors": "{count} uznanych współtwórców",
+      "empty": {
+        "title": "Brak zatwierdzonych publikacji",
+        "body": "Ta misja czeka na swój pierwszy zatwierdzony wkład."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Twój wkład",
+      "heading": "Dołącz do tej misji",
+      "signInPrompt": "Zaloguj się, aby zarezerwować element i przesłać publikację do przeglądu.",
+      "signIn": "Zaloguj się, aby wnieść wkład",
+      "countPrompt": "Utwórz nową publikację w domyślnym pokoju tej misji, a następnie rozwiń ją i zablokuj przed poproszeniem o przegląd.",
+      "setPrompt": "Wybierz dostępny element misji, zarezerwuj go i rozpocznij swój pierwszy wkład.",
+      "browseItems": "Przeglądaj dostępne elementy",
+      "createPost": "Utwórz publikację misji",
+      "closed": "Ta misja nie przyjmuje teraz nowych wkładów.",
+      "mineHeading": "Twoje publikacje w misjach",
+      "claim": "Zarezerwuj ten element",
+      "release": "Zwolnij rezerwację",
+      "editPost": "Edytuj publikację",
+      "requestReview": "Poproś o przegląd",
+      "withdraw": "Wycofaj",
+      "resumeEditing": "Wznów edycję",
+      "startRevision": "Popraw zatwierdzoną publikację",
+      "confirmWithdraw": "Wycofać to zgłoszenie do misji? Sama publikacja pozostanie w serwisie.",
+      "pagination": {
+        "label": "Strony twoich publikacji w misjach",
+        "previous": "← Nowsze publikacje",
+        "next": "Starsze publikacje →",
+        "status": "Strona {current} z {total} · {count} publikacji"
+      },
+      "status": {
+        "draft": "Szkic",
+        "pending": "W trakcie przeglądu",
+        "changes-requested": "Poproszono o zmiany",
+        "approved": "Zatwierdzone",
+        "rejected": "Odrzucone",
+        "withdrawn": "Wycofane",
+        "revoked": "Cofnięte"
+      },
+      "errors": {
+        "generic": "Nie udało się wykonać tej akcji misji. Spróbuj ponownie.",
+        "blockIneligible": "Przed poproszeniem o przegląd zablokuj publikację i upewnij się, że nadal spełnia wymagania misji.",
+        "itemUnavailable": "Ten element nie jest już dostępny dla tego wkładu. Odśwież stronę i spróbuj ponownie.",
+        "createFailed": "Nie udało się powiązać publikacji z tą misją. Twoja rezerwacja mogła wygasnąć; wróć do misji i spróbuj ponownie."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Kolejka przeglądu misji | Daily Page",
+        "description": "Przeglądaj oczekujące zgłoszenia do misji społecznościowych, którymi administrujesz."
+      },
+      "eyebrow": "Panel administratora",
+      "heading": "Kolejka przeglądu misji",
+      "intro": "Przejrzyj przesłaną publikację i jej historię, zanim ją zatwierdzisz albo odeślesz współtwórcy.",
+      "pendingCount": "{count} oczekujących zgłoszeń",
+      "openPanel": "Otwórz kolejkę przeglądu",
+      "owner": "Właściciel zgłoszenia",
+      "unknownOwner": "Nieznany użytkownik",
+      "item": "Element misji",
+      "requestedAt": "Poproszono o przegląd",
+      "revision": "Przesłana wersja",
+      "unknownRevision": "Nieznana wersja",
+      "openPost": "Otwórz przesłaną publikację",
+      "missingPost": "Publikacja niedostępna",
+      "history": "Historia przeglądu ({count})",
+      "reason": "Powód: {reason}",
+      "commentLabel": "Komentarz do przeglądu",
+      "commentPlaceholder": "Wyjaśnij swoją decyzję albo zostaw pomocne uwagi do poprawy.",
+      "commentHelp": "Komentarz jest wymagany przy proszeniu o zmiany lub odrzuceniu. Przy zatwierdzaniu jest opcjonalny.",
+      "approve": "Zatwierdź",
+      "requestChanges": "Poproś o zmiany",
+      "reject": "Odrzuć",
+      "events": {
+        "created": "Utworzono zgłoszenie",
+        "review-requested": "Poproszono o przegląd",
+        "changes-requested": "Poproszono o zmiany",
+        "editing-reopened": "Wznowiono edycję",
+        "approved": "Zatwierdzono",
+        "rejected": "Odrzucono",
+        "withdrawn": "Wycofano",
+        "revision-started": "Rozpoczęto poprawki",
+        "revoked": "Cofnięto zatwierdzenie",
+        "claim-expired": "Rezerwacja wygasła",
+        "invalidated": "Zgłoszenie unieważnione"
+      },
+      "empty": {
+        "title": "Kolejka jest pusta",
+        "body": "Nie ma oczekujących zgłoszeń do misji, którymi administrujesz."
+      },
+      "errors": {
+        "forbidden": "Nie administrujesz tą misją.",
+        "loadFailed": "Nie udało się teraz wczytać kolejki przeglądu misji.",
+        "actionFailed": "Nie udało się zapisać tej decyzji przeglądu. Spróbuj ponownie.",
+        "commentRequired": "Dodaj komentarz do przeglądu przed poproszeniem o zmiany lub odrzuceniem.",
+        "stale": "To zgłoszenie lub jego publikacja zmieniły się przed zapisaniem decyzji. Kolejka zostanie odświeżona."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "Ranking {questName} | Daily Page",
+        "description": "Zobacz czołowych współtwórców misji {questName}."
+      },
+      "heading": "Ranking misji",
+      "intro": "Współtwórcy są klasyfikowani według liczby zatwierdzonych publikacji w misji, a następnie według momentu osiągnięcia obecnego wyniku.",
+      "contributions": "{count} z {target} publikacji",
+      "empty": {
+        "title": "Ranking czeka",
+        "body": "Współtwórcy pojawią się po zatwierdzeniu pierwszej publikacji."
+      }
+    },
+    "medals": {
+      "base": "Współtwórca",
+      "bronze": "Brąz",
+      "silver": "Srebro",
+      "gold": "Złoto"
+    },
+    "pagination": {
+      "label": "Strony wyników misji",
+      "previous": "← Poprzednia",
+      "next": "Następna →",
+      "status": "Strona {current} z {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Nie znaleziono misji",
+      "notFound": "Nie udało się znaleźć tej misji.",
+      "loadFailed": "Nie udało się teraz wczytać misji."
+    }
+  }
+}
