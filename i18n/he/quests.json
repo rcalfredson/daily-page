@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "משימות קהילתיות | Daily Page",
+        "description": "הצטרפו למשימות קהילתיות שיתופיות ועזרו להשלים יעדים יצירתיים משותפים."
+      },
+      "eyebrow": "יוצרים יחד",
+      "heading": "משימות קהילתיות",
+      "intro": "הצטרפו לפרויקט משותף, תרמו לפוסטים שיתופיים ועזרו לקהילה להגיע ליעד שאפתני.",
+      "viewQuest": "צפייה במשימה →",
+      "empty": {
+        "title": "עדיין אין משימות פעילות",
+        "body": "המשימות הקהילתיות הראשונות עדיין בהכנה. חזרו בקרוב."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | משימות קהילתיות",
+        "description": "גלו את המשימה הקהילתית הזאת ב-Daily Page."
+      },
+      "breadcrumbLabel": "ניווט במשימה",
+      "allQuests": "כל המשימות",
+      "administeredBy": "מנוהלת על ידי",
+      "aboutHeading": "על המשימה הזאת",
+      "instructionsHeading": "הנחיות לתרומה",
+      "sectionsLabel": "מקטעי המשימה",
+      "tabs": {
+        "items": "פריטי המשימה",
+        "posts": "פוסטים שאושרו",
+        "leaderboard": "לוח מובילים"
+      }
+    },
+    "progress": {
+      "label": "התקדמות המשימה",
+      "count": "{completed} מתוך {target}",
+      "percent": "{percent}% הושלם"
+    },
+    "status": {
+      "draft": "טיוטה",
+      "active": "פעילה",
+      "completed": "הושלמה",
+      "archived": "בארכיון"
+    },
+    "type": {
+      "count": "משימה מבוססת ספירה",
+      "set": "משימה מבוססת קבוצת פריטים"
+    },
+    "badge": {
+      "alt": "תג עבור {questName}",
+      "tierAlt": "תג {tier} עבור {questName}"
+    },
+    "items": {
+      "eyebrow": "רשימת הבדיקה",
+      "heading": "פריטי המשימה",
+      "resultCount": "{count} מוצגים",
+      "searchLabel": "חיפוש פריטים",
+      "searchPlaceholder": "חיפוש לפי שם",
+      "stateLabel": "סטטוס",
+      "filter": "החלת מסננים",
+      "clear": "ניקוי",
+      "states": {
+        "all": "כל הסטטוסים",
+        "available": "זמין",
+        "reserved": "שמור",
+        "draft": "בתהליך",
+        "pending": "בבדיקה",
+        "changes-requested": "נדרשו שינויים",
+        "completed": "הושלם",
+        "inactive": "לא פעיל"
+      },
+      "byCreator": "מאת {username}",
+      "availableNote": "פתוח לתרומה עתידית.",
+      "inProgressNote": "חבר בקהילה עובד על הפריט הזה.",
+      "empty": {
+        "title": "אין פריטים תואמים",
+        "body": "נסו חיפוש אחר או מסנן סטטוס אחר."
+      }
+    },
+    "posts": {
+      "eyebrow": "עבודה קהילתית",
+      "heading": "פוסטים שאושרו",
+      "resultCount": "{count} מוצגים",
+      "byCreator": "נוצר על ידי {username}",
+      "approved": "אושר",
+      "contributors": "{count} תורמים מזוכים",
+      "empty": {
+        "title": "עדיין אין פוסטים שאושרו",
+        "body": "המשימה הזאת מחכה לתרומה המאושרת הראשונה שלה."
+      }
+    },
+    "contribute": {
+      "eyebrow": "התרומה שלך",
+      "heading": "הצטרפות למשימה הזאת",
+      "signInPrompt": "יש להתחבר כדי לשמור פריט ולשלוח פוסט לבדיקה.",
+      "signIn": "התחברות כדי לתרום",
+      "countPrompt": "צרו פוסט חדש בחדר ברירת המחדל של המשימה, ואז עבדו עליו ונעלו אותו לפני בקשת בדיקה.",
+      "setPrompt": "בחרו פריט משימה זמין לשמירה והתחילו את התרומה הראשונה שלכם.",
+      "browseItems": "עיון בפריטים זמינים",
+      "createPost": "יצירת פוסט למשימה",
+      "closed": "המשימה הזאת אינה מקבלת תרומות חדשות כרגע.",
+      "mineHeading": "פוסטי המשימה שלך",
+      "claim": "שמירת הפריט הזה",
+      "release": "שחרור השמירה",
+      "editPost": "עריכת הפוסט",
+      "requestReview": "בקשת בדיקה",
+      "withdraw": "משיכה",
+      "resumeEditing": "המשך עריכה",
+      "startRevision": "תיקון פוסט מאושר",
+      "confirmWithdraw": "למשוך את הגשת המשימה הזאת? הפוסט עצמו יישאר באתר.",
+      "pagination": {
+        "label": "עמודי פוסטי המשימה שלך",
+        "previous": "← פוסטים חדשים יותר",
+        "next": "פוסטים ישנים יותר →",
+        "status": "עמוד {current} מתוך {total} · {count} פוסטים"
+      },
+      "status": {
+        "draft": "טיוטה",
+        "pending": "בבדיקה",
+        "changes-requested": "נדרשו שינויים",
+        "approved": "אושר",
+        "rejected": "נדחה",
+        "withdrawn": "נמשך",
+        "revoked": "בוטל"
+      },
+      "errors": {
+        "generic": "לא ניתן היה להשלים את פעולת המשימה הזאת. נסו שוב.",
+        "blockIneligible": "לפני בקשת בדיקה, נעלו את הפוסט וודאו שהוא עדיין עומד בדרישות המשימה.",
+        "itemUnavailable": "הפריט הזה כבר אינו זמין לתרומה הזאת. רעננו את הדף ונסו שוב.",
+        "createFailed": "לא ניתן היה לצרף את הפוסט למשימה הזאת. ייתכן שהשמירה שלכם פגה; חזרו למשימה ונסו שוב."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "תור בדיקת משימות | Daily Page",
+        "description": "בדקו הגשות ממתינות עבור המשימות הקהילתיות שאתם מנהלים."
+      },
+      "eyebrow": "סביבת ניהול",
+      "heading": "תור בדיקת משימות",
+      "intro": "בדקו את הפוסט שנשלח ואת ההיסטוריה שלו לפני אישורו או החזרתו לתורם.",
+      "pendingCount": "{count} הגשות ממתינות",
+      "openPanel": "פתיחת תור הבדיקה",
+      "owner": "בעל ההגשה",
+      "unknownOwner": "משתמש לא ידוע",
+      "item": "פריט המשימה",
+      "requestedAt": "הבדיקה התבקשה",
+      "revision": "גרסה שנשלחה",
+      "unknownRevision": "גרסה לא ידועה",
+      "openPost": "פתיחת הפוסט שנשלח",
+      "missingPost": "הפוסט אינו זמין",
+      "history": "היסטוריית בדיקה ({count})",
+      "reason": "סיבה: {reason}",
+      "commentLabel": "הערת בדיקה",
+      "commentPlaceholder": "הסבירו את ההחלטה או השאירו הערות מועילות לתיקון.",
+      "commentHelp": "נדרשת הערה בעת בקשת שינויים או דחייה. היא אופציונלית בעת אישור.",
+      "approve": "אישור",
+      "requestChanges": "בקשת שינויים",
+      "reject": "דחייה",
+      "events": {
+        "created": "הגשה נוצרה",
+        "review-requested": "בדיקה התבקשה",
+        "changes-requested": "נדרשו שינויים",
+        "editing-reopened": "העריכה חודשה",
+        "approved": "אושר",
+        "rejected": "נדחה",
+        "withdrawn": "נמשך",
+        "revision-started": "תיקון התחיל",
+        "revoked": "האישור בוטל",
+        "claim-expired": "השמירה פגה",
+        "invalidated": "ההגשה נפסלה"
+      },
+      "empty": {
+        "title": "התור נקי",
+        "body": "אין הגשות ממתינות עבור המשימות שאתם מנהלים."
+      },
+      "errors": {
+        "forbidden": "אינכם מנהלים את המשימה הזאת.",
+        "loadFailed": "לא ניתן לטעון כרגע את תור בדיקת המשימות.",
+        "actionFailed": "לא ניתן היה לשמור את החלטת הבדיקה הזאת. נסו שוב.",
+        "commentRequired": "הוסיפו הערת בדיקה לפני בקשת שינויים או דחייה.",
+        "stale": "ההגשה הזאת או הפוסט שלה השתנו לפני שמירת ההחלטה. התור יתרענן."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "לוח המובילים של {questName} | Daily Page",
+        "description": "ראו את התורמים המובילים עבור {questName}."
+      },
+      "heading": "לוח מובילי המשימה",
+      "intro": "התורמים מדורגים לפי פוסטים מאושרים במשימה, ולאחר מכן לפי המועד שבו הגיעו לסך הנוכחי שלהם.",
+      "contributions": "{count} מתוך {target} פוסטים",
+      "empty": {
+        "title": "לוח המובילים מחכה",
+        "body": "התורמים יופיעו לאחר אישור הפוסט הראשון."
+      }
+    },
+    "medals": {
+      "base": "תורם",
+      "bronze": "ארד",
+      "silver": "כסף",
+      "gold": "זהב"
+    },
+    "pagination": {
+      "label": "עמודי תוצאות המשימה",
+      "previous": "← הקודם",
+      "next": "הבא →",
+      "status": "עמוד {current} מתוך {total}"
+    },
+    "errors": {
+      "notFoundTitle": "המשימה לא נמצאה",
+      "notFound": "לא ניתן היה למצוא את המשימה הזאת.",
+      "loadFailed": "לא ניתן לטעון את המשימה כרגע."
+    }
+  }
+}
