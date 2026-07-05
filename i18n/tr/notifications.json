@@ -9,9 +9,17 @@
       "markRead": "Okundu olarak işaretle",
       "fallbackActor": "Birisi",
       "fallbackBlockTitle": "gönderiniz",
+      "fallbackQuestName": "görev",
+      "fallbackItemLabel": "ayırtılmış görev öğeniz",
       "item": {
         "blockComment": "{actorUsername}, \"{blockTitle}\" gönderinize yorum yaptı.",
         "commentReply": "{actorUsername}, \"{blockTitle}\" hakkındaki yorumunuza yanıt verdi.",
+        "questReviewRequested": "{actorUsername}, \"{blockTitle}\" gönderisini {questName} görevi için incelemeye gönderdi.",
+        "questChangesRequested": "{questName} görevindeki \"{blockTitle}\" için değişiklik istendi.",
+        "questSubmissionApproved": "\"{blockTitle}\" gönderiniz {questName} görevi için onaylandı.",
+        "questSubmissionRejected": "\"{blockTitle}\" gönderiniz {questName} görevi için kabul edilmedi.",
+        "questSubmissionRevoked": "\"{blockTitle}\" gönderiniz artık {questName} görevine dahil edilmiyor.",
+        "questClaimExpired": "{questName} görevindeki {itemLabel} rezervasyonunuzun süresi doldu.",
         "unknown": "Bildirim"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Daily Page'deki konuşmayı görüntüleyin",
         "fallbackActor": "Birisi",
         "fallbackBlockTitle": "gönderiniz"
-      }
+      },
+      "quest": {"headingWithName": "Merhaba {username},", "fallbackActor": "Birisi", "fallbackQuestName": "görev", "fallbackBlockTitle": "gönderiniz", "fallbackItemLabel": "ayırtılmış görev öğeniz"},
+      "questReviewRequested": {"subject": "{questName} için yeni gönderi", "heading": "Bir görev gönderisi incelemeye hazır", "body": "<strong>{actorUsername}</strong>, <strong>{blockTitle}</strong> gönderisini <strong>{questName}</strong> görevi için incelemeye gönderdi.", "cta": "Gönderiyi incele"},
+      "questChangesRequested": {"subject": "{blockTitle} için değişiklik istendi", "heading": "Görev gönderinizde değişiklik gerekiyor", "body": "<strong>{questName}</strong> görevindeki <strong>{blockTitle}</strong> için değişiklik istendi.", "cta": "Gönderiyi görüntüle"},
+      "questSubmissionApproved": {"subject": "Gönderiniz {questName} için onaylandı", "heading": "Görev gönderisi onaylandı", "body": "<strong>{blockTitle}</strong> gönderiniz <strong>{questName}</strong> görevi için onaylandı.", "cta": "Onaylanan gönderiyi görüntüle"},
+      "questSubmissionRejected": {"subject": "{questName} gönderinizle ilgili güncelleme", "heading": "Görev gönderisi kabul edilmedi", "body": "<strong>{blockTitle}</strong> gönderiniz <strong>{questName}</strong> görevi için kabul edilmedi.", "cta": "Gönderiyi görüntüle"},
+      "questSubmissionRevoked": {"subject": "Gönderiniz artık {questName} görevine dahil edilmiyor", "heading": "Görev katkısı güncellendi", "body": "<strong>{blockTitle}</strong> gönderiniz artık <strong>{questName}</strong> görevine dahil edilmiyor.", "cta": "Görevi görüntüle"},
+      "questClaimExpired": {"subject": "{questName} görevindeki rezervasyonunuzun süresi doldu", "heading": "Görev rezervasyonunun süresi doldu", "body": "<strong>{questName}</strong> görevindeki <strong>{itemLabel}</strong> rezervasyonunuzun süresi doldu.", "cta": "Uygun görev öğelerini görüntüle"}
     }
   }
 }
