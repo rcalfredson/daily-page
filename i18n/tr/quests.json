@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Topluluk Görevleri | Daily Page",
+        "description": "Ortak yaratıcı hedefleri tamamlamaya yardımcı olmak için iş birliğine dayalı topluluk görevlerine katılın."
+      },
+      "eyebrow": "Birlikte oluşturun",
+      "heading": "Topluluk Görevleri",
+      "intro": "Ortak bir projeye katılın, iş birliğine dayalı gönderilere katkıda bulunun ve topluluğun iddialı bir hedefe ulaşmasına yardımcı olun.",
+      "viewQuest": "Görevi keşfet →",
+      "empty": {
+        "title": "Henüz aktif görev yok",
+        "body": "İlk topluluk görevleri hâlâ hazırlanıyor. Yakında tekrar kontrol edin."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Topluluk Görevleri",
+        "description": "Bu topluluk görevini Daily Page’de keşfedin."
+      },
+      "breadcrumbLabel": "Görev gezinmesi",
+      "allQuests": "Tüm görevler",
+      "administeredBy": "Yöneten",
+      "aboutHeading": "Bu görev hakkında",
+      "instructionsHeading": "Katkı yönergeleri",
+      "sectionsLabel": "Görev bölümleri",
+      "tabs": {
+        "items": "Görev öğeleri",
+        "posts": "Onaylanmış gönderiler",
+        "leaderboard": "Liderlik tablosu"
+      }
+    },
+    "progress": {
+      "label": "Görev ilerlemesi",
+      "count": "{completed} / {target}",
+      "percent": "%{percent} tamamlandı"
+    },
+    "status": {
+      "draft": "Taslak",
+      "active": "Aktif",
+      "completed": "Tamamlandı",
+      "archived": "Arşivlendi"
+    },
+    "type": {
+      "count": "Sayıya dayalı görev",
+      "set": "Kümeye dayalı görev"
+    },
+    "badge": {
+      "alt": "{questName} için rozet",
+      "tierAlt": "{questName} için {tier} rozeti"
+    },
+    "items": {
+      "eyebrow": "Kontrol listesi",
+      "heading": "Görev öğeleri",
+      "resultCount": "{count} gösteriliyor",
+      "searchLabel": "Öğelerde ara",
+      "searchPlaceholder": "Ada göre ara",
+      "stateLabel": "Durum",
+      "filter": "Filtreleri uygula",
+      "clear": "Temizle",
+      "states": {
+        "all": "Tüm durumlar",
+        "available": "Uygun",
+        "reserved": "Ayrılmış",
+        "draft": "Devam ediyor",
+        "pending": "İncelemede",
+        "changes-requested": "Değişiklik istendi",
+        "completed": "Tamamlandı",
+        "inactive": "Pasif"
+      },
+      "byCreator": "{username} tarafından",
+      "availableNote": "Gelecekteki bir katkı için açık.",
+      "inProgressNote": "Topluluktan bir üye bu öğe üzerinde çalışıyor.",
+      "empty": {
+        "title": "Eşleşen öğe yok",
+        "body": "Farklı bir arama veya durum filtresi deneyin."
+      }
+    },
+    "posts": {
+      "eyebrow": "Topluluk çalışması",
+      "heading": "Onaylanmış gönderiler",
+      "resultCount": "{count} gösteriliyor",
+      "byCreator": "{username} tarafından oluşturuldu",
+      "approved": "Onaylandı",
+      "contributors": "{count} katkıda bulunan kişi kredilendirildi",
+      "empty": {
+        "title": "Henüz onaylanmış gönderi yok",
+        "body": "Bu görev ilk onaylanmış katkısını bekliyor."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Katkınız",
+      "heading": "Bu göreve katılın",
+      "signInPrompt": "Bir öğeyi ayırmak ve bir gönderiyi incelemeye göndermek için oturum açın.",
+      "signIn": "Katkıda bulunmak için oturum açın",
+      "countPrompt": "Bu görevin varsayılan odasında yeni bir gönderi oluşturun; ardından inceleme istemeden önce onu geliştirin ve kilitleyin.",
+      "setPrompt": "Ayırmak ve ilk katkınıza başlamak için uygun bir görev öğesi seçin.",
+      "browseItems": "Uygun öğelere göz at",
+      "createPost": "Görev gönderisi oluştur",
+      "closed": "Bu görev şu anda yeni katkı kabul etmiyor.",
+      "mineHeading": "Görev gönderileriniz",
+      "claim": "Bu öğeyi ayır",
+      "release": "Ayırmayı kaldır",
+      "editPost": "Gönderiyi düzenle",
+      "requestReview": "İnceleme iste",
+      "withdraw": "Geri çek",
+      "resumeEditing": "Düzenlemeye devam et",
+      "startRevision": "Onaylanmış gönderiyi gözden geçir",
+      "confirmWithdraw": "Bu görev gönderimini geri çekmek istiyor musunuz? Gönderinin kendisi sitede kalacak.",
+      "pagination": {
+        "label": "Görev gönderilerinizin sayfaları",
+        "previous": "← Daha yeni gönderiler",
+        "next": "Daha eski gönderiler →",
+        "status": "Sayfa {current} / {total} · {count} gönderi"
+      },
+      "status": {
+        "draft": "Taslak",
+        "pending": "İncelemede",
+        "changes-requested": "Değişiklik istendi",
+        "approved": "Onaylandı",
+        "rejected": "Reddedildi",
+        "withdrawn": "Geri çekildi",
+        "revoked": "Geri alındı"
+      },
+      "errors": {
+        "generic": "Bu görev işlemi tamamlanamadı. Lütfen tekrar deneyin.",
+        "blockIneligible": "İnceleme istemeden önce gönderiyi kilitleyin ve hâlâ görev gereksinimlerini karşıladığından emin olun.",
+        "itemUnavailable": "Bu öğe artık bu katkı için uygun değil. Sayfayı yenileyip tekrar deneyin.",
+        "createFailed": "Gönderi bu göreve eklenemedi. Ayırmanızın süresi dolmuş olabilir; göreve dönüp tekrar deneyin."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Görev İnceleme Kuyruğu | Daily Page",
+        "description": "Yönettiğiniz topluluk görevleri için bekleyen gönderimleri inceleyin."
+      },
+      "eyebrow": "Yönetici çalışma alanı",
+      "heading": "Görev inceleme kuyruğu",
+      "intro": "Gönderilen gönderiyi ve geçmişini, onaylamadan ya da katkıda bulunana geri göndermeden önce inceleyin.",
+      "pendingCount": "{count} bekleyen gönderim",
+      "openPanel": "İnceleme kuyruğunu aç",
+      "owner": "Gönderim sahibi",
+      "unknownOwner": "Bilinmeyen kullanıcı",
+      "item": "Görev öğesi",
+      "requestedAt": "İnceleme istendi",
+      "revision": "Gönderilen revizyon",
+      "unknownRevision": "Bilinmeyen revizyon",
+      "openPost": "Gönderilen gönderiyi aç",
+      "missingPost": "Gönderi kullanılamıyor",
+      "history": "İnceleme geçmişi ({count})",
+      "reason": "Neden: {reason}",
+      "commentLabel": "İnceleme yorumu",
+      "commentPlaceholder": "Kararınızı açıklayın veya faydalı revizyon notları bırakın.",
+      "commentHelp": "Değişiklik isterken veya reddederken yorum gereklidir. Onaylarken isteğe bağlıdır.",
+      "approve": "Onayla",
+      "requestChanges": "Değişiklik iste",
+      "reject": "Reddet",
+      "events": {
+        "created": "Gönderim oluşturuldu",
+        "review-requested": "İnceleme istendi",
+        "changes-requested": "Değişiklik istendi",
+        "editing-reopened": "Düzenleme yeniden başlatıldı",
+        "approved": "Onaylandı",
+        "rejected": "Reddedildi",
+        "withdrawn": "Geri çekildi",
+        "revision-started": "Revizyon başlatıldı",
+        "revoked": "Onay geri alındı",
+        "claim-expired": "Ayırmanın süresi doldu",
+        "invalidated": "Gönderim geçersiz kılındı"
+      },
+      "empty": {
+        "title": "Kuyruk boş",
+        "body": "Yönettiğiniz görevler için bekleyen gönderim yok."
+      },
+      "errors": {
+        "forbidden": "Bu görevi yönetmiyorsunuz.",
+        "loadFailed": "Görev inceleme kuyruğu şu anda yüklenemedi.",
+        "actionFailed": "Bu inceleme kararı kaydedilemedi. Lütfen tekrar deneyin.",
+        "commentRequired": "Değişiklik istemeden veya reddetmeden önce lütfen bir inceleme yorumu ekleyin.",
+        "stale": "Karar kaydedilmeden önce bu gönderim veya gönderisi değişti. Kuyruk yenilenecek."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "{questName} Liderlik Tablosu | Daily Page",
+        "description": "{questName} için önde gelen katkıda bulunanları görün."
+      },
+      "heading": "Görev liderlik tablosu",
+      "intro": "Katkıda bulunanlar, onaylanmış görev gönderilerine ve ardından mevcut toplamlarına ulaştıkları zamana göre sıralanır.",
+      "contributions": "{count} / {target} gönderi",
+      "empty": {
+        "title": "Liderlik tablosu beklemede",
+        "body": "İlk gönderi onaylandıktan sonra katkıda bulunanlar görünecek."
+      }
+    },
+    "medals": {
+      "base": "Katkıda bulunan",
+      "bronze": "Bronz",
+      "silver": "Gümüş",
+      "gold": "Altın"
+    },
+    "pagination": {
+      "label": "Görev sonuçları sayfaları",
+      "previous": "← Önceki",
+      "next": "Sonraki →",
+      "status": "Sayfa {current} / {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Görev bulunamadı",
+      "notFound": "Bu görev bulunamadı.",
+      "loadFailed": "Görev şu anda yüklenemedi."
+    }
+  }
+}
