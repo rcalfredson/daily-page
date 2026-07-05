@@ -20,6 +20,14 @@
       "share": "يشارك",
       "flagContent": "الإبلاغ عن المحتوى"
     },
+    "quest": {
+      "heading": "ارتباطات المهام",
+      "eyebrow": "مهمة مجتمعية",
+      "item": "عنصر المهمة: {item}",
+      "readyForReview": "هل انتهيت من تحرير هذا المنشور؟",
+      "requestReview": "طلب مراجعة المهمة",
+      "viewQuest": "عرض المهمة"
+    },
     "description": {
       "label": "وصف",
       "none": "لم يتم تقديم أي وصف...",

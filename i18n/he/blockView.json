@@ -20,6 +20,14 @@
       "share": "שתף",
       "flagContent": "סמן תוכן"
     },
+    "quest": {
+      "heading": "קישורים למשימות",
+      "eyebrow": "משימה קהילתית",
+      "item": "פריט במשימה: {item}",
+      "readyForReview": "סיימת לערוך את הפוסט הזה?",
+      "requestReview": "בקשת סקירה למשימה",
+      "viewQuest": "הצגת המשימה"
+    },
     "description": {
       "label": "תיאור",
       "none": "לא סופק תיאור...",
