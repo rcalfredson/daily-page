@@ -9,9 +9,17 @@
       "markRead": "既読にする",
       "fallbackActor": "誰か",
       "fallbackBlockTitle": "あなたの投稿",
+      "fallbackQuestName": "クエスト",
+      "fallbackItemLabel": "予約した項目",
       "item": {
         "blockComment": "{actorUsername} があなたの投稿「{blockTitle}」にコメントしました。",
         "commentReply": "{actorUsername} が「{blockTitle}」であなたのコメントに返信しました。",
+        "questReviewRequested": "{actorUsername} が「{blockTitle}」を{questName}のレビューに提出しました。",
+        "questChangesRequested": "{questName}の「{blockTitle}」に修正依頼が届きました。",
+        "questSubmissionApproved": "あなたの投稿「{blockTitle}」が{questName}で承認されました。",
+        "questSubmissionRejected": "あなたの投稿「{blockTitle}」は{questName}で承認されませんでした。",
+        "questSubmissionRevoked": "あなたの投稿「{blockTitle}」は{questName}の達成数に含まれなくなりました。",
+        "questClaimExpired": "{questName}で予約した{itemLabel}の期限が切れました。",
         "unknown": "通知"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Daily Page で会話を見る",
         "fallbackActor": "誰か",
         "fallbackBlockTitle": "あなたの投稿"
-      }
+      },
+      "quest": {"headingWithName": "こんにちは {username} さん、", "fallbackActor": "誰か", "fallbackQuestName": "クエスト", "fallbackBlockTitle": "あなたの投稿", "fallbackItemLabel": "予約した項目"},
+      "questReviewRequested": {"subject": "{questName}に新しい提出があります", "heading": "クエスト投稿のレビュー準備ができました", "body": "<strong>{actorUsername}</strong> が <strong>{blockTitle}</strong> を <strong>{questName}</strong> のレビューに提出しました。", "cta": "提出内容をレビュー"},
+      "questChangesRequested": {"subject": "{blockTitle}に修正依頼が届きました", "heading": "クエスト投稿の修正が必要です", "body": "<strong>{questName}</strong> の <strong>{blockTitle}</strong> に修正依頼が届きました。", "cta": "投稿を見る"},
+      "questSubmissionApproved": {"subject": "投稿が{questName}で承認されました", "heading": "クエストへの提出が承認されました", "body": "あなたの投稿 <strong>{blockTitle}</strong> が <strong>{questName}</strong> で承認されました。", "cta": "承認された投稿を見る"},
+      "questSubmissionRejected": {"subject": "{questName}への提出に関するお知らせ", "heading": "クエストへの提出は承認されませんでした", "body": "あなたの投稿 <strong>{blockTitle}</strong> は <strong>{questName}</strong> で承認されませんでした。", "cta": "投稿を見る"},
+      "questSubmissionRevoked": {"subject": "投稿は{questName}の達成数に含まれなくなりました", "heading": "クエストへの貢献が更新されました", "body": "あなたの投稿 <strong>{blockTitle}</strong> は <strong>{questName}</strong> の達成数に含まれなくなりました。", "cta": "クエストを見る"},
+      "questClaimExpired": {"subject": "{questName}での予約期限が切れました", "heading": "クエストの予約期限が切れました", "body": "<strong>{questName}</strong> で予約した <strong>{itemLabel}</strong> の期限が切れました。", "cta": "予約可能な項目を見る"}
     }
   }
 }

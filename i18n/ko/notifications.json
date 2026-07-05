@@ -9,9 +9,17 @@
       "markRead": "읽음으로 표시",
       "fallbackActor": "누군가",
       "fallbackBlockTitle": "내 게시물",
+      "fallbackQuestName": "퀘스트",
+      "fallbackItemLabel": "예약한 항목",
       "item": {
         "blockComment": "{actorUsername}님이 내 게시물 \"{blockTitle}\"에 댓글을 남겼습니다.",
         "commentReply": "{actorUsername}님이 \"{blockTitle}\"의 내 댓글에 답글을 남겼습니다.",
+        "questReviewRequested": "{actorUsername}님이 \"{blockTitle}\"을(를) {questName} 검토에 제출했습니다.",
+        "questChangesRequested": "{questName}의 \"{blockTitle}\"에 수정 요청이 있습니다.",
+        "questSubmissionApproved": "내 게시물 \"{blockTitle}\"이(가) {questName}에 승인되었습니다.",
+        "questSubmissionRejected": "내 게시물 \"{blockTitle}\"이(가) {questName}에 승인되지 않았습니다.",
+        "questSubmissionRevoked": "내 게시물 \"{blockTitle}\"은(는) 더 이상 {questName}에 집계되지 않습니다.",
+        "questClaimExpired": "{questName}에서 예약한 {itemLabel}의 기한이 만료되었습니다.",
         "unknown": "알림"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Daily Page에서 대화 보기",
         "fallbackActor": "누군가",
         "fallbackBlockTitle": "내 게시물"
-      }
+      },
+      "quest": {"headingWithName": "안녕하세요 {username}님,", "fallbackActor": "누군가", "fallbackQuestName": "퀘스트", "fallbackBlockTitle": "내 게시물", "fallbackItemLabel": "예약한 항목"},
+      "questReviewRequested": {"subject": "{questName}에 새 제출물이 있습니다", "heading": "퀘스트 게시물을 검토할 수 있습니다", "body": "<strong>{actorUsername}</strong>님이 <strong>{blockTitle}</strong>을(를) <strong>{questName}</strong> 검토에 제출했습니다.", "cta": "제출물 검토"},
+      "questChangesRequested": {"subject": "{blockTitle}에 수정 요청이 있습니다", "heading": "퀘스트 게시물을 수정해야 합니다", "body": "<strong>{questName}</strong>의 <strong>{blockTitle}</strong>에 수정 요청이 있습니다.", "cta": "게시물 보기"},
+      "questSubmissionApproved": {"subject": "게시물이 {questName}에 승인되었습니다", "heading": "퀘스트 제출물 승인됨", "body": "내 게시물 <strong>{blockTitle}</strong>이(가) <strong>{questName}</strong>에 승인되었습니다.", "cta": "승인된 게시물 보기"},
+      "questSubmissionRejected": {"subject": "{questName} 제출물 관련 업데이트", "heading": "퀘스트 제출물이 승인되지 않았습니다", "body": "내 게시물 <strong>{blockTitle}</strong>이(가) <strong>{questName}</strong>에 승인되지 않았습니다.", "cta": "게시물 보기"},
+      "questSubmissionRevoked": {"subject": "게시물이 더 이상 {questName}에 집계되지 않습니다", "heading": "퀘스트 기여가 업데이트되었습니다", "body": "내 게시물 <strong>{blockTitle}</strong>은(는) 더 이상 <strong>{questName}</strong>에 집계되지 않습니다.", "cta": "퀘스트 보기"},
+      "questClaimExpired": {"subject": "{questName} 예약 기한이 만료되었습니다", "heading": "퀘스트 예약 만료", "body": "<strong>{questName}</strong>에서 예약한 <strong>{itemLabel}</strong>의 기한이 만료되었습니다.", "cta": "예약 가능한 항목 보기"}
     }
   }
 }
