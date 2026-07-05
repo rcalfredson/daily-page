@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Misiones comunitarias | Daily Page",
+        "description": "Únete a misiones comunitarias colaborativas y ayuda a completar objetivos creativos compartidos."
+      },
+      "eyebrow": "Crear juntos",
+      "heading": "Misiones comunitarias",
+      "intro": "Únete a un proyecto compartido, contribuye a posts colaborativos y ayuda a la comunidad a alcanzar un objetivo ambicioso.",
+      "viewQuest": "Explorar misión →",
+      "empty": {
+        "title": "Aún no hay misiones activas",
+        "body": "Las primeras misiones comunitarias todavía se están preparando. Vuelve pronto."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Misiones comunitarias",
+        "description": "Explora esta misión comunitaria en Daily Page."
+      },
+      "breadcrumbLabel": "Navegación de la misión",
+      "allQuests": "Todas las misiones",
+      "administeredBy": "Administrada por",
+      "aboutHeading": "Acerca de esta misión",
+      "instructionsHeading": "Pautas de contribución",
+      "sectionsLabel": "Secciones de la misión",
+      "tabs": {
+        "items": "Elementos de la misión",
+        "posts": "Posts aprobados",
+        "leaderboard": "Clasificación"
+      }
+    },
+    "progress": {
+      "label": "Progreso de la misión",
+      "count": "{completed} de {target}",
+      "percent": "{percent}% completado"
+    },
+    "status": {
+      "draft": "Borrador",
+      "active": "Activa",
+      "completed": "Completada",
+      "archived": "Archivada"
+    },
+    "type": {
+      "count": "Misión basada en cantidad",
+      "set": "Misión basada en un conjunto"
+    },
+    "badge": {
+      "alt": "Insignia de {questName}",
+      "tierAlt": "Insignia {tier} de {questName}"
+    },
+    "items": {
+      "eyebrow": "La lista",
+      "heading": "Elementos de la misión",
+      "resultCount": "{count} mostrados",
+      "searchLabel": "Buscar elementos",
+      "searchPlaceholder": "Buscar por nombre",
+      "stateLabel": "Estado",
+      "filter": "Aplicar filtros",
+      "clear": "Limpiar",
+      "states": {
+        "all": "Todos los estados",
+        "available": "Disponible",
+        "reserved": "Reservado",
+        "draft": "En curso",
+        "pending": "En revisión",
+        "changes-requested": "Cambios solicitados",
+        "completed": "Completado",
+        "inactive": "Inactivo"
+      },
+      "byCreator": "Por {username}",
+      "availableNote": "Disponible para una futura contribución.",
+      "inProgressNote": "Un miembro de la comunidad está trabajando en este elemento.",
+      "empty": {
+        "title": "No hay elementos coincidentes",
+        "body": "Prueba otra búsqueda o filtro de estado."
+      }
+    },
+    "posts": {
+      "eyebrow": "Trabajo comunitario",
+      "heading": "Posts aprobados",
+      "resultCount": "{count} mostrados",
+      "byCreator": "Creado por {username}",
+      "approved": "Aprobado",
+      "contributors": "{count} colaboradores acreditados",
+      "empty": {
+        "title": "Aún no hay posts aprobados",
+        "body": "Esta misión espera su primera contribución aprobada."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Tu contribución",
+      "heading": "Únete a esta misión",
+      "signInPrompt": "Inicia sesión para reclamar un elemento y enviar un post para revisión.",
+      "signIn": "Inicia sesión para contribuir",
+      "countPrompt": "Crea un nuevo post en la sala predeterminada de esta misión; después, desarróllalo y bloquéalo antes de solicitar una revisión.",
+      "setPrompt": "Elige un elemento disponible de la misión, reclámalo y comienza tu primera contribución.",
+      "browseItems": "Ver elementos disponibles",
+      "createPost": "Crear post de misión",
+      "closed": "Esta misión no acepta nuevas contribuciones en este momento.",
+      "mineHeading": "Tus posts de misión",
+      "claim": "Reclamar este elemento",
+      "release": "Liberar reclamación",
+      "editPost": "Editar post",
+      "requestReview": "Solicitar revisión",
+      "withdraw": "Retirar",
+      "resumeEditing": "Reanudar edición",
+      "startRevision": "Revisar post aprobado",
+      "confirmWithdraw": "¿Retirar esta entrega de la misión? El post permanecerá en el sitio.",
+      "pagination": {
+        "label": "Páginas de tus posts de misión",
+        "previous": "← Posts más recientes",
+        "next": "Posts anteriores →",
+        "status": "Página {current} de {total} · {count} posts"
+      },
+      "status": {
+        "draft": "Borrador",
+        "pending": "En revisión",
+        "changes-requested": "Cambios solicitados",
+        "approved": "Aprobado",
+        "rejected": "Rechazado",
+        "withdrawn": "Retirado",
+        "revoked": "Revocado"
+      },
+      "errors": {
+        "generic": "No se pudo completar esa acción de la misión. Inténtalo de nuevo.",
+        "blockIneligible": "Antes de solicitar una revisión, bloquea el post y comprueba que todavía cumpla los requisitos de la misión.",
+        "itemUnavailable": "Ese elemento ya no está disponible para esta contribución. Actualiza la página e inténtalo de nuevo.",
+        "createFailed": "No se pudo vincular el post a esta misión. Es posible que tu reclamación haya vencido; vuelve a la misión e inténtalo de nuevo."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Cola de revisión de misiones | Daily Page",
+        "description": "Revisa las entregas pendientes de las misiones comunitarias que administras."
+      },
+      "eyebrow": "Espacio de administración",
+      "heading": "Cola de revisión de misiones",
+      "intro": "Revisa el post enviado y su historial antes de aprobarlo o devolverlo al colaborador.",
+      "pendingCount": "{count} entregas pendientes",
+      "openPanel": "Abrir cola de revisión",
+      "owner": "Propietario de la entrega",
+      "unknownOwner": "Usuario desconocido",
+      "item": "Elemento de la misión",
+      "requestedAt": "Revisión solicitada",
+      "revision": "Revisión enviada",
+      "unknownRevision": "Revisión desconocida",
+      "openPost": "Abrir post enviado",
+      "missingPost": "Post no disponible",
+      "history": "Historial de revisión ({count})",
+      "reason": "Motivo: {reason}",
+      "commentLabel": "Comentario de revisión",
+      "commentPlaceholder": "Explica tu decisión o deja notas útiles para la revisión.",
+      "commentHelp": "Se requiere un comentario al solicitar cambios o rechazar. Es opcional al aprobar.",
+      "approve": "Aprobar",
+      "requestChanges": "Solicitar cambios",
+      "reject": "Rechazar",
+      "events": {
+        "created": "Entrega creada",
+        "review-requested": "Revisión solicitada",
+        "changes-requested": "Cambios solicitados",
+        "editing-reopened": "Edición reanudada",
+        "approved": "Aprobada",
+        "rejected": "Rechazada",
+        "withdrawn": "Retirada",
+        "revision-started": "Revisión iniciada",
+        "revoked": "Aprobación revocada",
+        "claim-expired": "Reclamación vencida",
+        "invalidated": "Entrega invalidada"
+      },
+      "empty": {
+        "title": "La cola está vacía",
+        "body": "No hay entregas pendientes para las misiones que administras."
+      },
+      "errors": {
+        "forbidden": "No administras esa misión.",
+        "loadFailed": "No se pudo cargar la cola de revisión de misiones en este momento.",
+        "actionFailed": "No se pudo guardar esa decisión de revisión. Inténtalo de nuevo.",
+        "commentRequired": "Añade un comentario de revisión antes de solicitar cambios o rechazar.",
+        "stale": "Esta entrega o su post cambió antes de guardar la decisión. La cola se actualizará."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "Clasificación de {questName} | Daily Page",
+        "description": "Consulta quiénes más contribuyen a {questName}."
+      },
+      "heading": "Clasificación de la misión",
+      "intro": "Los colaboradores se ordenan por posts de misión aprobados y después por el momento en que alcanzaron su total actual.",
+      "contributions": "{count} de {target} posts",
+      "empty": {
+        "title": "La clasificación está a la espera",
+        "body": "Los colaboradores aparecerán después de que se apruebe el primer post."
+      }
+    },
+    "medals": {
+      "base": "Colaborador",
+      "bronze": "Bronce",
+      "silver": "Plata",
+      "gold": "Oro"
+    },
+    "pagination": {
+      "label": "Páginas de resultados de la misión",
+      "previous": "← Anterior",
+      "next": "Siguiente →",
+      "status": "Página {current} de {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Misión no encontrada",
+      "notFound": "No se pudo encontrar esa misión.",
+      "loadFailed": "No se pudo cargar la misión en este momento."
+    }
+  }
+}
