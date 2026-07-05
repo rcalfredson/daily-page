@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Communityuppdrag | Daily Page",
+        "description": "Gå med i samarbetsinriktade communityuppdrag och hjälp till att nå gemensamma kreativa mål."
+      },
+      "eyebrow": "Skapa tillsammans",
+      "heading": "Communityuppdrag",
+      "intro": "Gå med i ett gemensamt projekt, bidra till kollaborativa inlägg och hjälp communityn att nå ett ambitiöst mål.",
+      "viewQuest": "Utforska uppdrag →",
+      "empty": {
+        "title": "Inga aktiva uppdrag ännu",
+        "body": "De första communityuppdragen håller fortfarande på att förberedas. Kom tillbaka snart."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Communityuppdrag",
+        "description": "Utforska detta communityuppdrag på Daily Page."
+      },
+      "breadcrumbLabel": "Uppdragsnavigering",
+      "allQuests": "Alla uppdrag",
+      "administeredBy": "Administreras av",
+      "aboutHeading": "Om detta uppdrag",
+      "instructionsHeading": "Riktlinjer för bidrag",
+      "sectionsLabel": "Uppdragssektioner",
+      "tabs": {
+        "items": "Uppdragsobjekt",
+        "posts": "Godkända inlägg",
+        "leaderboard": "Topplista"
+      }
+    },
+    "progress": {
+      "label": "Uppdragets framsteg",
+      "count": "{completed} av {target}",
+      "percent": "{percent} % klart"
+    },
+    "status": {
+      "draft": "Utkast",
+      "active": "Aktivt",
+      "completed": "Slutfört",
+      "archived": "Arkiverat"
+    },
+    "type": {
+      "count": "Antalsbaserat uppdrag",
+      "set": "Uppsättningsbaserat uppdrag"
+    },
+    "badge": {
+      "alt": "Märke för {questName}",
+      "tierAlt": "{tier}-märke för {questName}"
+    },
+    "items": {
+      "eyebrow": "Checklistan",
+      "heading": "Uppdragsobjekt",
+      "resultCount": "{count} visas",
+      "searchLabel": "Sök objekt",
+      "searchPlaceholder": "Sök efter namn",
+      "stateLabel": "Status",
+      "filter": "Använd filter",
+      "clear": "Rensa",
+      "states": {
+        "all": "Alla statusar",
+        "available": "Tillgängligt",
+        "reserved": "Reserverat",
+        "draft": "Pågår",
+        "pending": "Under granskning",
+        "changes-requested": "Ändringar begärda",
+        "completed": "Slutfört",
+        "inactive": "Inaktivt"
+      },
+      "byCreator": "Av {username}",
+      "availableNote": "Öppet för ett framtida bidrag.",
+      "inProgressNote": "En communitymedlem arbetar med detta objekt.",
+      "empty": {
+        "title": "Inga matchande objekt",
+        "body": "Prova en annan sökning eller ett annat statusfilter."
+      }
+    },
+    "posts": {
+      "eyebrow": "Communityarbete",
+      "heading": "Godkända inlägg",
+      "resultCount": "{count} visas",
+      "byCreator": "Skapat av {username}",
+      "approved": "Godkänt",
+      "contributors": "{count} krediterade bidragsgivare",
+      "empty": {
+        "title": "Inga godkända inlägg ännu",
+        "body": "Detta uppdrag väntar på sitt första godkända bidrag."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Ditt bidrag",
+      "heading": "Gå med i detta uppdrag",
+      "signInPrompt": "Logga in för att reservera ett objekt och skicka in ett inlägg för granskning.",
+      "signIn": "Logga in för att bidra",
+      "countPrompt": "Skapa ett nytt inlägg i uppdragets standardrum, utveckla och lås det sedan innan du begär granskning.",
+      "setPrompt": "Välj ett tillgängligt uppdragsobjekt att reservera och börja med ditt första bidrag.",
+      "browseItems": "Bläddra bland tillgängliga objekt",
+      "createPost": "Skapa uppdragsinlägg",
+      "closed": "Detta uppdrag tar inte emot nya bidrag just nu.",
+      "mineHeading": "Dina uppdragsinlägg",
+      "claim": "Reservera detta objekt",
+      "release": "Släpp reservationen",
+      "editPost": "Redigera inlägg",
+      "requestReview": "Begär granskning",
+      "withdraw": "Dra tillbaka",
+      "resumeEditing": "Fortsätt redigera",
+      "startRevision": "Revidera godkänt inlägg",
+      "confirmWithdraw": "Dra tillbaka denna uppdragsinlämning? Själva inlägget blir kvar på webbplatsen.",
+      "pagination": {
+        "label": "Sidor med dina uppdragsinlägg",
+        "previous": "← Nyare inlägg",
+        "next": "Äldre inlägg →",
+        "status": "Sida {current} av {total} · {count} inlägg"
+      },
+      "status": {
+        "draft": "Utkast",
+        "pending": "Under granskning",
+        "changes-requested": "Ändringar begärda",
+        "approved": "Godkänt",
+        "rejected": "Avvisat",
+        "withdrawn": "Tillbakadraget",
+        "revoked": "Återkallat"
+      },
+      "errors": {
+        "generic": "Den uppdragsåtgärden kunde inte slutföras. Försök igen.",
+        "blockIneligible": "Innan du begär granskning måste du låsa inlägget och kontrollera att det fortfarande uppfyller uppdragets krav.",
+        "itemUnavailable": "Det objektet är inte längre tillgängligt för detta bidrag. Uppdatera sidan och försök igen.",
+        "createFailed": "Inlägget kunde inte kopplas till detta uppdrag. Din reservation kan ha gått ut; gå tillbaka till uppdraget och försök igen."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Granskningskö för uppdrag | Daily Page",
+        "description": "Granska väntande inlämningar för de communityuppdrag du administrerar."
+      },
+      "eyebrow": "Administratörsarbetsyta",
+      "heading": "Granskningskö för uppdrag",
+      "intro": "Granska det inskickade inlägget och dess historik innan du godkänner det eller skickar tillbaka det till bidragsgivaren.",
+      "pendingCount": "{count} väntande inlämningar",
+      "openPanel": "Öppna granskningskö",
+      "owner": "Inlämningens ägare",
+      "unknownOwner": "Okänd användare",
+      "item": "Uppdragsobjekt",
+      "requestedAt": "Granskning begärd",
+      "revision": "Inskickad version",
+      "unknownRevision": "Okänd version",
+      "openPost": "Öppna inskickat inlägg",
+      "missingPost": "Inlägget är inte tillgängligt",
+      "history": "Granskningshistorik ({count})",
+      "reason": "Orsak: {reason}",
+      "commentLabel": "Granskningskommentar",
+      "commentPlaceholder": "Förklara ditt beslut eller lämna hjälpsamma revisionsanteckningar.",
+      "commentHelp": "En kommentar krävs när du begär ändringar eller avvisar. Den är valfri när du godkänner.",
+      "approve": "Godkänn",
+      "requestChanges": "Begär ändringar",
+      "reject": "Avvisa",
+      "events": {
+        "created": "Inlämning skapad",
+        "review-requested": "Granskning begärd",
+        "changes-requested": "Ändringar begärda",
+        "editing-reopened": "Redigering återupptagen",
+        "approved": "Godkänt",
+        "rejected": "Avvisat",
+        "withdrawn": "Tillbakadraget",
+        "revision-started": "Revision påbörjad",
+        "revoked": "Godkännande återkallat",
+        "claim-expired": "Reservationen har gått ut",
+        "invalidated": "Inlämning ogiltigförklarad"
+      },
+      "empty": {
+        "title": "Kön är tom",
+        "body": "Det finns inga väntande inlämningar för de uppdrag du administrerar."
+      },
+      "errors": {
+        "forbidden": "Du administrerar inte det uppdraget.",
+        "loadFailed": "Granskningskön för uppdrag kunde inte laddas just nu.",
+        "actionFailed": "Det granskningsbeslutet kunde inte sparas. Försök igen.",
+        "commentRequired": "Lägg till en granskningskommentar innan du begär ändringar eller avvisar.",
+        "stale": "Denna inlämning eller dess inlägg ändrades innan beslutet sparades. Kön kommer att uppdateras."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "Topplista för {questName} | Daily Page",
+        "description": "Se de ledande bidragsgivarna till {questName}."
+      },
+      "heading": "Uppdragets topplista",
+      "intro": "Bidragsgivare rangordnas efter godkända uppdragsinlägg och därefter efter när de nådde sin nuvarande summa.",
+      "contributions": "{count} av {target} inlägg",
+      "empty": {
+        "title": "Topplistan väntar",
+        "body": "Bidragsgivare visas efter att det första inlägget har godkänts."
+      }
+    },
+    "medals": {
+      "base": "Bidragsgivare",
+      "bronze": "Brons",
+      "silver": "Silver",
+      "gold": "Guld"
+    },
+    "pagination": {
+      "label": "Sidor med uppdragsresultat",
+      "previous": "← Föregående",
+      "next": "Nästa →",
+      "status": "Sida {current} av {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Uppdraget hittades inte",
+      "notFound": "Det uppdraget kunde inte hittas.",
+      "loadFailed": "Uppdraget kunde inte laddas just nu."
+    }
+  }
+}
