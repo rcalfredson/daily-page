@@ -1,6 +1,6 @@
 # Daily Page
 
-Daily Page is a collaborative writing app for keeping a public, textual record of each day. It began as a fork/descendant of the [Conclave project](https://github.com/conclave-team/conclave), but has grown into a room-based writing space with live editing, archives, profiles, reactions, comments, search, multilingual UI/content support, and a small amount of editorial curation.
+Daily Page is a collaborative writing app for keeping a public, textual record of each day. It began as a fork/descendant of the [Conclave project](https://github.com/conclave-team/conclave), but has grown into a room-based writing space with live editing, archives, profiles, reactions, comments, search, multilingual UI/content support, community quests, and a small amount of editorial curation.
 
 The reference instance lives at [dailypage.org](https://dailypage.org).
 
@@ -17,6 +17,7 @@ The long-term direction is less "private notes app" and more "small civic/cultur
 
 - Real-time collaborative Markdown editing using a CRDT-derived model and PeerJS/WebRTC signaling.
 - Rooms and topical dashboards for browsing in-progress and locked writing posts.
+- Community quests for coordinating shared writing goals, reserving quest items, submitting posts for review, tracking progress, and crediting contributors with leaderboards and badges.
 - Automatic locking of inactive posts after roughly seven days.
 - Public archives by date, room, month, and year.
 - User accounts with server-side auth sessions, remembered-device login, email verification, password reset, profile editing, writing streaks, and starred rooms.
@@ -251,6 +252,23 @@ panoramas on full posts and as lazy-loaded, click-through panoramas on cards.
 Existing banner metadata without a type continues to render as an image.
 
 When a post has been inactive for about seven days, a cron job marks it `locked`. Locked posts are treated as archive/browsing material rather than active writing surfaces. `public` posts appear in public browsing while editable; `unlisted` drafts stay out of public browsing until they lock.
+
+## Community Quests
+
+Community quests turn open-ended writing into shared, trackable projects. A quest can ask the community to reach a count-based goal, such as creating a certain number of posts, or complete a defined set of quest items, such as covering every place, topic, or prompt in a prepared checklist.
+
+Quest items can be claimed by contributors, attached to posts, submitted for review, sent back for changes, approved, rejected, withdrawn, or revoked. Approved quest posts count toward quest progress and can appear in quest-specific browsing, contributor leaderboards, and profile achievements.
+
+The review workflow is designed for moderated collaborative projects rather than fully open posting. Quest administrators can review pending submissions, inspect the submitted post and its history, leave comments, approve contributions, request revisions, or reject work that does not fit the quest guidelines.
+
+Quest support currently includes:
+
+- Count-based and set-based quest types.
+- Claim/release flows for set-based quest items.
+- Contributor submission statuses, including draft, pending, changes requested, approved, rejected, withdrawn, and revoked.
+- Administrator review queues with review history.
+- Progress displays, approved-post listings, contributor leaderboards, and badge tiers.
+- Quest-related in-site and email notification strings in the i18n layer.
 
 ## Internationalization
 
