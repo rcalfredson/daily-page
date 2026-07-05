@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "커뮤니티 퀘스트 | Daily Page",
+        "description": "협업 커뮤니티 퀘스트에 참여하고 공동의 창작 목표를 완성하는 데 힘을 보태세요."
+      },
+      "eyebrow": "함께 만들기",
+      "heading": "커뮤니티 퀘스트",
+      "intro": "공동 프로젝트에 참여하고, 협업 게시물에 기여하며, 커뮤니티가 야심 찬 목표를 달성하도록 도와주세요.",
+      "viewQuest": "퀘스트 살펴보기 →",
+      "empty": {
+        "title": "아직 활성 퀘스트가 없습니다",
+        "body": "첫 커뮤니티 퀘스트가 아직 준비 중입니다. 곧 다시 확인해 주세요."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | 커뮤니티 퀘스트",
+        "description": "Daily Page에서 이 커뮤니티 퀘스트를 살펴보세요."
+      },
+      "breadcrumbLabel": "퀘스트 탐색",
+      "allQuests": "모든 퀘스트",
+      "administeredBy": "관리자",
+      "aboutHeading": "이 퀘스트 소개",
+      "instructionsHeading": "기여 가이드라인",
+      "sectionsLabel": "퀘스트 섹션",
+      "tabs": {
+        "items": "퀘스트 항목",
+        "posts": "승인된 게시물",
+        "leaderboard": "리더보드"
+      }
+    },
+    "progress": {
+      "label": "퀘스트 진행률",
+      "count": "{target}개 중 {completed}개",
+      "percent": "{percent}% 완료"
+    },
+    "status": {
+      "draft": "초안",
+      "active": "활성",
+      "completed": "완료됨",
+      "archived": "보관됨"
+    },
+    "type": {
+      "count": "수량 기반 퀘스트",
+      "set": "세트 기반 퀘스트"
+    },
+    "badge": {
+      "alt": "{questName} 배지",
+      "tierAlt": "{questName}의 {tier} 배지"
+    },
+    "items": {
+      "eyebrow": "체크리스트",
+      "heading": "퀘스트 항목",
+      "resultCount": "{count}개 표시됨",
+      "searchLabel": "항목 검색",
+      "searchPlaceholder": "이름으로 검색",
+      "stateLabel": "상태",
+      "filter": "필터 적용",
+      "clear": "지우기",
+      "states": {
+        "all": "모든 상태",
+        "available": "사용 가능",
+        "reserved": "예약됨",
+        "draft": "진행 중",
+        "pending": "검토 중",
+        "changes-requested": "변경 요청됨",
+        "completed": "완료됨",
+        "inactive": "비활성"
+      },
+      "byCreator": "{username} 작성",
+      "availableNote": "향후 기여를 위해 열려 있습니다.",
+      "inProgressNote": "커뮤니티 구성원이 이 항목을 작업하고 있습니다.",
+      "empty": {
+        "title": "일치하는 항목이 없습니다",
+        "body": "다른 검색어나 상태 필터를 시도해 보세요."
+      }
+    },
+    "posts": {
+      "eyebrow": "커뮤니티 작업",
+      "heading": "승인된 게시물",
+      "resultCount": "{count}개 표시됨",
+      "byCreator": "{username} 작성",
+      "approved": "승인됨",
+      "contributors": "기여자 {count}명 크레딧 표시됨",
+      "empty": {
+        "title": "아직 승인된 게시물이 없습니다",
+        "body": "이 퀘스트는 첫 승인된 기여를 기다리고 있습니다."
+      }
+    },
+    "contribute": {
+      "eyebrow": "내 기여",
+      "heading": "이 퀘스트에 참여하기",
+      "signInPrompt": "항목을 예약하고 검토를 위해 게시물을 제출하려면 로그인하세요.",
+      "signIn": "로그인하여 기여하기",
+      "countPrompt": "이 퀘스트의 기본 방에서 새 게시물을 만든 다음, 검토를 요청하기 전에 내용을 발전시키고 잠그세요.",
+      "setPrompt": "사용 가능한 퀘스트 항목을 선택해 예약하고 첫 기여를 시작하세요.",
+      "browseItems": "사용 가능한 항목 보기",
+      "createPost": "퀘스트 게시물 만들기",
+      "closed": "이 퀘스트는 현재 새 기여를 받지 않습니다.",
+      "mineHeading": "내 퀘스트 게시물",
+      "claim": "이 항목 예약하기",
+      "release": "예약 해제",
+      "editPost": "게시물 편집",
+      "requestReview": "검토 요청",
+      "withdraw": "철회",
+      "resumeEditing": "편집 재개",
+      "startRevision": "승인된 게시물 수정",
+      "confirmWithdraw": "이 퀘스트 제출을 철회할까요? 게시물 자체는 사이트에 남아 있습니다.",
+      "pagination": {
+        "label": "내 퀘스트 게시물 페이지",
+        "previous": "← 최신 게시물",
+        "next": "이전 게시물 →",
+        "status": "{total}페이지 중 {current}페이지 · 게시물 {count}개"
+      },
+      "status": {
+        "draft": "초안",
+        "pending": "검토 중",
+        "changes-requested": "변경 요청됨",
+        "approved": "승인됨",
+        "rejected": "거부됨",
+        "withdrawn": "철회됨",
+        "revoked": "취소됨"
+      },
+      "errors": {
+        "generic": "해당 퀘스트 작업을 완료할 수 없습니다. 다시 시도해 주세요.",
+        "blockIneligible": "검토를 요청하기 전에 게시물을 잠그고 퀘스트 요구 사항을 여전히 충족하는지 확인하세요.",
+        "itemUnavailable": "해당 항목은 더 이상 이 기여에 사용할 수 없습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.",
+        "createFailed": "게시물을 이 퀘스트에 연결할 수 없습니다. 예약이 만료되었을 수 있으니 퀘스트로 돌아가 다시 시도해 주세요."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "퀘스트 검토 대기열 | Daily Page",
+        "description": "내가 관리하는 커뮤니티 퀘스트의 대기 중인 제출물을 검토하세요."
+      },
+      "eyebrow": "관리자 작업공간",
+      "heading": "퀘스트 검토 대기열",
+      "intro": "게시물을 승인하거나 기여자에게 돌려보내기 전에 제출된 게시물과 그 이력을 검토하세요.",
+      "pendingCount": "대기 중인 제출물 {count}개",
+      "openPanel": "검토 대기열 열기",
+      "owner": "제출자",
+      "unknownOwner": "알 수 없는 사용자",
+      "item": "퀘스트 항목",
+      "requestedAt": "검토 요청됨",
+      "revision": "제출된 수정본",
+      "unknownRevision": "알 수 없는 수정본",
+      "openPost": "제출된 게시물 열기",
+      "missingPost": "게시물을 사용할 수 없음",
+      "history": "검토 이력 ({count})",
+      "reason": "사유: {reason}",
+      "commentLabel": "검토 의견",
+      "commentPlaceholder": "결정을 설명하거나 유용한 수정 메모를 남기세요.",
+      "commentHelp": "변경을 요청하거나 거부할 때는 의견이 필요합니다. 승인할 때는 선택 사항입니다.",
+      "approve": "승인",
+      "requestChanges": "변경 요청",
+      "reject": "거부",
+      "events": {
+        "created": "제출물 생성됨",
+        "review-requested": "검토 요청됨",
+        "changes-requested": "변경 요청됨",
+        "editing-reopened": "편집 재개됨",
+        "approved": "승인됨",
+        "rejected": "거부됨",
+        "withdrawn": "철회됨",
+        "revision-started": "수정 시작됨",
+        "revoked": "승인 취소됨",
+        "claim-expired": "예약 만료됨",
+        "invalidated": "제출물 무효화됨"
+      },
+      "empty": {
+        "title": "대기열이 비어 있습니다",
+        "body": "내가 관리하는 퀘스트에 대기 중인 제출물이 없습니다."
+      },
+      "errors": {
+        "forbidden": "해당 퀘스트를 관리하고 있지 않습니다.",
+        "loadFailed": "지금은 퀘스트 검토 대기열을 불러올 수 없습니다.",
+        "actionFailed": "해당 검토 결정을 저장할 수 없습니다. 다시 시도해 주세요.",
+        "commentRequired": "변경을 요청하거나 거부하기 전에 검토 의견을 추가해 주세요.",
+        "stale": "결정이 저장되기 전에 이 제출물 또는 게시물이 변경되었습니다. 대기열이 새로고침됩니다."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "{questName} 리더보드 | Daily Page",
+        "description": "{questName}의 주요 기여자를 확인하세요."
+      },
+      "heading": "퀘스트 리더보드",
+      "intro": "기여자는 승인된 퀘스트 게시물 수를 기준으로 순위가 매겨지고, 동률일 때는 현재 합계에 도달한 시간이 기준이 됩니다.",
+      "contributions": "{target}개 중 {count}개 게시물",
+      "empty": {
+        "title": "리더보드가 기다리고 있습니다",
+        "body": "첫 게시물이 승인되면 기여자가 표시됩니다."
+      }
+    },
+    "medals": {
+      "base": "기여자",
+      "bronze": "브론즈",
+      "silver": "실버",
+      "gold": "골드"
+    },
+    "pagination": {
+      "label": "퀘스트 결과 페이지",
+      "previous": "← 이전",
+      "next": "다음 →",
+      "status": "{total}페이지 중 {current}페이지"
+    },
+    "errors": {
+      "notFoundTitle": "퀘스트를 찾을 수 없습니다",
+      "notFound": "해당 퀘스트를 찾을 수 없습니다.",
+      "loadFailed": "지금은 퀘스트를 불러올 수 없습니다."
+    }
+  }
+}
