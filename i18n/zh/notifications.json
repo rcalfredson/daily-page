@@ -9,9 +9,17 @@
       "markRead": "标为已读",
       "fallbackActor": "有人",
       "fallbackBlockTitle": "你的帖子",
+      "fallbackQuestName": "该任务",
+      "fallbackItemLabel": "你预留的项目",
       "item": {
         "blockComment": "{actorUsername} 评论了你的帖子“{blockTitle}”。",
         "commentReply": "{actorUsername} 回复了你在“{blockTitle}”上的评论。",
+        "questReviewRequested": "{actorUsername} 已提交“{blockTitle}”，申请在 {questName} 中审核。",
+        "questChangesRequested": "“{blockTitle}”在 {questName} 中被要求修改。",
+        "questSubmissionApproved": "你的帖子“{blockTitle}”已获准计入 {questName}。",
+        "questSubmissionRejected": "你的帖子“{blockTitle}”未获准计入 {questName}。",
+        "questSubmissionRevoked": "你的帖子“{blockTitle}”不再计入 {questName}。",
+        "questClaimExpired": "你在 {questName} 中预留的 {itemLabel} 已过期。",
         "unknown": "通知"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "在 Daily Page 上查看对话",
         "fallbackActor": "有人",
         "fallbackBlockTitle": "你的帖子"
-      }
+      },
+      "quest": {"headingWithName": "{username}，你好，", "fallbackActor": "有人", "fallbackQuestName": "该任务", "fallbackBlockTitle": "你的帖子", "fallbackItemLabel": "你预留的项目"},
+      "questReviewRequested": {"subject": "{questName} 有新的提交", "heading": "任务帖子已准备好接受审核", "body": "<strong>{actorUsername}</strong> 已提交 <strong>{blockTitle}</strong>，申请在 <strong>{questName}</strong> 中审核。", "cta": "审核提交内容"},
+      "questChangesRequested": {"subject": "{blockTitle} 被要求修改", "heading": "你的任务帖子需要修改", "body": "<strong>{blockTitle}</strong> 在 <strong>{questName}</strong> 中被要求修改。", "cta": "查看帖子"},
+      "questSubmissionApproved": {"subject": "你的帖子已获准计入 {questName}", "heading": "任务提交已获批准", "body": "你的帖子 <strong>{blockTitle}</strong> 已获准计入 <strong>{questName}</strong>。", "cta": "查看已批准的帖子"},
+      "questSubmissionRejected": {"subject": "你在 {questName} 中的提交有更新", "heading": "任务提交未获批准", "body": "你的帖子 <strong>{blockTitle}</strong> 未获准计入 <strong>{questName}</strong>。", "cta": "查看帖子"},
+      "questSubmissionRevoked": {"subject": "你的帖子不再计入 {questName}", "heading": "任务贡献已更新", "body": "你的帖子 <strong>{blockTitle}</strong> 不再计入 <strong>{questName}</strong>。", "cta": "查看任务"},
+      "questClaimExpired": {"subject": "你在 {questName} 中的预留已过期", "heading": "任务预留已过期", "body": "你在 <strong>{questName}</strong> 中预留的 <strong>{itemLabel}</strong> 已过期。", "cta": "查看可选任务项目"}
     }
   }
 }
