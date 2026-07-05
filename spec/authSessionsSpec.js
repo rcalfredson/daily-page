@@ -32,6 +32,7 @@ describe('auth session helpers', () => {
       bio: 'hello',
       streakLength: 7,
       preferredLang: 'en',
+      preferredUiLang: 'fr',
       verified: true,
       twoFactorEnabled: false,
       password: 'secret'
@@ -45,6 +46,7 @@ describe('auth session helpers', () => {
       bio: 'hello',
       streakLength: 7,
       preferredLang: 'en',
+      preferredUiLang: 'fr',
       verified: true,
       twoFactorEnabled: false,
     });

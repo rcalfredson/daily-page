@@ -6,10 +6,11 @@ import {
   createQuestNotification,
   markNotificationEmailed
 } from './notificationService.js';
-import { resolveQuestLocalizedField } from './questDomain.js';
+import { resolveQuestItemLabel, resolveQuestLocalizedField } from './questDomain.js';
 import { buildQuestNotificationEmail } from '../services/emailTemplates/questNotification.js';
 import { sendEmail } from '../services/mailgunService.js';
 import { buildQuestNotificationPath } from '../utils/questNotificationPath.js';
+import { DEFAULT_UI_LANG, isSupportedUiLang } from '../services/localeContext.js';
 
 export const QUEST_NOTIFICATION_EVENTS = Object.freeze({
   REVIEW_REQUESTED: 'quest_review_requested',
@@ -106,16 +107,19 @@ export function buildQuestNotificationService({
       itemId
     });
     const baseUrl = (process.env.BASE_URL || 'http://localhost:3000').replace(/\/$/, '');
-    const questName = resolveQuestLocalizedField(quest, 'name', 'en');
+    const recipientUiLang = isSupportedUiLang(recipient.preferredUiLang)
+      ? recipient.preferredUiLang
+      : DEFAULT_UI_LANG;
+    const questName = resolveQuestLocalizedField(quest, 'name', recipientUiLang);
     const { subject, html } = await buildEmail({
-      uiLang: 'en',
+      uiLang: recipientUiLang,
       notificationType: type,
       recipientUsername: recipient.username,
       actorUsername: actor?.username || '',
       questName,
       blockTitle: block?.title || '',
-      itemLabel: item?.label || '',
-      targetUrl: `${baseUrl}/en${path}`
+      itemLabel: item ? resolveQuestItemLabel(item, recipientUiLang) : '',
+      targetUrl: `${baseUrl}/${recipientUiLang}${path}`
     });
     await sendEmailFn({ to: recipient.email, subject, html });
     await markEmailed(notification._id);

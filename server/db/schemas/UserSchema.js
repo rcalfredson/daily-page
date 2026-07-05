@@ -16,6 +16,7 @@ const userSchema = new Schema({
   twoFactorRecoveryCodes: { type: [String], default: [] },
   profilePic: { type: String, default: '/assets/img/default-pic.png' },
   bio: { type: String, default: '' },
+  preferredUiLang: { type: String, default: 'en' },
   streakLength: { type: Number, default: 0 },
   streakLastUpdatedAt: { type: Date, default: null },
   streakTimeZone: { type: String, default: 'UTC' },

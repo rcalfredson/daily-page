@@ -41,6 +41,13 @@ export async function updateUserProfile(userId, updates) {
   return updatedUser.toObject();
 }
 
+export async function updateUserPreferredUiLang(userId, preferredUiLang) {
+  return User.updateOne(
+    { _id: userId, preferredUiLang: { $ne: preferredUiLang } },
+    { $set: { preferredUiLang } }
+  );
+}
+
 export async function starRoom(userId, roomId) {
   const user = await User.findById(userId);
   if (!user) throw new Error('User not found');

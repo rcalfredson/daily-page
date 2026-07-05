@@ -42,16 +42,18 @@ function makeHarness() {
       _id: 'quest-1',
       slug: 'virtual-road-trip',
       administratorUserId: 'admin-1',
-      name_i18n: { en: 'Virtual road trip' }
+      name_i18n: { en: 'Virtual road trip', es: 'Viaje virtual por carretera' }
     }]),
-    QuestItemModel: modelById([{ _id: 'item-1', label: 'Tioga, PA' }]),
+    QuestItemModel: modelById([{
+      _id: 'item-1', label: 'Tioga, PA', label_i18n: { es: 'Tioga, Pensilvania' }
+    }]),
     BlockModel: modelById([{
       _id: 'block-1', roomId: 'united-states', title: 'Tioga, PA'
     }]),
     UserModel: modelById([{
       _id: 'owner-1', username: 'Owner', email: 'owner@example.com'
     }, {
-      _id: 'admin-1', username: 'Admin', email: 'admin@example.com'
+      _id: 'admin-1', username: 'Admin', email: 'admin@example.com', preferredUiLang: 'es'
     }]),
     createNotificationRecord,
     markEmailed,
@@ -80,7 +82,10 @@ describe('quest notification service', () => {
       to: 'admin@example.com'
     }));
     expect(harness.buildEmail).toHaveBeenCalledWith(jasmine.objectContaining({
-      targetUrl: 'http://localhost:3000/en/quests/review?questId=quest-1&submission=submission-1' +
+      uiLang: 'es',
+      questName: 'Viaje virtual por carretera',
+      itemLabel: 'Tioga, Pensilvania',
+      targetUrl: 'http://localhost:3000/es/quests/review?questId=quest-1&submission=submission-1' +
         '#quest-review-submission-submission-1'
     }));
     expect(harness.markEmailed).toHaveBeenCalledWith('notification-1');
@@ -104,6 +109,7 @@ describe('quest notification service', () => {
       type: 'quest_submission_revoked'
     }));
     expect(harness.buildEmail).toHaveBeenCalledWith(jasmine.objectContaining({
+      uiLang: 'en',
       targetUrl: 'http://localhost:3000/en/quests/virtual-road-trip?submission=submission-1' +
         '#quest-submission-submission-1'
     }));
