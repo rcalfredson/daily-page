@@ -9,9 +9,17 @@
       "markRead": "Tandai dibaca",
       "fallbackActor": "Seseorang",
       "fallbackBlockTitle": "postinganmu",
+      "fallbackQuestName": "misi",
+      "fallbackItemLabel": "item yang kamu pesan",
       "item": {
         "blockComment": "{actorUsername} mengomentari postinganmu \"{blockTitle}\".",
         "commentReply": "{actorUsername} membalas komentarmu di \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} mengirim \"{blockTitle}\" untuk ditinjau dalam {questName}.",
+        "questChangesRequested": "Perubahan diminta untuk \"{blockTitle}\" dalam {questName}.",
+        "questSubmissionApproved": "Postinganmu \"{blockTitle}\" disetujui untuk {questName}.",
+        "questSubmissionRejected": "Postinganmu \"{blockTitle}\" tidak diterima untuk {questName}.",
+        "questSubmissionRevoked": "Postinganmu \"{blockTitle}\" tidak lagi dihitung untuk {questName}.",
+        "questClaimExpired": "Pemesananmu untuk {itemLabel} dalam {questName} telah kedaluwarsa.",
         "unknown": "Notifikasi"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Lihat percakapan di Daily Page",
         "fallbackActor": "Seseorang",
         "fallbackBlockTitle": "postinganmu"
-      }
+      },
+      "quest": {"headingWithName": "Hai {username},", "fallbackActor": "Seseorang", "fallbackQuestName": "misi", "fallbackBlockTitle": "postinganmu", "fallbackItemLabel": "item yang kamu pesan"},
+      "questReviewRequested": {"subject": "Kiriman baru untuk {questName}", "heading": "Postingan misi siap ditinjau", "body": "<strong>{actorUsername}</strong> mengirim <strong>{blockTitle}</strong> untuk ditinjau dalam <strong>{questName}</strong>.", "cta": "Tinjau kiriman"},
+      "questChangesRequested": {"subject": "Perubahan diminta untuk {blockTitle}", "heading": "Postingan misimu perlu diubah", "body": "Perubahan diminta untuk <strong>{blockTitle}</strong> dalam <strong>{questName}</strong>.", "cta": "Lihat postingan"},
+      "questSubmissionApproved": {"subject": "Postinganmu disetujui untuk {questName}", "heading": "Kiriman misi disetujui", "body": "Postinganmu <strong>{blockTitle}</strong> disetujui untuk <strong>{questName}</strong>.", "cta": "Lihat postingan yang disetujui"},
+      "questSubmissionRejected": {"subject": "Pembaruan kirimanmu untuk {questName}", "heading": "Kiriman misi tidak diterima", "body": "Postinganmu <strong>{blockTitle}</strong> tidak diterima untuk <strong>{questName}</strong>.", "cta": "Lihat postingan"},
+      "questSubmissionRevoked": {"subject": "Postinganmu tidak lagi dihitung untuk {questName}", "heading": "Kontribusi misi diperbarui", "body": "Postinganmu <strong>{blockTitle}</strong> tidak lagi dihitung untuk <strong>{questName}</strong>.", "cta": "Lihat misi"},
+      "questClaimExpired": {"subject": "Pemesananmu dalam {questName} telah kedaluwarsa", "heading": "Pemesanan misi kedaluwarsa", "body": "Pemesananmu untuk <strong>{itemLabel}</strong> dalam <strong>{questName}</strong> telah kedaluwarsa.", "cta": "Lihat item misi yang tersedia"}
     }
   }
 }
