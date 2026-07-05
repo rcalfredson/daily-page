@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Yhteisötehtävät | Daily Page",
+        "description": "Osallistu yhteisöllisiin tehtäviin ja auta saavuttamaan yhteisiä luovia tavoitteita."
+      },
+      "eyebrow": "Luodaan yhdessä",
+      "heading": "Yhteisötehtävät",
+      "intro": "Liity yhteiseen projektiin, osallistu yhteisöllisiin julkaisuihin ja auta yhteisöä saavuttamaan kunnianhimoinen tavoite.",
+      "viewQuest": "Tutustu tehtävään →",
+      "empty": {
+        "title": "Ei aktiivisia tehtäviä vielä",
+        "body": "Ensimmäisiä yhteisötehtäviä valmistellaan vielä. Tarkista tilanne pian uudelleen."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Yhteisötehtävät",
+        "description": "Tutustu tähän yhteisötehtävään Daily Pagessa."
+      },
+      "breadcrumbLabel": "Tehtävän navigointi",
+      "allQuests": "Kaikki tehtävät",
+      "administeredBy": "Ylläpitäjä",
+      "aboutHeading": "Tietoa tästä tehtävästä",
+      "instructionsHeading": "Osallistumisohjeet",
+      "sectionsLabel": "Tehtävän osiot",
+      "tabs": {
+        "items": "Tehtävän kohteet",
+        "posts": "Hyväksytyt julkaisut",
+        "leaderboard": "Tulostaulukko"
+      }
+    },
+    "progress": {
+      "label": "Tehtävän edistyminen",
+      "count": "{completed}/{target}",
+      "percent": "{percent} % valmis"
+    },
+    "status": {
+      "draft": "Luonnos",
+      "active": "Aktiivinen",
+      "completed": "Valmis",
+      "archived": "Arkistoitu"
+    },
+    "type": {
+      "count": "Määrään perustuva tehtävä",
+      "set": "Joukkoon perustuva tehtävä"
+    },
+    "badge": {
+      "alt": "Merkki tehtävälle {questName}",
+      "tierAlt": "{tier}-merkki tehtävälle {questName}"
+    },
+    "items": {
+      "eyebrow": "Tarkistuslista",
+      "heading": "Tehtävän kohteet",
+      "resultCount": "{count} näytetään",
+      "searchLabel": "Hae kohteita",
+      "searchPlaceholder": "Hae nimellä",
+      "stateLabel": "Tila",
+      "filter": "Käytä suodattimia",
+      "clear": "Tyhjennä",
+      "states": {
+        "all": "Kaikki tilat",
+        "available": "Saatavilla",
+        "reserved": "Varattu",
+        "draft": "Kesken",
+        "pending": "Arvioitavana",
+        "changes-requested": "Muutoksia pyydetty",
+        "completed": "Valmis",
+        "inactive": "Ei aktiivinen"
+      },
+      "byCreator": "Tekijä: {username}",
+      "availableNote": "Avoinna tulevaa osallistumista varten.",
+      "inProgressNote": "Yhteisön jäsen työskentelee tämän kohteen parissa.",
+      "empty": {
+        "title": "Ei vastaavia kohteita",
+        "body": "Kokeile toista hakua tai tilasuodatinta."
+      }
+    },
+    "posts": {
+      "eyebrow": "Yhteisön työ",
+      "heading": "Hyväksytyt julkaisut",
+      "resultCount": "{count} näytetään",
+      "byCreator": "Luonut {username}",
+      "approved": "Hyväksytty",
+      "contributors": "{count} hyvitettyä osallistujaa",
+      "empty": {
+        "title": "Ei hyväksyttyjä julkaisuja vielä",
+        "body": "Tämä tehtävä odottaa ensimmäistä hyväksyttyä osallistumista."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Sinun osallistumisesi",
+      "heading": "Liity tähän tehtävään",
+      "signInPrompt": "Kirjaudu sisään varataksesi kohteen ja lähettääksesi julkaisun arvioitavaksi.",
+      "signIn": "Kirjaudu sisään osallistuaksesi",
+      "countPrompt": "Luo uusi julkaisu tämän tehtävän oletushuoneessa, kehitä sitä ja lukitse se ennen arvioinnin pyytämistä.",
+      "setPrompt": "Valitse saatavilla oleva tehtävän kohde, varaa se ja aloita ensimmäinen osallistumisesi.",
+      "browseItems": "Selaa saatavilla olevia kohteita",
+      "createPost": "Luo tehtäväjulkaisu",
+      "closed": "Tämä tehtävä ei ota juuri nyt vastaan uusia osallistumisia.",
+      "mineHeading": "Omat tehtäväjulkaisusi",
+      "claim": "Varaa tämä kohde",
+      "release": "Vapauta varaus",
+      "editPost": "Muokkaa julkaisua",
+      "requestReview": "Pyydä arviointia",
+      "withdraw": "Peruuta",
+      "resumeEditing": "Jatka muokkaamista",
+      "startRevision": "Muokkaa hyväksyttyä julkaisua",
+      "confirmWithdraw": "Perutaanko tämä tehtävän lähetys? Itse julkaisu jää sivustolle.",
+      "pagination": {
+        "label": "Omien tehtäväjulkaisujesi sivut",
+        "previous": "← Uudemmat julkaisut",
+        "next": "Vanhemmat julkaisut →",
+        "status": "Sivu {current}/{total} · {count} julkaisua"
+      },
+      "status": {
+        "draft": "Luonnos",
+        "pending": "Arvioitavana",
+        "changes-requested": "Muutoksia pyydetty",
+        "approved": "Hyväksytty",
+        "rejected": "Hylätty",
+        "withdrawn": "Peruttu",
+        "revoked": "Kumottu"
+      },
+      "errors": {
+        "generic": "Tätä tehtävätoimintoa ei voitu suorittaa. Yritä uudelleen.",
+        "blockIneligible": "Ennen kuin pyydät arviointia, lukitse julkaisu ja varmista, että se täyttää edelleen tehtävän vaatimukset.",
+        "itemUnavailable": "Tämä kohde ei ole enää saatavilla tälle osallistumiselle. Päivitä sivu ja yritä uudelleen.",
+        "createFailed": "Julkaisua ei voitu liittää tähän tehtävään. Varauksesi on saattanut vanhentua; palaa tehtävään ja yritä uudelleen."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Tehtävien arviointijono | Daily Page",
+        "description": "Arvioi odottavat lähetykset hallinnoimistasi yhteisötehtävistä."
+      },
+      "eyebrow": "Ylläpitäjän työtila",
+      "heading": "Tehtävien arviointijono",
+      "intro": "Tarkista lähetetty julkaisu ja sen historia ennen kuin hyväksyt sen tai lähetät sen takaisin osallistujalle.",
+      "pendingCount": "{count} odottavaa lähetystä",
+      "openPanel": "Avaa arviointijono",
+      "owner": "Lähetyksen omistaja",
+      "unknownOwner": "Tuntematon käyttäjä",
+      "item": "Tehtävän kohde",
+      "requestedAt": "Arviointia pyydetty",
+      "revision": "Lähetetty versio",
+      "unknownRevision": "Tuntematon versio",
+      "openPost": "Avaa lähetetty julkaisu",
+      "missingPost": "Julkaisu ei ole saatavilla",
+      "history": "Arviointihistoria ({count})",
+      "reason": "Syy: {reason}",
+      "commentLabel": "Arviointikommentti",
+      "commentPlaceholder": "Selitä päätöksesi tai jätä hyödyllisiä muokkausohjeita.",
+      "commentHelp": "Kommentti vaaditaan, kun pyydät muutoksia tai hylkäät lähetyksen. Hyväksyessä se on valinnainen.",
+      "approve": "Hyväksy",
+      "requestChanges": "Pyydä muutoksia",
+      "reject": "Hylkää",
+      "events": {
+        "created": "Lähetys luotu",
+        "review-requested": "Arviointia pyydetty",
+        "changes-requested": "Muutoksia pyydetty",
+        "editing-reopened": "Muokkausta jatkettu",
+        "approved": "Hyväksytty",
+        "rejected": "Hylätty",
+        "withdrawn": "Peruttu",
+        "revision-started": "Muokkaus aloitettu",
+        "revoked": "Hyväksyntä kumottu",
+        "claim-expired": "Varaus vanhentui",
+        "invalidated": "Lähetys mitätöity"
+      },
+      "empty": {
+        "title": "Jono on tyhjä",
+        "body": "Hallinnoimillesi tehtäville ei ole odottavia lähetyksiä."
+      },
+      "errors": {
+        "forbidden": "Et hallinnoi tätä tehtävää.",
+        "loadFailed": "Tehtävien arviointijonoa ei voitu ladata juuri nyt.",
+        "actionFailed": "Tätä arviointipäätöstä ei voitu tallentaa. Yritä uudelleen.",
+        "commentRequired": "Lisää arviointikommentti ennen muutosten pyytämistä tai hylkäämistä.",
+        "stale": "Tämä lähetys tai sen julkaisu muuttui ennen päätöksen tallentamista. Jono päivitetään."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "{questName} -tulostaulukko | Daily Page",
+        "description": "Katso tehtävän {questName} johtavat osallistujat."
+      },
+      "heading": "Tehtävän tulostaulukko",
+      "intro": "Osallistujat järjestetään hyväksyttyjen tehtäväjulkaisujen määrän perusteella ja sen jälkeen sen mukaan, milloin he saavuttivat nykyisen kokonaismääränsä.",
+      "contributions": "{count}/{target} julkaisua",
+      "empty": {
+        "title": "Tulostaulukko odottaa",
+        "body": "Osallistujat ilmestyvät näkyviin, kun ensimmäinen julkaisu on hyväksytty."
+      }
+    },
+    "medals": {
+      "base": "Osallistuja",
+      "bronze": "Pronssi",
+      "silver": "Hopea",
+      "gold": "Kulta"
+    },
+    "pagination": {
+      "label": "Tehtävätulosten sivut",
+      "previous": "← Edellinen",
+      "next": "Seuraava →",
+      "status": "Sivu {current}/{total}"
+    },
+    "errors": {
+      "notFoundTitle": "Tehtävää ei löydy",
+      "notFound": "Tätä tehtävää ei löytynyt.",
+      "loadFailed": "Tehtävää ei voitu ladata juuri nyt."
+    }
+  }
+}
