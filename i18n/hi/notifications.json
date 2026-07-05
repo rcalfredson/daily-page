@@ -9,9 +9,17 @@
       "markRead": "पढ़ा हुआ चिह्नित करें",
       "fallbackActor": "कोई",
       "fallbackBlockTitle": "आपका पोस्ट",
+      "fallbackQuestName": "अभियान",
+      "fallbackItemLabel": "आपकी आरक्षित अभियान मद",
       "item": {
         "blockComment": "{actorUsername} ने आपके पोस्ट \"{blockTitle}\" पर टिप्पणी की।",
         "commentReply": "{actorUsername} ने \"{blockTitle}\" पर आपकी टिप्पणी का उत्तर दिया।",
+        "questReviewRequested": "{actorUsername} ने \"{blockTitle}\" को {questName} में समीक्षा के लिए भेजा।",
+        "questChangesRequested": "{questName} में \"{blockTitle}\" के लिए बदलाव मांगे गए।",
+        "questSubmissionApproved": "आपका पोस्ट \"{blockTitle}\" {questName} के लिए स्वीकृत हुआ।",
+        "questSubmissionRejected": "आपका पोस्ट \"{blockTitle}\" {questName} के लिए स्वीकार नहीं हुआ।",
+        "questSubmissionRevoked": "आपका पोस्ट \"{blockTitle}\" अब {questName} में नहीं गिना जाता।",
+        "questClaimExpired": "{questName} में {itemLabel} के लिए आपका आरक्षण समाप्त हो गया।",
         "unknown": "अधिसूचना"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Daily Page पर बातचीत देखें",
         "fallbackActor": "कोई",
         "fallbackBlockTitle": "आपका पोस्ट"
-      }
+      },
+      "quest": {"headingWithName": "नमस्ते {username},", "fallbackActor": "कोई", "fallbackQuestName": "अभियान", "fallbackBlockTitle": "आपका पोस्ट", "fallbackItemLabel": "आपकी आरक्षित अभियान मद"},
+      "questReviewRequested": {"subject": "{questName} के लिए नई प्रस्तुति", "heading": "अभियान पोस्ट समीक्षा के लिए तैयार है", "body": "<strong>{actorUsername}</strong> ने <strong>{blockTitle}</strong> को <strong>{questName}</strong> में समीक्षा के लिए भेजा।", "cta": "प्रस्तुति की समीक्षा करें"},
+      "questChangesRequested": {"subject": "{blockTitle} के लिए बदलाव मांगे गए", "heading": "आपके अभियान पोस्ट में बदलाव चाहिए", "body": "<strong>{questName}</strong> में <strong>{blockTitle}</strong> के लिए बदलाव मांगे गए।", "cta": "पोस्ट देखें"},
+      "questSubmissionApproved": {"subject": "आपका पोस्ट {questName} के लिए स्वीकृत हुआ", "heading": "अभियान प्रस्तुति स्वीकृत हुई", "body": "आपका पोस्ट <strong>{blockTitle}</strong> <strong>{questName}</strong> के लिए स्वीकृत हुआ।", "cta": "स्वीकृत पोस्ट देखें"},
+      "questSubmissionRejected": {"subject": "{questName} में आपकी प्रस्तुति पर अपडेट", "heading": "अभियान प्रस्तुति स्वीकार नहीं हुई", "body": "आपका पोस्ट <strong>{blockTitle}</strong> <strong>{questName}</strong> के लिए स्वीकार नहीं हुआ।", "cta": "पोस्ट देखें"},
+      "questSubmissionRevoked": {"subject": "आपका पोस्ट अब {questName} में नहीं गिना जाता", "heading": "अभियान योगदान अपडेट हुआ", "body": "आपका पोस्ट <strong>{blockTitle}</strong> अब <strong>{questName}</strong> में नहीं गिना जाता।", "cta": "अभियान देखें"},
+      "questClaimExpired": {"subject": "{questName} में आपका आरक्षण समाप्त हो गया", "heading": "अभियान आरक्षण समाप्त हुआ", "body": "<strong>{questName}</strong> में <strong>{itemLabel}</strong> के लिए आपका आरक्षण समाप्त हो गया।", "cta": "उपलब्ध अभियान मदें देखें"}
     }
   }
 }
