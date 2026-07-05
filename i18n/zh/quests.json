@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "社区任务 | Daily Page",
+        "description": "加入协作式社区任务，帮助完成共同的创作目标。"
+      },
+      "eyebrow": "一起创作",
+      "heading": "社区任务",
+      "intro": "加入一个共同项目，参与协作文章创作，帮助社区达成一个有挑战性的目标。",
+      "viewQuest": "探索任务 →",
+      "empty": {
+        "title": "暂时没有活跃任务",
+        "body": "第一批社区任务仍在准备中。请稍后再来看看。"
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | 社区任务",
+        "description": "在 Daily Page 上探索这个社区任务。"
+      },
+      "breadcrumbLabel": "任务导航",
+      "allQuests": "所有任务",
+      "administeredBy": "管理员",
+      "aboutHeading": "关于此任务",
+      "instructionsHeading": "投稿指南",
+      "sectionsLabel": "任务分区",
+      "tabs": {
+        "items": "任务项目",
+        "posts": "已批准文章",
+        "leaderboard": "排行榜"
+      }
+    },
+    "progress": {
+      "label": "任务进度",
+      "count": "已完成 {completed} / {target}",
+      "percent": "已完成 {percent}%"
+    },
+    "status": {
+      "draft": "草稿",
+      "active": "进行中",
+      "completed": "已完成",
+      "archived": "已归档"
+    },
+    "type": {
+      "count": "计数型任务",
+      "set": "集合型任务"
+    },
+    "badge": {
+      "alt": "{questName} 的徽章",
+      "tierAlt": "{questName} 的{tier}徽章"
+    },
+    "items": {
+      "eyebrow": "清单",
+      "heading": "任务项目",
+      "resultCount": "显示 {count} 项",
+      "searchLabel": "搜索项目",
+      "searchPlaceholder": "按名称搜索",
+      "stateLabel": "状态",
+      "filter": "应用筛选",
+      "clear": "清除",
+      "states": {
+        "all": "所有状态",
+        "available": "可领取",
+        "reserved": "已保留",
+        "draft": "进行中",
+        "pending": "审核中",
+        "changes-requested": "已要求修改",
+        "completed": "已完成",
+        "inactive": "未激活"
+      },
+      "byCreator": "由 {username} 创建",
+      "availableNote": "开放给未来的投稿。",
+      "inProgressNote": "一位社区成员正在处理此项目。",
+      "empty": {
+        "title": "没有匹配的项目",
+        "body": "请尝试其他搜索词或状态筛选。"
+      }
+    },
+    "posts": {
+      "eyebrow": "社区作品",
+      "heading": "已批准文章",
+      "resultCount": "显示 {count} 篇",
+      "byCreator": "由 {username} 创建",
+      "approved": "已批准",
+      "contributors": "{count} 位已署名贡献者",
+      "empty": {
+        "title": "暂时没有已批准文章",
+        "body": "此任务正在等待第一篇获批投稿。"
+      }
+    },
+    "contribute": {
+      "eyebrow": "你的贡献",
+      "heading": "加入此任务",
+      "signInPrompt": "登录后即可领取项目并提交文章以供审核。",
+      "signIn": "登录参与贡献",
+      "countPrompt": "在此任务的默认房间中创建一篇新文章，然后完善并锁定它，再请求审核。",
+      "setPrompt": "选择一个可用的任务项目并领取，开始你的第一份贡献。",
+      "browseItems": "浏览可用项目",
+      "createPost": "创建任务文章",
+      "closed": "此任务目前不接受新的贡献。",
+      "mineHeading": "你的任务文章",
+      "claim": "领取此项目",
+      "release": "释放领取",
+      "editPost": "编辑文章",
+      "requestReview": "请求审核",
+      "withdraw": "撤回",
+      "resumeEditing": "继续编辑",
+      "startRevision": "修订已批准文章",
+      "confirmWithdraw": "要撤回此任务投稿吗？文章本身仍会保留在网站上。",
+      "pagination": {
+        "label": "你的任务文章分页",
+        "previous": "← 较新的文章",
+        "next": "较旧的文章 →",
+        "status": "第 {current} 页，共 {total} 页 · {count} 篇文章"
+      },
+      "status": {
+        "draft": "草稿",
+        "pending": "审核中",
+        "changes-requested": "已要求修改",
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "withdrawn": "已撤回",
+        "revoked": "已撤销"
+      },
+      "errors": {
+        "generic": "无法完成该任务操作。请重试。",
+        "blockIneligible": "请求审核前，请锁定文章，并确认它仍符合任务要求。",
+        "itemUnavailable": "该项目已不再适用于这份贡献。请刷新页面后重试。",
+        "createFailed": "无法将文章附加到此任务。你的领取可能已过期；请返回任务页面并重试。"
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "任务审核队列 | Daily Page",
+        "description": "审核你管理的社区任务中的待处理投稿。"
+      },
+      "eyebrow": "管理员工作区",
+      "heading": "任务审核队列",
+      "intro": "在批准投稿或退回给贡献者之前，请查看提交的文章及其历史记录。",
+      "pendingCount": "{count} 份待审核投稿",
+      "openPanel": "打开审核队列",
+      "owner": "投稿所有者",
+      "unknownOwner": "未知用户",
+      "item": "任务项目",
+      "requestedAt": "请求审核时间",
+      "revision": "提交的修订版",
+      "unknownRevision": "未知修订版",
+      "openPost": "打开提交的文章",
+      "missingPost": "文章不可用",
+      "history": "审核历史（{count}）",
+      "reason": "原因：{reason}",
+      "commentLabel": "审核评论",
+      "commentPlaceholder": "说明你的决定，或留下有帮助的修订建议。",
+      "commentHelp": "要求修改或拒绝时必须填写评论；批准时可选。",
+      "approve": "批准",
+      "requestChanges": "要求修改",
+      "reject": "拒绝",
+      "events": {
+        "created": "投稿已创建",
+        "review-requested": "已请求审核",
+        "changes-requested": "已要求修改",
+        "editing-reopened": "已恢复编辑",
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "withdrawn": "已撤回",
+        "revision-started": "已开始修订",
+        "revoked": "批准已撤销",
+        "claim-expired": "领取已过期",
+        "invalidated": "投稿已失效"
+      },
+      "empty": {
+        "title": "队列已清空",
+        "body": "你管理的任务目前没有待处理投稿。"
+      },
+      "errors": {
+        "forbidden": "你不是该任务的管理员。",
+        "loadFailed": "目前无法加载任务审核队列。",
+        "actionFailed": "无法保存该审核决定。请重试。",
+        "commentRequired": "请在要求修改或拒绝之前添加审核评论。",
+        "stale": "保存决定前，此投稿或其文章已发生变化。队列将刷新。"
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "{questName} 排行榜 | Daily Page",
+        "description": "查看 {questName} 的领先贡献者。"
+      },
+      "heading": "任务排行榜",
+      "intro": "贡献者按已批准的任务文章数量排名；数量相同时，按达到当前总数的时间排序。",
+      "contributions": "{count} / {target} 篇文章",
+      "empty": {
+        "title": "排行榜正在等待",
+        "body": "第一篇文章获批后，贡献者会出现在这里。"
+      }
+    },
+    "medals": {
+      "base": "贡献者",
+      "bronze": "铜牌",
+      "silver": "银牌",
+      "gold": "金牌"
+    },
+    "pagination": {
+      "label": "任务结果分页",
+      "previous": "← 上一页",
+      "next": "下一页 →",
+      "status": "第 {current} 页，共 {total} 页"
+    },
+    "errors": {
+      "notFoundTitle": "未找到任务",
+      "notFound": "无法找到该任务。",
+      "loadFailed": "目前无法加载该任务。"
+    }
+  }
+}
