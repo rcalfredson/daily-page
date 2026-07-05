@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Missioni della comunità | Daily Page",
+        "description": "Partecipa a missioni collaborative della comunità e aiuta a completare obiettivi creativi condivisi."
+      },
+      "eyebrow": "Creare insieme",
+      "heading": "Missioni della comunità",
+      "intro": "Unisciti a un progetto condiviso, contribuisci a post collaborativi e aiuta la comunità a raggiungere un obiettivo ambizioso.",
+      "viewQuest": "Esplora la missione →",
+      "empty": {
+        "title": "Nessuna missione attiva per ora",
+        "body": "Le prime missioni della comunità sono ancora in preparazione. Torna presto."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Missioni della comunità",
+        "description": "Esplora questa missione della comunità su Daily Page."
+      },
+      "breadcrumbLabel": "Navigazione della missione",
+      "allQuests": "Tutte le missioni",
+      "administeredBy": "Amministrata da",
+      "aboutHeading": "Informazioni su questa missione",
+      "instructionsHeading": "Linee guida per contribuire",
+      "sectionsLabel": "Sezioni della missione",
+      "tabs": {
+        "items": "Elementi della missione",
+        "posts": "Post approvati",
+        "leaderboard": "Classifica"
+      }
+    },
+    "progress": {
+      "label": "Avanzamento della missione",
+      "count": "{completed} di {target}",
+      "percent": "{percent}% completato"
+    },
+    "status": {
+      "draft": "Bozza",
+      "active": "Attiva",
+      "completed": "Completata",
+      "archived": "Archiviata"
+    },
+    "type": {
+      "count": "Missione basata sul conteggio",
+      "set": "Missione basata su un insieme"
+    },
+    "badge": {
+      "alt": "Distintivo per {questName}",
+      "tierAlt": "Distintivo {tier} per {questName}"
+    },
+    "items": {
+      "eyebrow": "La lista",
+      "heading": "Elementi della missione",
+      "resultCount": "{count} visualizzati",
+      "searchLabel": "Cerca elementi",
+      "searchPlaceholder": "Cerca per nome",
+      "stateLabel": "Stato",
+      "filter": "Applica filtri",
+      "clear": "Cancella",
+      "states": {
+        "all": "Tutti gli stati",
+        "available": "Disponibile",
+        "reserved": "Riservato",
+        "draft": "In corso",
+        "pending": "In revisione",
+        "changes-requested": "Modifiche richieste",
+        "completed": "Completato",
+        "inactive": "Inattivo"
+      },
+      "byCreator": "Di {username}",
+      "availableNote": "Disponibile per un futuro contributo.",
+      "inProgressNote": "Un membro della comunità sta lavorando su questo elemento.",
+      "empty": {
+        "title": "Nessun elemento corrispondente",
+        "body": "Prova una ricerca o un filtro di stato diverso."
+      }
+    },
+    "posts": {
+      "eyebrow": "Lavoro della comunità",
+      "heading": "Post approvati",
+      "resultCount": "{count} visualizzati",
+      "byCreator": "Creato da {username}",
+      "approved": "Approvato",
+      "contributors": "{count} contributori accreditati",
+      "empty": {
+        "title": "Ancora nessun post approvato",
+        "body": "Questa missione attende il suo primo contributo approvato."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Il tuo contributo",
+      "heading": "Unisciti a questa missione",
+      "signInPrompt": "Accedi per reclamare un elemento e inviare un post per la revisione.",
+      "signIn": "Accedi per contribuire",
+      "countPrompt": "Crea un nuovo post nella stanza predefinita di questa missione, poi sviluppalo e bloccalo prima di richiedere la revisione.",
+      "setPrompt": "Scegli un elemento disponibile della missione da reclamare e inizia il tuo primo contributo.",
+      "browseItems": "Sfoglia gli elementi disponibili",
+      "createPost": "Crea post della missione",
+      "closed": "Questa missione non accetta nuovi contributi in questo momento.",
+      "mineHeading": "I tuoi post della missione",
+      "claim": "Reclama questo elemento",
+      "release": "Rilascia il reclamo",
+      "editPost": "Modifica post",
+      "requestReview": "Richiedi revisione",
+      "withdraw": "Ritira",
+      "resumeEditing": "Riprendi modifica",
+      "startRevision": "Rivedi post approvato",
+      "confirmWithdraw": "Ritirare questa candidatura alla missione? Il post stesso rimarrà sul sito.",
+      "pagination": {
+        "label": "Pagine dei tuoi post della missione",
+        "previous": "← Post più recenti",
+        "next": "Post meno recenti →",
+        "status": "Pagina {current} di {total} · {count} post"
+      },
+      "status": {
+        "draft": "Bozza",
+        "pending": "In revisione",
+        "changes-requested": "Modifiche richieste",
+        "approved": "Approvato",
+        "rejected": "Respinto",
+        "withdrawn": "Ritirato",
+        "revoked": "Revocato"
+      },
+      "errors": {
+        "generic": "Non è stato possibile completare questa azione della missione. Riprova.",
+        "blockIneligible": "Prima di richiedere la revisione, blocca il post e assicurati che soddisfi ancora i requisiti della missione.",
+        "itemUnavailable": "Questo elemento non è più disponibile per questo contributo. Aggiorna la pagina e riprova.",
+        "createFailed": "Non è stato possibile collegare il post a questa missione. Il tuo reclamo potrebbe essere scaduto; torna alla missione e riprova."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Coda di revisione delle missioni | Daily Page",
+        "description": "Rivedi le candidature in sospeso per le missioni della comunità che amministri."
+      },
+      "eyebrow": "Area amministratore",
+      "heading": "Coda di revisione delle missioni",
+      "intro": "Rivedi il post inviato e la sua cronologia prima di approvarlo o rimandarlo al contributore.",
+      "pendingCount": "{count} candidature in sospeso",
+      "openPanel": "Apri coda di revisione",
+      "owner": "Proprietario della candidatura",
+      "unknownOwner": "Utente sconosciuto",
+      "item": "Elemento della missione",
+      "requestedAt": "Revisione richiesta",
+      "revision": "Revisione inviata",
+      "unknownRevision": "Revisione sconosciuta",
+      "openPost": "Apri post inviato",
+      "missingPost": "Post non disponibile",
+      "history": "Cronologia revisioni ({count})",
+      "reason": "Motivo: {reason}",
+      "commentLabel": "Commento di revisione",
+      "commentPlaceholder": "Spiega la tua decisione o lascia note utili per la revisione.",
+      "commentHelp": "È richiesto un commento quando si richiedono modifiche o si respinge. È facoltativo in caso di approvazione.",
+      "approve": "Approva",
+      "requestChanges": "Richiedi modifiche",
+      "reject": "Respingi",
+      "events": {
+        "created": "Candidatura creata",
+        "review-requested": "Revisione richiesta",
+        "changes-requested": "Modifiche richieste",
+        "editing-reopened": "Modifica ripresa",
+        "approved": "Approvata",
+        "rejected": "Respinta",
+        "withdrawn": "Ritirata",
+        "revision-started": "Revisione avviata",
+        "revoked": "Approvazione revocata",
+        "claim-expired": "Reclamo scaduto",
+        "invalidated": "Candidatura invalidata"
+      },
+      "empty": {
+        "title": "La coda è vuota",
+        "body": "Non ci sono candidature in sospeso per le missioni che amministri."
+      },
+      "errors": {
+        "forbidden": "Non amministri quella missione.",
+        "loadFailed": "Non è stato possibile caricare la coda di revisione delle missioni in questo momento.",
+        "actionFailed": "Non è stato possibile salvare questa decisione di revisione. Riprova.",
+        "commentRequired": "Aggiungi un commento di revisione prima di richiedere modifiche o respingere.",
+        "stale": "Questa candidatura o il suo post è cambiato prima che la decisione fosse salvata. La coda verrà aggiornata."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "Classifica di {questName} | Daily Page",
+        "description": "Vedi i principali contributori di {questName}."
+      },
+      "heading": "Classifica della missione",
+      "intro": "I contributori sono classificati in base ai post della missione approvati, poi in base al momento in cui hanno raggiunto il totale attuale.",
+      "contributions": "{count} di {target} post",
+      "empty": {
+        "title": "La classifica è in attesa",
+        "body": "I contributori appariranno dopo l'approvazione del primo post."
+      }
+    },
+    "medals": {
+      "base": "Contributore",
+      "bronze": "Bronzo",
+      "silver": "Argento",
+      "gold": "Oro"
+    },
+    "pagination": {
+      "label": "Pagine dei risultati della missione",
+      "previous": "← Precedente",
+      "next": "Successivo →",
+      "status": "Pagina {current} di {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Missione non trovata",
+      "notFound": "Non è stato possibile trovare quella missione.",
+      "loadFailed": "Non è stato possibile caricare la missione in questo momento."
+    }
+  }
+}
