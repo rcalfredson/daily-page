@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "Communityquests | Daily Page",
+        "description": "Doe mee aan gezamenlijke communityquests en help gedeelde creatieve doelen te voltooien."
+      },
+      "eyebrow": "Samen creëren",
+      "heading": "Communityquests",
+      "intro": "Doe mee aan een gedeeld project, draag bij aan gezamenlijke posts en help de community een ambitieus doel te bereiken.",
+      "viewQuest": "Quest verkennen →",
+      "empty": {
+        "title": "Nog geen actieve quests",
+        "body": "De eerste communityquests worden nog voorbereid. Kom binnenkort terug."
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | Communityquests",
+        "description": "Verken deze communityquest op Daily Page."
+      },
+      "breadcrumbLabel": "Questnavigatie",
+      "allQuests": "Alle quests",
+      "administeredBy": "Beheerd door",
+      "aboutHeading": "Over deze quest",
+      "instructionsHeading": "Richtlijnen voor bijdragen",
+      "sectionsLabel": "Questsecties",
+      "tabs": {
+        "items": "Questitems",
+        "posts": "Goedgekeurde posts",
+        "leaderboard": "Klassement"
+      }
+    },
+    "progress": {
+      "label": "Questvoortgang",
+      "count": "{completed} van {target}",
+      "percent": "{percent}% voltooid"
+    },
+    "status": {
+      "draft": "Concept",
+      "active": "Actief",
+      "completed": "Voltooid",
+      "archived": "Gearchiveerd"
+    },
+    "type": {
+      "count": "Quest op basis van aantal",
+      "set": "Quest op basis van een set"
+    },
+    "badge": {
+      "alt": "Badge voor {questName}",
+      "tierAlt": "{tier}-badge voor {questName}"
+    },
+    "items": {
+      "eyebrow": "De checklist",
+      "heading": "Questitems",
+      "resultCount": "{count} weergegeven",
+      "searchLabel": "Items zoeken",
+      "searchPlaceholder": "Zoeken op naam",
+      "stateLabel": "Status",
+      "filter": "Filters toepassen",
+      "clear": "Wissen",
+      "states": {
+        "all": "Alle statussen",
+        "available": "Beschikbaar",
+        "reserved": "Gereserveerd",
+        "draft": "In uitvoering",
+        "pending": "In beoordeling",
+        "changes-requested": "Wijzigingen gevraagd",
+        "completed": "Voltooid",
+        "inactive": "Inactief"
+      },
+      "byCreator": "Door {username}",
+      "availableNote": "Open voor een toekomstige bijdrage.",
+      "inProgressNote": "Een communitylid werkt aan dit item.",
+      "empty": {
+        "title": "Geen overeenkomende items",
+        "body": "Probeer een andere zoekopdracht of statusfilter."
+      }
+    },
+    "posts": {
+      "eyebrow": "Communitywerk",
+      "heading": "Goedgekeurde posts",
+      "resultCount": "{count} weergegeven",
+      "byCreator": "Gemaakt door {username}",
+      "approved": "Goedgekeurd",
+      "contributors": "{count} erkende bijdragers",
+      "empty": {
+        "title": "Nog geen goedgekeurde posts",
+        "body": "Deze quest wacht op de eerste goedgekeurde bijdrage."
+      }
+    },
+    "contribute": {
+      "eyebrow": "Jouw bijdrage",
+      "heading": "Doe mee aan deze quest",
+      "signInPrompt": "Log in om een item te reserveren en een post ter beoordeling in te dienen.",
+      "signIn": "Log in om bij te dragen",
+      "countPrompt": "Maak een nieuwe post in de standaardruimte van deze quest, werk die uit en vergrendel hem voordat je beoordeling aanvraagt.",
+      "setPrompt": "Kies een beschikbaar questitem om te reserveren en begin aan je eerste bijdrage.",
+      "browseItems": "Beschikbare items bekijken",
+      "createPost": "Questpost maken",
+      "closed": "Deze quest accepteert momenteel geen nieuwe bijdragen.",
+      "mineHeading": "Jouw questposts",
+      "claim": "Dit item reserveren",
+      "release": "Reservering vrijgeven",
+      "editPost": "Post bewerken",
+      "requestReview": "Beoordeling aanvragen",
+      "withdraw": "Intrekken",
+      "resumeEditing": "Bewerken hervatten",
+      "startRevision": "Goedgekeurde post herzien",
+      "confirmWithdraw": "Deze questinzending intrekken? De post zelf blijft op de site staan.",
+      "pagination": {
+        "label": "Pagina’s van jouw questposts",
+        "previous": "← Nieuwere posts",
+        "next": "Oudere posts →",
+        "status": "Pagina {current} van {total} · {count} posts"
+      },
+      "status": {
+        "draft": "Concept",
+        "pending": "In beoordeling",
+        "changes-requested": "Wijzigingen gevraagd",
+        "approved": "Goedgekeurd",
+        "rejected": "Afgewezen",
+        "withdrawn": "Ingetrokken",
+        "revoked": "Ingetrokken goedkeuring"
+      },
+      "errors": {
+        "generic": "Deze questactie kon niet worden voltooid. Probeer het opnieuw.",
+        "blockIneligible": "Vergrendel de post en controleer of die nog steeds aan de questvereisten voldoet voordat je beoordeling aanvraagt.",
+        "itemUnavailable": "Dat item is niet langer beschikbaar voor deze bijdrage. Vernieuw de pagina en probeer het opnieuw.",
+        "createFailed": "De post kon niet aan deze quest worden gekoppeld. Je reservering is mogelijk verlopen; ga terug naar de quest en probeer het opnieuw."
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "Questbeoordelingswachtrij | Daily Page",
+        "description": "Beoordeel openstaande inzendingen voor de communityquests die je beheert."
+      },
+      "eyebrow": "Beheerderswerkruimte",
+      "heading": "Questbeoordelingswachtrij",
+      "intro": "Bekijk de ingediende post en de geschiedenis voordat je hem goedkeurt of terugstuurt naar de bijdrager.",
+      "pendingCount": "{count} openstaande inzendingen",
+      "openPanel": "Beoordelingswachtrij openen",
+      "owner": "Eigenaar van inzending",
+      "unknownOwner": "Onbekende gebruiker",
+      "item": "Questitem",
+      "requestedAt": "Beoordeling aangevraagd",
+      "revision": "Ingediende revisie",
+      "unknownRevision": "Onbekende revisie",
+      "openPost": "Ingediende post openen",
+      "missingPost": "Post niet beschikbaar",
+      "history": "Beoordelingsgeschiedenis ({count})",
+      "reason": "Reden: {reason}",
+      "commentLabel": "Beoordelingsopmerking",
+      "commentPlaceholder": "Leg je beslissing uit of laat behulpzame revisienotities achter.",
+      "commentHelp": "Een opmerking is vereist wanneer je wijzigingen vraagt of afwijst. Bij goedkeuren is die optioneel.",
+      "approve": "Goedkeuren",
+      "requestChanges": "Wijzigingen vragen",
+      "reject": "Afwijzen",
+      "events": {
+        "created": "Inzending gemaakt",
+        "review-requested": "Beoordeling aangevraagd",
+        "changes-requested": "Wijzigingen gevraagd",
+        "editing-reopened": "Bewerken hervat",
+        "approved": "Goedgekeurd",
+        "rejected": "Afgewezen",
+        "withdrawn": "Ingetrokken",
+        "revision-started": "Revisie gestart",
+        "revoked": "Goedkeuring ingetrokken",
+        "claim-expired": "Reservering verlopen",
+        "invalidated": "Inzending ongeldig gemaakt"
+      },
+      "empty": {
+        "title": "De wachtrij is leeg",
+        "body": "Er zijn geen openstaande inzendingen voor de quests die je beheert."
+      },
+      "errors": {
+        "forbidden": "Je beheert die quest niet.",
+        "loadFailed": "De questbeoordelingswachtrij kon nu niet worden geladen.",
+        "actionFailed": "Deze beoordelingsbeslissing kon niet worden opgeslagen. Probeer het opnieuw.",
+        "commentRequired": "Voeg een beoordelingsopmerking toe voordat je wijzigingen vraagt of afwijst.",
+        "stale": "Deze inzending of de post is gewijzigd voordat de beslissing werd opgeslagen. De wachtrij wordt vernieuwd."
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "{questName}-klassement | Daily Page",
+        "description": "Bekijk de leidende bijdragers aan {questName}."
+      },
+      "heading": "Questklassement",
+      "intro": "Bijdragers worden gerangschikt op goedgekeurde questposts en daarna op het moment waarop ze hun huidige totaal bereikten.",
+      "contributions": "{count} van {target} posts",
+      "empty": {
+        "title": "Het klassement wacht nog",
+        "body": "Bijdragers verschijnen nadat de eerste post is goedgekeurd."
+      }
+    },
+    "medals": {
+      "base": "Bijdrager",
+      "bronze": "Brons",
+      "silver": "Zilver",
+      "gold": "Goud"
+    },
+    "pagination": {
+      "label": "Pagina’s met questresultaten",
+      "previous": "← Vorige",
+      "next": "Volgende →",
+      "status": "Pagina {current} van {total}"
+    },
+    "errors": {
+      "notFoundTitle": "Quest niet gevonden",
+      "notFound": "Die quest kon niet worden gevonden.",
+      "loadFailed": "De quest kon nu niet worden geladen."
+    }
+  }
+}
