@@ -150,6 +150,11 @@ html[data-theme="dark"] .quests-page label {
   object-fit: contain;
 }
 
+.quest-card__badge {
+  width: 68px;
+  height: 68px;
+}
+
 .quest-badge--large {
   width: 92px;
   height: 92px;
