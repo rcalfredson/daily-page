@@ -1,0 +1,215 @@
+{
+  "quests": {
+    "overview": {
+      "meta": {
+        "title": "コミュニティクエスト | Daily Page",
+        "description": "協力型のコミュニティクエストに参加し、共有された創作目標の達成を手伝いましょう。"
+      },
+      "eyebrow": "一緒につくる",
+      "heading": "コミュニティクエスト",
+      "intro": "共有プロジェクトに参加し、共同投稿に貢献して、コミュニティが大きな目標に到達するのを助けましょう。",
+      "viewQuest": "クエストを見る →",
+      "empty": {
+        "title": "現在アクティブなクエストはありません",
+        "body": "最初のコミュニティクエストはまだ準備中です。しばらくしてからご確認ください。"
+      }
+    },
+    "detail": {
+      "meta": {
+        "title": "{questName} | コミュニティクエスト",
+        "description": "Daily Pageでこのコミュニティクエストを見てみましょう。"
+      },
+      "breadcrumbLabel": "クエストナビゲーション",
+      "allQuests": "すべてのクエスト",
+      "administeredBy": "管理者",
+      "aboutHeading": "このクエストについて",
+      "instructionsHeading": "投稿ガイドライン",
+      "sectionsLabel": "クエストのセクション",
+      "tabs": {
+        "items": "クエスト項目",
+        "posts": "承認済み投稿",
+        "leaderboard": "ランキング"
+      }
+    },
+    "progress": {
+      "label": "クエストの進捗",
+      "count": "{completed} / {target}",
+      "percent": "{percent}% 完了"
+    },
+    "status": {
+      "draft": "下書き",
+      "active": "アクティブ",
+      "completed": "完了",
+      "archived": "アーカイブ済み"
+    },
+    "type": {
+      "count": "件数ベースのクエスト",
+      "set": "セットベースのクエスト"
+    },
+    "badge": {
+      "alt": "{questName}のバッジ",
+      "tierAlt": "{questName}の{tier}バッジ"
+    },
+    "items": {
+      "eyebrow": "チェックリスト",
+      "heading": "クエスト項目",
+      "resultCount": "{count}件を表示",
+      "searchLabel": "項目を検索",
+      "searchPlaceholder": "名前で検索",
+      "stateLabel": "ステータス",
+      "filter": "フィルターを適用",
+      "clear": "クリア",
+      "states": {
+        "all": "すべてのステータス",
+        "available": "利用可能",
+        "reserved": "予約済み",
+        "draft": "進行中",
+        "pending": "審査中",
+        "changes-requested": "変更依頼あり",
+        "completed": "完了",
+        "inactive": "非アクティブ"
+      },
+      "byCreator": "{username}さんによる投稿",
+      "availableNote": "今後の貢献に利用できます。",
+      "inProgressNote": "コミュニティメンバーがこの項目に取り組んでいます。",
+      "empty": {
+        "title": "一致する項目はありません",
+        "body": "別の検索語句またはステータスフィルターをお試しください。"
+      }
+    },
+    "posts": {
+      "eyebrow": "コミュニティの成果",
+      "heading": "承認済み投稿",
+      "resultCount": "{count}件を表示",
+      "byCreator": "{username}さんが作成",
+      "approved": "承認済み",
+      "contributors": "クレジットされた貢献者 {count}名",
+      "empty": {
+        "title": "承認済み投稿はまだありません",
+        "body": "このクエストは、最初の承認済み貢献を待っています。"
+      }
+    },
+    "contribute": {
+      "eyebrow": "あなたの貢献",
+      "heading": "このクエストに参加",
+      "signInPrompt": "項目を予約し、投稿を審査に提出するにはサインインしてください。",
+      "signIn": "サインインして参加",
+      "countPrompt": "このクエストの既定ルームで新しい投稿を作成し、内容を整えてロックしてから審査を依頼してください。",
+      "setPrompt": "利用可能なクエスト項目を選んで予約し、最初の貢献を始めましょう。",
+      "browseItems": "利用可能な項目を見る",
+      "createPost": "クエスト投稿を作成",
+      "closed": "このクエストは現在、新しい貢献を受け付けていません。",
+      "mineHeading": "あなたのクエスト投稿",
+      "claim": "この項目を予約",
+      "release": "予約を解除",
+      "editPost": "投稿を編集",
+      "requestReview": "審査を依頼",
+      "withdraw": "取り下げる",
+      "resumeEditing": "編集を再開",
+      "startRevision": "承認済み投稿を改訂",
+      "confirmWithdraw": "このクエスト提出を取り下げますか？ 投稿自体はサイトに残ります。",
+      "pagination": {
+        "label": "あなたのクエスト投稿ページ",
+        "previous": "← 新しい投稿",
+        "next": "古い投稿 →",
+        "status": "ページ {current} / {total} · {count} 件の投稿"
+      },
+      "status": {
+        "draft": "下書き",
+        "pending": "審査中",
+        "changes-requested": "変更依頼あり",
+        "approved": "承認済み",
+        "rejected": "却下",
+        "withdrawn": "取り下げ済み",
+        "revoked": "取り消し済み"
+      },
+      "errors": {
+        "generic": "そのクエスト操作を完了できませんでした。もう一度お試しください。",
+        "blockIneligible": "審査を依頼する前に、投稿をロックし、クエスト要件を満たしていることを確認してください。",
+        "itemUnavailable": "その項目はこの貢献ではもう利用できません。ページを更新してもう一度お試しください。",
+        "createFailed": "投稿をこのクエストに関連付けられませんでした。予約の有効期限が切れた可能性があります。クエストに戻ってもう一度お試しください。"
+      }
+    },
+    "review": {
+      "meta": {
+        "title": "クエスト審査キュー | Daily Page",
+        "description": "あなたが管理するコミュニティクエストの保留中の提出を審査します。"
+      },
+      "eyebrow": "管理者ワークスペース",
+      "heading": "クエスト審査キュー",
+      "intro": "提出された投稿とその履歴を確認してから、承認するか貢献者へ差し戻してください。",
+      "pendingCount": "保留中の提出 {count}件",
+      "openPanel": "審査キューを開く",
+      "owner": "提出者",
+      "unknownOwner": "不明なユーザー",
+      "item": "クエスト項目",
+      "requestedAt": "審査依頼日時",
+      "revision": "提出されたリビジョン",
+      "unknownRevision": "不明なリビジョン",
+      "openPost": "提出された投稿を開く",
+      "missingPost": "投稿を利用できません",
+      "history": "審査履歴（{count}）",
+      "reason": "理由: {reason}",
+      "commentLabel": "審査コメント",
+      "commentPlaceholder": "判断の理由を説明するか、改訂に役立つメモを残してください。",
+      "commentHelp": "変更依頼または却下を行う場合はコメントが必要です。承認時は任意です。",
+      "approve": "承認",
+      "requestChanges": "変更を依頼",
+      "reject": "却下",
+      "events": {
+        "created": "提出が作成されました",
+        "review-requested": "審査が依頼されました",
+        "changes-requested": "変更が依頼されました",
+        "editing-reopened": "編集が再開されました",
+        "approved": "承認されました",
+        "rejected": "却下されました",
+        "withdrawn": "取り下げられました",
+        "revision-started": "改訂が開始されました",
+        "revoked": "承認が取り消されました",
+        "claim-expired": "予約の有効期限が切れました",
+        "invalidated": "提出が無効になりました"
+      },
+      "empty": {
+        "title": "キューは空です",
+        "body": "あなたが管理するクエストには、保留中の提出はありません。"
+      },
+      "errors": {
+        "forbidden": "そのクエストを管理していません。",
+        "loadFailed": "現在、クエスト審査キューを読み込めませんでした。",
+        "actionFailed": "その審査判断を保存できませんでした。もう一度お試しください。",
+        "commentRequired": "変更を依頼または却下する前に、審査コメントを追加してください。",
+        "stale": "判断が保存される前に、この提出または投稿が変更されました。キューを更新します。"
+      }
+    },
+    "leaderboard": {
+      "meta": {
+        "title": "{questName} ランキング | Daily Page",
+        "description": "{questName}への主要な貢献者を確認できます。"
+      },
+      "heading": "クエストランキング",
+      "intro": "貢献者は、承認済みクエスト投稿数で順位付けされ、同数の場合は現在の合計に到達した時点で並べられます。",
+      "contributions": "{target}件中{count}件の投稿",
+      "empty": {
+        "title": "ランキングは待機中です",
+        "body": "最初の投稿が承認されると、貢献者が表示されます。"
+      }
+    },
+    "medals": {
+      "base": "貢献者",
+      "bronze": "ブロンズ",
+      "silver": "シルバー",
+      "gold": "ゴールド"
+    },
+    "pagination": {
+      "label": "クエスト結果ページ",
+      "previous": "← 前へ",
+      "next": "次へ →",
+      "status": "ページ {current} / {total}"
+    },
+    "errors": {
+      "notFoundTitle": "クエストが見つかりません",
+      "notFound": "そのクエストは見つかりませんでした。",
+      "loadFailed": "現在、クエストを読み込めませんでした。"
+    }
+  }
+}
