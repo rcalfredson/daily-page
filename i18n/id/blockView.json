@@ -20,6 +20,14 @@
       "share": "Bagikan",
       "flagContent": "Laporkan Konten"
     },
+    "quest": {
+      "heading": "Kaitan misi",
+      "eyebrow": "Misi komunitas",
+      "item": "Item misi: {item}",
+      "readyForReview": "Selesai mengedit postingan ini?",
+      "requestReview": "Minta peninjauan misi",
+      "viewQuest": "Lihat misi"
+    },
     "description": {
       "label": "Deskripsi",
       "none": "Tidak ada deskripsi...",

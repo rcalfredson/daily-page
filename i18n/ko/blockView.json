@@ -20,6 +20,14 @@
       "share": "공유",
       "flagContent": "콘텐츠 신고"
     },
+    "quest": {
+      "heading": "퀘스트 연결",
+      "eyebrow": "커뮤니티 퀘스트",
+      "item": "퀘스트 항목: {item}",
+      "readyForReview": "이 게시물 편집을 마쳤나요?",
+      "requestReview": "퀘스트 검토 요청",
+      "viewQuest": "퀘스트 보기"
+    },
     "description": {
       "label": "설명",
       "none": "설명이 제공되지 않았습니다...",

@@ -18,6 +18,12 @@
       "tags": "标签",
       "collabsToday": "今日协作"
     },
+    "quests": {
+      "eyebrow": "共同创作",
+      "title": "参与社区任务",
+      "description": "选择一个共同目标，认领一项贡献，帮助社区完成一项宏大的计划。",
+      "cta": "探索任务"
+    },
     "activity": {
       "title": "Daily Page 正在发生",
       "subtitle": "新鲜对话与反应，一眼尽览。",

@@ -19,6 +19,13 @@
       "none": "Chưa có phòng được gắn dấu sao.",
       "unnamedRoom": "Phòng không tên"
     },
+    "quests": {
+      "title": "Thành tích nhiệm vụ",
+      "contributions": "{count} trong số {target} đóng góp",
+      "nextTier": "{tier} khi đạt {count} đóng góp",
+      "highestTier": "Cấp huy chương cao nhất đã đạt",
+      "none": "Chưa nhận được huy hiệu nhiệm vụ nào."
+    },
     "stats": {
       "title": "Thống kê người dùng",
       "totalBlocks": "Tổng số bài viết đã tạo",

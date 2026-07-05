@@ -19,6 +19,13 @@
       "none": "还没有收藏房间。",
       "unnamedRoom": "未命名房间"
     },
+    "quests": {
+      "title": "任务成就",
+      "contributions": "已贡献 {count}/{target} 项",
+      "nextTier": "贡献 {count} 项可获 {tier}",
+      "highestTier": "已获得的最高奖牌等级",
+      "none": "尚未获得任务徽章。"
+    },
     "stats": {
       "title": "用户统计",
       "totalBlocks": "创建的帖子总数",

@@ -18,6 +18,12 @@
       "tags": "태그",
       "collabsToday": "오늘의 협업"
     },
+    "quests": {
+      "eyebrow": "함께 만들기",
+      "title": "커뮤니티 퀘스트에 참여하세요",
+      "description": "공동 목표를 선택하고 기여할 항목을 맡아 커뮤니티가 멋진 도전을 완성하도록 도와주세요.",
+      "cta": "퀘스트 둘러보기"
+    },
     "activity": {
       "title": "Daily Page 실시간 활동",
       "subtitle": "새로운 대화와 반응을 한눈에 확인하세요.",

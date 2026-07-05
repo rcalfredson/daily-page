@@ -18,6 +18,12 @@
       "tags": "Tag",
       "collabsToday": "Kolaborasi Hari Ini"
     },
+    "quests": {
+      "eyebrow": "Berkarya bersama",
+      "title": "Ikuti misi komunitas",
+      "description": "Pilih tujuan bersama, klaim kontribusi, dan bantu komunitas menyelesaikan sesuatu yang ambisius.",
+      "cta": "Jelajahi misi"
+    },
     "activity": {
       "title": "Langsung di Daily Page",
       "subtitle": "Percakapan dan reaksi segar, semua dalam satu pandangan.",
