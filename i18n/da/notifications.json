@@ -9,9 +9,17 @@
       "markRead": "Mark læst",
       "fallbackActor": "Nogen",
       "fallbackBlockTitle": "dit indlæg",
+      "fallbackQuestName": "missionen",
+      "fallbackItemLabel": "dit reserverede missionselement",
       "item": {
         "blockComment": "{actorUsername} kommenterede dit indlæg \"{blockTitle}\".",
         "commentReply": "{actorUsername} svarede på din kommentar til \"{blockTitle}\".",
+        "questReviewRequested": "{actorUsername} indsendte \"{blockTitle}\" til gennemgang i {questName}.",
+        "questChangesRequested": "Der blev anmodet om ændringer til \"{blockTitle}\" i {questName}.",
+        "questSubmissionApproved": "Dit indlæg \"{blockTitle}\" blev godkendt til {questName}.",
+        "questSubmissionRejected": "Dit indlæg \"{blockTitle}\" blev ikke accepteret til {questName}.",
+        "questSubmissionRevoked": "Dit indlæg \"{blockTitle}\" tæller ikke længere med i {questName}.",
+        "questClaimExpired": "Din reservation af {itemLabel} i {questName} er udløbet.",
         "unknown": "Notifikation"
       }
     },
@@ -33,7 +41,14 @@
         "cta": "Se samtalen på Daily Page",
         "fallbackActor": "Nogen",
         "fallbackBlockTitle": "dit indlæg"
-      }
+      },
+      "quest": {"headingWithName": "Hej {username},", "fallbackActor": "Nogen", "fallbackQuestName": "missionen", "fallbackBlockTitle": "dit indlæg", "fallbackItemLabel": "dit reserverede missionselement"},
+      "questReviewRequested": {"subject": "Nyt bidrag til {questName}", "heading": "Et missionsindlæg er klar til gennemgang", "body": "<strong>{actorUsername}</strong> indsendte <strong>{blockTitle}</strong> til gennemgang i <strong>{questName}</strong>.", "cta": "Gennemgå bidraget"},
+      "questChangesRequested": {"subject": "Der er anmodet om ændringer til {blockTitle}", "heading": "Dit missionsindlæg skal ændres", "body": "Der blev anmodet om ændringer til <strong>{blockTitle}</strong> i <strong>{questName}</strong>.", "cta": "Se indlægget"},
+      "questSubmissionApproved": {"subject": "Dit indlæg blev godkendt til {questName}", "heading": "Missionsbidrag godkendt", "body": "Dit indlæg <strong>{blockTitle}</strong> blev godkendt til <strong>{questName}</strong>.", "cta": "Se det godkendte indlæg"},
+      "questSubmissionRejected": {"subject": "Opdatering om dit bidrag til {questName}", "heading": "Missionsbidrag ikke accepteret", "body": "Dit indlæg <strong>{blockTitle}</strong> blev ikke accepteret til <strong>{questName}</strong>.", "cta": "Se indlægget"},
+      "questSubmissionRevoked": {"subject": "Dit indlæg tæller ikke længere med i {questName}", "heading": "Missionsbidrag opdateret", "body": "Dit indlæg <strong>{blockTitle}</strong> tæller ikke længere med i <strong>{questName}</strong>.", "cta": "Se missionen"},
+      "questClaimExpired": {"subject": "Din reservation i {questName} er udløbet", "heading": "Missionsreservation udløbet", "body": "Din reservation af <strong>{itemLabel}</strong> i <strong>{questName}</strong> er udløbet.", "cta": "Se tilgængelige missionselementer"}
     }
   }
 }
