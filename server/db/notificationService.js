@@ -137,16 +137,17 @@ async function sendCommentNotificationEmail({
   }
 
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-  const uiLang = block.lang || 'en';
+  const uiLang = isSupportedUiLang(recipient.preferredUiLang)
+    ? recipient.preferredUiLang
+    : 'en';
   const blockUrl = `${baseUrl}/${uiLang}${canonicalCommentPath(block, comment._id || comment.id)}`;
-  const emailLang = isSupportedUiLang(block.lang) ? block.lang : 'en';
 
   const { subject, html } = await buildCommentNotificationEmail({
-    uiLang: emailLang,
+    uiLang,
     notificationType,
     recipientUsername: recipient.username,
-    actorUsername: actorUser.username || 'Someone',
-    blockTitle: block.title || 'your block',
+    actorUsername: actorUser.username || '',
+    blockTitle: block.title || '',
     commentBody: comment.body || '',
     blockUrl
   });

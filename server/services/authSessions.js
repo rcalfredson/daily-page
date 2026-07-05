@@ -46,6 +46,7 @@ export function toRequestUser(user) {
     bio: user.bio,
     streakLength: user.streakLength,
     preferredLang: user.preferredLang,
+    preferredUiLang: user.preferredUiLang || 'en',
     verified: user.verified,
     twoFactorEnabled: user.twoFactorEnabled,
   };
