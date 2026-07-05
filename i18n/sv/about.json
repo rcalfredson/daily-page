@@ -22,6 +22,10 @@
           "label": "Inlägg",
           "text": "är skrivutrymmen för samarbete – vem som helst (även \"anonym\") kan skapa en, redigera den tills den är låst och rösta på andra."
         },
+        "quests": {
+          "label": "Communityuppdrag",
+          "text": "gör gemensamma mål till vägledda skrivprojekt med reserverbara objekt, granskning, framsteg och märken."
+        },
         "privacy": {
           "label": "Sekretess och delning",
           "text": "betyder offentliga inlägg live i rummets flöde. Olistade utkast gömmer sig tills de är låsta, men du får en delningslänk för att bjuda in vänner."

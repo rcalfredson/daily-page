@@ -22,6 +22,10 @@
           "label": "bài viết",
           "text": "là không gian viết lách cộng tác—bất kỳ ai (kể cả “ẩn danh”) đều có thể tạo một không gian, chỉnh sửa nó cho đến khi nó bị khóa và bỏ phiếu cho những người khác."
         },
+        "quests": {
+          "label": "Nhiệm vụ cộng đồng",
+          "text": "biến các mục tiêu chung thành dự án viết có hướng dẫn, với các mục có thể nhận, xét duyệt, tiến độ và huy hiệu."
+        },
         "privacy": {
           "label": "Quyền riêng tư và chia sẻ",
           "text": "có nghĩa là các bài đăng công khai hiển thị trong nguồn cấp dữ liệu của phòng. Các bản nháp không công khai sẽ ẩn cho đến khi bị khóa nhưng bạn sẽ nhận được liên kết chia sẻ để mời bạn bè."

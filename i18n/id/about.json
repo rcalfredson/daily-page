@@ -22,6 +22,10 @@
           "label": "Postingan",
           "text": "adalah ruang menulis kolaboratif—siapa pun (bahkan “anonim”) dapat membuatnya, mengeditnya sampai terkunci, dan memberi suara pada karya orang lain."
         },
+        "quests": {
+          "label": "Misi Komunitas",
+          "text": "mengubah tujuan bersama menjadi proyek menulis terpandu, dengan item yang dapat diklaim, peninjauan, progres, dan lencana."
+        },
         "privacy": {
           "label": "Privasi & Berbagi",
           "text": "Postingan publik tampil di feed ruang. Draf tidak terdaftar tersembunyi sampai terkunci, tetapi kamu mendapat tautan berbagi untuk mengundang teman."

@@ -22,6 +22,10 @@
           "label": "Berichten",
           "text": "zijn gezamenlijke schrijfruimtes: iedereen (zelfs ‘anoniem’) kan er een maken, deze bewerken totdat deze is vergrendeld, en op anderen stemmen."
         },
+        "quests": {
+          "label": "Communityquests",
+          "text": "maken van gedeelde doelen begeleide schrijfprojecten, met reserveerbare items, beoordeling, voortgang en badges."
+        },
         "privacy": {
           "label": "Privacy en delen",
           "text": "betekent dat openbare berichten live in de feed van de kamer staan. Verborgen concepten worden verborgen totdat ze worden vergrendeld, maar u krijgt een deellink waarmee u vrienden kunt uitnodigen."

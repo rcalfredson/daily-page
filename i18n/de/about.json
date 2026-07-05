@@ -22,6 +22,10 @@
           "label": "Beitrage",
           "text": "sind kollaborative Schreibraume - jede Person, sogar anonym, kann einen erstellen, ihn bis zur Sperrung bearbeiten und fur andere abstimmen."
         },
+        "quests": {
+          "label": "Community-Quests",
+          "text": "machen gemeinsame Ziele zu geführten Schreibprojekten mit beanspruchbaren Elementen, Prüfung, Fortschritt und Abzeichen."
+        },
         "privacy": {
           "label": "Datenschutz und Teilen",
           "text": "Offentliche Beitrage erscheinen im Feed des Raums. Nicht gelistete Entwurfe bleiben bis zur Sperrung verborgen, aber du erhaltst einen Link zum Teilen, um Freunde einzuladen."

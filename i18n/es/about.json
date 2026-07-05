@@ -22,6 +22,10 @@
           "label": "Posts",
           "text": "son espacios de escritura colaborativa: cualquiera (incluso “anónimo”) puede crear uno, editarlo hasta que se bloquee y votar en los demás."
         },
+        "quests": {
+          "label": "Misiones comunitarias",
+          "text": "convierten objetivos compartidos en proyectos de escritura guiados, con elementos reclamables, revisión, progreso e insignias."
+        },
         "privacy": {
           "label": "Privacidad y Compartir",
           "text": "Los posts públicos viven en el feed de la sala. Los borradores no listados se esconden hasta que se bloquean, pero obtienes un enlace para compartir con amistades."

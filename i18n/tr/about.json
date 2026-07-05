@@ -22,6 +22,10 @@
           "label": "Gönderiler",
           "text": "işbirliğine dayalı yazma alanlarıdır; herkes (\"anonim\" bile olsa) bir tane oluşturabilir, kilitlenene kadar düzenleyebilir ve diğerlerine oy verebilir."
         },
+        "quests": {
+          "label": "Topluluk Görevleri",
+          "text": "ortak hedefleri ayrılabilir öğeler, inceleme, ilerleme ve rozetlerle yönlendirilmiş yazma projelerine dönüştürür."
+        },
         "privacy": {
           "label": "Gizlilik ve Paylaşım",
           "text": "herkese açık gönderilerin odanın akışında yayınlanacağı anlamına gelir. Listelenmemiş taslaklar kilitlenene kadar gizlenir ancak arkadaşlarınızı davet etmek için bir paylaşım bağlantısı alırsınız."

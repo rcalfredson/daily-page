@@ -14,12 +14,34 @@
     "how": {
       "h2": "Jak to funguje",
       "features": {
-        "rooms": { "label": "Místnosti", "text": "jsou tematické prostory (představte si „přívětivější subreddit“)." },
-        "blocks": { "label": "Příspěvky", "text": "jsou prostory pro společné psaní — kdokoli (i „anonym“) je může vytvořit, upravovat do uzamčení a hlasovat o ostatních." },
-        "privacy": { "label": "Soukromí a sdílení", "text": "znamená, že veřejné příspěvky jsou ve feedu místnosti. Neveřejné koncepty zůstávají do uzamčení skryté, ale dostanete odkaz ke sdílení s přáteli." },
-        "markdown": { "label": "Markdown a média", "text": "vám umožňují psát v markdownu, vkládat obrázky a spolupracovat jako v Dokumentech Google." },
-        "trends": { "label": "Trendy a štítky", "text": "vám umožní označovat příspěvky, sledovat trendy štítků a objevovat nejlepší obsah (7 dní / 30 dní / od začátku)." },
-        "streaks": { "label": "Série", "text": "udržují vaši každodenní sérii psaní — nejlepší motivaci přijít každý den." }
+        "rooms": {
+          "label": "Místnosti",
+          "text": "jsou tematické prostory (představte si „přívětivější subreddit“)."
+        },
+        "blocks": {
+          "label": "Příspěvky",
+          "text": "jsou prostory pro společné psaní — kdokoli (i „anonym“) je může vytvořit, upravovat do uzamčení a hlasovat o ostatních."
+        },
+        "quests": {
+          "label": "Komunitní výzvy",
+          "text": "proměňují společné cíle v řízené psací projekty s rezervovatelnými položkami, kontrolou, sledováním pokroku a odznaky."
+        },
+        "privacy": {
+          "label": "Soukromí a sdílení",
+          "text": "znamená, že veřejné příspěvky jsou ve feedu místnosti. Neveřejné koncepty zůstávají do uzamčení skryté, ale dostanete odkaz ke sdílení s přáteli."
+        },
+        "markdown": {
+          "label": "Markdown a média",
+          "text": "vám umožňují psát v markdownu, vkládat obrázky a spolupracovat jako v Dokumentech Google."
+        },
+        "trends": {
+          "label": "Trendy a štítky",
+          "text": "vám umožní označovat příspěvky, sledovat trendy štítků a objevovat nejlepší obsah (7 dní / 30 dní / od začátku)."
+        },
+        "streaks": {
+          "label": "Série",
+          "text": "udržují vaši každodenní sérii psaní — nejlepší motivaci přijít každý den."
+        }
       }
     },
     "origin": {
@@ -32,6 +54,9 @@
       "p1": "Teprve začínáme: bohatší vkládání obsahu, podrobnější statistiky uživatelů, žebříčky reputace a více způsobů, jak odměnit promyšlenou tvorbu.",
       "p2": "Děkujeme, že jste součástí tohoto malého nezávislého experimentu."
     },
-    "cta": { "rooms": "Prozkoumat místnosti", "signup": "Připojit se ke komunitě" }
+    "cta": {
+      "rooms": "Prozkoumat místnosti",
+      "signup": "Připojit se ke komunitě"
+    }
   }
 }

@@ -22,6 +22,10 @@
           "label": "Post",
           "text": "sono spazi di scrittura collaborativa: chiunque (anche in forma anonima) puo crearne uno, modificarlo finche non viene bloccato e votare quelli degli altri."
         },
+        "quests": {
+          "label": "Missioni della comunità",
+          "text": "trasformano obiettivi condivisi in progetti di scrittura guidati, con elementi reclamabili, revisione, avanzamento e badge."
+        },
         "privacy": {
           "label": "Privacy e condivisione",
           "text": "I post pubblici appaiono nel feed della stanza. Le bozze non elencate restano nascoste finche non vengono bloccate, ma ricevi un link di condivisione per invitare amici."

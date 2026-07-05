@@ -22,6 +22,10 @@
           "label": "Indlæg",
           "text": "er kollaborative skriverum - alle (selv \"anonyme\") kan oprette et, redigere det, indtil det er låst, og stemme på andre."
         },
+        "quests": {
+          "label": "Fællesskabsquests",
+          "text": "gør fælles mål til guidede skriveprojekter med reserverbare elementer, gennemgang, fremskridt og badges."
+        },
         "privacy": {
           "label": "Privatliv og deling",
           "text": "betyder, at offentlige opslag er live i rummets feed. Unoterede kladder skjules, indtil de er låst, men du får et delelink for at invitere venner."
