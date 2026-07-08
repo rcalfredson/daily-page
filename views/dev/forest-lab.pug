@@ -13,24 +13,23 @@ block content
       p.forest-lab__eyebrow Development preview
       h1 Activity Forest Lab
       p.forest-lab__lede
-        | V2 pixel art remains the stable baseline. Beside it, the v3 Milestone 1 view exposes the
-        | deterministic branch graph before wood, foliage, or pixel-art rendering is attempted.
+        | The pilot procedural phenotype is shown as a finished tree, a leafless wood raster, and
+        | its deterministic branch graph so structural and rendering changes remain diagnosable.
 
     section.forest-lab__legend(aria-labelledby='forest-lab-legend')
       h2#forest-lab-legend Current visual grammar
       ul
-        li Room selects the tree family.
-        li Creation month supplies the permanent seasonal palette.
-        li Post length modestly changes height.
-        li Collaboration splits the trunk.
-        li Translations grow blossoms on canopy edges; quest approval hangs fruit from lower foliage.
-        li Comments grow flower clusters; reactions attract fireflies into open air.
+        li Post identity supplies the stable seed for every growth and rendering decision.
+        li Three-dimensional radial growth is projected into a crisp two-dimensional tree.
+        li Branch hierarchy determines taper from the trunk through terminal twigs.
+        li Individual leaves grow from eligible branches while preserving intentional crown gaps.
+        li Post semantics, ornaments, additional phenotypes, and trunk variance remain future layers.
 
     section.forest-gallery(aria-label='Generated post tree gallery')
       each item in trees
         article.forest-comparison
           .forest-comparison__views
-            button.forest-tree-card(
+            button.forest-grown-card(
               type='button'
               data-forest-tree
               data-title=item.title
@@ -38,89 +37,74 @@ block content
               data-date=item.createdAt
               data-excerpt=item.excerpt
               data-url=item.url
-              data-species=item.tree.traits.species
-              data-season=item.tree.traits.season
-              aria-label=`Inspect v2 tree for ${item.title}`
+              aria-label=`Inspect procedural tree for ${item.title}`
             )
-              span.forest-comparison__label V2 assembled
-              .forest-tree-stage(class=`forest-tree-stage--${item.tree.traits.season}`)
-                svg.forest-tree-svg(
-                  viewBox=`0 0 ${item.tree.width} ${item.tree.height}`
-                  role='img'
-                  aria-label=`Pixel-art tree representing ${item.title}`
-                  shape-rendering='crispEdges'
-                  preserveAspectRatio='xMidYMax meet'
-                )
-                  title= item.title
-                  each run in item.tree.runs
-                    rect(x=run.x y=run.y width=run.width height='1' fill=run.color)
-            figure.forest-grown-card
-              figcaption.forest-comparison__label V3 grown tree
+              span.forest-comparison__label Grown tree
               .forest-grown-stage
                 svg.forest-grown-svg(
-                  viewBox=`0 0 ${item.treeV3.wood.width} ${item.treeV3.wood.height}`
+                  viewBox=`0 0 ${item.tree.wood.width} ${item.tree.wood.height}`
                   role='img'
-                  aria-label=`V3 tree with supported foliage for ${item.title}`
+                  aria-label=`Procedural tree with supported foliage for ${item.title}`
                   shape-rendering='crispEdges'
                   preserveAspectRatio='xMidYMax meet'
                 )
-                  title= `V3 tree with terminal-supported foliage for ${item.title}`
-                  each run in item.treeV3.foliage.backRuns
+                  title= `Procedural tree with terminal-supported foliage for ${item.title}`
+                  each run in item.tree.foliage.backRuns
                     rect(x=run.x y=run.y width=run.width height='1' fill=run.color)
-                  each run in item.treeV3.wood.runs
+                  each run in item.tree.wood.runs
                     rect(x=run.x y=run.y width=run.width height='1' fill=run.color)
-                  each run in item.treeV3.foliage.frontRuns
+                  each run in item.tree.foliage.frontRuns
                     rect(x=run.x y=run.y width=run.width height='1' fill=run.color)
             figure.forest-wood-card
-              figcaption.forest-comparison__label V3 leafless wood
+              figcaption.forest-comparison__label Leafless wood
               .forest-wood-stage
                 svg.forest-wood-svg(
-                  viewBox=`0 0 ${item.treeV3.wood.width} ${item.treeV3.wood.height}`
+                  viewBox=`0 0 ${item.tree.wood.width} ${item.tree.wood.height}`
                   role='img'
-                  aria-label=`Leafless v3 wood raster for ${item.title}`
+                  aria-label=`Leafless wood raster for ${item.title}`
                   shape-rendering='crispEdges'
                   preserveAspectRatio='xMidYMax meet'
                 )
-                  title= `V3 leafless wood raster for ${item.title}`
-                  each run in item.treeV3.wood.runs
+                  title= `Leafless wood raster for ${item.title}`
+                  each run in item.tree.wood.runs
                     rect(x=run.x y=run.y width=run.width height='1' fill=run.color)
             figure.forest-graph-card
-              figcaption.forest-comparison__label V3 branch graph
+              figcaption.forest-comparison__label Branch graph
               svg.forest-graph-svg(
-                viewBox=`0 0 ${item.treeV3.phenotype.width} ${item.treeV3.phenotype.height}`
+                viewBox=`0 0 ${item.tree.phenotype.width} ${item.tree.phenotype.height}`
                 role='img'
-                aria-label=`V3 branch graph for ${item.title}`
+                aria-label=`Branch graph for ${item.title}`
                 preserveAspectRatio='xMidYMax meet'
               )
-                title= `V3 deterministic branch graph for ${item.title}`
+                title= `Deterministic branch graph for ${item.title}`
                 ellipse.forest-graph__crown(
-                  cx=item.treeV3.phenotype.crown.centerX
-                  cy=item.treeV3.phenotype.crown.centerY
-                  rx=item.treeV3.phenotype.crown.radiusX
-                  ry=item.treeV3.phenotype.crown.radiusY
+                  cx=item.tree.phenotype.crown.centerX
+                  cy=item.tree.phenotype.crown.centerY
+                  rx=item.tree.phenotype.crown.radiusX
+                  ry=item.tree.phenotype.crown.radiusY
                 )
-                each point in item.treeV3.attractionPoints
+                each point in item.tree.attractionPoints
                   circle.forest-graph__attraction(cx=point.x cy=point.y r='0.65')
-                each segment in item.treeV3.segments
-                  - const from = item.treeV3.nodes[segment.fromId]
-                  - const to = item.treeV3.nodes[segment.toId]
+                each segment in item.tree.segments
+                  - const from = item.tree.nodes[segment.fromId]
+                  - const to = item.tree.nodes[segment.toId]
                   line.forest-graph__segment(
                     x1=from.x y1=from.y x2=to.x y2=to.y
                     stroke-width=Math.max(0.55, segment.radius * 0.7)
                   )
-                each node in item.treeV3.nodes
+                each node in item.tree.nodes
                   circle.forest-graph__node(cx=node.x cy=node.y r='0.75')
-                each terminalId in item.treeV3.terminalNodeIds
-                  - const terminal = item.treeV3.nodes[terminalId]
+                each terminalId in item.tree.terminalNodeIds
+                  - const terminal = item.tree.nodes[terminalId]
                   circle.forest-graph__terminal(cx=terminal.x cy=terminal.y r='1.65')
           h2.forest-comparison__title= item.title
           p.forest-comparison__meta
-            - const maximumOrder = Math.max(...item.treeV3.nodes.map(node => node.generation))
-            | Seed #{item.treeV3.seed} · #{item.treeV3.nodes.length} nodes ·
-            |  order #{maximumOrder} · #{item.treeV3.diagnostics.maximumTortuosity.toFixed(2)} tortuosity ·
-            |  #{item.treeV3.foliage.leaves.length} leaves ·
-            |  #{item.treeV3.diagnostics.crossingCount} projected overlaps ·
-            |  #{item.treeV3.stats.terminationReason}
+            - const maximumOrder = Math.max(...item.tree.nodes.map(node => node.generation))
+            | Seed #{item.tree.seed} · #{item.tree.nodes.length} nodes ·
+            |  order #{maximumOrder} · #{item.tree.diagnostics.maximumTortuosity.toFixed(2)} tortuosity ·
+            |  #{item.tree.foliage.leaves.length} leaves ·
+            |  #{item.tree.diagnostics.crossingCount} projected overlaps ·
+            |  #{item.tree.stats.terminationReason}
 
     dialog.forest-tree-dialog(data-forest-tree-dialog aria-labelledby='forest-tree-dialog-title')
       form(method='dialog')
@@ -134,11 +118,5 @@ block content
         div
           dt Created
           dd(data-forest-tree-date)
-        div
-          dt Species
-          dd(data-forest-tree-species)
-        div
-          dt Birth season
-          dd(data-forest-tree-season)
       p(data-forest-tree-excerpt)
       a.forest-tree-dialog__link(data-forest-tree-link) Read post

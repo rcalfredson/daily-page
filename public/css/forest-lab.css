@@ -73,7 +73,7 @@
 .forest-comparison__views {
   display: grid;
   min-width: 0;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .forest-comparison__views > * {
@@ -107,7 +107,7 @@
   font-size: 0.7rem;
 }
 
-.forest-tree-card {
+.forest-grown-card {
   display: flex;
   min-width: 0;
   box-sizing: border-box;
@@ -133,13 +133,6 @@
 }
 
 .forest-wood-card {
-  min-width: 0;
-  border-right: 1px solid var(--border-color);
-  margin: 0;
-  background: #b8c9c5;
-}
-
-.forest-grown-card {
   min-width: 0;
   border-right: 1px solid var(--border-color);
   margin: 0;
@@ -196,90 +189,11 @@
   stroke-width: 0.45;
 }
 
-.forest-tree-card:hover,
-.forest-tree-card:focus-visible {
+.forest-grown-card:hover,
+.forest-grown-card:focus-visible {
   border-color: var(--highlight-color);
   box-shadow: 0 0 0 3px var(--focus-ring);
   outline: none;
-}
-
-.forest-tree-stage {
-  position: relative;
-  display: grid;
-  width: 100%;
-  min-width: 0;
-  min-height: 205px;
-  overflow: hidden;
-  place-items: end center;
-  background: #9bc8d2;
-}
-
-.forest-tree-stage::before,
-.forest-tree-stage::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  content: '';
-}
-
-.forest-tree-stage::before {
-  height: 34%;
-  background: #789b57;
-}
-
-.forest-tree-stage::after {
-  right: 18%;
-  left: 18%;
-  height: 8%;
-  background: #5f7c49;
-}
-
-.forest-tree-stage--autumn {
-  background: #b9c5b1;
-}
-
-.forest-tree-stage--autumn::before {
-  background: #9a8650;
-}
-
-.forest-tree-stage--winter {
-  background: #a9c5ce;
-}
-
-.forest-tree-stage--winter::before {
-  background: #d6e2df;
-}
-
-.forest-tree-stage--spring {
-  background: #a5ced0;
-}
-
-.forest-tree-svg {
-  position: relative;
-  z-index: 1;
-  width: 144px;
-  max-width: 92%;
-  height: 192px;
-  image-rendering: pixelated;
-}
-
-.forest-tree-card__title,
-.forest-tree-card__meta {
-  overflow-wrap: anywhere;
-}
-
-.forest-tree-card__title {
-  padding: 0.8rem 0.8rem 0.25rem;
-  font-family: var(--font-rubik-medium);
-  line-height: 1.3;
-}
-
-.forest-tree-card__meta {
-  padding: 0 0.8rem 0.85rem;
-  color: var(--muted-text-color);
-  font-size: 0.72rem;
-  line-height: 1.45;
 }
 
 .forest-tree-dialog {
@@ -356,15 +270,6 @@
   .forest-gallery {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.7rem;
-  }
-
-  .forest-tree-stage {
-    min-height: 165px;
-  }
-
-  .forest-tree-svg {
-    width: 116px;
-    height: 155px;
   }
 
   .forest-graph-svg {

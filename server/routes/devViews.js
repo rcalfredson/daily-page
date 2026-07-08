@@ -2,7 +2,6 @@ import express from 'express';
 
 import optionalAuth from '../middleware/optionalAuth.js';
 import { addI18n } from '../services/i18n.js';
-import { generateForestTree } from '../services/forestTreeGenerator.js';
 import { generateForestTreeV3 } from '../services/forestTreeGeneratorV3.js';
 
 const router = express.Router();
@@ -56,8 +55,7 @@ function forestFixtures() {
     return {
       ...post,
       url: `/rooms/${post.roomId}/blocks/${post.id}`,
-      tree: generateForestTree(post),
-      treeV3: generateForestTreeV3(post)
+      tree: generateForestTreeV3(post)
     };
   });
 }
