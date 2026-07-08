@@ -145,14 +145,14 @@ This staging lets Daily Page first learn whether the forest succeeds as memory a
 
 The work remains a development feature in Forest Lab rather than a production Activity Forest.
 
-Renderer v2 established the original deterministic visual grammar and remains intact as a comparison baseline. Renderer v3 now has a convincing pilot deciduous phenotype with:
+Renderer v2 established the original deterministic visual grammar and is preserved in Git history as a retired prototype. Renderer v3 is now the sole active renderer and has a convincing pilot deciduous phenotype with:
 
 - Deterministic three-dimensional, space-colonization-inspired branch growth projected into two dimensions.
 - Persistent trunk and branch hierarchy with bounded growth and explicit termination.
 - Back-propagated branch thickness, trunk taper, root flare, and leafless wood rasterization.
 - Depth-aware individual foliage attached to eligible branch growth.
 - Coverage repair that preserves negative space without producing detached canopy masses.
-- Debug views for the branch graph, leafless wood, and final grown tree alongside v2.
+- Debug views for the branch graph and leafless wood alongside the final grown tree.
 - Automated coverage for determinism, graph validity, bounds, termination, hierarchy, rasterization, and foliage behavior.
 
 The initial graph, wood, and foliage milestones should therefore be treated as the established renderer foundation, not as unstarted work. The remaining sections retain the original design rationale because it explains the architecture and its invariants.
@@ -165,14 +165,12 @@ The recommended near-term technical sequence is:
 
 ### Files
 
-- `server/services/forestTreeGenerator.js`: deterministic renderer v2.
 - `server/services/forestTreeGeneratorV3.js`: experimental v3 orchestration.
 - `server/services/forest/v3/phenotype.js`: pilot phenotype and growth tendencies.
 - `server/services/forest/v3/growth.js`: deterministic three-dimensional branch growth.
 - `server/services/forest/v3/rasterizeWood.js`: tapered wood, root flare, and bark rendering.
 - `server/services/forest/v3/rasterizeFoliage.js`: leaf-bearing shoots, foliage coverage, depth, and rasterization.
 - `server/services/forest/v3/graphDiagnostics.js`: graph analysis and structural diagnostics.
-- `spec/forestTreeGeneratorSpec.js`: renderer determinism, bounds, anatomy, and motif tests.
 - `spec/forestTreeGeneratorV3Spec.js`: v3 graph, wood, foliage, and determinism tests.
 - `server/routes/devViews.js`: 24 fixture posts and the development-only Forest Lab route.
 - `views/dev/forest-lab.pug`: gallery and accessible tree-detail dialog.
@@ -181,11 +179,11 @@ The recommended near-term technical sequence is:
 
 The lab is available in development at `/__dev/views/forest-lab`.
 
-### Renderer v2
+### Historical renderer v2
 
-Renderer v2 produces a `40 × 48` logical-pixel image and compacts adjacent same-color pixels into horizontal SVG rectangle runs. It is deterministic for the same renderer version and post projection.
+Renderer v2 produced a `40 × 48` logical-pixel image and compacted adjacent same-color pixels into horizontal SVG rectangle runs. It was deterministic for the same renderer version and post projection. The implementation and tests were committed before retirement so its decisions remain available through Git history without burdening the active codebase.
 
-The current projection is:
+Its projection was:
 
 ```js
 {
@@ -385,13 +383,12 @@ These are product invariants, not implementation details:
 - The same post projection and renderer version must generate the same output.
 - No unseeded randomness may enter growth, rasterization, cleanup, or ornament placement.
 - Iteration order must be explicit; relying on database or object-key ordering can change output.
-- A renderer-version change may alter a tree, but existing versions should remain available while a migration policy is undecided.
-- The current v2 implementation should remain intact during v3 experimentation.
+- A renderer-version change may alter a tree. Before production trees exist, retired experimental versions may live only in Git history; production adoption will require an explicit migration policy.
+- Historical prototypes should be retired once their lessons and reproducible checkpoints are preserved.
 
 Recommended module boundary:
 
 ```text
-forestTreeGenerator.js       # current v2 and stable lab baseline
 forestTreeGeneratorV3.js     # experimental public orchestration
 forest/v3/phenotype.js
 forest/v3/growth.js
@@ -404,10 +401,10 @@ If v3 succeeds, a small dispatcher can select a renderer version without making 
 
 ## Forest Lab changes for v3
 
-The lab should compare the same post and seed side by side:
+The lab should expose the same generated tree at three diagnostic layers:
 
 ```text
-V2 assembled tree | V3 grown tree | branch-graph debug view
+grown tree | leafless wood | branch-graph debug view
 ```
 
 Add controls for phenotype parameters before reconnecting those parameters to post attributes. Useful controls include:
@@ -485,8 +482,8 @@ Success means foliage appears supported by the branch network and produces a con
 ### Milestone 4: semantics
 
 - Decide which post attributes influence phenotype without destabilizing identity.
-- Reintroduce blossoms, fruit, flowers, and fireflies using v2's semantic placement lessons.
-- Compare v2 and v3 across the fixed fixture set.
+- Reintroduce blossoms, fruit, flowers, and fireflies using the retired renderer's documented semantic placement lessons.
+- Compare semantic variations across the fixed fixture set.
 
 ### Milestone 5: forest composition
 
@@ -505,7 +502,7 @@ Success means foliage appears supported by the branch network and produces a con
 - Several seeds produce substantially different silhouettes without obvious anatomical failures.
 - The result remains readable at its intended Forest Lab thumbnail size.
 - Debug views make failures diagnosable rather than requiring guesses from the final sprite.
-- The existing v2 lab and tests continue to work throughout experimentation.
+- Renderer history and migration decisions remain explicit as the experiment evolves.
 
 ## Deferred decisions
 
@@ -522,7 +519,3 @@ Success means foliage appears supported by the branch network and produces a con
 - The boundaries between private forests, invited visitors, and public presentation.
 - How gifts and shared spaces remain generous without becoming popularity metrics.
 - Which landscape interaction beyond tree selection best demonstrates the core loop with the least mechanical overhead.
-
-## Suggested opening prompt for the new thread
-
-> We are continuing the Activity Forest work described in `docs/forest/procedural-tree-design.md`. Please inspect that document and the current v2 Forest Lab implementation. Begin only Milestone 1 of v3: a deterministic, space-colonization-inspired branch-graph generator for one deciduous phenotype, plus a debug visualization alongside v2. Preserve v2 unchanged, use seeded randomness throughout, and test graph determinism, validity, bounds, and termination before attempting pixel-art rasterization.
