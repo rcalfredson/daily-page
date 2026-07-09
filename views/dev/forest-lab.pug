@@ -101,6 +101,7 @@ block content
           p.forest-comparison__meta
             - const maximumOrder = Math.max(...item.tree.nodes.map(node => node.generation))
             | Seed #{item.tree.seed} · #{item.tree.nodes.length} nodes ·
+            |  branch start #{item.tree.architecture.branchStartHeight.toFixed(1)} ·
             |  order #{maximumOrder} · #{item.tree.diagnostics.maximumTortuosity.toFixed(2)} tortuosity ·
             |  #{item.tree.foliage.leaves.length} leaves ·
             |  #{item.tree.diagnostics.crossingCount} projected overlaps ·

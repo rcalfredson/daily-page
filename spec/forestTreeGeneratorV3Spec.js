@@ -23,6 +23,26 @@ describe('v3 forest branch graph generator', () => {
     expect(second.nodes).not.toEqual(first.nodes);
   });
 
+  it('derives a deterministic, bounded branch starting height for each specimen', () => {
+    const observedHeights = new Set();
+    for (let seed = 0; seed < 100; seed += 1) {
+      const graph = generateForestTreeGraph(post, { seed });
+      const [minimum, maximum] = graph.phenotype.architecture.branchStartHeight;
+      const { branchStartHeight } = graph.architecture;
+      const primaryOrigins = graph.segments
+        .filter(segment => graph.nodes[segment.fromId].generation === 0
+          && graph.nodes[segment.toId].generation === 1)
+        .map(segment => graph.phenotype.groundY - graph.nodes[segment.fromId].worldY);
+
+      expect(branchStartHeight).toBeGreaterThanOrEqual(minimum);
+      expect(branchStartHeight).toBeLessThanOrEqual(maximum);
+      expect(primaryOrigins.length).toBeGreaterThanOrEqual(graph.phenotype.primaryBranchCount);
+      expect(primaryOrigins.every(height => height >= branchStartHeight)).toBeTrue();
+      observedHeights.add(branchStartHeight);
+    }
+    expect(observedHeights.size).toBeGreaterThan(10);
+  });
+
   it('creates a valid rooted graph with one parent per non-root node', () => {
     const graph = generateForestTreeGraph(post);
     const incoming = Array(graph.nodes.length).fill(0);

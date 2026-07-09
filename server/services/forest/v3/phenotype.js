@@ -15,7 +15,9 @@ export const DECIDUOUS_PHENOTYPE = Object.freeze({
   growthEnvelopeOverscan: 1.04,
   attractionPointCount: 180,
   attractionGap: 0.1,
-  branchStartY: 91,
+  architecture: Object.freeze({
+    branchStartHeight: Object.freeze([22, 38])
+  }),
   trunkTopY: 43,
   primaryBranchCount: 5,
   primaryBranchAngle: 0.88,

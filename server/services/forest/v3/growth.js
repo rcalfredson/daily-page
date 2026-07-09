@@ -1,4 +1,5 @@
 import { createRandom } from './random.js';
+import { deriveTreeArchitecture } from './architecture.js';
 
 const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(maximum, value));
 
@@ -152,7 +153,7 @@ function appendSegment(segments, parent, child) {
   });
 }
 
-function buildScaffold(nodes, segments, phenotype, random) {
+function buildScaffold(nodes, segments, phenotype, architecture, random) {
   let leader = nodes[0];
   const trunkNodes = [];
   while (leader.worldY - phenotype.internodeLength > phenotype.trunkTopY) {
@@ -168,7 +169,8 @@ function buildScaffold(nodes, segments, phenotype, random) {
     });
     appendSegment(segments, leader, child);
     leader = child;
-    if (leader.worldY <= phenotype.branchStartY) trunkNodes.push(leader);
+    const heightAboveGround = phenotype.groundY - leader.worldY;
+    if (heightAboveGround >= architecture.branchStartHeight) trunkNodes.push(leader);
   }
 
   const primaryTips = [];
@@ -270,6 +272,13 @@ function directionIsClear(parent, direction, nodes, phenotype) {
     worldZ: parent.worldZ + (direction.z * phenotype.internodeLength)
   };
   if (candidate.worldY <= 0 || candidate.worldY >= phenotype.groundY) return false;
+  const projected = projectPosition({
+    x: candidate.worldX,
+    y: candidate.worldY,
+    z: candidate.worldZ
+  }, phenotype);
+  if (projected.x < 0 || projected.x > phenotype.width
+    || projected.y < 0 || projected.y > phenotype.groundY) return false;
   if (parent.generation > 0 && !insideCrown({
     x: candidate.worldX,
     y: candidate.worldY,
@@ -307,6 +316,7 @@ function calculateRadii(nodes, segments, phenotype) {
 
 export function growBranchGraph(seed, phenotype) {
   const random = createRandom(seed ^ 0xB4A9C135);
+  const architecture = deriveTreeArchitecture(seed, phenotype);
   const attractionPoints = generateAttractionPoints(seed, phenotype);
   let remainingPoints = attractionPoints.slice();
   const rootProjection = projectPosition({ x: 0, y: phenotype.groundY, z: 0 }, phenotype);
@@ -326,7 +336,7 @@ export function growBranchGraph(seed, phenotype) {
     axisDirection: { x: 0, y: -1, z: 0 }
   }];
   const segments = [];
-  let terminals = buildScaffold(nodes, segments, phenotype, random);
+  let terminals = buildScaffold(nodes, segments, phenotype, architecture, random);
   let iterations = 0;
 
   while (iterations < phenotype.maxIterations && remainingPoints.length && terminals.length
@@ -393,6 +403,7 @@ export function growBranchGraph(seed, phenotype) {
     : iterations >= phenotype.maxIterations ? 'iteration-limit'
       : remainingPoints.length === 0 ? 'points-consumed' : 'growth-exhausted';
   return {
+    architecture,
     nodes: nodes.map(node => ({
       id: node.id,
       x: node.x,
