@@ -651,7 +651,7 @@ async function getSupportFundingViewModel() {
             [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding] = await Promise.all([
               getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }),
               getFeaturedRoomWithFallback(),
-              getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang }),
+              getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang, includePinnedHome: true }),
               getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' }),
               getGlobalBlockStats(),
               getTotalRooms(),
@@ -664,7 +664,7 @@ async function getSupportFundingViewModel() {
             const perfResults = await Promise.all([
               timeIt('featuredBlock', () => getFeaturedBlockWithFallback({ preferredLang: preferredContentLang })),
               timeIt('featuredRoomRaw', () => getFeaturedRoomWithFallback()),
-              timeIt('topBlocks', () => getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang })),
+              timeIt('topBlocks', () => getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang, includePinnedHome: true })),
               timeIt('trendingTags', () => getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' })),
               timeIt('globalBlockStats', () => getGlobalBlockStats()),
               timeIt('totalRooms', () => getTotalRooms()),

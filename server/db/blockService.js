@@ -18,6 +18,7 @@ const TTL = {
 // optional: spread expirations so you don't get synchronized misses
 const JITTER = 10 * 1000; // up to 10s extra
 const HOME_STALE_TTL = 30 * 60 * 1000;
+export const HOME_PINNED_BLOCK_LIMIT = 3;
 
 export const PUBLIC_BLOCK_VISIBILITY_MATCH = Object.freeze({
   $or: [
@@ -375,7 +376,13 @@ export async function getRecentActivityByUser(username, options = {}) {
 
 // Fallback para obtener bloques con actividad
 export async function getTopBlocksWithFallback(options = {}) {
-  const { lockedOnly = false, limit = 20, preferredLang = "en" } = options;
+  const {
+    lockedOnly = false,
+    limit = 20,
+    preferredLang = "en",
+    includePinnedHome = false,
+    pinnedLimit = HOME_PINNED_BLOCK_LIMIT
+  } = options;
 
   const now = Date.now();
   const endNow = new Date();
@@ -393,6 +400,14 @@ export async function getTopBlocksWithFallback(options = {}) {
   const target = Number(limit);
   const collected = [];
   const seen = new Set();
+  const pinnedBlocks = includePinnedHome
+    ? await getPinnedHomeBlocks({ preferredLang, lockedOnly, limit: pinnedLimit })
+    : [];
+
+  for (const block of pinnedBlocks) {
+    if (block?._id) seen.add(String(block._id));
+    if (block?.groupId) seen.add(`group:${block.groupId}`);
+  }
 
   let maxDaysUsed = 1;
   let usedAllTime = false;
@@ -436,7 +451,9 @@ export async function getTopBlocksWithFallback(options = {}) {
       for (const b of bandBlocks) {
         const id = String(b?._id);
         if (!id || seen.has(id)) continue;
+        if (b?.groupId && seen.has(`group:${b.groupId}`)) continue;
         seen.add(id);
+        if (b?.groupId) seen.add(`group:${b.groupId}`);
         collected.push(b);
         if (collected.length >= target) break;
       }
@@ -450,7 +467,78 @@ export async function getTopBlocksWithFallback(options = {}) {
     ? { type: 'all' }
     : { type: 'days', value: maxDaysUsed };
 
-  return { blocks: collected, period };
+  return {
+    blocks: mergePinnedHomeBlocks(pinnedBlocks, collected, { limit: target }),
+    period
+  };
+}
+
+export function mergePinnedHomeBlocks(pinnedBlocks, ordinaryBlocks, { limit = 20 } = {}) {
+  const pinnedLimit = HOME_PINNED_BLOCK_LIMIT;
+  const seen = new Set();
+  const merged = [];
+
+  const addBlock = (block) => {
+    if (!block?._id) return false;
+    const id = String(block._id);
+    const groupId = block.groupId ? `group:${block.groupId}` : null;
+    if (seen.has(id) || (groupId && seen.has(groupId))) return false;
+
+    seen.add(id);
+    if (groupId) seen.add(groupId);
+    merged.push(block);
+    return true;
+  };
+
+  for (const block of pinnedBlocks || []) {
+    if (merged.length >= pinnedLimit) break;
+    addBlock(block);
+  }
+
+  for (const block of ordinaryBlocks || []) {
+    if (merged.length >= Number(limit) + pinnedLimit) break;
+    addBlock(block);
+  }
+
+  return merged;
+}
+
+async function getPinnedHomeBlocks({ preferredLang = 'en', lockedOnly = false, limit = HOME_PINNED_BLOCK_LIMIT } = {}) {
+  const match = publiclyVisibleBlockMatch({ pinnedAt: { $exists: true, $ne: null } });
+  if (lockedOnly) match.status = 'locked';
+
+  return Block.aggregate([
+    { $match: match },
+    { $sort: { pinnedAt: -1, createdAt: -1 } },
+    { $group: { _id: '$groupId', docs: { $push: '$$ROOT' } } },
+    {
+      $project: {
+        best: {
+          $let: {
+            vars: {
+              preferred: {
+                $filter: {
+                  input: '$docs',
+                  as: 'd',
+                  cond: { $eq: ['$$d.lang', preferredLang] }
+                }
+              }
+            },
+            in: {
+              $cond: [
+                { $gt: [{ $size: '$$preferred' }, 0] },
+                { $arrayElemAt: ['$$preferred', 0] },
+                { $arrayElemAt: ['$docs', 0] }
+              ]
+            }
+          }
+        }
+      }
+    },
+    { $replaceRoot: { newRoot: '$best' } },
+    { $sort: { pinnedAt: -1, createdAt: -1 } },
+    { $limit: Number(limit) }
+  ]).exec();
 }
 
 // Fallback para bloques por room (locked o in-progress)

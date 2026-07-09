@@ -108,6 +108,7 @@ const blockSchema = new Schema({
   },
   voteCount: { type: Number, default: 0 },
   lockedAt: { type: Date },
+  pinnedAt: { type: Date, default: undefined, index: true },
 
   groupId: {
     type: String,

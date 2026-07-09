@@ -30,7 +30,7 @@ async function warmHomeCache({ preferredLang }) {
     getGlobalBlockStats(),
     getTotalTags(),
     getTotalRooms(),
-    getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang }),
+    getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang, includePinnedHome: true }),
     getRecentCommentActivity({ limit: 5, lang: preferredLang }),
     getRecentReactionActivity({ limit: 5, lang: preferredLang }),
   ]);

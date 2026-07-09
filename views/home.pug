@@ -250,6 +250,9 @@ block content
       ul.block-list
         each block in topBlocks
           li.block-preview(lang=(block.lang || 'en'))
+            if block.pinnedAt
+              span.home-pinned-badge(title='Pinned post' aria-label='Pinned post')
+                i.fas.fa-thumbtack(aria-hidden='true')
             +blockBanner(block, 'card', block.roomId)
             div.content
               .title-row
