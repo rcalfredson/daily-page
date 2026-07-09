@@ -149,6 +149,7 @@ Renderer v2 established the original deterministic visual grammar and is preserv
 
 - Deterministic three-dimensional, space-colonization-inspired branch growth projected into two dimensions.
 - Persistent trunk and branch hierarchy with bounded growth and explicit termination.
+- Seed-derived specimen architecture, beginning with bounded branch-start height variation.
 - Back-propagated branch thickness, trunk taper, root flare, and leafless wood rasterization.
 - Depth-aware individual foliage attached to eligible branch growth.
 - Coverage repair that preserves negative space without producing detached canopy masses.
@@ -166,6 +167,7 @@ The recommended near-term technical sequence is:
 ### Files
 
 - `server/services/forestTreeGeneratorV3.js`: experimental v3 orchestration.
+- `server/services/forest/v3/architecture.js`: deterministic per-tree architectural traits.
 - `server/services/forest/v3/phenotype.js`: pilot phenotype and growth tendencies.
 - `server/services/forest/v3/growth.js`: deterministic three-dimensional branch growth.
 - `server/services/forest/v3/rasterizeWood.js`: tapered wood, root flare, and bark rendering.
