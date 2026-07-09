@@ -508,20 +508,18 @@
   padding-left: 0;
 }
 
-.trending-section .block-preview {
-  position: relative;
+.trending-section .title-row--pinned .block-title {
+  flex: 1 1 12rem;
 }
 
 .home-pinned-badge {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  z-index: 3;
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   width: 2rem;
   height: 2rem;
+  margin-left: auto;
   border: 1px solid rgba(171, 122, 0, 0.38);
   border-radius: 50%;
   background: rgba(255, 251, 234, 0.94);

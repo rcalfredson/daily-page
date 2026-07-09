@@ -250,14 +250,14 @@ block content
       ul.block-list
         each block in topBlocks
           li.block-preview(lang=(block.lang || 'en'))
-            if block.pinnedAt
-              span.home-pinned-badge(title='Pinned post' aria-label='Pinned post')
-                i.fas.fa-thumbtack(aria-hidden='true')
             +blockBanner(block, 'card', block.roomId)
             div.content
-              .title-row
+              .title-row(class=block.pinnedAt ? 'title-row--pinned' : null)
                 a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))= block.title
                 include partials/_draft_badge
+                if block.pinnedAt
+                  span.home-pinned-badge(title='Pinned post' aria-label='Pinned post')
+                    i.fas.fa-thumbtack(aria-hidden='true')
               p(lang=(uiLang || 'en'))
                 | #{t('home.trendingBlocks.createdBy')} 
                 - const u = encodeURIComponent(block.creator || '')
