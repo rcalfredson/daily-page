@@ -39,4 +39,11 @@ describe('block preview DTO', () => {
     expect(preview.isTitleOnly).toBeTrue();
     expect(preview.bannerImage).toEqual(bannerImage);
   });
+
+  it('preserves pinned homepage metadata', () => {
+    const pinnedAt = new Date('2026-07-08T15:00:00Z');
+    const preview = toBlockPreviewDTO(makeBlock({ pinnedAt }));
+
+    expect(preview.pinnedAt).toEqual(pinnedAt);
+  });
 });

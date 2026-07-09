@@ -508,6 +508,32 @@
   padding-left: 0;
 }
 
+.trending-section .block-preview {
+  position: relative;
+}
+
+.home-pinned-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(171, 122, 0, 0.38);
+  border-radius: 50%;
+  background: rgba(255, 251, 234, 0.94);
+  color: #8a5a00;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14);
+}
+
+.home-pinned-badge i {
+  font-size: 0.9rem;
+  transform: rotate(-18deg);
+}
+
 .featured-content-preview {
   max-height: 200px;
   overflow: hidden;
@@ -695,6 +721,15 @@ html[data-theme="dark"] .tag-chip:hover {
 
 html[data-theme="dark"] .tag-icon {
   color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .home-pinned-badge {
+  border-color: #050607;
+  background: rgba(36, 40, 31, 0.94);
+  color: var(--highlight-color);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.22),
+    0 0 14px rgba(212, 174, 76, 0.32);
 }
 
 html[data-theme="dark"] .featured-card {
