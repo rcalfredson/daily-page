@@ -101,6 +101,30 @@ A useful design test is:
 
 If so, resources may deepen it. If not, it is likely a reward treadmill rather than part of the forest's emotional life.
 
+## Sustainability boundary
+
+The forest's future revenue model should preserve the same moral shape as its resource economy: payment may expand private space, continuity, and hosted convenience, but should not buy public status, creative dignity, or mechanical power.
+
+A promising boundary is:
+
+```text
+Free:
+public writing grows a meaningful public Activity Forest
+
+Paid:
+private writing grows private Activity Forest spaces
+```
+
+This makes the paid value a natural inward extension of the same product idea rather than a superior version of the public experience. Public writing remains complete, beautiful, and worth tending. Paid private forests support more personal writing, private organization, hosted infrastructure, backups, long-term continuity, and privacy expectations.
+
+The guiding principle is:
+
+> **Paid privacy, not paid dignity.**
+
+Everyone should receive the core magic of seeing writing become a place. Payment should buy private terrain on the hosted service, not better trees, stronger resources, higher visibility, moderation influence, or a privileged public identity.
+
+The broader product and open-source implications of this model are tracked in `docs/product/sustainability-and-open-source.md`.
+
 ## Product guardrails
 
 - No punishment, damage, or irreversible loss caused by absence.
