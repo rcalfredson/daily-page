@@ -1186,6 +1186,37 @@ html[data-theme='dark'] .home-quests-heading h2 {
   .homepage-header {
     padding: 1rem;
   }
+
+  .home-discovery .title-row--pinned {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 0.25rem 0.5rem;
+  }
+
+  .home-discovery .title-row--pinned .home-pinned-badge {
+    grid-column: 1;
+    grid-row: 1;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0.25rem 0 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+  }
+
+  .home-discovery .title-row--pinned .home-pinned-badge i {
+    font-size: 0.7rem;
+  }
+
+  .home-discovery .title-row--pinned .block-title {
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+  }
+
+  .home-discovery .title-row--pinned .badge.badge-draft {
+    grid-column: 2;
+    width: fit-content;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
