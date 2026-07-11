@@ -19,7 +19,7 @@ section.home-discovery__panel.home-discovery__panel--quests(
             .home-quest__body
               strong= quest.displayName
               .home-quest__progress
-                progress(value=quest.progress.displayRatio max='1')
+                progress.quest-progress__bar(value=quest.progress.displayRatio max='1')
                 span= t('quests.progress.percent', { percent: Math.round(quest.progress.displayRatio * 100) })
   else
     p.home-quests-empty= t('quests.overview.empty.body')
