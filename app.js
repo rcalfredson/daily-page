@@ -44,7 +44,9 @@ import { initI18n, addI18n } from './server/services/i18n.js'
 import { startJobs } from './server/services/cron.js';
 import * as google from './server/services/google.js';
 import { timeIt } from './server/services/perf.js';
+import { getHomeActivitySince, getHomeActivityVisibility } from './server/services/homepage.js';
 import { getRecurringSupportMonthlyTotalUsd } from './server/db/supportFundingService.js';
+import { listPublicQuestsOverview } from './server/db/questService.js';
 
 import { renderMarkdownContent } from './server/utils/markdownHelper.js';
 import { titleOnlyMeta } from './server/utils/unfinished.js';
@@ -632,7 +634,7 @@ async function getSupportFundingViewModel() {
       '/',
       optionalAuth,
       addI18n([
-        'home', 'blockCommon', 'translation', 'reactions', 'readMore', 'voteControls'
+        'home', 'quests', 'blockCommon', 'translation', 'reactions', 'readMore', 'voteControls'
       ]),
       stripLegacyLang({ canonicalPath: '/' }),
       async (req, res) => {
@@ -644,34 +646,37 @@ async function getSupportFundingViewModel() {
 
           const PERF = process.env.PERF_HOME === '1';
 
-          let fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding;
+          let fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding, questsRes;
+          const activitySince = getHomeActivitySince();
 
           // Dispara todo en paralelo (con perf opcional por cada llamada)
           if (!PERF) {
-            [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding] = await Promise.all([
-              getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }),
-              getFeaturedRoomWithFallback(),
+            [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding, questsRes] = await Promise.all([
+              config.homeShowFeaturedPost ? getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }) : null,
+              config.homeShowFeaturedRoom ? getFeaturedRoomWithFallback() : null,
               getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang, includePinnedHome: true }),
               getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' }),
               getGlobalBlockStats(),
               getTotalRooms(),
               getTotalTags(),
-              getRecentCommentActivity({ limit: 5, lang: uiLang }),
-              getRecentReactionActivity({ limit: 5, lang: uiLang }),
-              getSupportFundingViewModel(),
+              getRecentCommentActivity({ limit: 5, lang: uiLang, since: activitySince }),
+              getRecentReactionActivity({ limit: 5, lang: uiLang, since: activitySince }),
+              config.homeShowSupport ? getSupportFundingViewModel() : null,
+              listPublicQuestsOverview({ uiLang, page: 1, limit: 3 }),
             ]);
           } else {
             const perfResults = await Promise.all([
-              timeIt('featuredBlock', () => getFeaturedBlockWithFallback({ preferredLang: preferredContentLang })),
-              timeIt('featuredRoomRaw', () => getFeaturedRoomWithFallback()),
+              timeIt('featuredBlock', () => config.homeShowFeaturedPost ? getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }) : null),
+              timeIt('featuredRoomRaw', () => config.homeShowFeaturedRoom ? getFeaturedRoomWithFallback() : null),
               timeIt('topBlocks', () => getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang, includePinnedHome: true })),
               timeIt('trendingTags', () => getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' })),
               timeIt('globalBlockStats', () => getGlobalBlockStats()),
               timeIt('totalRooms', () => getTotalRooms()),
               timeIt('totalTags', () => getTotalTags()),
-              timeIt('recentComments', () => getRecentCommentActivity({ limit: 5, lang: uiLang })),
-              timeIt('recentReactions', () => getRecentReactionActivity({ limit: 5, lang: uiLang })),
-              timeIt('supportFunding', () => getSupportFundingViewModel()),
+              timeIt('recentComments', () => getRecentCommentActivity({ limit: 5, lang: uiLang, since: activitySince })),
+              timeIt('recentReactions', () => getRecentReactionActivity({ limit: 5, lang: uiLang, since: activitySince })),
+              timeIt('supportFunding', () => config.homeShowSupport ? getSupportFundingViewModel() : null),
+              timeIt('quests', () => listPublicQuestsOverview({ uiLang, page: 1, limit: 3 })),
             ]);
 
             perfResults
@@ -693,8 +698,8 @@ async function getSupportFundingViewModel() {
             recentComments = perfResults.find(r => r.label === 'recentComments')?.value || [];
             recentReactions = perfResults.find(r => r.label === 'recentReactions')?.value || [];
             supportFunding = perfResults.find(r => r.label === 'supportFunding')?.value;
+            questsRes = perfResults.find(r => r.label === 'quests')?.value;
           }
-
 
           // Post-procesamiento mínimo (sin I/O extra)
           const fb = fbRes?.featuredBlock || null;
@@ -731,6 +736,11 @@ async function getSupportFundingViewModel() {
             totalTags: totalTagsRes ?? 0,
             collaborationsToday: statsRes?.collaborationsToday ?? 0,
           };
+          const { showRecentComments, showRecentReactions } = getHomeActivityVisibility({
+            comments: recentComments,
+            reactions: recentReactions
+          });
+          const homeQuests = (questsRes?.quests || []).filter(quest => quest.status === 'active');
 
           res.render('home', {
             title: t('home.meta.title'),
@@ -748,6 +758,9 @@ async function getSupportFundingViewModel() {
             tagsPeriod,
             recentComments: recentComments || [],
             recentReactions: recentReactions || [],
+            showRecentComments,
+            showRecentReactions,
+            homeQuests,
             supportFunding,
 
             user: req.user || null,

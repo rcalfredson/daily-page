@@ -12,6 +12,11 @@ function parseCsv(value) {
     .filter(Boolean);
 }
 
+function envFlag(value, fallback = false) {
+  if (value == null || value === '') return fallback;
+  return ['1', 'true', 'yes', 'on'].includes(String(value).trim().toLowerCase());
+}
+
 function parseMonthlyDonateOptions(value) {
   const optionsByAmount = new Map();
 
@@ -83,6 +88,11 @@ export const config = {
   port: process.env.PORT || 3000,
   backendUrl: process.env.BACKEND_URL,
   rateLimitSalt: process.env.RATE_LIMIT_SALT,
+
+  // Homepage sections. Expensive data is not loaded when its section is disabled.
+  homeShowSupport: envFlag(process.env.HOME_SHOW_SUPPORT),
+  homeShowFeaturedPost: envFlag(process.env.HOME_SHOW_FEATURED_POST),
+  homeShowFeaturedRoom: envFlag(process.env.HOME_SHOW_FEATURED_ROOM),
 
   // Support page funding display
   supportMonthlyGoalUsd: process.env.SUPPORT_MONTHLY_GOAL_USD,

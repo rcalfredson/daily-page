@@ -1,0 +1,25 @@
+section.home-discovery__panel.home-discovery__panel--quests(
+  id='home-panel-quests'
+  role='tabpanel'
+  aria-labelledby='home-tab-quests'
+  data-home-panel='quests'
+)
+  .home-quests-heading
+    div
+      p.home-quests-card__eyebrow= t('home.quests.eyebrow')
+      h2= t('home.quests.title')
+    a.home-quests-card__link(href=uiPath('/quests'))= t('home.quests.cta')
+  if homeQuests && homeQuests.length
+    ul.home-quest-list
+      each quest in homeQuests
+        li.home-quest
+          a.home-quest__link(href=uiPath(`/quests/${quest.slug}`))
+            if quest.badgeAssetPath
+              img.home-quest__badge(src=quest.badgeAssetPath alt=t('quests.badge.alt', { questName: quest.displayName }) width='44' height='44' loading='lazy' decoding='async')
+            .home-quest__body
+              strong= quest.displayName
+              .home-quest__progress
+                progress(value=quest.progress.displayRatio max='1')
+                span= t('quests.progress.percent', { percent: Math.round(quest.progress.displayRatio * 100) })
+  else
+    p.home-quests-empty= t('quests.overview.empty.body')
