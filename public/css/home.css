@@ -1052,10 +1052,8 @@ html[data-theme="dark"] .home-support-widget__fill {
   font-size: 0.75rem;
 }
 
-.home-quest__progress progress {
-  width: 100%;
+.home-quest__progress .quest-progress__bar {
   height: 0.45rem;
-  accent-color: var(--highlight-color);
 }
 
 .home-quests-empty {
