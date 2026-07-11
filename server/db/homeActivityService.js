@@ -23,6 +23,16 @@ function clampLimit(limit, fallback = 5, max = 8) {
   return Math.max(1, Math.min(Number(limit) || fallback, max));
 }
 
+function normalizeSince(since) {
+  if (since == null || since === '') return null;
+  const date = since instanceof Date ? since : new Date(since);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function sinceCacheKey(since) {
+  return since ? since.toISOString().slice(0, 10) : 'all-time';
+}
+
 function uniqueStrings(values = []) {
   return [...new Set(values.map((value) => String(value || '')).filter(Boolean))];
 }
@@ -116,21 +126,24 @@ function serializeRoom(roomMap, roomId) {
   };
 }
 
-export async function getRecentCommentActivity({ limit = 5, lang = 'en' } = {}) {
+export async function getRecentCommentActivity({ limit = 5, lang = 'en', since = null } = {}) {
   const safeLimit = clampLimit(limit);
+  const normalizedSince = normalizeSince(since);
   return await cache.get(
-    `recent-comment-activity-${safeLimit}-${lang}`,
-    () => getRecentCommentActivityFresh({ safeLimit, lang }),
+    `recent-comment-activity-${safeLimit}-${lang}-${sinceCacheKey(normalizedSince)}`,
+    () => getRecentCommentActivityFresh({ safeLimit, lang, since: normalizedSince }),
     [],
     { ttlMs: ACTIVITY_TTL, staleTtlMs: ACTIVITY_STALE_TTL }
   );
 }
 
-async function getRecentCommentActivityFresh({ safeLimit, lang }) {
-  const rawComments = await BlockComment.find({
+async function getRecentCommentActivityFresh({ safeLimit, lang, since }) {
+  const commentMatch = {
     status: 'visible',
     deletedAt: null
-  })
+  };
+  if (since) commentMatch.createdAt = { $gte: since };
+  const rawComments = await BlockComment.find(commentMatch)
     .sort({ createdAt: -1, _id: -1 })
     .limit(safeLimit * 6)
     .lean();
@@ -182,18 +195,20 @@ async function getRecentCommentActivityFresh({ safeLimit, lang }) {
   });
 }
 
-export async function getRecentReactionActivity({ limit = 5, lang = 'en' } = {}) {
+export async function getRecentReactionActivity({ limit = 5, lang = 'en', since = null } = {}) {
   const safeLimit = clampLimit(limit);
+  const normalizedSince = normalizeSince(since);
   return await cache.get(
-    `recent-reaction-activity-${safeLimit}-${lang}`,
-    () => getRecentReactionActivityFresh({ safeLimit, lang }),
+    `recent-reaction-activity-${safeLimit}-${lang}-${sinceCacheKey(normalizedSince)}`,
+    () => getRecentReactionActivityFresh({ safeLimit, lang, since: normalizedSince }),
     [],
     { ttlMs: ACTIVITY_TTL, staleTtlMs: ACTIVITY_STALE_TTL }
   );
 }
 
-async function getRecentReactionActivityFresh({ safeLimit, lang }) {
-  const rawReactions = await BlockReaction.find({})
+async function getRecentReactionActivityFresh({ safeLimit, lang, since }) {
+  const reactionMatch = since ? { createdAt: { $gte: since } } : {};
+  const rawReactions = await BlockReaction.find(reactionMatch)
     .sort({ createdAt: -1, _id: -1 })
     .limit(safeLimit * 8)
     .lean();

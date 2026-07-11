@@ -884,3 +884,313 @@ html[data-theme="dark"] .home-support-widget__fill {
     padding-right: 0.9rem;
   }
 }
+
+/* Discovery-first homepage layout */
+.homepage-header {
+  display: grid;
+  grid-template-columns: minmax(15rem, 1.15fr) minmax(25rem, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1.15rem 1.3rem;
+}
+
+.homepage-header h1 {
+  font-size: clamp(1.75rem, 3.3vw, 2.55rem);
+}
+
+.homepage-header .subtitle {
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.homepage-header .global-stats {
+  gap: 0.55rem;
+  margin: 0;
+}
+
+.homepage-header .stat-item {
+  padding: 0.7rem 0.45rem;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.homepage-header .stat-item i {
+  font-size: 1.15rem;
+}
+
+.homepage-header .stat-number {
+  margin-top: 0.25rem;
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+}
+
+.homepage-header .stat-label {
+  font-size: 0.75rem;
+}
+
+.home-discovery__tabs {
+  display: none;
+}
+
+.home-discovery__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(17rem, 1fr);
+  align-items: start;
+  gap: 1.35rem;
+}
+
+.home-discovery__sidebar {
+  display: grid;
+  gap: 1rem;
+  position: sticky;
+  top: 1rem;
+}
+
+.home-discovery__panel {
+  min-width: 0;
+}
+
+.home-discovery__panel > h2,
+.home-quests-heading h2 {
+  margin: 0 0 0.85rem;
+  color: #24384d;
+  font-size: 1.25rem;
+}
+
+.home-discovery__panel--tags,
+.home-discovery__panel--quests {
+  padding: 1rem;
+  border: 1px solid #dce5eb;
+  border-radius: 16px;
+  background: var(--surface-bg);
+  box-shadow: 0 8px 22px rgba(20, 40, 60, 0.05);
+}
+
+.home-discovery .trending-tags-widget {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.home-discovery .trending-tags {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.home-discovery .tag-chip {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.home-discovery .tag-badge {
+  margin-left: auto;
+  text-align: right;
+}
+
+.home-quests-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.8rem;
+}
+
+.home-quests-heading h2 {
+  margin-bottom: 0;
+}
+
+.home-quest-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-quest__link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: inherit;
+  background: var(--surface-raised-bg);
+  text-decoration: none;
+}
+
+.home-quest__link:hover,
+.home-quest__link:focus-visible {
+  border-color: var(--highlight-color);
+  text-decoration: none;
+}
+
+.home-quest__badge {
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.home-quest__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.home-quest__body strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.home-quest__progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+  color: var(--muted-text-color);
+  font-size: 0.75rem;
+}
+
+.home-quest__progress progress {
+  width: 100%;
+  height: 0.45rem;
+  accent-color: var(--highlight-color);
+}
+
+.home-quests-empty {
+  margin: 0;
+  color: var(--muted-text-color);
+}
+
+.live-activity {
+  margin-top: 1.5rem;
+}
+
+.activity-grid--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+html[data-theme='dark'] .homepage-header .stat-item,
+html[data-theme='dark'] .home-discovery__panel--tags,
+html[data-theme='dark'] .home-discovery__panel--quests {
+  color: var(--text-color);
+  border-color: var(--border-color);
+  background: var(--surface-bg);
+}
+
+html[data-theme='dark'] .home-discovery__panel > h2,
+html[data-theme='dark'] .home-quests-heading h2 {
+  color: var(--text-color);
+}
+
+@media (max-width: 980px) {
+  .homepage-header {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 799px) {
+  .home-discovery__tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.2rem;
+    margin: 0 0 0.85rem;
+    padding: 0.2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--surface-raised-bg);
+  }
+
+  .home-discovery__tab {
+    float: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.38rem;
+    min-width: 0;
+    min-height: 44px;
+    margin: 0;
+    padding: 0.4rem 0.45rem;
+    border: 0;
+    border-radius: 9px;
+    color: var(--muted-text-color);
+    background: transparent;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .home-discovery__tab i {
+    flex: 0 0 auto;
+    width: 1em;
+    font-size: 0.82rem;
+  }
+
+  .home-discovery__tab span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .home-discovery__tab.is-active {
+    color: var(--highlight-contrast);
+    background: var(--highlight-color);
+    box-shadow: 0 3px 10px color-mix(in srgb, var(--highlight-color) 25%, transparent);
+  }
+
+  .home-discovery__tab:focus-visible {
+    outline: 2px solid var(--highlight-color);
+    outline-offset: 2px;
+  }
+
+  html[data-theme='dark'] .home-discovery__tab {
+    border: 0;
+    color: var(--muted-text-color);
+    background: transparent;
+  }
+
+  html[data-theme='dark'] .home-discovery__tab.is-active {
+    color: var(--highlight-contrast);
+    background: var(--highlight-color);
+  }
+
+  .home-discovery__grid,
+  .home-discovery__sidebar {
+    display: block;
+  }
+
+  .home-discovery__sidebar {
+    position: static;
+  }
+
+  .home-discovery__panel:not(.is-active) {
+    display: none;
+  }
+
+  .home-discovery__panel--tags,
+  .home-discovery__panel--quests {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .homepage-header .global-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .homepage-header {
+    padding: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-discovery__tab,
+  .home-quest__link {
+    transition: none;
+  }
+}

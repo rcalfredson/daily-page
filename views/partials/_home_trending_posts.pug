@@ -1,0 +1,41 @@
+section.home-discovery__panel.home-discovery__panel--posts.is-active(
+  id='home-panel-posts'
+  role='tabpanel'
+  aria-labelledby='home-tab-posts'
+  data-home-panel='posts'
+)
+  h2
+    = t('home.trendingBlocks.title')
+    if blocksPeriod > 1
+      |  #{t('home.trendingBlocks.suffixDays', {days: blocksPeriod})}
+  if topBlocks.length
+    ul.block-list
+      each block in topBlocks
+        li.block-preview(lang=(block.lang || 'en'))
+          +blockBanner(block, 'card', block.roomId)
+          div.content
+            .title-row(class=block.pinnedAt ? 'title-row--pinned' : null)
+              a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))= block.title
+              include _draft_badge
+              if block.pinnedAt
+                span.home-pinned-badge(title=t('home.featured.blockRibbon') aria-label=t('home.featured.blockRibbon'))
+                  i.fas.fa-thumbtack(aria-hidden='true')
+            p(lang=(uiLang || 'en'))
+              | #{t('home.trendingBlocks.createdBy')} 
+              - const u = encodeURIComponent(block.creator || '')
+              a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
+              |  #{t('home.trendingBlocks.in')} 
+              a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('home.trendingBlocks.unknownRoom')
+              |  #{t('home.trendingBlocks.on')}
+              = ' '
+              - const blockCreatedAt = new Date(block.createdAt)
+              time(datetime=blockCreatedAt.toISOString() data-local-date-time data-date-style='medium' data-time-style='short')= blockCreatedAt.toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
+            +translationAttribution(block)
+            if block.contentHTML
+              div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))!= block.contentHTML
+          +readMoreIfTruncated(block, block.roomId)
+          footer.block-footer
+            include _reaction_counts
+            include _vote_controls
+  else
+    p= t('home.trendingBlocks.empty24h')
