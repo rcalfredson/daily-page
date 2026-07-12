@@ -291,7 +291,26 @@ function directionIsClear(parent, direction, nodes, phenotype) {
   return true;
 }
 
-function calculateRadii(nodes, segments, phenotype) {
+function applyTrunkProfile(nodes, radii, phenotype, architecture) {
+  const trunkNodes = nodes.filter(node => node.generation === 0);
+  const trunkTop = trunkNodes.at(-1);
+  const trunkHeight = phenotype.groundY - trunkTop.worldY;
+  const topRadius = radii[trunkTop.id];
+  for (const node of trunkNodes) {
+    const heightProgress = clamp(
+      (phenotype.groundY - node.worldY) / Math.max(phenotype.internodeLength, trunkHeight),
+      0,
+      1
+    );
+    const profiledRadius = topRadius + (
+      (architecture.trunkBaseRadius - topRadius)
+      * ((1 - heightProgress) ** architecture.trunkTaper)
+    );
+    radii[node.id] = Math.max(radii[node.id], profiledRadius);
+  }
+}
+
+function calculateRadii(nodes, segments, phenotype, architecture) {
   const children = Array.from({ length: nodes.length }, () => []);
   for (const segment of segments) children[segment.fromId].push(segment.toId);
   const radii = Array(nodes.length).fill(phenotype.terminalRadius);
@@ -306,6 +325,7 @@ function calculateRadii(nodes, segments, phenotype) {
       area ** (1 / phenotype.pipeExponent)
     );
   }
+  applyTrunkProfile(nodes, radii, phenotype, architecture);
   for (const node of nodes) node.radius = radii[node.id];
   for (const segment of segments) {
     segment.fromRadius = radii[segment.fromId];
@@ -395,7 +415,7 @@ export function growBranchGraph(seed, phenotype) {
     terminals = nextTerminals;
   }
 
-  calculateRadii(nodes, segments, phenotype);
+  calculateRadii(nodes, segments, phenotype, architecture);
   const terminalNodeIds = new Set(nodes.map(node => node.id));
   for (const segment of segments) terminalNodeIds.delete(segment.fromId);
   const terminationReason = nodes.length >= phenotype.maxNodes

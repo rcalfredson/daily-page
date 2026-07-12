@@ -43,6 +43,64 @@ describe('v3 forest branch graph generator', () => {
     expect(observedHeights.size).toBeGreaterThan(10);
   });
 
+  it('derives deterministic, bounded, meaningfully varied trunk architecture', () => {
+    const observedBaseRadii = new Set();
+    const observedTapers = new Set();
+    for (let seed = 0; seed < 100; seed += 1) {
+      const first = generateForestTreeGraph(post, { seed });
+      const repeated = generateForestTreeGraph(post, { seed });
+      const architecture = first.architecture;
+      const ranges = first.phenotype.architecture;
+
+      expect(repeated.architecture).toEqual(architecture);
+      expect(architecture.trunkBaseRadius).toBeGreaterThanOrEqual(ranges.trunkBaseRadius[0]);
+      expect(architecture.trunkBaseRadius).toBeLessThanOrEqual(ranges.trunkBaseRadius[1]);
+      expect(architecture.trunkTaper).toBeGreaterThanOrEqual(ranges.trunkTaper[0]);
+      expect(architecture.trunkTaper).toBeLessThanOrEqual(ranges.trunkTaper[1]);
+      expect(first.nodes[0].radius + 1e-9).toBeGreaterThanOrEqual(
+        architecture.trunkBaseRadius
+      );
+      observedBaseRadii.add(architecture.trunkBaseRadius);
+      observedTapers.add(architecture.trunkTaper);
+    }
+    expect(observedBaseRadii.size).toBeGreaterThan(20);
+    expect(observedTapers.size).toBeGreaterThan(20);
+  });
+
+  it('applies trunk traits without changing growth geometry or branch radii', () => {
+    const phenotype = generateForestTreeGraph(post, { seed: 202 }).phenotype;
+    const thinArchitecture = {
+      ...phenotype.architecture,
+      trunkBaseRadius: [3.1, 3.1],
+      trunkTaper: [0.72, 0.72]
+    };
+    const thickArchitecture = {
+      ...phenotype.architecture,
+      trunkBaseRadius: [4.1, 4.1],
+      trunkTaper: [1.32, 1.32]
+    };
+    const thin = generateForestTreeGraph(post, {
+      seed: 202,
+      phenotype: { ...phenotype, architecture: thinArchitecture }
+    });
+    const thick = generateForestTreeGraph(post, {
+      seed: 202,
+      phenotype: { ...phenotype, architecture: thickArchitecture }
+    });
+
+    expect(thick.nodes.map(node => [node.x, node.y, node.depth, node.parentId, node.generation]))
+      .toEqual(thin.nodes.map(node => [node.x, node.y, node.depth, node.parentId, node.generation]));
+    expect(thick.nodes.filter(node => node.generation > 0).map(node => node.radius))
+      .toEqual(thin.nodes.filter(node => node.generation > 0).map(node => node.radius));
+    expect(thick.nodes[0].radius).toBeGreaterThan(thin.nodes[0].radius);
+    for (const graph of [thin, thick]) {
+      const trunkRadii = graph.nodes.filter(node => node.generation === 0)
+        .map(node => node.radius);
+      expect(trunkRadii.every((radius, index) => index === 0
+        || radius <= trunkRadii[index - 1] + 1e-9)).toBeTrue();
+    }
+  });
+
   it('creates a valid rooted graph with one parent per non-root node', () => {
     const graph = generateForestTreeGraph(post);
     const incoming = Array(graph.nodes.length).fill(0);
