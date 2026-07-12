@@ -16,6 +16,13 @@ a.block-title {
   word-break: break-word;
 }
 
+/* Keep rendered post prose equally readable in full views and preview cards. */
+.block-content p,
+.content-preview p,
+.featured-content-preview p {
+  margin: 1em 0;
+}
+
 .block-content img,
 .content-preview img,
 .featured-content-preview img {
