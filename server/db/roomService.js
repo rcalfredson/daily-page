@@ -2,8 +2,44 @@ import Room from './models/Room.js';
 import * as cache from '../services/cache.js';
 
 let cachedTopicsByLang = new Map();
+let cachedRawRooms = null;
+let rawRoomsPromise = null;
 
 const ROOM_STALE_TTL = 30 * 60 * 1000;
+const ROOM_DIRECTORY_TTL = 10 * 60 * 1000;
+
+function refreshRawRooms() {
+  if (rawRoomsPromise) return rawRoomsPromise;
+
+  rawRoomsPromise = Room.find({}).lean().then(rooms => {
+    cachedRawRooms = {
+      rooms,
+      exp: Date.now() + ROOM_DIRECTORY_TTL,
+    };
+    cachedTopicsByLang.clear();
+    return rooms;
+  }).finally(() => {
+    rawRoomsPromise = null;
+  });
+
+  return rawRoomsPromise;
+}
+
+async function fetchRawRooms() {
+  const now = Date.now();
+  if (cachedRawRooms && now < cachedRawRooms.exp) {
+    return cachedRawRooms.rooms;
+  }
+
+  if (cachedRawRooms) {
+    void refreshRawRooms().catch(error => {
+      console.error('Failed to refresh room directory cache:', error);
+    });
+    return cachedRawRooms.rooms;
+  }
+
+  return await refreshRawRooms();
+}
 
 function resolveRoomField(room, field, lang) {
   const map = room?.[`${field}_i18n`];
@@ -86,11 +122,13 @@ export async function getTotalRooms() {
 export async function fetchAndGroupRooms(lang = null) {
   const now = Date.now();
   const hit = cachedTopicsByLang.get(lang || 'raw');
-  if (hit && now < hit.exp) return hit.topics;
+  if (hit && now < hit.exp) {
+    return hit.topics;
+  }
 
   try {
-    const docs = (await Room.find({})).map(d => d.toObject());
-    const rooms = lang ? docs.map(r => toRoomI18nDTO(r, lang)) : docs;
+    const rawRooms = await fetchRawRooms();
+    const rooms = lang ? rawRooms.map(r => toRoomI18nDTO(r, lang)) : rawRooms;
 
     const topics = rooms.reduce((grouped, room) => {
       const topicLabel = lang ? (room.displayTopic || room.topic) : room.topic;
@@ -109,12 +147,22 @@ export async function fetchAndGroupRooms(lang = null) {
     topics.forEach(t => t.rooms.sort((a, b) =>
       collator.compare(a.displayName || a.name, b.displayName || b.name)
     ));
-
     // Cache 10 min por lang
-    cachedTopicsByLang.set(lang || 'raw', { topics, exp: now + 10 * 60 * 1000 });
+    cachedTopicsByLang.set(lang || 'raw', { topics, exp: Date.now() + ROOM_DIRECTORY_TTL });
     return topics;
   } catch (error) {
     console.error('Error fetching and grouping rooms:', error.message);
     throw error;
   }
+}
+
+export async function warmRoomDirectoryCache(lang = 'en') {
+  const startedAt = Date.now();
+  const topics = await fetchAndGroupRooms(lang);
+  console.info('[rooms-cache] warmed', {
+    lang,
+    durationMs: Date.now() - startedAt,
+    topicCount: topics.length,
+    roomCount: topics.reduce((count, topic) => count + topic.rooms.length, 0),
+  });
 }
