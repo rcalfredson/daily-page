@@ -46,6 +46,8 @@ describe('v3 forest branch graph generator', () => {
   it('derives deterministic, bounded, meaningfully varied trunk architecture', () => {
     const observedBaseRadii = new Set();
     const observedTapers = new Set();
+    const observedLeanAngles = new Set();
+    const observedLeanAzimuths = new Set();
     for (let seed = 0; seed < 100; seed += 1) {
       const first = generateForestTreeGraph(post, { seed });
       const repeated = generateForestTreeGraph(post, { seed });
@@ -57,14 +59,56 @@ describe('v3 forest branch graph generator', () => {
       expect(architecture.trunkBaseRadius).toBeLessThanOrEqual(ranges.trunkBaseRadius[1]);
       expect(architecture.trunkTaper).toBeGreaterThanOrEqual(ranges.trunkTaper[0]);
       expect(architecture.trunkTaper).toBeLessThanOrEqual(ranges.trunkTaper[1]);
+      expect(architecture.trunkLeanAngle).toBeGreaterThanOrEqual(ranges.trunkLeanAngle[0]);
+      expect(architecture.trunkLeanAngle).toBeLessThanOrEqual(ranges.trunkLeanAngle[1]);
+      expect(architecture.trunkLeanAzimuth).toBeGreaterThanOrEqual(ranges.trunkLeanAzimuth[0]);
+      expect(architecture.trunkLeanAzimuth).toBeLessThanOrEqual(ranges.trunkLeanAzimuth[1]);
       expect(first.nodes[0].radius + 1e-9).toBeGreaterThanOrEqual(
         architecture.trunkBaseRadius
       );
       observedBaseRadii.add(architecture.trunkBaseRadius);
       observedTapers.add(architecture.trunkTaper);
+      observedLeanAngles.add(architecture.trunkLeanAngle);
+      observedLeanAzimuths.add(architecture.trunkLeanAzimuth);
     }
     expect(observedBaseRadii.size).toBeGreaterThan(20);
     expect(observedTapers.size).toBeGreaterThan(20);
+    expect(observedLeanAngles.size).toBeGreaterThan(20);
+    expect(observedLeanAzimuths.size).toBeGreaterThan(80);
+  });
+
+  it('applies trunk lean as a coherent scaffold direction', () => {
+    const phenotype = generateForestTreeGraph(post, { seed: 202 }).phenotype;
+    const architecture = {
+      ...phenotype.architecture,
+      trunkLeanAzimuth: [0, 0]
+    };
+    const upright = generateForestTreeGraph(post, {
+      seed: 202,
+      phenotype: {
+        ...phenotype,
+        architecture: { ...architecture, trunkLeanAngle: [0, 0] }
+      }
+    });
+    const leaned = generateForestTreeGraph(post, {
+      seed: 202,
+      phenotype: {
+        ...phenotype,
+        architecture: { ...architecture, trunkLeanAngle: [0.08, 0.08] }
+      }
+    });
+    const uprightScaffoldEnd = upright.nodes.findIndex(node => node.generation === 1);
+    const leanedScaffoldEnd = leaned.nodes.findIndex(node => node.generation === 1);
+    const uprightTrunk = upright.nodes.slice(0, uprightScaffoldEnd);
+    const leanedTrunk = leaned.nodes.slice(0, leanedScaffoldEnd);
+
+    expect(leanedTrunk.length).toBe(uprightTrunk.length);
+    expect(leanedTrunk.at(-1).worldX).toBeGreaterThan(uprightTrunk.at(-1).worldX + 4);
+    expect(Math.abs(leanedTrunk.at(-1).worldZ - uprightTrunk.at(-1).worldZ))
+      .toBeLessThan(0.5);
+    expect(leanedTrunk.slice(1).every((node, index) => (
+      node.worldX > uprightTrunk[index + 1].worldX
+    ))).toBeTrue();
   });
 
   it('applies trunk traits without changing growth geometry or branch radii', () => {

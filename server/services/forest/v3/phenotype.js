@@ -18,7 +18,9 @@ export const DECIDUOUS_PHENOTYPE = Object.freeze({
   architecture: Object.freeze({
     branchStartHeight: Object.freeze([22, 38]),
     trunkBaseRadius: Object.freeze([3.1, 4.1]),
-    trunkTaper: Object.freeze([0.72, 1.32])
+    trunkTaper: Object.freeze([0.72, 1.32]),
+    trunkLeanAngle: Object.freeze([0.025, 0.085]),
+    trunkLeanAzimuth: Object.freeze([0, Math.PI * 2])
   }),
   trunkTopY: 43,
   primaryBranchCount: 5,

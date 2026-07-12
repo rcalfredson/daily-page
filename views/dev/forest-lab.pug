@@ -104,6 +104,8 @@ block content
             |  branch start #{item.tree.architecture.branchStartHeight.toFixed(1)} ·
             |  base radius #{item.tree.architecture.trunkBaseRadius.toFixed(2)} ·
             |  taper #{item.tree.architecture.trunkTaper.toFixed(2)} ·
+            |  lean #{(item.tree.architecture.trunkLeanAngle * 180 / Math.PI).toFixed(1)}°
+            |  @ #{(item.tree.architecture.trunkLeanAzimuth * 180 / Math.PI).toFixed(0)}° ·
             |  order #{maximumOrder} · #{item.tree.diagnostics.maximumTortuosity.toFixed(2)} tortuosity ·
             |  #{item.tree.foliage.leaves.length} leaves ·
             |  #{item.tree.diagnostics.crossingCount} projected overlaps ·

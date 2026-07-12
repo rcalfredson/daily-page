@@ -20,6 +20,18 @@ export function deriveTreeArchitecture(seed, phenotype) {
   const trunkTaper = roundTo(
     sampleRange(random, phenotype.architecture.trunkTaper), 2
   );
+  const trunkLeanAngle = roundTo(
+    sampleRange(random, phenotype.architecture.trunkLeanAngle), 3
+  );
+  const trunkLeanAzimuth = roundTo(
+    sampleRange(random, phenotype.architecture.trunkLeanAzimuth), 3
+  );
 
-  return Object.freeze({ branchStartHeight, trunkBaseRadius, trunkTaper });
+  return Object.freeze({
+    branchStartHeight,
+    trunkBaseRadius,
+    trunkTaper,
+    trunkLeanAngle,
+    trunkLeanAzimuth
+  });
 }
