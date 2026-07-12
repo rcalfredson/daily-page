@@ -13,7 +13,7 @@ block content
       p.forest-lab__eyebrow Development preview
       h1 Activity Forest Lab
       p.forest-lab__lede
-        | The pilot procedural phenotype is shown as a finished tree, a leafless wood raster, and
+        | Two procedural phenotypes are shown as finished trees, leafless wood rasters, and
         | its deterministic branch graph so structural and rendering changes remain diagnosable.
 
     section.forest-lab__legend(aria-labelledby='forest-lab-legend')
@@ -23,7 +23,7 @@ block content
         li Three-dimensional radial growth is projected into a crisp two-dimensional tree.
         li Branch hierarchy and specimen architecture shape taper from the trunk through terminal twigs.
         li Individual leaves grow from eligible branches while preserving intentional crown gaps.
-        li Post semantics, ornaments, additional phenotypes, and further trunk variance remain future layers.
+        li Open-crown deciduous trees and fantastical sunset lanternwoods share one runtime asset contract.
 
     section.forest-gallery(aria-label='Generated post tree gallery')
       each item, treeIndex in trees
@@ -90,7 +90,8 @@ block content
           h2.forest-comparison__title= item.title
           p.forest-comparison__meta
             - const maximumOrder = Math.max(...item.tree.nodes.map(node => node.generation))
-            | Seed #{item.tree.seed} · #{item.tree.nodes.length} nodes ·
+            | #{item.tree.phenotype.name} · #{item.tree.foliage.paletteId} foliage ·
+            |  seed #{item.tree.seed} · #{item.tree.nodes.length} nodes ·
             |  branch start #{item.tree.architecture.branchStartHeight.toFixed(1)} ·
             |  base radius #{item.tree.architecture.trunkBaseRadius.toFixed(2)} ·
             |  taper #{item.tree.architecture.trunkTaper.toFixed(2)} ·

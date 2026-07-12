@@ -1,5 +1,6 @@
 import {
   generateForestTreeAssetV3,
+  generateForestTreeGraph,
   generateForestTreeV3
 } from '../server/services/forestTreeGeneratorV3.js';
 import {
@@ -7,7 +8,11 @@ import {
   FOREST_TREE_ASSET_SCHEMA_VERSION,
   treeAssetCacheKey
 } from '../server/services/forest/v3/treeAsset.js';
-import { DECIDUOUS_PHENOTYPE } from '../server/services/forest/v3/phenotype.js';
+import {
+  DECIDUOUS_PHENOTYPE,
+  LANTERNWOOD_PHENOTYPE
+} from '../server/services/forest/v3/phenotype.js';
+import { selectFoliagePalette } from '../server/services/forest/v3/rasterizeFoliage.js';
 import {
   clearForestLabTreeCache,
   forestLabTreeCacheSize,
@@ -70,6 +75,55 @@ describe('v3 forest runtime tree assets', () => {
       .toEqual(generateForestTreeAssetV3(post, { seed: 303 }));
   });
 
+  it('emits the same contract for a distinct registered phenotype', () => {
+    const deciduous = generateForestTreeAssetV3(post, {
+      seed: 303, phenotype: DECIDUOUS_PHENOTYPE
+    });
+    const lanternwood = generateForestTreeAssetV3(post, {
+      seed: 303, phenotype: LANTERNWOOD_PHENOTYPE
+    });
+
+    expect(lanternwood.layers.map(layer => layer.id)).toEqual(
+      deciduous.layers.map(layer => layer.id)
+    );
+    expect(lanternwood.dimensions).toEqual({ width: 112, height: 120 });
+    expect(lanternwood.phenotype).toEqual({ id: 'sunset-lanternwood', version: 2 });
+    expect(lanternwood.cacheKey).not.toBe(deciduous.cacheKey);
+    const lanternColors = new Set(LANTERNWOOD_PHENOTYPE.foliagePalettes
+      .flatMap(variant => Object.values(variant.colors)));
+    expect(lanternwood.layers.filter(layer => layer.id.includes('foliage'))
+      .flatMap(layer => layer.runs).every(run => lanternColors.has(run.color))).toBeTrue();
+  });
+
+  it('selects deterministic whole-tree foliage palettes with weighted rarity', () => {
+    for (const phenotype of [DECIDUOUS_PHENOTYPE, LANTERNWOOD_PHENOTYPE]) {
+      const selections = Array.from({ length: 1000 }, (_, seed) => (
+        selectFoliagePalette(phenotype, seed).id
+      ));
+      const repeated = Array.from({ length: 1000 }, (_, seed) => (
+        selectFoliagePalette(phenotype, seed).id
+      ));
+      const common = phenotype.foliagePalettes[0].id;
+
+      expect(repeated).toEqual(selections);
+      expect(selections.filter(id => id === common).length).toBeGreaterThan(700);
+      expect(new Set(selections)).toEqual(new Set(
+        phenotype.foliagePalettes.map(variant => variant.id)
+      ));
+    }
+  });
+
+  it('normally completes lanternwood growth before reaching its safety cap', () => {
+    const graphs = Array.from({ length: 24 }, (_, seed) => generateForestTreeGraph(post, {
+      seed, phenotype: LANTERNWOOD_PHENOTYPE
+    }));
+
+    expect(graphs.filter(graph => graph.stats.terminationReason === 'node-limit').length)
+      .toBeLessThan(4);
+    expect(graphs.filter(graph => graph.stats.terminationReason === 'growth-exhausted').length)
+      .toBeGreaterThan(18);
+  });
+
   it('reuses development fixtures by visual identity, independent of post identity', () => {
     const first = getForestLabTree(post, { seed: 404 });
     const repeated = getForestLabTree({ id: 'another-post' }, { seed: 404 });
@@ -79,6 +133,17 @@ describe('v3 forest runtime tree assets', () => {
     expect(repeated.asset).toBe(first.asset);
     expect(repeated.generation).toBe(first.generation);
     expect(forestLabTreeCacheSize()).toBe(1);
+  });
+
+  it('caches each registered phenotype under its own identity', () => {
+    const first = getForestLabTree(post, { seed: 404, phenotype: LANTERNWOOD_PHENOTYPE });
+    const repeated = getForestLabTree(post, { seed: 404, phenotype: LANTERNWOOD_PHENOTYPE });
+    const deciduous = getForestLabTree(post, { seed: 404, phenotype: DECIDUOUS_PHENOTYPE });
+
+    expect(first.cacheHit).toBeFalse();
+    expect(repeated.cacheHit).toBeTrue();
+    expect(deciduous.cacheHit).toBeFalse();
+    expect(forestLabTreeCacheSize()).toBe(2);
   });
 
   it('does not silently cache custom phenotype overrides without a stable identity', () => {

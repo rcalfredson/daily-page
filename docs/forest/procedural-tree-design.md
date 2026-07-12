@@ -178,6 +178,8 @@ Renderer v2 established the original deterministic visual grammar and is preserv
 - Back-propagated branch thickness, trunk taper, root flare, and leafless wood rasterization.
 - Depth-aware individual foliage attached to eligible branch growth.
 - Coverage repair that preserves negative space without producing detached canopy masses.
+- Deterministic weighted foliage palettes, with a common signature colorway and rarer whole-tree
+  variants registered independently by each phenotype.
 - Debug views for the branch graph and leafless wood alongside the final grown tree.
 - Automated coverage for determinism, graph validity, bounds, termination, hierarchy, rasterization, and foliage behavior.
 
@@ -186,7 +188,8 @@ The initial graph, wood, and foliage milestones should therefore be treated as t
 The recommended near-term technical sequence is:
 
 1. Establish the versioned runtime tree-asset boundary described below.
-2. Build a genuinely distinct second phenotype against the shared asset contract.
+2. Build a genuinely distinct second phenotype against the shared asset contract. (Complete:
+   the broad, warm-colored sunset lanternwood now contrasts with the pilot open-crown deciduous.)
 3. Begin deterministic forest composition and basic exploration.
 4. Add shared ambient motion once a representative multi-tree scene exists.
 
@@ -216,7 +219,8 @@ Forest Lab owns a narrow process-local in-memory cache of complete generation re
 
 - `server/services/forestTreeGeneratorV3.js`: experimental v3 orchestration.
 - `server/services/forest/v3/architecture.js`: deterministic per-tree architectural traits.
-- `server/services/forest/v3/phenotype.js`: pilot phenotype and growth tendencies.
+- `server/services/forest/v3/phenotype.js`: registered deciduous and lanternwood phenotypes and
+  their distinct growth, architecture, foliage, and palette tendencies.
 - `server/services/forest/v3/growth.js`: deterministic three-dimensional branch growth.
 - `server/services/forest/v3/rasterizeWood.js`: tapered wood, root flare, and bark rendering.
 - `server/services/forest/v3/rasterizeFoliage.js`: leaf-bearing shoots, foliage coverage, depth, and rasterization.

@@ -10,6 +10,21 @@ export const FOLIAGE_PALETTE = Object.freeze({
   deep: '#214a35'
 });
 
+export function selectFoliagePalette(phenotype, seed) {
+  const variants = phenotype.foliagePalettes;
+  if (!variants?.length) {
+    return { id: 'default', colors: phenotype.foliagePalette || FOLIAGE_PALETTE };
+  }
+  const totalWeight = variants.reduce((sum, variant) => sum + variant.weight, 0);
+  if (!(totalWeight > 0)) throw new Error('Foliage palette weights must total more than zero.');
+  let choice = createRandom(seed ^ 0xC0104A11)() * totalWeight;
+  for (const variant of variants) {
+    choice -= variant.weight;
+    if (choice < 0) return variant;
+  }
+  return variants.at(-1);
+}
+
 function makeGrid(width, height, value = EMPTY) {
   return Array.from({ length: height }, () => Array(width).fill(value));
 }
@@ -283,7 +298,7 @@ function paintLeaf(mask, owner, leaf, phenotype) {
   }
 }
 
-function shadeLeaves(mask, owner) {
+function shadeLeaves(mask, owner, palette) {
   const pixels = makeGrid(mask[0].length, mask.length);
   for (let y = 0; y < mask.length; y += 1) {
     for (let x = 0; x < mask[y].length; x += 1) {
@@ -293,14 +308,14 @@ function shadeLeaves(mask, owner) {
       const upperLeft = sample.normalizedX + sample.normalizedY < -0.38;
       const centralVein = Math.abs(sample.localX) < 0.48;
       if (upperLeft && leaf.massLight > 0.68 && leaf.tone > 0.62) {
-        pixels[y][x] = FOLIAGE_PALETTE.highlight;
+        pixels[y][x] = palette.highlight;
       } else if (centralVein && sample.normalizedY < 0.35
         && leaf.massLight > 0.52 && leaf.tone > 0.42) {
-        pixels[y][x] = FOLIAGE_PALETTE.light;
+        pixels[y][x] = palette.light;
       } else if (leaf.massLight < 0.3 || leaf.depth < -8 || leaf.tone < 0.14) {
-        pixels[y][x] = FOLIAGE_PALETTE.deep;
-      } else if (sample.normalizedX > 0.3) pixels[y][x] = FOLIAGE_PALETTE.dark;
-      else pixels[y][x] = FOLIAGE_PALETTE.mid;
+        pixels[y][x] = palette.deep;
+      } else if (sample.normalizedX > 0.3) pixels[y][x] = palette.dark;
+      else pixels[y][x] = palette.mid;
     }
   }
   return pixels;
@@ -324,21 +339,23 @@ function compactRuns(pixels) {
   return runs;
 }
 
-function rasterizeLayer(leaves, layer, phenotype) {
+function rasterizeLayer(leaves, layer, phenotype, palette) {
   const mask = makeGrid(phenotype.width, phenotype.height, false);
   const owner = makeGrid(phenotype.width, phenotype.height);
   const layerLeaves = leaves
     .filter(leaf => (leaf.depth >= 0 ? 'front' : 'back') === layer)
     .sort((first, second) => first.depth - second.depth || first.id - second.id);
   for (const leaf of layerLeaves) paintLeaf(mask, owner, leaf, phenotype);
-  const pixels = shadeLeaves(mask, owner);
+  const pixels = shadeLeaves(mask, owner, palette);
   return { mask, pixels, runs: compactRuns(pixels) };
 }
 
 export function rasterizeFoliage(graph, phenotype, seed) {
+  const paletteVariant = selectFoliagePalette(phenotype, seed);
+  const palette = paletteVariant.colors;
   const { shoots, leaves, coverageCells } = generateLeafBearingShoots(graph, phenotype, seed);
-  const back = rasterizeLayer(leaves, 'back', phenotype);
-  const front = rasterizeLayer(leaves, 'front', phenotype);
+  const back = rasterizeLayer(leaves, 'back', phenotype, palette);
+  const front = rasterizeLayer(leaves, 'front', phenotype, palette);
   const mask = makeGrid(phenotype.width, phenotype.height, false);
   const pixels = makeGrid(phenotype.width, phenotype.height);
   for (let y = 0; y < phenotype.height; y += 1) {
@@ -358,6 +375,7 @@ export function rasterizeFoliage(graph, phenotype, seed) {
     shoots,
     leaves,
     coverageCells,
-    palette: FOLIAGE_PALETTE
+    paletteId: paletteVariant.id,
+    palette
   };
 }

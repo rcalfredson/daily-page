@@ -3,6 +3,10 @@ import express from 'express';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { addI18n } from '../services/i18n.js';
 import { getForestLabTree } from '../services/forestLabTreeCache.js';
+import {
+  DECIDUOUS_PHENOTYPE,
+  LANTERNWOOD_PHENOTYPE
+} from '../services/forest/v3/phenotype.js';
 
 const router = express.Router();
 
@@ -52,7 +56,8 @@ function forestFixtures() {
       questApproved: index % 4 === 0,
       excerpt: 'A fixture post used to explore the visual grammar of a personal writing forest.'
     };
-    const { generation: tree, asset } = getForestLabTree(post);
+    const phenotype = index % 2 === 0 ? DECIDUOUS_PHENOTYPE : LANTERNWOOD_PHENOTYPE;
+    const { generation: tree, asset } = getForestLabTree(post, { phenotype });
     return {
       ...post,
       url: `/rooms/${post.roomId}/blocks/${post.id}`,
