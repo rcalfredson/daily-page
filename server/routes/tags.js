@@ -13,6 +13,15 @@ import { toBlockPreviewDTO } from '../utils/block.js';
 import { getUiLang, getPreferredContentLang } from '../services/localeContext.js';
 
 const router = express.Router();
+const tagTrendTimeframes = ['7d', '30d', 'all'];
+
+function normalizeTagTrendTimeframe(value) {
+  return tagTrendTimeframes.includes(value) ? value : '30d';
+}
+
+function tagTrendDays(timeframe) {
+  return timeframe === 'all' ? 'all' : Number.parseInt(timeframe, 10);
+}
 
 router.get(
   '/tags',
@@ -74,6 +83,22 @@ router.get(
     }
   });
 
+router.get('/tags/:tagName/trend', async (req, res) => {
+  try {
+    const timeframe = normalizeTagTrendTimeframe(req.query.timeframe);
+    const trendData = await getTagTrendData(
+      req.params.tagName,
+      tagTrendDays(timeframe),
+      { dedupeGroups: true }
+    );
+
+    res.json({ timeframe, trendData });
+  } catch (error) {
+    console.error('Error loading tag trend:', error);
+    res.status(500).json({ error: 'Unable to load tag activity' });
+  }
+});
+
 // Página específica para mostrar bloques por etiqueta
 router.get(
   '/tags/:tagName',
@@ -94,6 +119,7 @@ router.get(
       const page = parseInt(req.query.page, 10) || 1;
       const limit = parseInt(req.query.limit, 10) || 20;
       const skip = (page - 1) * limit;
+      const trendTimeframe = normalizeTagTrendTimeframe(req.query.timeframe);
 
       const userId = req.user?.id || null;
 
@@ -116,7 +142,11 @@ router.get(
 
       const totalPages = Math.ceil(totalBlocks / limit);
 
-      const trendData = await getTagTrendData(tagName, 30, { dedupeGroups: true });
+      const trendData = await getTagTrendData(
+        tagName,
+        tagTrendDays(trendTimeframe),
+        { dedupeGroups: true }
+      );
 
       // Title bits come from i18n, tagName stays dynamic
       const titlePrefix = t('tags.detail.meta.titlePrefix') || '#';
@@ -130,6 +160,7 @@ router.get(
         totalPages,
         totalBlocks,
         trendData,
+        trendTimeframe,
         user: req.user || null,
         uiLang,
         preferredContentLang,

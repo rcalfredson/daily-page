@@ -2,6 +2,7 @@ extends ../layout
 
 include ../partials/_read_more
 include ../partials/_translation_attribution
+include ../partials/_banner_image
 
 block nav
   include ../navLinks
@@ -17,6 +18,7 @@ block append head
   link(rel="stylesheet" href="/css/modal.css")
   link(rel='stylesheet' href='/css/translation-attribution.css')
   link(rel='stylesheet' href='/css/sortable-tables.css')
+  link(rel='stylesheet' href='/css/banner-images.css')
   script(src='https://cdn.jsdelivr.net/npm/chart.js')
 
 block append scripts
@@ -25,83 +27,113 @@ block append scripts
   script(src='/js/reaction-counts-hydrate.js')
   script(src='/js/modal.js')
   script(src='/js/sortable-tables.js')
+  script(src='/js/banner-images.js')
 
 block content
-  .tag-header
-    h1 #{t('tags.detail.header.icon')} #{t('tags.detail.header.label')} #[span.tag-name #{tagName}]
-    p.tag-stats
-      | #{t('tags.detail.stats.totalBlocks')} 
-      strong #{tagName}
-      | #{t('tags.detail.stats.totalBlocksTagSeparator')} 
-      strong #{totalBlocks}
+  main.tag-detail
+    header.tag-hero
+      .tag-hero__icon(aria-hidden='true')= t('tags.detail.header.icon')
+      .tag-hero__copy
+        p.tag-hero__eyebrow= t('tags.detail.header.label')
+        h1.tag-name ##{tagName}
+        p.tag-stats
+          = t('tags.detail.stats.totalBlocks') + ' '
+          strong= tagName
+          = t('tags.detail.stats.totalBlocksTagSeparator') + ' '
+          strong= totalBlocks
 
-  // Trend chart container
-  if trendData.length >= 2
-    .chart-container
-      canvas#tagTrendChart
+    section.tag-activity(
+      aria-labelledby='tag-activity-title'
+      data-tag-trend-endpoint=`/tags/${encodeURIComponent(tagName)}/trend`
+    )
+      .tag-activity__header
+        .tag-activity__copy
+          h2#tag-activity-title= t('tags.detail.chart.label')
+          p.tag-activity__summary(aria-live='polite')
+            strong= trendData.reduce((sum, point) => sum + point.count, 0)
+            |  / #{totalBlocks}
+        nav.tag-range-selector(aria-label=t('tags.detail.chart.label'))
+          a.tag-range-option(class=trendTimeframe === '7d' ? 'active' : null href=`${uiPath(`/tags/${encodeURIComponent(tagName)}`)}?timeframe=7d` aria-current=trendTimeframe === '7d' ? 'page' : null)= t('tags.timeframe.last7d')
+          a.tag-range-option(class=trendTimeframe === '30d' ? 'active' : null href=`${uiPath(`/tags/${encodeURIComponent(tagName)}`)}?timeframe=30d` aria-current=trendTimeframe === '30d' ? 'page' : null)= t('tags.timeframe.last30d')
+          a.tag-range-option(class=trendTimeframe === 'all' ? 'active' : null href=`${uiPath(`/tags/${encodeURIComponent(tagName)}`)}?timeframe=all` aria-current=trendTimeframe === 'all' ? 'page' : null)= t('tags.timeframe.all')
+      .chart-container
+        canvas#tagTrendChart(role='img' aria-label=t('tags.detail.chart.label'))
 
-  if taggedBlocks.length
-    ul.block-list
-      each block in taggedBlocks
-        li.block-preview(lang=(block.lang || 'en'))
-          .content
-            .title-row
-              a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
-              include ../partials/_draft_badge
-            p(lang=(uiLang || 'en'))
-              | #{t('tags.detail.blockInfo.createdBy')} 
-              - const u = encodeURIComponent(block.creator || '')
-              a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
-              |  #{t('tags.detail.blockInfo.inRoom')} 
-              a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('tags.detail.blockInfo.unknownRoom')
-              |  #{t('tags.detail.blockInfo.onDate')} 
-              - const blockCreatedAt = new Date(block.createdAt)
-              time(
-                datetime=blockCreatedAt.toISOString()
-                data-local-date-time
-                data-date-style='medium'
-                data-time-style='short'
-              )= blockCreatedAt.toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
-            +translationAttribution(block)
-            if block.contentHTML
-              div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
-          +readMoreIfTruncated(block, block.roomId)
-          footer.block-footer
-            include ../partials/_reaction_counts
-            include ../partials/_vote_controls
+    if taggedBlocks.length
+      ul.block-list.tag-post-list
+        each block in taggedBlocks
+          li.block-preview(lang=(block.lang || 'en'))
+            +blockBanner(block, 'card', block.roomId)
+            .content
+              .title-row
+                a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en'))= block.title
+                include ../partials/_draft_badge
+              p(lang=(uiLang || 'en'))
+                = t('tags.detail.blockInfo.createdBy') + ' '
+                - const u = encodeURIComponent(block.creator || '')
+                a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
+                = ' ' + t('tags.detail.blockInfo.inRoom') + ' '
+                a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('tags.detail.blockInfo.unknownRoom')
+                = ' ' + t('tags.detail.blockInfo.onDate') + ' '
+                - const blockCreatedAt = new Date(block.createdAt)
+                time(
+                  datetime=blockCreatedAt.toISOString()
+                  data-local-date-time
+                  data-date-style='medium'
+                  data-time-style='short'
+                )= blockCreatedAt.toLocaleString(uiLang || undefined, { dateStyle: 'medium', timeStyle: 'short' })
+              +translationAttribution(block)
+              if block.contentHTML
+                div(class=['content-preview', {'fade-footer': block.truncated}], lang=(block.lang || 'en'))!= block.contentHTML
+            +readMoreIfTruncated(block, block.roomId)
+            footer.block-footer
+              include ../partials/_reaction_counts
+              include ../partials/_vote_controls
 
-  else
-    p= t('tags.detail.empty.message')
+    else
+      p.tag-empty= t('tags.detail.empty.message')
 
-  - const baseUrl = uiPath(`/tags/${encodeURIComponent(tagName)}`);
-  include ../partials/_pagination
-  +pagination(currentPage, totalPages, baseUrl)
-  include ../partials/_login_modal
-  #toast-container
+    - const baseUrl = `${uiPath(`/tags/${encodeURIComponent(tagName)}`)}?timeframe=${encodeURIComponent(trendTimeframe)}`;
+    include ../partials/_pagination
+    +pagination(currentPage, totalPages, baseUrl)
+    include ../partials/_login_modal
+    #toast-container
 
   script.
     (function () {
       // Inyecta los datos del servidor a una constante con nombre distinto
-      const __trendData = !{JSON.stringify(trendData)};
-
-      if (!Array.isArray(__trendData) || __trendData.length <= 1) {
-        return;
-      }
+      let trendData = !{JSON.stringify(trendData)};
 
       const canvas = document.getElementById('tagTrendChart');
       if (!canvas) return;
       const ctxTrend = canvas.getContext('2d');
 
-      const labels = __trendData.map(e => e._id);
-      const dataCounts = __trendData.map(e => e.count);
+      const dayMs = 24 * 60 * 60 * 1000;
+      let selectedTimeframe = '#{trendTimeframe}';
+
+      function makeChartPoints(data, timeframe) {
+        const countsByDay = new Map(data.map(entry => [entry._id, entry.count]));
+        const today = new Date();
+        const endTime = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+        const startTime = timeframe === 'all' && data.length
+          ? Date.parse(`${data[0]._id}T00:00:00Z`)
+          : endTime - (((Number.parseInt(timeframe, 10) || 1) - 1) * dayMs);
+        const points = [];
+
+        for (let timestamp = startTime; timestamp <= endTime; timestamp += dayMs) {
+          const day = new Date(timestamp).toISOString().slice(0, 10);
+          points.push({ x: timestamp, y: countsByDay.get(day) || 0 });
+        }
+
+        return points;
+      }
 
       const chart = new Chart(ctxTrend, {
         type: 'line',
         data: {
-          labels,
           datasets: [{
             label: '#{t("tags.detail.chart.label")}',
-            data: dataCounts,
+            data: makeChartPoints(trendData, selectedTimeframe),
             backgroundColor: 'rgba(159, 184, 255, 0.18)',
             borderColor: '#9fb8ff',
             pointBackgroundColor: '#9fb8ff',
@@ -112,14 +144,46 @@ block content
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'nearest',
+            intersect: true
+          },
           scales: {
-            y: { beginAtZero: true, grid: {}, ticks: {} },
-            x: {
+            y: {
+              beginAtZero: true,
               grid: {},
-              ticks: { maxRotation: 45, minRotation: 45, autoSkip: false }
+              ticks: { precision: 0, stepSize: 1 }
+            },
+            x: {
+              type: 'linear',
+              grid: {},
+              ticks: {
+                maxRotation: 0,
+                autoSkip: true,
+                callback: value => new Intl.DateTimeFormat(undefined, {
+                  month: 'short',
+                  day: 'numeric',
+                  year: trendData.length > 1 &&
+                    trendData[0]._id.slice(0, 4) !== trendData.at(-1)._id.slice(0, 4)
+                    ? 'numeric'
+                    : undefined,
+                  timeZone: 'UTC'
+                }).format(new Date(value))
+              }
             }
           },
-          plugins: { legend: { display: false } }
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: items => new Intl.DateTimeFormat(undefined, {
+                  dateStyle: 'medium',
+                  timeZone: 'UTC'
+                }).format(new Date(items[0].parsed.x))
+              }
+            }
+          }
         }
       });
 
@@ -136,6 +200,7 @@ block content
         chart.options.scales.x.border.color = borderColor;
         chart.options.scales.y.border.color = borderColor;
         chart.options.plugins.tooltip = {
+          ...chart.options.plugins.tooltip,
           backgroundColor: surfaceColor,
           titleColor: styles.getPropertyValue('--text-color').trim(),
           bodyColor: textColor,
@@ -146,6 +211,95 @@ block content
       }
 
       updateChartTheme();
+
+      const activity = document.querySelector('.tag-activity');
+      const chartContainer = document.querySelector('.tag-activity .chart-container');
+      const rangeOptions = Array.from(document.querySelectorAll('.tag-range-option'));
+      const summaryCount = document.querySelector('.tag-activity__summary strong');
+      let requestController = null;
+
+      function updatePaginationTimeframe(timeframe) {
+        document.querySelectorAll('.pagination a').forEach(link => {
+          const url = new URL(link.href);
+          url.searchParams.set('timeframe', timeframe);
+          link.href = url.toString();
+        });
+      }
+
+      async function loadTimeframe(timeframe, { pushHistory = true } = {}) {
+        if (!['7d', '30d', 'all'].includes(timeframe)) return;
+
+        requestController?.abort();
+        requestController = new AbortController();
+        const controller = requestController;
+        activity.setAttribute('aria-busy', 'true');
+
+        try {
+          const url = new URL(activity.dataset.tagTrendEndpoint, window.location.origin);
+          url.searchParams.set('timeframe', timeframe);
+          const response = await fetch(url, {
+            headers: { Accept: 'application/json' },
+            signal: controller.signal
+          });
+
+          if (!response.ok) throw new Error(`Trend request failed: ${response.status}`);
+          const payload = await response.json();
+          trendData = Array.isArray(payload.trendData) ? payload.trendData : [];
+          selectedTimeframe = payload.timeframe;
+          chart.data.datasets[0].data = makeChartPoints(trendData, selectedTimeframe);
+          chart.update();
+
+          if (summaryCount) {
+            summaryCount.textContent = trendData.reduce((sum, point) => sum + point.count, 0);
+          }
+
+          rangeOptions.forEach(option => {
+            const isActive = new URL(option.href).searchParams.get('timeframe') === selectedTimeframe;
+            option.classList.toggle('active', isActive);
+            if (isActive) option.setAttribute('aria-current', 'page');
+            else option.removeAttribute('aria-current');
+          });
+
+          updatePaginationTimeframe(selectedTimeframe);
+
+          if (pushHistory) {
+            const pageUrl = new URL(window.location.href);
+            pageUrl.searchParams.set('timeframe', selectedTimeframe);
+            window.history.pushState({ tagTimeframe: selectedTimeframe }, '', pageUrl);
+          }
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            window.location.assign(rangeOptions.find(option =>
+              new URL(option.href).searchParams.get('timeframe') === timeframe
+            )?.href || window.location.href);
+          }
+        } finally {
+          if (requestController === controller) activity.removeAttribute('aria-busy');
+        }
+      }
+
+      rangeOptions.forEach(option => {
+        option.addEventListener('click', event => {
+          event.preventDefault();
+          const timeframe = new URL(option.href).searchParams.get('timeframe');
+          if (timeframe !== selectedTimeframe) loadTimeframe(timeframe);
+        });
+      });
+
+      window.addEventListener('popstate', () => {
+        const timeframe = new URL(window.location.href).searchParams.get('timeframe') || '30d';
+        if (timeframe !== selectedTimeframe) loadTimeframe(timeframe, { pushHistory: false });
+      });
+
+      if (chartContainer && typeof ResizeObserver !== 'undefined') {
+        let resizeFrame = null;
+        new ResizeObserver(() => {
+          window.cancelAnimationFrame(resizeFrame);
+          resizeFrame = window.requestAnimationFrame(() => chart.resize());
+        }).observe(chartContainer);
+      } else {
+        window.addEventListener('resize', () => chart.resize(), { passive: true });
+      }
 
       new MutationObserver(updateChartTheme).observe(document.documentElement, {
         attributes: true,
