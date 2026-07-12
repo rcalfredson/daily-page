@@ -1,4 +1,9 @@
+export const DECIDUOUS_PHENOTYPE_ID = 'open-crown-deciduous';
+export const DECIDUOUS_PHENOTYPE_ASSET_VERSION = 1;
+
 export const DECIDUOUS_PHENOTYPE = Object.freeze({
+  id: DECIDUOUS_PHENOTYPE_ID,
+  assetVersion: DECIDUOUS_PHENOTYPE_ASSET_VERSION,
   name: 'open-crown deciduous',
   width: 96,
   height: 128,
