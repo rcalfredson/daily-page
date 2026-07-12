@@ -137,7 +137,8 @@ function appendNode(nodes, parent, direction, phenotype, properties = {}) {
     vigor: properties.vigor ?? parent.vigor,
     step: properties.step ?? parent.step,
     direction,
-    axisDirection: properties.axisDirection || parent.axisDirection
+    axisDirection: properties.axisDirection || parent.axisDirection,
+    trunkProfile: properties.trunkProfile ?? parent.trunkProfile
   };
   nodes.push(node);
   return node;
@@ -155,7 +156,7 @@ function appendSegment(segments, parent, child) {
 
 function buildScaffold(nodes, segments, phenotype, architecture, random) {
   let leader = nodes[0];
-  const trunkNodes = [];
+  const sharedTrunkNodes = [];
   const leanDirection = normalize({
     x: Math.cos(architecture.trunkLeanAzimuth) * Math.sin(architecture.trunkLeanAngle),
     y: -Math.cos(architecture.trunkLeanAngle),
@@ -163,35 +164,77 @@ function buildScaffold(nodes, segments, phenotype, architecture, random) {
   });
   leader.direction = leanDirection;
   leader.axisDirection = leanDirection;
-  while (leader.worldY - phenotype.internodeLength > phenotype.trunkTopY) {
+  const appendLeaderNode = (parent, axisDirection, trunkProfile) => {
     const direction = normalize({
-      x: (leader.direction.x * 0.55) + (leanDirection.x * 0.45)
+      x: (parent.direction.x * 0.55) + (axisDirection.x * 0.45)
         + ((random() - 0.5) * 0.025),
-      y: leanDirection.y,
-      z: (leader.direction.z * 0.55) + (leanDirection.z * 0.45)
+      y: axisDirection.y,
+      z: (parent.direction.z * 0.55) + (axisDirection.z * 0.45)
         + ((random() - 0.5) * 0.025)
     });
-    const child = appendNode(nodes, leader, direction, phenotype, {
+    const child = appendNode(nodes, parent, direction, phenotype, {
       generation: 0,
-      step: leader.step + 1,
-      axisDirection: leanDirection
+      step: parent.step + 1,
+      axisDirection,
+      trunkProfile
     });
-    appendSegment(segments, leader, child);
+    appendSegment(segments, parent, child);
+    return child;
+  };
+
+  const sharedTrunkTopY = architecture.hasSplitTrunk
+    ? phenotype.groundY - architecture.splitTrunkHeight
+    : phenotype.trunkTopY;
+  while (leader.worldY + (leanDirection.y * phenotype.internodeLength) > sharedTrunkTopY) {
+    const child = appendLeaderNode(leader, leanDirection, true);
     leader = child;
     const heightAboveGround = phenotype.groundY - leader.worldY;
-    if (heightAboveGround >= architecture.branchStartHeight) trunkNodes.push(leader);
+    if (heightAboveGround >= architecture.branchStartHeight) sharedTrunkNodes.push(leader);
+  }
+
+  const leaderNodes = [sharedTrunkNodes];
+  let leaders = [leader];
+  if (architecture.hasSplitTrunk) {
+    const forkAxis = {
+      x: Math.cos(architecture.splitTrunkAzimuth),
+      y: 0,
+      z: Math.sin(architecture.splitTrunkAzimuth)
+    };
+    leaders = [-1, 1].map(side => {
+      const axisDirection = normalize({
+        x: leanDirection.x + (forkAxis.x * Math.sin(architecture.splitTrunkAngle) * side),
+        y: leanDirection.y * Math.cos(architecture.splitTrunkAngle),
+        z: leanDirection.z + (forkAxis.z * Math.sin(architecture.splitTrunkAngle) * side)
+      });
+      return appendLeaderNode(leader, axisDirection, false);
+    });
+    leaderNodes.length = 0;
+    for (const splitLeader of leaders) {
+      const nodesForLeader = [splitLeader];
+      let tip = splitLeader;
+      while (tip.worldY + (tip.axisDirection.y * phenotype.internodeLength)
+        > phenotype.trunkTopY) {
+        tip = appendLeaderNode(tip, tip.axisDirection, false);
+        nodesForLeader.push(tip);
+      }
+      leaderNodes.push(nodesForLeader);
+    }
+    leaders = leaderNodes.map(nodesForLeader => nodesForLeader.at(-1));
   }
 
   const primaryTips = [];
-  const usableTrunkNodes = trunkNodes.slice(1, -2);
-  const spacing = usableTrunkNodes.length / phenotype.primaryBranchCount;
   const azimuthOffset = random() * Math.PI * 2;
   const goldenAngle = Math.PI * (3 - Math.sqrt(5));
   for (let index = 0; index < phenotype.primaryBranchCount; index += 1) {
-    const parent = usableTrunkNodes[Math.min(
-      usableTrunkNodes.length - 1,
-      Math.floor((index + 0.45) * spacing)
-    )];
+    const lineageIndex = index % leaderNodes.length;
+    const usableTrunkNodes = leaderNodes[lineageIndex].slice(1, -2);
+    const lineageBranchCount = Math.ceil(
+      (phenotype.primaryBranchCount - lineageIndex) / leaderNodes.length
+    );
+    const lineageBranchIndex = Math.floor(index / leaderNodes.length);
+    const parent = usableTrunkNodes[Math.min(usableTrunkNodes.length - 1, Math.floor(
+      ((lineageBranchIndex + 0.45) * usableTrunkNodes.length) / lineageBranchCount
+    ))];
     if (!parent) continue;
     const heightProgress = index / Math.max(1, phenotype.primaryBranchCount - 1);
     const tilt = phenotype.primaryBranchAngle - (heightProgress * 0.22)
@@ -207,12 +250,13 @@ function buildScaffold(nodes, segments, phenotype, architecture, random) {
       generation: 1,
       vigor: 0.8 - (heightProgress * 0.08),
       step: 0,
-      axisDirection: direction
+      axisDirection: direction,
+      trunkProfile: false
     });
     appendSegment(segments, parent, child);
     primaryTips.push(child);
   }
-  return [leader, ...primaryTips];
+  return [...leaders, ...primaryTips];
 }
 
 function directionToPoint(node, point) {
@@ -288,7 +332,7 @@ function directionIsClear(parent, direction, nodes, phenotype) {
   }, phenotype);
   if (projected.x < 0 || projected.x > phenotype.width
     || projected.y < 0 || projected.y > phenotype.groundY) return false;
-  if (parent.generation > 0 && !insideCrown({
+  if (!insideCrown({
     x: candidate.worldX,
     y: candidate.worldY,
     z: candidate.worldZ
@@ -301,7 +345,7 @@ function directionIsClear(parent, direction, nodes, phenotype) {
 }
 
 function applyTrunkProfile(nodes, radii, phenotype, architecture) {
-  const trunkNodes = nodes.filter(node => node.generation === 0);
+  const trunkNodes = nodes.filter(node => node.trunkProfile);
   const trunkTop = trunkNodes.at(-1);
   const trunkHeight = phenotype.groundY - trunkTop.worldY;
   const topRadius = radii[trunkTop.id];
@@ -362,7 +406,8 @@ export function growBranchGraph(seed, phenotype) {
     vigor: 1,
     step: 0,
     direction: { x: 0, y: -1, z: 0 },
-    axisDirection: { x: 0, y: -1, z: 0 }
+    axisDirection: { x: 0, y: -1, z: 0 },
+    trunkProfile: true
   }];
   const segments = [];
   let terminals = buildScaffold(nodes, segments, phenotype, architecture, random);
@@ -415,7 +460,9 @@ export function growBranchGraph(seed, phenotype) {
           ),
           vigor: terminal.vigor * phenotype.vigorDecay * (lateral ? 0.72 : 0.97),
           step: iterations,
-          axisDirection: lateral ? direction : terminal.axisDirection
+          axisDirection: lateral ? direction : terminal.axisDirection,
+          trunkProfile: !lateral && terminal.generation === 0
+            ? terminal.trunkProfile : false
         });
         appendSegment(segments, terminal, child);
         nextTerminals.push(child);

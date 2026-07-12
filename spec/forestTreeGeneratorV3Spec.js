@@ -48,6 +48,9 @@ describe('v3 forest branch graph generator', () => {
     const observedTapers = new Set();
     const observedLeanAngles = new Set();
     const observedLeanAzimuths = new Set();
+    const observedSplitHeights = new Set();
+    const observedSplitAngles = new Set();
+    const observedSplitStates = new Set();
     for (let seed = 0; seed < 100; seed += 1) {
       const first = generateForestTreeGraph(post, { seed });
       const repeated = generateForestTreeGraph(post, { seed });
@@ -63,6 +66,12 @@ describe('v3 forest branch graph generator', () => {
       expect(architecture.trunkLeanAngle).toBeLessThanOrEqual(ranges.trunkLeanAngle[1]);
       expect(architecture.trunkLeanAzimuth).toBeGreaterThanOrEqual(ranges.trunkLeanAzimuth[0]);
       expect(architecture.trunkLeanAzimuth).toBeLessThanOrEqual(ranges.trunkLeanAzimuth[1]);
+      expect(architecture.splitTrunkHeight).toBeGreaterThanOrEqual(ranges.splitTrunkHeight[0]);
+      expect(architecture.splitTrunkHeight).toBeLessThanOrEqual(ranges.splitTrunkHeight[1]);
+      expect(architecture.splitTrunkAngle).toBeGreaterThanOrEqual(ranges.splitTrunkAngle[0]);
+      expect(architecture.splitTrunkAngle).toBeLessThanOrEqual(ranges.splitTrunkAngle[1]);
+      expect(architecture.splitTrunkAzimuth).toBeGreaterThanOrEqual(ranges.splitTrunkAzimuth[0]);
+      expect(architecture.splitTrunkAzimuth).toBeLessThanOrEqual(ranges.splitTrunkAzimuth[1]);
       expect(first.nodes[0].radius + 1e-9).toBeGreaterThanOrEqual(
         architecture.trunkBaseRadius
       );
@@ -70,17 +79,73 @@ describe('v3 forest branch graph generator', () => {
       observedTapers.add(architecture.trunkTaper);
       observedLeanAngles.add(architecture.trunkLeanAngle);
       observedLeanAzimuths.add(architecture.trunkLeanAzimuth);
+      observedSplitHeights.add(architecture.splitTrunkHeight);
+      observedSplitAngles.add(architecture.splitTrunkAngle);
+      observedSplitStates.add(architecture.hasSplitTrunk);
     }
     expect(observedBaseRadii.size).toBeGreaterThan(20);
     expect(observedTapers.size).toBeGreaterThan(20);
     expect(observedLeanAngles.size).toBeGreaterThan(20);
     expect(observedLeanAzimuths.size).toBeGreaterThan(80);
+    expect(observedSplitHeights.size).toBeGreaterThan(15);
+    expect(observedSplitAngles.size).toBeGreaterThan(20);
+    expect(observedSplitStates).toEqual(new Set([true, false]));
+  });
+
+  it('builds a bounded major fork with two persistent trunk leaders when enabled', () => {
+    const phenotype = generateForestTreeGraph(post, { seed: 202 }).phenotype;
+    const split = generateForestTreeGraph(post, {
+      seed: 202,
+      phenotype: {
+        ...phenotype,
+        architecture: { ...phenotype.architecture, splitTrunkProbability: 1 }
+      }
+    });
+    const children = split.nodes.map(() => []);
+    for (const segment of split.segments) children[segment.fromId].push(segment.toId);
+    const trunkForks = split.nodes.filter(node => node.generation === 0
+      && children[node.id].filter(id => split.nodes[id].generation === 0).length === 2);
+    const fork = trunkForks[0];
+    const trunkChildren = children[fork.id].map(id => split.nodes[id])
+      .filter(node => node.generation === 0);
+    const forkHeight = split.phenotype.groundY - fork.worldY;
+    const primaryOrigins = split.segments
+      .filter(segment => split.nodes[segment.fromId].generation === 0
+        && split.nodes[segment.toId].generation === 1)
+      .map(segment => split.phenotype.groundY - split.nodes[segment.fromId].worldY);
+
+    expect(split.architecture.hasSplitTrunk).toBeTrue();
+    expect(trunkForks.length).toBe(1);
+    expect(Math.abs(forkHeight - split.architecture.splitTrunkHeight))
+      .toBeLessThanOrEqual(split.phenotype.internodeLength);
+    expect(trunkChildren.length).toBe(2);
+    expect(trunkChildren.every(child => child.parentId === fork.id)).toBeTrue();
+    expect(trunkChildren.every(child => child.radius < fork.radius)).toBeTrue();
+    expect(primaryOrigins.every(height => height > forkHeight)).toBeTrue();
+  });
+
+  it('retains a single persistent trunk when split trunks are disabled', () => {
+    const phenotype = generateForestTreeGraph(post, { seed: 202 }).phenotype;
+    const single = generateForestTreeGraph(post, {
+      seed: 202,
+      phenotype: {
+        ...phenotype,
+        architecture: { ...phenotype.architecture, splitTrunkProbability: 0 }
+      }
+    });
+    const trunkChildCounts = single.nodes.map(node => single.segments.filter(segment => (
+      segment.fromId === node.id && single.nodes[segment.toId].generation === 0
+    )).length);
+
+    expect(single.architecture.hasSplitTrunk).toBeFalse();
+    expect(trunkChildCounts.every(count => count <= 1)).toBeTrue();
   });
 
   it('applies trunk lean as a coherent scaffold direction', () => {
     const phenotype = generateForestTreeGraph(post, { seed: 202 }).phenotype;
     const architecture = {
       ...phenotype.architecture,
+      splitTrunkProbability: 0,
       trunkLeanAzimuth: [0, 0]
     };
     const upright = generateForestTreeGraph(post, {
@@ -115,11 +180,13 @@ describe('v3 forest branch graph generator', () => {
     const phenotype = generateForestTreeGraph(post, { seed: 202 }).phenotype;
     const thinArchitecture = {
       ...phenotype.architecture,
+      splitTrunkProbability: 0,
       trunkBaseRadius: [3.1, 3.1],
       trunkTaper: [0.72, 0.72]
     };
     const thickArchitecture = {
       ...phenotype.architecture,
+      splitTrunkProbability: 0,
       trunkBaseRadius: [4.1, 4.1],
       trunkTaper: [1.32, 1.32]
     };
