@@ -26,12 +26,26 @@ export function deriveTreeArchitecture(seed, phenotype) {
   const trunkLeanAzimuth = roundTo(
     sampleRange(random, phenotype.architecture.trunkLeanAzimuth), 3
   );
+  const hasSplitTrunk = random() < phenotype.architecture.splitTrunkProbability;
+  const splitTrunkHeight = Math.round(
+    sampleRange(random, phenotype.architecture.splitTrunkHeight) * 2
+  ) / 2;
+  const splitTrunkAngle = roundTo(
+    sampleRange(random, phenotype.architecture.splitTrunkAngle), 3
+  );
+  const splitTrunkAzimuth = roundTo(
+    sampleRange(random, phenotype.architecture.splitTrunkAzimuth), 3
+  );
 
   return Object.freeze({
     branchStartHeight,
     trunkBaseRadius,
     trunkTaper,
     trunkLeanAngle,
-    trunkLeanAzimuth
+    trunkLeanAzimuth,
+    hasSplitTrunk,
+    splitTrunkHeight,
+    splitTrunkAngle,
+    splitTrunkAzimuth
   });
 }

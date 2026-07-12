@@ -21,6 +21,13 @@ function angleBetween(first, second) {
 }
 
 export function analyzeBranchGraph(graph, phenotype) {
+  const sameOrderChildren = Array.from({ length: graph.nodes.length }, () => []);
+  for (const segment of graph.segments) {
+    if (graph.nodes[segment.fromId].generation === graph.nodes[segment.toId].generation) {
+      sameOrderChildren[segment.fromId].push(segment.toId);
+    }
+  }
+
   let crossingCount = 0;
   for (let firstIndex = 0; firstIndex < graph.segments.length; firstIndex += 1) {
     const first = graph.segments[firstIndex];
@@ -45,6 +52,7 @@ export function analyzeBranchGraph(graph, phenotype) {
     const parent = graph.nodes[node.parentId];
     if (parent.parentId === null) continue;
     if (node.generation !== parent.generation) continue;
+    if (node.generation === 0 && sameOrderChildren[parent.id].length > 1) continue;
     const grandparent = graph.nodes[parent.parentId];
     const turn = angleBetween(
       {
