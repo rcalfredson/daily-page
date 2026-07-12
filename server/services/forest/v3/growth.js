@@ -156,16 +156,25 @@ function appendSegment(segments, parent, child) {
 function buildScaffold(nodes, segments, phenotype, architecture, random) {
   let leader = nodes[0];
   const trunkNodes = [];
+  const leanDirection = normalize({
+    x: Math.cos(architecture.trunkLeanAzimuth) * Math.sin(architecture.trunkLeanAngle),
+    y: -Math.cos(architecture.trunkLeanAngle),
+    z: Math.sin(architecture.trunkLeanAzimuth) * Math.sin(architecture.trunkLeanAngle)
+  });
+  leader.direction = leanDirection;
+  leader.axisDirection = leanDirection;
   while (leader.worldY - phenotype.internodeLength > phenotype.trunkTopY) {
     const direction = normalize({
-      x: leader.direction.x * 0.8 + ((random() - 0.5) * 0.025),
-      y: -1,
-      z: leader.direction.z * 0.8 + ((random() - 0.5) * 0.025)
+      x: (leader.direction.x * 0.55) + (leanDirection.x * 0.45)
+        + ((random() - 0.5) * 0.025),
+      y: leanDirection.y,
+      z: (leader.direction.z * 0.55) + (leanDirection.z * 0.45)
+        + ((random() - 0.5) * 0.025)
     });
     const child = appendNode(nodes, leader, direction, phenotype, {
       generation: 0,
       step: leader.step + 1,
-      axisDirection: { x: 0, y: -1, z: 0 }
+      axisDirection: leanDirection
     });
     appendSegment(segments, leader, child);
     leader = child;
