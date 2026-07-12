@@ -125,6 +125,14 @@ For a personal dev instance, MongoDB Atlas is the path of least resistance becau
 
 The app will connect to `daily-page-test` by default. Set `NODE_ENV=production` only for a real deployment, because that changes database selection, cookie security behavior, compression/view caching, and dotenv loading.
 
+For read-only local diagnostics against the production database, keep development mode and disable scheduled jobs:
+
+```sh
+USE_PRODUCTION_DB=true DISABLE_BACKGROUND_JOBS=true npm start
+```
+
+`USE_PRODUCTION_DB` changes only database selection. `DISABLE_BACKGROUND_JOBS` prevents scheduled cleanup, expiry, featured-content, block-lifecycle, and cache-warming jobs from starting. HTTP write routes remain available, so avoid editing content and use read-only database credentials when possible.
+
 ## Database Notes
 
 The app does not currently ship with a one-command seed for a complete demo instance. An empty database can boot, but pages such as the rooms directory and room dashboards become useful after inserting room metadata and creating posts.
@@ -150,6 +158,7 @@ Then visit `/rooms/general/blocks/new` to create posts through the UI, or use th
 | --- | --- |
 | `MONGO_DB_ADDR` | MongoDB Atlas host, for example `cluster0.example.mongodb.net`. |
 | `MONGO_DB_PW` | Password for the hard-coded Mongo user `daily-page-admin`. |
+| `USE_PRODUCTION_DB` | Selects `daily-page` instead of `daily-page-test` without requiring production mode. |
 
 ### Strongly recommended
 
@@ -159,6 +168,7 @@ Then visit `/rooms/general/blocks/new` to create posts through the UI, or use th
 | `BACKEND_URL` | Base URL passed to the browser editor. Defaults to local port. |
 | `BASE_URL` | Public canonical URL for emails, notifications, and SEO helpers. |
 | `RATE_LIMIT_SALT` | Salt for hashed rate-limit identifiers. Falls back to `MONGO_DB_PW` if absent. |
+| `DISABLE_BACKGROUND_JOBS` | Disables all scheduled and startup background jobs when true. |
 
 ### Optional integrations
 

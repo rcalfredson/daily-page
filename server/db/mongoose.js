@@ -6,7 +6,13 @@ const addr = config.mongoDbAddr;
 const pw = config.mongoDbPw;
 const baseURL = `mongodb+srv://${user}:${pw}@${addr}`;
 
-function resolveDbName({ useProductionDb = process.env.NODE_ENV === 'production' } = {}) {
+function envFlag(value) {
+  return ['1', 'true', 'yes', 'on'].includes(String(value || '').trim().toLowerCase());
+}
+
+function resolveDbName({
+  useProductionDb = process.env.NODE_ENV === 'production' || envFlag(process.env.USE_PRODUCTION_DB)
+} = {}) {
   return `daily-page${useProductionDb ? '' : '-test'}`;
 }
 

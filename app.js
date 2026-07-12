@@ -72,7 +72,7 @@ import {
 } from './server/db/pageService.js';
 import {
   getAllRooms, getRoomMetadata,
-  getTotalRooms
+  getTotalRooms, warmRoomDirectoryCache
 
 } from './server/db/roomService.js'
 import { addHreflangLocals } from './server/middleware/hreflang.js';
@@ -85,7 +85,13 @@ import { uiPrefixAndLangContext } from './server/middleware/uiPrefix.js';
 import { findUserById } from './server/db/userService.js';
 import { toBlockPreviewDTO } from './server/utils/block.js';
 
-startJobs();
+if (['1', 'true', 'yes', 'on'].includes(
+  String(process.env.DISABLE_BACKGROUND_JOBS || '').trim().toLowerCase()
+)) {
+  console.warn('Background jobs disabled by DISABLE_BACKGROUND_JOBS.');
+} else {
+  startJobs();
+}
 
 const app = express();
 const port = config.port || 3000;
@@ -149,6 +155,9 @@ async function getSupportFundingViewModel() {
 
   try {
     await initMongooseConnection();
+    await warmRoomDirectoryCache('en').catch(error => {
+      console.error('Failed to warm room directory cache:', error);
+    });
     google.init();
 
     const whitelist = ['https://dailypage.org', 'http://localhost:3000'];
