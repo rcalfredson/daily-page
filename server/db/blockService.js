@@ -175,32 +175,15 @@ export async function getAllTagsWithCounts(timeframe = 'all') {
 }
 
 
-export async function getTagTrendData(tagName, defaultDays = 30, opts = {}) {
+export async function getTagTrendData(tagName, timeframe = 30, opts = {}) {
   const { dedupeGroups = true } = opts;
-  // Obtener los primeros 20 bloques por fecha ascendente (los más antiguos primero)
-  const blocks = await Block.find(publiclyVisibleBlockMatch({ tags: tagName }))
-    .sort({ createdAt: 1 })
-    .limit(20)
-    .select('createdAt')
-    .lean();
-
-  let days = defaultDays; // valor por defecto de 30 días
-  if (blocks.length > 0) {
-    const firstDate = new Date(blocks[0].createdAt);
-    const lastDate = new Date(blocks[blocks.length - 1].createdAt);
-    const diffMs = lastDate - firstDate;
-    const diffDays = diffMs / (1000 * 60 * 60 * 24);
-    // Si el rango entre el bloque más antiguo y el más reciente es mayor a 30 días,
-    // usamos ese rango (redondeado hacia arriba) como nuestro período.
-    if (diffDays > 30) {
-      days = Math.ceil(diffDays);
-    }
-  }
-
-  const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const days = timeframe === 'all' ? null : Number(timeframe) || 30;
+  const dateFilter = days
+    ? { createdAt: { $gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000) } }
+    : {};
   const pipeline = dedupeGroups
     ? [
-      { $match: publiclyVisibleBlockMatch({ tags: tagName, createdAt: { $gte: cutoff } }) },
+      { $match: publiclyVisibleBlockMatch({ tags: tagName, ...dateFilter }) },
       {
         $project: {
           day: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'UTC' } },
@@ -214,7 +197,7 @@ export async function getTagTrendData(tagName, defaultDays = 30, opts = {}) {
       { $sort: { _id: 1 } },
     ]
     : [
-      { $match: publiclyVisibleBlockMatch({ tags: tagName, createdAt: { $gte: cutoff } }) },
+      { $match: publiclyVisibleBlockMatch({ tags: tagName, ...dateFilter }) },
       { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'UTC' } }, count: { $sum: 1 } } },
       { $sort: { _id: 1 } },
     ];
