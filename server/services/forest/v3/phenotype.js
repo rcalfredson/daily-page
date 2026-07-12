@@ -24,7 +24,8 @@ export const DECIDUOUS_PHENOTYPE = Object.freeze({
     splitTrunkProbability: 0.65,
     splitTrunkHeight: Object.freeze([32, 46]),
     splitTrunkAngle: Object.freeze([0.3, 0.4]),
-    splitTrunkAzimuth: Object.freeze([0, Math.PI * 2])
+    splitTrunkAzimuth: Object.freeze([0, Math.PI * 2]),
+    leaderBalance: Object.freeze([0.78, 1])
   }),
   trunkTopY: 43,
   primaryBranchCount: 5,

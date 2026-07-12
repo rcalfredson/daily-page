@@ -173,7 +173,8 @@ Renderer v2 established the original deterministic visual grammar and is preserv
 
 - Deterministic three-dimensional, space-colonization-inspired branch growth projected into two dimensions.
 - Persistent trunk and branch hierarchy with bounded growth and explicit termination.
-- Seed-derived specimen architecture with bounded branch-start height, trunk-base thickness, trunk-taper, trunk-lean, and major-fork variation.
+- Seed-derived specimen architecture with bounded branch-start height, trunk-base thickness, trunk-taper, trunk-lean, major-fork, and competing-leader balance variation.
+- Split specimens retain two persistent leaders while a seed-derived balance trait modestly biases leader vigor, scaffold support, attraction-point competition, crown occupancy, and resulting pipe-model weight.
 - Back-propagated branch thickness, trunk taper, root flare, and leafless wood rasterization.
 - Depth-aware individual foliage attached to eligible branch growth.
 - Coverage repair that preserves negative space without producing detached canopy masses.
@@ -184,9 +185,8 @@ The initial graph, wood, and foliage milestones should therefore be treated as t
 
 The recommended near-term technical sequence is:
 
-1. Add trunk and architectural variance to the pilot phenotype: weight balance between competing leaders. Branch-start height, base thickness, taper, lean, major forks, and split-trunk height are complete.
-2. Build a genuinely distinct second phenotype to discover which parameters are species grammar and which assumptions remain hard-coded to the pilot tree.
-3. Begin deterministic forest composition and basic exploration before designing a substantial resource economy. Experiencing many trees as one place should reveal which curatorial and playful interactions the forest naturally invites.
+1. Build a genuinely distinct second phenotype to discover which parameters are species grammar and which assumptions remain hard-coded to the pilot tree. The planned pilot architectural variation—branch-start height, base thickness, taper, lean, major forks, split-trunk height, and competing-leader balance—is complete.
+2. Begin deterministic forest composition and basic exploration before designing a substantial resource economy. Experiencing many trees as one place should reveal which curatorial and playful interactions the forest naturally invites.
 
 ### Files
 
