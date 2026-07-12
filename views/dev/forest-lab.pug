@@ -26,7 +26,7 @@ block content
         li Post semantics, ornaments, additional phenotypes, and further trunk variance remain future layers.
 
     section.forest-gallery(aria-label='Generated post tree gallery')
-      each item in trees
+      each item, treeIndex in trees
         article.forest-comparison
           .forest-comparison__views
             button.forest-grown-card(
@@ -41,33 +41,23 @@ block content
             )
               span.forest-comparison__label Grown tree
               .forest-grown-stage
-                svg.forest-grown-svg(
-                  viewBox=`0 0 ${item.tree.wood.width} ${item.tree.wood.height}`
+                canvas.forest-grown-canvas(
+                  width=item.asset.dimensions.width
+                  height=item.asset.dimensions.height
+                  data-forest-asset=treeIndex
                   role='img'
                   aria-label=`Procedural tree with supported foliage for ${item.title}`
-                  shape-rendering='crispEdges'
-                  preserveAspectRatio='xMidYMax meet'
                 )
-                  title= `Procedural tree with terminal-supported foliage for ${item.title}`
-                  each run in item.tree.foliage.backRuns
-                    rect(x=run.x y=run.y width=run.width height='1' fill=run.color)
-                  each run in item.tree.wood.runs
-                    rect(x=run.x y=run.y width=run.width height='1' fill=run.color)
-                  each run in item.tree.foliage.frontRuns
-                    rect(x=run.x y=run.y width=run.width height='1' fill=run.color)
             figure.forest-wood-card
               figcaption.forest-comparison__label Leafless wood
               .forest-wood-stage
-                svg.forest-wood-svg(
-                  viewBox=`0 0 ${item.tree.wood.width} ${item.tree.wood.height}`
+                canvas.forest-wood-canvas(
+                  width=item.asset.dimensions.width
+                  height=item.asset.dimensions.height
+                  data-forest-asset=treeIndex
                   role='img'
                   aria-label=`Leafless wood raster for ${item.title}`
-                  shape-rendering='crispEdges'
-                  preserveAspectRatio='xMidYMax meet'
                 )
-                  title= `Leafless wood raster for ${item.title}`
-                  each run in item.tree.wood.runs
-                    rect(x=run.x y=run.y width=run.width height='1' fill=run.color)
             figure.forest-graph-card
               figcaption.forest-comparison__label Branch graph
               svg.forest-graph-svg(
@@ -117,6 +107,8 @@ block content
             |  #{item.tree.foliage.leaves.length} leaves ·
             |  #{item.tree.diagnostics.crossingCount} projected overlaps ·
             |  #{item.tree.stats.terminationReason}
+
+    script#forest-tree-assets(type='application/json')!= JSON.stringify(trees.map(item => item.asset)).replace(/</g, '\\u003c')
 
     dialog.forest-tree-dialog(data-forest-tree-dialog aria-labelledby='forest-tree-dialog-title')
       form(method='dialog')

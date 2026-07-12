@@ -2,7 +2,7 @@ import express from 'express';
 
 import optionalAuth from '../middleware/optionalAuth.js';
 import { addI18n } from '../services/i18n.js';
-import { generateForestTreeV3 } from '../services/forestTreeGeneratorV3.js';
+import { getForestLabTree } from '../services/forestLabTreeCache.js';
 
 const router = express.Router();
 
@@ -52,10 +52,12 @@ function forestFixtures() {
       questApproved: index % 4 === 0,
       excerpt: 'A fixture post used to explore the visual grammar of a personal writing forest.'
     };
+    const { generation: tree, asset } = getForestLabTree(post);
     return {
       ...post,
       url: `/rooms/${post.roomId}/blocks/${post.id}`,
-      tree: generateForestTreeV3(post)
+      tree,
+      asset
     };
   });
 }

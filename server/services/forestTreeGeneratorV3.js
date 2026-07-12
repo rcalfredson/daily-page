@@ -4,6 +4,7 @@ import { DECIDUOUS_PHENOTYPE } from './forest/v3/phenotype.js';
 import { hashSeed } from './forest/v3/random.js';
 import { rasterizeFoliage } from './forest/v3/rasterizeFoliage.js';
 import { rasterizeWood } from './forest/v3/rasterizeWood.js';
+import { buildForestTreeAsset } from './forest/v3/treeAsset.js';
 
 export const FOREST_RENDERER_VERSION_V3 = 3;
 
@@ -28,4 +29,8 @@ export function generateForestTreeV3(post, options = {}) {
     wood: rasterizeWood(graph, graph.phenotype, graph.seed),
     foliage: rasterizeFoliage(graph, graph.phenotype, graph.seed)
   };
+}
+
+export function generateForestTreeAssetV3(post, options = {}) {
+  return buildForestTreeAsset(generateForestTreeV3(post, options));
 }

@@ -185,8 +185,32 @@ The initial graph, wood, and foliage milestones should therefore be treated as t
 
 The recommended near-term technical sequence is:
 
-1. Build a genuinely distinct second phenotype to discover which parameters are species grammar and which assumptions remain hard-coded to the pilot tree. The planned pilot architectural variation—branch-start height, base thickness, taper, lean, major forks, split-trunk height, and competing-leader balance—is complete.
-2. Begin deterministic forest composition and basic exploration before designing a substantial resource economy. Experiencing many trees as one place should reveal which curatorial and playful interactions the forest naturally invites.
+1. Establish the versioned runtime tree-asset boundary described below.
+2. Build a genuinely distinct second phenotype against the shared asset contract.
+3. Begin deterministic forest composition and basic exploration.
+4. Add shared ambient motion once a representative multi-tree scene exists.
+
+### Generation results and runtime tree assets
+
+The procedural generation result is an authoring and diagnostic object. It retains the mutable inputs and derived architecture, three-dimensional branch graph, attraction points, termination diagnostics, foliage shoots and leaves, logical masks, shaded pixel grids, and compact color runs. Forest Lab needs this complete result to explain why a specimen has its shape, but a game-facing renderer does not.
+
+The runtime tree asset is a phenotype-independent, JSON-serializable projection built after generation. Schema version 1 contains:
+
+- asset schema version; renderer id and version; phenotype id and asset version
+- deterministic seed and the derived visual cache key
+- logical width and height, ground anchor, and occupied visual bounds
+- ordered `rear-foliage`, `wood`, and `front-foliage` horizontal color-run layers
+- limited architectural identity and maximum branch order for inspection and later composition
+
+It deliberately excludes masks, full pixel grids, nodes, segments, attraction points, diagnostics, leaves, shoots, and coverage cells. JSON stringify/parse is the serialization boundary: consumers render the parsed asset without procedural growth. Separate foliage and wood layers preserve depth order now and provide stable layer-level attachment points for future shared ambient motion or foliage-cluster metadata; no animation data is defined yet.
+
+### Identity, caching, and invalidation
+
+The visual cache key is composed from the tree-asset schema version, stable renderer id/version, stable phenotype id/asset version, and unsigned deterministic seed. Post identity is used only to derive the default seed and is not retained as a separate cache dimension. Explicit seeds therefore behave identically regardless of post id.
+
+Any output-affecting renderer change must increment the renderer version. Any output-affecting phenotype change must increment that phenotype's asset version. Contract changes increment the asset schema version. Changing any component produces a different key. Custom phenotype overrides are not cacheable merely because they were spread from a named phenotype: callers must provide a deliberate stable id/version.
+
+Forest Lab owns a narrow process-local in-memory cache of complete generation results plus their projected assets. Its lifetime is the development server process/module lifetime, and it is invalidated by restart or the versioned key. This lets the Lab preserve graph diagnostics while proving that finished and leafless canvases consume only reusable assets. It is not production persistence or a proposed game cache.
 
 ### Files
 
