@@ -6,6 +6,17 @@ import {
 describe('v3 forest branch graph generator', () => {
   const post = { id: 'post-forest-v3-1' };
 
+  function splitLeaderWeights(graph) {
+    const children = graph.nodes.map(() => []);
+    for (const segment of graph.segments) children[segment.fromId].push(segment.toId);
+    const fork = graph.nodes.find(node => node.generation === 0
+      && children[node.id].filter(id => graph.nodes[id].generation === 0).length === 2);
+    const leaderRoots = children[fork.id]
+      .map(id => graph.nodes[id])
+      .filter(node => node.generation === 0);
+    return leaderRoots.map(node => node.radius ** graph.phenotype.pipeExponent);
+  }
+
   it('is structurally deterministic for the same post and seed', () => {
     const first = generateForestTreeGraph(post);
     const second = generateForestTreeGraph({ ...post });
@@ -51,6 +62,8 @@ describe('v3 forest branch graph generator', () => {
     const observedSplitHeights = new Set();
     const observedSplitAngles = new Set();
     const observedSplitStates = new Set();
+    const observedLeaderBalances = new Set();
+    const observedDominantLeaders = new Set();
     for (let seed = 0; seed < 100; seed += 1) {
       const first = generateForestTreeGraph(post, { seed });
       const repeated = generateForestTreeGraph(post, { seed });
@@ -72,6 +85,9 @@ describe('v3 forest branch graph generator', () => {
       expect(architecture.splitTrunkAngle).toBeLessThanOrEqual(ranges.splitTrunkAngle[1]);
       expect(architecture.splitTrunkAzimuth).toBeGreaterThanOrEqual(ranges.splitTrunkAzimuth[0]);
       expect(architecture.splitTrunkAzimuth).toBeLessThanOrEqual(ranges.splitTrunkAzimuth[1]);
+      expect(architecture.leaderBalance).toBeGreaterThanOrEqual(ranges.leaderBalance[0]);
+      expect(architecture.leaderBalance).toBeLessThanOrEqual(ranges.leaderBalance[1]);
+      expect([0, 1]).toContain(architecture.dominantLeaderIndex);
       expect(first.nodes[0].radius + 1e-9).toBeGreaterThanOrEqual(
         architecture.trunkBaseRadius
       );
@@ -82,6 +98,8 @@ describe('v3 forest branch graph generator', () => {
       observedSplitHeights.add(architecture.splitTrunkHeight);
       observedSplitAngles.add(architecture.splitTrunkAngle);
       observedSplitStates.add(architecture.hasSplitTrunk);
+      observedLeaderBalances.add(architecture.leaderBalance);
+      observedDominantLeaders.add(architecture.dominantLeaderIndex);
     }
     expect(observedBaseRadii.size).toBeGreaterThan(20);
     expect(observedTapers.size).toBeGreaterThan(20);
@@ -90,6 +108,73 @@ describe('v3 forest branch graph generator', () => {
     expect(observedSplitHeights.size).toBeGreaterThan(15);
     expect(observedSplitAngles.size).toBeGreaterThan(20);
     expect(observedSplitStates).toEqual(new Set([true, false]));
+    expect(observedLeaderBalances.size).toBeGreaterThan(50);
+    expect(observedDominantLeaders).toEqual(new Set([0, 1]));
+  });
+
+  it('keeps leader balance isolated from forced single-trunk growth', () => {
+    const phenotype = generateForestTreeGraph(post, { seed: 202 }).phenotype;
+    const generate = leaderBalance => generateForestTreeGraph(post, {
+      seed: 202,
+      phenotype: {
+        ...phenotype,
+        architecture: {
+          ...phenotype.architecture,
+          splitTrunkProbability: 0,
+          leaderBalance: [leaderBalance, leaderBalance]
+        }
+      }
+    });
+    const balanced = generate(1);
+    const asymmetric = generate(0.78);
+
+    expect(balanced.architecture.hasSplitTrunk).toBeFalse();
+    expect(asymmetric.architecture.hasSplitTrunk).toBeFalse();
+    expect(asymmetric.nodes).toEqual(balanced.nodes);
+    expect(asymmetric.segments).toEqual(balanced.segments);
+    expect(asymmetric.remainingAttractionPointIds).toEqual(balanced.remainingAttractionPointIds);
+  });
+
+  it('keeps two viable leaders while balance predicts downstream pipe weight', () => {
+    let strongerLeaderWins = 0;
+    let asymmetricRatioTotal = 0;
+    let balancedRatioTotal = 0;
+    const seeds = Array.from({ length: 50 }, (_, seed) => seed);
+
+    for (const seed of seeds) {
+      const phenotype = generateForestTreeGraph(post, { seed }).phenotype;
+      const generate = leaderBalance => generateForestTreeGraph(post, {
+        seed,
+        phenotype: {
+          ...phenotype,
+          architecture: {
+            ...phenotype.architecture,
+            splitTrunkProbability: 1,
+            leaderBalance: [leaderBalance, leaderBalance]
+          }
+        }
+      });
+      const asymmetric = generate(0.78);
+      const balanced = generate(1);
+      const dominant = asymmetric.architecture.dominantLeaderIndex;
+      const weak = 1 - dominant;
+      const asymmetricWeights = splitLeaderWeights(asymmetric);
+      const balancedWeights = splitLeaderWeights(balanced);
+      const descendants = [0, 1].map(leaderIndex => (
+        asymmetric.nodes.filter(node => node.leaderIndex === leaderIndex)
+      ));
+
+      expect(descendants.every(nodes => nodes.length > 20)).toBeTrue();
+      expect(asymmetricWeights.every(weight => weight
+        > asymmetric.phenotype.terminalRadius ** asymmetric.phenotype.pipeExponent)).toBeTrue();
+      if (asymmetricWeights[dominant] > asymmetricWeights[weak]) strongerLeaderWins += 1;
+      asymmetricRatioTotal += asymmetricWeights[dominant] / asymmetricWeights[weak];
+      balancedRatioTotal += balancedWeights[dominant] / balancedWeights[weak];
+    }
+
+    expect(strongerLeaderWins).toBeGreaterThanOrEqual(45);
+    expect(asymmetricRatioTotal / seeds.length)
+      .toBeGreaterThan((balancedRatioTotal / seeds.length) + 0.5);
   });
 
   it('builds a bounded major fork with two persistent trunk leaders when enabled', () => {

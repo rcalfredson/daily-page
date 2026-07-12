@@ -109,6 +109,8 @@ block content
             if item.tree.architecture.hasSplitTrunk
               |  split #{item.tree.architecture.splitTrunkHeight.toFixed(1)} high
               |  @ #{(item.tree.architecture.splitTrunkAngle * 180 / Math.PI).toFixed(1)}° ·
+              |  balance #{item.tree.architecture.leaderBalance.toFixed(3)}
+              |  (leader #{item.tree.architecture.dominantLeaderIndex + 1} stronger) ·
             else
               |  single trunk ·
             |  order #{maximumOrder} · #{item.tree.diagnostics.maximumTortuosity.toFixed(2)} tortuosity ·

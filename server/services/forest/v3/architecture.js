@@ -11,6 +11,7 @@ function roundTo(value, precision) {
 
 export function deriveTreeArchitecture(seed, phenotype) {
   const random = createRandom(seed ^ 0xA2C417EC);
+  const leaderRandom = createRandom(seed ^ 0x1EADE4B4);
   const branchStartHeight = Math.round(
     sampleRange(random, phenotype.architecture.branchStartHeight) * 2
   ) / 2;
@@ -36,6 +37,10 @@ export function deriveTreeArchitecture(seed, phenotype) {
   const splitTrunkAzimuth = roundTo(
     sampleRange(random, phenotype.architecture.splitTrunkAzimuth), 3
   );
+  const leaderBalance = roundTo(
+    sampleRange(leaderRandom, phenotype.architecture.leaderBalance), 3
+  );
+  const dominantLeaderIndex = leaderRandom() < 0.5 ? 0 : 1;
 
   return Object.freeze({
     branchStartHeight,
@@ -46,6 +51,8 @@ export function deriveTreeArchitecture(seed, phenotype) {
     hasSplitTrunk,
     splitTrunkHeight,
     splitTrunkAngle,
-    splitTrunkAzimuth
+    splitTrunkAzimuth,
+    leaderBalance,
+    dominantLeaderIndex
   });
 }

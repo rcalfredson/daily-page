@@ -138,7 +138,8 @@ function appendNode(nodes, parent, direction, phenotype, properties = {}) {
     step: properties.step ?? parent.step,
     direction,
     axisDirection: properties.axisDirection || parent.axisDirection,
-    trunkProfile: properties.trunkProfile ?? parent.trunkProfile
+    trunkProfile: properties.trunkProfile ?? parent.trunkProfile,
+    leaderIndex: properties.leaderIndex ?? parent.leaderIndex
   };
   nodes.push(node);
   return node;
@@ -164,7 +165,7 @@ function buildScaffold(nodes, segments, phenotype, architecture, random) {
   });
   leader.direction = leanDirection;
   leader.axisDirection = leanDirection;
-  const appendLeaderNode = (parent, axisDirection, trunkProfile) => {
+  const appendLeaderNode = (parent, axisDirection, trunkProfile, properties = {}) => {
     const direction = normalize({
       x: (parent.direction.x * 0.55) + (axisDirection.x * 0.45)
         + ((random() - 0.5) * 0.025),
@@ -176,7 +177,8 @@ function buildScaffold(nodes, segments, phenotype, architecture, random) {
       generation: 0,
       step: parent.step + 1,
       axisDirection,
-      trunkProfile
+      trunkProfile,
+      ...properties
     });
     appendSegment(segments, parent, child);
     return child;
@@ -200,13 +202,15 @@ function buildScaffold(nodes, segments, phenotype, architecture, random) {
       y: 0,
       z: Math.sin(architecture.splitTrunkAzimuth)
     };
-    leaders = [-1, 1].map(side => {
+    leaders = [-1, 1].map((side, leaderIndex) => {
       const axisDirection = normalize({
         x: leanDirection.x + (forkAxis.x * Math.sin(architecture.splitTrunkAngle) * side),
         y: leanDirection.y * Math.cos(architecture.splitTrunkAngle),
         z: leanDirection.z + (forkAxis.z * Math.sin(architecture.splitTrunkAngle) * side)
       });
-      return appendLeaderNode(leader, axisDirection, false);
+      const vigor = leaderIndex === architecture.dominantLeaderIndex
+        ? 1 : architecture.leaderBalance;
+      return appendLeaderNode(leader, axisDirection, false, { leaderIndex, vigor });
     });
     leaderNodes.length = 0;
     for (const splitLeader of leaders) {
@@ -226,7 +230,11 @@ function buildScaffold(nodes, segments, phenotype, architecture, random) {
   const azimuthOffset = random() * Math.PI * 2;
   const goldenAngle = Math.PI * (3 - Math.sqrt(5));
   for (let index = 0; index < phenotype.primaryBranchCount; index += 1) {
-    const lineageIndex = index % leaderNodes.length;
+    const lineageIndex = leaderNodes.length === 1
+      ? 0
+      : index % 2 === 0
+        ? architecture.dominantLeaderIndex
+        : 1 - architecture.dominantLeaderIndex;
     const usableTrunkNodes = leaderNodes[lineageIndex].slice(1, -2);
     const lineageBranchCount = Math.ceil(
       (phenotype.primaryBranchCount - lineageIndex) / leaderNodes.length
@@ -248,10 +256,11 @@ function buildScaffold(nodes, segments, phenotype, architecture, random) {
     });
     const child = appendNode(nodes, parent, direction, phenotype, {
       generation: 1,
-      vigor: 0.8 - (heightProgress * 0.08),
+      vigor: (0.8 - (heightProgress * 0.08)) * (parent.vigor ?? 1),
       step: 0,
       axisDirection: direction,
-      trunkProfile: false
+      trunkProfile: false,
+      leaderIndex: parent.leaderIndex
     });
     appendSegment(segments, parent, child);
     primaryTips.push(child);
@@ -407,7 +416,8 @@ export function growBranchGraph(seed, phenotype) {
     step: 0,
     direction: { x: 0, y: -1, z: 0 },
     axisDirection: { x: 0, y: -1, z: 0 },
-    trunkProfile: true
+    trunkProfile: true,
+    leaderIndex: null
   }];
   const segments = [];
   let terminals = buildScaffold(nodes, segments, phenotype, architecture, random);
@@ -428,9 +438,15 @@ export function growBranchGraph(seed, phenotype) {
         );
         if (distance < phenotype.killRadius) return false;
         const influence = phenotype.influenceRadius * (1 - (terminal.generation * 0.08));
-        if (distance < nearestDistance && distance <= influence) {
+        const rawLeaderCapacity = terminal.leaderIndex === null
+          || terminal.leaderIndex === undefined
+          || terminal.leaderIndex === architecture.dominantLeaderIndex
+          ? 1 : architecture.leaderBalance;
+        const leaderCapacity = 0.25 + (rawLeaderCapacity * 0.75);
+        const competitiveDistance = distance / leaderCapacity;
+        if (competitiveDistance < nearestDistance && distance <= influence * leaderCapacity) {
           nearest = terminal;
-          nearestDistance = distance;
+          nearestDistance = competitiveDistance;
         }
       }
       if (nearest) assignments.get(nearest.id).push(point);
@@ -492,7 +508,8 @@ export function growBranchGraph(seed, phenotype) {
       generation: node.generation,
       vigor: node.vigor,
       step: node.step,
-      radius: node.radius
+      radius: node.radius,
+      leaderIndex: node.leaderIndex
     })),
     segments,
     terminalNodeIds: [...terminalNodeIds].sort((a, b) => a - b),
