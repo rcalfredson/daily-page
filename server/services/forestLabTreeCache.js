@@ -1,6 +1,9 @@
 import { generateForestTreeV3 } from './forestTreeGeneratorV3.js';
 import { buildForestTreeAsset, treeAssetCacheKey } from './forest/v3/treeAsset.js';
-import { DECIDUOUS_PHENOTYPE } from './forest/v3/phenotype.js';
+import {
+  DECIDUOUS_PHENOTYPE,
+  isRegisteredForestPhenotype
+} from './forest/v3/phenotype.js';
 import { hashSeed } from './forest/v3/random.js';
 import { FOREST_RENDERER_VERSION_V3 } from './forestTreeGeneratorV3.js';
 
@@ -18,7 +21,7 @@ export function forestLabTreeCacheSize() {
 export function getForestLabTree(post, options = {}) {
   const phenotype = options.phenotype || DECIDUOUS_PHENOTYPE;
   const seed = (options.seed ?? hashSeed(`${FOREST_RENDERER_VERSION_V3}:${post.id}`)) >>> 0;
-  const identity = phenotype === DECIDUOUS_PHENOTYPE
+  const identity = isRegisteredForestPhenotype(phenotype)
     ? { id: phenotype.id, version: phenotype.assetVersion }
     : options.phenotypeIdentity;
   const cacheable = typeof identity?.id === 'string'
@@ -34,7 +37,7 @@ export function getForestLabTree(post, options = {}) {
     phenotypeAssetVersion: identity.version
   });
   if (fixtureCache.has(key)) return { ...fixtureCache.get(key), cacheHit: true };
-  const identifiedPhenotype = phenotype === DECIDUOUS_PHENOTYPE ? phenotype : {
+  const identifiedPhenotype = isRegisteredForestPhenotype(phenotype) ? phenotype : {
     ...phenotype,
     id: identity.id,
     assetVersion: identity.version

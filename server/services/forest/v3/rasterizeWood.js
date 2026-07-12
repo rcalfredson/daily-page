@@ -64,7 +64,7 @@ function paintRootFlare(mask, owner, root, phenotype) {
   }
 }
 
-function shadeWood(mask, owner, seed) {
+function shadeWood(mask, owner, seed, palette) {
   const height = mask.length;
   const width = mask[0].length;
   const pixels = makeGrid(width, height);
@@ -75,10 +75,10 @@ function shadeWood(mask, owner, seed) {
       const side = surface.lateral / Math.max(0.5, surface.radius);
       const noise = coordinateNoise(seed, x, y);
       const verticalBarkMark = y > 18 && noise % 41 < 3 && mask[Math.max(0, y - 1)][x];
-      if (side < -0.35 && noise % 5 !== 0) pixels[y][x] = WOOD_PALETTE.light;
-      else if (side > 0.48) pixels[y][x] = WOOD_PALETTE.dark;
-      else if (verticalBarkMark) pixels[y][x] = WOOD_PALETTE.deep;
-      else pixels[y][x] = WOOD_PALETTE.mid;
+      if (side < -0.35 && noise % 5 !== 0) pixels[y][x] = palette.light;
+      else if (side > 0.48) pixels[y][x] = palette.dark;
+      else if (verticalBarkMark) pixels[y][x] = palette.deep;
+      else pixels[y][x] = palette.mid;
     }
   }
   return pixels;
@@ -103,6 +103,7 @@ function compactRuns(pixels) {
 }
 
 export function rasterizeWood(graph, phenotype, seed) {
+  const palette = phenotype.woodPalette || WOOD_PALETTE;
   const mask = makeGrid(phenotype.width, phenotype.height, false);
   const owner = makeGrid(phenotype.width, phenotype.height);
   for (const segment of graph.segments) {
@@ -115,7 +116,7 @@ export function rasterizeWood(graph, phenotype, seed) {
     );
   }
   paintRootFlare(mask, owner, graph.nodes[0], phenotype);
-  const pixels = shadeWood(mask, owner, seed ^ 0xB47C0DE);
+  const pixels = shadeWood(mask, owner, seed ^ 0xB47C0DE, palette);
   return {
     width: phenotype.width,
     height: phenotype.height,
@@ -123,6 +124,6 @@ export function rasterizeWood(graph, phenotype, seed) {
     mask,
     pixels,
     runs: compactRuns(pixels),
-    palette: WOOD_PALETTE
+    palette
   };
 }
