@@ -254,12 +254,16 @@ the browser receives placements plus JSON-round-tripped runtime assets. Many pla
 to each asset; generation results and branch diagnostics never cross the scene boundary. The
 cache lives only for the server module/process lifetime and is not production persistence.
 
-The browser draws the prepared scene into one Canvas. Browser-independent math derives each
-scaled visual rectangle from the asset bounds and ground anchor, culls it against the camera,
-and orders visible placements by ground Y with stable id tie-breaking. Rendering preserves the
-asset layer order and integer scaling with image smoothing disabled. Keyboard, pointer, touch,
-resize, and reset-camera events clamp the camera and request one coalesced animation frame;
-there is no idle animation loop and no procedural generation in a frame.
+The browser draws the prepared scene into one visible Canvas. During initial browser-side
+preparation, each unique runtime asset is rasterized once into a small offscreen Canvas in its
+declared layer order. Placements reuse those 16 prepared bitmaps, reducing ordinary scene draws
+from thousands of color-run operations per tree to one `drawImage` call per visible tree. These
+offscreen surfaces are per asset, never per placement, and are discarded with the page.
+Browser-independent math derives each scaled visual rectangle from the asset bounds and ground
+anchor, culls it against the camera, and orders visible placements by ground Y with stable id
+tie-breaking. Integer scaling and disabled image smoothing preserve crisp pixels. Keyboard,
+pointer, touch, resize, and reset-camera events clamp the camera and request one coalesced
+animation frame; there is no idle animation loop and no procedural generation in a frame.
 
 The restrained world-space ground treatment and corridor exist only to make depth and negative
 space legible. This first camera is deliberately orthographic: terrain and trees share the same
