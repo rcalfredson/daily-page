@@ -8,6 +8,7 @@ if (payload && viewportElement && canvas) {
   const scene = JSON.parse(payload.textContent);
   const assetsByKey = new Map(scene.assets.map((asset) => [asset.cacheKey, asset]));
   const context = canvas.getContext('2d');
+  const spritesByKey = new Map();
   const camera = { x: 0, y: 0, width: 0, height: 0 };
   const diagnostics = {
     visible: document.querySelector('[data-forest-visible]'),
@@ -16,6 +17,23 @@ if (payload && viewportElement && canvas) {
   };
   let scheduledFrame = null;
   let drag = null;
+
+  function prepareTreeSprites() {
+    for (const asset of scene.assets) {
+      const sprite = document.createElement('canvas');
+      sprite.width = asset.dimensions.width;
+      sprite.height = asset.dimensions.height;
+      const spriteContext = sprite.getContext('2d');
+      spriteContext.imageSmoothingEnabled = false;
+      for (const layer of asset.layers) {
+        for (const run of layer.runs) {
+          spriteContext.fillStyle = run.color;
+          spriteContext.fillRect(run.x, run.y, run.width, 1);
+        }
+      }
+      spritesByKey.set(asset.cacheKey, sprite);
+    }
+  }
 
   function corridorCenter(worldY) {
     return (scene.world.width / 2) + (Math.sin((worldY / 330) + 0.7) * 155);
@@ -64,17 +82,14 @@ if (payload && viewportElement && canvas) {
   function paintTree(placement, asset) {
     const originX = Math.round(placement.worldX - camera.x - (asset.anchor.x * placement.scale));
     const originY = Math.round(placement.worldY - camera.y - (asset.anchor.y * placement.scale));
-    for (const layer of asset.layers) {
-      for (const run of layer.runs) {
-        context.fillStyle = run.color;
-        context.fillRect(
-          originX + (run.x * placement.scale),
-          originY + (run.y * placement.scale),
-          run.width * placement.scale,
-          placement.scale
-        );
-      }
-    }
+    const sprite = spritesByKey.get(placement.assetKey);
+    context.drawImage(
+      sprite,
+      originX,
+      originY,
+      asset.dimensions.width * placement.scale,
+      asset.dimensions.height * placement.scale
+    );
   }
 
   function render() {
@@ -148,6 +163,7 @@ if (payload && viewportElement && canvas) {
   viewportElement.addEventListener('pointercancel', () => { drag = null; });
   document.querySelector('[data-forest-reset]').addEventListener('click', resetCamera);
   window.addEventListener('resize', resize);
+  prepareTreeSprites();
   resize();
   resetCamera();
 }
