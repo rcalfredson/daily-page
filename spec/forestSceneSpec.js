@@ -9,9 +9,20 @@ import {
   prepareForestScene
 } from '../server/services/forestSceneAssetPool.js';
 import {
+  cameraFollowingPlayer,
+  focusedForestPlacement,
+  forestDepthOrder,
+  moveForestPlayer,
+  normalizedMovement,
+  playerCollides,
+  touchMovement,
   placementVisualRect,
   visibleForestPlacements
 } from '../public/js/forest-scene-math.js';
+import {
+  createForestExploration,
+  forestPlacementCollisionRadius
+} from '../server/services/forestSceneExploration.js';
 
 describe('static Activity Forest scene', () => {
   beforeEach(() => clearForestSceneAssetPool());
@@ -98,5 +109,88 @@ describe('static Activity Forest scene', () => {
     expect(visibleForestPlacements(
       placements, assets, { x: 0, y: 0, width: 140, height: 100 }, 0
     ).map((placement) => placement.id)).toEqual(['partial', 'tie-a', 'tie-b', 'near']);
+  });
+
+  it('adds a deterministic, safe spawn and bounded fixture metadata', () => {
+    const scene = prepareForestScene(createForestExploration(generateForestSceneLayout()));
+    const repeated = createForestExploration(generateForestSceneLayout());
+    const serialized = JSON.stringify(scene);
+
+    expect(repeated.exploration).toEqual(scene.exploration);
+    expect(scene.exploration.spawn.worldX).toBeGreaterThan(0);
+    expect(scene.exploration.spawn.worldX).toBeLessThan(scene.world.width);
+    expect(scene.exploration.spawn.worldY).toBeGreaterThan(0);
+    expect(scene.exploration.spawn.worldY).toBeLessThan(scene.world.height);
+    expect(playerCollides(scene.exploration.spawn, scene.placements)).toBeFalse();
+    expect(scene.exploration.fixtures.length).toBeLessThan(scene.placements.length);
+    expect(scene.placements.every((placement) => placement.fixtureId)).toBeTrue();
+    expect(scene.assets.length).toBeGreaterThan(0);
+    for (const excluded of ['nodes', 'segments', 'diagnostics', 'attractionPoints', 'wordCount']) {
+      expect(serialized).not.toContain(`"${excluded}"`);
+    }
+    expect(JSON.parse(JSON.stringify(scene))).toEqual(scene);
+  });
+
+  it('normalizes elapsed-time movement and keeps the player inside world bounds', () => {
+    const player = { worldX: 50, worldY: 50, radius: 10, movementSpeed: 100 };
+    const diagonal = normalizedMovement({ right: true, down: true });
+    const moved = moveForestPlayer(player, diagonal, 0.5, { width: 200, height: 200 }, []);
+    const clamped = moveForestPlayer(player, { x: -1, y: -1 }, 10,
+      { width: 200, height: 200 }, []);
+
+    expect(Math.hypot(diagonal.x, diagonal.y)).toBeCloseTo(1, 8);
+    expect(Math.hypot(moved.worldX - 50, moved.worldY - 50)).toBeCloseTo(50, 8);
+    expect(moveForestPlayer(player, diagonal, 0.5, { width: 200, height: 200 }, []))
+      .toEqual(moved);
+    expect(clamped.worldX).toBe(10);
+    expect(clamped.worldY).toBe(10);
+  });
+
+  it('turns touch displacement into constant-speed directional input after a dead zone', () => {
+    expect(touchMovement(4, 6, 10)).toEqual({ x: 0, y: 0 });
+    expect(touchMovement(30, 40, 10)).toEqual({ x: 0.6, y: 0.8 });
+    expect(touchMovement(-30, 0, 10)).toEqual({ x: -1, y: 0 });
+  });
+
+  it('blocks trunk entry, supports axis sliding, and scales collision radii', () => {
+    const player = { worldX: 50, worldY: 50, radius: 10, movementSpeed: 40 };
+    const obstacle = { id: 'tree', worldX: 80, worldY: 50, collisionRadius: 12 };
+    const blocked = moveForestPlayer(player, { x: 1, y: 0 }, 0.5,
+      { width: 200, height: 200 }, [obstacle]);
+    const sliding = moveForestPlayer(player, { x: 1, y: 1 }, 0.5,
+      { width: 200, height: 200 }, [obstacle]);
+
+    expect(blocked.worldX).toBe(50);
+    expect(sliding.worldX).toBe(50);
+    expect(sliding.worldY).toBe(70);
+    expect(forestPlacementCollisionRadius({ phenotypeId: 'sunset-lanternwood', scale: 2 }))
+      .toBe(26);
+    expect(playerCollides({ ...player, worldX: 30 }, [obstacle])).toBeFalse();
+  });
+
+  it('follows the player with camera edge clamping', () => {
+    const viewport = { x: 0, y: 0, width: 100, height: 80 };
+    const world = { width: 300, height: 200 };
+    expect(cameraFollowingPlayer({ worldX: 150, worldY: 100 }, viewport, world))
+      .toEqual({ x: 100, y: 60, width: 100, height: 80 });
+    expect(cameraFollowingPlayer({ worldX: 0, worldY: 0 }, viewport, world).x).toBe(0);
+    expect(cameraFollowingPlayer({ worldX: 300, worldY: 200 }, viewport, world))
+      .toEqual({ x: 200, y: 120, width: 100, height: 80 });
+  });
+
+  it('orders the player by ground Y and selects proximity with stable ties', () => {
+    const player = { worldX: 0, worldY: 50 };
+    const placements = [
+      { id: 'below', worldX: 0, worldY: 60, collisionRadius: 5 },
+      { id: 'tie-b', worldX: 10, worldY: 50, collisionRadius: 5 },
+      { id: 'tie-a', worldX: -10, worldY: 50, collisionRadius: 5 },
+      { id: 'above', worldX: 0, worldY: 40, collisionRadius: 5 },
+      { id: 'far', worldX: 200, worldY: 50, collisionRadius: 5 }
+    ];
+
+    expect(forestDepthOrder(placements, player).map((item) => item.id))
+      .toEqual(['above', 'far', 'tie-a', 'tie-b', '~player', 'below']);
+    expect(focusedForestPlacement(player, placements.slice(1, 3), 10).id).toBe('tie-a');
+    expect(focusedForestPlacement(player, [placements[4]], 10)).toBeNull();
   });
 });

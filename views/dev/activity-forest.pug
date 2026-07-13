@@ -14,22 +14,26 @@ block content
         p.activity-forest__eyebrow Development preview
         h1 Activity Forest
         p.activity-forest__lede
-          | A deterministic grove composed from reusable procedural tree assets. The winding
-          | clearing is the first hint of a place to explore rather than a gallery to inspect.
-      button.activity-forest__reset(type='button' data-forest-reset) Reset camera
+          | Walk the winding clearing, approach a tree, and rediscover a fixture piece of writing.
+          | The grove remains deterministic and is composed from reusable procedural tree assets.
+      button.activity-forest__reset(type='button' data-forest-reset) Return to entrance
 
     p#activity-forest-help.activity-forest__help
-      | Focus the forest, then pan with arrow keys or WASD. You can also drag with a mouse or touch.
+      | Move with arrow keys or WASD, or touch and drag in the forest. Near a tree, inspect its writing.
 
     .activity-forest__viewport(
       tabindex='0'
       role='application'
-      aria-label='Navigable static Activity Forest scene'
+      aria-label='Activity Forest exploration scene'
       aria-describedby='activity-forest-help'
       data-forest-viewport
     )
       canvas.activity-forest__canvas(data-forest-canvas)
-      .activity-forest__hint Drag to explore
+      .activity-forest__joystick(data-forest-joystick hidden aria-hidden='true')
+        .activity-forest__joystick-stick(data-forest-joystick-stick)
+      button.activity-forest__prompt(type='button' data-forest-prompt hidden)
+        span.activity-forest__prompt-keyboard Press E or Enter to inspect
+        span.activity-forest__prompt-touch Tap to inspect
 
     dl.activity-forest__diagnostics(aria-label='Scene diagnostics')
       div
@@ -51,7 +55,23 @@ block content
         dt Camera
         dd(data-forest-camera) —
       div
+        dt Player
+        dd(data-forest-player) —
+      div
+        dt Nearby tree
+        dd(data-forest-focus) None
+      div
         dt Last render
         dd(data-forest-duration) —
+
+    dialog.activity-forest__dialog(data-forest-dialog aria-labelledby='forest-post-title')
+      p.activity-forest__dialog-eyebrow A writing remembered here
+      h2#forest-post-title(data-forest-post-title)
+      p.activity-forest__dialog-context
+        span(data-forest-post-room)
+        span(aria-hidden='true')  ·
+        time(data-forest-post-date)
+      p.activity-forest__dialog-excerpt(data-forest-post-excerpt)
+      button(type='button' data-forest-dialog-close) Return to the forest
 
     script#activity-forest-scene(type='application/json')!= JSON.stringify(scene).replace(/</g, '\\u003c')
