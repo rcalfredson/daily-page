@@ -3,6 +3,8 @@ import express from 'express';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { addI18n } from '../services/i18n.js';
 import { getForestLabTree } from '../services/forestLabTreeCache.js';
+import { prepareForestScene } from '../services/forestSceneAssetPool.js';
+import { generateForestSceneLayout } from '../services/forestSceneLayout.js';
 import {
   DECIDUOUS_PHENOTYPE,
   LANTERNWOOD_PHENOTYPE
@@ -76,6 +78,20 @@ router.get(
       user: req.user || null,
       uiLang: res.locals.uiLang,
       trees: forestFixtures()
+    });
+  }
+);
+
+router.get(
+  '/__dev/views/activity-forest',
+  optionalAuth,
+  (req, res) => {
+    const scene = prepareForestScene(generateForestSceneLayout());
+    res.render('dev/activity-forest', {
+      title: 'Activity Forest Scene',
+      user: req.user || null,
+      uiLang: res.locals.uiLang,
+      scene
     });
   }
 );

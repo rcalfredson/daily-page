@@ -1,0 +1,57 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/activity-forest.css')
+  script(type='module' src='/js/activity-forest.js')
+
+block content
+  main.activity-forest
+    header.activity-forest__header
+      div
+        p.activity-forest__eyebrow Development preview
+        h1 Activity Forest
+        p.activity-forest__lede
+          | A deterministic grove composed from reusable procedural tree assets. The winding
+          | clearing is the first hint of a place to explore rather than a gallery to inspect.
+      button.activity-forest__reset(type='button' data-forest-reset) Reset camera
+
+    p#activity-forest-help.activity-forest__help
+      | Focus the forest, then pan with arrow keys or WASD. You can also drag with a mouse or touch.
+
+    .activity-forest__viewport(
+      tabindex='0'
+      role='application'
+      aria-label='Navigable static Activity Forest scene'
+      aria-describedby='activity-forest-help'
+      data-forest-viewport
+    )
+      canvas.activity-forest__canvas(data-forest-canvas)
+      .activity-forest__hint Drag to explore
+
+    dl.activity-forest__diagnostics(aria-label='Scene diagnostics')
+      div
+        dt Scene
+        dd= scene.seed
+      div
+        dt World
+        dd #{scene.world.width} × #{scene.world.height}
+      div
+        dt Placements
+        dd= scene.placements.length
+      div
+        dt Unique assets
+        dd= scene.assets.length
+      div
+        dt Visible
+        dd(data-forest-visible) —
+      div
+        dt Camera
+        dd(data-forest-camera) —
+      div
+        dt Last render
+        dd(data-forest-duration) —
+
+    script#activity-forest-scene(type='application/json')!= JSON.stringify(scene).replace(/</g, '\\u003c')

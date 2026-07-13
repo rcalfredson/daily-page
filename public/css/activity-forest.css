@@ -1,0 +1,115 @@
+.activity-forest {
+  width: min(1280px, 100%);
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+}
+
+.activity-forest__header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.activity-forest__header h1 { margin: 0; }
+
+.activity-forest__eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--highlight-color);
+  font-family: var(--font-rubik-medium);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.activity-forest__lede {
+  max-width: 720px;
+  margin-bottom: 0.6rem;
+  color: var(--muted-text-color);
+  line-height: 1.55;
+}
+
+.activity-forest__reset {
+  flex: 0 0 auto;
+  margin-bottom: 0.6rem;
+}
+
+.activity-forest__help {
+  margin: 0.6rem 0;
+  color: var(--muted-text-color);
+  font-size: 0.85rem;
+}
+
+.activity-forest__viewport {
+  position: relative;
+  height: clamp(420px, 68vh, 760px);
+  overflow: hidden;
+  border: 2px solid #405846;
+  border-radius: 14px;
+  background: #6d815c;
+  box-shadow: 0 16px 45px rgba(14, 31, 27, 0.24);
+  cursor: grab;
+  touch-action: none;
+}
+
+.activity-forest__viewport:active { cursor: grabbing; }
+
+.activity-forest__viewport:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.activity-forest__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.activity-forest__hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.7rem;
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  background: rgba(18, 39, 32, 0.72);
+  color: #f2ead1;
+  font-size: 0.72rem;
+  pointer-events: none;
+}
+
+.activity-forest__diagnostics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  margin-top: 0.8rem;
+  background: var(--border-color);
+}
+
+.activity-forest__diagnostics div {
+  padding: 0.6rem 0.7rem;
+  background: var(--surface-raised-bg);
+}
+
+.activity-forest__diagnostics dt {
+  color: var(--muted-text-color);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.activity-forest__diagnostics dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-rubik-medium);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 600px) {
+  .activity-forest { padding-top: 1rem; }
+  .activity-forest__header { align-items: start; flex-direction: column; }
+  .activity-forest__viewport { height: 62vh; min-height: 390px; }
+}
