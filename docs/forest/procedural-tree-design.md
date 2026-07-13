@@ -233,6 +233,42 @@ Forest Lab owns a narrow process-local in-memory cache of complete generation re
 
 The lab is available in development at `/__dev/views/forest-lab`.
 
+## First static multi-tree composition
+
+The first composed development scene is available at `/__dev/views/activity-forest`. It turns
+the isolated runtime assets into a deterministic 3000 × 1800 world containing 180 placements.
+The scene is still a preview: it has no player, collision, post association, persistence, or
+ambient animation.
+
+`forestSceneLayout.js` owns scene layout version 1. A placement contains only a stable placement
+id, world-space ground anchor, integer scale, phenotype id, specimen seed, and versioned asset
+key. Layout randomness is derived independently for X, Y, phenotype, specimen, and scale from
+the scene seed and candidate index. Rejection sampling enforces trunk spacing and reserves a
+winding central corridor; camera position is never an input to layout or tree identity.
+
+The scene prepares a bounded pool of eight specimens for each registered phenotype. Its
+process-local cache is separate from Forest Lab's diagnostic cache and retains runtime assets
+only. The asset's schema, renderer, phenotype, and seed identities form the invalidation key.
+The development route eagerly generates missing specimens before serializing the scene, and
+the browser receives placements plus JSON-round-tripped runtime assets. Many placements point
+to each asset; generation results and branch diagnostics never cross the scene boundary. The
+cache lives only for the server module/process lifetime and is not production persistence.
+
+The browser draws the prepared scene into one Canvas. Browser-independent math derives each
+scaled visual rectangle from the asset bounds and ground anchor, culls it against the camera,
+and orders visible placements by ground Y with stable id tie-breaking. Rendering preserves the
+asset layer order and integer scaling with image smoothing disabled. Keyboard, pointer, touch,
+resize, and reset-camera events clamp the camera and request one coalesced animation frame;
+there is no idle animation loop and no procedural generation in a frame.
+
+The restrained world-space ground treatment and corridor exist only to make depth and negative
+space legible. This first camera is deliberately orthographic: terrain and trees share the same
+translation, with no viewport-fixed horizon or implied perspective projection. Terrain systems,
+sprites, weather, a player, physics, interaction, perspective projection, and streaming are
+explicitly deferred. The next likely steps are to refine camera/culling and nearby preparation
+if measurement calls for it, add one thin exploration or inspection loop, and then test shared
+ambient wind against this representative workload before expanding the phenotype roster.
+
 ### Historical renderer v2
 
 Renderer v2 produced a `40 × 48` logical-pixel image and compacted adjacent same-color pixels into horizontal SVG rectangle runs. It was deterministic for the same renderer version and post projection. The implementation and tests were committed before retirement so its decisions remain available through Git history without burdening the active codebase.
