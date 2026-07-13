@@ -49,11 +49,8 @@
   border-radius: 14px;
   background: #6d815c;
   box-shadow: 0 16px 45px rgba(14, 31, 27, 0.24);
-  cursor: grab;
   touch-action: none;
 }
-
-.activity-forest__viewport:active { cursor: grabbing; }
 
 .activity-forest__viewport:focus-visible {
   outline: 3px solid var(--focus-ring);
@@ -67,17 +64,74 @@
   image-rendering: pixelated;
 }
 
-.activity-forest__hint {
+.activity-forest__joystick {
   position: absolute;
-  right: 0.7rem;
+  width: 86px;
+  height: 86px;
+  margin: -43px 0 0 -43px;
+  border: 2px solid rgba(255, 245, 202, 0.68);
+  border-radius: 50%;
+  background: rgba(18, 39, 32, 0.42);
+  box-shadow: 0 2px 12px rgba(10, 25, 21, 0.3);
+  pointer-events: none;
+}
+
+.activity-forest__joystick-stick {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  background: rgba(255, 240, 174, 0.9);
+  box-shadow: 0 2px 8px rgba(10, 25, 21, 0.38);
+}
+
+.activity-forest__prompt {
+  position: absolute;
+  left: 50%;
   bottom: 0.7rem;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 240, 174, 0.7);
   border-radius: 999px;
   padding: 0.3rem 0.65rem;
   background: rgba(18, 39, 32, 0.72);
   color: #f2ead1;
   font-size: 0.72rem;
-  pointer-events: none;
+  cursor: pointer;
 }
+
+.activity-forest__prompt-touch { display: none; }
+
+@media (hover: none) and (pointer: coarse) {
+  .activity-forest__prompt { min-height: 44px; padding-inline: 1rem; }
+  .activity-forest__prompt-keyboard { display: none; }
+  .activity-forest__prompt-touch { display: inline; }
+}
+
+.activity-forest__dialog {
+  width: min(520px, calc(100% - 2rem));
+  box-sizing: border-box;
+  border: 1px solid #7c795c;
+  border-radius: 14px;
+  padding: 1.5rem;
+  background: #f5efd9;
+  color: #25352f;
+  box-shadow: 0 24px 70px rgba(9, 24, 20, 0.45);
+}
+
+.activity-forest__dialog::backdrop { background: rgba(11, 27, 23, 0.68); }
+.activity-forest__dialog h2 { margin: 0.25rem 0; }
+.activity-forest__dialog-eyebrow {
+  margin: 0;
+  color: #8b4d38;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.activity-forest__dialog-context { margin: 0.3rem 0 1.2rem; color: #5f6a61; }
+.activity-forest__dialog-excerpt { font-size: 1.08rem; line-height: 1.65; }
 
 .activity-forest__diagnostics {
   display: grid;

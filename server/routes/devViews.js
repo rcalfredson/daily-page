@@ -5,6 +5,7 @@ import { addI18n } from '../services/i18n.js';
 import { getForestLabTree } from '../services/forestLabTreeCache.js';
 import { prepareForestScene } from '../services/forestSceneAssetPool.js';
 import { generateForestSceneLayout } from '../services/forestSceneLayout.js';
+import { createForestExploration } from '../services/forestSceneExploration.js';
 import {
   DECIDUOUS_PHENOTYPE,
   LANTERNWOOD_PHENOTYPE
@@ -86,7 +87,7 @@ router.get(
   '/__dev/views/activity-forest',
   optionalAuth,
   (req, res) => {
-    const scene = prepareForestScene(generateForestSceneLayout());
+    const scene = prepareForestScene(createForestExploration(generateForestSceneLayout()));
     res.render('dev/activity-forest', {
       title: 'Activity Forest Scene',
       user: req.user || null,

@@ -237,8 +237,9 @@ The lab is available in development at `/__dev/views/forest-lab`.
 
 The first composed development scene is available at `/__dev/views/activity-forest`. It turns
 the isolated runtime assets into a deterministic 3000 × 1800 world containing 180 placements.
-The scene is still a preview: it has no player, collision, post association, persistence, or
-ambient animation.
+The scene now includes the first fixture-only exploration loop: a deterministic player can walk
+the corridor, approach a tree, inspect fixture writing, close it, and continue from the same place.
+It remains a development preview without persistence, real post queries, or ambient animation.
 
 `forestSceneLayout.js` owns scene layout version 1. A placement contains only a stable placement
 id, world-space ground anchor, integer scale, phenotype id, specimen seed, and versioned asset
@@ -262,16 +263,32 @@ offscreen surfaces are per asset, never per placement, and are discarded with th
 Browser-independent math derives each scaled visual rectangle from the asset bounds and ground
 anchor, culls it against the camera, and orders visible placements by ground Y with stable id
 tie-breaking. Integer scaling and disabled image smoothing preserve crisp pixels. Keyboard,
-pointer, touch, resize, and reset-camera events clamp the camera and request one coalesced
-animation frame; there is no idle animation loop and no procedural generation in a frame.
+resize, and reset events request coalesced frames. The exploration version replaces direct camera
+navigation with a clamped camera
+following a player whose small explicit state has a deterministic, collision-free corridor spawn.
+Arrow-key and WASD movement is normalized and elapsed-time based. Touch and stylus input uses a
+floating direction-only joystick whose origin is the initial contact point; dragging beyond a small
+dead zone selects a normalized direction, while release, cancellation, blur, or inspection stops
+movement. Both input paths resolve movement independently on X and Y against scaled circular trunk
+obstacles, allowing sliding while leaving canopies non-solid.
+
+The player participates in stable ground-Y ordering. A pure proximity query selects the nearest
+in-range placement with stable id tie-breaking. Deterministic placement-to-fixture assignment is
+independent of tree asset identity, and only bounded title, room, date, and excerpt metadata crosses
+the runtime boundary. A native modal inspection dialog stops movement and returns focus without
+changing the player or camera location.
+
+Tree sprites are still prepared only at startup. Active movement frames perform movement math,
+culling, ordering, and bitmap draws, then cease when input stops; no procedural generation or
+color-run replay occurs in those frames. The render-duration diagnostic remains the local
+measurement point, with no new benchmark claim for this first interaction slice.
 
 The restrained world-space ground treatment and corridor exist only to make depth and negative
 space legible. This first camera is deliberately orthographic: terrain and trees share the same
-translation, with no viewport-fixed horizon or implied perspective projection. Terrain systems,
-sprites, weather, a player, physics, interaction, perspective projection, and streaming are
-explicitly deferred. The next likely steps are to refine camera/culling and nearby preparation
-if measurement calls for it, add one thin exploration or inspection loop, and then test shared
-ambient wind against this representative workload before expanding the phenotype roster.
+translation, with no viewport-fixed horizon or implied perspective projection. The next likely
+step is to test shared ambient wind against this representative workload. Real post integration,
+persistence, complex physics, animation systems, tap-to-pathfind movement, zoom, terrain systems,
+perspective projection, streaming, and game-engine abstractions remain non-goals for this slice.
 
 ### Historical renderer v2
 
