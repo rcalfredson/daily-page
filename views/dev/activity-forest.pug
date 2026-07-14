@@ -11,12 +11,27 @@ block content
   main.activity-forest
     header.activity-forest__header
       div
-        p.activity-forest__eyebrow Development preview
+        p.activity-forest__eyebrow= profile.pressure ? 'Development pressure test' : 'Development preview'
         h1 Activity Forest
+          if profile.pressure
+            |  — #{profile.label}
         p.activity-forest__lede
-          | Walk the winding clearing, approach a tree, and rediscover a fixture piece of writing.
-          | The grove remains deterministic and is composed from reusable procedural tree assets.
+          if profile.pressure
+            | #{profile.description} This mode is development-only and does not change the default grove.
+          else
+            | Walk the winding clearing, approach a tree, and rediscover a fixture piece of writing.
+            | The grove remains deterministic and is composed from reusable procedural tree assets.
       button.activity-forest__reset(type='button' data-forest-reset) Return to entrance
+
+    nav.activity-forest__profiles(aria-label='Forest pressure configurations')
+      each availableProfile in pressureProfiles
+        a(
+          href=availableProfile.id === 'representative' ? '/__dev/views/activity-forest' : `/__dev/views/activity-forest?pressure=${availableProfile.id}`
+          aria-current=availableProfile.id === profile.id ? 'page' : null
+        )= availableProfile.label
+      a.activity-forest__cold(
+        href=`/__dev/views/activity-forest?pressure=${profile.id}&cold=1`
+      ) Repeat with cold server asset cache
 
     p#activity-forest-help.activity-forest__help
       | Move with arrow keys or WASD, or touch and drag in the forest. Near a tree, inspect its writing.
@@ -47,7 +62,31 @@ block content
         dd= scene.placements.length
       div
         dt Unique assets
+        dd= scene.assetLoading.totalAssetCount
+      div
+        dt Initial assets
         dd= scene.assets.length
+      div
+        dt Payload
+        dd #{serverDiagnostics.serializedPayloadBytes.toLocaleString()} bytes
+      div
+        dt Server preparation
+        dd #{serverDiagnostics.durationMilliseconds.toFixed(1)} ms
+      div
+        dt Server assets
+        dd #{serverDiagnostics.generatedAssetCount} generated / #{serverDiagnostics.reusedAssetCount} reused initially
+      div
+        dt Browser preparation
+        dd(data-forest-sprite-duration) —
+      div
+        dt Prepared canvases
+        dd(data-forest-prepared) —
+      div
+        dt Regional loading
+        dd(data-forest-region-loading) —
+      div
+        dt First scene render
+        dd(data-forest-first-render) —
       div
         dt Visible
         dd(data-forest-visible) —
@@ -63,6 +102,12 @@ block content
       div
         dt Last render
         dd(data-forest-duration) —
+      div
+        dt Movement renders
+        dd(data-forest-movement-duration) No movement frames yet
+      div
+        dt Unseen-region entry
+        dd(data-forest-region-entry) Walk beyond the initial view
 
     dialog.activity-forest__dialog(data-forest-dialog aria-labelledby='forest-post-title')
       p.activity-forest__dialog-eyebrow A writing remembered here

@@ -6,11 +6,21 @@ import {
 import {
   clearForestSceneAssetPool,
   forestSceneAssetPoolSize,
-  prepareForestScene
+  prepareForestSceneAssets,
+  prepareForestScene,
+  prepareForestSceneWithDiagnostics
 } from '../server/services/forestSceneAssetPool.js';
+import {
+  FOREST_PRESSURE_PROFILES,
+  resolveForestPressureProfile,
+  serializedForestSceneBytes
+} from '../server/services/forestScenePressure.js';
 import {
   cameraFollowingPlayer,
   focusedForestPlacement,
+  forestSceneAssetKeysForCells,
+  forestSceneCellIdsForViewport,
+  forestScenePlacementCellId,
   forestDepthOrder,
   moveForestPlayer,
   normalizedMovement,
@@ -87,6 +97,83 @@ describe('static Activity Forest scene', () => {
       expect(serialized).not.toContain(`"${excluded}"`);
     }
     expect(JSON.parse(serialized)).toEqual(scene);
+  });
+
+  it('defines explicit development pressure profiles without changing the default layout', () => {
+    const representative = resolveForestPressureProfile('representative');
+    const variety = resolveForestPressureProfile('asset-variety');
+    const unique = resolveForestPressureProfile('unique-assets');
+    const large = resolveForestPressureProfile('large-world');
+
+    expect(FOREST_PRESSURE_PROFILES.length).toBe(4);
+    expect(representative.pressure).toBeFalse();
+    expect(representative.layout).toEqual({});
+    expect(resolveForestPressureProfile('unknown')).toBe(representative);
+    expect(generateForestSceneLayout(variety.layout).placements
+      .map(({ assetKey }) => assetKey).filter((key, index, keys) => keys.indexOf(key) === index)
+      .length).toBe(60);
+    expect(new Set(generateForestSceneLayout(unique.layout).placements
+      .map(({ assetKey }) => assetKey)).size).toBe(180);
+    const largeScene = generateForestSceneLayout(large.layout);
+    expect(largeScene.placements.length).toBe(600);
+    expect(largeScene.world).toEqual({ width: 6000, height: 3600 });
+  });
+
+  it('reports cold and warm server preparation work and exact UTF-8 payload bytes', () => {
+    const layout = generateForestSceneLayout({
+      seed: 'pressure-diagnostics', placementCount: 8, assetPoolSize: 4
+    });
+    const cold = prepareForestSceneWithDiagnostics(layout);
+    const warm = prepareForestSceneWithDiagnostics(layout);
+
+    expect(cold.diagnostics.generatedAssetCount).toBe(4);
+    expect(cold.diagnostics.reusedAssetCount).toBe(0);
+    expect(cold.diagnostics.preparedAssetCount).toBe(4);
+    expect(cold.diagnostics.durationMilliseconds).toBeGreaterThanOrEqual(0);
+    expect(warm.diagnostics.generatedAssetCount).toBe(0);
+    expect(warm.diagnostics.reusedAssetCount).toBe(4);
+    expect(serializedForestSceneBytes(cold.scene))
+      .toBe(Buffer.byteLength(JSON.stringify(cold.scene), 'utf8'));
+  });
+
+  it('partitions the world into stable cells with a clamped preload ring', () => {
+    const world = { width: 1200, height: 900 };
+
+    expect(forestScenePlacementCellId({ worldX: 960, worldY: 479 }, 480)).toBe('2:0');
+    expect(forestSceneCellIdsForViewport(
+      { x: 450, y: 450, width: 100, height: 100 }, world, 480, 1
+    )).toEqual([
+      '0:0', '1:0', '2:0',
+      '0:1', '1:1', '2:1'
+    ]);
+    expect(forestSceneCellIdsForViewport(
+      { x: 0, y: 0, width: 100, height: 100 }, world, 480, 1
+    )).toEqual(['0:0', '1:0', '0:1', '1:1']);
+    const placements = [
+      { worldX: 10, worldY: 10, assetKey: 'shared' },
+      { worldX: 20, worldY: 20, assetKey: 'cell-zero' },
+      { worldX: 500, worldY: 20, assetKey: 'shared' },
+      { worldX: 510, worldY: 20, assetKey: 'cell-one' },
+      { worldX: 20, worldY: 500, assetKey: 'outside' }
+    ];
+    expect(forestSceneAssetKeysForCells(
+      placements, ['0:0', '1:0'], 480, ['shared']
+    )).toEqual(['cell-zero', 'cell-one']);
+  });
+
+  it('prepares only assets required by a regional placement subset', () => {
+    const layout = generateForestSceneLayout({
+      seed: 'regional-assets', placementCount: 8, assetPoolSize: 4
+    });
+    const regionalPlacements = layout.placements.slice(0, 2);
+    const cold = prepareForestSceneAssets(regionalPlacements);
+    const warm = prepareForestSceneAssets(regionalPlacements);
+
+    expect(cold.assets.length).toBe(2);
+    expect(cold.diagnostics.generatedAssetCount).toBe(2);
+    expect(warm.diagnostics.generatedAssetCount).toBe(0);
+    expect(warm.diagnostics.reusedAssetCount).toBe(2);
+    expect(forestSceneAssetPoolSize()).toBe(2);
   });
 
   it('culls by scaled visual bounds and orders visible trees stably by ground Y', () => {

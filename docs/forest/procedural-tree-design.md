@@ -247,17 +247,17 @@ key. Layout randomness is derived independently for X, Y, phenotype, specimen, a
 the scene seed and candidate index. Rejection sampling enforces trunk spacing and reserves a
 winding central corridor; camera position is never an input to layout or tree identity.
 
-The scene prepares a bounded pool of eight specimens for each registered phenotype. Its
-process-local cache is separate from Forest Lab's diagnostic cache and retains runtime assets
-only. The asset's schema, renderer, phenotype, and seed identities form the invalidation key.
-The development route eagerly generates missing specimens before serializing the scene, and
-the browser receives placements plus JSON-round-tripped runtime assets. Many placements point
-to each asset; generation results and branch diagnostics never cross the scene boundary. The
-cache lives only for the server module/process lifetime and is not production persistence.
+The representative scene uses a bounded pool of eight specimens for each registered phenotype;
+pressure profiles can deliberately select broader pools. Its process-local cache is separate from
+Forest Lab's diagnostic cache and retains runtime assets only. The asset's schema, renderer,
+phenotype, and seed identities form the invalidation key. The browser receives the complete compact
+placement manifest, but only nearby JSON-round-tripped runtime assets. Many placements can point to
+each asset; generation results and branch diagnostics never cross the scene boundary. The cache
+lives only for the server module/process lifetime and is not production persistence.
 
-The browser draws the prepared scene into one visible Canvas. During initial browser-side
-preparation, each unique runtime asset is rasterized once into a small offscreen Canvas in its
-declared layer order. Placements reuse those 16 prepared bitmaps, reducing ordinary scene draws
+The browser draws the prepared scene into one visible Canvas. As each runtime asset arrives, it is
+rasterized once into a small offscreen Canvas in its declared layer order. Placements reuse prepared
+bitmaps, reducing ordinary scene draws
 from thousands of color-run operations per tree to one `drawImage` call per visible tree. These
 offscreen surfaces are per asset, never per placement, and are discarded with the page.
 Browser-independent math derives each scaled visual rectangle from the asset bounds and ground
@@ -278,17 +278,65 @@ independent of tree asset identity, and only bounded title, room, date, and exce
 the runtime boundary. A native modal inspection dialog stops movement and returns focus without
 changing the player or camera location.
 
-Tree sprites are still prepared only at startup. Active movement frames perform movement math,
-culling, ordering, and bitmap draws, then cease when input stops; no procedural generation or
-color-run replay occurs in those frames. The render-duration diagnostic remains the local
-measurement point, with no new benchmark claim for this first interaction slice.
+Active movement frames perform movement math, region-set comparison, culling, ordering, and bitmap
+draws, then cease when input stops. Procedural generation, response decoding, and color-run replay
+remain outside the animation frame. The render-duration diagnostic remains the local measurement
+point, with no universal benchmark claim for this interaction slice.
+
+### Development pressure profiles
+
+The development route accepts four labeled profiles through its on-page profile links:
+
+| Profile | Placements | Unique runtime assets | Purpose |
+| --- | ---: | ---: | --- |
+| Representative grove | 180 | up to 16 | The unchanged calm default and normal comparison point. |
+| Asset variety | 180 | 60 | Isolates the cost of a moderately broader asset set. |
+| Unique assets | 180 | 180 | Exercises the current eager asset boundary at maximum variety. |
+| Large world | 600 | 60 | Separates placement, culling, and movement cost from asset variety. |
+
+Only this development route can select the pressure profiles. An explicit cold-cache link clears
+the scene asset pool before preparation so a cold generation run can be compared with ordinary
+warm-cache reloads. The initial route reports the UTF-8 serialized scene payload size, preparation
+time, and generated-versus-reused server asset counts for its initial region. Preparation timing
+includes asset lookup or generation plus creation of JSON-safe assets; it does not claim to measure
+network transfer or template rendering.
+
+The measured eager results justified a narrow regional-loading experiment. The world is divided
+into deterministic 480-pixel square cells. The initial response includes assets whose placement
+anchors occupy the spawn cell and its one-cell neighbors. In the browser, the current camera extent
+plus a one-cell preload ring determines subsequent cell requests. The development-only asset route
+regenerates the same deterministic layout, validates and caps requested cells, prepares only their
+unique asset keys, and returns those assets. Loaded and in-flight cell sets prevent duplicate
+requests. Before requesting a cell set, the browser subtracts asset keys for canvases it already
+owns; cells whose assets are all prepared require no response, and the server validates requested
+keys against the requested cells. Returned assets are prepared asynchronously and retained for the
+page lifetime; there is
+an approximately six-millisecond active-work budget before preparation yields to an idle callback.
+There is no eviction, persistence, generalized loading framework, or change to placement and asset
+identity.
+
+The browser reports initial and last-regional sprite-preparation time, prepared canvas count,
+regional request/server timing, time from navigation start to the first completed scene render,
+visible placement count, last render duration, and rolling last/average/maximum movement-render
+duration. It also remembers which placements and asset keys have appeared in prior views. When
+movement reveals placements outside the previously seen set, the diagnostic records the new
+placement and asset counts, render duration, and animation-frame gap.
+
+These values are local instrumentation, not a committed cross-device benchmark. Compare cold
+runs on the intended baseline browser and device, repeat each profile enough to distinguish a
+consistent regression from generator and browser noise, and use the representative grove as the
+control. Compare the regional results with the recorded eager baseline to determine how much asset
+staging alone improves startup and whether the preload ring prevents region-entry stalls. A compact
+raster transport may be evaluated separately if JSON color-run payloads remain material. Asset
+eviction, WebGL, atlases, and generalized loading remain out of scope until further evidence and
+explicit approval.
 
 The restrained world-space ground treatment and corridor exist only to make depth and negative
 space legible. This first camera is deliberately orthographic: terrain and trees share the same
 translation, with no viewport-fixed horizon or implied perspective projection. The next likely
 step is to test shared ambient wind against this representative workload. Real post integration,
 persistence, complex physics, animation systems, tap-to-pathfind movement, zoom, terrain systems,
-perspective projection, streaming, and game-engine abstractions remain non-goals for this slice.
+perspective projection, asset eviction, and game-engine abstractions remain non-goals for this slice.
 
 ### Historical renderer v2
 

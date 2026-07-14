@@ -3,9 +3,26 @@ import express from 'express';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { addI18n } from '../services/i18n.js';
 import { getForestLabTree } from '../services/forestLabTreeCache.js';
-import { prepareForestScene } from '../services/forestSceneAssetPool.js';
+import {
+  clearForestSceneAssetPool,
+  prepareForestSceneAssets
+} from '../services/forestSceneAssetPool.js';
 import { generateForestSceneLayout } from '../services/forestSceneLayout.js';
 import { createForestExploration } from '../services/forestSceneExploration.js';
+import {
+  FOREST_PRESSURE_PROFILES,
+  FOREST_SCENE_MAX_ASSET_REQUEST,
+  FOREST_SCENE_CELL_SIZE,
+  FOREST_SCENE_MAX_CELL_REQUEST,
+  FOREST_SCENE_PRELOAD_CELL_COUNT,
+  resolveForestPressureProfile,
+  serializedForestSceneBytes
+} from '../services/forestScenePressure.js';
+import {
+  forestSceneAssetKeysForCells,
+  forestSceneCellIdsForViewport,
+  forestScenePlacementCellId
+} from '../../public/js/forest-scene-math.js';
 import {
   DECIDUOUS_PHENOTYPE,
   LANTERNWOOD_PHENOTYPE
@@ -70,6 +87,42 @@ function forestFixtures() {
   });
 }
 
+function forestSceneForProfile(profile) {
+  return createForestExploration(generateForestSceneLayout(profile.layout));
+}
+
+function placementsInForestCells(scene, cellIds) {
+  const requested = new Set(cellIds);
+  return scene.placements.filter((placement) => requested.has(
+    forestScenePlacementCellId(placement, FOREST_SCENE_CELL_SIZE)
+  ));
+}
+
+function initialForestCellIds(scene) {
+  return forestSceneCellIdsForViewport({
+    x: scene.exploration.spawn.worldX,
+    y: scene.exploration.spawn.worldY,
+    width: 1,
+    height: 1
+  }, scene.world, FOREST_SCENE_CELL_SIZE, FOREST_SCENE_PRELOAD_CELL_COUNT);
+}
+
+function validRequestedForestCellIds(value, world) {
+  const available = new Set(forestSceneCellIdsForViewport({
+    x: 0, y: 0, width: world.width, height: world.height
+  }, world, FOREST_SCENE_CELL_SIZE));
+  return [...new Set(String(value || '').split(',').filter((id) => available.has(id)))]
+    .slice(0, FOREST_SCENE_MAX_CELL_REQUEST);
+}
+
+function validRequestedForestAssetKeys(value, scene, cellIds) {
+  const available = new Set(forestSceneAssetKeysForCells(
+    scene.placements, cellIds, FOREST_SCENE_CELL_SIZE
+  ));
+  return [...new Set(String(value || '').split(',').filter((key) => available.has(key)))]
+    .slice(0, FOREST_SCENE_MAX_ASSET_REQUEST);
+}
+
 router.get(
   '/__dev/views/forest-lab',
   optionalAuth,
@@ -84,15 +137,72 @@ router.get(
 );
 
 router.get(
+  '/__dev/api/activity-forest/assets',
+  (req, res) => {
+    const profile = resolveForestPressureProfile(req.query.pressure);
+    const scene = forestSceneForProfile(profile);
+    const cellIds = validRequestedForestCellIds(req.query.cells, scene.world);
+    if (!cellIds.length) return res.status(400).json({ error: 'Valid forest cells are required.' });
+    const assetKeys = validRequestedForestAssetKeys(req.query.assetKeys, scene, cellIds);
+    if (!assetKeys.length) {
+      return res.status(400).json({ error: 'Valid unloaded forest assets are required.' });
+    }
+    const requestedAssetKeys = new Set(assetKeys);
+    const { assets, diagnostics } = prepareForestSceneAssets(
+      placementsInForestCells(scene, cellIds).filter(
+        ({ assetKey }) => requestedAssetKeys.has(assetKey)
+      )
+    );
+    res.set('Cache-Control', 'no-store');
+    return res.json({
+      cellIds,
+      assets,
+      serverPreparation: {
+        ...diagnostics,
+        serializedAssetBytes: Buffer.byteLength(JSON.stringify(assets), 'utf8')
+      }
+    });
+  }
+);
+
+router.get(
   '/__dev/views/activity-forest',
   optionalAuth,
   (req, res) => {
-    const scene = prepareForestScene(createForestExploration(generateForestSceneLayout()));
+    const profile = resolveForestPressureProfile(req.query.pressure);
+    const coldPreparationRequested = req.query.cold === '1';
+    if (coldPreparationRequested) clearForestSceneAssetPool();
+    const layout = forestSceneForProfile(profile);
+    const initialCellIds = initialForestCellIds(layout);
+    const { assets, diagnostics: preparation } = prepareForestSceneAssets(
+      placementsInForestCells(layout, initialCellIds)
+    );
+    const scene = JSON.parse(JSON.stringify({
+      ...layout,
+      assets,
+      assetLoading: {
+        strategy: 'regional',
+        profileId: profile.id,
+        cellSize: FOREST_SCENE_CELL_SIZE,
+        preloadCellCount: FOREST_SCENE_PRELOAD_CELL_COUNT,
+        initialCellIds,
+        totalAssetCount: new Set(layout.placements.map(({ assetKey }) => assetKey)).size
+      }
+    }));
+    const serverDiagnostics = {
+      ...preparation,
+      serializedPayloadBytes: serializedForestSceneBytes(scene),
+      coldPreparationRequested
+    };
     res.render('dev/activity-forest', {
-      title: 'Activity Forest Scene',
+      title: profile.pressure ? `Activity Forest Pressure Test: ${profile.label}`
+        : 'Activity Forest Scene',
       user: req.user || null,
       uiLang: res.locals.uiLang,
-      scene
+      scene,
+      profile,
+      pressureProfiles: FOREST_PRESSURE_PROFILES,
+      serverDiagnostics
     });
   }
 );
