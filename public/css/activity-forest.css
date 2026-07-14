@@ -41,6 +41,29 @@
   font-size: 0.85rem;
 }
 
+.activity-forest__profiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0.8rem 0;
+}
+
+.activity-forest__profiles a {
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  background: var(--surface-raised-bg);
+  font-size: 0.75rem;
+  text-decoration: none;
+}
+
+.activity-forest__profiles a[aria-current='page'] {
+  border-color: var(--highlight-color);
+  color: var(--highlight-color);
+}
+
+.activity-forest__profiles .activity-forest__cold { margin-left: auto; }
+
 .activity-forest__viewport {
   position: relative;
   height: clamp(420px, 68vh, 760px);
@@ -166,4 +189,5 @@
   .activity-forest { padding-top: 1rem; }
   .activity-forest__header { align-items: start; flex-direction: column; }
   .activity-forest__viewport { height: 62vh; min-height: 390px; }
+  .activity-forest__profiles .activity-forest__cold { margin-left: 0; }
 }

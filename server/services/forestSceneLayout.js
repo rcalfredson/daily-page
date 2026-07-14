@@ -95,9 +95,15 @@ export function generateForestSceneLayout(options = {}) {
     ));
     if (pathDistance < config.corridorHalfWidth || overlapsTrunk) continue;
 
-    const phenotype = selectPhenotype(config, config.seed, candidateIndex);
-    const specimenIndex = Math.floor(
-      decisionRandom(config.seed, candidateIndex, 'specimen') * config.specimenPoolSize
+    const specimenIndex = config.assetPoolSize
+      ? placements.length % config.assetPoolSize
+      : Math.floor(
+        decisionRandom(config.seed, candidateIndex, 'specimen') * config.specimenPoolSize
+      );
+    const phenotype = selectPhenotype(
+      config,
+      config.seed,
+      config.assetPoolSize ? specimenIndex : candidateIndex
     );
     const { treeSeed, assetKey } = specimenIdentity(
       config, config.seed, phenotype, specimenIndex
@@ -129,4 +135,3 @@ export function generateForestSceneLayout(options = {}) {
     placements
   };
 }
-

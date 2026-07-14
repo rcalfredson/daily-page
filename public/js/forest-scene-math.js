@@ -22,6 +22,49 @@ export function visibleForestPlacements(placements, assetsByKey, viewport, margi
   ));
 }
 
+export function forestSceneCellId(column, row) {
+  return `${column}:${row}`;
+}
+
+export function forestScenePlacementCellId(placement, cellSize) {
+  return forestSceneCellId(
+    Math.floor(placement.worldX / cellSize),
+    Math.floor(placement.worldY / cellSize)
+  );
+}
+
+export function forestSceneCellIdsForViewport(
+  viewport, world, cellSize, preloadCellCount = 0
+) {
+  const maximumColumn = Math.max(0, Math.ceil(world.width / cellSize) - 1);
+  const maximumRow = Math.max(0, Math.ceil(world.height / cellSize) - 1);
+  const firstColumn = Math.max(0, Math.floor(viewport.x / cellSize) - preloadCellCount);
+  const lastColumn = Math.min(maximumColumn,
+    Math.floor((viewport.x + Math.max(0, viewport.width - 1)) / cellSize)
+      + preloadCellCount);
+  const firstRow = Math.max(0, Math.floor(viewport.y / cellSize) - preloadCellCount);
+  const lastRow = Math.min(maximumRow,
+    Math.floor((viewport.y + Math.max(0, viewport.height - 1)) / cellSize)
+      + preloadCellCount);
+  const ids = [];
+  for (let row = firstRow; row <= lastRow; row += 1) {
+    for (let column = firstColumn; column <= lastColumn; column += 1) {
+      ids.push(forestSceneCellId(column, row));
+    }
+  }
+  return ids;
+}
+
+export function forestSceneAssetKeysForCells(
+  placements, cellIds, cellSize, excludedAssetKeys = []
+) {
+  const requestedCells = new Set(cellIds);
+  const excluded = new Set(excludedAssetKeys);
+  return [...new Set(placements.filter((placement) => requestedCells.has(
+    forestScenePlacementCellId(placement, cellSize)
+  )).map(({ assetKey }) => assetKey).filter((assetKey) => !excluded.has(assetKey)))];
+}
+
 export function normalizedMovement(keys) {
   const x = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
   const y = (keys.down ? 1 : 0) - (keys.up ? 1 : 0);

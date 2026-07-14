@@ -1,6 +1,8 @@
 import {
   cameraFollowingPlayer,
   focusedForestPlacement,
+  forestSceneAssetKeysForCells,
+  forestSceneCellIdsForViewport,
   forestDepthOrder,
   moveForestPlayer,
   normalizedMovement,
@@ -13,8 +15,9 @@ const viewportElement = document.querySelector('[data-forest-viewport]');
 const canvas = document.querySelector('[data-forest-canvas]');
 
 if (payload && viewportElement && canvas) {
+  const scriptStartedAt = window.performance.now();
   const scene = JSON.parse(payload.textContent);
-  const assetsByKey = new Map(scene.assets.map((asset) => [asset.cacheKey, asset]));
+  const assetsByKey = new Map();
   const fixturesById = new Map(scene.exploration.fixtures.map((fixture) => [fixture.id, fixture]));
   const context = canvas.getContext('2d');
   const spritesByKey = new Map();
@@ -31,26 +34,155 @@ if (payload && viewportElement && canvas) {
     camera: document.querySelector('[data-forest-camera]'),
     player: document.querySelector('[data-forest-player]'),
     focus: document.querySelector('[data-forest-focus]'),
-    duration: document.querySelector('[data-forest-duration]')
+    duration: document.querySelector('[data-forest-duration]'),
+    spriteDuration: document.querySelector('[data-forest-sprite-duration]'),
+    prepared: document.querySelector('[data-forest-prepared]'),
+    firstRender: document.querySelector('[data-forest-first-render]'),
+    movementDuration: document.querySelector('[data-forest-movement-duration]'),
+    regionEntry: document.querySelector('[data-forest-region-entry]'),
+    regionLoading: document.querySelector('[data-forest-region-loading]')
   };
+  const loadedCellIds = new Set(scene.assetLoading.initialCellIds);
+  const pendingCellIds = new Set();
+  const totalCellCount = forestSceneCellIdsForViewport({
+    x: 0, y: 0, width: scene.world.width, height: scene.world.height
+  }, scene.world, scene.assetLoading.cellSize).length;
+  const seenPlacementIds = new Set();
+  const seenAssetKeys = new Set();
+  const movementRenders = { count: 0, total: 0, maximum: 0 };
   let focusedPlacement = null;
   let scheduledFrame = null;
   let lastFrameTime = null;
+  let firstRenderRecorded = false;
+  let regionRetryAfter = 0;
+  let regionalRequestActive = false;
 
-  for (const asset of scene.assets) {
-    const sprite = document.createElement('canvas');
-    sprite.width = asset.dimensions.width;
-    sprite.height = asset.dimensions.height;
-    const spriteContext = sprite.getContext('2d');
-    spriteContext.imageSmoothingEnabled = false;
-    for (const layer of asset.layers) {
-      for (const run of layer.runs) {
-        spriteContext.fillStyle = run.color;
-        spriteContext.fillRect(run.x, run.y, run.width, 1);
+  function prepareRuntimeAssets(assets) {
+    let preparedCount = 0;
+    for (const asset of assets) {
+      if (spritesByKey.has(asset.cacheKey)) continue;
+      const sprite = document.createElement('canvas');
+      sprite.width = asset.dimensions.width;
+      sprite.height = asset.dimensions.height;
+      const spriteContext = sprite.getContext('2d');
+      spriteContext.imageSmoothingEnabled = false;
+      for (const layer of asset.layers) {
+        for (const run of layer.runs) {
+          spriteContext.fillStyle = run.color;
+          spriteContext.fillRect(run.x, run.y, run.width, 1);
+        }
+      }
+      assetsByKey.set(asset.cacheKey, asset);
+      spritesByKey.set(asset.cacheKey, sprite);
+      preparedCount += 1;
+    }
+    diagnostics.prepared.textContent = `${spritesByKey.size} / ${
+      scene.assetLoading.totalAssetCount} asset canvases`;
+    return preparedCount;
+  }
+
+  function waitForAssetPreparationTime() {
+    return new Promise((resolve) => {
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(resolve, { timeout: 50 });
+      } else {
+        window.setTimeout(resolve, 0);
+      }
+    });
+  }
+
+  async function prepareRegionalRuntimeAssets(assets) {
+    let activeDuration = 0;
+    let batchDuration = 0;
+    let preparedCount = 0;
+    for (const [index, asset] of assets.entries()) {
+      const assetStartedAt = window.performance.now();
+      preparedCount += prepareRuntimeAssets([asset]);
+      const assetDuration = window.performance.now() - assetStartedAt;
+      activeDuration += assetDuration;
+      batchDuration += assetDuration;
+      if (batchDuration >= 6 && index < assets.length - 1) {
+        await waitForAssetPreparationTime();
+        batchDuration = 0;
       }
     }
-    spritesByKey.set(asset.cacheKey, sprite);
+    return { activeDuration, preparedCount };
   }
+
+  const spritePreparationStartedAt = window.performance.now();
+  prepareRuntimeAssets(scene.assets);
+  const spritePreparationDuration = window.performance.now() - spritePreparationStartedAt;
+  diagnostics.spriteDuration.textContent = `${spritePreparationDuration.toFixed(1)} ms initial`;
+
+  function updateRegionLoading(message = '') {
+    diagnostics.regionLoading.textContent = `${loadedCellIds.size} / ${totalCellCount} cells loaded · ${
+      pendingCellIds.size} pending${message ? ` · ${message}` : ''}`;
+  }
+
+  async function requestRequiredRegions() {
+    if (!camera.width || !camera.height || regionalRequestActive
+      || window.performance.now() < regionRetryAfter) return;
+    const requiredCellIds = forestSceneCellIdsForViewport(
+      camera,
+      scene.world,
+      scene.assetLoading.cellSize,
+      scene.assetLoading.preloadCellCount
+    );
+    const missingCellIds = requiredCellIds.filter((cellId) => (
+      !loadedCellIds.has(cellId) && !pendingCellIds.has(cellId)
+    ));
+    if (!missingCellIds.length) return;
+    const missingAssetKeys = forestSceneAssetKeysForCells(
+      scene.placements,
+      missingCellIds,
+      scene.assetLoading.cellSize,
+      spritesByKey.keys()
+    );
+    if (!missingAssetKeys.length) {
+      missingCellIds.forEach((cellId) => loadedCellIds.add(cellId));
+      updateRegionLoading(`${missingCellIds.length} cells reused prepared assets`);
+      return;
+    }
+    regionalRequestActive = true;
+    missingCellIds.forEach((cellId) => pendingCellIds.add(cellId));
+    updateRegionLoading('requesting nearby assets');
+    const requestStartedAt = window.performance.now();
+    let completionMessage = '';
+    try {
+      const query = new URLSearchParams({
+        pressure: scene.assetLoading.profileId,
+        cells: missingCellIds.join(','),
+        assetKeys: missingAssetKeys.join(',')
+      });
+      const response = await window.fetch(`/__dev/api/activity-forest/assets?${query}`);
+      if (!response.ok) throw new Error(`Regional asset request failed (${response.status}).`);
+      const region = await response.json();
+      const responseReceivedAt = window.performance.now();
+      const {
+        activeDuration: preparationDuration,
+        preparedCount
+      } = await prepareRegionalRuntimeAssets(region.assets);
+      region.cellIds.forEach((cellId) => loadedCellIds.add(cellId));
+      diagnostics.spriteDuration.textContent = `${spritePreparationDuration.toFixed(1)} ms initial / ${
+        preparationDuration.toFixed(1)} ms last regional`;
+      completionMessage = `${preparedCount} new assets · ${
+        region.serverPreparation.serializedAssetBytes.toLocaleString()} bytes · ${
+        (responseReceivedAt - requestStartedAt).toFixed(1)} ms fetch · ${
+        region.serverPreparation.durationMilliseconds.toFixed(1)} ms server`;
+      updateFocus();
+      requestRender();
+    } catch (error) {
+      completionMessage = error.message;
+      regionRetryAfter = window.performance.now() + 1000;
+    } finally {
+      missingCellIds.forEach((cellId) => pendingCellIds.delete(cellId));
+      regionalRequestActive = false;
+      updateRegionLoading(completionMessage);
+      requestRequiredRegions();
+    }
+  }
+
+  updateRegionLoading();
 
   function corridorCenter(worldY) {
     return (scene.world.width / 2) + (Math.sin((worldY / 330) + 0.7) * 155);
@@ -58,6 +190,7 @@ if (payload && viewportElement && canvas) {
 
   function followPlayer() {
     Object.assign(camera, cameraFollowingPlayer(player, camera, scene.world));
+    requestRequiredRegions();
   }
 
   function paintGround() {
@@ -120,13 +253,15 @@ if (payload && viewportElement && canvas) {
   }
 
   function updateFocus() {
-    focusedPlacement = focusedForestPlacement(player, scene.placements,
+    focusedPlacement = focusedForestPlacement(player, scene.placements.filter(
+      ({ assetKey }) => assetsByKey.has(assetKey)
+    ),
       scene.exploration.interactionRadius);
     prompt.hidden = !focusedPlacement;
     diagnostics.focus.textContent = focusedPlacement?.id || 'None';
   }
 
-  function render() {
+  function render({ moving = false, frameGap = null } = {}) {
     const start = window.performance.now();
     context.imageSmoothingEnabled = false;
     paintGround();
@@ -138,7 +273,37 @@ if (payload && viewportElement && canvas) {
     diagnostics.visible.textContent = `${visible.length} / ${scene.placements.length}`;
     diagnostics.camera.textContent = `${camera.x}, ${camera.y}`;
     diagnostics.player.textContent = `${Math.round(player.worldX)}, ${Math.round(player.worldY)}`;
-    diagnostics.duration.textContent = `${(window.performance.now() - start).toFixed(1)} ms`;
+    const duration = window.performance.now() - start;
+    diagnostics.duration.textContent = `${duration.toFixed(1)} ms`;
+
+    const newlySeen = visible.filter(({ id }) => !seenPlacementIds.has(id));
+    const newlySeenAssets = new Set(newlySeen.map(({ assetKey }) => assetKey)
+      .filter((assetKey) => !seenAssetKeys.has(assetKey)));
+    visible.forEach(({ id, assetKey }) => {
+      seenPlacementIds.add(id);
+      seenAssetKeys.add(assetKey);
+    });
+
+    if (moving) {
+      movementRenders.count += 1;
+      movementRenders.total += duration;
+      movementRenders.maximum = Math.max(movementRenders.maximum, duration);
+      diagnostics.movementDuration.textContent = `${duration.toFixed(1)} ms last / ${
+        (movementRenders.total / movementRenders.count).toFixed(1)} ms avg / ${
+        movementRenders.maximum.toFixed(1)} ms max`;
+      if (newlySeen.length) {
+        diagnostics.regionEntry.textContent = `${newlySeen.length} new placements / ${
+          newlySeenAssets.size} new assets · ${duration.toFixed(1)} ms render · ${
+          frameGap === null ? 'first movement frame' : `${frameGap.toFixed(1)} ms frame gap`}`;
+      }
+    }
+
+    if (!firstRenderRecorded) {
+      firstRenderRecorded = true;
+      const renderFinishedAt = window.performance.now();
+      diagnostics.firstRender.textContent = `${renderFinishedAt.toFixed(1)} ms after navigation (${
+        (renderFinishedAt - scriptStartedAt).toFixed(1)} ms in scene script)`;
+    }
   }
 
   function hasMovement() {
@@ -152,17 +317,19 @@ if (payload && viewportElement && canvas) {
 
   function frame(timestamp) {
     scheduledFrame = null;
+    const frameGap = lastFrameTime === null ? null : timestamp - lastFrameTime;
     if (lastFrameTime === null) lastFrameTime = timestamp;
     const elapsed = Math.min(0.05, (timestamp - lastFrameTime) / 1000);
     lastFrameTime = timestamp;
-    if (hasMovement() && !dialog.open) {
+    const moving = hasMovement() && !dialog.open;
+    if (moving) {
       Object.assign(player, moveForestPlayer(player, movementDirection(), elapsed,
         scene.world, scene.placements));
       followPlayer();
       updateFocus();
     }
-    render();
-    if (hasMovement() && !dialog.open) scheduledFrame = requestAnimationFrame(frame);
+    render({ moving, frameGap });
+    if (moving) scheduledFrame = requestAnimationFrame(frame);
     else lastFrameTime = null;
   }
 
