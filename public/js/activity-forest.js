@@ -16,7 +16,9 @@ const canvas = document.querySelector('[data-forest-canvas]');
 
 if (payload && viewportElement && canvas) {
   const scriptStartedAt = window.performance.now();
+  const initialResponseDecodeStartedAt = window.performance.now();
   const scene = JSON.parse(payload.textContent);
+  const initialResponseDecodeDuration = window.performance.now() - initialResponseDecodeStartedAt;
   const assetsByKey = new Map();
   const fixturesById = new Map(scene.exploration.fixtures.map((fixture) => [fixture.id, fixture]));
   const context = canvas.getContext('2d');
@@ -35,6 +37,7 @@ if (payload && viewportElement && canvas) {
     player: document.querySelector('[data-forest-player]'),
     focus: document.querySelector('[data-forest-focus]'),
     duration: document.querySelector('[data-forest-duration]'),
+    decodeDuration: document.querySelector('[data-forest-decode-duration]'),
     spriteDuration: document.querySelector('[data-forest-sprite-duration]'),
     prepared: document.querySelector('[data-forest-prepared]'),
     firstRender: document.querySelector('[data-forest-first-render]'),
@@ -57,28 +60,59 @@ if (payload && viewportElement && canvas) {
   let regionRetryAfter = 0;
   let regionalRequestActive = false;
 
-  function prepareRuntimeAssets(assets) {
-    let preparedCount = 0;
-    for (const asset of assets) {
-      if (spritesByKey.has(asset.cacheKey)) continue;
-      const sprite = document.createElement('canvas');
-      sprite.width = asset.dimensions.width;
-      sprite.height = asset.dimensions.height;
-      const spriteContext = sprite.getContext('2d');
-      spriteContext.imageSmoothingEnabled = false;
-      for (const layer of asset.layers) {
+  function rasterLayerSource(layer) {
+    const binary = window.atob(layer.data);
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+    return new Blob([bytes], { type: layer.mediaType });
+  }
+
+  async function decodeRasterLayer(layer) {
+    const source = rasterLayerSource(layer);
+    if (window.createImageBitmap) return window.createImageBitmap(source);
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      const url = URL.createObjectURL(source);
+      image.onload = () => {
+        URL.revokeObjectURL(url);
+        resolve(image);
+      };
+      image.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('Lossless forest raster decoding failed.'));
+      };
+      image.src = url;
+    });
+  }
+
+  async function prepareRuntimeAsset(asset) {
+    if (spritesByKey.has(asset.cacheKey)) return { preparedCount: 0, decodeDuration: 0 };
+    let decodeDuration = 0;
+    const layerSprites = [];
+    for (const layer of asset.layers) {
+      let sprite;
+      if (layer.runs) {
+        sprite = document.createElement('canvas');
+        sprite.width = asset.dimensions.width;
+        sprite.height = asset.dimensions.height;
+        const spriteContext = sprite.getContext('2d');
+        spriteContext.imageSmoothingEnabled = false;
         for (const run of layer.runs) {
           spriteContext.fillStyle = run.color;
           spriteContext.fillRect(run.x, run.y, run.width, 1);
         }
+      } else {
+        const decodeStartedAt = window.performance.now();
+        sprite = await decodeRasterLayer(layer);
+        decodeDuration += window.performance.now() - decodeStartedAt;
       }
-      assetsByKey.set(asset.cacheKey, asset);
-      spritesByKey.set(asset.cacheKey, sprite);
-      preparedCount += 1;
+      layerSprites.push({ id: layer.id, sprite });
     }
+    assetsByKey.set(asset.cacheKey, asset);
+    spritesByKey.set(asset.cacheKey, layerSprites);
     diagnostics.prepared.textContent = `${spritesByKey.size} / ${
-      scene.assetLoading.totalAssetCount} asset canvases`;
-    return preparedCount;
+      scene.assetLoading.totalAssetCount} assets · ${spritesByKey.size * 3} layer sprites`;
+    return { preparedCount: 1, decodeDuration };
   }
 
   function waitForAssetPreparationTime() {
@@ -93,26 +127,34 @@ if (payload && viewportElement && canvas) {
 
   async function prepareRegionalRuntimeAssets(assets) {
     let activeDuration = 0;
+    let decodeDuration = 0;
     let batchDuration = 0;
     let preparedCount = 0;
     for (const [index, asset] of assets.entries()) {
       const assetStartedAt = window.performance.now();
-      preparedCount += prepareRuntimeAssets([asset]);
+      const prepared = await prepareRuntimeAsset(asset);
+      preparedCount += prepared.preparedCount;
+      decodeDuration += prepared.decodeDuration;
       const assetDuration = window.performance.now() - assetStartedAt;
-      activeDuration += assetDuration;
-      batchDuration += assetDuration;
+      const preparationDuration = Math.max(0, assetDuration - prepared.decodeDuration);
+      activeDuration += preparationDuration;
+      batchDuration += preparationDuration;
       if (batchDuration >= 6 && index < assets.length - 1) {
         await waitForAssetPreparationTime();
         batchDuration = 0;
       }
     }
-    return { activeDuration, preparedCount };
+    return { activeDuration, decodeDuration, preparedCount };
   }
 
   const spritePreparationStartedAt = window.performance.now();
-  prepareRuntimeAssets(scene.assets);
-  const spritePreparationDuration = window.performance.now() - spritePreparationStartedAt;
-  diagnostics.spriteDuration.textContent = `${spritePreparationDuration.toFixed(1)} ms initial`;
+  const initialPreparation = await prepareRegionalRuntimeAssets(scene.assets);
+  const initialPreparationElapsed = window.performance.now() - spritePreparationStartedAt;
+  const spritePreparationDuration = initialPreparation.activeDuration;
+  diagnostics.decodeDuration.textContent = `${initialResponseDecodeDuration.toFixed(1)} ms JSON + ${
+    initialPreparation.decodeDuration.toFixed(1)} ms ${scene.assetLoading.transport} initial`;
+  diagnostics.spriteDuration.textContent = `${spritePreparationDuration.toFixed(1)} ms active / ${
+    initialPreparationElapsed.toFixed(1)} ms elapsed initial`;
 
   function updateRegionLoading(message = '') {
     diagnostics.regionLoading.textContent = `${loadedCellIds.size} / ${totalCellCount} cells loaded · ${
@@ -151,24 +193,32 @@ if (payload && viewportElement && canvas) {
     try {
       const query = new URLSearchParams({
         pressure: scene.assetLoading.profileId,
+        transport: scene.assetLoading.transport,
         cells: missingCellIds.join(','),
         assetKeys: missingAssetKeys.join(',')
       });
       const response = await window.fetch(`/__dev/api/activity-forest/assets?${query}`);
       if (!response.ok) throw new Error(`Regional asset request failed (${response.status}).`);
+      const responseDecodeStartedAt = window.performance.now();
       const region = await response.json();
+      const responseDecodeDuration = window.performance.now() - responseDecodeStartedAt;
       const responseReceivedAt = window.performance.now();
       const {
         activeDuration: preparationDuration,
+        decodeDuration,
         preparedCount
       } = await prepareRegionalRuntimeAssets(region.assets);
       region.cellIds.forEach((cellId) => loadedCellIds.add(cellId));
       diagnostics.spriteDuration.textContent = `${spritePreparationDuration.toFixed(1)} ms initial / ${
         preparationDuration.toFixed(1)} ms last regional`;
+      diagnostics.decodeDuration.textContent = `${initialResponseDecodeDuration.toFixed(1)} ms JSON + ${
+        initialPreparation.decodeDuration.toFixed(1)} ms image initial / ${
+        responseDecodeDuration.toFixed(1)} ms JSON + ${decodeDuration.toFixed(1)} ms image regional`;
       completionMessage = `${preparedCount} new assets · ${
-        region.serverPreparation.serializedAssetBytes.toLocaleString()} bytes · ${
+        region.serverPreparation.encodedPayloadBytes.toLocaleString()} bytes · ${
         (responseReceivedAt - requestStartedAt).toFixed(1)} ms fetch · ${
-        region.serverPreparation.durationMilliseconds.toFixed(1)} ms server`;
+        region.serverPreparation.generationDurationMilliseconds.toFixed(1)} ms generate · ${
+        region.serverPreparation.encodingDurationMilliseconds.toFixed(1)} ms encode`;
       updateFocus();
       requestRender();
     } catch (error) {
@@ -234,8 +284,10 @@ if (payload && viewportElement && canvas) {
       context.lineWidth = 2;
       context.stroke();
     }
-    context.drawImage(spritesByKey.get(placement.assetKey), originX, originY,
-      asset.dimensions.width * placement.scale, asset.dimensions.height * placement.scale);
+    for (const { sprite } of spritesByKey.get(placement.assetKey)) {
+      context.drawImage(sprite, originX, originY,
+        asset.dimensions.width * placement.scale, asset.dimensions.height * placement.scale);
+    }
   }
 
   function paintPlayer() {

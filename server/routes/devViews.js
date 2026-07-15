@@ -7,6 +7,12 @@ import {
   clearForestSceneAssetPool,
   prepareForestSceneAssets
 } from '../services/forestSceneAssetPool.js';
+import {
+  clearForestSceneRasterAssetCache,
+  encodeForestSceneAssets,
+  FOREST_ASSET_TRANSPORT_RASTER,
+  resolveForestAssetTransport
+} from '../services/forestSceneAssetTransport.js';
 import { generateForestSceneLayout } from '../services/forestSceneLayout.js';
 import { createForestExploration } from '../services/forestSceneExploration.js';
 import {
@@ -138,8 +144,9 @@ router.get(
 
 router.get(
   '/__dev/api/activity-forest/assets',
-  (req, res) => {
+  async (req, res) => {
     const profile = resolveForestPressureProfile(req.query.pressure);
+    const transport = resolveForestAssetTransport(req.query.transport);
     const scene = forestSceneForProfile(profile);
     const cellIds = validRequestedForestCellIds(req.query.cells, scene.world);
     if (!cellIds.length) return res.status(400).json({ error: 'Valid forest cells are required.' });
@@ -148,18 +155,25 @@ router.get(
       return res.status(400).json({ error: 'Valid unloaded forest assets are required.' });
     }
     const requestedAssetKeys = new Set(assetKeys);
-    const { assets, diagnostics } = prepareForestSceneAssets(
+    const { assets: runtimeAssets, diagnostics } = prepareForestSceneAssets(
       placementsInForestCells(scene, cellIds).filter(
         ({ assetKey }) => requestedAssetKeys.has(assetKey)
       )
     );
+    const { assets, diagnostics: encoding } = await encodeForestSceneAssets(
+      runtimeAssets, transport
+    );
     res.set('Cache-Control', 'no-store');
     return res.json({
       cellIds,
+      transport,
       assets,
       serverPreparation: {
         ...diagnostics,
-        serializedAssetBytes: Buffer.byteLength(JSON.stringify(assets), 'utf8')
+        encodingDurationMilliseconds: encoding.durationMilliseconds,
+        encodedAssetCount: encoding.encodedAssetCount,
+        reusedEncodedAssetCount: encoding.reusedEncodedAssetCount,
+        encodedPayloadBytes: encoding.encodedPayloadBytes
       }
     });
   }
@@ -168,20 +182,28 @@ router.get(
 router.get(
   '/__dev/views/activity-forest',
   optionalAuth,
-  (req, res) => {
+  async (req, res) => {
     const profile = resolveForestPressureProfile(req.query.pressure);
+    const transport = resolveForestAssetTransport(req.query.transport);
     const coldPreparationRequested = req.query.cold === '1';
-    if (coldPreparationRequested) clearForestSceneAssetPool();
+    if (coldPreparationRequested) {
+      clearForestSceneAssetPool();
+      clearForestSceneRasterAssetCache();
+    }
     const layout = forestSceneForProfile(profile);
     const initialCellIds = initialForestCellIds(layout);
-    const { assets, diagnostics: preparation } = prepareForestSceneAssets(
+    const { assets: runtimeAssets, diagnostics: preparation } = prepareForestSceneAssets(
       placementsInForestCells(layout, initialCellIds)
+    );
+    const { assets, diagnostics: encoding } = await encodeForestSceneAssets(
+      runtimeAssets, transport
     );
     const scene = JSON.parse(JSON.stringify({
       ...layout,
       assets,
       assetLoading: {
         strategy: 'regional',
+        transport,
         profileId: profile.id,
         cellSize: FOREST_SCENE_CELL_SIZE,
         preloadCellCount: FOREST_SCENE_PRELOAD_CELL_COUNT,
@@ -191,6 +213,10 @@ router.get(
     }));
     const serverDiagnostics = {
       ...preparation,
+      encodingDurationMilliseconds: encoding.durationMilliseconds,
+      encodedAssetCount: encoding.encodedAssetCount,
+      reusedEncodedAssetCount: encoding.reusedEncodedAssetCount,
+      encodedAssetBytes: encoding.encodedPayloadBytes,
       serializedPayloadBytes: serializedForestSceneBytes(scene),
       coldPreparationRequested
     };
@@ -201,6 +227,7 @@ router.get(
       uiLang: res.locals.uiLang,
       scene,
       profile,
+      rasterTransport: FOREST_ASSET_TRANSPORT_RASTER,
       pressureProfiles: FOREST_PRESSURE_PROFILES,
       serverDiagnostics
     });
