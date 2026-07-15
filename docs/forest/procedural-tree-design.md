@@ -197,15 +197,22 @@ The recommended near-term technical sequence is:
 
 The procedural generation result is an authoring and diagnostic object. It retains the mutable inputs and derived architecture, three-dimensional branch graph, attraction points, termination diagnostics, foliage shoots and leaves, logical masks, shaded pixel grids, and compact color runs. Forest Lab needs this complete result to explain why a specimen has its shape, but a game-facing renderer does not.
 
-The runtime tree asset is a phenotype-independent, JSON-serializable projection built after generation. Schema version 1 contains:
+The runtime tree asset is a phenotype-independent, JSON-serializable projection built after generation. Schema version 2 contains:
 
 - asset schema version; renderer id and version; phenotype id and asset version
 - deterministic seed and the derived visual cache key
 - logical width and height, ground anchor, and occupied visual bounds
-- ordered `rear-foliage`, `wood`, and `front-foliage` horizontal color-run layers
+- ordered `rear-foliage`, `wood`, and `front-foliage` layers; each foliage layer contains up to
+  three branch-associated motion groups with horizontal color runs, an attachment point, and a
+  bounded wind-response description
 - limited architectural identity and maximum branch order for inspection and later composition
 
-It deliberately excludes masks, full pixel grids, nodes, segments, attraction points, diagnostics, leaves, shoots, and coverage cells. JSON stringify/parse is the serialization boundary: consumers render the parsed asset without procedural growth. Separate foliage and wood layers preserve depth order now and provide stable layer-level attachment points for future shared ambient motion or foliage-cluster metadata; no animation data is defined yet.
+It deliberately excludes masks, full pixel grids, nodes, segments, attraction points, diagnostics,
+leaves, shoots, and coverage cells. JSON stringify/parse is the serialization boundary: consumers
+render the parsed asset without procedural growth. The groups preserve only the minimal runtime
+information needed to move related foliage together; procedural branch and leaf data do not cross
+the asset boundary. Their attachment points leave room for a later model to test rotation or
+deformation without committing this experiment to those techniques.
 
 ### Identity, caching, and invalidation
 
@@ -239,7 +246,8 @@ The first composed development scene is available at `/__dev/views/activity-fore
 the isolated runtime assets into a deterministic 3000 × 1800 world containing 180 placements.
 The scene now includes the first fixture-only exploration loop: a deterministic player can walk
 the corridor, approach a tree, inspect fixture writing, close it, and continue from the same place.
-It remains a development preview without persistence, real post queries, or ambient animation.
+It also includes the first shared ambient wind slice. It remains a development preview without
+persistence or real post queries.
 
 `forestSceneLayout.js` owns scene layout version 1. A placement contains only a stable placement
 id, world-space ground anchor, integer scale, phenotype id, specimen seed, and versioned asset
@@ -255,12 +263,11 @@ placement manifest, but only nearby JSON-round-tripped runtime assets. Many plac
 each asset; generation results and branch diagnostics never cross the scene boundary. The cache
 lives only for the server module/process lifetime and is not production persistence.
 
-The browser draws the prepared scene into one visible Canvas. As each runtime asset arrives, its
-three ordered layers are prepared once as small offscreen surfaces. Placements reuse those surfaces,
-reducing ordinary scene draws from thousands of color-run operations per tree to three `drawImage`
-calls per visible tree. The distinct rear-foliage, wood, and front-foliage surfaces remain available
-for later layer-level motion. These surfaces are per asset, never per placement, and are discarded
-with the page.
+The browser draws the prepared scene into one visible Canvas. As each runtime asset arrives, wood
+and each foliage motion group are prepared once as small offscreen surfaces. Placements reuse those
+surfaces, reducing ordinary scene draws from thousands of color-run operations per tree to at most
+seven `drawImage` calls per visible tree: three rear groups, static wood, and three front groups.
+These surfaces are per asset, never per placement, and are discarded with the page.
 Browser-independent math derives each scaled visual rectangle from the asset bounds and ground
 anchor, culls it against the camera, and orders visible placements by ground Y with stable id
 tie-breaking. Integer scaling and disabled image smoothing preserve crisp pixels. Keyboard,
@@ -337,8 +344,8 @@ explicit approval.
 The Activity Forest route offers a development-only transport selector alongside every pressure
 profile. `color-runs` remains the calm representative scene's default. The experimental
 `lossless-raster` option leaves the placement manifest and versioned runtime identity unchanged but
-replaces each asset's run arrays with three transparent, lossless PNG payloads carried as base64 in
-the existing initial and regional JSON responses. Raster assets retain the schema, renderer,
+replaces each static layer or foliage-group run array with a transparent, lossless PNG payload
+carried as base64 in the existing initial and regional JSON responses. Raster assets retain the schema, renderer,
 phenotype, seed, cache key, dimensions, bounds, anchor, architectural identity, and ordered
 `rear-foliage`, `wood`, and `front-foliage` layer ids. They deliberately do not combine those layers
 into a single image.
@@ -352,7 +359,7 @@ For each initial response and regional request, diagnostics separate procedural 
 from transport encoding time and report the exact UTF-8 byte size of the encoded asset array. The
 browser separately reports JSON response decoding, PNG image decoding, layer preparation, fetch
 time, first completed scene render, regional entry behavior, and the existing last/average/maximum
-movement-render measurements. Color runs follow the same three-layer preparation and draw path, so
+movement-render measurements. Color runs follow the same ordered layer/group preparation and draw path, so
 the selector compares transport and browser preparation costs without changing layout, culling,
 depth ordering, exploration, or the default scene. These measurements remain local observations;
 compare repeated cold and warm runs for each pressure profile on the intended baseline device.
@@ -362,10 +369,85 @@ route, or flattened animation layers. Its purpose is to determine whether lossle
 materially improves encoded bytes and browser preparation enough to justify a later production
 design decision.
 
+### First shared ambient wind
+
+The initial ambient experiment applied one restrained shared wind function to each whole foliage
+layer. It performed well, but observation in the composed scene found that a crown changing position
+as one rigid mass read more like a sprite glitch than wind. The first refinement therefore retains
+the top-level layers while dividing each foliage layer into at most three branch-associated motion
+groups. Each placement deterministically derives a phase, speed in the bounded 0.72–1.08 range,
+and amplitude in the bounded 0.45–1 range from its stable placement id and world coordinates. Asset
+identity is deliberately absent from this derivation, so placements that reuse the same runtime
+asset do not move in lockstep. The calmer shared two-frequency signal is sampled with those placement
+parameters plus each group's small phase lag and response amplitude, then converted to an integer
+horizontal displacement of at most two screen pixels. The stagger lets wind appear to pass across
+the crown instead of translating every leaf on the same frame. `wood` remains at the original
+pixel-snapped origin. There is no vertical motion, branch deformation, rotation, or change to
+top-level layer order.
+
+Wind parameters live only in browser scene state and are calculated once when the placement
+manifest is read. During authoring, every shoot already identifies its primary branch lineage. The
+generator orders those lineages by crown position, assigns each complete lineage to one of three
+bounded groups, and distributes each final visible foliage pixel according to its owning leaf.
+Consequently, no leaf or pixel belongs to more than one group, and compositing all groups at zero
+offset exactly reproduces the static foliage layer. Each runtime group retains only its id, index,
+average branch attachment point, wind-response parameters, and pixels. Schema version 2 and its
+cache key explicitly invalidate schema version 1 assets; dimensions, occupied bounds, tree anchor,
+and placement identity remain unchanged.
+
+Both JSON color runs and lossless rasters use the same draw path. Color runs prepare one surface per
+group; raster transport encodes the same group and metadata as one transparent PNG. Preparation
+occurs outside render frames. The renderer supplies placement time parameters at paint time, so the
+raster pixels do not bake a motion sequence and the same asset can still move differently at each
+placement.
+
+Ambient motion requests continuous frames only while the document is visible and the user has not
+requested reduced motion. A hidden document cancels the pending frame and clears movement input.
+Returning to a visible document reevaluates the preference and requests a fresh frame. With reduced
+motion, foliage displacement is zero and rendering returns to the existing event-driven behavior;
+exploration remains available. Regional network requests are scheduled after the active animation
+callback, and response decoding, raster decoding, color-run replay, and sprite preparation remain
+in the asynchronous regional-preparation path rather than the render path.
+
+The browser maintains one narrow visible/depth-order cache. It recomputes after camera or viewport
+changes, player ground-Y changes, or regional asset arrival, and otherwise returns the same visible
+and player/tree depth-ordered arrays. Ambient-only frames consequently do not rescan the complete
+placement manifest, sort it, or rebuild unseen-region sets. Camera movement, resize, and genuine
+asset arrival remain accepted invalidation points; this is intentionally not a generalized spatial
+index.
+
+Diagnostics preserve first-render, movement, and unseen-region measurements. They add a separate
+ambient-only render count and rolling last, average, and maximum render duration. Movement frames
+continue to update only the movement series, allowing the two workloads to be compared without
+combining their samples.
+
+On Node 24.15.0 in a local development run after motion grouping, the representative profile's initial six-cell region
+contained 35 placements, 12 assets, and 12 visible placements in a 1000 × 700 test viewport. The
+large-world profile contained 20 initial placements, 18 assets, and 10 visible placements. Their
+prepared surface counts were 82 and 125 respectively. One hundred thousand unchanged
+visibility-cache reads took 6.9 ms and 6.8 ms; 200 reads that alternated camera X and therefore
+forced recomputation took 10.1 ms and 11.3 ms. Cold generation for those initial regions took
+1155.8 ms and 1361.7 ms outside render frames. Their color-run asset arrays were 1,723,394 and
+2,495,857 UTF-8 bytes, while lossless-raster arrays were 115,270 and 168,874 bytes. These are local
+architecture checks, not browser frame-time claims. The on-page
+ambient, movement, first-render, decoding, preparation, and unseen-region diagnostics remain the
+source for baseline-device evaluation. The regional loader's bounded preparation yields and the
+cached ambient path ensure regional arrival can cause a genuine one-time visibility recomputation,
+not sustained per-frame placement scans or synchronous decoding stalls inside animation callbacks.
+
+This refinement deliberately stops at three translated lineage groups per foliage depth layer.
+Individual leaf motion, additional cluster hierarchy, branch deformation, rotation, storms, user
+wind controls, WebGL, atlases, cache eviction, persistent storage, production routes, and a general
+animation framework remain future boundaries. Group attachment metadata permits a future experiment
+to interpret the same grouping more richly, but does not authorize or implement such a model.
+Further detail should be considered only if representative-scene observation shows this staggered
+motion is still visibly insufficient and the measured Canvas budget supports more work.
+
 The restrained world-space ground treatment and corridor exist only to make depth and negative
 space legible. This first camera is deliberately orthographic: terrain and trees share the same
-translation, with no viewport-fixed horizon or implied perspective projection. The next likely
-step is to test shared ambient wind against this representative workload. Real post integration,
+translation, with no viewport-fixed horizon or implied perspective projection. The next step is to
+judge the grouped ambient motion perceptually against the representative workload before expanding
+the model. Real post integration,
 persistence, complex physics, animation systems, tap-to-pathfind movement, zoom, terrain systems,
 perspective projection, asset eviction, and game-engine abstractions remain non-goals for this slice.
 

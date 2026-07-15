@@ -21,6 +21,10 @@ import {
 
 describe('v3 forest runtime tree assets', () => {
   const post = { id: 'tree-asset-post' };
+  const layerRuns = layer => layer.motionGroups?.flatMap(group => group.runs) || layer.runs;
+  const runPixels = runs => new Map(runs.flatMap(run => Array.from(
+    { length: run.width }, (_, offset) => [`${run.x + offset}:${run.y}`, run.color]
+  )));
 
   beforeEach(() => clearForestLabTreeCache());
 
@@ -50,7 +54,19 @@ describe('v3 forest runtime tree assets', () => {
       'leaves', 'shoots', 'coverageCells'
     ]) expect(serialized).not.toContain(`"${excluded}"`);
     expect(asset.identity.architecture.hasSplitTrunk).toBeDefined();
-    expect(asset.layers.every(layer => Array.isArray(layer.runs))).toBeTrue();
+    expect(asset.layers.find(layer => layer.id === 'wood').runs.length).toBeGreaterThan(0);
+    for (const layer of asset.layers.filter(layer => layer.id.includes('foliage'))) {
+      expect(layer.runs).toBeUndefined();
+      expect(layer.motionGroups.length).toBeGreaterThan(1);
+      expect(layer.motionGroups.length).toBeLessThanOrEqual(3);
+      for (const group of layer.motionGroups) {
+        expect(group.runs.length).toBeGreaterThan(0);
+        expect(group.attachment.x).toEqual(jasmine.any(Number));
+        expect(group.attachment.y).toEqual(jasmine.any(Number));
+        expect(group.windResponse.phaseOffset).toEqual(jasmine.any(Number));
+        expect(group.windResponse.amplitude).toBeGreaterThan(0);
+      }
+    }
   });
 
   it('varies cache identity with seed, renderer, phenotype, and schema versions', () => {
@@ -71,8 +87,10 @@ describe('v3 forest runtime tree assets', () => {
 
   it('builds the same visual asset from an existing generation result', () => {
     const generation = generateForestTreeV3(post, { seed: 303 });
-    expect(buildForestTreeAsset(generation))
-      .toEqual(generateForestTreeAssetV3(post, { seed: 303 }));
+    const asset = buildForestTreeAsset(generation);
+    expect(asset).toEqual(generateForestTreeAssetV3(post, { seed: 303 }));
+    expect(runPixels(layerRuns(asset.layers[0]))).toEqual(runPixels(generation.foliage.backRuns));
+    expect(runPixels(layerRuns(asset.layers[2]))).toEqual(runPixels(generation.foliage.frontRuns));
   });
 
   it('emits the same contract for a distinct registered phenotype', () => {
@@ -92,7 +110,7 @@ describe('v3 forest runtime tree assets', () => {
     const lanternColors = new Set(LANTERNWOOD_PHENOTYPE.foliagePalettes
       .flatMap(variant => Object.values(variant.colors)));
     expect(lanternwood.layers.filter(layer => layer.id.includes('foliage'))
-      .flatMap(layer => layer.runs).every(run => lanternColors.has(run.color))).toBeTrue();
+      .flatMap(layerRuns).every(run => lanternColors.has(run.color))).toBeTrue();
   });
 
   it('selects deterministic whole-tree foliage palettes with weighted rarity', () => {

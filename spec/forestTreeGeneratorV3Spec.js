@@ -2,6 +2,7 @@ import {
   generateForestTreeGraph,
   generateForestTreeV3
 } from '../server/services/forestTreeGeneratorV3.js';
+import { FOREST_FOLIAGE_MOTION_GROUP_COUNT } from '../server/services/forest/v3/rasterizeFoliage.js';
 
 describe('v3 forest branch graph generator', () => {
   const post = { id: 'post-forest-v3-1' };
@@ -446,6 +447,7 @@ describe('v3 forest branch graph generator', () => {
       expect(tree.foliage.leaves.length).toBeGreaterThan(40);
       expect(tree.foliage.backRuns.length).toBeGreaterThan(0);
       expect(tree.foliage.frontRuns.length).toBeGreaterThan(0);
+      const groupByLineage = new Map();
       for (const shoot of tree.foliage.shoots) {
         expect(shoot.branchOrder).toBeGreaterThanOrEqual(tree.phenotype.foliageMinimumOrder);
         if (tree.nodes[shoot.nodeId].generation < tree.phenotype.foliageMinimumOrder) {
@@ -453,11 +455,17 @@ describe('v3 forest branch graph generator', () => {
           expect(shoot.terminal).toBeTrue();
         }
         expect(shoot.leafIds.length).toBeGreaterThan(0);
+        if (groupByLineage.has(shoot.lineageId)) {
+          expect(shoot.motionGroupId).toBe(groupByLineage.get(shoot.lineageId));
+        } else groupByLineage.set(shoot.lineageId, shoot.motionGroupId);
       }
+      expect(new Set(groupByLineage.values()).size)
+        .toBeLessThanOrEqual(FOREST_FOLIAGE_MOTION_GROUP_COUNT);
       for (const leaf of tree.foliage.leaves) {
         const shoot = tree.foliage.shoots[leaf.shootId];
         expect(shoot.leafIds).toContain(leaf.id);
         expect(leaf.supportNodeId).toBe(shoot.nodeId);
+        expect(leaf.motionGroupId).toBe(shoot.motionGroupId);
       }
     }
   });

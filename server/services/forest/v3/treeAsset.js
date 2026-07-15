@@ -1,8 +1,10 @@
-export const FOREST_TREE_ASSET_SCHEMA_VERSION = 1;
+export const FOREST_TREE_ASSET_SCHEMA_VERSION = 2;
 export const FOREST_RENDERER_ID = 'daily-page-forest-v3';
 
 function visualBounds(layers, width, height) {
-  const runs = layers.flatMap(layer => layer.runs);
+  const runs = layers.flatMap(layer => (
+    layer.motionGroups?.flatMap(group => group.runs) || layer.runs
+  ));
   if (!runs.length) return { x: 0, y: 0, width: 0, height: 0 };
   const left = Math.min(...runs.map(run => run.x));
   const top = Math.min(...runs.map(run => run.y));
@@ -38,9 +40,9 @@ export function buildForestTreeAsset(generationResult) {
     phenotypeAssetVersion: phenotype.assetVersion
   });
   const layers = [
-    { id: 'rear-foliage', runs: foliage.backRuns },
+    { id: 'rear-foliage', motionGroups: foliage.backMotionGroups },
     { id: 'wood', runs: wood.runs },
-    { id: 'front-foliage', runs: foliage.frontRuns }
+    { id: 'front-foliage', motionGroups: foliage.frontMotionGroups }
   ];
   return {
     schemaVersion: FOREST_TREE_ASSET_SCHEMA_VERSION,
