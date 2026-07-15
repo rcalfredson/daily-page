@@ -22,6 +22,96 @@ export function visibleForestPlacements(placements, assetsByKey, viewport, margi
   ));
 }
 
+export const FOREST_AMBIENT_WIND = Object.freeze({
+  maximumDisplacement: 2,
+  minimumAmplitude: 0.45,
+  maximumAmplitude: 1,
+  minimumSpeed: 0.72,
+  maximumSpeed: 1.08
+});
+
+function placementHash(value) {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function placementUnit(placement, decision) {
+  return placementHash(`${placement.id}:${placement.worldX}:${placement.worldY}:${decision}`)
+    / 4294967296;
+}
+
+export function forestPlacementWindParameters(placement) {
+  const amplitudeRange = FOREST_AMBIENT_WIND.maximumAmplitude
+    - FOREST_AMBIENT_WIND.minimumAmplitude;
+  const speedRange = FOREST_AMBIENT_WIND.maximumSpeed - FOREST_AMBIENT_WIND.minimumSpeed;
+  return Object.freeze({
+    phase: placementUnit(placement, 'phase') * Math.PI * 2,
+    speed: FOREST_AMBIENT_WIND.minimumSpeed + (placementUnit(placement, 'speed') * speedRange),
+    amplitude: FOREST_AMBIENT_WIND.minimumAmplitude
+      + (placementUnit(placement, 'amplitude') * amplitudeRange)
+  });
+}
+
+export function forestAmbientWindSignal(time) {
+  return (Math.sin(time * 0.55) * 0.72) + (Math.sin((time * 0.21) + 1.4) * 0.28);
+}
+
+export function forestFoliageMotionGroupDisplacement(
+  parameters, group, elapsedSeconds, active = true
+) {
+  if (!active) return 0;
+  const phaseOffset = group.windResponse?.phaseOffset || 0;
+  const response = group.windResponse?.amplitude ?? 1;
+  const signal = forestAmbientWindSignal(
+    (elapsedSeconds * parameters.speed) + parameters.phase + phaseOffset
+  );
+  return Math.round(
+    FOREST_AMBIENT_WIND.maximumDisplacement * parameters.amplitude * response * signal
+  );
+}
+
+export function forestAmbientMotionActive({ documentHidden = false, reducedMotion = false } = {}) {
+  return !documentHidden && !reducedMotion;
+}
+
+export function createForestVisibilityCache(placements, assetsByKey, margin = 24) {
+  let cached = null;
+  let invalidated = true;
+  let revision = 0;
+  let snapshot = null;
+
+  return {
+    invalidate() {
+      invalidated = true;
+    },
+    read(viewport, player) {
+      const changed = invalidated || !snapshot
+        || snapshot.x !== viewport.x || snapshot.y !== viewport.y
+        || snapshot.width !== viewport.width || snapshot.height !== viewport.height
+        || snapshot.playerWorldY !== player.worldY || snapshot.assetCount !== assetsByKey.size;
+      if (changed) {
+        const visible = visibleForestPlacements(placements, assetsByKey, viewport, margin);
+        revision += 1;
+        cached = { visible, depthOrder: forestDepthOrder(visible, player), revision };
+        snapshot = {
+          x: viewport.x,
+          y: viewport.y,
+          width: viewport.width,
+          height: viewport.height,
+          playerWorldY: player.worldY,
+          assetCount: assetsByKey.size
+        };
+        invalidated = false;
+      }
+      return cached;
+    }
+  };
+}
+
 export function forestSceneCellId(column, row) {
   return `${column}:${row}`;
 }

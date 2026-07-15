@@ -2,6 +2,8 @@ import { createRandom } from './random.js';
 
 const EMPTY = null;
 
+export const FOREST_FOLIAGE_MOTION_GROUP_COUNT = 3;
+
 export const FOLIAGE_PALETTE = Object.freeze({
   highlight: '#9fbe59',
   light: '#73a34a',
@@ -339,7 +341,68 @@ function compactRuns(pixels) {
   return runs;
 }
 
-function rasterizeLayer(leaves, layer, phenotype, palette) {
+function assignFoliageMotionGroups(graph, shoots, leaves) {
+  const lineages = new Map();
+  for (const shoot of shoots) {
+    if (!lineages.has(shoot.lineageId)) lineages.set(shoot.lineageId, { x: 0, count: 0 });
+    const lineage = lineages.get(shoot.lineageId);
+    for (const leafId of shoot.leafIds) {
+      lineage.x += leaves[leafId].x;
+      lineage.count += 1;
+    }
+  }
+  const orderedLineageIds = [...lineages.entries()].sort((first, second) => (
+    (first[1].x / first[1].count) - (second[1].x / second[1].count)
+      || first[0] - second[0]
+  )).map(([lineageId]) => lineageId);
+  const groupByLineage = new Map(orderedLineageIds.map((lineageId, index) => [
+    lineageId,
+    Math.min(FOREST_FOLIAGE_MOTION_GROUP_COUNT - 1, Math.floor(
+      (index * FOREST_FOLIAGE_MOTION_GROUP_COUNT) / orderedLineageIds.length
+    ))
+  ]));
+  for (const shoot of shoots) {
+    shoot.motionGroupId = groupByLineage.get(shoot.lineageId);
+    for (const leafId of shoot.leafIds) leaves[leafId].motionGroupId = shoot.motionGroupId;
+  }
+  return Array.from({ length: FOREST_FOLIAGE_MOTION_GROUP_COUNT }, (_, index) => {
+    const groupShoots = shoots.filter(shoot => shoot.motionGroupId === index);
+    const attachment = groupShoots.reduce((sum, shoot) => ({
+      x: sum.x + graph.nodes[shoot.nodeId].x,
+      y: sum.y + graph.nodes[shoot.nodeId].y
+    }), { x: 0, y: 0 });
+    const groupSize = Math.max(1, groupShoots.length);
+    return {
+      id: `crown-${index}`,
+      index,
+      attachment: {
+        x: Number((attachment.x / groupSize).toFixed(2)),
+        y: Number((attachment.y / groupSize).toFixed(2))
+      },
+      windResponse: {
+        phaseOffset: (index - 1) * 0.72,
+        amplitude: [0.82, 1, 0.9][index]
+      }
+    };
+  });
+}
+
+function compactMotionGroups(pixels, owner, motionGroups) {
+  const groupPixels = Array.from({ length: FOREST_FOLIAGE_MOTION_GROUP_COUNT }, () => (
+    makeGrid(pixels[0].length, pixels.length)
+  ));
+  for (let y = 0; y < pixels.length; y += 1) {
+    for (let x = 0; x < pixels[y].length; x += 1) {
+      if (pixels[y][x]) groupPixels[owner[y][x].leaf.motionGroupId][y][x] = pixels[y][x];
+    }
+  }
+  return groupPixels.map((group, index) => ({
+    ...motionGroups[index],
+    runs: compactRuns(group)
+  })).filter(group => group.runs.length);
+}
+
+function rasterizeLayer(leaves, layer, phenotype, palette, motionGroups) {
   const mask = makeGrid(phenotype.width, phenotype.height, false);
   const owner = makeGrid(phenotype.width, phenotype.height);
   const layerLeaves = leaves
@@ -347,15 +410,21 @@ function rasterizeLayer(leaves, layer, phenotype, palette) {
     .sort((first, second) => first.depth - second.depth || first.id - second.id);
   for (const leaf of layerLeaves) paintLeaf(mask, owner, leaf, phenotype);
   const pixels = shadeLeaves(mask, owner, palette);
-  return { mask, pixels, runs: compactRuns(pixels) };
+  return {
+    mask,
+    pixels,
+    runs: compactRuns(pixels),
+    motionGroups: compactMotionGroups(pixels, owner, motionGroups)
+  };
 }
 
 export function rasterizeFoliage(graph, phenotype, seed) {
   const paletteVariant = selectFoliagePalette(phenotype, seed);
   const palette = paletteVariant.colors;
   const { shoots, leaves, coverageCells } = generateLeafBearingShoots(graph, phenotype, seed);
-  const back = rasterizeLayer(leaves, 'back', phenotype, palette);
-  const front = rasterizeLayer(leaves, 'front', phenotype, palette);
+  const motionGroups = assignFoliageMotionGroups(graph, shoots, leaves);
+  const back = rasterizeLayer(leaves, 'back', phenotype, palette, motionGroups);
+  const front = rasterizeLayer(leaves, 'front', phenotype, palette, motionGroups);
   const mask = makeGrid(phenotype.width, phenotype.height, false);
   const pixels = makeGrid(phenotype.width, phenotype.height);
   for (let y = 0; y < phenotype.height; y += 1) {
@@ -372,6 +441,8 @@ export function rasterizeFoliage(graph, phenotype, seed) {
     runs: compactRuns(pixels),
     backRuns: back.runs,
     frontRuns: front.runs,
+    backMotionGroups: back.motionGroups,
+    frontMotionGroups: front.motionGroups,
     shoots,
     leaves,
     coverageCells,

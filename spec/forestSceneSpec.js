@@ -26,11 +26,16 @@ import {
 } from '../server/services/forestScenePressure.js';
 import {
   cameraFollowingPlayer,
+  createForestVisibilityCache,
   focusedForestPlacement,
+  FOREST_AMBIENT_WIND,
+  forestAmbientMotionActive,
   forestSceneAssetKeysForCells,
   forestSceneCellIdsForViewport,
   forestScenePlacementCellId,
   forestDepthOrder,
+  forestFoliageMotionGroupDisplacement,
+  forestPlacementWindParameters,
   moveForestPlayer,
   normalizedMovement,
   playerCollides,
@@ -174,9 +179,13 @@ describe('static Activity Forest scene', () => {
     expect(rasterAsset.layers.map(({ id }) => id)).toEqual([
       'rear-foliage', 'wood', 'front-foliage'
     ]);
-    expect(rasterAsset.layers.every(layer => (
-      layer.mediaType === 'image/png' && layer.encoding === 'base64' && !layer.runs
-    ))).toBeTrue();
+    expect(rasterAsset.layers.find(layer => layer.id === 'wood').mediaType).toBe('image/png');
+    for (const layer of rasterAsset.layers.filter(layer => layer.motionGroups)) {
+      expect(layer.motionGroups.length).toBeGreaterThan(1);
+      expect(layer.motionGroups.every(group => (
+        group.mediaType === 'image/png' && group.encoding === 'base64' && !group.runs
+      ))).toBeTrue();
+    }
     expect(cold.diagnostics.encodedAssetCount).toBe(1);
     expect(cold.diagnostics.reusedEncodedAssetCount).toBe(0);
     expect(warm.diagnostics.encodedAssetCount).toBe(0);
@@ -187,24 +196,37 @@ describe('static Activity Forest scene', () => {
     expect(cold.diagnostics.encodedPayloadBytes)
       .toBe(Buffer.byteLength(JSON.stringify(cold.assets), 'utf8'));
 
-    for (const [index, layer] of rasterAsset.layers.entries()) {
-      const { data, info } = await sharp(Buffer.from(layer.data, 'base64')).raw().toBuffer({
-        resolveWithObject: true
-      });
-      const expected = Buffer.alloc(data.length);
-      for (const run of runtimeAsset.layers[index].runs) {
-        const color = run.color.slice(1);
-        const channels = color.length === 3
-          ? [...color].map(value => Number.parseInt(`${value}${value}`, 16))
-          : [0, 2, 4].map(offset => Number.parseInt(color.slice(offset, offset + 2), 16));
-        for (let x = run.x; x < run.x + run.width; x += 1) {
-          const offset = ((run.y * info.width) + x) * info.channels;
-          expected.set([...channels, 255], offset);
+    for (const [index, rasterLayer] of rasterAsset.layers.entries()) {
+      const runtimeLayer = runtimeAsset.layers[index];
+      const rasterSources = rasterLayer.motionGroups || [rasterLayer];
+      const runtimeSources = runtimeLayer.motionGroups || [runtimeLayer];
+      expect(rasterSources.map(source => source.id)).toEqual(
+        runtimeSources.map(source => source.id)
+      );
+      for (const [sourceIndex, source] of rasterSources.entries()) {
+        if (runtimeLayer.motionGroups) {
+          expect(source.index).toBe(runtimeSources[sourceIndex].index);
+          expect(source.attachment).toEqual(runtimeSources[sourceIndex].attachment);
+          expect(source.windResponse).toEqual(runtimeSources[sourceIndex].windResponse);
         }
+        const { data, info } = await sharp(Buffer.from(source.data, 'base64')).raw().toBuffer({
+          resolveWithObject: true
+        });
+        const expected = Buffer.alloc(data.length);
+        for (const run of runtimeSources[sourceIndex].runs) {
+          const color = run.color.slice(1);
+          const channels = color.length === 3
+            ? [...color].map(value => Number.parseInt(`${value}${value}`, 16))
+            : [0, 2, 4].map(offset => Number.parseInt(color.slice(offset, offset + 2), 16));
+          for (let x = run.x; x < run.x + run.width; x += 1) {
+            const offset = ((run.y * info.width) + x) * info.channels;
+            expected.set([...channels, 255], offset);
+          }
+        }
+        expect(info.width).toBe(runtimeAsset.dimensions.width);
+        expect(info.height).toBe(runtimeAsset.dimensions.height);
+        expect(data).toEqual(expected);
       }
-      expect(info.width).toBe(runtimeAsset.dimensions.width);
-      expect(info.height).toBe(runtimeAsset.dimensions.height);
-      expect(data).toEqual(expected);
     }
   });
 
@@ -283,6 +305,102 @@ describe('static Activity Forest scene', () => {
     expect(visibleForestPlacements(
       placements, assets, { x: 0, y: 0, width: 140, height: 100 }, 0
     ).map((placement) => placement.id)).toEqual(['partial', 'tie-a', 'tie-b', 'near']);
+  });
+
+  it('derives deterministic wind parameters from placement rather than shared asset identity', () => {
+    const firstPlacement = {
+      id: 'placement-1', assetKey: 'shared-tree', worldX: 120, worldY: 240
+    };
+    const secondPlacement = {
+      id: 'placement-2', assetKey: 'shared-tree', worldX: 220, worldY: 240
+    };
+    const first = forestPlacementWindParameters(firstPlacement);
+    const repeated = forestPlacementWindParameters({ ...firstPlacement });
+    const second = forestPlacementWindParameters(secondPlacement);
+
+    expect(repeated).toEqual(first);
+    expect(second.phase).not.toBe(first.phase);
+    expect(second).not.toEqual(first);
+    expect(first.amplitude).toBeGreaterThanOrEqual(FOREST_AMBIENT_WIND.minimumAmplitude);
+    expect(first.amplitude).toBeLessThanOrEqual(FOREST_AMBIENT_WIND.maximumAmplitude);
+    expect(first.speed).toBeGreaterThanOrEqual(FOREST_AMBIENT_WIND.minimumSpeed);
+    expect(first.speed).toBeLessThanOrEqual(FOREST_AMBIENT_WIND.maximumSpeed);
+  });
+
+  it('keeps foliage wind bounded and pixel-snapped and becomes static when inactive', () => {
+    const parameters = forestPlacementWindParameters({
+      id: 'bounded-wind', worldX: 42, worldY: 84
+    });
+    const group = { index: 1, windResponse: { phaseOffset: 0, amplitude: 1 } };
+    const samples = Array.from({ length: 500 }, (_, index) => (
+      forestFoliageMotionGroupDisplacement(parameters, group, index / 30)
+    ));
+
+    expect(samples.every(Number.isInteger)).toBeTrue();
+    expect(Math.max(...samples)).toBeLessThanOrEqual(
+      FOREST_AMBIENT_WIND.maximumDisplacement
+    );
+    expect(Math.min(...samples)).toBeGreaterThanOrEqual(
+      -FOREST_AMBIENT_WIND.maximumDisplacement
+    );
+    expect(forestFoliageMotionGroupDisplacement(parameters, group, 4.5, false)).toBe(0);
+    expect(forestAmbientMotionActive()).toBeTrue();
+    expect(forestAmbientMotionActive({ documentHidden: true })).toBeFalse();
+    expect(forestAmbientMotionActive({ reducedMotion: true })).toBeFalse();
+  });
+
+  it('staggers deterministic motion groups without exceeding the ambient bound', () => {
+    const parameters = forestPlacementWindParameters({
+      id: 'grouped-wind', worldX: 140, worldY: 280
+    });
+    const groups = [
+      { index: 0, windResponse: { phaseOffset: -0.72, amplitude: 0.82 } },
+      { index: 1, windResponse: { phaseOffset: 0, amplitude: 1 } },
+      { index: 2, windResponse: { phaseOffset: 0.72, amplitude: 0.9 } }
+    ];
+    const samples = groups.map(group => Array.from({ length: 500 }, (_, index) => (
+      forestFoliageMotionGroupDisplacement(parameters, group, index / 30)
+    )));
+
+    expect(new Set(samples.map(sample => sample.join(','))).size).toBe(groups.length);
+    expect(samples.flat().every(value => Number.isInteger(value)
+      && Math.abs(value) <= FOREST_AMBIENT_WIND.maximumDisplacement)).toBeTrue();
+    expect(groups.every(group => (
+      forestFoliageMotionGroupDisplacement(parameters, group, 8, false) === 0
+    ))).toBeTrue();
+  });
+
+  it('reuses visible depth order until a genuine visibility input changes', () => {
+    const asset = {
+      anchor: { x: 5, y: 10 }, bounds: { x: 1, y: 2, width: 8, height: 9 }
+    };
+    const assets = new Map([['tree', asset]]);
+    const placements = [
+      { id: 'visible', assetKey: 'tree', worldX: 50, worldY: 60, scale: 1 },
+      { id: 'unloaded', assetKey: 'late-tree', worldX: 70, worldY: 70, scale: 1 }
+    ];
+    const viewport = { x: 0, y: 0, width: 100, height: 100 };
+    const player = { worldX: 40, worldY: 65 };
+    const cache = createForestVisibilityCache(placements, assets, 0);
+    const initial = cache.read(viewport, player);
+
+    expect(cache.read(viewport, player)).toBe(initial);
+    expect(initial.visible.map(({ id }) => id)).toEqual(['visible']);
+
+    const cameraChanged = cache.read({ ...viewport, x: 1 }, player);
+    expect(cameraChanged.revision).toBe(initial.revision + 1);
+    expect(cache.read({ ...viewport, x: 1 }, player)).toBe(cameraChanged);
+
+    assets.set('late-tree', asset);
+    const assetChanged = cache.read({ ...viewport, x: 1 }, player);
+    expect(assetChanged.revision).toBe(cameraChanged.revision + 1);
+    expect(assetChanged.visible.map(({ id }) => id)).toEqual(['visible', 'unloaded']);
+
+    const playerDepthChanged = cache.read({ ...viewport, x: 1 }, { ...player, worldY: 75 });
+    expect(playerDepthChanged.revision).toBe(assetChanged.revision + 1);
+    cache.invalidate();
+    expect(cache.read({ ...viewport, x: 1 }, { ...player, worldY: 75 }).revision)
+      .toBe(playerDepthChanged.revision + 1);
   });
 
   it('adds a deterministic, safe spawn and bounded fixture metadata', () => {

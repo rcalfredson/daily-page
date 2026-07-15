@@ -1,13 +1,15 @@
 import {
   cameraFollowingPlayer,
+  createForestVisibilityCache,
   focusedForestPlacement,
+  forestAmbientMotionActive,
   forestSceneAssetKeysForCells,
   forestSceneCellIdsForViewport,
-  forestDepthOrder,
+  forestFoliageMotionGroupDisplacement,
+  forestPlacementWindParameters,
   moveForestPlayer,
   normalizedMovement,
-  touchMovement,
-  visibleForestPlacements
+  touchMovement
 } from './forest-scene-math.js';
 
 const payload = document.getElementById('activity-forest-scene');
@@ -42,6 +44,7 @@ if (payload && viewportElement && canvas) {
     prepared: document.querySelector('[data-forest-prepared]'),
     firstRender: document.querySelector('[data-forest-first-render]'),
     movementDuration: document.querySelector('[data-forest-movement-duration]'),
+    ambientDuration: document.querySelector('[data-forest-ambient-duration]'),
     regionEntry: document.querySelector('[data-forest-region-entry]'),
     regionLoading: document.querySelector('[data-forest-region-loading]')
   };
@@ -53,12 +56,25 @@ if (payload && viewportElement && canvas) {
   const seenPlacementIds = new Set();
   const seenAssetKeys = new Set();
   const movementRenders = { count: 0, total: 0, maximum: 0 };
+  const ambientRenders = { count: 0, total: 0, maximum: 0 };
+  const windByPlacementId = new Map(scene.placements.map((placement) => (
+    [placement.id, forestPlacementWindParameters(placement)]
+  )));
+  const visibilityCache = createForestVisibilityCache(scene.placements, assetsByKey);
+  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   let focusedPlacement = null;
+  let preparedSpriteCount = 0;
   let scheduledFrame = null;
   let lastFrameTime = null;
+  let lastSeenVisibilityRevision = 0;
   let firstRenderRecorded = false;
   let regionRetryAfter = 0;
   let regionalRequestActive = false;
+  let regionalRequestScheduled = false;
+  let ambientMotionActive = forestAmbientMotionActive({
+    documentHidden: document.hidden,
+    reducedMotion: reducedMotionQuery.matches
+  });
 
   function rasterLayerSource(layer) {
     const binary = window.atob(layer.data);
@@ -85,33 +101,56 @@ if (payload && viewportElement && canvas) {
     });
   }
 
+  async function prepareRuntimeSprite(source, dimensions) {
+    if (source.runs) {
+      const sprite = document.createElement('canvas');
+      sprite.width = dimensions.width;
+      sprite.height = dimensions.height;
+      const spriteContext = sprite.getContext('2d');
+      spriteContext.imageSmoothingEnabled = false;
+      for (const run of source.runs) {
+        spriteContext.fillStyle = run.color;
+        spriteContext.fillRect(run.x, run.y, run.width, 1);
+      }
+      return { sprite, decodeDuration: 0 };
+    }
+    const decodeStartedAt = window.performance.now();
+    const sprite = await decodeRasterLayer(source);
+    return { sprite, decodeDuration: window.performance.now() - decodeStartedAt };
+  }
+
   async function prepareRuntimeAsset(asset) {
     if (spritesByKey.has(asset.cacheKey)) return { preparedCount: 0, decodeDuration: 0 };
     let decodeDuration = 0;
     const layerSprites = [];
     for (const layer of asset.layers) {
-      let sprite;
-      if (layer.runs) {
-        sprite = document.createElement('canvas');
-        sprite.width = asset.dimensions.width;
-        sprite.height = asset.dimensions.height;
-        const spriteContext = sprite.getContext('2d');
-        spriteContext.imageSmoothingEnabled = false;
-        for (const run of layer.runs) {
-          spriteContext.fillStyle = run.color;
-          spriteContext.fillRect(run.x, run.y, run.width, 1);
+      if (layer.motionGroups) {
+        const motionGroups = [];
+        for (const group of layer.motionGroups) {
+          const prepared = await prepareRuntimeSprite(group, asset.dimensions);
+          decodeDuration += prepared.decodeDuration;
+          preparedSpriteCount += 1;
+          motionGroups.push({
+            id: group.id,
+            index: group.index,
+            attachment: group.attachment,
+            windResponse: group.windResponse,
+            sprite: prepared.sprite
+          });
         }
+        layerSprites.push({ id: layer.id, motionGroups });
       } else {
-        const decodeStartedAt = window.performance.now();
-        sprite = await decodeRasterLayer(layer);
-        decodeDuration += window.performance.now() - decodeStartedAt;
+        const prepared = await prepareRuntimeSprite(layer, asset.dimensions);
+        decodeDuration += prepared.decodeDuration;
+        preparedSpriteCount += 1;
+        layerSprites.push({ id: layer.id, sprite: prepared.sprite });
       }
-      layerSprites.push({ id: layer.id, sprite });
     }
     assetsByKey.set(asset.cacheKey, asset);
     spritesByKey.set(asset.cacheKey, layerSprites);
+    visibilityCache.invalidate();
     diagnostics.prepared.textContent = `${spritesByKey.size} / ${
-      scene.assetLoading.totalAssetCount} assets · ${spritesByKey.size * 3} layer sprites`;
+      scene.assetLoading.totalAssetCount} assets · ${preparedSpriteCount} layer/group sprites`;
     return { preparedCount: 1, decodeDuration };
   }
 
@@ -232,6 +271,15 @@ if (payload && viewportElement && canvas) {
     }
   }
 
+  function scheduleRequiredRegions() {
+    if (regionalRequestScheduled) return;
+    regionalRequestScheduled = true;
+    window.setTimeout(() => {
+      regionalRequestScheduled = false;
+      requestRequiredRegions();
+    }, 0);
+  }
+
   updateRegionLoading();
 
   function corridorCenter(worldY) {
@@ -240,7 +288,7 @@ if (payload && viewportElement && canvas) {
 
   function followPlayer() {
     Object.assign(camera, cameraFollowingPlayer(player, camera, scene.world));
-    requestRequiredRegions();
+    scheduleRequiredRegions();
   }
 
   function paintGround() {
@@ -269,10 +317,11 @@ if (payload && viewportElement && canvas) {
     context.fill();
   }
 
-  function paintTree(placement) {
+  function paintTree(placement, elapsedSeconds) {
     const asset = assetsByKey.get(placement.assetKey);
     const originX = Math.round(placement.worldX - camera.x - asset.anchor.x * placement.scale);
     const originY = Math.round(placement.worldY - camera.y - asset.anchor.y * placement.scale);
+    const wind = windByPlacementId.get(placement.id);
     if (placement.id === focusedPlacement?.id) {
       context.beginPath();
       context.ellipse(Math.round(placement.worldX - camera.x),
@@ -284,9 +333,19 @@ if (payload && viewportElement && canvas) {
       context.lineWidth = 2;
       context.stroke();
     }
-    for (const { sprite } of spritesByKey.get(placement.assetKey)) {
-      context.drawImage(sprite, originX, originY,
-        asset.dimensions.width * placement.scale, asset.dimensions.height * placement.scale);
+    for (const layer of spritesByKey.get(placement.assetKey)) {
+      if (layer.motionGroups) {
+        for (const group of layer.motionGroups) {
+          const displacement = forestFoliageMotionGroupDisplacement(
+            wind, group, elapsedSeconds, ambientMotionActive
+          );
+          context.drawImage(group.sprite, originX + displacement, originY,
+            asset.dimensions.width * placement.scale, asset.dimensions.height * placement.scale);
+        }
+      } else {
+        context.drawImage(layer.sprite, originX, originY,
+          asset.dimensions.width * placement.scale, asset.dimensions.height * placement.scale);
+      }
     }
   }
 
@@ -313,28 +372,34 @@ if (payload && viewportElement && canvas) {
     diagnostics.focus.textContent = focusedPlacement?.id || 'None';
   }
 
-  function render({ moving = false, frameGap = null } = {}) {
+  function render(elapsedSeconds, moving = false, frameGap = null) {
     const start = window.performance.now();
     context.imageSmoothingEnabled = false;
     paintGround();
-    const visible = visibleForestPlacements(scene.placements, assetsByKey, camera);
-    for (const item of forestDepthOrder(visible, player)) {
+    const visibility = visibilityCache.read(camera, player);
+    for (const item of visibility.depthOrder) {
       if (item.kind === 'player') paintPlayer();
-      else paintTree(item.placement);
+      else paintTree(item.placement, elapsedSeconds);
     }
+    const { visible } = visibility;
     diagnostics.visible.textContent = `${visible.length} / ${scene.placements.length}`;
     diagnostics.camera.textContent = `${camera.x}, ${camera.y}`;
     diagnostics.player.textContent = `${Math.round(player.worldX)}, ${Math.round(player.worldY)}`;
     const duration = window.performance.now() - start;
     diagnostics.duration.textContent = `${duration.toFixed(1)} ms`;
 
-    const newlySeen = visible.filter(({ id }) => !seenPlacementIds.has(id));
-    const newlySeenAssets = new Set(newlySeen.map(({ assetKey }) => assetKey)
-      .filter((assetKey) => !seenAssetKeys.has(assetKey)));
-    visible.forEach(({ id, assetKey }) => {
-      seenPlacementIds.add(id);
-      seenAssetKeys.add(assetKey);
-    });
+    let newlySeen = [];
+    let newlySeenAssets = null;
+    if (visibility.revision !== lastSeenVisibilityRevision) {
+      lastSeenVisibilityRevision = visibility.revision;
+      newlySeen = visible.filter(({ id }) => !seenPlacementIds.has(id));
+      newlySeenAssets = new Set(newlySeen.map(({ assetKey }) => assetKey)
+        .filter((assetKey) => !seenAssetKeys.has(assetKey)));
+      visible.forEach(({ id, assetKey }) => {
+        seenPlacementIds.add(id);
+        seenAssetKeys.add(assetKey);
+      });
+    }
 
     if (moving) {
       movementRenders.count += 1;
@@ -348,6 +413,14 @@ if (payload && viewportElement && canvas) {
           newlySeenAssets.size} new assets · ${duration.toFixed(1)} ms render · ${
           frameGap === null ? 'first movement frame' : `${frameGap.toFixed(1)} ms frame gap`}`;
       }
+    } else if (ambientMotionActive) {
+      ambientRenders.count += 1;
+      ambientRenders.total += duration;
+      ambientRenders.maximum = Math.max(ambientRenders.maximum, duration);
+      diagnostics.ambientDuration.textContent = `${ambientRenders.count} renders · ${
+        duration.toFixed(1)} ms last / ${
+        (ambientRenders.total / ambientRenders.count).toFixed(1)} ms avg / ${
+        ambientRenders.maximum.toFixed(1)} ms max`;
     }
 
     if (!firstRenderRecorded) {
@@ -380,8 +453,8 @@ if (payload && viewportElement && canvas) {
       followPlayer();
       updateFocus();
     }
-    render({ moving, frameGap });
-    if (moving) scheduledFrame = requestAnimationFrame(frame);
+    render(timestamp / 1000, moving, frameGap);
+    if (moving || ambientMotionActive) scheduledFrame = requestAnimationFrame(frame);
     else lastFrameTime = null;
   }
 
@@ -397,6 +470,21 @@ if (payload && viewportElement && canvas) {
     joystick.hidden = true;
     joystickStick.style.transform = '';
     lastFrameTime = null;
+  }
+
+  function updateAmbientMotion() {
+    const nextActive = forestAmbientMotionActive({
+      documentHidden: document.hidden,
+      reducedMotion: reducedMotionQuery.matches
+    });
+    if (document.hidden) clearMovement();
+    ambientMotionActive = nextActive;
+    if (document.hidden && scheduledFrame !== null) {
+      cancelAnimationFrame(scheduledFrame);
+      scheduledFrame = null;
+      lastFrameTime = null;
+    }
+    if (!document.hidden) requestRender();
   }
 
   function updateTouchMovement(event) {
@@ -501,6 +589,8 @@ if (payload && viewportElement && canvas) {
   viewportElement.addEventListener('pointercancel', stopTouchMovement);
   viewportElement.addEventListener('lostpointercapture', stopTouchMovement);
   window.addEventListener('blur', clearMovement);
+  document.addEventListener('visibilitychange', updateAmbientMotion);
+  reducedMotionQuery.addEventListener('change', updateAmbientMotion);
   dialog.addEventListener('close', () => {
     clearMovement();
     viewportElement.focus();

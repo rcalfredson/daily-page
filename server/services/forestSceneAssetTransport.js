@@ -50,8 +50,10 @@ async function encodeRasterLayer(layer, dimensions) {
   const png = await sharp(layerPixels(layer, dimensions), {
     raw: { ...dimensions, channels: 4 }
   }).png({ compressionLevel: 9 }).toBuffer();
+  const metadata = { ...layer };
+  delete metadata.runs;
   return {
-    id: layer.id,
+    ...metadata,
     mediaType: 'image/png',
     encoding: 'base64',
     data: png.toString('base64')
@@ -63,7 +65,16 @@ async function encodeRasterAsset(asset) {
   return {
     ...metadata,
     transport: FOREST_ASSET_TRANSPORT_RASTER,
-    layers: await Promise.all(layers.map(layer => encodeRasterLayer(layer, asset.dimensions)))
+    layers: await Promise.all(layers.map(async (layer) => (
+      layer.motionGroups
+        ? {
+          id: layer.id,
+          motionGroups: await Promise.all(layer.motionGroups.map(group => (
+            encodeRasterLayer(group, asset.dimensions)
+          )))
+        }
+        : encodeRasterLayer(layer, asset.dimensions)
+    )))
   };
 }
 

@@ -17,7 +17,11 @@
       const layers = canvas.classList.contains('forest-wood-canvas')
         ? asset.layers.filter(function (layer) { return layer.id === 'wood'; })
         : asset.layers;
-      layers.forEach(function (layer) { paintRuns(context, layer.runs); });
+      layers.forEach(function (layer) {
+        if (layer.motionGroups) {
+          layer.motionGroups.forEach(function (group) { paintRuns(context, group.runs); });
+        } else paintRuns(context, layer.runs);
+      });
     });
   }
 
