@@ -11,6 +11,15 @@ import {
   prepareForestSceneWithDiagnostics
 } from '../server/services/forestSceneAssetPool.js';
 import {
+  clearForestSceneRasterAssetCache,
+  encodeForestSceneAssets,
+  FOREST_ASSET_TRANSPORT_RASTER,
+  FOREST_ASSET_TRANSPORT_RUNS,
+  forestSceneRasterAssetCacheSize,
+  resolveForestAssetTransport
+} from '../server/services/forestSceneAssetTransport.js';
+import sharp from 'sharp';
+import {
   FOREST_PRESSURE_PROFILES,
   resolveForestPressureProfile,
   serializedForestSceneBytes
@@ -35,7 +44,10 @@ import {
 } from '../server/services/forestSceneExploration.js';
 
 describe('static Activity Forest scene', () => {
-  beforeEach(() => clearForestSceneAssetPool());
+  beforeEach(() => {
+    clearForestSceneAssetPool();
+    clearForestSceneRasterAssetCache();
+  });
 
   it('generates exactly serializable deterministic placements', () => {
     const first = generateForestSceneLayout();
@@ -127,6 +139,7 @@ describe('static Activity Forest scene', () => {
     const warm = prepareForestSceneWithDiagnostics(layout);
 
     expect(cold.diagnostics.generatedAssetCount).toBe(4);
+    expect(cold.diagnostics.generationDurationMilliseconds).toBeGreaterThanOrEqual(0);
     expect(cold.diagnostics.reusedAssetCount).toBe(0);
     expect(cold.diagnostics.preparedAssetCount).toBe(4);
     expect(cold.diagnostics.durationMilliseconds).toBeGreaterThanOrEqual(0);
@@ -134,6 +147,80 @@ describe('static Activity Forest scene', () => {
     expect(warm.diagnostics.reusedAssetCount).toBe(4);
     expect(serializedForestSceneBytes(cold.scene))
       .toBe(Buffer.byteLength(JSON.stringify(cold.scene), 'utf8'));
+  });
+
+  it('encodes and caches deterministic lossless layer rasters by versioned asset key', async () => {
+    const layout = generateForestSceneLayout({
+      seed: 'raster-transport', placementCount: 1, assetPoolSize: 1
+    });
+    const [runtimeAsset] = prepareForestSceneAssets(layout.placements).assets;
+    const cold = await encodeForestSceneAssets(
+      [runtimeAsset], FOREST_ASSET_TRANSPORT_RASTER
+    );
+    const warm = await encodeForestSceneAssets(
+      [runtimeAsset], FOREST_ASSET_TRANSPORT_RASTER
+    );
+    clearForestSceneRasterAssetCache();
+    const repeated = await encodeForestSceneAssets(
+      [runtimeAsset], FOREST_ASSET_TRANSPORT_RASTER
+    );
+    const [rasterAsset] = cold.assets;
+
+    expect(rasterAsset.cacheKey).toBe(runtimeAsset.cacheKey);
+    expect(rasterAsset.dimensions).toEqual(runtimeAsset.dimensions);
+    expect(rasterAsset.bounds).toEqual(runtimeAsset.bounds);
+    expect(rasterAsset.anchor).toEqual(runtimeAsset.anchor);
+    expect(rasterAsset.identity).toEqual(runtimeAsset.identity);
+    expect(rasterAsset.layers.map(({ id }) => id)).toEqual([
+      'rear-foliage', 'wood', 'front-foliage'
+    ]);
+    expect(rasterAsset.layers.every(layer => (
+      layer.mediaType === 'image/png' && layer.encoding === 'base64' && !layer.runs
+    ))).toBeTrue();
+    expect(cold.diagnostics.encodedAssetCount).toBe(1);
+    expect(cold.diagnostics.reusedEncodedAssetCount).toBe(0);
+    expect(warm.diagnostics.encodedAssetCount).toBe(0);
+    expect(warm.diagnostics.reusedEncodedAssetCount).toBe(1);
+    expect(warm.assets).toEqual(cold.assets);
+    expect(repeated.assets).toEqual(cold.assets);
+    expect(forestSceneRasterAssetCacheSize()).toBe(1);
+    expect(cold.diagnostics.encodedPayloadBytes)
+      .toBe(Buffer.byteLength(JSON.stringify(cold.assets), 'utf8'));
+
+    for (const [index, layer] of rasterAsset.layers.entries()) {
+      const { data, info } = await sharp(Buffer.from(layer.data, 'base64')).raw().toBuffer({
+        resolveWithObject: true
+      });
+      const expected = Buffer.alloc(data.length);
+      for (const run of runtimeAsset.layers[index].runs) {
+        const color = run.color.slice(1);
+        const channels = color.length === 3
+          ? [...color].map(value => Number.parseInt(`${value}${value}`, 16))
+          : [0, 2, 4].map(offset => Number.parseInt(color.slice(offset, offset + 2), 16));
+        for (let x = run.x; x < run.x + run.width; x += 1) {
+          const offset = ((run.y * info.width) + x) * info.channels;
+          expected.set([...channels, 255], offset);
+        }
+      }
+      expect(info.width).toBe(runtimeAsset.dimensions.width);
+      expect(info.height).toBe(runtimeAsset.dimensions.height);
+      expect(data).toEqual(expected);
+    }
+  });
+
+  it('keeps color runs as the default development transport with exact bytes', async () => {
+    const layout = generateForestSceneLayout({
+      seed: 'run-transport', placementCount: 1, assetPoolSize: 1
+    });
+    const assets = prepareForestSceneAssets(layout.placements).assets;
+    const encoded = await encodeForestSceneAssets(assets, FOREST_ASSET_TRANSPORT_RUNS);
+
+    expect(resolveForestAssetTransport('unknown')).toBe(FOREST_ASSET_TRANSPORT_RUNS);
+    expect(resolveForestAssetTransport(FOREST_ASSET_TRANSPORT_RASTER))
+      .toBe(FOREST_ASSET_TRANSPORT_RASTER);
+    expect(encoded.assets).toBe(assets);
+    expect(encoded.diagnostics.encodedPayloadBytes)
+      .toBe(Buffer.byteLength(JSON.stringify(assets), 'utf8'));
   });
 
   it('partitions the world into stable cells with a clamped preload ring', () => {

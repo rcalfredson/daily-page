@@ -255,11 +255,12 @@ placement manifest, but only nearby JSON-round-tripped runtime assets. Many plac
 each asset; generation results and branch diagnostics never cross the scene boundary. The cache
 lives only for the server module/process lifetime and is not production persistence.
 
-The browser draws the prepared scene into one visible Canvas. As each runtime asset arrives, it is
-rasterized once into a small offscreen Canvas in its declared layer order. Placements reuse prepared
-bitmaps, reducing ordinary scene draws
-from thousands of color-run operations per tree to one `drawImage` call per visible tree. These
-offscreen surfaces are per asset, never per placement, and are discarded with the page.
+The browser draws the prepared scene into one visible Canvas. As each runtime asset arrives, its
+three ordered layers are prepared once as small offscreen surfaces. Placements reuse those surfaces,
+reducing ordinary scene draws from thousands of color-run operations per tree to three `drawImage`
+calls per visible tree. The distinct rear-foliage, wood, and front-foliage surfaces remain available
+for later layer-level motion. These surfaces are per asset, never per placement, and are discarded
+with the page.
 Browser-independent math derives each scaled visual rectangle from the asset bounds and ground
 anchor, culls it against the camera, and orders visible placements by ground Y with stable id
 tie-breaking. Integer scaling and disabled image smoothing preserve crisp pixels. Keyboard,
@@ -330,6 +331,36 @@ staging alone improves startup and whether the preload ring prevents region-entr
 raster transport may be evaluated separately if JSON color-run payloads remain material. Asset
 eviction, WebGL, atlases, and generalized loading remain out of scope until further evidence and
 explicit approval.
+
+### Development lossless-raster transport experiment
+
+The Activity Forest route offers a development-only transport selector alongside every pressure
+profile. `color-runs` remains the calm representative scene's default. The experimental
+`lossless-raster` option leaves the placement manifest and versioned runtime identity unchanged but
+replaces each asset's run arrays with three transparent, lossless PNG payloads carried as base64 in
+the existing initial and regional JSON responses. Raster assets retain the schema, renderer,
+phenotype, seed, cache key, dimensions, bounds, anchor, architectural identity, and ordered
+`rear-foliage`, `wood`, and `front-foliage` layer ids. They deliberately do not combine those layers
+into a single image.
+
+The scene asset pool still caches run-based runtime assets by the tree asset's existing versioned
+cache key. A separate process-local raster cache stores the encoded projection under that exact same
+key, so renderer, phenotype, schema, or seed changes naturally invalidate both representations.
+The explicit cold-cache link clears both caches. There is no eviction or persistence.
+
+For each initial response and regional request, diagnostics separate procedural generation time
+from transport encoding time and report the exact UTF-8 byte size of the encoded asset array. The
+browser separately reports JSON response decoding, PNG image decoding, layer preparation, fetch
+time, first completed scene render, regional entry behavior, and the existing last/average/maximum
+movement-render measurements. Color runs follow the same three-layer preparation and draw path, so
+the selector compares transport and browser preparation costs without changing layout, culling,
+depth ordering, exploration, or the default scene. These measurements remain local observations;
+compare repeated cold and warm runs for each pressure profile on the intended baseline device.
+
+The experiment intentionally does not add WebGL, atlases, eviction, persistent storage, a production
+route, or flattened animation layers. Its purpose is to determine whether lossless raster transport
+materially improves encoded bytes and browser preparation enough to justify a later production
+design decision.
 
 The restrained world-space ground treatment and corridor exist only to make depth and negative
 space legible. This first camera is deliberately orthographic: terrain and trees share the same

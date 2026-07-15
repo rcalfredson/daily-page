@@ -26,9 +26,11 @@ export function prepareForestSceneAssets(placements) {
   const assets = [];
   const required = new Map(placements.map((placement) => [placement.assetKey, placement]));
   let generatedAssetCount = 0;
+  let generationDurationMilliseconds = 0;
 
   for (const [assetKey, placement] of required) {
     if (!sceneAssetCache.has(assetKey)) {
+      const generationStartedAt = performance.now();
       const phenotype = phenotypesById.get(placement.phenotypeId);
       if (!phenotype) throw new Error(`Unknown forest phenotype: ${placement.phenotypeId}`);
       const asset = generateForestTreeAssetV3(
@@ -38,6 +40,7 @@ export function prepareForestSceneAssets(placements) {
       if (asset.cacheKey !== assetKey) throw new Error('Prepared tree asset identity mismatch.');
       sceneAssetCache.set(assetKey, asset);
       generatedAssetCount += 1;
+      generationDurationMilliseconds += performance.now() - generationStartedAt;
     }
     assets.push(sceneAssetCache.get(assetKey));
   }
@@ -46,6 +49,7 @@ export function prepareForestSceneAssets(placements) {
     assets: JSON.parse(JSON.stringify(assets)),
     diagnostics: {
       durationMilliseconds: performance.now() - startedAt,
+      generationDurationMilliseconds,
       generatedAssetCount,
       reusedAssetCount: required.size - generatedAssetCount,
       preparedAssetCount: required.size

@@ -26,12 +26,22 @@ block content
     nav.activity-forest__profiles(aria-label='Forest pressure configurations')
       each availableProfile in pressureProfiles
         a(
-          href=availableProfile.id === 'representative' ? '/__dev/views/activity-forest' : `/__dev/views/activity-forest?pressure=${availableProfile.id}`
+          href=`/__dev/views/activity-forest?pressure=${availableProfile.id}&transport=${scene.assetLoading.transport}`
           aria-current=availableProfile.id === profile.id ? 'page' : null
         )= availableProfile.label
       a.activity-forest__cold(
-        href=`/__dev/views/activity-forest?pressure=${profile.id}&cold=1`
+        href=`/__dev/views/activity-forest?pressure=${profile.id}&transport=${scene.assetLoading.transport}&cold=1`
       ) Repeat with cold server asset cache
+
+    nav.activity-forest__profiles(aria-label='Forest asset transport')
+      a(
+        href=`/__dev/views/activity-forest?pressure=${profile.id}&transport=color-runs`
+        aria-current=scene.assetLoading.transport === 'color-runs' ? 'page' : null
+      ) JSON color runs
+      a(
+        href=`/__dev/views/activity-forest?pressure=${profile.id}&transport=${rasterTransport}`
+        aria-current=scene.assetLoading.transport === rasterTransport ? 'page' : null
+      ) Lossless raster experiment
 
     p#activity-forest-help.activity-forest__help
       | Move with arrow keys or WASD, or touch and drag in the forest. Near a tree, inspect its writing.
@@ -67,14 +77,29 @@ block content
         dt Initial assets
         dd= scene.assets.length
       div
+        dt Transport
+        dd= scene.assetLoading.transport
+      div
         dt Payload
         dd #{serverDiagnostics.serializedPayloadBytes.toLocaleString()} bytes
       div
-        dt Server preparation
-        dd #{serverDiagnostics.durationMilliseconds.toFixed(1)} ms
+        dt Encoded asset bytes
+        dd #{serverDiagnostics.encodedAssetBytes.toLocaleString()} bytes
+      div
+        dt Server generation
+        dd #{serverDiagnostics.generationDurationMilliseconds.toFixed(1)} ms
+      div
+        dt Server encoding
+        dd #{serverDiagnostics.encodingDurationMilliseconds.toFixed(1)} ms
       div
         dt Server assets
         dd #{serverDiagnostics.generatedAssetCount} generated / #{serverDiagnostics.reusedAssetCount} reused initially
+      div
+        dt Server raster encodings
+        dd #{serverDiagnostics.encodedAssetCount} encoded / #{serverDiagnostics.reusedEncodedAssetCount} reused initially
+      div
+        dt Browser decoding
+        dd(data-forest-decode-duration) —
       div
         dt Browser preparation
         dd(data-forest-sprite-duration) —
