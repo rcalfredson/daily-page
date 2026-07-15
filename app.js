@@ -53,6 +53,7 @@ import { titleOnlyMeta } from './server/utils/unfinished.js';
 import * as viewHelper from './server/utils/view.js'; // Utils
 
 import { initMongooseConnection } from './server/db/mongoose.js';
+import { corsOptionsDelegate } from './server/services/corsPolicy.js';
 import {
   getBlocksByRoomWithFallback,
   getTopBlocksWithFallback, getTrendingTagsWithFallback,
@@ -160,17 +161,6 @@ async function getSupportFundingViewModel() {
     });
     google.init();
 
-    const whitelist = ['https://dailypage.org', 'http://localhost:3000'];
-    const corsOptions = {
-      origin: (origin, callback) => {
-        if (whitelist.indexOf(origin) !== -1 || !origin) {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
-      },
-    };
-
     app.set('trust proxy', true);
 
     if (process.env.NODE_ENV === 'production') {
@@ -189,14 +179,14 @@ async function getSupportFundingViewModel() {
       res.set('Content-Security-Policy', "frame-src 'self' https://www.google.com;");
       next();
     });
-    app.use(cors(corsOptions));
+    app.use(cors(corsOptionsDelegate));
     app.use(uiPrefixAndLangContext);
     app.use(uiLangFallbackNotice);
     app.use(makePrefixRedirectMiddleware({ isLocalizedPath }))
     app.use(addSeoLocals);
     app.use(addHreflangLocals);
     app.use(initI18n(['layout', 'nav', 'modals', 'notifications', 'errors']));
-    app.options('*', cors(corsOptions));
+    app.options('*', cors(corsOptionsDelegate));
 
     app.use(express.static('public'));
     app.use(express.urlencoded({ extended: true }));
