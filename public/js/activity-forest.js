@@ -1,7 +1,7 @@
 import {
   cameraFollowingPlayer,
   createForestVisibilityCache,
-  focusedForestPlacement,
+  focusedForestSceneItem,
   forestAmbientMotionActive,
   forestSceneAssetKeysForCells,
   forestSceneCellIdsForViewport,
@@ -11,6 +11,13 @@ import {
   normalizedMovement,
   touchMovement
 } from './forest-scene-math.js';
+import { createForestDevOverlayPersistence } from './forest-overlay-persistence.js';
+import {
+  applyForestOverlay,
+  createForestMarker,
+  overlayWithForestMarker,
+  validateForestObjectPlacement
+} from './forest-world-overlay.js';
 
 const payload = document.getElementById('activity-forest-scene');
 const viewportElement = document.querySelector('[data-forest-viewport]');
@@ -27,6 +34,11 @@ if (payload && viewportElement && canvas) {
   const spritesByKey = new Map();
   const camera = { x: 0, y: 0, width: 0, height: 0 };
   const player = { ...scene.exploration.spawn };
+  const overlayPersistence = createForestDevOverlayPersistence(window.localStorage);
+  const persistedOverlay = overlayPersistence.load(scene.baseIdentity);
+  let overlay = persistedOverlay.overlay;
+  let overlayApplication = applyForestOverlay(scene, overlay);
+  let placedObjects = overlayApplication.objects;
   const keys = { left: false, right: false, up: false, down: false };
   const touch = { pointerId: null, originX: 0, originY: 0, x: 0, y: 0 };
   const dialog = document.querySelector('[data-forest-dialog]');
@@ -46,7 +58,8 @@ if (payload && viewportElement && canvas) {
     movementDuration: document.querySelector('[data-forest-movement-duration]'),
     ambientDuration: document.querySelector('[data-forest-ambient-duration]'),
     regionEntry: document.querySelector('[data-forest-region-entry]'),
-    regionLoading: document.querySelector('[data-forest-region-loading]')
+    regionLoading: document.querySelector('[data-forest-region-loading]'),
+    overlay: document.querySelector('[data-forest-overlay]')
   };
   const loadedCellIds = new Set(scene.assetLoading.initialCellIds);
   const pendingCellIds = new Set();
@@ -60,9 +73,11 @@ if (payload && viewportElement && canvas) {
   const windByPlacementId = new Map(scene.placements.map((placement) => (
     [placement.id, forestPlacementWindParameters(placement)]
   )));
-  const visibilityCache = createForestVisibilityCache(scene.placements, assetsByKey);
+  const visibilityCache = createForestVisibilityCache(
+    scene.placements, assetsByKey, 24, placedObjects
+  );
   const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let focusedPlacement = null;
+  let focusedItem = null;
   let preparedSpriteCount = 0;
   let scheduledFrame = null;
   let lastFrameTime = null;
@@ -75,6 +90,14 @@ if (payload && viewportElement && canvas) {
     documentHidden: document.hidden,
     reducedMotion: reducedMotionQuery.matches
   });
+
+  function updateOverlayDiagnostic(status = persistedOverlay.status, error = persistedOverlay.error
+    || overlayApplication.error) {
+    diagnostics.overlay.textContent = `${overlay.objects.length} marker · revision ${
+      overlay.revision} · ${status}${error ? ` (${error})` : ''}`;
+  }
+
+  updateOverlayDiagnostic();
 
   function rasterLayerSource(layer) {
     const binary = window.atob(layer.data);
@@ -322,7 +345,7 @@ if (payload && viewportElement && canvas) {
     const originX = Math.round(placement.worldX - camera.x - asset.anchor.x * placement.scale);
     const originY = Math.round(placement.worldY - camera.y - asset.anchor.y * placement.scale);
     const wind = windByPlacementId.get(placement.id);
-    if (placement.id === focusedPlacement?.id) {
+    if (focusedItem?.kind === 'tree' && placement.id === focusedItem.id) {
       context.beginPath();
       context.ellipse(Math.round(placement.worldX - camera.x),
         Math.round(placement.worldY - camera.y), placement.collisionRadius + 10, 8, 0, 0,
@@ -349,6 +372,28 @@ if (payload && viewportElement && canvas) {
     }
   }
 
+  function paintMarker(marker) {
+    const x = Math.round(marker.worldX - camera.x);
+    const y = Math.round(marker.worldY - camera.y);
+    if (focusedItem?.kind === 'marker' && marker.id === focusedItem.id) {
+      context.beginPath();
+      context.ellipse(x, y, 19, 8, 0, 0, Math.PI * 2);
+      context.fillStyle = 'rgba(255, 239, 164, 0.42)';
+      context.fill();
+      context.strokeStyle = '#fff0ae';
+      context.lineWidth = 2;
+      context.stroke();
+    }
+    context.fillStyle = 'rgba(22, 35, 31, 0.28)';
+    context.fillRect(x - 10, y - 3, 20, 5);
+    context.fillStyle = '#554638';
+    context.fillRect(x - 2, y - 23, 4, 22);
+    context.fillStyle = '#d8b45c';
+    context.fillRect(x - 8, y - 27, 16, 8);
+    context.fillStyle = '#6f4d32';
+    context.fillRect(x - 5, y - 25, 10, 2);
+  }
+
   function paintPlayer() {
     const x = Math.round(player.worldX - camera.x);
     const y = Math.round(player.worldY - camera.y);
@@ -364,12 +409,15 @@ if (payload && viewportElement && canvas) {
   }
 
   function updateFocus() {
-    focusedPlacement = focusedForestPlacement(player, scene.placements.filter(
+    focusedItem = focusedForestSceneItem(player, scene.placements.filter(
       ({ assetKey }) => assetsByKey.has(assetKey)
-    ),
-      scene.exploration.interactionRadius);
-    prompt.hidden = !focusedPlacement;
-    diagnostics.focus.textContent = focusedPlacement?.id || 'None';
+    ), placedObjects, scene.exploration.interactionRadius);
+    prompt.hidden = !focusedItem;
+    const action = focusedItem?.kind === 'marker' ? 'inspect marker' : 'inspect';
+    prompt.querySelector('[data-forest-prompt-keyboard]').textContent =
+      `Press E or Enter to ${action}`;
+    prompt.querySelector('[data-forest-prompt-touch]').textContent = `Tap to ${action}`;
+    diagnostics.focus.textContent = focusedItem ? `${focusedItem.kind}: ${focusedItem.id}` : 'None';
   }
 
   function render(elapsedSeconds, moving = false, frameGap = null) {
@@ -379,10 +427,12 @@ if (payload && viewportElement && canvas) {
     const visibility = visibilityCache.read(camera, player);
     for (const item of visibility.depthOrder) {
       if (item.kind === 'player') paintPlayer();
+      else if (item.kind === 'marker') paintMarker(item.object);
       else paintTree(item.placement, elapsedSeconds);
     }
-    const { visible } = visibility;
-    diagnostics.visible.textContent = `${visible.length} / ${scene.placements.length}`;
+    const { visible, visibleObjects } = visibility;
+    diagnostics.visible.textContent = `${visible.length} / ${scene.placements.length} trees · ${
+      visibleObjects.length} markers`;
     diagnostics.camera.textContent = `${camera.x}, ${camera.y}`;
     diagnostics.player.textContent = `${Math.round(player.worldX)}, ${Math.round(player.worldY)}`;
     const duration = window.performance.now() - start;
@@ -509,15 +559,72 @@ if (payload && viewportElement && canvas) {
   }
 
   function openInspection() {
-    if (!focusedPlacement || dialog.open) return;
+    if (!focusedItem || dialog.open) return;
     clearMovement();
-    const fixture = fixturesById.get(focusedPlacement.fixtureId);
+    if (focusedItem.kind === 'marker') {
+      dialog.querySelector('[data-forest-dialog-eyebrow]').textContent = 'A place made personal';
+      dialog.querySelector('[data-forest-post-title]').textContent = 'Your clearing marker';
+      dialog.querySelector('[data-forest-dialog-context]').hidden = true;
+      dialog.querySelector('[data-forest-post-excerpt]').textContent =
+        'This simple marker is stored in the personal overlay, independently of the generated trees.';
+      dialog.showModal();
+      return;
+    }
+    const fixture = fixturesById.get(focusedItem.value.fixtureId);
+    dialog.querySelector('[data-forest-dialog-eyebrow]').textContent = 'A writing remembered here';
+    dialog.querySelector('[data-forest-dialog-context]').hidden = false;
     dialog.querySelector('[data-forest-post-title]').textContent = fixture.title;
     dialog.querySelector('[data-forest-post-room]').textContent = fixture.roomName;
     dialog.querySelector('[data-forest-post-date]').textContent = new Intl.DateTimeFormat(undefined,
       { dateStyle: 'long' }).format(new Date(`${fixture.createdAt}T12:00:00Z`));
     dialog.querySelector('[data-forest-post-excerpt]').textContent = fixture.excerpt;
     dialog.showModal();
+  }
+
+  function setOverlay(nextOverlay, status) {
+    const application = applyForestOverlay(scene, nextOverlay);
+    if (application.error) {
+      updateOverlayDiagnostic('rejected', application.error);
+      return false;
+    }
+    overlay = nextOverlay;
+    overlayApplication = application;
+    placedObjects = application.objects;
+    visibilityCache.setObjects(placedObjects);
+    updateOverlayDiagnostic(status, null);
+    updateFocus();
+    requestRender();
+    return true;
+  }
+
+  function placeMarker() {
+    const marker = createForestMarker(player.worldX, player.worldY);
+    const placement = validateForestObjectPlacement(marker, scene, placedObjects);
+    if (!placement.valid) {
+      updateOverlayDiagnostic('placement rejected', placement.reason);
+      return;
+    }
+    const nextOverlay = overlayWithForestMarker(overlay, marker);
+    try {
+      overlayPersistence.save(nextOverlay);
+    } catch (error) {
+      updateOverlayDiagnostic('save failed', error.message);
+      return;
+    }
+    setOverlay(nextOverlay, 'saved locally');
+    viewportElement.focus();
+  }
+
+  function resetOverlay() {
+    let emptyOverlay;
+    try {
+      emptyOverlay = overlayPersistence.reset(scene.baseIdentity);
+    } catch (error) {
+      updateOverlayDiagnostic('reset failed', error.message);
+      return;
+    }
+    setOverlay(emptyOverlay, 'reset');
+    viewportElement.focus();
   }
 
   function resetPlayer() {
@@ -553,7 +660,7 @@ if (payload && viewportElement && canvas) {
       keys[direction] = true;
       requestRender();
     } else if ((event.key === 'e' || event.key === 'E' || event.key === 'Enter')
-      && focusedPlacement) {
+      && focusedItem) {
       event.preventDefault();
       openInspection();
     }
@@ -599,6 +706,8 @@ if (payload && viewportElement && canvas) {
   dialog.querySelector('[data-forest-dialog-close]').addEventListener('click', () => dialog.close());
   prompt.addEventListener('click', openInspection);
   document.querySelector('[data-forest-reset]').addEventListener('click', resetPlayer);
+  document.querySelector('[data-forest-place-marker]').addEventListener('click', placeMarker);
+  document.querySelector('[data-forest-reset-overlay]').addEventListener('click', resetOverlay);
   window.addEventListener('resize', resize);
   resize();
   resetPlayer();

@@ -35,6 +35,14 @@
   margin-bottom: 0.6rem;
 }
 
+.activity-forest__header-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
 .activity-forest__help {
   margin: 0.6rem 0;
   color: var(--muted-text-color);
@@ -188,6 +196,7 @@
 @media (max-width: 600px) {
   .activity-forest { padding-top: 1rem; }
   .activity-forest__header { align-items: start; flex-direction: column; }
+  .activity-forest__header-actions { justify-content: flex-start; }
   .activity-forest__viewport { height: 62vh; min-height: 390px; }
   .activity-forest__profiles .activity-forest__cold { margin-left: 0; }
 }
