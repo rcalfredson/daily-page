@@ -21,7 +21,10 @@ block content
           else
             | Walk the winding clearing, approach a tree, and rediscover a fixture piece of writing.
             | The grove remains deterministic and is composed from reusable procedural tree assets.
-      button.activity-forest__reset(type='button' data-forest-reset) Return to entrance
+      .activity-forest__header-actions
+        button.activity-forest__reset(type='button' data-forest-place-marker) Place marker here
+        button.activity-forest__reset(type='button' data-forest-reset-overlay) Reset personal overlay
+        button.activity-forest__reset(type='button' data-forest-reset) Return to entrance
 
     nav.activity-forest__profiles(aria-label='Forest pressure configurations')
       each availableProfile in pressureProfiles
@@ -44,7 +47,8 @@ block content
       ) Lossless raster experiment
 
     p#activity-forest-help.activity-forest__help
-      | Move with arrow keys or WASD, or touch and drag in the forest. Near a tree, inspect its writing.
+      | Move with arrow keys or WASD, or touch and drag in the forest. Inspect nearby trees or your marker.
+      | “Place marker here” saves one development-only personal overlay independently of the grove.
 
     .activity-forest__viewport(
       tabindex='0'
@@ -57,8 +61,8 @@ block content
       .activity-forest__joystick(data-forest-joystick hidden aria-hidden='true')
         .activity-forest__joystick-stick(data-forest-joystick-stick)
       button.activity-forest__prompt(type='button' data-forest-prompt hidden)
-        span.activity-forest__prompt-keyboard Press E or Enter to inspect
-        span.activity-forest__prompt-touch Tap to inspect
+        span.activity-forest__prompt-keyboard(data-forest-prompt-keyboard) Press E or Enter to inspect
+        span.activity-forest__prompt-touch(data-forest-prompt-touch) Tap to inspect
 
     dl.activity-forest__diagnostics(aria-label='Scene diagnostics')
       div
@@ -70,6 +74,12 @@ block content
       div
         dt Placements
         dd= scene.placements.length
+      div
+        dt Generated base
+        dd v#{scene.baseIdentity.sceneVersion} · #{scene.baseIdentity.seed} · #{scene.baseIdentity.layoutKey}
+      div
+        dt Personal overlay
+        dd(data-forest-overlay) —
       div
         dt Unique assets
         dd= scene.assetLoading.totalAssetCount
@@ -138,9 +148,9 @@ block content
         dd(data-forest-region-entry) Walk beyond the initial view
 
     dialog.activity-forest__dialog(data-forest-dialog aria-labelledby='forest-post-title')
-      p.activity-forest__dialog-eyebrow A writing remembered here
+      p.activity-forest__dialog-eyebrow(data-forest-dialog-eyebrow) A writing remembered here
       h2#forest-post-title(data-forest-post-title)
-      p.activity-forest__dialog-context
+      p.activity-forest__dialog-context(data-forest-dialog-context)
         span(data-forest-post-room)
         span(aria-hidden='true')  ·
         time(data-forest-post-date)

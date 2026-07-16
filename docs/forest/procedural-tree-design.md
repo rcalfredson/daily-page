@@ -246,8 +246,8 @@ The first composed development scene is available at `/__dev/views/activity-fore
 the isolated runtime assets into a deterministic 3000 × 1800 world containing 180 placements.
 The scene now includes the first fixture-only exploration loop: a deterministic player can walk
 the corridor, approach a tree, inspect fixture writing, close it, and continue from the same place.
-It also includes the first shared ambient wind slice. It remains a development preview without
-persistence or real post queries.
+It also includes the first shared ambient wind slice and a development-only personal-overlay proof.
+It remains a development preview without production persistence or real post queries.
 
 `forestSceneLayout.js` owns scene layout version 1. A placement contains only a stable placement
 id, world-space ground anchor, integer scale, phenotype id, specimen seed, and versioned asset
@@ -290,6 +290,73 @@ Active movement frames perform movement math, region-set comparison, culling, or
 draws, then cease when input stops. Procedural generation, response decoding, and color-run replay
 remain outside the animation frame. The render-duration diagnostic remains the local measurement
 point, with no universal benchmark claim for this interaction slice.
+
+### Inhabitable-world contract: generated base and personal overlay
+
+The first inhabitable-world milestone deliberately adds only one placed-object vocabulary item: a
+small clearing marker. It proves the state boundary without beginning trails, construction,
+inventory, crafting, or a general entity system.
+
+Every generated layout now includes a `baseIdentity` with exactly four fields:
+`schemaVersion`, `sceneVersion`, `seed`, and `layoutKey`. The bounded `layoutKey` fingerprints the
+world dimensions and other placement-affecting configuration, so development pressure profiles do
+not accidentally share overlays. Regenerating with the same explicit versions, seed, and
+configuration reproduces that identity and the existing tree placement ids, coordinates, specimen
+seeds, and asset keys. The base identity is not an asset identity and does not incorporate camera state,
+personal choices, or transient animation state.
+
+The separately serialized personal overlay has exactly these top-level fields:
+
+```text
+schemaVersion, id, baseIdentity, revision, objects
+```
+
+An overlay is accepted only for the base identity it names. Its object collection is capped at 32
+records even though this development UI authors only one marker. A marker record has exactly:
+
+```text
+schemaVersion, id, type="marker", worldX, worldY
+```
+
+Ids follow bounded, versioned string patterns; coordinates are bounded safe integers; unknown
+fields and unknown object types are rejected. Moving the representative marker replaces its record
+at the same stable id and increments the overlay revision. The record deliberately has no arbitrary
+metadata, behavior, asset payload, post data, or serialized generated-world fields.
+
+Applying an overlay is a pure step after base generation. It verifies schema and base compatibility,
+then validates the marker footprint against world edges, generated tree trunk collision circles,
+the protected player entrance, and any other accepted overlay footprints. Any invalid object rejects
+the applied object set rather than partially applying ambiguous personal state. Base regeneration
+does not mutate, merge into, or derive randomness from the overlay, so applying or resetting a
+marker cannot change a tree's placement or asset identity.
+
+The marker is deliberately non-solid to the player: its footprint prevents invalid placement but
+does not turn this proof into a navigation or construction system. The current corridor is valid,
+flat terrain for a marker and remains walkable. Interaction reach is a fixed contract constant, not
+saved user data, so every accepted marker remains usable without trusting an arbitrary stored radius.
+
+The development page exposes `Place marker here` and `Reset personal overlay`. Its adapter stores
+only the overlay JSON in browser `localStorage`, under a base-specific development key. Loading
+happens once during scene initialization; saving and resetting happen only in those explicit action
+handlers. Invalid JSON, an unsupported schema version, an incompatible base identity, a storage
+exception, or a newly invalid placement produces a visible diagnostic and an empty applied overlay.
+Invalid stored bytes are not silently overwritten, so a developer can inspect them and recover by
+resetting or placing a valid marker. This adapter is evidence for independent round trips, not a
+production storage policy.
+
+Markers use a fixed prepared canvas drawing path: no object asset or procedural work is needed.
+They participate in the same cached viewport culling and stable ground-Y depth order as trees and
+the player. Marker changes explicitly invalidate that cache. The shared proximity query can focus
+either a loaded tree or a marker with deterministic distance, kind, and id tie-breaking, and the
+existing keyboard, touch, prompt, modal, and focus-return behavior is reused. Animation frames do
+not access storage, parse overlay JSON, validate placement, regenerate the base, or prepare assets.
+
+The explicit future boundary is narrow: production account storage, migrations between generated
+base versions, conflict resolution, multiple devices, authorization, object asset loading, editing
+tools, free-form labels, paths, pickups, inventories, currencies, crafting, multiplayer, and a
+general component framework all remain undesigned. Supporting any of them requires a new contract
+decision; the marker schema is not an invitation to smuggle those systems into an unversioned
+payload.
 
 ### Development pressure profiles
 

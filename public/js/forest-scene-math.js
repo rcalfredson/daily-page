@@ -1,3 +1,5 @@
+import { FOREST_MARKER_INTERACTION_RADIUS } from './forest-world-overlay.js';
+
 export function placementVisualRect(placement, asset) {
   const scale = placement.scale;
   return {
@@ -20,6 +22,15 @@ export function visibleForestPlacements(placements, assetsByKey, viewport, margi
   }).sort((left, right) => (
     left.worldY - right.worldY || left.id.localeCompare(right.id)
   ));
+}
+
+export function visibleForestObjects(objects, viewport, margin = 24) {
+  return objects.filter((object) => (
+    object.worldX + 12 >= viewport.x - margin
+      && object.worldX - 12 <= viewport.x + viewport.width + margin
+      && object.worldY + 28 >= viewport.y - margin
+      && object.worldY - 28 <= viewport.y + viewport.height + margin
+  )).sort((left, right) => left.worldY - right.worldY || left.id.localeCompare(right.id));
 }
 
 export const FOREST_AMBIENT_WIND = Object.freeze({
@@ -78,14 +89,20 @@ export function forestAmbientMotionActive({ documentHidden = false, reducedMotio
   return !documentHidden && !reducedMotion;
 }
 
-export function createForestVisibilityCache(placements, assetsByKey, margin = 24) {
+export function createForestVisibilityCache(placements, assetsByKey, margin = 24,
+  initialObjects = []) {
   let cached = null;
   let invalidated = true;
   let revision = 0;
   let snapshot = null;
+  let objects = initialObjects;
 
   return {
     invalidate() {
+      invalidated = true;
+    },
+    setObjects(nextObjects) {
+      objects = nextObjects;
       invalidated = true;
     },
     read(viewport, player) {
@@ -95,8 +112,14 @@ export function createForestVisibilityCache(placements, assetsByKey, margin = 24
         || snapshot.playerWorldY !== player.worldY || snapshot.assetCount !== assetsByKey.size;
       if (changed) {
         const visible = visibleForestPlacements(placements, assetsByKey, viewport, margin);
+        const visibleObjects = visibleForestObjects(objects, viewport, margin);
         revision += 1;
-        cached = { visible, depthOrder: forestDepthOrder(visible, player), revision };
+        cached = {
+          visible,
+          visibleObjects,
+          depthOrder: forestDepthOrder(visible, player, visibleObjects),
+          revision
+        };
         snapshot = {
           x: viewport.x,
           y: viewport.y,
@@ -218,11 +241,33 @@ export function focusedForestPlacement(player, placements, interactionRadius) {
   ))[0]?.placement || null;
 }
 
-export function forestDepthOrder(placements, player) {
+export function focusedForestSceneItem(player, placements, objects, treeInteractionRadius) {
+  const candidates = [
+    ...placements.map((placement) => ({
+      kind: 'tree', id: placement.id, value: placement,
+      distance: Math.hypot(player.worldX - placement.worldX, player.worldY - placement.worldY),
+      reach: treeInteractionRadius + placement.collisionRadius
+    })),
+    ...objects.map((object) => ({
+      kind: 'marker', id: object.id, value: object,
+      distance: Math.hypot(player.worldX - object.worldX, player.worldY - object.worldY),
+      reach: FOREST_MARKER_INTERACTION_RADIUS
+    }))
+  ];
+  return candidates.filter(({ distance, reach }) => distance <= reach)
+    .sort((left, right) => left.distance - right.distance
+      || left.kind.localeCompare(right.kind) || left.id.localeCompare(right.id))[0] || null;
+}
+
+export function forestDepthOrder(placements, player, objects = []) {
   return [
     ...placements.map((placement) => ({ kind: 'tree', id: placement.id,
       worldY: placement.worldY, placement })),
+    ...objects.map((object) => ({ kind: 'marker', id: object.id,
+      worldY: object.worldY, object })),
     { kind: 'player', id: '~player', worldY: player.worldY, player }
   ].sort((left, right) => left.worldY - right.worldY
-    || (left.kind === right.kind ? left.id.localeCompare(right.id) : left.kind === 'player' ? 1 : -1));
+    || (left.kind === right.kind ? left.id.localeCompare(right.id)
+      : left.kind === 'player' ? 1 : right.kind === 'player' ? -1
+        : left.kind.localeCompare(right.kind)));
 }

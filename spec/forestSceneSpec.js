@@ -28,6 +28,7 @@ import {
   cameraFollowingPlayer,
   createForestVisibilityCache,
   focusedForestPlacement,
+  focusedForestSceneItem,
   FOREST_AMBIENT_WIND,
   forestAmbientMotionActive,
   forestSceneAssetKeysForCells,
@@ -41,6 +42,7 @@ import {
   playerCollides,
   touchMovement,
   placementVisualRect,
+  visibleForestObjects,
   visibleForestPlacements
 } from '../public/js/forest-scene-math.js';
 import {
@@ -398,9 +400,13 @@ describe('static Activity Forest scene', () => {
 
     const playerDepthChanged = cache.read({ ...viewport, x: 1 }, { ...player, worldY: 75 });
     expect(playerDepthChanged.revision).toBe(assetChanged.revision + 1);
+    cache.setObjects([{ id: 'marker', worldX: 45, worldY: 65 }]);
+    const objectChanged = cache.read({ ...viewport, x: 1 }, { ...player, worldY: 75 });
+    expect(objectChanged.revision).toBe(playerDepthChanged.revision + 1);
+    expect(objectChanged.visibleObjects.map(({ id }) => id)).toEqual(['marker']);
     cache.invalidate();
     expect(cache.read({ ...viewport, x: 1 }, { ...player, worldY: 75 }).revision)
-      .toBe(playerDepthChanged.revision + 1);
+      .toBe(objectChanged.revision + 1);
   });
 
   it('adds a deterministic, safe spawn and bounded fixture metadata', () => {
@@ -484,5 +490,13 @@ describe('static Activity Forest scene', () => {
       .toEqual(['above', 'far', 'tie-a', 'tie-b', '~player', 'below']);
     expect(focusedForestPlacement(player, placements.slice(1, 3), 10).id).toBe('tie-a');
     expect(focusedForestPlacement(player, [placements[4]], 10)).toBeNull();
+    const marker = { id: 'marker-a', worldX: 3, worldY: 50 };
+    expect(focusedForestSceneItem(player, placements, [marker], 10)).toEqual(
+      jasmine.objectContaining({ kind: 'marker', id: 'marker-a' })
+    );
+    expect(forestDepthOrder(placements, player, [marker]).map((item) => item.id))
+      .toEqual(['above', 'marker-a', 'far', 'tie-a', 'tie-b', '~player', 'below']);
+    expect(visibleForestObjects([marker, { id: 'offscreen-marker', worldX: 500, worldY: 500 }],
+      { x: 0, y: 0, width: 100, height: 100 }, 0)).toEqual([marker]);
   });
 });

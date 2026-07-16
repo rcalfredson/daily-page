@@ -7,6 +7,7 @@ import { createRandom, hashSeed } from './forest/v3/random.js';
 import { treeAssetCacheKey } from './forest/v3/treeAsset.js';
 
 export const FOREST_SCENE_VERSION = 1;
+export const FOREST_BASE_IDENTITY_SCHEMA_VERSION = 1;
 
 export const DEFAULT_FOREST_SCENE_CONFIG = Object.freeze({
   seed: 'first-grove',
@@ -33,6 +34,26 @@ function decisionRandom(sceneSeed, candidateIndex, decision) {
 
 export function forestCorridorCenter(worldY, worldWidth) {
   return (worldWidth / 2) + (Math.sin((worldY / 330) + 0.7) * 155);
+}
+
+export function forestBaseIdentity(config) {
+  const layoutKey = hashSeed(JSON.stringify({
+    world: config.world,
+    placementCount: config.placementCount,
+    minimumSpacing: config.minimumSpacing,
+    edgeMargin: config.edgeMargin,
+    corridorHalfWidth: config.corridorHalfWidth,
+    scale: config.scale,
+    specimenPoolSize: config.specimenPoolSize,
+    assetPoolSize: config.assetPoolSize || null,
+    phenotypeWeights: config.phenotypeWeights
+  })).toString(16).padStart(8, '0');
+  return Object.freeze({
+    schemaVersion: FOREST_BASE_IDENTITY_SCHEMA_VERSION,
+    sceneVersion: FOREST_SCENE_VERSION,
+    seed: config.seed,
+    layoutKey
+  });
 }
 
 function selectPhenotype(config, sceneSeed, candidateIndex) {
@@ -130,6 +151,7 @@ export function generateForestSceneLayout(options = {}) {
   return {
     version: FOREST_SCENE_VERSION,
     seed: config.seed,
+    baseIdentity: forestBaseIdentity(config),
     world: config.world,
     corridor: { halfWidth: config.corridorHalfWidth },
     placements
