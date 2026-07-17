@@ -49,6 +49,29 @@
   font-size: 0.85rem;
 }
 
+.activity-forest__trail-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.8rem;
+  margin: 0.6rem 0;
+  border: 1px solid #8d7b55;
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+  background: #f3ead0;
+  color: #34463d;
+  font-size: 0.82rem;
+}
+
+.activity-forest__trail-tools[hidden] { display: none; }
+.activity-forest__trail-tools [role='status'] { flex: 1 1 280px; }
+.activity-forest__trail-actions { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.activity-forest__trail-actions button[aria-pressed='true'] {
+  border-color: #6f5431;
+  background: #6f5431;
+  color: #fff8e5;
+}
+
 .activity-forest__profiles {
   display: flex;
   flex-wrap: wrap;

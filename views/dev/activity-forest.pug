@@ -22,6 +22,7 @@ block content
             | Walk the winding clearing, approach a tree, and rediscover a fixture piece of writing.
             | The grove remains deterministic and is composed from reusable procedural tree assets.
       .activity-forest__header-actions
+        button.activity-forest__reset(type='button' data-forest-toggle-trail aria-pressed='false') Edit trail
         button.activity-forest__reset(type='button' data-forest-place-marker) Place marker here
         button.activity-forest__reset(type='button' data-forest-reset-overlay) Reset personal overlay
         button.activity-forest__reset(type='button' data-forest-reset) Return to entrance
@@ -49,6 +50,16 @@ block content
     p#activity-forest-help.activity-forest__help
       | Move with arrow keys or WASD, or touch and drag in the forest. Inspect nearby trees or your marker.
       | “Place marker here” saves one development-only personal overlay independently of the grove.
+      | Press T or choose “Edit trail” to place, move, or reversibly remove up to 12 stepping stones.
+
+    .activity-forest__trail-tools(data-forest-trail-tools hidden aria-label='Trail editing controls')
+      strong(data-forest-trail-mode) Trail editing: place
+      span(data-forest-trail-status role='status' aria-live='polite') Choose clear ground; connected stones stay 26–96 px apart.
+      .activity-forest__trail-actions
+        button(type='button' data-forest-trail-place aria-pressed='true') Place
+        button(type='button' data-forest-trail-move aria-pressed='false') Move nearest
+        button(type='button' data-forest-trail-remove aria-pressed='false') Remove
+        button(type='button' data-forest-trail-done) Done
 
     .activity-forest__viewport(
       tabindex='0'
@@ -80,6 +91,9 @@ block content
       div
         dt Personal overlay
         dd(data-forest-overlay) —
+      div
+        dt Trail editor
+        dd(data-forest-trail-diagnostic) Off
       div
         dt Unique assets
         dd= scene.assetLoading.totalAssetCount

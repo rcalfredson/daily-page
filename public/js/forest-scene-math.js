@@ -1,4 +1,7 @@
-import { FOREST_MARKER_INTERACTION_RADIUS } from './forest-world-overlay.js';
+import {
+  FOREST_MARKER_INTERACTION_RADIUS,
+  FOREST_STEPPING_STONE_TYPE
+} from './forest-world-overlay.js';
 
 export function placementVisualRect(placement, asset) {
   const scale = placement.scale;
@@ -26,10 +29,14 @@ export function visibleForestPlacements(placements, assetsByKey, viewport, margi
 
 export function visibleForestObjects(objects, viewport, margin = 24) {
   return objects.filter((object) => (
-    object.worldX + 12 >= viewport.x - margin
-      && object.worldX - 12 <= viewport.x + viewport.width + margin
-      && object.worldY + 28 >= viewport.y - margin
-      && object.worldY - 28 <= viewport.y + viewport.height + margin
+    object.worldX + (object.type === FOREST_STEPPING_STONE_TYPE ? 14 : 12)
+      >= viewport.x - margin
+      && object.worldX - (object.type === FOREST_STEPPING_STONE_TYPE ? 14 : 12)
+        <= viewport.x + viewport.width + margin
+      && object.worldY + (object.type === FOREST_STEPPING_STONE_TYPE ? 7 : 28)
+        >= viewport.y - margin
+      && object.worldY - (object.type === FOREST_STEPPING_STONE_TYPE ? 7 : 28)
+        <= viewport.y + viewport.height + margin
   )).sort((left, right) => left.worldY - right.worldY || left.id.localeCompare(right.id));
 }
 
@@ -248,8 +255,8 @@ export function focusedForestSceneItem(player, placements, objects, treeInteract
       distance: Math.hypot(player.worldX - placement.worldX, player.worldY - placement.worldY),
       reach: treeInteractionRadius + placement.collisionRadius
     })),
-    ...objects.map((object) => ({
-      kind: 'marker', id: object.id, value: object,
+    ...objects.filter(({ type }) => type !== FOREST_STEPPING_STONE_TYPE).map((object) => ({
+      kind: object.type || 'marker', id: object.id, value: object,
       distance: Math.hypot(player.worldX - object.worldX, player.worldY - object.worldY),
       reach: FOREST_MARKER_INTERACTION_RADIUS
     }))
@@ -263,7 +270,7 @@ export function forestDepthOrder(placements, player, objects = []) {
   return [
     ...placements.map((placement) => ({ kind: 'tree', id: placement.id,
       worldY: placement.worldY, placement })),
-    ...objects.map((object) => ({ kind: 'marker', id: object.id,
+    ...objects.map((object) => ({ kind: object.type || 'marker', id: object.id,
       worldY: object.worldY, object })),
     { kind: 'player', id: '~player', worldY: player.worldY, player }
   ].sort((left, right) => left.worldY - right.worldY

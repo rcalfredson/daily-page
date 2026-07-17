@@ -293,9 +293,10 @@ point, with no universal benchmark claim for this interaction slice.
 
 ### Inhabitable-world contract: generated base and personal overlay
 
-The first inhabitable-world milestone deliberately adds only one placed-object vocabulary item: a
-small clearing marker. It proves the state boundary without beginning trails, construction,
-inventory, crafting, or a general entity system.
+The inhabitable-world work began with a small clearing marker. Milestone 2 adds one deliberately
+narrow editable-trail item, a stepping stone. Together they prove that the state boundary supports a
+reversible spatial edit without beginning general construction, inventory, crafting, or an entity
+system.
 
 Every generated layout now includes a `baseIdentity` with exactly four fields:
 `schemaVersion`, `sceneVersion`, `seed`, and `layoutKey`. The bounded `layoutKey` fingerprints the
@@ -312,7 +313,7 @@ schemaVersion, id, baseIdentity, revision, objects
 ```
 
 An overlay is accepted only for the base identity it names. Its object collection is capped at 32
-records even though this development UI authors only one marker. A marker record has exactly:
+records. A marker record has exactly:
 
 ```text
 schemaVersion, id, type="marker", worldX, worldY
@@ -322,6 +323,65 @@ Ids follow bounded, versioned string patterns; coordinates are bounded safe inte
 fields and unknown object types are rejected. Moving the representative marker replaces its record
 at the same stable id and increments the overlay revision. The record deliberately has no arbitrary
 metadata, behavior, asset payload, post data, or serialized generated-world fields.
+
+### Milestone 2 persistent editable-trail contract
+
+A stepping-stone record uses the same placed-object schema version and has exactly:
+
+```text
+schemaVersion, id, type="stepping-stone", worldX, worldY
+```
+
+Stone ids match the bounded `forest-stone-v1-*` pattern. The editor allocates the lowest unused
+two-digit ordinal from `forest-stone-v1-01` through `forest-stone-v1-12`, giving the trail a hard
+limit of 12 stones and deterministic identity allocation. A move replaces coordinates under the
+same id; it never removes and recreates the object. Accepted objects are stored in id order, making
+JSON output and equal-ground ordering stable. Unknown fields, non-integer or out-of-range
+coordinates, duplicate ids, mismatched id/type pairs, and unsupported object or overlay schema
+versions reject the complete overlay.
+
+The development page exposes one `Edit trail` mode and four small controls: place, move nearest,
+remove, and done. `T` toggles editing; `P`, `M`, Delete/Backspace, Enter, and Escape provide the
+corresponding keyboard path while ordinary movement remains available. Pointer and touch positions
+map directly to world coordinates during editing instead of starting the movement joystick. The
+canvas shows a pale valid or red invalid preview, the compact live status announces a specific
+validation reason, and diagnostics name the active tool and validity. Leaving the mode clears only
+transient preview and selection state and returns focus to the viewport. Editing adds no motion, so
+reduced-motion behavior remains the existing ambient-motion contract.
+
+Placement validation is pure and deterministic. The fixed stone radius is 11 world pixels. A stone
+must remain inside the world; avoid generated trunk collision circles; remain outside the entrance's
+52-pixel protected radius; keep 14 pixels of fixed clearance beyond each tree and stone collision
+footprint; and avoid marker or other overlay-object footprints. The tree clearance protects visual
+legibility immediately around a trunk without reserving the tree's full 70-pixel interaction reach.
+Because stones are non-solid, visually open passages between trees remain usable while every nearby
+position from which writing can be inspected stays walkable. Distinct stones must be at
+least 26 pixels apart. After the first stone, a new or moved stone must be within 96 pixels of
+another stone. The complete set must remain connected under that same 96-pixel neighbor rule.
+Moving or removing a bridge stone is rejected instead of partially splitting the trail. These rules
+protect the spawn and the space needed to approach nearby writing.
+
+Stones are non-solid ground decoration. They cannot block player movement, close a corridor, or
+strand the player; validation protects legibility and interaction space without turning the trail
+into navigation geometry. Adjacent visuals use one narrow rule: in stable id order, each stone after
+the first draws one subdued ground join to its nearest earlier stone within 96 pixels, with id
+tie-breaking. This is a visual hint only, not path topology, collision, or pathfinding.
+
+Place, move, and remove operations construct and validate a complete candidate overlay before
+storage or live state changes. A rejected edit returns the original overlay object, so there is no
+partial revision or stranded state. A successful edit increments the overlay revision exactly once,
+saves through the existing development-only adapter, then invalidates the visible-object cache.
+Reset removes the base-specific local value and reapplies an empty overlay. Regenerating the same
+base reproduces the same tree placement and asset identities before independently reapplying saved
+stones. Invalid JSON, incompatible bases, invalid placements, or unsupported versions recover to an
+empty applied overlay while leaving offending saved bytes available for development diagnosis.
+
+Stepping stones use fixed canvas primitives and bounded culling footprints. They enter the existing
+viewport cache and stable ground-Y depth ordering with id tie-breaking. Joins and visible stones are
+drawn from already validated in-memory objects. Storage access, JSON decoding, schema and placement
+validation, base generation, asset preparation, and overlay mutation stay in initialization or
+explicit editing handlers, never animation frames. The 12-stone bound makes the join pass deliberate
+without introducing a spatial index or regional overlay loader.
 
 Applying an overlay is a pure step after base generation. It verifies schema and base compatibility,
 then validates the marker footprint against world edges, generated tree trunk collision circles,
@@ -351,12 +411,14 @@ either a loaded tree or a marker with deterministic distance, kind, and id tie-b
 existing keyboard, touch, prompt, modal, and focus-return behavior is reused. Animation frames do
 not access storage, parse overlay JSON, validate placement, regenerate the base, or prepare assets.
 
-The explicit future boundary is narrow: production account storage, migrations between generated
-base versions, conflict resolution, multiple devices, authorization, object asset loading, editing
-tools, free-form labels, paths, pickups, inventories, currencies, crafting, multiplayer, and a
-general component framework all remain undesigned. Supporting any of them requires a new contract
-decision; the marker schema is not an invitation to smuggle those systems into an unversioned
-payload.
+The explicit future boundary remains narrow: production account or database storage, migrations
+between generated base versions, conflict resolution, multiple devices, authorization, object asset
+loading, free-form labels, path topology, automatic pathfinding, terrain painting, bridges,
+elevation, excavation, pickups, inventories, currencies, resource costs, crafting, generalized
+construction tools, multiplayer, and a general component framework all remain undesigned. The
+stepping-stone contract does not authorize trail networks, navigation graphs, terrain mutation, or a
+complete customization system. Supporting those requires a new versioned contract decision;
+neither placed-object type is an invitation to smuggle new systems into an unversioned payload.
 
 ### Development pressure profiles
 
