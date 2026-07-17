@@ -15,6 +15,12 @@ import { createForestDevOverlayPersistence } from './forest-overlay-persistence.
 import {
   applyForestOverlay,
   createForestMarker,
+  createForestTrailPlacementPreview,
+  forestSteppingStoneJoins,
+  FOREST_STEPPING_STONE_TYPE,
+  nextForestSteppingStoneId,
+  overlayWithForestSteppingStone,
+  overlayWithoutForestSteppingStone,
   overlayWithForestMarker,
   validateForestObjectPlacement
 } from './forest-world-overlay.js';
@@ -45,6 +51,11 @@ if (payload && viewportElement && canvas) {
   const prompt = document.querySelector('[data-forest-prompt]');
   const joystick = document.querySelector('[data-forest-joystick]');
   const joystickStick = joystick.querySelector('[data-forest-joystick-stick]');
+  const trailTools = document.querySelector('[data-forest-trail-tools]');
+  const trailToggle = document.querySelector('[data-forest-toggle-trail]');
+  const trailStatus = document.querySelector('[data-forest-trail-status]');
+  const trailModeLabel = document.querySelector('[data-forest-trail-mode]');
+  const trailEditor = { active: false, tool: 'place', preview: null, movingId: null };
   const diagnostics = {
     visible: document.querySelector('[data-forest-visible]'),
     camera: document.querySelector('[data-forest-camera]'),
@@ -59,7 +70,8 @@ if (payload && viewportElement && canvas) {
     ambientDuration: document.querySelector('[data-forest-ambient-duration]'),
     regionEntry: document.querySelector('[data-forest-region-entry]'),
     regionLoading: document.querySelector('[data-forest-region-loading]'),
-    overlay: document.querySelector('[data-forest-overlay]')
+    overlay: document.querySelector('[data-forest-overlay]'),
+    trail: document.querySelector('[data-forest-trail-diagnostic]')
   };
   const loadedCellIds = new Set(scene.assetLoading.initialCellIds);
   const pendingCellIds = new Set();
@@ -93,7 +105,11 @@ if (payload && viewportElement && canvas) {
 
   function updateOverlayDiagnostic(status = persistedOverlay.status, error = persistedOverlay.error
     || overlayApplication.error) {
-    diagnostics.overlay.textContent = `${overlay.objects.length} marker · revision ${
+    const stoneCount = overlay.objects.filter(({ type }) => (
+      type === FOREST_STEPPING_STONE_TYPE
+    )).length;
+    const markerCount = overlay.objects.length - stoneCount;
+    diagnostics.overlay.textContent = `${markerCount} marker · ${stoneCount} stones · revision ${
       overlay.revision} · ${status}${error ? ` (${error})` : ''}`;
   }
 
@@ -394,6 +410,43 @@ if (payload && viewportElement && canvas) {
     context.fillRect(x - 5, y - 25, 10, 2);
   }
 
+  function paintTrailJoins() {
+    const byId = new Map(placedObjects.map((object) => [object.id, object]));
+    context.lineWidth = 5;
+    context.lineCap = 'round';
+    context.strokeStyle = 'rgba(112, 94, 66, 0.36)';
+    for (const join of forestSteppingStoneJoins(placedObjects)) {
+      const from = byId.get(join.fromId);
+      const to = byId.get(join.toId);
+      context.beginPath();
+      context.moveTo(Math.round(from.worldX - camera.x), Math.round(from.worldY - camera.y));
+      context.lineTo(Math.round(to.worldX - camera.x), Math.round(to.worldY - camera.y));
+      context.stroke();
+    }
+  }
+
+  function paintSteppingStone(stone, preview = false) {
+    const x = Math.round(stone.worldX - camera.x);
+    const y = Math.round(stone.worldY - camera.y);
+    context.beginPath();
+    context.ellipse(x, y, 13, 6, 0, 0, Math.PI * 2);
+    context.fillStyle = preview
+      ? (trailEditor.preview?.valid ? 'rgba(238, 224, 181, 0.62)' : 'rgba(173, 78, 62, 0.62)')
+      : '#b8aa83';
+    context.fill();
+    context.strokeStyle = preview
+      ? (trailEditor.preview?.valid ? '#fff0ae' : '#842f27') : '#75694f';
+    context.lineWidth = preview ? 2 : 1;
+    context.stroke();
+    if (!preview) {
+      context.beginPath();
+      context.moveTo(x - 5, y - 1);
+      context.lineTo(x + 4, y - 2);
+      context.strokeStyle = 'rgba(244, 235, 202, 0.48)';
+      context.stroke();
+    }
+  }
+
   function paintPlayer() {
     const x = Math.round(player.worldX - camera.x);
     const y = Math.round(player.worldY - camera.y);
@@ -424,15 +477,21 @@ if (payload && viewportElement && canvas) {
     const start = window.performance.now();
     context.imageSmoothingEnabled = false;
     paintGround();
+    paintTrailJoins();
     const visibility = visibilityCache.read(camera, player);
     for (const item of visibility.depthOrder) {
       if (item.kind === 'player') paintPlayer();
       else if (item.kind === 'marker') paintMarker(item.object);
+      else if (item.kind === FOREST_STEPPING_STONE_TYPE) paintSteppingStone(item.object);
       else paintTree(item.placement, elapsedSeconds);
+    }
+    if (trailEditor.active && trailEditor.preview) {
+      paintSteppingStone(trailEditor.preview.stone, true);
     }
     const { visible, visibleObjects } = visibility;
     diagnostics.visible.textContent = `${visible.length} / ${scene.placements.length} trees · ${
-      visibleObjects.length} markers`;
+      visibleObjects.filter(({ type }) => type === 'marker').length} markers · ${
+      visibleObjects.filter(({ type }) => type === FOREST_STEPPING_STONE_TYPE).length} stones`;
     diagnostics.camera.textContent = `${camera.x}, ${camera.y}`;
     diagnostics.player.textContent = `${Math.round(player.worldX)}, ${Math.round(player.worldY)}`;
     const duration = window.performance.now() - start;
@@ -502,6 +561,9 @@ if (payload && viewportElement && canvas) {
         scene.world, scene.placements));
       followPlayer();
       updateFocus();
+      if (trailEditor.active && trailEditor.tool !== 'remove') {
+        previewTrailAt(player.worldX, player.worldY, false);
+      }
     }
     render(timestamp / 1000, moving, frameGap);
     if (moving || ambientMotionActive) scheduledFrame = requestAnimationFrame(frame);
@@ -597,6 +659,144 @@ if (payload && viewportElement && canvas) {
     return true;
   }
 
+  const trailReasonText = {
+    'world-bounds': 'That stone would cross the edge of the world.',
+    'tree-collision': 'That position overlaps a tree.',
+    'protected-entrance': 'Keep the entrance clearing open.',
+    'entrance-collision': 'Keep the entrance clearing open.',
+    'tree-interaction-space': 'That stone is too close to the tree trunk.',
+    'object-collision': 'That position overlaps another overlay object.',
+    'stone-too-close': 'Stones must be at least 26 px apart.',
+    'trail-gap': 'Keep each new stone within 96 px of the trail.',
+    'stone-limit': 'This focused trail is limited to 12 stones.',
+    'trail-disconnected': 'That edit would split the trail.',
+    'stone-not-found': 'Choose an existing stepping stone.'
+  };
+
+  function trailStones() {
+    return placedObjects.filter(({ type }) => type === FOREST_STEPPING_STONE_TYPE);
+  }
+
+  function nearestTrailStone(worldX, worldY, maximumDistance = 70) {
+    return trailStones().map((stone) => ({ stone, distance: Math.hypot(
+      worldX - stone.worldX, worldY - stone.worldY
+    ) })).filter(({ distance }) => distance <= maximumDistance)
+      .sort((left, right) => left.distance - right.distance
+        || left.stone.id.localeCompare(right.stone.id))[0]?.stone || null;
+  }
+
+  function reportTrail(message, validity = '') {
+    trailStatus.textContent = message;
+    diagnostics.trail.textContent = `${trailEditor.active ? trailEditor.tool : 'Off'}${
+      validity ? ` · ${validity}` : ''}`;
+  }
+
+  function updateTrailControls() {
+    trailTools.hidden = !trailEditor.active;
+    trailToggle.setAttribute('aria-pressed', String(trailEditor.active));
+    trailToggle.textContent = trailEditor.active ? 'Editing trail' : 'Edit trail';
+    trailModeLabel.textContent = `Trail editing: ${trailEditor.tool}`;
+    for (const tool of ['place', 'move', 'remove']) {
+      document.querySelector(`[data-forest-trail-${tool}]`).setAttribute(
+        'aria-pressed', String(trailEditor.tool === tool)
+      );
+    }
+  }
+
+  function setTrailTool(tool) {
+    trailEditor.tool = tool;
+    trailEditor.movingId = tool === 'move'
+      ? nearestTrailStone(player.worldX, player.worldY)?.id || null : null;
+    trailEditor.preview = null;
+    updateTrailControls();
+    if (tool === 'move' && !trailEditor.movingId) {
+      reportTrail('Stand near a stone, then choose Move nearest.', 'no nearby stone');
+    } else if (tool === 'remove') {
+      reportTrail('Choose a stone to remove. Removal is rejected if it would split the trail.');
+    } else {
+      reportTrail(tool === 'move' ? 'Choose a new clear position for the selected stone.'
+        : 'Choose clear ground; connected stones stay 26–96 px apart.');
+    }
+    requestRender();
+  }
+
+  function toggleTrailEditor(force) {
+    trailEditor.active = typeof force === 'boolean' ? force : !trailEditor.active;
+    trailEditor.preview = null;
+    trailEditor.movingId = null;
+    clearMovement();
+    updateTrailControls();
+    if (trailEditor.active) setTrailTool('place');
+    else reportTrail('Off');
+    viewportElement.focus();
+    requestRender();
+  }
+
+  function previewTrailAt(worldX, worldY, shouldRender = true) {
+    if (!trailEditor.active || trailEditor.tool === 'remove') return;
+    const id = trailEditor.tool === 'move'
+      ? trailEditor.movingId : nextForestSteppingStoneId(overlay);
+    if (!id) {
+      trailEditor.preview = null;
+      reportTrail(trailReasonText['stone-limit'], 'invalid: stone-limit');
+      return;
+    }
+    const otherObjects = placedObjects.filter(({ id: objectId }) => objectId !== id);
+    trailEditor.preview = createForestTrailPlacementPreview(
+      worldX, worldY, id, scene, otherObjects
+    );
+    const validity = trailEditor.preview;
+    reportTrail(validity.valid ? 'Valid position. Click or press Enter to save.'
+      : (trailReasonText[validity.reason] || validity.reason),
+    validity.valid ? 'valid preview' : `invalid: ${validity.reason}`);
+    if (shouldRender) requestRender();
+  }
+
+  function saveTrailResult(result, action) {
+    if (!result.valid) {
+      reportTrail(trailReasonText[result.reason] || result.reason, `rejected: ${result.reason}`);
+      return false;
+    }
+    try {
+      overlayPersistence.save(result.overlay);
+    } catch (error) {
+      reportTrail(`Save failed: ${error.message}`, 'save failed');
+      return false;
+    }
+    setOverlay(result.overlay, `trail ${action} saved locally`);
+    trailEditor.preview = null;
+    if (trailEditor.tool === 'move') trailEditor.movingId = null;
+    reportTrail(`Stone ${action}. The overlay is saved locally.`, action);
+    return true;
+  }
+
+  function commitTrailAt(worldX, worldY) {
+    if (trailEditor.tool === 'remove') {
+      const stone = nearestTrailStone(worldX, worldY);
+      if (!stone) {
+        reportTrail('Choose a nearby stepping stone.', 'invalid: stone-not-found');
+        return;
+      }
+      saveTrailResult(overlayWithoutForestSteppingStone(overlay, stone.id), 'removed');
+      return;
+    }
+    if (trailEditor.tool === 'move' && !trailEditor.movingId) {
+      const stone = nearestTrailStone(worldX, worldY);
+      if (!stone) {
+        reportTrail('Choose a nearby stepping stone to move.', 'invalid: stone-not-found');
+        return;
+      }
+      trailEditor.movingId = stone.id;
+      reportTrail(`Selected ${stone.id}. Choose its new clear position.`, 'stone selected');
+      return;
+    }
+    previewTrailAt(worldX, worldY);
+    if (!trailEditor.preview?.valid) return;
+    saveTrailResult(overlayWithForestSteppingStone(
+      overlay, trailEditor.preview.stone, scene
+    ), trailEditor.tool === 'move' ? 'moved' : 'placed');
+  }
+
   function placeMarker() {
     const marker = createForestMarker(player.worldX, player.worldY);
     const placement = validateForestObjectPlacement(marker, scene, placedObjects);
@@ -624,6 +824,9 @@ if (payload && viewportElement && canvas) {
       return;
     }
     setOverlay(emptyOverlay, 'reset');
+    trailEditor.preview = null;
+    trailEditor.movingId = null;
+    if (trailEditor.active) setTrailTool('place');
     viewportElement.focus();
   }
 
@@ -659,6 +862,28 @@ if (payload && viewportElement && canvas) {
       event.preventDefault();
       keys[direction] = true;
       requestRender();
+    } else if ((event.key === 't' || event.key === 'T')) {
+      event.preventDefault();
+      toggleTrailEditor();
+    } else if (trailEditor.active && (event.key === 'p' || event.key === 'P')) {
+      event.preventDefault();
+      setTrailTool('place');
+        previewTrailAt(player.worldX, player.worldY, false);
+    } else if (trailEditor.active && (event.key === 'm' || event.key === 'M')) {
+      event.preventDefault();
+      setTrailTool('move');
+      previewTrailAt(player.worldX, player.worldY);
+    } else if (trailEditor.active && (event.key === 'Delete' || event.key === 'Backspace')) {
+      event.preventDefault();
+      setTrailTool('remove');
+      commitTrailAt(player.worldX, player.worldY);
+    } else if (trailEditor.active && event.key === 'Escape') {
+      event.preventDefault();
+      toggleTrailEditor(false);
+    } else if (trailEditor.active && event.key === 'Enter') {
+      event.preventDefault();
+      commitTrailAt(trailEditor.preview?.stone.worldX ?? player.worldX,
+        trailEditor.preview?.stone.worldY ?? player.worldY);
     } else if ((event.key === 'e' || event.key === 'E' || event.key === 'Enter')
       && focusedItem) {
       event.preventDefault();
@@ -673,6 +898,14 @@ if (payload && viewportElement && canvas) {
     }
   });
   viewportElement.addEventListener('pointerdown', (event) => {
+    if (trailEditor.active && !event.target.closest('button') && !dialog.open) {
+      event.preventDefault();
+      const viewportRect = viewportElement.getBoundingClientRect();
+      commitTrailAt(camera.x + event.clientX - viewportRect.left,
+        camera.y + event.clientY - viewportRect.top);
+      viewportElement.focus();
+      return;
+    }
     if (event.pointerType === 'mouse' || event.target.closest('button') || dialog.open) return;
     event.preventDefault();
     touch.pointerId = event.pointerId;
@@ -688,6 +921,12 @@ if (payload && viewportElement && canvas) {
     viewportElement.focus();
   });
   viewportElement.addEventListener('pointermove', (event) => {
+    if (trailEditor.active) {
+      const viewportRect = viewportElement.getBoundingClientRect();
+      previewTrailAt(camera.x + event.clientX - viewportRect.left,
+        camera.y + event.clientY - viewportRect.top);
+      return;
+    }
     if (event.pointerId !== touch.pointerId) return;
     event.preventDefault();
     updateTouchMovement(event);
@@ -706,9 +945,26 @@ if (payload && viewportElement && canvas) {
   dialog.querySelector('[data-forest-dialog-close]').addEventListener('click', () => dialog.close());
   prompt.addEventListener('click', openInspection);
   document.querySelector('[data-forest-reset]').addEventListener('click', resetPlayer);
+  trailToggle.addEventListener('click', () => toggleTrailEditor());
+  document.querySelector('[data-forest-trail-place]').addEventListener('click', () => {
+    setTrailTool('place');
+    viewportElement.focus();
+  });
+  document.querySelector('[data-forest-trail-move]').addEventListener('click', () => {
+    setTrailTool('move');
+    viewportElement.focus();
+  });
+  document.querySelector('[data-forest-trail-remove]').addEventListener('click', () => {
+    setTrailTool('remove');
+    viewportElement.focus();
+  });
+  document.querySelector('[data-forest-trail-done]').addEventListener('click', () => (
+    toggleTrailEditor(false)
+  ));
   document.querySelector('[data-forest-place-marker]').addEventListener('click', placeMarker);
   document.querySelector('[data-forest-reset-overlay]').addEventListener('click', resetOverlay);
   window.addEventListener('resize', resize);
   resize();
+  updateTrailControls();
   resetPlayer();
 }
