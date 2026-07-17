@@ -2,6 +2,10 @@ import {
   FOREST_MARKER_INTERACTION_RADIUS,
   FOREST_STEPPING_STONE_TYPE
 } from './forest-world-overlay.js';
+import {
+  FOREST_DISCOVERY_PICKUP_RADIUS,
+  FOREST_DISCOVERY_TYPE
+} from './forest-discoveries.js';
 
 export function placementVisualRect(placement, asset) {
   const scale = placement.scale;
@@ -28,16 +32,24 @@ export function visibleForestPlacements(placements, assetsByKey, viewport, margi
 }
 
 export function visibleForestObjects(objects, viewport, margin = 24) {
-  return objects.filter((object) => (
-    object.worldX + (object.type === FOREST_STEPPING_STONE_TYPE ? 14 : 12)
+  return objects.filter((object) => {
+    const horizontalRadius = object.type === FOREST_STEPPING_STONE_TYPE ? 14
+      : object.type === FOREST_DISCOVERY_TYPE ? 10 : 12;
+    const upperRadius = object.type === FOREST_STEPPING_STONE_TYPE ? 7
+      : object.type === FOREST_DISCOVERY_TYPE ? 10 : 28;
+    const lowerRadius = object.type === FOREST_STEPPING_STONE_TYPE ? 7
+      : object.type === FOREST_DISCOVERY_TYPE ? 8 : 28;
+    return (
+      object.worldX + horizontalRadius
       >= viewport.x - margin
-      && object.worldX - (object.type === FOREST_STEPPING_STONE_TYPE ? 14 : 12)
+      && object.worldX - horizontalRadius
         <= viewport.x + viewport.width + margin
-      && object.worldY + (object.type === FOREST_STEPPING_STONE_TYPE ? 7 : 28)
+      && object.worldY + lowerRadius
         >= viewport.y - margin
-      && object.worldY - (object.type === FOREST_STEPPING_STONE_TYPE ? 7 : 28)
+      && object.worldY - upperRadius
         <= viewport.y + viewport.height + margin
-  )).sort((left, right) => left.worldY - right.worldY || left.id.localeCompare(right.id));
+    );
+  }).sort((left, right) => left.worldY - right.worldY || left.id.localeCompare(right.id));
 }
 
 export const FOREST_AMBIENT_WIND = Object.freeze({
@@ -248,7 +260,9 @@ export function focusedForestPlacement(player, placements, interactionRadius) {
   ))[0]?.placement || null;
 }
 
-export function focusedForestSceneItem(player, placements, objects, treeInteractionRadius) {
+export function focusedForestSceneItem(
+  player, placements, objects, treeInteractionRadius, discoveries = []
+) {
   const candidates = [
     ...placements.map((placement) => ({
       kind: 'tree', id: placement.id, value: placement,
@@ -259,6 +273,11 @@ export function focusedForestSceneItem(player, placements, objects, treeInteract
       kind: object.type || 'marker', id: object.id, value: object,
       distance: Math.hypot(player.worldX - object.worldX, player.worldY - object.worldY),
       reach: FOREST_MARKER_INTERACTION_RADIUS
+    })),
+    ...discoveries.map((discovery) => ({
+      kind: FOREST_DISCOVERY_TYPE, id: discovery.id, value: discovery,
+      distance: Math.hypot(player.worldX - discovery.worldX, player.worldY - discovery.worldY),
+      reach: FOREST_DISCOVERY_PICKUP_RADIUS
     }))
   ];
   return candidates.filter(({ distance, reach }) => distance <= reach)

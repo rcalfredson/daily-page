@@ -411,14 +411,108 @@ either a loaded tree or a marker with deterministic distance, kind, and id tie-b
 existing keyboard, touch, prompt, modal, and focus-return behavior is reused. Animation frames do
 not access storage, parse overlay JSON, validate placement, regenerate the base, or prepare assets.
 
-The explicit future boundary remains narrow: production account or database storage, migrations
-between generated base versions, conflict resolution, multiple devices, authorization, object asset
-loading, free-form labels, path topology, automatic pathfinding, terrain painting, bridges,
-elevation, excavation, pickups, inventories, currencies, resource costs, crafting, generalized
+The explicit future boundary for the overlay remains narrow: production account or database
+storage, migrations between generated base versions, conflict resolution, multiple devices,
+authorization, object asset loading, free-form labels, path topology, automatic pathfinding,
+terrain painting, bridges, elevation, excavation, currencies, resource costs, crafting, generalized
 construction tools, multiplayer, and a general component framework all remain undesigned. The
 stepping-stone contract does not authorize trail networks, navigation graphs, terrain mutation, or a
 complete customization system. Supporting those requires a new versioned contract decision;
 neither placed-object type is an invitation to smuggle new systems into an unversioned payload.
+
+### Milestone 3 discovery and satchel contract
+
+The first discovery vocabulary is exactly **fallen twigs**, **smooth stones**, and **seed pods**.
+They are small things that have fallen naturally or been offered by the forest. Nothing in the
+interaction presents a writing tree as something to cut, mine, or consume. There is no rarity,
+quality, price, weight, durability, tool, spending rule, or arbitrary item metadata.
+
+The state boundary is explicit:
+
+- Generated discovery placement is reconstructed from the forest base identity, discovery
+  generation version 1, offering-cycle integer, fixed vocabulary, and the current bounded overlay
+  footprints. A complete discovery manifest is never saved.
+- Persistent personal state is a separate exact schema containing schema version 1, one fixed
+  state identity, the compatible forest base identity, a non-negative revision, a bounded offering
+  cycle, exactly three bounded inventory counts, and up to nine collected discovery identities.
+- Focus highlighting, prompt text, pickup feedback, and its dismissal timer are transient browser
+  presentation state. Losing them cannot remove inventory or alter collection progress.
+
+Each generated discovery has exactly seven fields: schema version, stable id, fixed `discovery`
+type, material id, cycle, and integer world coordinates. Its id includes the discovery schema
+version, a key of the complete base identity, cycle, and two-digit offering ordinal. A cycle offers nine discoveries,
+exactly three of each material. Representative and large-world profiles use the same nine-item
+bound. The candidate sequence is deterministic, so identical base, cycle, and overlay inputs
+reproduce identical ids, types, and coordinates without changing tree, asset, marker, or stone
+identity.
+
+Placement stays in a legible corridor band between 150 and at most 1,180 pixels ahead of the
+entrance. This encourages a short exploration beyond the nearest tree without distributing
+required items across the whole large-world profile. Fixed validation protects world edges, tree
+trunks and writing-interaction space, the entrance, marker and stepping-stone footprints, and
+discovery-to-discovery spacing. The current world is flat and its generated corridor is walkable,
+so this deliberately does not add pathfinding, navigation graphs, terrain analysis, or a spawn
+scheduler. Overlay edits can deterministically move a conflicting discovery candidate while
+preserving its identity; the generated manifest still remains independent of saved personal data.
+
+Pickup is an explicit nearby action shared with the existing interaction prompt. Keyboard users
+press E or Enter, pointer users activate the prompt, and touch users tap it. Trees, markers, and
+discoveries enter one deterministic proximity query ordered by distance, then kind and stable id;
+discovery pickup reach is a fixed 34 pixels. Trail editing retains its existing input precedence.
+Dialog and Satchel focus suspend movement, and closing either returns predictable focus to the
+forest. Closing the Satchel also returns focus to the viewport so movement and inspection continue
+immediately.
+
+A pickup first builds and validates a complete candidate discovery state. The development adapter
+serializes and stores that candidate before live state, culling, inventory text, or feedback
+changes. A storage exception therefore leaves the offered discovery and live inventory untouched.
+Already-collected ids and inventory counts at the 9,999 bound are rejected, so repeated input cannot
+credit an item twice. On success exactly one discovery id is recorded, exactly one material count is
+incremented, the visible-object cache is invalidated, and a polite non-modal status identifies the
+material and new count.
+
+Renewal is deterministic and has no wall-clock input. Only after all nine identities in the current
+offering have been collected can the user explicitly welcome another offering. Renewal increments
+the bounded cycle and clears only that cycle's collected-id list; it never subtracts or resets
+inventory and never touches marker or trail edits. Reloading, absence, or waiting does not advance,
+expire, or destroy an opportunity. This completion-gated development proof is intentionally not a
+generalized ecology, event calendar, loot table, or recurring reward schedule.
+
+The in-frame **Satchel** is one compact surface with the three material labels and counts, a concise
+renewal explanation, completion-gated renewal, and an explicit development reset. It has a labeled
+44-pixel target, visible native focus, Escape-to-close behavior, polite live feedback, and focus
+return. Reduced-motion users receive the same static feedback with a shorter dwell; discovery
+visuals have no continuous animation. The reset clears this base-specific inventory and discovery
+progress and regenerates cycle zero. It does not reset the separately stored personal overlay.
+
+The discovery adapter uses its own base-specific development `localStorage` key. Marker-only and
+marker-and-trail overlay v1 records therefore load unchanged. Invalid JSON, unsupported versions,
+incompatible bases, malformed or unknown inventory fields, unsafe or negative counts, duplicate
+collected ids, wrong-cycle ids, and storage exceptions recover to an empty in-memory discovery
+state with a visible diagnostic. Offending stored bytes are not overwritten during load. This is a
+development persistence proof, not database policy.
+
+Discoveries use three fixed Canvas primitive treatments and are non-solid. The Satchel renders its
+material icons through that same drawing function, rather than maintaining approximate text symbols
+or a second visual vocabulary. Available discoveries join the existing bounded visible-object
+cache, viewport culling, and stable ground-Y/id depth ordering. Diagnostics report total and
+remaining discoveries, the cycle, offered counts by type,
+inventory, and the last pickup or persistence failure. Generation, schema validation, JSON work,
+storage access, renewal, and inventory mutation occur only at setup or explicit action boundaries.
+Movement frames perform only the already bounded visibility and pure proximity math over at most
+nine discoveries. Regional tree-asset loading remains unchanged because discoveries need no asset
+requests or preparation.
+
+The Activity Forest stylesheet also contains legacy global `button` and `label` layout properties at
+the page boundary. Forest controls therefore do not inherit the site's generic floats, margins,
+font size, or fixed line-height. Satchel controls explicitly own their dimensions, spacing, colors,
+disabled treatment, and focus rings in both site themes.
+
+The next boundary remains explicit: there is no spending, crafting, construction toolbar, large
+inventory, equipment, shops, trading, daily spawn, streak, survival need, destructive harvesting,
+production storage, multiplayer, or generalized entity system. Benches, lanterns, signs, material
+costs, placement refunds, and environmental personalization belong to later milestones and are not
+implied by the Satchel.
 
 ### Development pressure profiles
 

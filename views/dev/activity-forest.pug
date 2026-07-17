@@ -49,6 +49,7 @@ block content
 
     p#activity-forest-help.activity-forest__help
       | Move with arrow keys or WASD, or touch and drag in the forest. Inspect nearby trees or your marker.
+      | Gather nearby fallen twigs, smooth stones, and seed pods with the same interaction prompt.
       | “Place marker here” saves one development-only personal overlay independently of the grove.
       | Press T or choose “Edit trail” to place, move, or reversibly remove up to 12 stepping stones.
 
@@ -69,11 +70,67 @@ block content
       data-forest-viewport
     )
       canvas.activity-forest__canvas(data-forest-canvas)
+      button.activity-forest__satchel-button(
+        type='button'
+        data-forest-satchel-button
+        aria-expanded='false'
+        aria-controls='activity-forest-satchel'
+      ) Satchel
+      section#activity-forest-satchel.activity-forest__satchel(
+        data-forest-satchel
+        aria-labelledby='activity-forest-satchel-title'
+        hidden
+      )
+        .activity-forest__satchel-heading
+          div
+            p.activity-forest__dialog-eyebrow A few things the forest offered
+            h2#activity-forest-satchel-title Satchel
+          button(type='button' data-forest-satchel-close aria-label='Close satchel') Close
+        ul.activity-forest__satchel-list
+          li
+            canvas.activity-forest__material-icon(
+              width='28'
+              height='24'
+              data-forest-material-icon='fallen-twigs'
+              aria-hidden='true'
+            )
+            span Fallen twigs
+            strong(data-forest-material-count='fallen-twigs') 0
+          li
+            canvas.activity-forest__material-icon(
+              width='28'
+              height='24'
+              data-forest-material-icon='smooth-stones'
+              aria-hidden='true'
+            )
+            span Smooth stones
+            strong(data-forest-material-count='smooth-stones') 0
+          li
+            canvas.activity-forest__material-icon(
+              width='28'
+              height='24'
+              data-forest-material-icon='seed-pods'
+              aria-hidden='true'
+            )
+            span Seed pods
+            strong(data-forest-material-count='seed-pods') 0
+        p.activity-forest__satchel-note
+          | These small finds are renewable. Once an offering is complete, the forest can offer another
+          | without taking anything from your satchel.
+        .activity-forest__satchel-actions
+          button(type='button' data-forest-renew-discoveries disabled) 9 discoveries remain
+          button(type='button' data-forest-reset-discoveries) Reset satchel and finds
       .activity-forest__joystick(data-forest-joystick hidden aria-hidden='true')
         .activity-forest__joystick-stick(data-forest-joystick-stick)
       button.activity-forest__prompt(type='button' data-forest-prompt hidden)
         span.activity-forest__prompt-keyboard(data-forest-prompt-keyboard) Press E or Enter to inspect
         span.activity-forest__prompt-touch(data-forest-prompt-touch) Tap to inspect
+      p.activity-forest__pickup-feedback(
+        data-forest-pickup-feedback
+        role='status'
+        aria-live='polite'
+        hidden
+      )
 
     dl.activity-forest__diagnostics(aria-label='Scene diagnostics')
       div
@@ -94,6 +151,15 @@ block content
       div
         dt Trail editor
         dd(data-forest-trail-diagnostic) Off
+      div
+        dt Discoveries
+        dd(data-forest-discoveries) —
+      div
+        dt Satchel inventory
+        dd(data-forest-inventory) —
+      div
+        dt Last pickup
+        dd(data-forest-last-pickup) —
       div
         dt Unique assets
         dd= scene.assetLoading.totalAssetCount
