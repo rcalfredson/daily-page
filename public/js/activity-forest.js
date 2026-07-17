@@ -12,6 +12,17 @@ import {
   touchMovement
 } from './forest-scene-math.js';
 import { createForestDevOverlayPersistence } from './forest-overlay-persistence.js';
+import { createForestDevDiscoveryPersistence } from './forest-discovery-persistence.js';
+import {
+  availableForestDiscoveries,
+  FOREST_DISCOVERY_MATERIALS,
+  FOREST_DISCOVERY_OFFERING_COUNT,
+  FOREST_DISCOVERY_TYPE,
+  forestDiscoveryMaterial,
+  forestDiscoveryStateAfterPickup,
+  generateForestDiscoveries,
+  renewForestDiscoveryState
+} from './forest-discoveries.js';
 import {
   applyForestOverlay,
   createForestMarker,
@@ -45,6 +56,13 @@ if (payload && viewportElement && canvas) {
   let overlay = persistedOverlay.overlay;
   let overlayApplication = applyForestOverlay(scene, overlay);
   let placedObjects = overlayApplication.objects;
+  const discoveryPersistence = createForestDevDiscoveryPersistence(window.localStorage);
+  const persistedDiscoveries = discoveryPersistence.load(scene.baseIdentity);
+  let discoveryState = persistedDiscoveries.state;
+  let discoveryOffering = generateForestDiscoveries(
+    scene, discoveryState.cycle, placedObjects
+  );
+  let availableDiscoveries = availableForestDiscoveries(discoveryOffering, discoveryState);
   const keys = { left: false, right: false, up: false, down: false };
   const touch = { pointerId: null, originX: 0, originY: 0, x: 0, y: 0 };
   const dialog = document.querySelector('[data-forest-dialog]');
@@ -56,6 +74,12 @@ if (payload && viewportElement && canvas) {
   const trailStatus = document.querySelector('[data-forest-trail-status]');
   const trailModeLabel = document.querySelector('[data-forest-trail-mode]');
   const trailEditor = { active: false, tool: 'place', preview: null, movingId: null };
+  const satchelButton = document.querySelector('[data-forest-satchel-button]');
+  const satchel = document.querySelector('[data-forest-satchel]');
+  const pickupFeedback = document.querySelector('[data-forest-pickup-feedback]');
+  let pickupFeedbackTimer = null;
+  let lastPickupResult = persistedDiscoveries.error
+    ? `recovered: ${persistedDiscoveries.error}` : 'No pickup yet';
   const diagnostics = {
     visible: document.querySelector('[data-forest-visible]'),
     camera: document.querySelector('[data-forest-camera]'),
@@ -71,7 +95,10 @@ if (payload && viewportElement && canvas) {
     regionEntry: document.querySelector('[data-forest-region-entry]'),
     regionLoading: document.querySelector('[data-forest-region-loading]'),
     overlay: document.querySelector('[data-forest-overlay]'),
-    trail: document.querySelector('[data-forest-trail-diagnostic]')
+    trail: document.querySelector('[data-forest-trail-diagnostic]'),
+    discoveries: document.querySelector('[data-forest-discoveries]'),
+    inventory: document.querySelector('[data-forest-inventory]'),
+    pickup: document.querySelector('[data-forest-last-pickup]')
   };
   const loadedCellIds = new Set(scene.assetLoading.initialCellIds);
   const pendingCellIds = new Set();
@@ -86,7 +113,7 @@ if (payload && viewportElement && canvas) {
     [placement.id, forestPlacementWindParameters(placement)]
   )));
   const visibilityCache = createForestVisibilityCache(
-    scene.placements, assetsByKey, 24, placedObjects
+    scene.placements, assetsByKey, 24, [...placedObjects, ...availableDiscoveries]
   );
   const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   let focusedItem = null;
@@ -113,7 +140,86 @@ if (payload && viewportElement && canvas) {
       overlay.revision} · ${status}${error ? ` (${error})` : ''}`;
   }
 
+  function updateDiscoverySurfaces() {
+    const counts = Object.fromEntries(FOREST_DISCOVERY_MATERIALS.map(({ id }) => [
+      id, discoveryOffering.filter(({ material }) => material === id).length
+    ]));
+    diagnostics.discoveries.textContent = `${availableDiscoveries.length} / ${
+      discoveryOffering.length} remaining · cycle ${discoveryState.cycle} · ${
+      FOREST_DISCOVERY_MATERIALS.map(({ id, shortLabel }) => `${shortLabel} ${counts[id]}`)
+        .join(' · ')}`;
+    diagnostics.inventory.textContent = FOREST_DISCOVERY_MATERIALS.map(({ id, shortLabel }) => (
+      `${shortLabel} ${discoveryState.inventory[id]}`
+    )).join(' · ');
+    diagnostics.pickup.textContent = lastPickupResult;
+    satchelButton.setAttribute('aria-label', `Satchel: ${FOREST_DISCOVERY_MATERIALS.map(
+      ({ id, shortLabel }) => `${discoveryState.inventory[id]} ${shortLabel.toLowerCase()}`
+    ).join(', ')}`);
+    for (const { id } of FOREST_DISCOVERY_MATERIALS) {
+      document.querySelector(`[data-forest-material-count="${id}"]`).textContent =
+        discoveryState.inventory[id];
+    }
+    const complete = availableDiscoveries.length === 0;
+    const renewButton = document.querySelector('[data-forest-renew-discoveries]');
+    renewButton.disabled = !complete;
+    renewButton.textContent = complete ? 'Welcome another offering' : `${
+      availableDiscoveries.length} discoveries remain`;
+  }
+
+  function setDiscoveryObjects() {
+    visibilityCache.setObjects([...placedObjects, ...availableDiscoveries]);
+  }
+
+  function regenerateDiscoveryOffering() {
+    discoveryOffering = generateForestDiscoveries(scene, discoveryState.cycle, placedObjects);
+    availableDiscoveries = availableForestDiscoveries(discoveryOffering, discoveryState);
+    setDiscoveryObjects();
+    updateDiscoverySurfaces();
+  }
+
   updateOverlayDiagnostic();
+  updateDiscoverySurfaces();
+
+  function paintDiscoveryGlyph(targetContext, x, y, material) {
+    targetContext.fillStyle = 'rgba(22, 35, 31, 0.24)';
+    targetContext.beginPath();
+    targetContext.ellipse(x, y + 3, 9, 4, 0, 0, Math.PI * 2);
+    targetContext.fill();
+    if (material === 'fallen-twigs') {
+      targetContext.strokeStyle = '#6c4930';
+      targetContext.lineWidth = 3;
+      targetContext.beginPath();
+      targetContext.moveTo(x - 7, y + 2);
+      targetContext.lineTo(x + 6, y - 4);
+      targetContext.moveTo(x - 2, y);
+      targetContext.lineTo(x - 5, y - 5);
+      targetContext.stroke();
+    } else if (material === 'smooth-stones') {
+      targetContext.fillStyle = '#c8c0a5';
+      targetContext.strokeStyle = '#6f756c';
+      targetContext.lineWidth = 1;
+      targetContext.beginPath();
+      targetContext.ellipse(x, y - 1, 7, 5, -0.12, 0, Math.PI * 2);
+      targetContext.fill();
+      targetContext.stroke();
+    } else {
+      targetContext.fillStyle = '#d4ad4f';
+      targetContext.strokeStyle = '#715c2c';
+      targetContext.lineWidth = 1;
+      targetContext.beginPath();
+      targetContext.ellipse(x - 3, y, 3, 5, -0.45, 0, Math.PI * 2);
+      targetContext.ellipse(x + 3, y - 2, 3, 5, 0.45, 0, Math.PI * 2);
+      targetContext.fill();
+      targetContext.stroke();
+    }
+  }
+
+  document.querySelectorAll('[data-forest-material-icon]').forEach((icon) => {
+    const iconContext = icon.getContext('2d');
+    iconContext.imageSmoothingEnabled = false;
+    paintDiscoveryGlyph(iconContext, icon.width / 2, icon.height / 2,
+      icon.dataset.forestMaterialIcon);
+  });
 
   function rasterLayerSource(layer) {
     const binary = window.atob(layer.data);
@@ -447,6 +553,19 @@ if (payload && viewportElement && canvas) {
     }
   }
 
+  function paintDiscovery(discovery) {
+    const x = Math.round(discovery.worldX - camera.x);
+    const y = Math.round(discovery.worldY - camera.y);
+    paintDiscoveryGlyph(context, x, y, discovery.material);
+    if (focusedItem?.kind === FOREST_DISCOVERY_TYPE && focusedItem.id === discovery.id) {
+      context.strokeStyle = '#fff0ae';
+      context.lineWidth = 2;
+      context.beginPath();
+      context.ellipse(x, y, 13, 9, 0, 0, Math.PI * 2);
+      context.stroke();
+    }
+  }
+
   function paintPlayer() {
     const x = Math.round(player.worldX - camera.x);
     const y = Math.round(player.worldY - camera.y);
@@ -464,9 +583,11 @@ if (payload && viewportElement && canvas) {
   function updateFocus() {
     focusedItem = focusedForestSceneItem(player, scene.placements.filter(
       ({ assetKey }) => assetsByKey.has(assetKey)
-    ), placedObjects, scene.exploration.interactionRadius);
-    prompt.hidden = !focusedItem;
-    const action = focusedItem?.kind === 'marker' ? 'inspect marker' : 'inspect';
+    ), placedObjects, scene.exploration.interactionRadius, availableDiscoveries);
+    prompt.hidden = !focusedItem || trailEditor.active;
+    const action = focusedItem?.kind === FOREST_DISCOVERY_TYPE
+      ? `gather ${forestDiscoveryMaterial(focusedItem.value.material).label.toLowerCase()}`
+      : focusedItem?.kind === 'marker' ? 'inspect marker' : 'inspect';
     prompt.querySelector('[data-forest-prompt-keyboard]').textContent =
       `Press E or Enter to ${action}`;
     prompt.querySelector('[data-forest-prompt-touch]').textContent = `Tap to ${action}`;
@@ -483,6 +604,7 @@ if (payload && viewportElement && canvas) {
       if (item.kind === 'player') paintPlayer();
       else if (item.kind === 'marker') paintMarker(item.object);
       else if (item.kind === FOREST_STEPPING_STONE_TYPE) paintSteppingStone(item.object);
+      else if (item.kind === FOREST_DISCOVERY_TYPE) paintDiscovery(item.object);
       else paintTree(item.placement, elapsedSeconds);
     }
     if (trailEditor.active && trailEditor.preview) {
@@ -491,7 +613,8 @@ if (payload && viewportElement && canvas) {
     const { visible, visibleObjects } = visibility;
     diagnostics.visible.textContent = `${visible.length} / ${scene.placements.length} trees · ${
       visibleObjects.filter(({ type }) => type === 'marker').length} markers · ${
-      visibleObjects.filter(({ type }) => type === FOREST_STEPPING_STONE_TYPE).length} stones`;
+      visibleObjects.filter(({ type }) => type === FOREST_STEPPING_STONE_TYPE).length} stones · ${
+      visibleObjects.filter(({ type }) => type === FOREST_DISCOVERY_TYPE).length} discoveries`;
     diagnostics.camera.textContent = `${camera.x}, ${camera.y}`;
     diagnostics.player.textContent = `${Math.round(player.worldX)}, ${Math.round(player.worldY)}`;
     const duration = window.performance.now() - start;
@@ -555,7 +678,7 @@ if (payload && viewportElement && canvas) {
     if (lastFrameTime === null) lastFrameTime = timestamp;
     const elapsed = Math.min(0.05, (timestamp - lastFrameTime) / 1000);
     lastFrameTime = timestamp;
-    const moving = hasMovement() && !dialog.open;
+    const moving = hasMovement() && !dialog.open && satchel.hidden;
     if (moving) {
       Object.assign(player, moveForestPlayer(player, movementDirection(), elapsed,
         scene.world, scene.placements));
@@ -620,6 +743,91 @@ if (payload && viewportElement && canvas) {
     lastFrameTime = null;
   }
 
+  function reportPickup(message, failed = false) {
+    lastPickupResult = message;
+    diagnostics.pickup.textContent = message;
+    pickupFeedback.textContent = message;
+    pickupFeedback.dataset.failed = String(failed);
+    pickupFeedback.hidden = false;
+    if (pickupFeedbackTimer !== null) window.clearTimeout(pickupFeedbackTimer);
+    pickupFeedbackTimer = window.setTimeout(() => {
+      pickupFeedback.hidden = true;
+      pickupFeedbackTimer = null;
+    }, reducedMotionQuery.matches ? 1800 : 2600);
+  }
+
+  function collectDiscovery(discovery) {
+    const result = forestDiscoveryStateAfterPickup(
+      discoveryState, discovery, discoveryOffering
+    );
+    if (!result.valid) {
+      reportPickup(`Pickup rejected: ${result.reason}.`, true);
+      return false;
+    }
+    try {
+      discoveryPersistence.save(result.state);
+    } catch (error) {
+      reportPickup(`Pickup not saved: ${error.message}`, true);
+      return false;
+    }
+    discoveryState = result.state;
+    availableDiscoveries = availableForestDiscoveries(discoveryOffering, discoveryState);
+    setDiscoveryObjects();
+    const material = forestDiscoveryMaterial(discovery.material);
+    reportPickup(`${material.label} gathered · ${discoveryState.inventory[discovery.material]} in satchel`);
+    updateDiscoverySurfaces();
+    updateFocus();
+    requestRender();
+    return true;
+  }
+
+  function openSatchel() {
+    clearMovement();
+    satchel.hidden = false;
+    satchelButton.setAttribute('aria-expanded', 'true');
+    satchel.querySelector('[data-forest-satchel-close]').focus();
+  }
+
+  function closeSatchel() {
+    if (satchel.hidden) return;
+    satchel.hidden = true;
+    satchelButton.setAttribute('aria-expanded', 'false');
+    viewportElement.focus();
+    requestRender();
+  }
+
+  function renewDiscoveries() {
+    const result = renewForestDiscoveryState(discoveryState, discoveryOffering);
+    if (!result.valid) {
+      reportPickup(`Renewal unavailable: ${result.reason}.`, true);
+      return;
+    }
+    try {
+      discoveryPersistence.save(result.state);
+    } catch (error) {
+      reportPickup(`Renewal not saved: ${error.message}`, true);
+      return;
+    }
+    discoveryState = result.state;
+    regenerateDiscoveryOffering();
+    updateFocus();
+    reportPickup(`The forest has offered ${FOREST_DISCOVERY_OFFERING_COUNT} more small finds.`);
+    requestRender();
+  }
+
+  function resetDiscoveries() {
+    try {
+      discoveryState = discoveryPersistence.reset(scene.baseIdentity);
+    } catch (error) {
+      reportPickup(`Satchel reset failed: ${error.message}`, true);
+      return;
+    }
+    regenerateDiscoveryOffering();
+    updateFocus();
+    reportPickup('Satchel and discovery progress reset for this generated forest.');
+    requestRender();
+  }
+
   function openInspection() {
     if (!focusedItem || dialog.open) return;
     clearMovement();
@@ -643,6 +851,11 @@ if (payload && viewportElement && canvas) {
     dialog.showModal();
   }
 
+  function activateFocusedItem() {
+    if (focusedItem?.kind === FOREST_DISCOVERY_TYPE) collectDiscovery(focusedItem.value);
+    else openInspection();
+  }
+
   function setOverlay(nextOverlay, status) {
     const application = applyForestOverlay(scene, nextOverlay);
     if (application.error) {
@@ -652,7 +865,7 @@ if (payload && viewportElement && canvas) {
     overlay = nextOverlay;
     overlayApplication = application;
     placedObjects = application.objects;
-    visibilityCache.setObjects(placedObjects);
+    regenerateDiscoveryOffering();
     updateOverlayDiagnostic(status, null);
     updateFocus();
     requestRender();
@@ -728,6 +941,7 @@ if (payload && viewportElement && canvas) {
     updateTrailControls();
     if (trailEditor.active) setTrailTool('place');
     else reportTrail('Off');
+    updateFocus();
     viewportElement.focus();
     requestRender();
   }
@@ -887,7 +1101,7 @@ if (payload && viewportElement && canvas) {
     } else if ((event.key === 'e' || event.key === 'E' || event.key === 'Enter')
       && focusedItem) {
       event.preventDefault();
-      openInspection();
+      activateFocusedItem();
     }
   });
   viewportElement.addEventListener('keyup', (event) => {
@@ -898,7 +1112,7 @@ if (payload && viewportElement && canvas) {
     }
   });
   viewportElement.addEventListener('pointerdown', (event) => {
-    if (trailEditor.active && !event.target.closest('button') && !dialog.open) {
+    if (trailEditor.active && !event.target.closest('button') && !dialog.open && satchel.hidden) {
       event.preventDefault();
       const viewportRect = viewportElement.getBoundingClientRect();
       commitTrailAt(camera.x + event.clientX - viewportRect.left,
@@ -906,7 +1120,8 @@ if (payload && viewportElement && canvas) {
       viewportElement.focus();
       return;
     }
-    if (event.pointerType === 'mouse' || event.target.closest('button') || dialog.open) return;
+    if (event.pointerType === 'mouse' || event.target.closest('button') || dialog.open
+      || !satchel.hidden) return;
     event.preventDefault();
     touch.pointerId = event.pointerId;
     touch.originX = event.clientX;
@@ -943,7 +1158,23 @@ if (payload && viewportElement && canvas) {
     requestRender();
   });
   dialog.querySelector('[data-forest-dialog-close]').addEventListener('click', () => dialog.close());
-  prompt.addEventListener('click', openInspection);
+  prompt.addEventListener('click', () => {
+    if (!trailEditor.active) activateFocusedItem();
+  });
+  satchelButton.addEventListener('click', openSatchel);
+  satchel.querySelector('[data-forest-satchel-close]').addEventListener('click', closeSatchel);
+  satchel.querySelector('[data-forest-renew-discoveries]').addEventListener(
+    'click', renewDiscoveries
+  );
+  satchel.querySelector('[data-forest-reset-discoveries]').addEventListener(
+    'click', resetDiscoveries
+  );
+  satchel.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeSatchel();
+    }
+  });
   document.querySelector('[data-forest-reset]').addEventListener('click', resetPlayer);
   trailToggle.addEventListener('click', () => toggleTrailEditor());
   document.querySelector('[data-forest-trail-place]').addEventListener('click', () => {
