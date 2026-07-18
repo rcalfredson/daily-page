@@ -1,6 +1,9 @@
 import {
   FOREST_MARKER_TYPE,
+  FOREST_SEED_POD_LANTERN_TYPE,
+  FOREST_STONE_BENCH_TYPE,
   FOREST_STEPPING_STONE_TYPE,
+  FOREST_TRAIL_SIGN_TYPE,
   isForestBaseIdentity,
   sameForestBaseIdentity
 } from './forest-world-overlay.js';
@@ -62,7 +65,9 @@ function corridorCenter(scene, worldY) {
 
 function overlayRadius(object) {
   return object.type === FOREST_STEPPING_STONE_TYPE ? 14
-    : object.type === FOREST_MARKER_TYPE ? 12 : 12;
+    : object.type === FOREST_STONE_BENCH_TYPE ? 20
+      : [FOREST_TRAIL_SIGN_TYPE, FOREST_SEED_POD_LANTERN_TYPE,
+        FOREST_MARKER_TYPE].includes(object.type) ? 12 : 12;
 }
 
 export function isForestDiscoveryMaterial(value) {

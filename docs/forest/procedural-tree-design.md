@@ -508,11 +508,90 @@ the page boundary. Forest controls therefore do not inherit the site's generic f
 font size, or fixed line-height. Satchel controls explicitly own their dimensions, spacing, colors,
 disabled treatment, and focus rings in both site themes.
 
-The next boundary remains explicit: there is no spending, crafting, construction toolbar, large
-inventory, equipment, shops, trading, daily spawn, streak, survival need, destructive harvesting,
-production storage, multiplayer, or generalized entity system. Benches, lanterns, signs, material
-costs, placement refunds, and environmental personalization belong to later milestones and are not
-implied by the Satchel.
+The discovery contract itself still contains no spending or crafting semantics. Milestone 4 adds a
+separate, fixed clearing-object vocabulary and derives commitments from that overlay.
+
+### Milestone 4 clearing-object contract
+
+The initial vocabulary is exactly **trail sign**, **stone bench**, and **seed-pod lantern**. They
+exercise the future `sign`, `seat`, and `light` affordances without introducing a general building
+or crafting system. Their code-owned costs are fixed at two fallen twigs; two smooth stones; and one
+fallen twig plus two seed pods, respectively. Costs, collision footprints, interaction reach,
+visual dimensions and colors are never loaded from personal state. One nine-discovery offering can
+therefore fund one of each object, with one smooth stone and one seed pod left available. The overlay allows at most nine
+clearing objects and at most three of any type.
+
+All three use placed-object schema version 1, stable ids of the form
+`forest-clearing-v1-{type}-{01..03}`, and integer world coordinates. Bench and lantern records have
+exactly five fields:
+
+```text
+schemaVersion, id, type, worldX, worldY
+```
+
+A sign alone adds an exact `text` field. Text is normalized to Unicode NFC, CR/LF sequences become
+one space, surrounding and repeated horizontal whitespace is removed, control characters are
+rejected, and the result is capped at 60 Unicode code points. Empty text is allowed and renders as
+an unnamed sign. It is assigned only through `textContent` or an input value; it is never treated as
+HTML. Unknown types, fields, mismatched identities, malformed text, duplicate ids, unsupported
+versions and per-type or total overflows reject the complete overlay. Visual version 1 remains a
+code boundary independent of mutable placement records.
+
+Material accounting uses a derived commitment ledger. Discovery inventory remains the total ever
+gathered; available inventory is that total minus the fixed costs of every valid clearing object in
+the overlay. Placement validates a complete candidate, checks this derived availability, saves the
+single candidate overlay record, and only then replaces live objects. Removal saves the candidate
+without one identity before live removal, which makes its complete fixed cost available again.
+Moves and sign edits replace a record under the same id and cannot charge or refund. A storage
+exception leaves both the live overlay and derived availability unchanged; repeated placement or
+removal input cannot debit or refund twice because there is no independently mutable debit record.
+The discovery and overlay storage keys remain independently versioned and marker/trail and
+Milestone 3 records load unchanged, but no operation that changes commitment requires two writes.
+
+If loaded collected totals are inconsistent with valid authored objects, diagnostics report
+`impossible-material-commitment`, all new construction is disabled, and the authored overlay remains
+visible and removable so the developer can recover without duplicating material. The discovery
+reset is disabled while clearing objects exist; its label explains that objects must first be
+removed and refunded. `Reset personal overlay` removes the marker, trail, and all clearing objects,
+thereby making every committed material available while leaving gathered inventory and discovery
+progress intact. Renewal changes only the discovery cycle and never consumes objects, trails, or
+committed material.
+
+Placement is one focused mode entered from three 44-pixel Satchel actions. Keyboard placement
+starts at the deterministic point 56 world pixels above the player; movement updates that preview,
+Enter commits, and Escape cancels. Pointer and touch coordinates map through the viewport to bounded
+integer world coordinates and commit once on pointer-down instead of starting the joystick. A
+valid preview has a pale outline; an invalid preview has a red outline plus a drawn cross, so color
+is not the only cue. A polite status names success, rejection, refund, cancellation, or save
+failure. Selecting an object opens a native modal with text-safe, read-only inspection plus move,
+removal, and close actions. A sign exposes a separate `Edit message` action; only that action reveals
+and focuses the input, while cancel restores the read-only view. The development route assumes the
+personal-overlay owner permission that a production surface will eventually need to gate. Closing
+returns focus to exploration.
+
+Validation protects world bounds, tree collision and an additional 28-pixel writing-interaction
+clearance, the 52-pixel entrance region, the current player, marker and stone footprints, active
+discoveries, and an additional 34-pixel gap among clearing objects. These bounded rules preserve the
+flat generated corridor assumptions without pathfinding or terrain analysis. The stone bench is
+solid and joins deterministic axis-separated player collision; signs and lanterns are non-solid.
+Only three benches can exist, their spacing and entrance/tree exclusions prevent this slice from
+closing the entrance or a writing tree, and no navigation mesh or generalized physics is added.
+
+The objects use fixed Canvas primitives. The lantern has one bounded translucent glow with a small,
+deterministic two-frequency pulse in the existing ambient render loop. Reduced-motion mode holds it
+at a fixed midpoint. There is no darkness, power, time-of-day, or lighting engine. Objects enter the existing visibility
+cache, bounded culling rectangles, stable ground-Y/kind/id depth ordering, and deterministic
+distance/kind/id focus query. No visual preparation or regional asset request is needed. Diagnostics
+report total and visible objects, counts by type, placement mode, available and committed counts,
+and the last edit or persistence failure. Candidate generation, normalization, schema validation,
+ledger calculation, JSON and storage remain in initialization or explicit handlers rather than
+animation-frame callbacks; frames perform only preview math, collision, culling, focus and draws.
+
+Milestone 5 writing resurfacing remains deliberately absent: the bench only identifies a quiet
+place, the sign displays its restrained authored text, and the lantern identifies its gentle glow.
+There are no post associations, excerpts, semantic relationships, sitting animation, construction
+parts, arbitrary recipes, terrain edits, generalized lighting, containers, shops, production
+storage, multiplayer, or entity-component framework.
 
 ### Development pressure profiles
 

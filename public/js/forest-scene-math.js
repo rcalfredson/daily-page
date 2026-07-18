@@ -1,7 +1,14 @@
 import {
   FOREST_MARKER_INTERACTION_RADIUS,
+  FOREST_SEED_POD_LANTERN_TYPE,
+  FOREST_STONE_BENCH_TYPE,
+  FOREST_TRAIL_SIGN_TYPE,
   FOREST_STEPPING_STONE_TYPE
 } from './forest-world-overlay.js';
+import {
+  FOREST_CLEARING_OBJECT_DEFINITIONS,
+  FOREST_CLEARING_OBJECT_INTERACTION_RADIUS
+} from './forest-clearing-objects.js';
 import {
   FOREST_DISCOVERY_PICKUP_RADIUS,
   FOREST_DISCOVERY_TYPE
@@ -34,9 +41,11 @@ export function visibleForestPlacements(placements, assetsByKey, viewport, margi
 export function visibleForestObjects(objects, viewport, margin = 24) {
   return objects.filter((object) => {
     const horizontalRadius = object.type === FOREST_STEPPING_STONE_TYPE ? 14
-      : object.type === FOREST_DISCOVERY_TYPE ? 10 : 12;
+      : object.type === FOREST_DISCOVERY_TYPE ? 10
+        : object.type === FOREST_STONE_BENCH_TYPE ? 24 : 16;
     const upperRadius = object.type === FOREST_STEPPING_STONE_TYPE ? 7
-      : object.type === FOREST_DISCOVERY_TYPE ? 10 : 28;
+      : object.type === FOREST_DISCOVERY_TYPE ? 10
+        : object.type === FOREST_SEED_POD_LANTERN_TYPE ? 48 : 32;
     const lowerRadius = object.type === FOREST_STEPPING_STONE_TYPE ? 7
       : object.type === FOREST_DISCOVERY_TYPE ? 8 : 28;
     return (
@@ -102,6 +111,14 @@ export function forestFoliageMotionGroupDisplacement(
   return Math.round(
     FOREST_AMBIENT_WIND.maximumDisplacement * parameters.amplitude * response * signal
   );
+}
+
+export function forestLanternGlowIntensity(lantern, elapsedSeconds, active = true) {
+  if (!active) return 0.56;
+  const phase = (placementHash(lantern.id) / 4294967296) * Math.PI * 2;
+  const slowPulse = Math.sin((elapsedSeconds * 2.4) + phase) * 0.09;
+  const flameFlicker = Math.sin((elapsedSeconds * 7.1) + (phase * 1.7)) * 0.04;
+  return Math.max(0.4, Math.min(0.72, 0.56 + slowPulse + flameFlicker));
 }
 
 export function forestAmbientMotionActive({ documentHidden = false, reducedMotion = false } = {}) {
@@ -272,7 +289,9 @@ export function focusedForestSceneItem(
     ...objects.filter(({ type }) => type !== FOREST_STEPPING_STONE_TYPE).map((object) => ({
       kind: object.type || 'marker', id: object.id, value: object,
       distance: Math.hypot(player.worldX - object.worldX, player.worldY - object.worldY),
-      reach: FOREST_MARKER_INTERACTION_RADIUS
+      reach: [FOREST_TRAIL_SIGN_TYPE, FOREST_STONE_BENCH_TYPE,
+        FOREST_SEED_POD_LANTERN_TYPE].includes(object.type)
+        ? FOREST_CLEARING_OBJECT_INTERACTION_RADIUS : FOREST_MARKER_INTERACTION_RADIUS
     })),
     ...discoveries.map((discovery) => ({
       kind: FOREST_DISCOVERY_TYPE, id: discovery.id, value: discovery,
@@ -283,6 +302,12 @@ export function focusedForestSceneItem(
   return candidates.filter(({ distance, reach }) => distance <= reach)
     .sort((left, right) => left.distance - right.distance
       || left.kind.localeCompare(right.kind) || left.id.localeCompare(right.id))[0] || null;
+}
+
+export function forestSolidClearingPlacements(objects) {
+  return objects.filter(({ type }) => type === FOREST_STONE_BENCH_TYPE).map((object) => ({
+    ...object, collisionRadius: FOREST_CLEARING_OBJECT_DEFINITIONS[object.type].collisionRadius
+  }));
 }
 
 export function forestDepthOrder(placements, player, objects = []) {
