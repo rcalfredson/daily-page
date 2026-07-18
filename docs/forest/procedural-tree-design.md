@@ -142,6 +142,11 @@ The broader product and open-source implications of this model are tracked in `d
 
 The forest can grow in layers while preserving the value of every earlier layer.
 
+These stages describe layers of player experience, not release phases or calendar commitments. The
+evidence-gated path from development experiments through a production owner loop, constructive
+sandbox proof, connected public alpha, and private-world pilot is defined in
+`docs/forest/activity-forest-long-term-gameplay-vision.md`.
+
 ### Stage A: A living record
 
 - Generate one stable tree for each post.
