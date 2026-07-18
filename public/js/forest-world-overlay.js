@@ -3,6 +3,9 @@ export const FOREST_PLACED_OBJECT_SCHEMA_VERSION = 1;
 export const FOREST_MARKER_ID = 'forest-marker-v1-personal-clearing';
 export const FOREST_MARKER_TYPE = 'marker';
 export const FOREST_STEPPING_STONE_TYPE = 'stepping-stone';
+export const FOREST_TRAIL_SIGN_TYPE = 'trail-sign';
+export const FOREST_STONE_BENCH_TYPE = 'stone-bench';
+export const FOREST_SEED_POD_LANTERN_TYPE = 'seed-pod-lantern';
 export const FOREST_MARKER_COLLISION_RADIUS = 9;
 export const FOREST_MARKER_INTERACTION_RADIUS = 54;
 export const FOREST_OVERLAY_MAX_OBJECTS = 32;
@@ -16,6 +19,7 @@ export const FOREST_TREE_TRAIL_CLEARANCE = 14;
 const OVERLAY_ID_PATTERN = /^forest-overlay-v1-[a-z0-9-]{1,48}$/;
 const MARKER_ID_PATTERN = /^forest-marker-v1-[a-z0-9-]{1,48}$/;
 const STONE_ID_PATTERN = /^forest-stone-v1-[a-z0-9-]{1,48}$/;
+const CLEARING_ID_PATTERN = /^forest-clearing-v1-(trail-sign|stone-bench|seed-pod-lantern)-[0-9]{2}$/;
 
 function exactKeys(value, keys) {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -43,12 +47,20 @@ export function sameForestBaseIdentity(left, right) {
 }
 
 export function isForestPlacedObject(value) {
-  return exactKeys(value, ['schemaVersion', 'id', 'type', 'worldX', 'worldY'])
+  const basicKeys = ['schemaVersion', 'id', 'type', 'worldX', 'worldY'];
+  const sign = value?.type === FOREST_TRAIL_SIGN_TYPE;
+  return exactKeys(value, sign ? [...basicKeys, 'text'] : basicKeys)
     && value.schemaVersion === FOREST_PLACED_OBJECT_SCHEMA_VERSION
     && typeof value.id === 'string'
     && ((value.type === FOREST_MARKER_TYPE && MARKER_ID_PATTERN.test(value.id))
-      || (value.type === FOREST_STEPPING_STONE_TYPE && STONE_ID_PATTERN.test(value.id)))
-    && validCoordinate(value.worldX) && validCoordinate(value.worldY);
+      || (value.type === FOREST_STEPPING_STONE_TYPE && STONE_ID_PATTERN.test(value.id))
+      || ([FOREST_TRAIL_SIGN_TYPE, FOREST_STONE_BENCH_TYPE,
+        FOREST_SEED_POD_LANTERN_TYPE].includes(value.type) && CLEARING_ID_PATTERN.test(value.id)
+        && value.id.startsWith(`forest-clearing-v1-${value.type}-`)))
+    && validCoordinate(value.worldX) && validCoordinate(value.worldY)
+    && (!sign || (typeof value.text === 'string' && value.text === value.text.normalize('NFC')
+      && value.text === value.text.trim() && !/[\n\r]/.test(value.text)
+      && !/\p{Cc}/u.test(value.text) && [...value.text].length <= 60));
 }
 
 export function createForestMarker(worldX, worldY, id = FOREST_MARKER_ID) {
@@ -122,6 +134,13 @@ export function validateForestOverlay(value, expectedBaseIdentity) {
   }
   if (value.objects.filter(({ type }) => type === FOREST_STEPPING_STONE_TYPE).length
     > FOREST_TRAIL_MAX_STONES) return { valid: false, reason: 'too-many-stones' };
+  const clearingObjects = value.objects.filter(({ type }) => [FOREST_TRAIL_SIGN_TYPE,
+    FOREST_STONE_BENCH_TYPE, FOREST_SEED_POD_LANTERN_TYPE].includes(type));
+  if (clearingObjects.length > 9) return { valid: false, reason: 'too-many-clearing-objects' };
+  if ([FOREST_TRAIL_SIGN_TYPE, FOREST_STONE_BENCH_TYPE,
+    FOREST_SEED_POD_LANTERN_TYPE].some((type) => (
+    clearingObjects.filter((object) => object.type === type).length > 3
+  ))) return { valid: false, reason: 'too-many-clearing-objects-of-type' };
   return { valid: true, reason: null };
 }
 
@@ -140,8 +159,11 @@ export function overlayWithForestMarker(overlay, marker) {
 
 
 function objectRadius(object) {
-  return object.type === FOREST_STEPPING_STONE_TYPE
-    ? FOREST_STONE_COLLISION_RADIUS : FOREST_MARKER_COLLISION_RADIUS;
+  if (object.type === FOREST_STEPPING_STONE_TYPE) return FOREST_STONE_COLLISION_RADIUS;
+  if (object.type === FOREST_STONE_BENCH_TYPE) return 18;
+  if (object.type === FOREST_TRAIL_SIGN_TYPE) return 10;
+  if (object.type === FOREST_SEED_POD_LANTERN_TYPE) return 9;
+  return FOREST_MARKER_COLLISION_RADIUS;
 }
 
 function stoneTrailConnected(stones) {
@@ -274,6 +296,26 @@ export function applyForestOverlay(scene, overlay) {
       ? validateForestTrailPlacement(object, scene, otherObjects)
       : validateForestObjectPlacement(object, scene, otherObjects);
     if (!placement.valid) return { objects: [], error: placement.reason };
+    if ([FOREST_TRAIL_SIGN_TYPE, FOREST_STONE_BENCH_TYPE,
+      FOREST_SEED_POD_LANTERN_TYPE].includes(object.type)) {
+      const radius = objectRadius(object);
+      const spawn = scene.exploration?.spawn;
+      if (spawn && Math.hypot(object.worldX - spawn.worldX, object.worldY - spawn.worldY)
+        < FOREST_ENTRANCE_PROTECTION_RADIUS + radius) {
+        return { objects: [], error: 'protected-entrance' };
+      }
+      if (scene.placements.some((tree) => Math.hypot(
+        object.worldX - tree.worldX, object.worldY - tree.worldY
+      ) < radius + tree.collisionRadius + 28)) {
+        return { objects: [], error: 'tree-interaction-space' };
+      }
+      if (otherObjects.some((other) => [FOREST_TRAIL_SIGN_TYPE, FOREST_STONE_BENCH_TYPE,
+        FOREST_SEED_POD_LANTERN_TYPE].includes(other.type) && Math.hypot(
+        object.worldX - other.worldX, object.worldY - other.worldY
+      ) < radius + objectRadius(other) + 34)) {
+        return { objects: [], error: 'clearing-object-spacing' };
+      }
+    }
   }
   if (!stoneTrailConnected(ordered.filter(({ type }) => type === FOREST_STEPPING_STONE_TYPE))) {
     return { objects: [], error: 'trail-disconnected' };

@@ -28,6 +28,9 @@ html[data-theme='dark'] .activity-forest label {
   color: inherit;
 }
 
+/* Component display declarations must never override native hidden state. */
+.activity-forest [hidden] { display: none !important; }
+
 .activity-forest__header {
   display: flex;
   align-items: end;
@@ -251,6 +254,7 @@ html[data-theme='dark'] .activity-forest .activity-forest__satchel-button {
 .activity-forest__satchel-actions {
   display: grid;
   gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 .activity-forest__satchel-actions button {
   width: 100%;
@@ -262,6 +266,42 @@ html[data-theme='dark'] .activity-forest .activity-forest__satchel-button {
   background: transparent;
   color: #765146;
 }
+
+.activity-forest__satchel-subheading { margin: 1rem 0 0.45rem; font-size: 0.9rem; }
+.activity-forest__build-list { display: grid; gap: 0.4rem; }
+.activity-forest__build-list button {
+  display: grid;
+  min-height: 44px;
+  border: 1px solid #786f54;
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+  background: #fff8e5;
+  color: #34463d;
+  text-align: left;
+}
+.activity-forest__build-list button span { margin-top: 0.15rem; font-size: 0.72rem; }
+.activity-forest__object-editor {
+  margin: 1rem 0;
+  border: 1px solid rgba(86, 82, 61, 0.25);
+  border-radius: 10px;
+  padding: 0.85rem;
+  background: rgba(255, 248, 229, 0.55);
+}
+.activity-forest__object-text-label { display: grid; gap: 0.35rem; }
+.activity-forest__object-text-label input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+  border: 1px solid #786f54;
+  border-radius: 7px;
+  padding: 0.6rem 0.7rem;
+  background: #fffdf4;
+  color: #25352f;
+}
+.activity-forest__object-editor .activity-forest__dialog-context { margin: 0.45rem 0 0.75rem; }
+.activity-forest__object-editor-actions,
+.activity-forest__object-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.activity-forest__object-actions { margin-top: 1.25rem; }
 
 html[data-theme='dark'] .activity-forest__satchel button {
   border-color: #786f54;
@@ -379,9 +419,30 @@ html[data-theme='dark'] .activity-forest .activity-forest__prompt {
 .activity-forest__dialog-excerpt { font-size: 1.08rem; line-height: 1.65; }
 .activity-forest__dialog button {
   min-height: 44px;
+  box-sizing: border-box;
+  border: 1px solid #786f54;
+  border-radius: 7px;
   padding: 0.5rem 0.85rem;
+  background: #fff8e5;
+  color: #34463d;
   font-size: 0.78rem;
   line-height: 1.2;
+}
+.activity-forest__dialog button:hover { border-color: #4f5f52; background: #f2e7c8; }
+.activity-forest__dialog button:focus-visible,
+.activity-forest__object-text-label input:focus-visible {
+  outline: 3px solid #8b4d38;
+  outline-offset: 2px;
+}
+html[data-theme='dark'] .activity-forest .activity-forest__dialog button {
+  border-color: #786f54;
+  background: #fff8e5;
+  color: #34463d;
+}
+html[data-theme='dark'] .activity-forest .activity-forest__object-text-label input {
+  border-color: #786f54;
+  background: #fffdf4;
+  color: #25352f;
 }
 
 .activity-forest__diagnostics {

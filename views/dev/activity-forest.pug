@@ -50,6 +50,7 @@ block content
     p#activity-forest-help.activity-forest__help
       | Move with arrow keys or WASD, or touch and drag in the forest. Inspect nearby trees or your marker.
       | Gather nearby fallen twigs, smooth stones, and seed pods with the same interaction prompt.
+      | Open the Satchel to place a trail sign, stone bench, or seed-pod lantern.
       | “Place marker here” saves one development-only personal overlay independently of the grove.
       | Press T or choose “Edit trail” to place, move, or reversibly remove up to 12 stepping stones.
 
@@ -61,6 +62,13 @@ block content
         button(type='button' data-forest-trail-move aria-pressed='false') Move nearest
         button(type='button' data-forest-trail-remove aria-pressed='false') Remove
         button(type='button' data-forest-trail-done) Done
+
+    .activity-forest__trail-tools(data-forest-clearing-tools hidden aria-label='Clearing object placement controls')
+      strong(data-forest-clearing-mode) Placing clearing object
+      span(data-forest-clearing-status role='status' aria-live='polite') Choose clear ground.
+      .activity-forest__trail-actions
+        button(type='button' data-forest-clearing-commit) Place here
+        button(type='button' data-forest-clearing-cancel) Cancel
 
     .activity-forest__viewport(
       tabindex='0'
@@ -117,6 +125,17 @@ block content
         p.activity-forest__satchel-note
           | These small finds are renewable. Once an offering is complete, the forest can offer another
           | without taking anything from your satchel.
+        h3.activity-forest__satchel-subheading Make for the clearing
+        .activity-forest__build-list
+          button(type='button' data-forest-build='trail-sign')
+            strong Trail sign
+            span 2 twigs · up to 60 characters
+          button(type='button' data-forest-build='stone-bench')
+            strong Stone bench
+            span 2 stones
+          button(type='button' data-forest-build='seed-pod-lantern')
+            strong Seed-pod lantern
+            span 1 twig · 2 seed pods
         .activity-forest__satchel-actions
           button(type='button' data-forest-renew-discoveries disabled) 9 discoveries remain
           button(type='button' data-forest-reset-discoveries) Reset satchel and finds
@@ -157,6 +176,15 @@ block content
       div
         dt Satchel inventory
         dd(data-forest-inventory) —
+      div
+        dt Clearing objects
+        dd(data-forest-clearing-diagnostic) —
+      div
+        dt Material commitment
+        dd(data-forest-commitment-diagnostic) —
+      div
+        dt Last clearing edit
+        dd(data-forest-clearing-last-action) —
       div
         dt Last pickup
         dd(data-forest-last-pickup) —
@@ -236,5 +264,24 @@ block content
         time(data-forest-post-date)
       p.activity-forest__dialog-excerpt(data-forest-post-excerpt)
       button(type='button' data-forest-dialog-close) Return to the forest
+
+    dialog.activity-forest__dialog(data-forest-object-dialog aria-labelledby='forest-object-title')
+      p.activity-forest__dialog-eyebrow A clearing object
+      h2#forest-object-title(data-forest-object-title)
+      p.activity-forest__dialog-excerpt(data-forest-object-description)
+      .activity-forest__object-editor(data-forest-sign-editor hidden)
+        label.activity-forest__object-text-label
+          span Sign name or note
+          input(type='text' maxlength='120' data-forest-sign-text aria-describedby='forest-sign-help')
+        p#forest-sign-help.activity-forest__dialog-context
+          | Up to 60 Unicode characters. Line breaks become spaces.
+        .activity-forest__object-editor-actions
+          button(type='button' data-forest-object-save) Save message
+          button(type='button' data-forest-object-edit-cancel) Cancel editing
+      .activity-forest__object-actions
+        button(type='button' data-forest-object-edit hidden) Edit message
+        button(type='button' data-forest-object-move) Move
+        button(type='button' data-forest-object-remove) Remove and refund
+        button(type='button' data-forest-object-close) Return to the forest
 
     script#activity-forest-scene(type='application/json')!= JSON.stringify(scene).replace(/</g, '\\u003c')

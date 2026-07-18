@@ -6,6 +6,8 @@ import {
   forestSceneAssetKeysForCells,
   forestSceneCellIdsForViewport,
   forestFoliageMotionGroupDisplacement,
+  forestLanternGlowIntensity,
+  forestSolidClearingPlacements,
   forestPlacementWindParameters,
   moveForestPlayer,
   normalizedMovement,
@@ -28,13 +30,28 @@ import {
   createForestMarker,
   createForestTrailPlacementPreview,
   forestSteppingStoneJoins,
+  FOREST_STONE_BENCH_TYPE,
   FOREST_STEPPING_STONE_TYPE,
+  FOREST_TRAIL_SIGN_TYPE,
   nextForestSteppingStoneId,
   overlayWithForestSteppingStone,
   overlayWithoutForestSteppingStone,
   overlayWithForestMarker,
   validateForestObjectPlacement
 } from './forest-world-overlay.js';
+import {
+  canAffordForestClearingObject,
+  createForestClearingObject,
+  createForestClearingPlacementPreview,
+  FOREST_CLEARING_OBJECT_DEFINITIONS,
+  FOREST_CLEARING_OBJECT_TYPES,
+  forestClearingMaterialLedger,
+  isForestClearingObject,
+  nextForestClearingObjectId,
+  normalizeForestSignText,
+  overlayWithForestClearingObject,
+  overlayWithoutForestClearingObject
+} from './forest-clearing-objects.js';
 
 const payload = document.getElementById('activity-forest-scene');
 const viewportElement = document.querySelector('[data-forest-viewport]');
@@ -74,8 +91,15 @@ if (payload && viewportElement && canvas) {
   const trailStatus = document.querySelector('[data-forest-trail-status]');
   const trailModeLabel = document.querySelector('[data-forest-trail-mode]');
   const trailEditor = { active: false, tool: 'place', preview: null, movingId: null };
+  const clearingTools = document.querySelector('[data-forest-clearing-tools]');
+  const clearingStatus = document.querySelector('[data-forest-clearing-status]');
+  const clearingEditor = { active: false, type: null, preview: null, movingId: null };
   const satchelButton = document.querySelector('[data-forest-satchel-button]');
   const satchel = document.querySelector('[data-forest-satchel]');
+  const objectDialog = document.querySelector('[data-forest-object-dialog]');
+  let selectedClearingObjectId = null;
+  let lastClearingAction = persistedOverlay.error
+    ? `overlay recovery: ${persistedOverlay.error}` : 'No clearing edit yet';
   const pickupFeedback = document.querySelector('[data-forest-pickup-feedback]');
   let pickupFeedbackTimer = null;
   let lastPickupResult = persistedDiscoveries.error
@@ -98,7 +122,10 @@ if (payload && viewportElement && canvas) {
     trail: document.querySelector('[data-forest-trail-diagnostic]'),
     discoveries: document.querySelector('[data-forest-discoveries]'),
     inventory: document.querySelector('[data-forest-inventory]'),
-    pickup: document.querySelector('[data-forest-last-pickup]')
+    pickup: document.querySelector('[data-forest-last-pickup]'),
+    clearing: document.querySelector('[data-forest-clearing-diagnostic]'),
+    commitment: document.querySelector('[data-forest-commitment-diagnostic]'),
+    clearingAction: document.querySelector('[data-forest-clearing-last-action]')
   };
   const loadedCellIds = new Set(scene.assetLoading.initialCellIds);
   const pendingCellIds = new Set();
@@ -135,12 +162,14 @@ if (payload && viewportElement && canvas) {
     const stoneCount = overlay.objects.filter(({ type }) => (
       type === FOREST_STEPPING_STONE_TYPE
     )).length;
-    const markerCount = overlay.objects.length - stoneCount;
+    const clearingCount = overlay.objects.filter(isForestClearingObject).length;
+    const markerCount = overlay.objects.length - stoneCount - clearingCount;
     diagnostics.overlay.textContent = `${markerCount} marker · ${stoneCount} stones · revision ${
-      overlay.revision} · ${status}${error ? ` (${error})` : ''}`;
+      overlay.revision} · ${clearingCount} clearing objects · ${status}${error ? ` (${error})` : ''}`;
   }
 
   function updateDiscoverySurfaces() {
+    const ledger = forestClearingMaterialLedger(discoveryState.inventory, placedObjects);
     const counts = Object.fromEntries(FOREST_DISCOVERY_MATERIALS.map(({ id }) => [
       id, discoveryOffering.filter(({ material }) => material === id).length
     ]));
@@ -149,21 +178,39 @@ if (payload && viewportElement && canvas) {
       FOREST_DISCOVERY_MATERIALS.map(({ id, shortLabel }) => `${shortLabel} ${counts[id]}`)
         .join(' · ')}`;
     diagnostics.inventory.textContent = FOREST_DISCOVERY_MATERIALS.map(({ id, shortLabel }) => (
-      `${shortLabel} ${discoveryState.inventory[id]}`
+      `${shortLabel} ${ledger.available[id]} available / ${discoveryState.inventory[id]} gathered`
     )).join(' · ');
     diagnostics.pickup.textContent = lastPickupResult;
     satchelButton.setAttribute('aria-label', `Satchel: ${FOREST_DISCOVERY_MATERIALS.map(
-      ({ id, shortLabel }) => `${discoveryState.inventory[id]} ${shortLabel.toLowerCase()}`
+      ({ id, shortLabel }) => `${ledger.available[id]} ${shortLabel.toLowerCase()} available`
     ).join(', ')}`);
     for (const { id } of FOREST_DISCOVERY_MATERIALS) {
       document.querySelector(`[data-forest-material-count="${id}"]`).textContent =
-        discoveryState.inventory[id];
+        `${ledger.available[id]} / ${discoveryState.inventory[id]}`;
     }
     const complete = availableDiscoveries.length === 0;
     const renewButton = document.querySelector('[data-forest-renew-discoveries]');
     renewButton.disabled = !complete;
     renewButton.textContent = complete ? 'Welcome another offering' : `${
       availableDiscoveries.length} discoveries remain`;
+    const clearing = placedObjects.filter(isForestClearingObject);
+    diagnostics.clearing.textContent = `${clearing.length} / 9 · ${FOREST_CLEARING_OBJECT_TYPES.map(
+      (type) => `${FOREST_CLEARING_OBJECT_DEFINITIONS[type].label} ${
+        clearing.filter((object) => object.type === type).length}`
+    ).join(' · ')} · ${clearingEditor.active ? `placing ${clearingEditor.type}` : 'placement off'}`;
+    diagnostics.commitment.textContent = `${FOREST_DISCOVERY_MATERIALS.map(({ id, shortLabel }) => (
+      `${shortLabel} ${ledger.committed[id]}`
+    )).join(' · ')}${ledger.valid ? '' : ` · ${ledger.reason}`}`;
+    diagnostics.clearingAction.textContent = lastClearingAction;
+    document.querySelectorAll('[data-forest-build]').forEach((button) => {
+      button.disabled = !canAffordForestClearingObject(
+        discoveryState.inventory, placedObjects, button.dataset.forestBuild
+      ) || !nextForestClearingObjectId(overlay, button.dataset.forestBuild);
+    });
+    const resetButton = document.querySelector('[data-forest-reset-discoveries]');
+    resetButton.disabled = clearing.length > 0;
+    resetButton.textContent = clearing.length
+      ? 'Remove clearing objects before resetting finds' : 'Reset satchel and finds';
   }
 
   function setDiscoveryObjects() {
@@ -516,6 +563,62 @@ if (payload && viewportElement && canvas) {
     context.fillRect(x - 5, y - 25, 10, 2);
   }
 
+  function paintClearingObject(object, preview = false, elapsedSeconds = 0) {
+    const x = Math.round(object.worldX - camera.x);
+    const y = Math.round(object.worldY - camera.y);
+    const valid = !preview || clearingEditor.preview?.valid;
+    if (preview || (focusedItem?.id === object.id)) {
+      context.beginPath();
+      context.ellipse(x, y, object.type === FOREST_STONE_BENCH_TYPE ? 25 : 18, 9,
+        0, 0, Math.PI * 2);
+      context.fillStyle = valid ? 'rgba(255, 239, 164, 0.38)' : 'rgba(173, 78, 62, 0.42)';
+      context.fill();
+      context.strokeStyle = valid ? '#fff0ae' : '#842f27';
+      context.lineWidth = 2;
+      context.stroke();
+      if (preview && !valid) {
+        context.beginPath();
+        context.moveTo(x - 6, y - 6);
+        context.lineTo(x + 6, y + 6);
+        context.moveTo(x + 6, y - 6);
+        context.lineTo(x - 6, y + 6);
+        context.stroke();
+      }
+    }
+    context.fillStyle = 'rgba(22, 35, 31, 0.25)';
+    context.fillRect(x - 12, y - 3, 24, 5);
+    if (object.type === FOREST_TRAIL_SIGN_TYPE) {
+      context.fillStyle = '#65462f';
+      context.fillRect(x - 2, y - 25, 4, 24);
+      context.fillStyle = '#d3ad63';
+      context.fillRect(x - 12, y - 29, 24, 9);
+      context.fillStyle = '#6d4b32';
+      context.fillRect(x - 8, y - 26, 16, 2);
+    } else if (object.type === FOREST_STONE_BENCH_TYPE) {
+      context.fillStyle = '#aaa58f';
+      context.fillRect(x - 19, y - 13, 38, 8);
+      context.fillStyle = '#716f68';
+      context.fillRect(x - 15, y - 5, 6, 7);
+      context.fillRect(x + 9, y - 5, 6, 7);
+      context.fillStyle = '#d5cfb8';
+      context.fillRect(x - 15, y - 11, 23, 2);
+    } else {
+      const glow = forestLanternGlowIntensity(object, elapsedSeconds,
+        ambientMotionActive && !preview);
+      context.fillStyle = `rgba(239, 197, 87, ${glow * 0.38})`;
+      context.beginPath();
+      context.arc(x, y - 24, 19 + Math.round(glow * 6), 0, Math.PI * 2);
+      context.fill();
+      context.fillStyle = '#5b4932';
+      context.fillRect(x - 2, y - 23, 4, 22);
+      context.fillStyle = '#e3b94f';
+      context.fillRect(x - 7, y - 34, 14, 13);
+      context.fillStyle = glow > 0.56 ? '#fff6bd' : '#ffe38a';
+      context.fillRect(x - 3, y - 31 - (glow > 0.62 ? 1 : 0), 6,
+        7 + (glow > 0.62 ? 1 : 0));
+    }
+  }
+
   function paintTrailJoins() {
     const byId = new Map(placedObjects.map((object) => [object.id, object]));
     context.lineWidth = 5;
@@ -584,7 +687,7 @@ if (payload && viewportElement && canvas) {
     focusedItem = focusedForestSceneItem(player, scene.placements.filter(
       ({ assetKey }) => assetsByKey.has(assetKey)
     ), placedObjects, scene.exploration.interactionRadius, availableDiscoveries);
-    prompt.hidden = !focusedItem || trailEditor.active;
+    prompt.hidden = !focusedItem || trailEditor.active || clearingEditor.active;
     const action = focusedItem?.kind === FOREST_DISCOVERY_TYPE
       ? `gather ${forestDiscoveryMaterial(focusedItem.value.material).label.toLowerCase()}`
       : focusedItem?.kind === 'marker' ? 'inspect marker' : 'inspect';
@@ -605,15 +708,22 @@ if (payload && viewportElement && canvas) {
       else if (item.kind === 'marker') paintMarker(item.object);
       else if (item.kind === FOREST_STEPPING_STONE_TYPE) paintSteppingStone(item.object);
       else if (item.kind === FOREST_DISCOVERY_TYPE) paintDiscovery(item.object);
+      else if (isForestClearingObject(item.object)) {
+        paintClearingObject(item.object, false, elapsedSeconds);
+      }
       else paintTree(item.placement, elapsedSeconds);
     }
     if (trailEditor.active && trailEditor.preview) {
       paintSteppingStone(trailEditor.preview.stone, true);
     }
+    if (clearingEditor.active && clearingEditor.preview) {
+      paintClearingObject(clearingEditor.preview.object, true, elapsedSeconds);
+    }
     const { visible, visibleObjects } = visibility;
     diagnostics.visible.textContent = `${visible.length} / ${scene.placements.length} trees · ${
       visibleObjects.filter(({ type }) => type === 'marker').length} markers · ${
       visibleObjects.filter(({ type }) => type === FOREST_STEPPING_STONE_TYPE).length} stones · ${
+      visibleObjects.filter(isForestClearingObject).length} clearing objects · ${
       visibleObjects.filter(({ type }) => type === FOREST_DISCOVERY_TYPE).length} discoveries`;
     diagnostics.camera.textContent = `${camera.x}, ${camera.y}`;
     diagnostics.player.textContent = `${Math.round(player.worldX)}, ${Math.round(player.worldY)}`;
@@ -678,15 +788,16 @@ if (payload && viewportElement && canvas) {
     if (lastFrameTime === null) lastFrameTime = timestamp;
     const elapsed = Math.min(0.05, (timestamp - lastFrameTime) / 1000);
     lastFrameTime = timestamp;
-    const moving = hasMovement() && !dialog.open && satchel.hidden;
+    const moving = hasMovement() && !dialog.open && !objectDialog.open && satchel.hidden;
     if (moving) {
       Object.assign(player, moveForestPlayer(player, movementDirection(), elapsed,
-        scene.world, scene.placements));
+        scene.world, [...scene.placements, ...forestSolidClearingPlacements(placedObjects)]));
       followPlayer();
       updateFocus();
       if (trailEditor.active && trailEditor.tool !== 'remove') {
         previewTrailAt(player.worldX, player.worldY, false);
       }
+      if (clearingEditor.active) previewClearingAt(player.worldX, player.worldY, false);
     }
     render(timestamp / 1000, moving, frameGap);
     if (moving || ambientMotionActive) scheduledFrame = requestAnimationFrame(frame);
@@ -783,6 +894,8 @@ if (payload && viewportElement && canvas) {
 
   function openSatchel() {
     clearMovement();
+    if (clearingEditor.active) stopClearingPlacement(false);
+    if (trailEditor.active) toggleTrailEditor(false);
     satchel.hidden = false;
     satchelButton.setAttribute('aria-expanded', 'true');
     satchel.querySelector('[data-forest-satchel-close]').focus();
@@ -816,6 +929,10 @@ if (payload && viewportElement && canvas) {
   }
 
   function resetDiscoveries() {
+    if (placedObjects.some(isForestClearingObject)) {
+      reportPickup('Remove clearing objects before resetting gathered materials.', true);
+      return;
+    }
     try {
       discoveryState = discoveryPersistence.reset(scene.baseIdentity);
     } catch (error) {
@@ -831,6 +948,24 @@ if (payload && viewportElement && canvas) {
   function openInspection() {
     if (!focusedItem || dialog.open) return;
     clearMovement();
+    if (isForestClearingObject(focusedItem.value)) {
+      selectedClearingObjectId = focusedItem.id;
+      const object = focusedItem.value;
+      const definition = FOREST_CLEARING_OBJECT_DEFINITIONS[object.type];
+      objectDialog.querySelector('[data-forest-object-title]').textContent = definition.label;
+      objectDialog.querySelector('[data-forest-object-description]').textContent =
+        object.type === FOREST_TRAIL_SIGN_TYPE
+          ? (object.text || 'An unnamed sign points quietly through the clearing.')
+          : object.type === FOREST_STONE_BENCH_TYPE
+            ? 'A quiet place to sit or reflect.'
+            : 'A gentle seed-pod glow flickers like a small flame.';
+      const sign = object.type === FOREST_TRAIL_SIGN_TYPE;
+      objectDialog.querySelector('[data-forest-sign-editor]').hidden = true;
+      objectDialog.querySelector('[data-forest-object-edit]').hidden = !sign;
+      if (sign) objectDialog.querySelector('[data-forest-sign-text]').value = object.text;
+      objectDialog.showModal();
+      return;
+    }
     if (focusedItem.kind === 'marker') {
       dialog.querySelector('[data-forest-dialog-eyebrow]').textContent = 'A place made personal';
       dialog.querySelector('[data-forest-post-title]').textContent = 'Your clearing marker';
@@ -870,6 +1005,169 @@ if (payload && viewportElement && canvas) {
     updateFocus();
     requestRender();
     return true;
+  }
+
+  const clearingReasonText = {
+    'world-bounds': 'That object would cross the edge of the world.',
+    'tree-collision': 'That position overlaps a tree.',
+    'tree-interaction-space': 'Keep writing-tree interaction space clear.',
+    'entrance-collision': 'Keep the entrance and spawn clear.',
+    'protected-entrance': 'Keep the entrance and spawn clear.',
+    'player-collision': 'Place it a little farther from the player.',
+    'object-collision': 'That position overlaps another overlay object.',
+    'clearing-object-spacing': 'Leave enough room to see and use each clearing object.',
+    'discovery-collision': 'That position overlaps a discovery.',
+    'insufficient-materials': 'Those materials are not currently available.',
+    'clearing-object-limit': 'This experiment allows at most nine clearing objects.',
+    'clearing-object-type-limit': 'This experiment allows at most three of each object.',
+    'clearing-object-not-found': 'That clearing object is no longer present.'
+  };
+
+  function reportClearing(message, action = message, failed = false) {
+    clearingStatus.textContent = message;
+    lastClearingAction = action;
+    updateDiscoverySurfaces();
+    reportPickup(message, failed);
+  }
+
+  function previewClearingAt(worldX, worldY, shouldRender = true) {
+    if (!clearingEditor.active) return;
+    const existing = clearingEditor.movingId
+      ? placedObjects.find(({ id }) => id === clearingEditor.movingId) : null;
+    const id = existing?.id || nextForestClearingObjectId(overlay, clearingEditor.type);
+    if (!id) {
+      clearingEditor.preview = null;
+      reportClearing('This object type has reached its limit.', 'rejected: type limit', true);
+      return;
+    }
+    clearingEditor.preview = createForestClearingPlacementPreview(
+      clearingEditor.type, worldX, worldY, id, scene,
+      placedObjects.filter(({ id: objectId }) => objectId !== id), availableDiscoveries,
+      player, existing?.text || ''
+    );
+    const result = clearingEditor.preview;
+    clearingStatus.textContent = result.valid
+      ? 'Valid position. Click, tap, or press Enter to save.'
+      : (clearingReasonText[result.reason] || result.reason);
+    if (shouldRender) requestRender();
+  }
+
+  function stopClearingPlacement(returnFocus = true) {
+    clearingEditor.active = false;
+    clearingEditor.type = null;
+    clearingEditor.preview = null;
+    clearingEditor.movingId = null;
+    clearingTools.hidden = true;
+    updateDiscoverySurfaces();
+    updateFocus();
+    if (returnFocus) viewportElement.focus();
+    requestRender();
+  }
+
+  function beginClearingPlacement(type, movingId = null) {
+    if (!FOREST_CLEARING_OBJECT_TYPES.includes(type)) return;
+    if (trailEditor.active) toggleTrailEditor(false);
+    clearMovement();
+    clearingEditor.active = true;
+    clearingEditor.type = type;
+    clearingEditor.movingId = movingId;
+    clearingTools.hidden = false;
+    clearingTools.querySelector('[data-forest-clearing-mode]').textContent = movingId
+      ? `Moving ${FOREST_CLEARING_OBJECT_DEFINITIONS[type].label}`
+      : `Placing ${FOREST_CLEARING_OBJECT_DEFINITIONS[type].label}`;
+    previewClearingAt(player.worldX, player.worldY - 56, false);
+    updateDiscoverySurfaces();
+    updateFocus();
+    viewportElement.focus();
+    requestRender();
+  }
+
+  function saveClearingResult(result, action) {
+    if (!result.valid) {
+      reportClearing(clearingReasonText[result.reason] || result.reason,
+        `rejected: ${result.reason}`, true);
+      return false;
+    }
+    try {
+      overlayPersistence.save(result.overlay);
+    } catch (error) {
+      reportClearing(`Save failed; nothing changed: ${error.message}`,
+        'persistence failure', true);
+      return false;
+    }
+    setOverlay(result.overlay, `clearing object ${action}`);
+    reportClearing(`Clearing object ${action}.`, action);
+    stopClearingPlacement();
+    return true;
+  }
+
+  function commitClearingPlacement() {
+    if (!clearingEditor.preview?.valid) {
+      if (clearingEditor.preview) reportClearing(
+        clearingReasonText[clearingEditor.preview.reason] || clearingEditor.preview.reason,
+        `rejected: ${clearingEditor.preview.reason}`, true
+      );
+      return;
+    }
+    const result = overlayWithForestClearingObject(
+      overlay, clearingEditor.preview.object, scene, discoveryState.inventory,
+      availableDiscoveries, player
+    );
+    saveClearingResult(result, clearingEditor.movingId ? 'moved' : 'placed');
+  }
+
+  function saveSelectedSignText() {
+    const existing = placedObjects.find(({ id }) => id === selectedClearingObjectId);
+    if (!existing || existing.type !== FOREST_TRAIL_SIGN_TYPE) return;
+    const normalized = normalizeForestSignText(
+      objectDialog.querySelector('[data-forest-sign-text]').value
+    );
+    if (!normalized.valid) {
+      reportClearing(`Sign not saved: ${normalized.reason}.`, 'sign edit rejected', true);
+      return;
+    }
+    const candidate = createForestClearingObject(existing.type, existing.worldX,
+      existing.worldY, existing.id, normalized.text);
+    const result = overlayWithForestClearingObject(
+      overlay, candidate, scene, discoveryState.inventory, availableDiscoveries
+    );
+    if (saveClearingResult(result, 'sign edited')) objectDialog.close();
+  }
+
+  function setSelectedSignEditing(active) {
+    const existing = placedObjects.find(({ id }) => id === selectedClearingObjectId);
+    const editable = existing?.type === FOREST_TRAIL_SIGN_TYPE;
+    const editor = objectDialog.querySelector('[data-forest-sign-editor]');
+    const editButton = objectDialog.querySelector('[data-forest-object-edit]');
+    editor.hidden = !editable || !active;
+    editButton.hidden = !editable || active;
+    if (editable && active) {
+      const input = objectDialog.querySelector('[data-forest-sign-text]');
+      input.value = existing.text;
+      input.focus();
+    } else if (editable && objectDialog.open) {
+      editButton.focus();
+    }
+  }
+
+  function removeSelectedClearingObject() {
+    const result = overlayWithoutForestClearingObject(overlay, selectedClearingObjectId);
+    if (!result.valid) {
+      reportClearing(clearingReasonText[result.reason] || result.reason,
+        'removal rejected', true);
+      return;
+    }
+    try {
+      overlayPersistence.save(result.overlay);
+    } catch (error) {
+      reportClearing(`Removal not saved; object and materials are unchanged: ${error.message}`,
+        'persistence failure', true);
+      return;
+    }
+    setOverlay(result.overlay, 'clearing object removed and refunded');
+    reportClearing('Object removed. Its complete fixed cost is available again.',
+      'removed and fully refunded');
+    objectDialog.close();
   }
 
   const trailReasonText = {
@@ -934,6 +1232,9 @@ if (payload && viewportElement && canvas) {
   }
 
   function toggleTrailEditor(force) {
+    if (!trailEditor.active && force !== false && clearingEditor.active) {
+      stopClearingPlacement(false);
+    }
     trailEditor.active = typeof force === 'boolean' ? force : !trailEditor.active;
     trailEditor.preview = null;
     trailEditor.movingId = null;
@@ -1038,6 +1339,7 @@ if (payload && viewportElement && canvas) {
       return;
     }
     setOverlay(emptyOverlay, 'reset');
+    stopClearingPlacement(false);
     trailEditor.preview = null;
     trailEditor.movingId = null;
     if (trailEditor.active) setTrailTool('place');
@@ -1079,6 +1381,13 @@ if (payload && viewportElement && canvas) {
     } else if ((event.key === 't' || event.key === 'T')) {
       event.preventDefault();
       toggleTrailEditor();
+    } else if (clearingEditor.active && event.key === 'Escape') {
+      event.preventDefault();
+      reportClearing('Placement cancelled.', 'cancelled');
+      stopClearingPlacement();
+    } else if (clearingEditor.active && event.key === 'Enter') {
+      event.preventDefault();
+      commitClearingPlacement();
     } else if (trailEditor.active && (event.key === 'p' || event.key === 'P')) {
       event.preventDefault();
       setTrailTool('place');
@@ -1112,6 +1421,15 @@ if (payload && viewportElement && canvas) {
     }
   });
   viewportElement.addEventListener('pointerdown', (event) => {
+    if (clearingEditor.active && !event.target.closest('button') && !dialog.open
+      && !objectDialog.open && satchel.hidden) {
+      event.preventDefault();
+      const viewportRect = viewportElement.getBoundingClientRect();
+      previewClearingAt(camera.x + event.clientX - viewportRect.left,
+        camera.y + event.clientY - viewportRect.top, false);
+      commitClearingPlacement();
+      return;
+    }
     if (trailEditor.active && !event.target.closest('button') && !dialog.open && satchel.hidden) {
       event.preventDefault();
       const viewportRect = viewportElement.getBoundingClientRect();
@@ -1136,6 +1454,12 @@ if (payload && viewportElement && canvas) {
     viewportElement.focus();
   });
   viewportElement.addEventListener('pointermove', (event) => {
+    if (clearingEditor.active) {
+      const viewportRect = viewportElement.getBoundingClientRect();
+      previewClearingAt(camera.x + event.clientX - viewportRect.left,
+        camera.y + event.clientY - viewportRect.top);
+      return;
+    }
     if (trailEditor.active) {
       const viewportRect = viewportElement.getBoundingClientRect();
       previewTrailAt(camera.x + event.clientX - viewportRect.left,
@@ -1157,6 +1481,14 @@ if (payload && viewportElement && canvas) {
     viewportElement.focus();
     requestRender();
   });
+  objectDialog.addEventListener('close', () => {
+    clearMovement();
+    objectDialog.querySelector('[data-forest-sign-editor]').hidden = true;
+    objectDialog.querySelector('[data-forest-object-edit]').hidden = true;
+    selectedClearingObjectId = null;
+    viewportElement.focus();
+    requestRender();
+  });
   dialog.querySelector('[data-forest-dialog-close]').addEventListener('click', () => dialog.close());
   prompt.addEventListener('click', () => {
     if (!trailEditor.active) activateFocusedItem();
@@ -1174,6 +1506,13 @@ if (payload && viewportElement && canvas) {
       event.preventDefault();
       closeSatchel();
     }
+  });
+  satchel.querySelectorAll('[data-forest-build]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const type = button.dataset.forestBuild;
+      closeSatchel();
+      beginClearingPlacement(type);
+    });
   });
   document.querySelector('[data-forest-reset]').addEventListener('click', resetPlayer);
   trailToggle.addEventListener('click', () => toggleTrailEditor());
@@ -1194,6 +1533,34 @@ if (payload && viewportElement && canvas) {
   ));
   document.querySelector('[data-forest-place-marker]').addEventListener('click', placeMarker);
   document.querySelector('[data-forest-reset-overlay]').addEventListener('click', resetOverlay);
+  document.querySelector('[data-forest-clearing-commit]').addEventListener(
+    'click', commitClearingPlacement
+  );
+  document.querySelector('[data-forest-clearing-cancel]').addEventListener('click', () => {
+    reportClearing('Placement cancelled.', 'cancelled');
+    stopClearingPlacement();
+  });
+  objectDialog.querySelector('[data-forest-object-save]').addEventListener(
+    'click', saveSelectedSignText
+  );
+  objectDialog.querySelector('[data-forest-object-edit]').addEventListener(
+    'click', () => setSelectedSignEditing(true)
+  );
+  objectDialog.querySelector('[data-forest-object-edit-cancel]').addEventListener(
+    'click', () => setSelectedSignEditing(false)
+  );
+  objectDialog.querySelector('[data-forest-object-move]').addEventListener('click', () => {
+    const object = placedObjects.find(({ id }) => id === selectedClearingObjectId);
+    if (!object) return;
+    objectDialog.close();
+    beginClearingPlacement(object.type, object.id);
+  });
+  objectDialog.querySelector('[data-forest-object-remove]').addEventListener(
+    'click', removeSelectedClearingObject
+  );
+  objectDialog.querySelector('[data-forest-object-close]').addEventListener(
+    'click', () => objectDialog.close()
+  );
   window.addEventListener('resize', resize);
   resize();
   updateTrailControls();
