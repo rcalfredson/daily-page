@@ -495,21 +495,178 @@ Before adding a system, ask:
 9. Can the state be migrated, reversed, and moderated?
 10. Is the interaction still worthwhile without a currency counter?
 
-## Recommended implementation horizon
+## Product delivery horizons and validation gates
 
-The existing Part II roadmap should remain the near-term spine through the first clearing loop.
+The Part II roadmap remains the near-term experimental spine. Its milestones should answer one
+bounded product question at a time; the horizons below describe how those experiments could become
+a coherent product. A horizon is complete when its evidence exists, not when a feature checklist is
+large enough or a calendar date arrives.
 
-After its current Milestone 3, the next work should still be narrow:
+At the time of this revision, the generated-world, personal-overlay, trail, discovery, inventory,
+and first clearing-object contracts from Milestones 1–4 are established in the development Forest
+Lab. Connecting those choices back to writing remains the next narrow product question.
 
-1. Place and personalize two or three clearing objects.
-2. Connect at least one object back to writing.
-3. Evaluate whether the clearing is already pleasant and expressive.
-4. Add a first modular construction proof, such as a small gate, shelter, or arch assembled from reusable parts.
-5. Add one planted-tree lifecycle.
-6. Add one neighboring habitat and bounded world expansion.
-7. Add read-only visits to a deliberately selected fixture forest.
-8. Test one owner-authored outbound portal.
-9. Add asynchronous invited editing before real-time multiplayer.
-10. Evaluate the economy only after building and exchange create genuine material needs.
+### Horizon 1: First Clearing proof
 
-The long-term vision should guide architecture, but it should not convert the next milestone into the whole game at once.
+Purpose:
+
+Prove that exploring, gathering, shaping a place, and revisiting writing form one meaningful loop.
+
+Scope:
+
+- Complete the Part II First Clearing milestones, including one restrained connection from an
+  authored environmental choice back to fixture writing.
+- Evaluate the combined trail, discoveries, Satchel, signs, benches, lanterns, and writing-tree
+  interactions as one experience rather than as isolated technical demonstrations.
+- Preserve development-only persistence while the interaction and emotional value are still being
+  tested.
+- Keep modular construction, planted-tree growth, network visiting, production storage, and
+  monetization outside this proof.
+
+Exit evidence:
+
+A person can explore, gather, personalize one clearing, encounter writing through that change,
+leave, return to the persistent result, and explain why the authored place feels more meaningful
+than a conventional post list or decorative profile scene.
+
+### Horizon 2: Production owner loop
+
+Purpose:
+
+Move the proven personal loop from fixtures into a reliable forest grown from real writing.
+
+Scope:
+
+- Connect authenticated users and actual posts to stable, inspectable post trees.
+- Define post-tree creation, update, privacy, archival, and removal semantics without treating
+  writing as an expendable game resource.
+- Introduce production persistence for generated identities, writing projections, and personal
+  overlays, with deliberate migration, recovery, backup, and reset behavior.
+- Carry keyboard, pointer, touch, reduced-motion, focus, non-canvas access, and baseline performance
+  contracts into the production surface.
+- Observe real post-count and metadata distributions before finalizing capacity or semantic mapping
+  rules.
+
+Exit evidence:
+
+A real user can write a post, see its stable tree, inspect the writing, personalize the surrounding
+world, leave, and return without authored or writing-linked state being lost, duplicated, or
+silently reinterpreted.
+
+### Horizon 3: Constructive sandbox proof
+
+Purpose:
+
+Determine whether a few composable systems can make the forest feel like a small writing-driven
+sandbox rather than a profile scene with a catalog of unrelated props.
+
+Scope:
+
+- Add one planted-tree lifecycle with no absence penalty or recurring-care obligation.
+- Add one small modular construction grammar, such as a gate, shelter, arch, or reading nook made
+  from a few reusable parts.
+- Add one contrasting neighboring habitat and bounded form of world expansion.
+- Test construction, planting, trails, discoveries, writing trees, and habitat rules in combination.
+- Continue to defer a broad catalog, unrestricted terrain editing, markets, and generalized
+  construction infrastructure.
+
+Exit evidence:
+
+Players can use a small shared vocabulary to create substantially different places, and the
+systems produce expressive combinations that were not each authored as a single-purpose object.
+
+### Horizon 4: Connected public alpha
+
+Purpose:
+
+Prove that forests can connect people without compromising ownership, consent, safety, or the calm
+single-player experience.
+
+Scope:
+
+- Begin with read-only visits to deliberately selected public forests.
+- Use a minimal, legible visitor representation before committing to a full avatar creator.
+- Add one safe edge transition or portal proof with explicit destination and arrival behavior.
+- Establish owner visibility settings, controlled arrival points, blocking, reporting, and portal
+  consent before randomized travel.
+- Keep shared mutation, item exchange, persistent chat, and real-time building outside the first
+  public visiting slice.
+
+Exit evidence:
+
+A visitor can enter, understand, inspect, and leave another person's public forest while the owner
+retains clear control and neither participant can confuse visiting with permission to modify the
+world.
+
+### Horizon 5: Private-world and membership pilot
+
+Purpose:
+
+Test whether privacy, space, continuity, and authorship create trustworthy membership value without
+making the public forest mechanically inferior.
+
+Scope:
+
+- Project private writing into a private forest with explicit authorization boundaries.
+- Define invited access independently from public discovery and random travel.
+- Establish credible backup, export, recovery, retention, and deletion expectations for private
+  writing and world state.
+- Test one deliberately narrow private-portal or invited-access path.
+- Present membership as private terrain, hosted continuity, stronger organization, and broader
+  authorship rather than economic acceleration or public status.
+
+Exit evidence:
+
+Users understand what is private, who can enter, how their work is protected, and why the hosted
+private world may be worth paying for without payment purchasing mechanical dominance.
+
+### Later alpha and maturation
+
+Once the earlier gates are supported by observation rather than aspiration, later work may deepen:
+
+- Modular building, interiors, planting, habitat, terrain, and world expansion.
+- Art, display, music, and other authored expressive tools.
+- Botanical, biome, seasonal, weather, lighting, wildlife, and avatar variety.
+- Asynchronous invited editing with attribution, review, and reversion.
+- Gifts and exchange after worthwhile material and social needs exist.
+- Economy design only after building and exchange reveal genuine demand.
+- Shared presence only after read-only visiting, permissions, moderation, and versioned
+  collaboration are reliable.
+
+Feature presence alone is not maturity. Building must feel expressive rather than fiddly; mobile
+controls must feel natural; persistence and migration must be trustworthy; public travel and
+portals must be safe; and added systems must preserve the forest's calm character.
+
+## Delivery assumptions
+
+Detailed contracts and AI-assisted development can compress implementation work, especially
+scaffolding, bounded schemas, UI wiring, tests, refactors, diagnostics, and changes within an
+already understood architecture. That acceleration is valuable, but it is not evenly distributed.
+
+The schedule is more likely to be governed by:
+
+- Product judgment and deciding which interaction is actually worth keeping.
+- Playtesting whether a mechanic feels alive, understandable, and connected to writing.
+- Visual and audio direction across objects, environments, characters, and devices.
+- Performance measurement with real worlds and representative user data.
+- Accessibility review beyond the contracts that automated tests can cover.
+- Production persistence, migrations, recovery, backups, privacy, and operational reliability.
+- Permission, moderation, abuse-prevention, and consent design for networked features.
+- Economy observation and balancing without grind, coercion, or pay-to-win pressure.
+- Multiplayer and collaborative correctness under conflicts, retries, and partial failure.
+
+Faster construction should therefore shorten feedback loops, not justify beginning every horizon at
+once. Parallel work is appropriate only when it does not obscure the current product question or
+force unvalidated future systems into present contracts.
+
+Calendar estimates are planning hypotheses rather than game-design invariants. If maintained, they
+should live in a separate revisable delivery note and record:
+
+- The date of the estimate and the exact scope being estimated.
+- Assumptions about developer availability, tooling, infrastructure, and dependencies.
+- The evidence already available and the unknowns most likely to change the estimate.
+- A confidence level and the conditions that would trigger re-estimation.
+
+The long-term vision should guide architecture and sequencing, but it should not convert the next
+milestone into the whole game at once. The immediate task remains to finish and evaluate the First
+Clearing loop before selecting the next large system.
