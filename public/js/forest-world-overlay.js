@@ -15,6 +15,8 @@ export const FOREST_STONE_MINIMUM_SPACING = 26;
 export const FOREST_STONE_MAXIMUM_SPACING = 96;
 export const FOREST_ENTRANCE_PROTECTION_RADIUS = 52;
 export const FOREST_TREE_TRAIL_CLEARANCE = 14;
+export const FOREST_CLEARING_OBJECT_MINIMUM_SPACING = 8;
+export const FOREST_CLEARING_TREE_CLEARANCE = 8;
 
 const OVERLAY_ID_PATTERN = /^forest-overlay-v1-[a-z0-9-]{1,48}$/;
 const MARKER_ID_PATTERN = /^forest-marker-v1-[a-z0-9-]{1,48}$/;
@@ -306,13 +308,13 @@ export function applyForestOverlay(scene, overlay) {
       }
       if (scene.placements.some((tree) => Math.hypot(
         object.worldX - tree.worldX, object.worldY - tree.worldY
-      ) < radius + tree.collisionRadius + 28)) {
+      ) < radius + tree.collisionRadius + FOREST_CLEARING_TREE_CLEARANCE)) {
         return { objects: [], error: 'tree-interaction-space' };
       }
       if (otherObjects.some((other) => [FOREST_TRAIL_SIGN_TYPE, FOREST_STONE_BENCH_TYPE,
         FOREST_SEED_POD_LANTERN_TYPE].includes(other.type) && Math.hypot(
         object.worldX - other.worldX, object.worldY - other.worldY
-      ) < radius + objectRadius(other) + 34)) {
+      ) < radius + objectRadius(other) + FOREST_CLEARING_OBJECT_MINIMUM_SPACING)) {
         return { objects: [], error: 'clearing-object-spacing' };
       }
     }

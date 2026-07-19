@@ -280,10 +280,21 @@ resize, and reset events request coalesced frames. The exploration version repla
 navigation with a clamped camera
 following a player whose small explicit state has a deterministic, collision-free corridor spawn.
 Arrow-key and WASD movement is normalized and elapsed-time based. Touch and stylus input uses a
-floating direction-only joystick whose origin is the initial contact point; dragging beyond a small
-dead zone selects a normalized direction, while release, cancellation, blur, or inspection stops
-movement. Both input paths resolve movement independently on X and Y against scaled circular trunk
-obstacles, allowing sliding while leaving canopies non-solid.
+floating analog joystick whose origin is the initial contact point. A small dead zone prevents
+drift; displacement beyond it scales continuously from slow movement to full walking speed at a
+fixed outer distance. Direction remains normalized independently of intensity. Release,
+cancellation, blur, or inspection stops movement.
+
+During clearing-object or trail placement, maximum gesture displacement classifies the gesture at
+release: a deliberate tap may commit, while any drag beyond the same dead zone remains movement and
+never commits an edit. On touch, both new and existing clearing objects use a carrying treatment:
+the preview follows ahead of the player, and a later tap or the explicit action confirms that
+current preview rather than teleporting it to the tap. An existing object's saved rendering is
+temporarily suppressed until commit or cancellation; canceling restores the unchanged saved object.
+Mouse input retains direct cursor preview and click placement. This prevents the first joystick
+touch after choosing **Move** from relocating an object and keeps the visual coupling between avatar
+and object semantically consistent. Both input paths resolve movement independently on X and Y
+against scaled circular trunk obstacles, allowing sliding while leaving canopies non-solid.
 
 The player participates in stable ground-Y ordering. A pure proximity query selects the nearest
 in-range placement with stable id tie-breaking. Deterministic placement-to-fixture assignment is
@@ -464,9 +475,39 @@ Pickup is an explicit nearby action shared with the existing interaction prompt.
 press E or Enter, pointer users activate the prompt, and touch users tap it. Trees, markers, and
 discoveries enter one deterministic proximity query ordered by distance, then kind and stable id;
 discovery pickup reach is a fixed 34 pixels. Trail editing retains its existing input precedence.
-Dialog and Satchel focus suspend movement, and closing either returns predictable focus to the
-forest. Closing the Satchel also returns focus to the viewport so movement and inspection continue
-immediately.
+Native dialog and Forest-menu focus suspend movement, and closing either returns predictable focus
+to the forest viewport so movement and inspection continue immediately.
+
+The earlier absolutely positioned Satchel scaffold has been replaced by the first unified in-game
+menu shell. **Edit trail**, **Place marker here**, inventory, clearing-object construction, offering
+renewal, and discovery reset live together in that player-facing surface. Development-only
+**Reset personal overlay** and **Return to entrance** controls remain outside it above the scene.
+The menu is a native modal dialog outside the Canvas viewport's input-suppression boundary, so it
+traps focus, closes with Escape, scrolls independently, blocks Canvas interaction behind it, and
+restores exploration focus on close. Desktop uses a bounded centered panel. At mobile widths it
+becomes a bottom sheet capped against the dynamic viewport, scrolls internally,
+keeps a sticky close control, preserves 44-pixel actions, and pads for device safe areas. Its
+contents therefore remain reachable even when the gameplay viewport is shorter than the complete
+menu, including on mobile Safari. A restrained code-owned visual vocabulary now gives the menu a
+warm paper interior, timber frame and header, and wood-toned controls so it belongs to the rendered
+forest without depending on new raster assets or sacrificing contrast and focus treatment.
+The mobile sheet is slightly inset with the complete timber border retained on every side, avoiding
+the tapered top corners produced by the earlier top-border-only rule.
+
+The player-facing menu markup lives in the reusable `_activity_forest_menu.pug` partial rather than
+the development route template. The development view composes that production-facing surface with
+fixture payloads, pressure controls, diagnostics, and recovery actions; a future owner route can
+compose the same menu without copying those development concerns. Actions remain explicit because
+trail editing, marker placement, inventory, construction, focus, validation, and persistence do not
+yet share one honest generic contract. This seam avoids both duplicating the test harness and
+prematurely introducing a data-driven menu registry, generalized command bus, or arbitrary action
+framework.
+
+Trail and clearing-object mode controls are HUD overlays inside the gameplay viewport rather than
+flow content above it. Entering or leaving placement therefore does not resize or vertically shift
+the Canvas. The overlays remain bounded and scrollable at small viewport heights. The gameplay
+surface and its descendants also disable text selection and the iOS touch callout; touch gestures
+remain movement or explicit controls instead of selecting the application element.
 
 A pickup first builds and validates a complete candidate discovery state. The development adapter
 serializes and stores that candidate before live state, culling, inventory text, or feedback
@@ -574,13 +615,16 @@ and focuses the input, while cancel restores the read-only view. The development
 personal-overlay owner permission that a production surface will eventually need to gate. Closing
 returns focus to exploration.
 
-Validation protects world bounds, tree collision and an additional 28-pixel writing-interaction
-clearance, the 52-pixel entrance region, the current player, marker and stone footprints, active
-discoveries, and an additional 34-pixel gap among clearing objects. These bounded rules preserve the
-flat generated corridor assumptions without pathfinding or terrain analysis. The stone bench is
-solid and joins deterministic axis-separated player collision; signs and lanterns are non-solid.
-Only three benches can exist, their spacing and entrance/tree exclusions prevent this slice from
-closing the entrance or a writing tree, and no navigation mesh or generalized physics is added.
+Validation protects world bounds, exact tree and clearing-object collision footprints plus an
+8-pixel composition gap, the 52-pixel entrance region, the current player, marker and stone
+footprints, and active discoveries. The earlier 28-pixel tree buffer and 34-pixel clearing-object
+buffer proved the validation path but made authored arrangements unnaturally sparse. The smaller
+code-owned gap permits compositions such as a bench beneath a tree or a lantern beside a bench
+without allowing their collision circles to overlap. These bounded rules preserve the flat
+generated corridor assumptions without pathfinding or terrain analysis. The stone bench is solid
+and joins deterministic axis-separated player collision; signs and lanterns are non-solid. Only
+three benches can exist, the entrance remains protected, close arrangements remain reversible, and
+no navigation mesh or generalized physics is added.
 
 The objects use fixed Canvas primitives. The lantern has one bounded translucent glow with a small,
 deterministic two-frequency pulse in the existing ambient render loop. Reduced-motion mode holds it
@@ -592,11 +636,43 @@ and the last edit or persistence failure. Candidate generation, normalization, s
 ledger calculation, JSON and storage remain in initialization or explicit handlers rather than
 animation-frame callbacks; frames perform only preview math, collision, culling, focus and draws.
 
-Milestone 5 writing resurfacing remains deliberately absent: the bench only identifies a quiet
-place, the sign displays its restrained authored text, and the lantern identifies its gentle glow.
-There are no post associations, excerpts, semantic relationships, sitting animation, construction
-parts, arbitrary recipes, terrain edits, generalized lighting, containers, shops, production
-storage, multiplayer, or entity-component framework.
+### Milestone 5 bench reflection
+
+A placed stone bench now provides one calm, resource-free route back to fixture writing. Its
+read-only object dialog retains the fixed quiet-place description and offers **Reflect on nearby
+writing**. Activating that action reveals an accessible HTML list outside the Canvas. Each result
+shows the bounded fixture title, room, and date context; opening one reuses the native writing
+inspection dialog and its read-only excerpt treatment. Native buttons provide keyboard, pointer,
+and touch activation with 44-pixel minimum targets and visible focus. Escape closes either native
+dialog, movement remains stopped while a dialog is open, and closing writing returns focus to the
+forest viewport. The empty result is the fixed message that no fixture writing grows within the
+bench's quiet reach.
+
+The pure nearby-writing contract scans tree placements within **360 world pixels** of the bench and
+returns at most **three** fixture writings. It orders qualifying placements by Euclidean distance,
+then stable tree placement id, then fixture id. Repeated fixture identities are deduplicated after
+that ordering, so the nearest qualifying tree wins with stable identity tie-breaking. Placements
+with missing or unknown fixture projections are omitted. Camera position, focus, regional asset
+load state, animation time, dialog state, and input iteration order are not inputs. The scan runs
+only at explicit bench inspection, not in animation frames, and remains bounded by the existing
+180-placement representative or 600-placement large-world manifest; it does not add a spatial
+index or alter regional asset loading.
+
+Candidates are transient derivations. The bench's exact five-field overlay schema remains
+unchanged: it stores no fixture ids, titles, excerpts, dates, URLs, tree ids, or inferred
+relationships. Moving a bench preserves its id and fixed two-stone commitment while recomputing a
+different spatial result. Reflection performs no persistence operation, inventory debit, discovery
+mutation, refund, history write, or other personal-state change. Diagnostics expose the selected
+bench, qualifying placement count, ordered deduplicated fixture identities, and last fixture
+resurfaced through a bench.
+
+This development slice deliberately uses the existing bounded fixture-writing projection. It leaves
+a seam for a later production writing projection but does not define production post queries,
+authentication, post-to-tree creation, publishing events, or the edit, archive, deletion, privacy,
+and restoration lifecycle. Signs retain explicit text editing, lanterns retain their deterministic
+flicker, and neither gains nearby-writing behavior. There are still no semantic recommendations,
+sitting or avatar state, reading history, favorites, authored bench-to-post links, general writing
+browser, generalized object scripting, or entity-component framework.
 
 ### Development pressure profiles
 

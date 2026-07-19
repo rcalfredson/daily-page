@@ -22,8 +22,6 @@ block content
             | Walk the winding clearing, approach a tree, and rediscover a fixture piece of writing.
             | The grove remains deterministic and is composed from reusable procedural tree assets.
       .activity-forest__header-actions
-        button.activity-forest__reset(type='button' data-forest-toggle-trail aria-pressed='false') Edit trail
-        button.activity-forest__reset(type='button' data-forest-place-marker) Place marker here
         button.activity-forest__reset(type='button' data-forest-reset-overlay) Reset personal overlay
         button.activity-forest__reset(type='button' data-forest-reset) Return to entrance
 
@@ -50,25 +48,9 @@ block content
     p#activity-forest-help.activity-forest__help
       | Move with arrow keys or WASD, or touch and drag in the forest. Inspect nearby trees or your marker.
       | Gather nearby fallen twigs, smooth stones, and seed pods with the same interaction prompt.
-      | Open the Satchel to place a trail sign, stone bench, or seed-pod lantern.
-      | “Place marker here” saves one development-only personal overlay independently of the grove.
-      | Press T or choose “Edit trail” to place, move, or reversibly remove up to 12 stepping stones.
-
-    .activity-forest__trail-tools(data-forest-trail-tools hidden aria-label='Trail editing controls')
-      strong(data-forest-trail-mode) Trail editing: place
-      span(data-forest-trail-status role='status' aria-live='polite') Choose clear ground; connected stones stay 26–96 px apart.
-      .activity-forest__trail-actions
-        button(type='button' data-forest-trail-place aria-pressed='true') Place
-        button(type='button' data-forest-trail-move aria-pressed='false') Move nearest
-        button(type='button' data-forest-trail-remove aria-pressed='false') Remove
-        button(type='button' data-forest-trail-done) Done
-
-    .activity-forest__trail-tools(data-forest-clearing-tools hidden aria-label='Clearing object placement controls')
-      strong(data-forest-clearing-mode) Placing clearing object
-      span(data-forest-clearing-status role='status' aria-live='polite') Choose clear ground.
-      .activity-forest__trail-actions
-        button(type='button' data-forest-clearing-commit) Place here
-        button(type='button' data-forest-clearing-cancel) Cancel
+      | Open the Forest menu to shape the clearing or use the Satchel.
+      | Placing a marker saves one development-only personal overlay independently of the grove.
+      | Press T or use the menu to place, move, or reversibly remove up to 12 stepping stones.
 
     .activity-forest__viewport(
       tabindex='0'
@@ -78,67 +60,27 @@ block content
       data-forest-viewport
     )
       canvas.activity-forest__canvas(data-forest-canvas)
-      button.activity-forest__satchel-button(
+      button.activity-forest__menu-button(
         type='button'
-        data-forest-satchel-button
+        data-forest-menu-button
         aria-expanded='false'
-        aria-controls='activity-forest-satchel'
-      ) Satchel
-      section#activity-forest-satchel.activity-forest__satchel(
-        data-forest-satchel
-        aria-labelledby='activity-forest-satchel-title'
-        hidden
-      )
-        .activity-forest__satchel-heading
-          div
-            p.activity-forest__dialog-eyebrow A few things the forest offered
-            h2#activity-forest-satchel-title Satchel
-          button(type='button' data-forest-satchel-close aria-label='Close satchel') Close
-        ul.activity-forest__satchel-list
-          li
-            canvas.activity-forest__material-icon(
-              width='28'
-              height='24'
-              data-forest-material-icon='fallen-twigs'
-              aria-hidden='true'
-            )
-            span Fallen twigs
-            strong(data-forest-material-count='fallen-twigs') 0
-          li
-            canvas.activity-forest__material-icon(
-              width='28'
-              height='24'
-              data-forest-material-icon='smooth-stones'
-              aria-hidden='true'
-            )
-            span Smooth stones
-            strong(data-forest-material-count='smooth-stones') 0
-          li
-            canvas.activity-forest__material-icon(
-              width='28'
-              height='24'
-              data-forest-material-icon='seed-pods'
-              aria-hidden='true'
-            )
-            span Seed pods
-            strong(data-forest-material-count='seed-pods') 0
-        p.activity-forest__satchel-note
-          | These small finds are renewable. Once an offering is complete, the forest can offer another
-          | without taking anything from your satchel.
-        h3.activity-forest__satchel-subheading Make for the clearing
-        .activity-forest__build-list
-          button(type='button' data-forest-build='trail-sign')
-            strong Trail sign
-            span 2 twigs · up to 60 characters
-          button(type='button' data-forest-build='stone-bench')
-            strong Stone bench
-            span 2 stones
-          button(type='button' data-forest-build='seed-pod-lantern')
-            strong Seed-pod lantern
-            span 1 twig · 2 seed pods
-        .activity-forest__satchel-actions
-          button(type='button' data-forest-renew-discoveries disabled) 9 discoveries remain
-          button(type='button' data-forest-reset-discoveries) Reset satchel and finds
+        aria-haspopup='dialog'
+        aria-controls='activity-forest-menu'
+      ) Forest menu
+      .activity-forest__mode-tools(data-forest-trail-tools hidden aria-label='Trail editing controls')
+        strong(data-forest-trail-mode) Trail editing: place
+        span(data-forest-trail-status role='status' aria-live='polite') Choose clear ground; connected stones stay 26–96 px apart.
+        .activity-forest__trail-actions
+          button(type='button' data-forest-trail-place aria-pressed='true') Place
+          button(type='button' data-forest-trail-move aria-pressed='false') Move nearest
+          button(type='button' data-forest-trail-remove aria-pressed='false') Remove
+          button(type='button' data-forest-trail-done) Done
+      .activity-forest__mode-tools(data-forest-clearing-tools hidden aria-label='Clearing object placement controls')
+        strong(data-forest-clearing-mode) Placing clearing object
+        span(data-forest-clearing-status role='status' aria-live='polite') Choose clear ground.
+        .activity-forest__trail-actions
+          button(type='button' data-forest-clearing-commit) Place here
+          button(type='button' data-forest-clearing-cancel) Cancel
       .activity-forest__joystick(data-forest-joystick hidden aria-hidden='true')
         .activity-forest__joystick-stick(data-forest-joystick-stick)
       button.activity-forest__prompt(type='button' data-forest-prompt hidden)
@@ -150,6 +92,8 @@ block content
         aria-live='polite'
         hidden
       )
+
+    include ../partials/_activity_forest_menu
 
     dl.activity-forest__diagnostics(aria-label='Scene diagnostics')
       div
@@ -185,6 +129,12 @@ block content
       div
         dt Last clearing edit
         dd(data-forest-clearing-last-action) —
+      div
+        dt Bench reflection
+        dd(data-forest-bench-writing-diagnostic) No bench selected
+      div
+        dt Last bench writing
+        dd(data-forest-bench-resurfaced) None
       div
         dt Last pickup
         dd(data-forest-last-pickup) —
@@ -269,6 +219,15 @@ block content
       p.activity-forest__dialog-eyebrow A clearing object
       h2#forest-object-title(data-forest-object-title)
       p.activity-forest__dialog-excerpt(data-forest-object-description)
+      section.activity-forest__bench-writing(
+        data-forest-bench-writing
+        hidden
+        aria-labelledby='forest-bench-writing-title'
+      )
+        h3#forest-bench-writing-title Nearby writing
+        p.activity-forest__dialog-context(data-forest-bench-writing-empty hidden)
+          | No fixture writing grows within this bench’s quiet reach.
+        ol.activity-forest__bench-writing-list(data-forest-bench-writing-list)
       .activity-forest__object-editor(data-forest-sign-editor hidden)
         label.activity-forest__object-text-label
           span Sign name or note
@@ -279,6 +238,7 @@ block content
           button(type='button' data-forest-object-save) Save message
           button(type='button' data-forest-object-edit-cancel) Cancel editing
       .activity-forest__object-actions
+        button(type='button' data-forest-bench-reflect hidden) Reflect on nearby writing
         button(type='button' data-forest-object-edit hidden) Edit message
         button(type='button' data-forest-object-move) Move
         button(type='button' data-forest-object-remove) Remove and refund
