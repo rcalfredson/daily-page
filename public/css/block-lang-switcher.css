@@ -2,7 +2,8 @@
 .block-lang-switcher {
   position: relative;
   display: inline-block;
-  z-index: var(--z-popover);
+  /* Keep post controls below the sticky site header's stacking context. */
+  z-index: 1;
 }
 
 .block-lang-summary {
@@ -62,7 +63,7 @@
   border: 1px solid var(--border-color);
   box-shadow: 0 10px 30px rgba(0,0,0,0.18);
   border-radius: 12px;
-  z-index: calc(var(--z-popover) + 1);
+  z-index: 1;
 }
 
 .block-lang-menu {
@@ -137,12 +138,9 @@ html[data-theme="dark"] .block-lang-option.is-active:hover {
 
 @media (max-width: 600px) {
   .block-lang-menu {
-    position: fixed;
-    inset-inline: 12px;
-    top: auto;
-    bottom: 12px;
     box-sizing: border-box;
-    min-width: 0;
+    min-width: min(200px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
     max-height: min(60vh, 360px);
   }
 }
