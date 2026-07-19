@@ -1,0 +1,64 @@
+dialog#activity-forest-menu.activity-forest__menu(
+  data-forest-menu
+  aria-labelledby='activity-forest-menu-title'
+)
+  .activity-forest__menu-heading
+    div
+      p.activity-forest__dialog-eyebrow While you are in the forest
+      h2#activity-forest-menu-title Forest menu
+    button(type='button' data-forest-menu-close aria-label='Close Forest menu') Close
+  section.activity-forest__menu-section(aria-labelledby='activity-forest-shape-title')
+    h3#activity-forest-shape-title Shape the clearing
+    p.activity-forest__menu-note
+      | Make reversible changes to the place around your writing.
+    .activity-forest__menu-actions
+      button(type='button' data-forest-toggle-trail aria-pressed='false') Edit trail
+      button(type='button' data-forest-place-marker) Place marker here
+  section.activity-forest__menu-section(aria-labelledby='activity-forest-satchel-title')
+    h3#activity-forest-satchel-title Satchel
+    p.activity-forest__menu-note A few renewable things the forest has offered.
+    ul.activity-forest__satchel-list
+      li
+        canvas.activity-forest__material-icon(
+          width='28'
+          height='24'
+          data-forest-material-icon='fallen-twigs'
+          aria-hidden='true'
+        )
+        span Fallen twigs
+        strong(data-forest-material-count='fallen-twigs') 0
+      li
+        canvas.activity-forest__material-icon(
+          width='28'
+          height='24'
+          data-forest-material-icon='smooth-stones'
+          aria-hidden='true'
+        )
+        span Smooth stones
+        strong(data-forest-material-count='smooth-stones') 0
+      li
+        canvas.activity-forest__material-icon(
+          width='28'
+          height='24'
+          data-forest-material-icon='seed-pods'
+          aria-hidden='true'
+        )
+        span Seed pods
+        strong(data-forest-material-count='seed-pods') 0
+    p.activity-forest__menu-note
+      | These small finds are renewable. Once an offering is complete, the forest can offer another
+      | without taking anything from your satchel.
+    h3.activity-forest__menu-subheading Make for the clearing
+    .activity-forest__build-list
+      button(type='button' data-forest-build='trail-sign')
+        strong Trail sign
+        span 2 twigs · up to 60 characters
+      button(type='button' data-forest-build='stone-bench')
+        strong Stone bench
+        span 2 stones
+      button(type='button' data-forest-build='seed-pod-lantern')
+        strong Seed-pod lantern
+        span 1 twig · 2 seed pods
+    .activity-forest__menu-actions.activity-forest__menu-actions--utility
+      button(type='button' data-forest-renew-discoveries disabled) 9 discoveries remain
+      button(type='button' data-forest-reset-discoveries) Reset satchel and finds

@@ -1,4 +1,9 @@
 .activity-forest {
+  --forest-menu-bark-dark: #3c281b;
+  --forest-menu-bark: #68472c;
+  --forest-menu-bark-light: #8a633e;
+  --forest-menu-paper: #f1e5c4;
+  --forest-menu-paper-deep: #e2cd9f;
   width: min(1280px, 100%);
   box-sizing: border-box;
   margin: 0 auto;
@@ -79,26 +84,32 @@ html[data-theme='dark'] .activity-forest label {
   font-size: 0.85rem;
 }
 
-.activity-forest__trail-tools {
+.activity-forest__mode-tools {
+  position: absolute;
+  z-index: 2;
+  right: max(0.75rem, env(safe-area-inset-right));
+  bottom: max(0.75rem, env(safe-area-inset-bottom));
+  left: max(0.75rem, env(safe-area-inset-left));
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem 0.8rem;
-  margin: 0.6rem 0;
   border: 1px solid #8d7b55;
   border-radius: 10px;
   padding: 0.55rem 0.7rem;
-  background: #f3ead0;
+  background: rgba(243, 234, 208, 0.96);
   color: #34463d;
+  box-shadow: 0 8px 22px rgba(14, 31, 27, 0.32);
   font-size: 0.82rem;
+  touch-action: manipulation;
 }
 
-.activity-forest__trail-tools[hidden] { display: none; }
-.activity-forest__trail-tools [role='status'] { flex: 1 1 280px; }
+.activity-forest__mode-tools[hidden] { display: none; }
+.activity-forest__mode-tools [role='status'] { flex: 1 1 280px; }
 .activity-forest__trail-actions { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .activity-forest__trail-actions button,
-.activity-forest__trail-tools > button {
-  min-height: 36px;
+.activity-forest__mode-tools > button {
+  min-height: 44px;
   padding: 0.4rem 0.7rem;
 }
 .activity-forest__trail-actions button[aria-pressed='true'] {
@@ -141,6 +152,13 @@ html[data-theme='dark'] .activity-forest label {
   touch-action: none;
 }
 
+.activity-forest__viewport,
+.activity-forest__viewport * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .activity-forest__viewport:focus-visible {
   outline: 3px solid var(--focus-ring);
   outline-offset: 3px;
@@ -153,52 +171,69 @@ html[data-theme='dark'] .activity-forest label {
   image-rendering: pixelated;
 }
 
-.activity-forest__satchel-button {
+.activity-forest__menu-button {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: max(0.75rem, env(safe-area-inset-top));
+  right: max(0.75rem, env(safe-area-inset-right));
   min-height: 44px;
-  border: 1px solid rgba(255, 240, 174, 0.72);
+  border: 2px solid rgba(238, 210, 143, 0.88);
   border-radius: 999px;
   padding: 0.45rem 0.85rem;
-  background: rgba(18, 39, 32, 0.82);
+  background: repeating-linear-gradient(102deg, var(--forest-menu-bark-dark) 0 7px,
+    var(--forest-menu-bark) 7px 14px, #593b26 14px 19px);
   color: #fff4ce;
   cursor: pointer;
   font-size: 0.82rem;
   line-height: 1;
 }
-html[data-theme='dark'] .activity-forest .activity-forest__satchel-button {
-  border-color: rgba(255, 240, 174, 0.72);
-  background: rgba(18, 39, 32, 0.82);
+html[data-theme='dark'] .activity-forest .activity-forest__menu-button {
+  border-color: rgba(238, 210, 143, 0.88);
+  background: repeating-linear-gradient(102deg, var(--forest-menu-bark-dark) 0 7px,
+    var(--forest-menu-bark) 7px 14px, #593b26 14px 19px);
   color: #fff4ce;
 }
 
-.activity-forest__satchel {
-  position: absolute;
-  z-index: 2;
-  top: 0.75rem;
-  right: 0.75rem;
-  width: min(340px, calc(100% - 1.5rem));
+.activity-forest__menu {
+  width: min(420px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
   box-sizing: border-box;
-  border: 1px solid #8d7b55;
-  border-radius: 14px;
+  overflow-y: auto;
+  border: 7px solid transparent;
+  border-radius: 18px;
   padding: 1rem;
-  background: rgba(245, 239, 217, 0.97);
+  background:
+    linear-gradient(145deg, var(--forest-menu-paper), var(--forest-menu-paper-deep)) padding-box,
+    repeating-linear-gradient(100deg, var(--forest-menu-bark-dark) 0 9px,
+      var(--forest-menu-bark) 9px 17px, var(--forest-menu-bark-light) 17px 22px) border-box;
   color: #25352f;
-  box-shadow: 0 14px 36px rgba(9, 24, 20, 0.38);
-  touch-action: auto;
+  box-shadow: 0 18px 46px rgba(9, 24, 20, 0.48),
+    inset 0 0 0 1px rgba(83, 57, 31, 0.3);
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 
-.activity-forest__satchel[hidden] { display: none; }
-.activity-forest__satchel-heading {
+.activity-forest__menu::backdrop { background: rgba(11, 27, 23, 0.68); }
+.activity-forest__menu-heading {
+  position: sticky;
+  z-index: 1;
+  top: -1rem;
   display: flex;
   align-items: start;
   justify-content: space-between;
   gap: 1rem;
+  margin: -1rem -1rem 0;
+  border-bottom: 2px solid #332218;
+  padding: 1rem;
+  background: repeating-linear-gradient(102deg, var(--forest-menu-bark-dark) 0 10px,
+    var(--forest-menu-bark) 10px 22px, #563822 22px 28px);
+  color: #fff4d2;
+  box-shadow: 0 4px 10px rgba(53, 34, 20, 0.28);
 }
-.activity-forest__satchel-heading h2 { margin: 0.1rem 0 0; }
-.activity-forest__satchel-heading button,
-.activity-forest__satchel-actions button {
+.activity-forest__menu-heading h2 { margin: 0.1rem 0 0; }
+.activity-forest__menu-heading .activity-forest__dialog-eyebrow { color: #e7ca8f; }
+.activity-forest__menu-heading button,
+.activity-forest__menu-actions button {
   min-height: 44px;
   box-sizing: border-box;
   border: 1px solid #786f54;
@@ -209,26 +244,38 @@ html[data-theme='dark'] .activity-forest .activity-forest__satchel-button {
   font-size: 0.78rem;
   line-height: 1.25;
 }
-.activity-forest__satchel-heading button {
+.activity-forest__menu-heading button {
   flex: 0 0 auto;
   border-radius: 999px;
   padding: 0.45rem 0.75rem;
+  border-color: #d9bb7d;
+  background: #f6e9c4;
 }
-.activity-forest__satchel button:hover:not(:disabled) {
+.activity-forest__menu button:hover:not(:disabled) {
   border-color: #4f5f52;
   background: #f2e7c8;
 }
-.activity-forest__satchel button:focus-visible,
-.activity-forest__satchel-button:focus-visible {
+.activity-forest__menu button:focus-visible,
+.activity-forest__menu-button:focus-visible {
   outline: 3px solid #8b4d38;
   outline-offset: 2px;
 }
-.activity-forest__satchel button:disabled {
+.activity-forest__menu button:disabled {
   border-color: #b9b39f;
   background: #e8e1cb;
   color: #716f64;
   cursor: default;
 }
+.activity-forest__menu-section { padding-top: 1rem; }
+.activity-forest__menu-section + .activity-forest__menu-section {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(86, 82, 61, 0.22);
+}
+.activity-forest__menu-section {
+  border-radius: 10px;
+  text-shadow: 0 1px rgba(255, 255, 255, 0.3);
+}
+.activity-forest__menu-section h3 { margin: 0 0 0.3rem; font-size: 1rem; }
 .activity-forest__satchel-list {
   display: grid;
   gap: 0.4rem;
@@ -250,24 +297,29 @@ html[data-theme='dark'] .activity-forest .activity-forest__satchel-button {
   height: 24px;
   image-rendering: pixelated;
 }
-.activity-forest__satchel-note { color: #56645b; font-size: 0.82rem; line-height: 1.45; }
-.activity-forest__satchel-actions {
+.activity-forest__menu-note {
+  margin: 0.25rem 0 0.75rem;
+  color: #56645b;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.activity-forest__menu-actions {
   display: grid;
   gap: 0.5rem;
-  margin-top: 0.75rem;
 }
-.activity-forest__satchel-actions button {
+.activity-forest__menu-actions button {
   width: 100%;
   padding: 0.65rem 0.8rem;
   text-align: center;
 }
-.activity-forest__satchel-actions [data-forest-reset-discoveries] {
+.activity-forest__menu-actions--utility { margin-top: 0.75rem; }
+.activity-forest__menu-actions [data-forest-reset-discoveries] {
   border-color: transparent;
   background: transparent;
   color: #765146;
 }
 
-.activity-forest__satchel-subheading { margin: 1rem 0 0.45rem; font-size: 0.9rem; }
+.activity-forest__menu-subheading { margin: 1rem 0 0.45rem; font-size: 0.9rem; }
 .activity-forest__build-list { display: grid; gap: 0.4rem; }
 .activity-forest__build-list button {
   display: grid;
@@ -275,7 +327,7 @@ html[data-theme='dark'] .activity-forest .activity-forest__satchel-button {
   border: 1px solid #786f54;
   border-radius: 8px;
   padding: 0.55rem 0.7rem;
-  background: #fff8e5;
+  background: linear-gradient(#fff8e5, #ecdbb4);
   color: #34463d;
   text-align: left;
 }
@@ -302,22 +354,46 @@ html[data-theme='dark'] .activity-forest .activity-forest__satchel-button {
 .activity-forest__object-editor-actions,
 .activity-forest__object-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .activity-forest__object-actions { margin-top: 1.25rem; }
+.activity-forest__bench-writing {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(86, 82, 61, 0.25);
+  padding-top: 0.8rem;
+}
+.activity-forest__bench-writing h3 { margin: 0 0 0.4rem; font-size: 0.95rem; }
+.activity-forest__bench-writing-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.activity-forest__bench-writing-list button {
+  display: grid;
+  width: 100%;
+  min-height: 44px;
+  text-align: left;
+}
+.activity-forest__bench-writing-list button span {
+  margin-top: 0.2rem;
+  color: #5f6a61;
+  font-size: 0.72rem;
+}
 
-html[data-theme='dark'] .activity-forest__satchel button {
+html[data-theme='dark'] .activity-forest__menu button {
   border-color: #786f54;
   background: #fff8e5;
   color: #34463d;
 }
-html[data-theme='dark'] .activity-forest__satchel button:hover:not(:disabled) {
+html[data-theme='dark'] .activity-forest__menu button:hover:not(:disabled) {
   border-color: #4f5f52;
   background: #f2e7c8;
 }
-html[data-theme='dark'] .activity-forest__satchel button:disabled {
+html[data-theme='dark'] .activity-forest__menu button:disabled {
   border-color: #b9b39f;
   background: #e8e1cb;
   color: #716f64;
 }
-html[data-theme='dark'] .activity-forest__satchel [data-forest-reset-discoveries] {
+html[data-theme='dark'] .activity-forest__menu [data-forest-reset-discoveries] {
   border-color: transparent;
   background: transparent;
   color: #765146;
@@ -480,4 +556,24 @@ html[data-theme='dark'] .activity-forest .activity-forest__object-text-label inp
   .activity-forest__header-actions { justify-content: flex-start; }
   .activity-forest__viewport { height: 62vh; min-height: 390px; }
   .activity-forest__profiles .activity-forest__cold { margin-left: 0; }
+  .activity-forest__menu {
+    width: calc(100% - 1rem);
+    max-width: none;
+    max-height: 88vh;
+    max-height: 88dvh;
+    margin: auto 0.5rem 0.5rem;
+    border-width: 7px;
+    border-radius: 18px;
+    padding: 1rem max(1rem, env(safe-area-inset-right))
+      calc(1rem + env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  }
+  .activity-forest__menu-heading {
+    margin-inline: -1rem;
+    padding-inline: max(1rem, env(safe-area-inset-left))
+      max(1rem, env(safe-area-inset-right));
+  }
+  .activity-forest__mode-tools {
+    max-height: 42%;
+    overflow-y: auto;
+  }
 }

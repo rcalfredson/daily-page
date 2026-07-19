@@ -221,10 +221,21 @@ export function normalizedMovement(keys) {
   return length ? { x: x / length, y: y / length } : { x: 0, y: 0 };
 }
 
-export function touchMovement(deltaX, deltaY, deadZone = 10) {
+export const FOREST_TOUCH_DEAD_ZONE = 10;
+export const FOREST_TOUCH_FULL_SPEED_DISTANCE = 46;
+
+export function touchMovement(deltaX, deltaY, deadZone = FOREST_TOUCH_DEAD_ZONE,
+  fullSpeedDistance = FOREST_TOUCH_FULL_SPEED_DISTANCE) {
   const distance = Math.hypot(deltaX, deltaY);
   if (distance <= deadZone) return { x: 0, y: 0 };
-  return { x: deltaX / distance, y: deltaY / distance };
+  const intensity = Math.min(1, (distance - deadZone)
+    / Math.max(1, fullSpeedDistance - deadZone));
+  return { x: (deltaX / distance) * intensity, y: (deltaY / distance) * intensity };
+}
+
+export function forestTouchGestureIntent(maximumDistance,
+  deadZone = FOREST_TOUCH_DEAD_ZONE) {
+  return Number.isFinite(maximumDistance) && maximumDistance <= deadZone ? 'tap' : 'drag';
 }
 
 export function playerCollides(player, placements) {

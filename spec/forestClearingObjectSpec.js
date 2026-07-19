@@ -2,10 +2,12 @@ import {
   canAffordForestClearingObject,
   createForestClearingObject,
   createForestClearingPlacementPreview,
+  FOREST_CLEARING_OBJECT_MINIMUM_SPACING,
   FOREST_CLEARING_OBJECT_DEFINITIONS,
   FOREST_CLEARING_OBJECT_MAXIMUM,
   FOREST_CLEARING_OBJECT_PER_TYPE_MAXIMUM,
   FOREST_CLEARING_OBJECT_TYPES,
+  FOREST_CLEARING_TREE_CLEARANCE,
   forestClearingMaterialLedger,
   isForestClearingObject,
   nextForestClearingObjectId,
@@ -19,6 +21,7 @@ import {
   FOREST_SEED_POD_LANTERN_TYPE,
   FOREST_STONE_BENCH_TYPE,
   FOREST_TRAIL_SIGN_TYPE,
+  applyForestOverlay,
   validateForestOverlay
 } from '../public/js/forest-world-overlay.js';
 import { createForestDevOverlayPersistence } from '../public/js/forest-overlay-persistence.js';
@@ -156,6 +159,40 @@ describe('Activity Forest clearing objects', () => {
     expect(place(overlay, scene, FOREST_STONE_BENCH_TYPE, 500, 160,
       { ...fullInventory, 'smooth-stones': 20 }).reason).toBe('clearing-object-type-limit');
     expect(FOREST_CLEARING_OBJECT_MAXIMUM).toBe(9);
+  });
+
+  it('allows close creative compositions while preserving exact collision footprints', () => {
+    const scene = openScene();
+    const tree = { id: 'nearby-tree', worldX: 300, worldY: 300, collisionRadius: 20 };
+    scene.placements = [tree];
+    const bench = createForestClearingObject(FOREST_STONE_BENCH_TYPE,
+      tree.worldX + tree.collisionRadius
+        + FOREST_CLEARING_OBJECT_DEFINITIONS[FOREST_STONE_BENCH_TYPE].collisionRadius
+        + FOREST_CLEARING_TREE_CLEARANCE,
+      tree.worldY, 'forest-clearing-v1-stone-bench-01');
+    const lantern = createForestClearingObject(FOREST_SEED_POD_LANTERN_TYPE,
+      bench.worldX,
+      bench.worldY + FOREST_CLEARING_OBJECT_DEFINITIONS[FOREST_STONE_BENCH_TYPE].collisionRadius
+        + FOREST_CLEARING_OBJECT_DEFINITIONS[FOREST_SEED_POD_LANTERN_TYPE].collisionRadius
+        + FOREST_CLEARING_OBJECT_MINIMUM_SPACING,
+      'forest-clearing-v1-seed-pod-lantern-01');
+
+    expect(FOREST_CLEARING_TREE_CLEARANCE).toBe(8);
+    expect(FOREST_CLEARING_OBJECT_MINIMUM_SPACING).toBe(8);
+    expect(validateForestClearingObjectPlacement(bench, scene)).toEqual({
+      valid: true, reason: null
+    });
+    expect(validateForestClearingObjectPlacement(lantern, scene, [bench])).toEqual({
+      valid: true, reason: null
+    });
+    expect(validateForestClearingObjectPlacement({ ...bench, worldX: bench.worldX - 1 }, scene)
+      .reason).toBe('tree-interaction-space');
+    expect(validateForestClearingObjectPlacement({ ...lantern, worldY: lantern.worldY - 1 },
+      scene, [bench]).reason).toBe('clearing-object-spacing');
+
+    const overlay = { ...createEmptyForestOverlay(scene.baseIdentity), revision: 2,
+      objects: [bench, lantern] };
+    expect(applyForestOverlay(scene, overlay).error).toBeNull();
   });
 
   it('persists the complete candidate before live state changes on success or failure', () => {

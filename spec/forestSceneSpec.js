@@ -36,6 +36,7 @@ import {
   forestScenePlacementCellId,
   forestDepthOrder,
   forestFoliageMotionGroupDisplacement,
+  forestTouchGestureIntent,
   forestPlacementWindParameters,
   moveForestPlayer,
   normalizedMovement,
@@ -444,10 +445,20 @@ describe('static Activity Forest scene', () => {
     expect(clamped.worldY).toBe(10);
   });
 
-  it('turns touch displacement into constant-speed directional input after a dead zone', () => {
+  it('turns touch displacement into proportional analog movement after a dead zone', () => {
     expect(touchMovement(4, 6, 10)).toEqual({ x: 0, y: 0 });
     expect(touchMovement(30, 40, 10)).toEqual({ x: 0.6, y: 0.8 });
-    expect(touchMovement(-30, 0, 10)).toEqual({ x: -1, y: 0 });
+    expect(touchMovement(-28, 0, 10).x).toBeCloseTo(-0.5, 8);
+    expect(Math.hypot(...Object.values(touchMovement(18, 0, 10)))).toBeLessThan(0.25);
+    expect(Math.hypot(...Object.values(touchMovement(60, 0, 10)))).toBe(1);
+  });
+
+  it('distinguishes a deliberate touch tap from a joystick drag', () => {
+    expect(forestTouchGestureIntent(0)).toBe('tap');
+    expect(forestTouchGestureIntent(10)).toBe('tap');
+    expect(forestTouchGestureIntent(10.01)).toBe('drag');
+    expect(forestTouchGestureIntent(48)).toBe('drag');
+    expect(forestTouchGestureIntent(Number.NaN)).toBe('drag');
   });
 
   it('blocks trunk entry, supports axis sliding, and scales collision radii', () => {
