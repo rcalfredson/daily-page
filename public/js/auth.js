@@ -60,10 +60,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (window.innerWidth < 980) {
       siteHeader.classList.remove('site-header--nav-inline');
-      return;
+    } else {
+      siteHeader.classList.toggle('site-header--nav-inline', measureInlineHeaderFit());
     }
 
-    siteHeader.classList.toggle('site-header--nav-inline', measureInlineHeaderFit());
+    const headerHeight = Math.ceil(siteHeader.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--site-header-height', `${headerHeight}px`);
   };
 
   const scheduleHeaderLayoutUpdate = () => {
@@ -87,6 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     [
+      siteHeader,
       headerRow,
       brandLink,
       mainMenu,
@@ -94,6 +97,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       navbarRight
     ].filter(Boolean).forEach((element) => headerResizeObserver.observe(element));
   }
+
+  scheduleHeaderLayoutUpdate();
 
   document.fonts?.ready
     ?.then(() => {
