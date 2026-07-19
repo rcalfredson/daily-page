@@ -1,7 +1,7 @@
 import { FOREST_RENDERER_VERSION_V3 } from './forestTreeGeneratorV3.js';
 import {
-  DECIDUOUS_PHENOTYPE,
-  LANTERNWOOD_PHENOTYPE
+  FOREST_PHENOTYPES,
+  FOREST_PHENOTYPE_SCENE_TRAITS
 } from './forest/v3/phenotype.js';
 import { createRandom, hashSeed } from './forest/v3/random.js';
 import { treeAssetCacheKey } from './forest/v3/treeAsset.js';
@@ -19,12 +19,11 @@ export const DEFAULT_FOREST_SCENE_CONFIG = Object.freeze({
   scale: Object.freeze({ minimum: 1, maximum: 2 }),
   specimenPoolSize: 8,
   phenotypeWeights: Object.freeze({
-    [DECIDUOUS_PHENOTYPE.id]: 68,
-    [LANTERNWOOD_PHENOTYPE.id]: 32
+    ...Object.fromEntries(FOREST_PHENOTYPES.map(phenotype => [
+      phenotype.id, FOREST_PHENOTYPE_SCENE_TRAITS[phenotype.id].defaultWeight
+    ]).filter(([, weight]) => weight > 0))
   })
 });
-
-const PHENOTYPES = [DECIDUOUS_PHENOTYPE, LANTERNWOOD_PHENOTYPE];
 
 function decisionRandom(sceneSeed, candidateIndex, decision) {
   return createRandom(hashSeed([
@@ -57,14 +56,14 @@ export function forestBaseIdentity(config) {
 }
 
 function selectPhenotype(config, sceneSeed, candidateIndex) {
-  const total = PHENOTYPES.reduce((sum, phenotype) => (
+  const total = FOREST_PHENOTYPES.reduce((sum, phenotype) => (
     sum + (config.phenotypeWeights[phenotype.id] || 0)
   ), 0);
   let selection = decisionRandom(sceneSeed, candidateIndex, 'phenotype') * total;
-  return PHENOTYPES.find((phenotype) => {
+  return FOREST_PHENOTYPES.find((phenotype) => {
     selection -= config.phenotypeWeights[phenotype.id] || 0;
     return selection < 0;
-  }) || PHENOTYPES[0];
+  }) || FOREST_PHENOTYPES[0];
 }
 
 function specimenIdentity(config, sceneSeed, phenotype, specimenIndex) {

@@ -3,6 +3,7 @@ import { createRandom } from './random.js';
 const EMPTY = null;
 
 export const FOREST_FOLIAGE_MOTION_GROUP_COUNT = 3;
+export const FOREST_FOLIAGE_STYLES = Object.freeze(['broadleaf', 'needle-spray']);
 
 export const FOLIAGE_PALETTE = Object.freeze({
   highlight: '#9fbe59',
@@ -165,6 +166,7 @@ export function generateLeafBearingShoots(graph, phenotype, seed) {
         tone: random(),
         massLight: 0
       };
+      leaf.style = phenotype.foliageStyle;
       const crownX = (leaf.x - phenotype.crown.centerX) / phenotype.crown.radiusX;
       const crownY = (leaf.y - phenotype.crown.centerY) / phenotype.crown.radiusY;
       leaf.massLight = clampLight(
@@ -234,8 +236,11 @@ function leafContainsPoint(leaf, x, y) {
   const dy = y - leaf.y;
   const localX = (dx * cosine) + (dy * sine);
   const localY = (-dx * sine) + (dy * cosine);
-  return Math.abs(localX / leaf.radiusX) ** 1.55
-    + Math.abs(localY / leaf.radiusY) ** 1.18 <= 1;
+  const style = leaf.style || 'broadleaf';
+  const xPower = style === 'needle-spray' ? 1.2 : 1.55;
+  const yPower = style === 'needle-spray' ? 1.65 : 1.18;
+  return Math.abs(localX / leaf.radiusX) ** xPower
+    + Math.abs(localY / leaf.radiusY) ** yPower <= 1;
 }
 
 function measureCoverageCells(leaves, supports, phenotype) {
@@ -292,7 +297,9 @@ function paintLeaf(mask, owner, leaf, phenotype) {
       const localY = (-dx * sine) + (dy * cosine);
       const normalizedX = localX / leaf.radiusX;
       const normalizedY = localY / leaf.radiusY;
-      const almond = Math.abs(normalizedX) ** 1.55 + Math.abs(normalizedY) ** 1.18;
+      const needleSpray = phenotype.foliageStyle === 'needle-spray';
+      const almond = Math.abs(normalizedX) ** (needleSpray ? 1.2 : 1.55)
+        + Math.abs(normalizedY) ** (needleSpray ? 1.65 : 1.18);
       if (almond > 1) continue;
       mask[y][x] = true;
       owner[y][x] = { leaf, localX, localY, normalizedX, normalizedY };
@@ -419,6 +426,9 @@ function rasterizeLayer(leaves, layer, phenotype, palette, motionGroups) {
 }
 
 export function rasterizeFoliage(graph, phenotype, seed) {
+  if (!FOREST_FOLIAGE_STYLES.includes(phenotype.foliageStyle)) {
+    throw new Error(`Unsupported forest foliage style: ${phenotype.foliageStyle}`);
+  }
   const paletteVariant = selectFoliagePalette(phenotype, seed);
   const palette = paletteVariant.colors;
   const { shoots, leaves, coverageCells } = generateLeafBearingShoots(graph, phenotype, seed);

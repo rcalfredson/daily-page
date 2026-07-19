@@ -10,14 +10,21 @@ import {
 } from '../server/services/forest/v3/treeAsset.js';
 import {
   DECIDUOUS_PHENOTYPE,
-  LANTERNWOOD_PHENOTYPE
+  FOREST_PHENOTYPES,
+  HIGHLAND_CONIFER_PHENOTYPE,
+  LANTERNWOOD_PHENOTYPE,
+  resolveForestPhenotype
 } from '../server/services/forest/v3/phenotype.js';
-import { selectFoliagePalette } from '../server/services/forest/v3/rasterizeFoliage.js';
+import {
+  FOREST_FOLIAGE_STYLES,
+  selectFoliagePalette
+} from '../server/services/forest/v3/rasterizeFoliage.js';
 import {
   clearForestLabTreeCache,
   forestLabTreeCacheSize,
   getForestLabTree
 } from '../server/services/forestLabTreeCache.js';
+import { forestFixtures } from '../server/routes/devViews.js';
 
 describe('v3 forest runtime tree assets', () => {
   const post = { id: 'tree-asset-post' };
@@ -113,8 +120,36 @@ describe('v3 forest runtime tree assets', () => {
       .flatMap(layerRuns).every(run => lanternColors.has(run.color))).toBeTrue();
   });
 
+  it('registers and resolves every immutable phenotype once', () => {
+    expect(FOREST_PHENOTYPES.map(({ id }) => id)).toEqual([
+      'open-crown-deciduous',
+      'sunset-lanternwood',
+      'wind-shaped-highland-conifer'
+    ]);
+    expect(new Set(FOREST_PHENOTYPES.map(({ id }) => id)).size).toBe(FOREST_PHENOTYPES.length);
+    expect(HIGHLAND_CONIFER_PHENOTYPE.assetVersion).toBe(1);
+    expect(Object.isFrozen(FOREST_PHENOTYPES)).toBeTrue();
+    for (const phenotype of FOREST_PHENOTYPES) {
+      expect(resolveForestPhenotype(phenotype.id)).toBe(phenotype);
+      expect(FOREST_FOLIAGE_STYLES).toContain(phenotype.foliageStyle);
+    }
+    expect(resolveForestPhenotype('unknown-tree')).toBeNull();
+  });
+
+  it('gives Forest Lab eight deterministic fixtures for every registered phenotype', () => {
+    const fixtures = forestFixtures();
+    const counts = Object.fromEntries(FOREST_PHENOTYPES.map(phenotype => [
+      phenotype.id,
+      fixtures.filter(item => item.tree.phenotype.id === phenotype.id).length
+    ]));
+
+    expect(fixtures.length).toBe(FOREST_PHENOTYPES.length * 8);
+    expect(Object.values(counts).every(count => count === 8)).toBeTrue();
+    expect(fixtures.every(item => item.tree.seed === item.asset.seed)).toBeTrue();
+  });
+
   it('selects deterministic whole-tree foliage palettes with weighted rarity', () => {
-    for (const phenotype of [DECIDUOUS_PHENOTYPE, LANTERNWOOD_PHENOTYPE]) {
+    for (const phenotype of FOREST_PHENOTYPES) {
       const selections = Array.from({ length: 1000 }, (_, seed) => (
         selectFoliagePalette(phenotype, seed).id
       ));
@@ -157,11 +192,13 @@ describe('v3 forest runtime tree assets', () => {
     const first = getForestLabTree(post, { seed: 404, phenotype: LANTERNWOOD_PHENOTYPE });
     const repeated = getForestLabTree(post, { seed: 404, phenotype: LANTERNWOOD_PHENOTYPE });
     const deciduous = getForestLabTree(post, { seed: 404, phenotype: DECIDUOUS_PHENOTYPE });
+    const conifer = getForestLabTree(post, { seed: 404, phenotype: HIGHLAND_CONIFER_PHENOTYPE });
 
     expect(first.cacheHit).toBeFalse();
     expect(repeated.cacheHit).toBeTrue();
     expect(deciduous.cacheHit).toBeFalse();
-    expect(forestLabTreeCacheSize()).toBe(2);
+    expect(conifer.cacheHit).toBeFalse();
+    expect(forestLabTreeCacheSize()).toBe(3);
   });
 
   it('does not silently cache custom phenotype overrides without a stable identity', () => {

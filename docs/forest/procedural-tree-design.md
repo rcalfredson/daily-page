@@ -198,6 +198,55 @@ The recommended near-term technical sequence is:
 3. Begin deterministic forest composition and basic exploration.
 4. Add shared ambient motion once a representative multi-tree scene exists.
 
+### Milestone 6A: wind-shaped highland conifer
+
+The third registered phenotype is `wind-shaped-highland-conifer`, asset version 1. It is a tall,
+narrow evergreen organized around a sturdy, persistent central leader. Twelve scaffold boughs,
+near-horizontal lower branch angles, restrained droop, a very low split-trunk probability, sparse
+foliage, and a cool deep-green palette give it a weathered highland character. A small deterministic
+growth bias produces mild prevailing-wind asymmetry. Seed variation changes lean, taper, branch
+occupancy, crown width, needle count, and palette without turning the family into identical cones.
+
+Most of this character uses existing phenotype data: canvas and crown proportions, branch-start
+height, trunk top and base, apical dominance, branch count and angle, fork and vigor controls,
+foliage counts and radii, coverage repair, root flare, and palettes. Two bounded shared additions
+were needed:
+
+- `attractionDensityByHeight` accepts 2–16 values between zero and one. It varies attraction-point
+  acceptance by crown height, creating reusable tiering and negative-space control without encoding
+  a conifer renderer.
+- `foliageStyle` accepts only `broadleaf` or `needle-spray`. Both styles use the same shoots, depth
+  split, shading, color runs, raster transport, and three motion groups; only the bounded pixel
+  footprint changes. The two established phenotypes explicitly declare `broadleaf`.
+
+The optional directional-growth vector is also bounded to ±0.2 per axis and feeds the shared growth
+blend. Invalid density, bias, or foliage-style values fail generation instead of becoming unbounded
+inputs. No runtime phenotype switch or asset-contract field was added.
+
+These shared capabilities changed the renderer vocabulary, so renderer v3's cache version advanced
+from 3 to 4. The runtime tree-asset schema remains version 2. The conifer starts at phenotype asset
+version 1; the two established phenotype versions remain 2. Their broadleaf pixels and layer runs
+for explicit prior inputs are unchanged, but the renderer-version component deliberately gives
+every new asset a fresh cache key rather than silently reusing version-3 entries. The default scene keeps
+its established 68/32 deciduous/lanternwood selection and generated-base configuration; the conifer
+is not selected there yet.
+
+Forest Lab derives its 24 fixtures from the immutable canonical registry and shows eight seeds per
+phenotype in final, leafless, and graph views. The leafless conifers expose the long leader, tiered
+bough origins, taper, and rare split state without relying on green pixels. A separate
+`botanical-range` pressure profile keeps representative density at 180 placements, balances all
+three phenotypes, and caps the shared pool at 24 assets. It uses the normal regional loading,
+collision, inspection, culling, motion, color-run, and lossless-raster paths.
+
+This first slice deliberately defers a fourth fanciful phenotype until the conifer receives visual
+review. The experiment shows that a strongly different woody structure fits the common generator;
+the main remaining question for a fourth phenotype is whether its foliage can fit the two-style
+vocabulary or justifies one similarly small, botanical shared extension. Current limitations are
+that tier bands remain probabilistic rather than explicit whorls, wind shaping is mild and global,
+and representative seeds still need review at ordinary scene scale for occasional overly full
+upper crowns. Seeds 2 and 3 in the initial zero-through-seven review are the fullest current cases
+and are useful visual-tuning fixtures rather than generation failures.
+
 ### Generation results and runtime tree assets
 
 The procedural generation result is an authoring and diagnostic object. It retains the mutable inputs and derived architecture, three-dimensional branch graph, attraction points, termination diagnostics, foliage shoots and leaves, logical masks, shaded pixel grids, and compact color runs. Forest Lab needs this complete result to explain why a specimen has its shape, but a game-facing renderer does not.
@@ -231,7 +280,7 @@ Forest Lab owns a narrow process-local in-memory cache of complete generation re
 
 - `server/services/forestTreeGeneratorV3.js`: experimental v3 orchestration.
 - `server/services/forest/v3/architecture.js`: deterministic per-tree architectural traits.
-- `server/services/forest/v3/phenotype.js`: registered deciduous and lanternwood phenotypes and
+- `server/services/forest/v3/phenotype.js`: registered deciduous, lanternwood, and conifer phenotypes and
   their distinct growth, architecture, foliage, and palette tendencies.
 - `server/services/forest/v3/growth.js`: deterministic three-dimensional branch growth.
 - `server/services/forest/v3/rasterizeWood.js`: tapered wood, root flare, and bark rendering.
@@ -260,7 +309,7 @@ key. Layout randomness is derived independently for X, Y, phenotype, specimen, a
 the scene seed and candidate index. Rejection sampling enforces trunk spacing and reserves a
 winding central corridor; camera position is never an input to layout or tree identity.
 
-The representative scene uses a bounded pool of eight specimens for each registered phenotype;
+The representative scene uses a bounded pool of eight specimens for each active default phenotype;
 pressure profiles can deliberately select broader pools. Its process-local cache is separate from
 Forest Lab's diagnostic cache and retains runtime assets only. The asset's schema, renderer,
 phenotype, and seed identities form the invalidation key. The browser receives the complete compact

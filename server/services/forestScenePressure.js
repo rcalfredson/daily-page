@@ -13,6 +13,21 @@ export const FOREST_PRESSURE_PROFILES = Object.freeze([
     layout: Object.freeze({})
   }),
   Object.freeze({
+    id: 'botanical-range',
+    label: 'Botanical range',
+    description: '180 placements balancing all registered phenotypes across 24 shared assets.',
+    pressure: true,
+    layout: Object.freeze({
+      seed: 'pressure-botanical-range',
+      assetPoolSize: 24,
+      phenotypeWeights: Object.freeze({
+        'open-crown-deciduous': 1,
+        'sunset-lanternwood': 0.8,
+        'wind-shaped-highland-conifer': 1.4
+      })
+    })
+  }),
+  Object.freeze({
     id: 'asset-variety',
     label: 'Asset variety',
     description: '180 placements sharing 60 assets.',

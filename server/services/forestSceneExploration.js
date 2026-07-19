@@ -1,5 +1,6 @@
 import { forestCorridorCenter } from './forestSceneLayout.js';
 import { hashSeed } from './forest/v3/random.js';
+import { FOREST_PHENOTYPE_SCENE_TRAITS } from './forest/v3/phenotype.js';
 
 export const FOREST_PLAYER_RADIUS = 10;
 export const FOREST_PLAYER_SPEED = 150;
@@ -23,8 +24,9 @@ const FIXTURES = Object.freeze([
 })));
 
 export function forestPlacementCollisionRadius(placement) {
-  const phenotypeRadius = placement.phenotypeId === 'sunset-lanternwood' ? 13 : 11;
-  return phenotypeRadius * placement.scale;
+  const traits = FOREST_PHENOTYPE_SCENE_TRAITS[placement.phenotypeId];
+  if (!traits) throw new Error(`Unknown forest phenotype: ${placement.phenotypeId}`);
+  return traits.collisionRadius * placement.scale;
 }
 
 export function createForestExploration(scene) {

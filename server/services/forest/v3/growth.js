@@ -58,6 +58,18 @@ function insideCrown(position, phenotype, overscan = 1) {
 }
 
 export function generateAttractionPoints(seed, phenotype) {
+  if (phenotype.attractionDensityByHeight && (
+    !Array.isArray(phenotype.attractionDensityByHeight)
+    || phenotype.attractionDensityByHeight.length < 2
+    || phenotype.attractionDensityByHeight.length > 16
+    || phenotype.attractionDensityByHeight.some(value => value < 0 || value > 1)
+  )) throw new Error('Crown height-density profiles require 2–16 values between zero and one.');
+  if (phenotype.directionalGrowthBias && ['x', 'y', 'z'].some(axis => (
+    !Number.isFinite(phenotype.directionalGrowthBias[axis])
+    || Math.abs(phenotype.directionalGrowthBias[axis]) > 0.2
+  ))) {
+    throw new Error('Directional growth bias components must be between -0.2 and 0.2.');
+  }
   const random = createRandom(seed ^ 0xA77AC710);
   const points = [];
   let attempts = 0;
@@ -71,8 +83,16 @@ export function generateAttractionPoints(seed, phenotype) {
     };
     const normalizedHeight = (phenotype.crown.centerY + phenotype.crown.radiusY - position.y)
       / (phenotype.crown.radiusY * 2);
+    const densityProfile = phenotype.attractionDensityByHeight;
+    const density = densityProfile?.length
+      ? densityProfile[Math.min(
+        densityProfile.length - 1,
+        Math.floor(normalizedHeight * densityProfile.length)
+      )]
+      : 1;
     if (insideCrown(position, phenotype)
-      && random() >= phenotype.attractionGap * (0.45 + normalizedHeight)) {
+      && random() >= phenotype.attractionGap * (0.45 + normalizedHeight)
+      && (!densityProfile || random() < density)) {
       const projected = projectPosition(position, phenotype);
       points.push({
         id: points.length,
@@ -290,6 +310,11 @@ function blendedDirection(node, points, phenotype) {
   y /= Math.max(1, points.length);
   z /= Math.max(1, points.length);
   y -= phenotype.apicalDominance + phenotype.phototropism;
+  if (phenotype.directionalGrowthBias) {
+    x += phenotype.directionalGrowthBias.x;
+    y += phenotype.directionalGrowthBias.y;
+    z += phenotype.directionalGrowthBias.z;
+  }
   return constrainDirection(node, normalize({ x, y, z }), phenotype);
 }
 
