@@ -3,6 +3,10 @@ import {
   generateForestTreeV3
 } from '../server/services/forestTreeGeneratorV3.js';
 import { FOREST_FOLIAGE_MOTION_GROUP_COUNT } from '../server/services/forest/v3/rasterizeFoliage.js';
+import {
+  DECIDUOUS_PHENOTYPE,
+  HIGHLAND_CONIFER_PHENOTYPE
+} from '../server/services/forest/v3/phenotype.js';
 
 describe('v3 forest branch graph generator', () => {
   const post = { id: 'post-forest-v3-1' };
@@ -595,5 +599,63 @@ describe('v3 forest branch graph generator', () => {
 
     expect(bottomWidth).toBeGreaterThan(upperWidth);
     expect(root.radius).toBeGreaterThan(Math.max(...terminalRadii));
+  });
+
+  it('produces a narrow, single-leader conifer family with tiered needle sprays', () => {
+    const ratios = { conifer: [], deciduous: [] };
+    const coniferWidths = new Set();
+    const coniferLeafCounts = new Set();
+    let splitCount = 0;
+    for (let seed = 0; seed < 24; seed += 1) {
+      const conifer = generateForestTreeV3(post, {
+        seed, phenotype: HIGHLAND_CONIFER_PHENOTYPE
+      });
+      const repeated = generateForestTreeV3(post, {
+        seed, phenotype: HIGHLAND_CONIFER_PHENOTYPE
+      });
+      const deciduous = generateForestTreeGraph(post, { seed, phenotype: DECIDUOUS_PHENOTYPE });
+      const dimensions = graph => ({
+        width: Math.max(...graph.nodes.map(node => node.x))
+          - Math.min(...graph.nodes.map(node => node.x)),
+        height: graph.phenotype.groundY - Math.min(...graph.nodes.map(node => node.y))
+      });
+      const coniferSize = dimensions(conifer);
+      const deciduousSize = dimensions(deciduous);
+      ratios.conifer.push(coniferSize.height / coniferSize.width);
+      ratios.deciduous.push(deciduousSize.height / deciduousSize.width);
+      coniferWidths.add(Math.round(coniferSize.width));
+      coniferLeafCounts.add(conifer.foliage.leaves.length);
+      if (conifer.architecture.hasSplitTrunk) splitCount += 1;
+
+      expect(repeated).toEqual(conifer);
+      expect(conifer.stats.terminationReason).toBe('growth-exhausted');
+      expect(conifer.nodes.length).toBeLessThanOrEqual(conifer.phenotype.maxNodes);
+      expect(conifer.nodes.filter(node => node.generation === 0).some(
+        node => node.y < conifer.phenotype.crown.centerY - (conifer.phenotype.crown.radiusY * 0.8)
+      )).toBeTrue();
+      expect(conifer.foliage.leaves.every(leaf => leaf.style === 'needle-spray')).toBeTrue();
+      expect(new Set(conifer.foliage.coverageCells.filter(cell => cell.supported)
+        .map(cell => cell.row)).size).toBeGreaterThan(5);
+    }
+    const average = values => values.reduce((sum, value) => sum + value, 0) / values.length;
+    expect(average(ratios.conifer)).toBeGreaterThan(average(ratios.deciduous) * 1.35);
+    expect(splitCount).toBeLessThanOrEqual(2);
+    expect(coniferWidths.size).toBeGreaterThan(5);
+    expect(coniferLeafCounts.size).toBeGreaterThan(18);
+  });
+
+  it('rejects unbounded shared crown-density, wind-bias, and foliage-style inputs', () => {
+    expect(() => generateForestTreeGraph(post, {
+      phenotype: { ...HIGHLAND_CONIFER_PHENOTYPE, attractionDensityByHeight: [1.2, 0.5] }
+    })).toThrowError(/height-density/);
+    expect(() => generateForestTreeGraph(post, {
+      phenotype: {
+        ...HIGHLAND_CONIFER_PHENOTYPE,
+        directionalGrowthBias: { x: 0.3, y: 0, z: 0 }
+      }
+    })).toThrowError(/Directional growth bias/);
+    expect(() => generateForestTreeV3(post, {
+      phenotype: { ...HIGHLAND_CONIFER_PHENOTYPE, foliageStyle: 'frond' }
+    })).toThrowError(/foliage style/);
   });
 });

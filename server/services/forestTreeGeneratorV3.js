@@ -6,7 +6,8 @@ import { rasterizeFoliage } from './forest/v3/rasterizeFoliage.js';
 import { rasterizeWood } from './forest/v3/rasterizeWood.js';
 import { buildForestTreeAsset } from './forest/v3/treeAsset.js';
 
-export const FOREST_RENDERER_VERSION_V3 = 3;
+// Version 4 adds bounded height-density and foliage-shape vocabulary. Asset schema remains v2.
+export const FOREST_RENDERER_VERSION_V3 = 4;
 
 export function generateForestTreeGraph(post, options = {}) {
   if (!post?.id) throw new Error('V3 forest trees require a post id.');

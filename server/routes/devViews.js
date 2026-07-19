@@ -30,8 +30,7 @@ import {
   forestScenePlacementCellId
 } from '../../public/js/forest-scene-math.js';
 import {
-  DECIDUOUS_PHENOTYPE,
-  LANTERNWOOD_PHENOTYPE
+  FOREST_PHENOTYPES
 } from '../services/forest/v3/phenotype.js';
 
 const router = express.Router();
@@ -67,7 +66,7 @@ const forestFixtureRooms = [
   'united-states', 'daily-inspiration', 'physics', 'history', 'united-states', 'mathematics'
 ];
 
-function forestFixtures() {
+export function forestFixtures() {
   return forestFixtureTitles.map((title, index) => {
     const post = {
       id: `forest-lab-post-${index + 1}`,
@@ -82,7 +81,7 @@ function forestFixtures() {
       questApproved: index % 4 === 0,
       excerpt: 'A fixture post used to explore the visual grammar of a personal writing forest.'
     };
-    const phenotype = index % 2 === 0 ? DECIDUOUS_PHENOTYPE : LANTERNWOOD_PHENOTYPE;
+    const phenotype = FOREST_PHENOTYPES[index % FOREST_PHENOTYPES.length];
     const { generation: tree, asset } = getForestLabTree(post, { phenotype });
     return {
       ...post,

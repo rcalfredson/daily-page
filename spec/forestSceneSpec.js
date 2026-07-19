@@ -121,14 +121,30 @@ describe('static Activity Forest scene', () => {
 
   it('defines explicit development pressure profiles without changing the default layout', () => {
     const representative = resolveForestPressureProfile('representative');
+    const botanical = resolveForestPressureProfile('botanical-range');
     const variety = resolveForestPressureProfile('asset-variety');
     const unique = resolveForestPressureProfile('unique-assets');
     const large = resolveForestPressureProfile('large-world');
 
-    expect(FOREST_PRESSURE_PROFILES.length).toBe(4);
+    expect(FOREST_PRESSURE_PROFILES.length).toBe(5);
     expect(representative.pressure).toBeFalse();
     expect(representative.layout).toEqual({});
     expect(resolveForestPressureProfile('unknown')).toBe(representative);
+    const botanicalScene = generateForestSceneLayout(botanical.layout);
+    expect(botanicalScene.placements.length).toBe(180);
+    expect(new Set(botanicalScene.placements.map(({ phenotypeId }) => phenotypeId))).toEqual(
+      new Set([
+        'open-crown-deciduous',
+        'sunset-lanternwood',
+        'wind-shaped-highland-conifer'
+      ])
+    );
+    expect(new Set(botanicalScene.placements.map(({ assetKey }) => assetKey)).size)
+      .toBeLessThanOrEqual(24);
+    const botanicalCounts = [...new Set(botanicalScene.placements.map(
+      ({ phenotypeId }) => phenotypeId
+    ))].map(id => botanicalScene.placements.filter(({ phenotypeId }) => phenotypeId === id).length);
+    expect(Math.max(...botanicalCounts) - Math.min(...botanicalCounts)).toBeLessThan(20);
     expect(generateForestSceneLayout(variety.layout).placements
       .map(({ assetKey }) => assetKey).filter((key, index, keys) => keys.indexOf(key) === index)
       .length).toBe(60);
@@ -159,7 +175,12 @@ describe('static Activity Forest scene', () => {
 
   it('encodes and caches deterministic lossless layer rasters by versioned asset key', async () => {
     const layout = generateForestSceneLayout({
-      seed: 'raster-transport', placementCount: 1, assetPoolSize: 1
+      seed: 'raster-transport', placementCount: 1, assetPoolSize: 1,
+      phenotypeWeights: {
+        'open-crown-deciduous': 0,
+        'sunset-lanternwood': 0,
+        'wind-shaped-highland-conifer': 1
+      }
     });
     const [runtimeAsset] = prepareForestSceneAssets(layout.placements).assets;
     const cold = await encodeForestSceneAssets(
@@ -474,6 +495,9 @@ describe('static Activity Forest scene', () => {
     expect(sliding.worldY).toBe(70);
     expect(forestPlacementCollisionRadius({ phenotypeId: 'sunset-lanternwood', scale: 2 }))
       .toBe(26);
+    expect(forestPlacementCollisionRadius({
+      phenotypeId: 'wind-shaped-highland-conifer', scale: 2
+    })).toBe(24);
     expect(playerCollides({ ...player, worldX: 30 }, [obstacle])).toBeFalse();
   });
 
