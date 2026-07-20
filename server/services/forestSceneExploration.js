@@ -29,7 +29,7 @@ export function forestPlacementCollisionRadius(placement) {
   return traits.collisionRadius * placement.scale;
 }
 
-export function createForestExploration(scene) {
+export function createForestExploration(scene, options = {}) {
   const spawn = {
     worldX: Math.round(forestCorridorCenter(scene.world.height - 180, scene.world.width)),
     worldY: scene.world.height - 180,
@@ -37,12 +37,21 @@ export function createForestExploration(scene) {
     facing: 'down',
     movementSpeed: FOREST_PLAYER_SPEED
   };
-  const fixtures = FIXTURES.map((fixture) => ({ ...fixture }));
+  const customFixtures = Array.isArray(options.fixtures);
+  const fixtures = customFixtures
+    ? JSON.parse(JSON.stringify(options.fixtures))
+    : FIXTURES.map((fixture) => ({ ...fixture }));
+  const fixtureIds = new Set(fixtures.map(({ id }) => id));
   const placements = scene.placements.map((placement) => ({
     ...placement,
     collisionRadius: forestPlacementCollisionRadius(placement),
-    fixtureId: fixtures[hashSeed(`forest-fixture:${placement.id}`) % fixtures.length].id
+    fixtureId: customFixtures
+      ? placement.fixtureId
+      : fixtures[hashSeed(`forest-fixture:${placement.id}`) % fixtures.length].id
   }));
+  if (!fixtures.length || placements.some(({ fixtureId }) => !fixtureIds.has(fixtureId))) {
+    throw new Error('Forest exploration placements require known fixture identities.');
+  }
 
   return {
     ...scene,

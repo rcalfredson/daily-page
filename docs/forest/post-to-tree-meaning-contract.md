@@ -157,12 +157,55 @@ of 112 by 142 logical pixels. The same assets serialized to 3,007,300 bytes as c
 215,783 bytes through the existing lossless-raster transport. These are local architecture checks,
 not device benchmarks.
 
+## Projected writing grove evidence
+
+Milestone 7B adds the explicit `post-tree-meaning` development profile to the explorable Activity
+Forest. It does not change the representative default or `botanical-range` profile. The semantic
+profile generates the ordinary deterministic 180-placement layout, then cycles the 24 projection
+fixtures across those placements. Each placement receives only its normal bounded spatial fields,
+fixture id, phenotype id, specimen seed, and complete versioned asset key. It does not receive the
+projection, habitat, creation time, counts, or explanations.
+
+The server retains a request-local map from asset key to the projection needed to prepare that
+asset. Initial and regional asset preparation consult this map and call the validated projected
+generator; ordinary profiles use the established seed-and-phenotype path. The process-local scene
+pool and lossless-raster cache remain keyed by the same complete runtime asset key. The map is not
+serialized into the scene response.
+
+The exploration fixture associated with each placement contains ordinary bounded writing display
+fields plus a `treeMeaning` explanation projection. It includes mapping version, specimen seed,
+phenotype id, habitat token, creation-season token, palette id, and the three code-owned explanation
+tokens and sentences. It excludes counts, raw post identity, projection fingerprints, title/body
+source fields beyond what the existing writing dialog already presents, and all generation data.
+Inspecting a tree displays this explanation in the existing accessible dialog. Nearby-bench
+reflection resolves the same full fixture before opening it, so it presents the same meaning without
+changing nearby-writing selection or persistence.
+
+This inspection panel is development instrumentation, not a proposed final player-facing design.
+Phenotype ids, specimen seeds, mapping versions, palette ids, and rule explanations exist here so
+the contract can be reviewed. A future product may offer a gentler optional “why this tree?” view,
+but it should not expose cache identity or turn selection mechanics into an optimization guide.
+
+The fixed scene has 180 placements, 24 inspectable writing fixtures, and 23 unique projected assets;
+the controlled activity pair deliberately shares one asset. Its placement distribution is 61
+open-crown deciduous, 59 sunset lanternwood, and 60 wind-shaped highland conifers. Habitat inputs
+appear on 128 neutral-grove and 52 rocky-edge placements because the scene repeats the representative
+fixture set rather than synthesizing a biome distribution. Every fixture appears seven or eight
+times, making paired comparisons reachable without expanding the asset pool.
+
+On Node 24.15.0, one local cold preparation of all 23 projected assets took about 1.37 seconds. The
+complete asset array serialized to 2,874,169 bytes as color runs and 206,394 bytes through the
+existing lossless-raster transport. Runtime assets retain schema 2, renderer version 4, their
+registered phenotype versions, ordered layers, and at most three foliage motion groups. These are
+local architecture observations, not browser or baseline-device frame-time claims.
+
 ## Remaining unknowns and Milestone 8 boundary
 
 Real post distributions may reveal clustering by creation month, missing or corrected timestamps,
-and whether the two habitat biases feel too weak or too classificatory. The permanent tint also
-needs ordinary scene-scale visual review; a palette that is tasteful in a Lab card may be too
-prominent in a grove. No conclusion should be drawn about mutable activity or surrounding features
+and whether the two habitat biases feel too weak or too classificatory. The projected grove now
+makes ordinary scene-scale review possible, but the permanent tint still requires human judgment on
+the intended baseline display and with representative source data. No conclusion should be drawn
+about mutable activity or surrounding features
 until representative product data and humane visual studies exist.
 
 Habitat here is an explicit two-value fixture input used only to prove selection. It is not inferred

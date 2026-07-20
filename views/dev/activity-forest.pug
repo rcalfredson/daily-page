@@ -11,13 +11,15 @@ block content
   main.activity-forest
     header.activity-forest__header
       div
-        p.activity-forest__eyebrow= profile.pressure ? 'Development pressure test' : 'Development preview'
+        p.activity-forest__eyebrow= profile.pressure ? 'Development pressure test' : profile.projectedWriting ? 'Meaning-contract scene' : 'Development preview'
         h1 Activity Forest
-          if profile.pressure
+          if profile.pressure || profile.projectedWriting
             |  — #{profile.label}
         p.activity-forest__lede
           if profile.pressure
             | #{profile.description} This mode is development-only and does not change the default grove.
+          else if profile.projectedWriting
+            | #{profile.description} Inspect trees while walking to compare their bounded habitat and creation-season decisions.
           else
             | Walk the winding clearing, approach a tree, and rediscover a fixture piece of writing.
             | The grove remains deterministic and is composed from reusable procedural tree assets.
@@ -25,7 +27,7 @@ block content
         button.activity-forest__reset(type='button' data-forest-reset-overlay) Reset personal overlay
         button.activity-forest__reset(type='button' data-forest-reset) Return to entrance
 
-    nav.activity-forest__profiles(aria-label='Forest pressure configurations')
+    nav.activity-forest__profiles(aria-label='Forest development configurations')
       each availableProfile in pressureProfiles
         a(
           href=`/__dev/views/activity-forest?pressure=${availableProfile.id}&transport=${scene.assetLoading.transport}`
@@ -213,6 +215,22 @@ block content
         span(aria-hidden='true')  ·
         time(data-forest-post-date)
       p.activity-forest__dialog-excerpt(data-forest-post-excerpt)
+      section.activity-forest__tree-meaning(data-forest-tree-meaning hidden)
+        h3 Why this tree differs
+        dl
+          div
+            dt Phenotype
+            dd(data-forest-meaning-phenotype)
+          div
+            dt Specimen seed
+            dd(data-forest-meaning-seed)
+          div
+            dt Habitat
+            dd(data-forest-meaning-habitat)
+          div
+            dt Permanent tint
+            dd(data-forest-meaning-tint)
+        ul(data-forest-meaning-reasons)
       button(type='button' data-forest-dialog-close) Return to the forest
 
     dialog.activity-forest__dialog(data-forest-object-dialog aria-labelledby='forest-object-title')

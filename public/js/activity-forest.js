@@ -1014,6 +1014,7 @@ if (payload && viewportElement && canvas) {
       dialog.querySelector('[data-forest-dialog-eyebrow]').textContent = 'A place made personal';
       dialog.querySelector('[data-forest-post-title]').textContent = 'Your clearing marker';
       dialog.querySelector('[data-forest-dialog-context]').hidden = true;
+      dialog.querySelector('[data-forest-tree-meaning]').hidden = true;
       dialog.querySelector('[data-forest-post-excerpt]').textContent =
         'This simple marker is stored in the personal overlay, independently of the generated trees.';
       dialog.showModal();
@@ -1032,6 +1033,25 @@ if (payload && viewportElement && canvas) {
     dialog.querySelector('[data-forest-post-date]').textContent = new Intl.DateTimeFormat(undefined,
       { dateStyle: 'long' }).format(new Date(`${fixture.createdAt}T12:00:00Z`));
     dialog.querySelector('[data-forest-post-excerpt]').textContent = fixture.excerpt;
+    const meaning = fixture.treeMeaning;
+    const meaningSurface = dialog.querySelector('[data-forest-tree-meaning]');
+    meaningSurface.hidden = !meaning;
+    if (meaning) {
+      meaningSurface.querySelector('[data-forest-meaning-phenotype]').textContent =
+        meaning.phenotypeId;
+      meaningSurface.querySelector('[data-forest-meaning-seed]').textContent =
+        String(meaning.specimenSeed);
+      meaningSurface.querySelector('[data-forest-meaning-habitat]').textContent =
+        meaning.habitat.replaceAll('-', ' ');
+      meaningSurface.querySelector('[data-forest-meaning-tint]').textContent =
+        `${meaning.creationSeason} · ${meaning.foliagePaletteId || 'seed-selected'}`;
+      const reasons = meaningSurface.querySelector('[data-forest-meaning-reasons]');
+      reasons.replaceChildren(...meaning.explanations.map((explanation) => {
+        const item = document.createElement('li');
+        item.textContent = explanation.text;
+        return item;
+      }));
+    }
     dialog.showModal();
   }
 
@@ -1043,7 +1063,10 @@ if (payload && viewportElement && canvas) {
         diagnostics.benchResurfaced.textContent =
           `${candidate.fixtureId} via ${selectedBenchWriting.benchId}`;
         objectDialog.close();
-        openFixtureWriting(candidate.fixture, 'Writing reflected from nearby trees');
+        openFixtureWriting(
+          fixturesById.get(candidate.fixtureId) || candidate.fixture,
+          'Writing reflected from nearby trees'
+        );
       }
     );
     objectDialog.querySelector('[data-forest-bench-reflect]').hidden = true;

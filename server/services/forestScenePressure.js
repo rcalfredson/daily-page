@@ -28,6 +28,14 @@ export const FOREST_PRESSURE_PROFILES = Object.freeze([
     })
   }),
   Object.freeze({
+    id: 'post-tree-meaning',
+    label: 'Projected writing grove',
+    description: '180 placements cycle through the 24 meaning-contract fixtures and 23 assets.',
+    pressure: false,
+    projectedWriting: true,
+    layout: Object.freeze({ seed: 'projected-writing-grove', assetPoolSize: 24 })
+  }),
+  Object.freeze({
     id: 'asset-variety',
     label: 'Asset variety',
     description: '180 placements sharing 60 assets.',

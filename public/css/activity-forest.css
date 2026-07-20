@@ -493,6 +493,32 @@ html[data-theme='dark'] .activity-forest .activity-forest__prompt {
 }
 .activity-forest__dialog-context { margin: 0.3rem 0 1.2rem; color: #5f6a61; }
 .activity-forest__dialog-excerpt { font-size: 1.08rem; line-height: 1.65; }
+.activity-forest__tree-meaning {
+  margin: 1rem 0;
+  padding: 0.85rem;
+  border-radius: 9px;
+  background: #e9e2ca;
+}
+.activity-forest__tree-meaning h3 { margin: 0 0 0.7rem; font-size: 0.9rem; }
+.activity-forest__tree-meaning dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0;
+}
+.activity-forest__tree-meaning dt {
+  color: #6d705f;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.activity-forest__tree-meaning dd { margin: 0.15rem 0 0; font-size: 0.78rem; }
+.activity-forest__tree-meaning ul {
+  margin: 0.7rem 0 0;
+  padding-left: 1.15rem;
+  color: #536158;
+  font-size: 0.76rem;
+}
 .activity-forest__dialog button {
   min-height: 44px;
   box-sizing: border-box;

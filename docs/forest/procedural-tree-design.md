@@ -725,11 +725,13 @@ browser, generalized object scripting, or entity-component framework.
 
 ### Development pressure profiles
 
-The development route accepts four labeled profiles through its on-page profile links:
+The development route accepts six labeled profiles through its on-page profile links:
 
 | Profile | Placements | Unique runtime assets | Purpose |
 | --- | ---: | ---: | --- |
 | Representative grove | 180 | up to 16 | The unchanged calm default and normal comparison point. |
+| Botanical range | 180 | up to 24 | Balances all three registered phenotypes without semantic writing projection. |
+| Projected writing grove | 180 | 23 | Cycles the 24 Milestone 7 meaning-contract fixtures through a separately selectable semantic scene. |
 | Asset variety | 180 | 60 | Isolates the cost of a moderately broader asset set. |
 | Unique assets | 180 | 180 | Exercises the current eager asset boundary at maximum variety. |
 | Large world | 600 | 60 | Separates placement, culling, and movement cost from asset variety. |
