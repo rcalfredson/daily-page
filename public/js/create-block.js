@@ -36,6 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
+    const sourceReady = await queueSourceLookup();
+    const currentSourceValue = sourceInput.value.trim();
+    if (
+      !sourceReady
+      || (currentSourceValue && resolvedSourceValue !== currentSourceValue)
+    ) {
+      return;
+    }
+
     if (existingLangs.includes(langSelect.value)) {
       alert(t('createBlock.messages.langExists'));
       return;
@@ -95,6 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const groupIdField = document.getElementById('groupId');
   const originalBlockField = document.getElementById('originalBlock');
   submitBtn = document.querySelector('button[type="submit"]');
+  let sourceLookup = Promise.resolve(true);
+  let sourceLookupValue = null;
+  let sourceLookupVersion = 0;
+  let resolvedSourceValue = '';
 
   existingLangs = [];
 
@@ -108,16 +121,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const short = String(guess).split('-')[0];
   langSelect.value = short;
 
-  // Fetch info del bloque origen
-  sourceInput.addEventListener('blur', async () => {
-    const raw = sourceInput.value.trim();
+  function clearSourceLink() {
+    groupIdField.value = '';
+    originalBlockField.value = '';
+    resolvedSourceValue = '';
+    existingLangs = [];
+    langSelect.querySelectorAll('option').forEach(option => {
+      option.disabled = false;
+    });
+    bumpIfDup();
+  }
+
+  // Resolve the source before serializing the form. A click on submit blurs this
+  // input first, so submission must share and await the lookup started by blur.
+  async function resolveSource(raw, version) {
     if (!raw) {
-      groupIdField.value = '';
-      originalBlockField.value = '';
-      langSelect.querySelectorAll('option').forEach(o => (o.disabled = false));
-      existingLangs = [];
-      bumpIfDup();
-      return;
+      clearSourceLink();
+      return true;
     }
 
     const match =
@@ -125,9 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
       || raw.match(/^([0-9a-fA-F]{24})$/);
     if (!match) {
       alert(t('createBlock.advanced.translate.invalid'));
-      groupIdField.value = '';
-      originalBlockField.value = '';
-      return;
+      clearSourceLink();
+      return false;
     }
 
     const id = match[1];
@@ -135,26 +154,56 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch(`/api/v1/blocks/${id}`);
       if (!res.ok) throw new Error('NOT_FOUND');
       const json = await res.json();
+
+      // Ignore a response for a value the user has since changed.
+      if (version !== sourceLookupVersion || sourceInput.value.trim() !== raw) {
+        return false;
+      }
+
       existingLangs = json.translations.map(ti => ti.lang);
       groupIdField.value = json.block.groupId;
       originalBlockField.value = id;
+      resolvedSourceValue = raw;
 
-      // elegir primer idioma libre
-      const allOpts = [...langSelect.options].map(o => o.value);
-      const firstFree = allOpts.find(l => !existingLangs.includes(l)) || 'en';
-      langSelect.value = firstFree;
-
-      existingLangs.forEach(lang => {
-        const option = langSelect.querySelector(`option[value="${lang}"]`);
-        if (option) option.disabled = true;
+      langSelect.querySelectorAll('option').forEach(option => {
+        option.disabled = existingLangs.includes(option.value);
       });
 
+      // Preserve the user's choice unless that language is genuinely occupied.
+      if (existingLangs.includes(langSelect.value)) {
+        const firstFree = [...langSelect.options]
+          .find(option => !option.disabled);
+        if (firstFree) langSelect.value = firstFree.value;
+      }
+
       bumpIfDup();
+      return true;
     } catch {
+      if (version !== sourceLookupVersion || sourceInput.value.trim() !== raw) {
+        return false;
+      }
       alert(t('createBlock.advanced.translate.fetchError'));
-      groupIdField.value = '';
+      clearSourceLink();
+      return false;
     }
+  }
+
+  function queueSourceLookup() {
+    const raw = sourceInput.value.trim();
+    if (sourceLookupValue === raw) return sourceLookup;
+
+    sourceLookupValue = raw;
+    const version = ++sourceLookupVersion;
+    sourceLookup = resolveSource(raw, version);
+    return sourceLookup;
+  }
+
+  sourceInput.addEventListener('input', () => {
+    sourceLookupVersion += 1;
+    sourceLookupValue = null;
+    clearSourceLink();
   });
+  sourceInput.addEventListener('blur', queueSourceLookup);
 
   langSelect.addEventListener('change', bumpIfDup);
 
