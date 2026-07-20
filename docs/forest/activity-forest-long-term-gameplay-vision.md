@@ -188,6 +188,14 @@ Post trees are not ordinary timber. They represent writing and cannot be destroy
 
 Generated and authored state should remain independently versioned. A world-generation upgrade must not silently erase or scramble the owner's work.
 
+For newly generated post trees, stable placement should normally select a position in the generated
+world before botanical identity is resolved. The biome or environmental region at that position can
+then provide a bounded habitat classification to the post-to-tree meaning contract. Biomes own the
+larger spatial grammar—terrain, water, transitions, wildlife, and vegetation tendencies—while
+habitat is the narrower ecological context used to influence a tree. This relationship should be
+versioned and deterministic, and changes to biome generation must not silently reinterpret
+historical writing trees.
+
 ## World growth and post-tree capacity
 
 Both free and paid users may begin with a compact generated landscape. Writing adds post-linked trees and gradually reveals or generates surrounding terrain.
@@ -229,6 +237,13 @@ A possible boundary:
 - Free users receive occasional or bounded transplant actions and can rearrange trees within designated clearing tools.
 - Paid users receive broader, repeatable relocation and landscape-planning controls.
 - Moving a tree never changes its identity or post association.
+
+Relocation should also preserve the tree's captured habitat, phenotype, specimen seed, and permanent
+traits. Habitat describes where a writing tree originally grew; it is not a rule forbidding the
+owner from placing that tree elsewhere. Personal curation may intentionally create ecological
+exceptions—a palm-like tree in an alpine clearing, for example—without decay, penalties, or an
+automatic visual reroll. Changing the tree's ecological identity should require a separate explicit
+reprojection action.
 
 ### Planted trees
 
