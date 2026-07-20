@@ -87,6 +87,51 @@ Changing only creation season preserves seed, phenotype, branch graph, architect
 complexity but changes the chosen palette and visual cache identity. The mapping is code-owned and
 versioned; it is intentionally not a user-authored rule language.
 
+## Future biome-to-habitat integration seam
+
+The explicit habitat input in Milestone 7 is the narrow seam through which Milestone 8's generated
+environment should eventually influence a newly placed writing tree. The expected dependency is:
+
+```text
+world seed + biome/world-generation version
+                    ↓
+        terrain and spatial biome regions
+                    ↓
+stable post-placement rule selects a world position
+                    ↓
+the biome at that position resolves to a bounded habitat classification
+                    ↓
+post identity + permanent writing evidence + captured habitat
+                    ↓
+             post-to-tree projection
+```
+
+The biome owns spatial terrain, surfaces, water, transitions, wildlife suitability, and broad
+vegetation tendencies. Habitat remains a smaller ecological classification passed to the tree
+projection; the projection should not consume the complete biome or terrain object. One biome may
+resolve to more than one habitat at different positions—for example, an interior grove, rocky edge,
+or wet margin—so habitat is not required to be synonymous with a biome name.
+
+Initial generated placement should normally be map-first. A stable, versioned placement rule uses
+post and world identity to choose an available position; the position's biome context supplies the
+habitat; then the post-to-tree contract chooses phenotype and permanent traits. If the resulting
+tree cannot occupy the chosen space safely, any retry or reservation rule must be deterministic and
+versioned rather than allowing phenotype, request order, or camera state to move writing arbitrarily.
+Rooms, popularity, and mutable activity should not secretly choose more prestigious biomes.
+
+The resolved habitat and resulting semantic projection should be captured as writing-layer
+historical evidence when the tree is created. Later biome-generator, renderer, or mapping upgrades
+must not silently move or ecologically reinterpret established trees. Such a change requires an
+explicit, auditable reprojection or world-migration decision.
+
+Personal relocation is different from ecological reprojection. Moving a tree as curation preserves
+its captured habitat, phenotype, specimen seed, permanent traits, post association, and asset
+identity. Habitat describes the context in which the tree was generated, not a permanent restriction
+on where its owner may place it. An owner may therefore create intentional ecological exceptions,
+such as placing a palm-like tree in an alpine region. The tree must not decay, weaken, or become
+mechanically disadvantaged because it is now outside its originating habitat. Changing its
+ecological identity would be a separate explicit reprojection action, not a side effect of movement.
+
 ## Mutation and historical evidence policy
 
 The projection describes a stable writing-layer record, not a live activity dashboard. A future
@@ -210,4 +255,6 @@ until representative product data and humane visual studies exist.
 
 Habitat here is an explicit two-value fixture input used only to prove selection. It is not inferred
 from rooms, placement, terrain, or user behavior. Terrain regions, habitat transitions, water,
-environmental grammar, and biome generation remain Milestone 8 work.
+environmental grammar, and biome generation remain Milestone 8 work. The future derivation seam
+documented above records the intended dependency without committing Milestone 8 to this experiment's
+two habitat names or to an untested placement algorithm.
