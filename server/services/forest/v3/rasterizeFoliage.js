@@ -13,10 +13,16 @@ export const FOLIAGE_PALETTE = Object.freeze({
   deep: '#214a35'
 });
 
-export function selectFoliagePalette(phenotype, seed) {
+export function selectFoliagePalette(phenotype, seed, paletteId = null) {
   const variants = phenotype.foliagePalettes;
   if (!variants?.length) {
+    if (paletteId) throw new Error(`Unknown foliage palette: ${paletteId}`);
     return { id: 'default', colors: phenotype.foliagePalette || FOLIAGE_PALETTE };
+  }
+  if (paletteId) {
+    const selected = variants.find(variant => variant.id === paletteId);
+    if (!selected) throw new Error(`Unknown foliage palette for ${phenotype.id}: ${paletteId}`);
+    return selected;
   }
   const totalWeight = variants.reduce((sum, variant) => sum + variant.weight, 0);
   if (!(totalWeight > 0)) throw new Error('Foliage palette weights must total more than zero.');
@@ -425,11 +431,11 @@ function rasterizeLayer(leaves, layer, phenotype, palette, motionGroups) {
   };
 }
 
-export function rasterizeFoliage(graph, phenotype, seed) {
+export function rasterizeFoliage(graph, phenotype, seed, options = {}) {
   if (!FOREST_FOLIAGE_STYLES.includes(phenotype.foliageStyle)) {
     throw new Error(`Unsupported forest foliage style: ${phenotype.foliageStyle}`);
   }
-  const paletteVariant = selectFoliagePalette(phenotype, seed);
+  const paletteVariant = selectFoliagePalette(phenotype, seed, options.paletteId);
   const palette = paletteVariant.colors;
   const { shoots, leaves, coverageCells } = generateLeafBearingShoots(graph, phenotype, seed);
   const motionGroups = assignFoliageMotionGroups(graph, shoots, leaves);

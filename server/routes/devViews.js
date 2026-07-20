@@ -2,7 +2,8 @@ import express from 'express';
 
 import optionalAuth from '../middleware/optionalAuth.js';
 import { addI18n } from '../services/i18n.js';
-import { getForestLabTree } from '../services/forestLabTreeCache.js';
+import { getForestLabProjectedTree } from '../services/forestLabTreeCache.js';
+import { projectPostToForestTree } from '../services/forestPostTreeProjection.js';
 import {
   clearForestSceneAssetPool,
   prepareForestSceneAssets
@@ -29,9 +30,6 @@ import {
   forestSceneCellIdsForViewport,
   forestScenePlacementCellId
 } from '../../public/js/forest-scene-math.js';
-import {
-  FOREST_PHENOTYPES
-} from '../services/forest/v3/phenotype.js';
 
 const router = express.Router();
 
@@ -66,28 +64,76 @@ const forestFixtureRooms = [
   'united-states', 'daily-inspiration', 'physics', 'history', 'united-states', 'mathematics'
 ];
 
+const forestFixtureSemantics = Object.freeze([
+  Object.freeze({ id: 'forest-pair-habitat-0', habitat: 'neutral-grove',
+    createdAt: '2025-06-12T00:00:00.000Z', pair: 'Habitat pair A' }),
+  Object.freeze({ id: 'forest-pair-habitat-0', habitat: 'rocky-edge',
+    createdAt: '2025-06-12T00:00:00.000Z', pair: 'Habitat pair B' }),
+  Object.freeze({ id: 'forest-pair-season', habitat: 'neutral-grove',
+    createdAt: '2025-04-12T00:00:00.000Z', pair: 'Creation-season pair A' }),
+  Object.freeze({ id: 'forest-pair-season', habitat: 'neutral-grove',
+    createdAt: '2025-10-12T00:00:00.000Z', pair: 'Creation-season pair B' }),
+  Object.freeze({ id: 'forest-pair-activity', habitat: 'neutral-grove',
+    createdAt: '2025-07-12T00:00:00.000Z', pair: 'Mutable-activity pair A', lowActivity: true }),
+  Object.freeze({ id: 'forest-pair-activity', habitat: 'neutral-grove',
+    createdAt: '2025-07-12T00:00:00.000Z', pair: 'Mutable-activity pair B', highActivity: true }),
+  ...Array.from({ length: 18 }, (_, index) => Object.freeze({
+    id: `forest-meaning-fixture-${index + 7}`,
+    habitat: index % 3 === 0 ? 'rocky-edge' : 'neutral-grove',
+    createdAt: new Date(Date.UTC(2024 + (index % 3), index % 12, 7 + index)).toISOString(),
+    pair: null
+  }))
+]);
+
+export function projectForestLabFixture(post, context) {
+  try {
+    const projection = projectPostToForestTree({
+      id: post.id,
+      roomId: post.roomId,
+      createdAt: post.createdAt,
+      wordCount: post.wordCount,
+      collaboratorCount: post.collaboratorCount,
+      translationCount: post.translationCount,
+      commentCount: post.commentCount,
+      reactionCount: post.reactionCount,
+      questApproved: post.questApproved
+    }, context);
+    const { generation: tree, asset } = getForestLabProjectedTree(projection);
+    return { projection, tree, asset, projectionError: null };
+  } catch (error) {
+    return {
+      projection: null,
+      tree: null,
+      asset: null,
+      projectionError: error instanceof Error ? error.message : 'Unknown projection failure.'
+    };
+  }
+}
+
 export function forestFixtures() {
   return forestFixtureTitles.map((title, index) => {
+    const semantics = forestFixtureSemantics[index];
     const post = {
-      id: `forest-lab-post-${index + 1}`,
+      id: semantics.id,
       title,
       roomId: forestFixtureRooms[index % forestFixtureRooms.length],
-      createdAt: new Date(Date.UTC(2024 + (index % 3), index % 12, 3 + index)).toISOString(),
-      wordCount: 280 + ((index * 347) % 2500),
-      collaboratorCount: index % 5 === 0 ? 2 : index % 3 === 0 ? 1 : 0,
-      translationCount: index % 6,
-      commentCount: (index * 3) % 15,
-      reactionCount: (index * 5) % 21,
-      questApproved: index % 4 === 0,
+      createdAt: semantics.createdAt,
+      wordCount: semantics.highActivity ? 8000 : semantics.lowActivity ? 80
+        : 280 + ((index * 347) % 2500),
+      collaboratorCount: semantics.highActivity ? 20 : semantics.lowActivity ? 0
+        : index % 5 === 0 ? 2 : index % 3 === 0 ? 1 : 0,
+      translationCount: semantics.highActivity ? 40 : semantics.lowActivity ? 0 : index % 6,
+      commentCount: semantics.highActivity ? 500 : semantics.lowActivity ? 0 : (index * 3) % 15,
+      reactionCount: semantics.highActivity ? 1000 : semantics.lowActivity ? 0 : (index * 5) % 21,
+      questApproved: semantics.highActivity || (!semantics.lowActivity && index % 4 === 0),
       excerpt: 'A fixture post used to explore the visual grammar of a personal writing forest.'
     };
-    const phenotype = FOREST_PHENOTYPES[index % FOREST_PHENOTYPES.length];
-    const { generation: tree, asset } = getForestLabTree(post, { phenotype });
+    const projected = projectForestLabFixture(post, { habitat: semantics.habitat });
     return {
       ...post,
       url: `/rooms/${post.roomId}/blocks/${post.id}`,
-      tree,
-      asset
+      pair: semantics.pair,
+      ...projected
     };
   });
 }

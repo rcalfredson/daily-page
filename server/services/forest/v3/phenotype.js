@@ -109,6 +109,12 @@ export const DECIDUOUS_PHENOTYPE = Object.freeze({
       })
     })
   ]),
+  postTreeMeaning: Object.freeze({
+    habitatWeights: Object.freeze({ 'neutral-grove': 5, 'rocky-edge': 3 }),
+    creationSeasonPaletteIds: Object.freeze({
+      spring: 'meadow-green', summer: 'summer-green', autumn: 'early-gold', winter: 'blue-grove'
+    })
+  }),
   rootFlareHeight: 11,
   rootFlareStrength: 3.8
 });
@@ -211,6 +217,12 @@ export const LANTERNWOOD_PHENOTYPE = Object.freeze({
       })
     })
   ]),
+  postTreeMeaning: Object.freeze({
+    habitatWeights: Object.freeze({ 'neutral-grove': 3, 'rocky-edge': 2 }),
+    creationSeasonPaletteIds: Object.freeze({
+      spring: 'spring-bloom', summer: 'sunset', autumn: 'harvest', winter: 'enchanted-plum'
+    })
+  }),
   woodPalette: Object.freeze({
     light: '#d8b987', mid: '#aa795d', dark: '#704b4b', deep: '#49333f'
   }),
@@ -311,6 +323,12 @@ export const HIGHLAND_CONIFER_PHENOTYPE = Object.freeze({
       })
     })
   ]),
+  postTreeMeaning: Object.freeze({
+    habitatWeights: Object.freeze({ 'neutral-grove': 2, 'rocky-edge': 5 }),
+    creationSeasonPaletteIds: Object.freeze({
+      spring: 'lichen-tips', summer: 'highland-evergreen', autumn: 'lichen-tips', winter: 'blue-ridge'
+    })
+  }),
   woodPalette: Object.freeze({
     light: '#b49268', mid: '#826348', dark: '#594737', deep: '#3c342e'
   }),

@@ -1,4 +1,7 @@
-import { generateForestTreeV3 } from './forestTreeGeneratorV3.js';
+import {
+  generateForestTreeV3,
+  generateProjectedForestTreeV3
+} from './forestTreeGeneratorV3.js';
 import { buildForestTreeAsset, treeAssetCacheKey } from './forest/v3/treeAsset.js';
 import {
   DECIDUOUS_PHENOTYPE,
@@ -43,6 +46,25 @@ export function getForestLabTree(post, options = {}) {
     assetVersion: identity.version
   };
   const generation = generateForestTreeV3(post, { ...options, seed, phenotype: identifiedPhenotype });
+  const value = { generation, asset: buildForestTreeAsset(generation) };
+  fixtureCache.set(key, value);
+  return { ...value, cacheHit: false };
+}
+
+export function getForestLabProjectedTree(projection) {
+  const identity = {
+    version: projection.mappingVersion,
+    visualFingerprint: projection.identity.visualFingerprint
+  };
+  const key = treeAssetCacheKey({
+    seed: projection.specimen.seed,
+    rendererVersion: FOREST_RENDERER_VERSION_V3,
+    phenotypeId: projection.phenotype.id,
+    phenotypeAssetVersion: projection.phenotype.version,
+    meaningProjection: identity
+  });
+  if (fixtureCache.has(key)) return { ...fixtureCache.get(key), cacheHit: true };
+  const generation = generateProjectedForestTreeV3(projection);
   const value = { generation, asset: buildForestTreeAsset(generation) };
   fixtureCache.set(key, value);
   return { ...value, cacheHit: false };

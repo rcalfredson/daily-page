@@ -100,6 +100,50 @@
   font-size: 0.92rem;
 }
 
+.forest-comparison__pair {
+  margin: 0;
+  padding: 0 0.8rem 0.35rem;
+  color: var(--highlight-color);
+  font-family: var(--font-rubik-medium);
+  font-size: 0.72rem;
+}
+
+.forest-comparison__error {
+  margin: 0.8rem;
+  padding: 0.8rem;
+  border: 1px solid #b95756;
+  border-radius: 8px;
+  color: #b95756;
+}
+
+.forest-comparison__error p {
+  margin: 0.35rem 0 0;
+}
+
+.forest-comparison__meaning {
+  margin: 0 0.8rem 0.65rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  background: var(--secondary-bg);
+  color: var(--muted-text-color);
+  font-size: 0.72rem;
+}
+
+.forest-comparison__meaning p,
+.forest-comparison__meaning ul {
+  margin: 0;
+}
+
+.forest-comparison__meaning ul {
+  padding: 0.4rem 0 0.45rem 1.1rem;
+}
+
+.forest-comparison__meaning code {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 0.64rem;
+}
+
 .forest-comparison__meta {
   margin: 0;
   padding: 0 0.8rem 0.85rem;
