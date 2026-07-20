@@ -1,6 +1,9 @@
 import { performance } from 'node:perf_hooks';
 
-import { generateForestTreeAssetV3 } from './forestTreeGeneratorV3.js';
+import {
+  generateForestTreeAssetV3,
+  generateProjectedForestTreeAssetV3
+} from './forestTreeGeneratorV3.js';
 import {
   resolveForestPhenotype
 } from './forest/v3/phenotype.js';
@@ -16,7 +19,7 @@ export function forestSceneAssetPoolSize() {
   return sceneAssetCache.size;
 }
 
-export function prepareForestSceneAssets(placements) {
+export function prepareForestSceneAssets(placements, assetProjections = new Map()) {
   const startedAt = performance.now();
   const assets = [];
   const required = new Map(placements.map((placement) => [placement.assetKey, placement]));
@@ -28,10 +31,13 @@ export function prepareForestSceneAssets(placements) {
       const generationStartedAt = performance.now();
       const phenotype = resolveForestPhenotype(placement.phenotypeId);
       if (!phenotype) throw new Error(`Unknown forest phenotype: ${placement.phenotypeId}`);
-      const asset = generateForestTreeAssetV3(
-        { id: `forest-scene-specimen-${placement.treeSeed}` },
-        { seed: placement.treeSeed, phenotype }
-      );
+      const projection = assetProjections.get(assetKey);
+      const asset = projection
+        ? generateProjectedForestTreeAssetV3(projection)
+        : generateForestTreeAssetV3(
+          { id: `forest-scene-specimen-${placement.treeSeed}` },
+          { seed: placement.treeSeed, phenotype }
+        );
       if (asset.cacheKey !== assetKey) throw new Error('Prepared tree asset identity mismatch.');
       sceneAssetCache.set(assetKey, asset);
       generatedAssetCount += 1;
@@ -52,9 +58,11 @@ export function prepareForestSceneAssets(placements) {
   };
 }
 
-export function prepareForestSceneWithDiagnostics(layout) {
+export function prepareForestSceneWithDiagnostics(layout, assetProjections = new Map()) {
   const startedAt = performance.now();
-  const { assets, diagnostics } = prepareForestSceneAssets(layout.placements);
+  const { assets, diagnostics } = prepareForestSceneAssets(
+    layout.placements, assetProjections
+  );
   const scene = JSON.parse(JSON.stringify({ ...layout, assets }));
   return {
     scene,
@@ -65,6 +73,6 @@ export function prepareForestSceneWithDiagnostics(layout) {
   };
 }
 
-export function prepareForestScene(layout) {
-  return prepareForestSceneWithDiagnostics(layout).scene;
+export function prepareForestScene(layout, assetProjections = new Map()) {
+  return prepareForestSceneWithDiagnostics(layout, assetProjections).scene;
 }

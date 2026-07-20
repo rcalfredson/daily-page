@@ -3,6 +3,7 @@ import express from 'express';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { addI18n } from '../services/i18n.js';
 import { getForestLabProjectedTree } from '../services/forestLabTreeCache.js';
+import { forestPostTreeFixtures } from '../services/forestPostTreeFixtures.js';
 import { projectPostToForestTree } from '../services/forestPostTreeProjection.js';
 import {
   clearForestSceneAssetPool,
@@ -16,6 +17,7 @@ import {
 } from '../services/forestSceneAssetTransport.js';
 import { generateForestSceneLayout } from '../services/forestSceneLayout.js';
 import { createForestExploration } from '../services/forestSceneExploration.js';
+import { composeProjectedForestScene } from '../services/forestProjectedScene.js';
 import {
   FOREST_PRESSURE_PROFILES,
   FOREST_SCENE_MAX_ASSET_REQUEST,
@@ -32,58 +34,6 @@ import {
 } from '../../public/js/forest-scene-math.js';
 
 const router = express.Router();
-
-const forestFixtureTitles = [
-  'Coos County at the Edge of the Continent',
-  'Notes from a Summer Thunderstorm',
-  'Why Saturn Has Rings',
-  'A Small Museum of Lost Buttons',
-  'Walking Across Lower Manhattan',
-  'The Mathematics of Honeycombs',
-  'Letter to an Unfamiliar City',
-  'Yalobusha County Field Notes',
-  'The Quiet Work of Repair',
-  'What the Telescope Remembered',
-  'A Recipe Written from Memory',
-  'Gosper County Beneath a Wide Sky',
-  'How Rivers Choose Their Paths',
-  'Three Poems About Streetlights',
-  'A Brief History of Public Benches',
-  'The Physics of Skipping Stones',
-  'Postcard from a Winter Harbor',
-  'On Learning the Names of Birds',
-  'The Last Independent Bookshop',
-  'A Map of Neighborhood Kindness',
-  'Cloud Chambers and Cosmic Rays',
-  'An Orchard at the City Limit',
-  'Notes on Translation and Distance',
-  'The Road Home After Midnight'
-];
-
-const forestFixtureRooms = [
-  'united-states', 'daily-inspiration', 'physics', 'history', 'united-states', 'mathematics'
-];
-
-const forestFixtureSemantics = Object.freeze([
-  Object.freeze({ id: 'forest-pair-habitat-0', habitat: 'neutral-grove',
-    createdAt: '2025-06-12T00:00:00.000Z', pair: 'Habitat pair A' }),
-  Object.freeze({ id: 'forest-pair-habitat-0', habitat: 'rocky-edge',
-    createdAt: '2025-06-12T00:00:00.000Z', pair: 'Habitat pair B' }),
-  Object.freeze({ id: 'forest-pair-season', habitat: 'neutral-grove',
-    createdAt: '2025-04-12T00:00:00.000Z', pair: 'Creation-season pair A' }),
-  Object.freeze({ id: 'forest-pair-season', habitat: 'neutral-grove',
-    createdAt: '2025-10-12T00:00:00.000Z', pair: 'Creation-season pair B' }),
-  Object.freeze({ id: 'forest-pair-activity', habitat: 'neutral-grove',
-    createdAt: '2025-07-12T00:00:00.000Z', pair: 'Mutable-activity pair A', lowActivity: true }),
-  Object.freeze({ id: 'forest-pair-activity', habitat: 'neutral-grove',
-    createdAt: '2025-07-12T00:00:00.000Z', pair: 'Mutable-activity pair B', highActivity: true }),
-  ...Array.from({ length: 18 }, (_, index) => Object.freeze({
-    id: `forest-meaning-fixture-${index + 7}`,
-    habitat: index % 3 === 0 ? 'rocky-edge' : 'neutral-grove',
-    createdAt: new Date(Date.UTC(2024 + (index % 3), index % 12, 7 + index)).toISOString(),
-    pair: null
-  }))
-]);
 
 export function projectForestLabFixture(post, context) {
   try {
@@ -111,35 +61,28 @@ export function projectForestLabFixture(post, context) {
 }
 
 export function forestFixtures() {
-  return forestFixtureTitles.map((title, index) => {
-    const semantics = forestFixtureSemantics[index];
-    const post = {
-      id: semantics.id,
-      title,
-      roomId: forestFixtureRooms[index % forestFixtureRooms.length],
-      createdAt: semantics.createdAt,
-      wordCount: semantics.highActivity ? 8000 : semantics.lowActivity ? 80
-        : 280 + ((index * 347) % 2500),
-      collaboratorCount: semantics.highActivity ? 20 : semantics.lowActivity ? 0
-        : index % 5 === 0 ? 2 : index % 3 === 0 ? 1 : 0,
-      translationCount: semantics.highActivity ? 40 : semantics.lowActivity ? 0 : index % 6,
-      commentCount: semantics.highActivity ? 500 : semantics.lowActivity ? 0 : (index * 3) % 15,
-      reactionCount: semantics.highActivity ? 1000 : semantics.lowActivity ? 0 : (index * 5) % 21,
-      questApproved: semantics.highActivity || (!semantics.lowActivity && index % 4 === 0),
-      excerpt: 'A fixture post used to explore the visual grammar of a personal writing forest.'
-    };
-    const projected = projectForestLabFixture(post, { habitat: semantics.habitat });
+  return forestPostTreeFixtures().map((fixture) => {
+    const post = { ...fixture.post, title: fixture.title, excerpt: fixture.excerpt };
+    const projected = projectForestLabFixture(post, fixture.context);
     return {
       ...post,
       url: `/rooms/${post.roomId}/blocks/${post.id}`,
-      pair: semantics.pair,
+      pair: fixture.pair,
       ...projected
     };
   });
 }
 
 function forestSceneForProfile(profile) {
-  return createForestExploration(generateForestSceneLayout(profile.layout));
+  const baseLayout = generateForestSceneLayout(profile.layout);
+  if (!profile.projectedWriting) {
+    return { scene: createForestExploration(baseLayout), assetProjections: new Map() };
+  }
+  const projected = composeProjectedForestScene(baseLayout);
+  return {
+    scene: createForestExploration(projected.layout, { fixtures: projected.fixtures }),
+    assetProjections: projected.assetProjections
+  };
 }
 
 function placementsInForestCells(scene, cellIds) {
@@ -192,7 +135,7 @@ router.get(
   async (req, res) => {
     const profile = resolveForestPressureProfile(req.query.pressure);
     const transport = resolveForestAssetTransport(req.query.transport);
-    const scene = forestSceneForProfile(profile);
+    const { scene, assetProjections } = forestSceneForProfile(profile);
     const cellIds = validRequestedForestCellIds(req.query.cells, scene.world);
     if (!cellIds.length) return res.status(400).json({ error: 'Valid forest cells are required.' });
     const assetKeys = validRequestedForestAssetKeys(req.query.assetKeys, scene, cellIds);
@@ -203,7 +146,8 @@ router.get(
     const { assets: runtimeAssets, diagnostics } = prepareForestSceneAssets(
       placementsInForestCells(scene, cellIds).filter(
         ({ assetKey }) => requestedAssetKeys.has(assetKey)
-      )
+      ),
+      assetProjections
     );
     const { assets, diagnostics: encoding } = await encodeForestSceneAssets(
       runtimeAssets, transport
@@ -235,10 +179,11 @@ router.get(
       clearForestSceneAssetPool();
       clearForestSceneRasterAssetCache();
     }
-    const layout = forestSceneForProfile(profile);
+    const { scene: layout, assetProjections } = forestSceneForProfile(profile);
     const initialCellIds = initialForestCellIds(layout);
     const { assets: runtimeAssets, diagnostics: preparation } = prepareForestSceneAssets(
-      placementsInForestCells(layout, initialCellIds)
+      placementsInForestCells(layout, initialCellIds),
+      assetProjections
     );
     const { assets, diagnostics: encoding } = await encodeForestSceneAssets(
       runtimeAssets, transport
@@ -267,7 +212,7 @@ router.get(
     };
     res.render('dev/activity-forest', {
       title: profile.pressure ? `Activity Forest Pressure Test: ${profile.label}`
-        : 'Activity Forest Scene',
+        : profile.projectedWriting ? `Activity Forest: ${profile.label}` : 'Activity Forest Scene',
       user: req.user || null,
       uiLang: res.locals.uiLang,
       scene,
