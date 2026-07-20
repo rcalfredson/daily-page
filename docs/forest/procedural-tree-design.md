@@ -903,7 +903,7 @@ Its projection was:
 }
 ```
 
-Current semantic mappings are:
+Its historical semantic mappings were:
 
 | Post property | Tree expression |
 | --- | --- |
@@ -916,6 +916,12 @@ Current semantic mappings are:
 | Approved quest association | Fruit |
 | Comments | Ground flowers |
 | Reactions | Fireflies |
+
+This table is renderer-v2 research evidence, not the active renderer-v3 contract. The focused v3
+Milestone 7A policy, versioned projection, mutation rules, and cache boundary are documented in
+[`post-to-tree-meaning-contract.md`](./post-to-tree-meaning-contract.md). In particular, v3 does not
+restore room-to-species rules, metric-driven size, split trunks as collaboration rewards, or the v2
+adornment mappings.
 
 The v2 tree has a shared trunk, branch-tip, and crown-center anatomy, correcting the visibly unsupported crowns in v1. Blossoms, fruit, flowers, and fireflies are multi-pixel motifs placed in semantic zones rather than as unrelated random pixels.
 

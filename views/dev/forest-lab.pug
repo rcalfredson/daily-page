@@ -13,13 +13,16 @@ block content
       p.forest-lab__eyebrow Development preview
       h1 Activity Forest Lab
       p.forest-lab__lede
-        | Every registered procedural phenotype is shown as finished trees, leafless wood rasters, and
-        | its deterministic branch graph so structural and rendering changes remain diagnosable.
+        | Representative writing fixtures pass through the versioned post-to-tree meaning contract,
+        | then use the same finished-tree, leafless-wood, and branch-graph paths.
 
     section.forest-lab__legend(aria-labelledby='forest-lab-legend')
       h2#forest-lab-legend Current visual grammar
       ul
         li Post identity supplies the stable seed for every growth and rendering decision.
+        li Neutral-grove and rocky-edge habitat hints softly bias all three eligible phenotypes.
+        li Creation season selects one existing phenotype-owned foliage tint; size and complexity do not change.
+        li Mutable activity counts, room changes, and personal overlays do not restyle the core tree in this slice.
         li Three-dimensional radial growth is projected into a crisp two-dimensional tree.
         li Branch hierarchy and specimen architecture shape taper from the trunk through terminal twigs.
         li Broad leaves or needle sprays grow from eligible branches while preserving intentional crown gaps.
@@ -28,86 +31,107 @@ block content
     section.forest-gallery(aria-label='Generated post tree gallery')
       each item, treeIndex in trees
         article.forest-comparison
-          .forest-comparison__views
-            button.forest-grown-card(
-              type='button'
-              data-forest-tree
-              data-title=item.title
-              data-room=item.roomId
-              data-date=item.createdAt
-              data-excerpt=item.excerpt
-              data-url=item.url
-              aria-label=`Inspect procedural tree for ${item.title}`
-            )
-              span.forest-comparison__label Grown tree
-              .forest-grown-stage
-                canvas.forest-grown-canvas(
-                  width=item.asset.dimensions.width
-                  height=item.asset.dimensions.height
-                  data-forest-asset=treeIndex
-                  role='img'
-                  aria-label=`Procedural tree with supported foliage for ${item.title}`
-                )
-            figure.forest-wood-card
-              figcaption.forest-comparison__label Leafless wood
-              .forest-wood-stage
-                canvas.forest-wood-canvas(
-                  width=item.asset.dimensions.width
-                  height=item.asset.dimensions.height
-                  data-forest-asset=treeIndex
-                  role='img'
-                  aria-label=`Leafless wood raster for ${item.title}`
-                )
-            figure.forest-graph-card
-              figcaption.forest-comparison__label Branch graph
-              svg.forest-graph-svg(
-                viewBox=`0 0 ${item.tree.phenotype.width} ${item.tree.phenotype.height}`
-                role='img'
-                aria-label=`Branch graph for ${item.title}`
-                preserveAspectRatio='xMidYMax meet'
+          if item.projectionError
+            .forest-comparison__error(role='alert')
+              strong Projection failed
+              p= item.projectionError
+          else
+            .forest-comparison__views
+              button.forest-grown-card(
+                type='button'
+                data-forest-tree
+                data-title=item.title
+                data-room=item.roomId
+                data-date=item.createdAt
+                data-excerpt=item.excerpt
+                data-url=item.url
+                aria-label=`Inspect procedural tree for ${item.title}`
               )
-                title= `Deterministic branch graph for ${item.title}`
-                ellipse.forest-graph__crown(
-                  cx=item.tree.phenotype.crown.centerX
-                  cy=item.tree.phenotype.crown.centerY
-                  rx=item.tree.phenotype.crown.radiusX
-                  ry=item.tree.phenotype.crown.radiusY
-                )
-                each point in item.tree.attractionPoints
-                  circle.forest-graph__attraction(cx=point.x cy=point.y r='0.65')
-                each segment in item.tree.segments
-                  - const from = item.tree.nodes[segment.fromId]
-                  - const to = item.tree.nodes[segment.toId]
-                  line.forest-graph__segment(
-                    x1=from.x y1=from.y x2=to.x y2=to.y
-                    stroke-width=Math.max(0.55, segment.radius * 0.7)
+                span.forest-comparison__label Grown tree
+                .forest-grown-stage
+                  canvas.forest-grown-canvas(
+                    width=item.asset.dimensions.width
+                    height=item.asset.dimensions.height
+                    data-forest-asset=treeIndex
+                    role='img'
+                    aria-label=`Procedural tree with supported foliage for ${item.title}`
                   )
-                each node in item.tree.nodes
-                  circle.forest-graph__node(cx=node.x cy=node.y r='0.75')
-                each terminalId in item.tree.terminalNodeIds
-                  - const terminal = item.tree.nodes[terminalId]
-                  circle.forest-graph__terminal(cx=terminal.x cy=terminal.y r='1.65')
+              figure.forest-wood-card
+                figcaption.forest-comparison__label Leafless wood
+                .forest-wood-stage
+                  canvas.forest-wood-canvas(
+                    width=item.asset.dimensions.width
+                    height=item.asset.dimensions.height
+                    data-forest-asset=treeIndex
+                    role='img'
+                    aria-label=`Leafless wood raster for ${item.title}`
+                  )
+              figure.forest-graph-card
+                figcaption.forest-comparison__label Branch graph
+                svg.forest-graph-svg(
+                  viewBox=`0 0 ${item.tree.phenotype.width} ${item.tree.phenotype.height}`
+                  role='img'
+                  aria-label=`Branch graph for ${item.title}`
+                  preserveAspectRatio='xMidYMax meet'
+                )
+                  title= `Deterministic branch graph for ${item.title}`
+                  ellipse.forest-graph__crown(
+                    cx=item.tree.phenotype.crown.centerX
+                    cy=item.tree.phenotype.crown.centerY
+                    rx=item.tree.phenotype.crown.radiusX
+                    ry=item.tree.phenotype.crown.radiusY
+                  )
+                  each point in item.tree.attractionPoints
+                    circle.forest-graph__attraction(cx=point.x cy=point.y r='0.65')
+                  each segment in item.tree.segments
+                    - const from = item.tree.nodes[segment.fromId]
+                    - const to = item.tree.nodes[segment.toId]
+                    line.forest-graph__segment(
+                      x1=from.x y1=from.y x2=to.x y2=to.y
+                      stroke-width=Math.max(0.55, segment.radius * 0.7)
+                    )
+                  each node in item.tree.nodes
+                    circle.forest-graph__node(cx=node.x cy=node.y r='0.75')
+                  each terminalId in item.tree.terminalNodeIds
+                    - const terminal = item.tree.nodes[terminalId]
+                    circle.forest-graph__terminal(cx=terminal.x cy=terminal.y r='1.65')
           h2.forest-comparison__title= item.title
-          p.forest-comparison__meta
-            - const maximumOrder = Math.max(...item.tree.nodes.map(node => node.generation))
-            | #{item.tree.phenotype.name} · #{item.tree.foliage.paletteId} foliage ·
-            |  seed #{item.tree.seed} · #{item.tree.nodes.length} nodes ·
-            |  branch start #{item.tree.architecture.branchStartHeight.toFixed(1)} ·
-            |  base radius #{item.tree.architecture.trunkBaseRadius.toFixed(2)} ·
-            |  taper #{item.tree.architecture.trunkTaper.toFixed(2)} ·
-            |  lean #{(item.tree.architecture.trunkLeanAngle * 180 / Math.PI).toFixed(1)}°
-            |  @ #{(item.tree.architecture.trunkLeanAzimuth * 180 / Math.PI).toFixed(0)}° ·
-            if item.tree.architecture.hasSplitTrunk
-              |  split #{item.tree.architecture.splitTrunkHeight.toFixed(1)} high
-              |  @ #{(item.tree.architecture.splitTrunkAngle * 180 / Math.PI).toFixed(1)}° ·
-              |  balance #{item.tree.architecture.leaderBalance.toFixed(3)}
-              |  (leader #{item.tree.architecture.dominantLeaderIndex + 1} stronger) ·
-            else
-              |  single trunk ·
-            |  order #{maximumOrder} · #{item.tree.diagnostics.maximumTortuosity.toFixed(2)} tortuosity ·
-            |  #{item.tree.foliage.leaves.length} leaves ·
-            |  #{item.tree.diagnostics.crossingCount} projected overlaps ·
-            |  #{item.tree.stats.terminationReason}
+          if !item.projectionError && item.pair
+            p.forest-comparison__pair= item.pair
+          if !item.projectionError
+            .forest-comparison__meaning
+              p
+                strong #{item.projection.phenotype.id}
+                |  · #{item.projection.habitat.id} · #{item.projection.permanentTraits.creationSeason}
+                if item.projection.permanentTraits.foliagePaletteId
+                  |  · #{item.projection.permanentTraits.foliagePaletteId} tint
+                else
+                  |  · seed-selected tint
+              ul
+                each explanation in item.projection.explanations
+                  li(data-reason-token=explanation.token)= explanation.text
+              code= `projection v${item.projection.mappingVersion} · ${item.projection.identity.projectionFingerprint}`
+          if !item.projectionError
+            p.forest-comparison__meta
+              - const maximumOrder = Math.max(...item.tree.nodes.map(node => node.generation))
+              | #{item.tree.phenotype.name} · #{item.tree.foliage.paletteId} foliage ·
+              |  seed #{item.tree.seed} · #{item.tree.nodes.length} nodes ·
+              |  branch start #{item.tree.architecture.branchStartHeight.toFixed(1)} ·
+              |  base radius #{item.tree.architecture.trunkBaseRadius.toFixed(2)} ·
+              |  taper #{item.tree.architecture.trunkTaper.toFixed(2)} ·
+              |  lean #{(item.tree.architecture.trunkLeanAngle * 180 / Math.PI).toFixed(1)}°
+              |  @ #{(item.tree.architecture.trunkLeanAzimuth * 180 / Math.PI).toFixed(0)}° ·
+              if item.tree.architecture.hasSplitTrunk
+                |  split #{item.tree.architecture.splitTrunkHeight.toFixed(1)} high
+                |  @ #{(item.tree.architecture.splitTrunkAngle * 180 / Math.PI).toFixed(1)}° ·
+                |  balance #{item.tree.architecture.leaderBalance.toFixed(3)}
+                |  (leader #{item.tree.architecture.dominantLeaderIndex + 1} stronger) ·
+              else
+                |  single trunk ·
+              |  order #{maximumOrder} · #{item.tree.diagnostics.maximumTortuosity.toFixed(2)} tortuosity ·
+              |  #{item.tree.foliage.leaves.length} leaves ·
+              |  #{item.tree.diagnostics.crossingCount} projected overlaps ·
+              |  #{item.tree.stats.terminationReason}
 
     script#forest-tree-assets(type='application/json')!= JSON.stringify(trees.map(item => item.asset)).replace(/</g, '\\u003c')
 

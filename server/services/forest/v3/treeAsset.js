@@ -18,17 +18,27 @@ export function treeAssetCacheKey({
   rendererVersion,
   phenotypeId,
   phenotypeAssetVersion,
-  schemaVersion = FOREST_TREE_ASSET_SCHEMA_VERSION
+  schemaVersion = FOREST_TREE_ASSET_SCHEMA_VERSION,
+  meaningProjection = null
 }) {
   if (!phenotypeId || !Number.isInteger(phenotypeAssetVersion)) {
     throw new Error('Cached tree assets require an explicit phenotype id and asset version.');
+  }
+  if (meaningProjection && (!Number.isInteger(meaningProjection.version)
+    || meaningProjection.version < 1
+    || typeof meaningProjection.visualFingerprint !== 'string'
+    || meaningProjection.visualFingerprint.length > 200
+    || !/^[a-z0-9@._:-]+$/i.test(meaningProjection.visualFingerprint))) {
+    throw new Error('Projected tree assets require a bounded meaning-projection identity.');
   }
   return [
     `tree-asset-v${schemaVersion}`,
     `${FOREST_RENDERER_ID}@${rendererVersion}`,
     `${phenotypeId}@${phenotypeAssetVersion}`,
-    `seed-${seed >>> 0}`
-  ].join(':');
+    `seed-${seed >>> 0}`,
+    meaningProjection
+      ? `meaning-v${meaningProjection.version}-${meaningProjection.visualFingerprint}` : null
+  ].filter(Boolean).join(':');
 }
 
 export function buildForestTreeAsset(generationResult) {
@@ -37,7 +47,8 @@ export function buildForestTreeAsset(generationResult) {
     seed,
     rendererVersion,
     phenotypeId: phenotype.id,
-    phenotypeAssetVersion: phenotype.assetVersion
+    phenotypeAssetVersion: phenotype.assetVersion,
+    meaningProjection: generationResult.meaningProjectionIdentity
   });
   const layers = [
     { id: 'rear-foliage', motionGroups: foliage.backMotionGroups },
