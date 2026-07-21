@@ -732,7 +732,7 @@ The development route accepts seven labeled profiles through its on-page profile
 | Representative grove | 180 | up to 16 | The unchanged calm default and normal comparison point. |
 | Botanical range | 180 | up to 24 | Balances all three registered phenotypes without semantic writing projection. |
 | Projected writing grove | 180 | 23 | Cycles the 24 Milestone 7 meaning-contract fixtures through a separately selectable semantic scene. |
-| First environmental regions | 60 | 60 | Proves position-derived habitat, a soft grove-to-rocky-rise transition, and independent density and botanical tendencies. |
+| First environmental regions | 60 | 60 | Proves position-derived habitat, grove-to-rocky-rise terrain, a winding animated stream, and two differently angled arched crossings. |
 | Asset variety | 180 | 60 | Isolates the cost of a moderately broader asset set. |
 | Unique assets | 180 | 180 | Exercises the current eager asset boundary at maximum variety. |
 | Large world | 600 | 60 | Separates placement, culling, and movement cost from asset variety. |
@@ -778,6 +778,14 @@ The first environment profile's shared query, position-first projection, identit
 table, fixed-seed distributions, and measured evidence are documented in
 [`environment-region-contract.md`](./environment-region-contract.md). It does not change the
 480-pixel regional asset transport abstraction or the established profiles in this table.
+Milestone 8B adds analytic water and bank classification, seven generated stream boulders, seven
+sparse bank boulders, broad meandering tonal water regions, and finer flow strokes with deterministic
+variation and bounded boulder deflection. Planar water collision admits two oblique bridges.
+Both use angle-independent local coordinates for their rotated decks and collision. Their sine
+elevation is presentation only; collision, camera, focus, and world position remain
+two-dimensional. Side rails use the same local coordinates as bounded solid segments, preventing
+the player circle from crossing them over water or dry approaches while leaving both ends open.
+Reduced motion freezes water flow at a stable phase.
 
 ### Development lossless-raster transport experiment
 

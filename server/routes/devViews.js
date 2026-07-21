@@ -116,6 +116,7 @@ function forestEnvironmentSummary(scene) {
   return {
     regions: countBy('originatingRegionId'),
     habitats: countBy('originatingHabitatId'),
+    surfaces: countBy('groundSurfaceId'),
     phenotypes: countBy('phenotypeId'),
     transitions: countBy('transitionState'),
     boulderRegions: Object.fromEntries([...new Set(scene.terrainFeatures.map(
@@ -133,6 +134,12 @@ function forestEnvironmentSummary(scene) {
     ))].sort().map(value => [value, scene.terrainFeatures.filter(
       feature => feature.rockPaletteId === value
     ).length])),
+    terrainRoles: Object.fromEntries([...new Set(scene.terrainFeatures.map(
+      feature => feature.terrainRole
+    ))].sort().map(value => [value, scene.terrainFeatures.filter(
+      feature => feature.terrainRole === value
+    ).length])),
+    crossing: scene.crossing,
     placement: scene.environmentPlacementDiagnostics
   };
 }

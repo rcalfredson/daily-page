@@ -8,6 +8,8 @@ import { treeAssetCacheKey } from './forest/v3/treeAsset.js';
 import { forestEnvironmentAt } from '../../public/js/forest-environment.js';
 import {
   FOREST_TERRAIN_FEATURE_GENERATION_VERSION,
+  FOREST_CROSSING_GENERATION_VERSION,
+  generateForestStreamCrossings,
   generateForestTerrainFeatures
 } from './forestTerrainFeatures.js';
 
@@ -53,7 +55,9 @@ export function forestBaseIdentity(config) {
     phenotypeWeights: config.phenotypeWeights,
     environmentManifest: config.environmentManifest || null,
     terrainFeatureGenerationVersion: config.environmentManifest
-      ? FOREST_TERRAIN_FEATURE_GENERATION_VERSION : null
+      ? FOREST_TERRAIN_FEATURE_GENERATION_VERSION : null,
+    crossingGenerationVersion: config.environmentManifest
+      ? FOREST_CROSSING_GENERATION_VERSION : null
   })).toString(16).padStart(8, '0');
   return Object.freeze({
     schemaVersion: FOREST_BASE_IDENTITY_SCHEMA_VERSION,
@@ -213,6 +217,11 @@ export function generateForestSceneLayout(options = {}) {
       termination: 'requested-count-reached'
     };
     scene.terrainFeatureGenerationVersion = FOREST_TERRAIN_FEATURE_GENERATION_VERSION;
+    scene.crossingGenerationVersion = FOREST_CROSSING_GENERATION_VERSION;
+    scene.crossings = generateForestStreamCrossings(
+      scene, worldY => forestCorridorCenter(worldY, scene.world.width)
+    );
+    [scene.crossing] = scene.crossings;
     scene.terrainFeatures = generateForestTerrainFeatures(
       scene, worldY => forestCorridorCenter(worldY, scene.world.width)
     );

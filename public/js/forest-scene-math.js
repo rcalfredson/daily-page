@@ -13,7 +13,12 @@ import {
   FOREST_DISCOVERY_PICKUP_RADIUS,
   FOREST_DISCOVERY_TYPE
 } from './forest-discoveries.js';
-import { FOREST_BOULDER_TYPE } from './forest-environment.js';
+import {
+  FOREST_BOULDER_TYPE,
+  forestBridgeContains,
+  forestBridgeRailCollides,
+  forestEnvironmentAt
+} from './forest-environment.js';
 
 export function placementVisualRect(placement, asset) {
   const scale = placement.scale;
@@ -249,7 +254,23 @@ export function playerCollides(player, placements) {
   ));
 }
 
-export function moveForestPlayer(player, direction, elapsedSeconds, world, placements) {
+export function forestTerrainTraversableAt(scene, position) {
+  if (!scene?.environment) return true;
+  const crossings = scene.crossings || (scene.crossing ? [scene.crossing] : []);
+  if (crossings.some(crossing => forestBridgeRailCollides(
+    crossing, position, position.radius || 0
+  ))) return false;
+  const environment = forestEnvironmentAt(scene.environment, {
+    worldX: Math.round(position.worldX), worldY: Math.round(position.worldY)
+  });
+  if (environment.hydrology.state !== 'water') return true;
+  return crossings.some(crossing => forestBridgeContains(
+    crossing, position, -(position.radius || 0)
+  ));
+}
+
+export function moveForestPlayer(player, direction, elapsedSeconds, world, placements,
+  scene = null) {
   const distance = player.movementSpeed * elapsedSeconds;
   const next = { ...player };
   const limits = {
@@ -262,12 +283,14 @@ export function moveForestPlayer(player, direction, elapsedSeconds, world, place
     ...next,
     worldX: Math.max(limits.left, Math.min(limits.right, next.worldX + direction.x * distance))
   };
-  if (!playerCollides(candidateX, placements)) next.worldX = candidateX.worldX;
+  if (!playerCollides(candidateX, placements)
+    && forestTerrainTraversableAt(scene, candidateX)) next.worldX = candidateX.worldX;
   const candidateY = {
     ...next,
     worldY: Math.max(limits.top, Math.min(limits.bottom, next.worldY + direction.y * distance))
   };
-  if (!playerCollides(candidateY, placements)) next.worldY = candidateY.worldY;
+  if (!playerCollides(candidateY, placements)
+    && forestTerrainTraversableAt(scene, candidateY)) next.worldY = candidateY.worldY;
   return next;
 }
 

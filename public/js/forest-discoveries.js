@@ -7,6 +7,7 @@ import {
   isForestBaseIdentity,
   sameForestBaseIdentity
 } from './forest-world-overlay.js';
+import { forestEnvironmentAt } from './forest-environment.js';
 
 export const FOREST_DISCOVERY_SCHEMA_VERSION = 1;
 export const FOREST_DISCOVERY_STATE_SCHEMA_VERSION = 1;
@@ -158,6 +159,15 @@ export function validateForestDiscoveryPlacement(discovery, scene, placed = [], 
     || discovery.worldX + radius > scene.world.width
     || discovery.worldY + radius > scene.world.height) {
     return { valid: false, reason: 'world-bounds' };
+  }
+  if (scene.environment) {
+    const environment = forestEnvironmentAt(scene.environment, {
+      worldX: discovery.worldX, worldY: discovery.worldY
+    });
+    if (environment.hydrology.distanceToCenter
+      <= environment.hydrology.waterHalfWidth + radius) {
+      return { valid: false, reason: 'water-surface' };
+    }
   }
   if (scene.placements.some((tree) => Math.hypot(
     discovery.worldX - tree.worldX, discovery.worldY - tree.worldY
