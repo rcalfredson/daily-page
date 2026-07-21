@@ -259,5 +259,5 @@ exercises the future derivation seam in the separately selectable `first-regions
 is chosen first, the shared environment query supplies captured habitat, and mapping v1 projects the
 tree afterward. The Milestone 7 fixtures and `post-tree-meaning` scene remain unchanged. The bounded
 environment grammar and its persistence boundary are documented in
-[`environment-region-contract.md`](./environment-region-contract.md); water and crossings remain
-later work.
+[`environment-region-contract.md`](./environment-region-contract.md). Milestone 8B adds water and
+two harness crossings without changing the position-first habitat projection or the Milestone 7 control.

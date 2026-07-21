@@ -1,3 +1,5 @@
+import { forestEnvironmentAt } from './forest-environment.js';
+
 export const FOREST_OVERLAY_SCHEMA_VERSION = 1;
 export const FOREST_PLACED_OBJECT_SCHEMA_VERSION = 1;
 export const FOREST_MARKER_ID = 'forest-marker-v1-personal-clearing';
@@ -207,6 +209,16 @@ export function validateForestObjectPlacement(object, scene, otherObjects = []) 
     || object.worldX + radius > scene.world.width
     || object.worldY + radius > scene.world.height) {
     return { valid: false, reason: 'world-bounds' };
+  }
+  if (scene.environment) {
+    const environment = forestEnvironmentAt(scene.environment, {
+      worldX: object.worldX, worldY: object.worldY
+    });
+    if (environment.hydrology.state !== 'land'
+      || environment.hydrology.distanceToCenter <= environment.hydrology.waterHalfWidth
+        + environment.hydrology.bankWidth + radius) {
+      return { valid: false, reason: 'water-or-bank-surface' };
+    }
   }
   if (scene.placements.some((placement) => Math.hypot(
     object.worldX - placement.worldX, object.worldY - placement.worldY

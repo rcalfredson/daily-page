@@ -1,12 +1,14 @@
 # Activity Forest Environment Region Contract
 
-## Milestone 8A scope
+## Milestone 8 scope
 
-Milestone 8A adds one development-only `first-regions` profile. It proves that the finite
+Milestone 8A added one development-only `first-regions` profile. It proved that the finite
 3,000 × 1,800 world can contain a familiar calm grove and an adjacent rocky rise, joined by a broad
 irregular intergrade. It is deliberately not a generalized biome generator. The representative,
 `botanical-range`, and `post-tree-meaning` profiles retain their earlier layouts and ground
-presentation.
+presentation. Milestone 8B extends only that profile with one semi-winding shallow stream, bounded
+in-stream and bank boulders, and two generated arched footbridges. It does not add a
+generalized hydrology, elevation, or crossing framework.
 
 The shared pure implementation is `public/js/forest-environment.js`. Both server placement and the
 browser ground painter import this module; there is no second browser approximation or transported
@@ -16,17 +18,18 @@ per-pixel biome raster.
 
 The initial contract uses:
 
-- environment schema version **1**;
-- world/environment generation version **1**;
-- ground-presentation version **3** (recognizable terrain plus stable rock palettes);
-- generated terrain-feature schema version **1** and generation version **2**;
-- grammar id `grove-and-rocky-rise`;
+- environment schema version **2**;
+- world/environment generation version **2**;
+- ground-presentation version **11** (lusher ground and water plus shared bridge arch rendering);
+- generated terrain-feature schema version **2** and generation version **5**;
+- crossing schema version **2** and generation version **5**;
+- grammar id `grove-rocky-rise-and-stream`;
 - code-owned regions `calm-grove` and `rocky-rise`;
-- surfaces `grove-moss` and `weathered-rock-grass`;
+- surfaces `grove-moss`, `weathered-rock-grass`, `stream-bank`, and `shallow-stream`;
 - captured habitats `neutral-grove` and `rocky-edge`.
 
-The manifest contains only these versions and ids, a bounded seed and world, and seven integer
-parameters describing the rocky rise. The query accepts an exact `{ worldX, worldY }` object of
+The manifest contains only these versions and ids, a bounded seed and world, seven integer
+parameters describing the rocky rise, and ten bounded stream parameters. The query accepts an exact `{ worldX, worldY }` object of
 safe integers on the inclusive world boundary. Unknown ids or versions, strings longer than 80
 characters, malformed or out-of-world coordinates, non-finite numbers, unsafe integers, and extra
 fields reject. Both manifest and query results survive an exact JSON stringify/parse round trip.
@@ -36,11 +39,17 @@ fields reject. Both manifest and query results survive an exact JSON stringify/p
 | `calm-grove` | `grove-moss` | `neutral-grove` | Full candidate acceptance outside ordinary corridor/spacing rejection |
 | `rocky-rise` | `weathered-rock-grass` | `rocky-edge` | Acceptance eases continuously to 67% in the rocky core, leaving more negative space |
 | Intergrade | Blended presentation; dominant surface remains bounded | Habitat follows the dominant side at the 50% boundary | Density interpolates independently from phenotype weights |
+| Stream bank | Restrained earth/stone margin over either region | The underlying region retains its habitat | Tree acceptance is 35% of local land density; authored clearing objects stay on dry land |
+| Shallow stream | Animated blue-green water over either region | Habitat remains underlying context but no writing-tree candidate is accepted | Trees and discoveries are forbidden; player traversal requires the generated bridge |
 
 `habitat` is intentionally narrower than the region result. The environment query also returns a
 0–1,000 rocky blend, one of `grove-core`, `intergrade`, or `rocky-core`, and bounded suitability
 tokens. It returns no callbacks, post inputs, personal-overlay state, camera state, renderer data,
 or unbounded noise.
+
+Hydrology is orthogonal to biome. The same stream may cross calm grove, intergrade, and rocky rise;
+it changes surface and suitability without manufacturing a prestigious aquatic habitat or changing
+the captured habitat of nearby land trees.
 
 ## Spatial grammar and painting
 
@@ -59,6 +68,13 @@ materially with rocky blend. Results are cached by cell for the page lifetime an
 are painted. The 48-pixel presentation cells are explicitly unrelated to the established 480-pixel
 regional tree-asset loading cells.
 
+Ground-presentation version 11 moves both regions toward a moderately lusher palette without copying
+the reference's highest saturation. Calm-grove cells use a fresher mid-green, rocky-rise grass keeps
+more yellow warmth but less grey, and their tufts receive clearer dark/light separation. The stream
+shifts from muted slate teal toward blue-teal, with greener banks and brighter cyan-green surface
+details. These are presentation-only color changes: region, habitat, hydrology, placement, and
+post-tree identity remain unchanged.
+
 Small stones, gravel, and boulders choose one stable code-owned rock palette: `mossed-green`,
 `granite-grey`, `warm-stone`, or `blue-slate`. Mossed green remains the most heavily weighted
 signature treatment; the other families prevent the terrain vocabulary from collapsing into one
@@ -69,13 +85,56 @@ Larger rocks are generated-base objects rather than marks baked into the surface
 `low`, `shouldered`, or `mossy-outcrop` form, stable world anchor, dimensions, collision radius, and
 originating-region evidence. They reserve tree, entrance, one-another, and corridor clearance, enter
 the normal viewport culling and ground-Y depth order, and block player and authored-object placement.
-They are not inspectable rewards, inventory, or personal-overlay objects. The palette addition
-advanced terrain-feature generation to version 2 and generated-base identity while deliberately
-retaining placement decision version 1, so existing boulder anchors do not move merely because
-their color vocabulary expanded.
+They are not inspectable rewards, inventory, or personal-overlay objects. Generation version 2
+added rock palettes, version 3 added in-stream obstacles, version 4 added sparse bank-edge rocks,
+and version 5 reserves all bridge approaches and decks from land boulders.
+The placement decision version remains 1, so established land-boulder anchors do not move merely
+because their presentation vocabulary expands.
 
-The corridor is painted afterward and remains continuous through both regions. There is no water,
-elevation physics, navigation mesh, or pathfinder.
+The corridor remains continuous through both land regions. The stream is painted over it and the
+primary bridge restores that route; a second harness bridge proves another angle and crossing. There
+is no general elevation physics, navigation mesh, or
+pathfinder.
+
+### Stream, flow, and bridge
+
+The stream center is a seed-derived base Y plus two bounded sine waves with different wavelengths.
+It crosses the full finite world from west to east and is queryable analytically without a raster.
+Distance to that center classifies water, bank, or land. The fixed profile uses a 44-pixel water
+half-width and 22-pixel bank width. Water and bank shapes are painted in visible 16-pixel samples
+after the corridor, so the stream cuts across the route rather than appearing beneath it.
+
+Three broad, independently meandering tonal bands break the water into deep teal, middle blue-green,
+and lighter shallow regions without creating hard tile boundaries. Stable world-anchored clusters
+of two-tone pixels dapple those large shapes, while separate moss, soil, shallow-water, and shadow
+notches articulate both banks. Above them, four sparse flow lanes contain short two- or three-step
+pixel clusters moving east at a deliberate six frames per second. Deterministic gaps, starting
+jitter, length, stairstep direction, broken tails, undersides, and occasional one-pixel glints make
+the animation feel authored without changing its shape between reloads. Motion shares the
+established ambient render loop and freezes to a stable phase under reduced motion. Each cluster
+receives a bounded local offset near stream boulders, splitting around the obstacle before the
+boulder is drawn over it.
+This is a legible flow treatment, not fluid simulation; it has no volume, current force, erosion,
+particles, or gameplay state.
+
+The primary `arched-footbridge` is found deterministically at the minimum-distance intersection of
+the stream center and established corridor. A second bridge is placed clear of trees elsewhere on
+the stream with a substantially different seed-derived angle, span, and crown. Bridge geometry is
+evaluated in local longitudinal/lateral coordinates,
+so its containment and traversal contract supports arbitrary world angles. Player collision remains
+two-dimensional: water rejects movement unless the player's collision circle is inside the rotated
+deck rectangle, and each visible side rail rejects circle overlap over both water and dry approaches.
+The open ends remain unobstructed. Presentation alone evaluates a sine-shaped elevation curve from zero at either
+approach to a 24-pixel crown whenever the bridge is not parallel to the viewport Y axis. A deep
+two-tone curved fascia, crown-lit plank palette, explicit transverse seams, uneven seed-stable plank
+widths and outer ends, restrained grain, iron nails, four
+bridge-aligned stone abutments, and irregular log posts and rails make the rustic arch readable.
+Adjacent planks share the same procedurally chosen seam endpoints, preventing gaps while retaining
+hand-built variation. Every lateral point at one longitudinal position—including fascia and rails
+outside the walkable rectangle—uses the centerline elevation. The deck, player, posts, and rails
+therefore share one structural arch, so walking appears to rise and descend while world position,
+collision, focus, and camera remain planar.
+This is not general elevation physics, jumping, slopes, or a bridge-construction system.
 
 ## Position-first writing identity
 
@@ -90,7 +149,7 @@ environment query and density acceptance
         ↓
 ordinary corridor and anchor-spacing reservation
         ↓
-bounded generated boulder dressing outside reserved navigation/tree space
+bounded land, bank, and stream boulder dressing outside reserved navigation/tree/crossing space
         ↓
 captured habitat at the accepted position
         ↓
@@ -128,6 +187,9 @@ to an old development overlay silently.
   alter classification or placement.
 - Generated boulder frequency, form, placement, or collision changes increment the terrain-feature
   generation version included in generated-base identity.
+- Stream shape or suitability changes increment environment/world-generation version; water or
+  bridge presentation changes increment ground-presentation version; crossing geometry or
+  traversability changes increment crossing generation version.
 - Meaning changes increment the post-to-tree mapping version.
 - Renderer or phenotype pixel changes retain their existing renderer/asset invalidators.
 - Runtime tree-asset schema remains version 2; renderer cache version remains 4.
@@ -142,17 +204,18 @@ automatic reroll. Personal-overlay identity is never an environment-query or tre
 
 ## Discoveries and authored-object suitability
 
-| Element | 8A suitability |
+| Element | Milestone 8 suitability |
 | --- | --- |
-| Fallen-twig, smooth-stone, and seed-pod discoveries | Valid on either surface; generated offerings also avoid solid boulders |
-| Stepping stones and the simple marker | Valid on either surface; placement rejects overlap with a generated boulder |
-| Trail signs, stone benches, and seed-pod lanterns | Valid on either surface; preview, move, refund, and recovery retain their behavior while respecting boulder collision |
+| Fallen-twig, smooth-stone, and seed-pod discoveries | Valid on land and banks; forbidden in water; generated offerings also avoid solid boulders |
+| Stepping stones and the simple marker | Valid on dry land; placement rejects stream banks, water, and generated boulders |
+| Trail signs, stone benches, and seed-pod lanterns | Valid on dry land; preview, move, refund, and recovery expose the bounded water/bank or boulder reason |
 | Writing trees | Generated density and phenotype are environment-aware only in `first-regions` |
-| Water-edge objects, bridges, boats, swimming, wet-margin discoveries | Deferred until a later water/crossing contract exists |
+| Generated arched footbridges | Two walkable harness crossings using one generalized renderer and traversal contract; neither is an inventory or overlay object |
+| Boats, swimming, fishing, user-built bridges, wet-margin discoveries | Deferred beyond this focused milestone |
 
 Environment regeneration never rewrites overlay objects. Both initial surfaces remain valid; the
-new bounded `terrain-feature-collision` reason describes a physical boulder overlap rather than a
-biome prohibition. A changed terrain-feature generation version creates a different base identity,
+bounded `terrain-feature-collision` and `water-or-bank-surface` reasons describe physical placement
+limits rather than biome prestige. A changed environment or terrain version creates a different base identity,
 so incompatible development overlays recover visibly instead of being silently moved or deleted.
 Keyboard, touch, preview, removal, and full-refund paths use the same validation result.
 
@@ -160,17 +223,20 @@ Keyboard, touch, preview, removal, and full-refund paths use the same validation
 
 On Node 24.15.0, one local run of `first-environmental-regions` produced:
 
-- 60 placements after 83 candidates: 12 density, 2 corridor, and 9 spacing rejections;
+- 60 placements after 91 candidates: 15 density/water, 5 corridor, and 11 spacing rejections;
 - 51 calm-grove/neutral-grove and 9 rocky-rise/rocky-edge placements;
 - 36 grove-core, 20 intergrade, and 4 rocky-core placement anchors;
 - 28 deciduous, 19 lanternwood, and 13 highland conifer trees;
 - all three phenotypes in both regions; conifers were 8/51 in the grove and 5/9 on the rise;
 - 1,507 bounded ground motifs across the finite world: 811 grass tufts, 299 gravel patches,
   156 small stones, and 241 bare-soil marks, queried only for visible cells;
-- 17 generated boulders: 15 rocky-rise and 2 calm-grove; 7 low, 7 shouldered, and 3 mossy-outcrop;
-- boulder palettes: 6 mossed green, 6 granite grey, 3 warm stone, and 2 blue slate;
-- a 306-byte environment manifest and 36,335-byte projected layout before runtime assets;
-- about 7.7 ms for layout and environment classification;
+- 27 generated boulders: 15 land, 6 stream, and 6 bank boulders, with the water set reserved at
+  least 135 pixels and bank set at least 150 pixels horizontally from both crossings;
+- a primary 62 × 200 bridge centered at world position 1,425 × 972, oriented 66.4° from the positive
+  X axis with a 24-pixel crown, plus a 58 × 226 bridge at 2,220 × 1,000 oriented 116.8° with a
+  20-pixel crown;
+- a 482-byte environment manifest and 41,040-byte projected layout before runtime assets;
+- about 17.8 ms for layout, environment classification, crossing search, and terrain features;
 - about 4.62 seconds of cold generation within 4.73 seconds total preparation for 60 assets;
 - about 114 ms warm preparation with all 60 assets reused and no generation;
 - 7,922,089 bytes for the complete color-run asset array and 548,916 bytes for lossless raster.
@@ -185,7 +251,8 @@ intended mood.
 
 ## Deferred boundary
 
-Milestone 8B may define water surface identity, banks, collision, and one crossing while preserving
-this position-to-habitat seam. It must decide whether wet margins add a habitat within a region or a
-new region, and how crossings interact with authored overlays. Milestone 9 owns wildlife or other
-nonessential transient life. Neither system is anticipated with ad hoc 8A renderer conditionals.
+Milestone 8 now contains the requested two places, soft transition, water feature, and crossing.
+Further hydrology—ponds, branching rivers, wetland habitats, swimming, boats, fishing, currents,
+erosion, user-built bridges, and general elevation—requires a later evidence-gated milestone rather
+than expansion of this proof. Milestone 9 owns wildlife or other nonessential transient life; the
+stream does not introduce fish, insects, birds, or task sources ahead of that experiment.

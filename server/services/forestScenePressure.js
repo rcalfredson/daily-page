@@ -40,7 +40,7 @@ export const FOREST_PRESSURE_PROFILES = Object.freeze([
   Object.freeze({
     id: 'first-regions',
     label: 'First environmental regions',
-    description: '60 position-derived writing trees span a calm grove, soft intergrade, and rocky rise.',
+    description: '60 position-derived writing trees span a grove, rocky rise, winding stream, and two angled footbridges.',
     pressure: false,
     projectedWriting: true,
     projectedEnvironment: true,

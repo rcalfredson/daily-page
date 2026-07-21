@@ -1,10 +1,13 @@
-export const FOREST_ENVIRONMENT_SCHEMA_VERSION = 1;
-export const FOREST_WORLD_GENERATION_VERSION = 1;
-export const FOREST_GROUND_PRESENTATION_VERSION = 3;
-export const FOREST_ENVIRONMENT_GRAMMAR_ID = 'grove-and-rocky-rise';
+export const FOREST_ENVIRONMENT_SCHEMA_VERSION = 2;
+export const FOREST_WORLD_GENERATION_VERSION = 2;
+export const FOREST_GROUND_PRESENTATION_VERSION = 11;
+export const FOREST_ENVIRONMENT_GRAMMAR_ID = 'grove-rocky-rise-and-stream';
 export const FOREST_GROUND_DETAIL_VERSION = 1;
 export const FOREST_GROUND_DETAIL_CELL_SIZE = 48;
 export const FOREST_BOULDER_TYPE = 'generated-boulder';
+export const FOREST_BRIDGE_TYPE = 'arched-footbridge';
+export const FOREST_CROSSING_SCHEMA_VERSION = 2;
+export const FOREST_CROSSING_GENERATION_VERSION = 5;
 export const FOREST_ROCK_PALETTES = Object.freeze([
   Object.freeze({
     id: 'mossed-green', weight: 40,
@@ -40,7 +43,7 @@ export const FOREST_ENVIRONMENT_REGIONS = Object.freeze([
   'calm-grove', 'rocky-rise'
 ]);
 export const FOREST_GROUND_SURFACES = Object.freeze([
-  'grove-moss', 'weathered-rock-grass'
+  'grove-moss', 'weathered-rock-grass', 'stream-bank', 'shallow-stream'
 ]);
 export const FOREST_ENVIRONMENT_HABITATS = Object.freeze([
   'neutral-grove', 'rocky-edge'
@@ -48,14 +51,22 @@ export const FOREST_ENVIRONMENT_HABITATS = Object.freeze([
 
 const MANIFEST_KEYS = Object.freeze([
   'schemaVersion', 'worldGenerationVersion', 'groundPresentationVersion',
-  'grammarId', 'seed', 'world', 'rockyRise'
+  'grammarId', 'seed', 'world', 'rockyRise', 'stream'
 ]);
 const WORLD_KEYS = Object.freeze(['width', 'height']);
 const RISE_KEYS = Object.freeze([
   'centerX', 'centerY', 'radiusX', 'radiusY', 'transitionWidth', 'phaseX', 'phaseY'
 ]);
+const STREAM_KEYS = Object.freeze([
+  'baseY', 'halfWidth', 'bankWidth', 'amplitudeA', 'amplitudeB',
+  'wavelengthA', 'wavelengthB', 'phaseA', 'phaseB', 'flowDirection'
+]);
 const POSITION_KEYS = Object.freeze(['worldX', 'worldY']);
 const CELL_KEYS = Object.freeze(['column', 'row']);
+const CROSSING_KEYS = Object.freeze([
+  'schemaVersion', 'generationVersion', 'id', 'type', 'worldX', 'worldY', 'orientation',
+  'angleMilliradians', 'halfWidth', 'halfLength', 'maximumElevationPixels'
+]);
 
 function exactKeys(value, expected) {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -115,6 +126,22 @@ export function validateForestEnvironmentManifest(manifest) {
     || !boundedInteger(rise.phaseY, 0, 6283)) {
     throw new Error('Forest environment rocky-rise grammar is malformed.');
   }
+  const stream = manifest.stream;
+  if (!exactKeys(stream, STREAM_KEYS)
+    || !boundedInteger(stream.baseY, 160, manifest.world.height - 160)
+    || !boundedInteger(stream.halfWidth, 28, 70)
+    || !boundedInteger(stream.bankWidth, 12, 40)
+    || !boundedInteger(stream.amplitudeA, 20, 160)
+    || !boundedInteger(stream.amplitudeB, 10, 90)
+    || !boundedInteger(stream.wavelengthA, 480, 1400)
+    || !boundedInteger(stream.wavelengthB, 220, 700)
+    || !boundedInteger(stream.phaseA, 0, 6283)
+    || !boundedInteger(stream.phaseB, 0, 6283)
+    || stream.flowDirection !== 'east'
+    || stream.baseY - stream.amplitudeA - stream.amplitudeB < 60
+    || stream.baseY + stream.amplitudeA + stream.amplitudeB > manifest.world.height - 60) {
+    throw new Error('Forest environment stream grammar is malformed.');
+  }
   return manifest;
 }
 
@@ -141,6 +168,18 @@ export function createForestEnvironmentManifest({ seed, world }) {
       transitionWidth: Math.round(190 + (unit(`${seed}:transition`) * 55)),
       phaseX: Math.floor(unit(`${seed}:phase-x`) * 6284),
       phaseY: Math.floor(unit(`${seed}:phase-y`) * 6284)
+    },
+    stream: {
+      baseY: Math.round(world.height * (0.57 + ((unit(`${seed}:stream-y`) - 0.5) * 0.035))),
+      halfWidth: Math.round(38 + (unit(`${seed}:stream-width`) * 7)),
+      bankWidth: Math.round(18 + (unit(`${seed}:stream-bank`) * 6)),
+      amplitudeA: Math.round(72 + (unit(`${seed}:stream-amplitude-a`) * 28)),
+      amplitudeB: Math.round(24 + (unit(`${seed}:stream-amplitude-b`) * 18)),
+      wavelengthA: Math.round(760 + (unit(`${seed}:stream-wave-a`) * 220)),
+      wavelengthB: Math.round(330 + (unit(`${seed}:stream-wave-b`) * 120)),
+      phaseA: Math.floor(unit(`${seed}:stream-phase-a`) * 6284),
+      phaseB: Math.floor(unit(`${seed}:stream-phase-b`) * 6284),
+      flowDirection: 'east'
     }
   };
   validateForestEnvironmentManifest(manifest);
@@ -150,6 +189,23 @@ export function createForestEnvironmentManifest({ seed, world }) {
 function smoothstep(value) {
   const bounded = Math.max(0, Math.min(1, value));
   return bounded * bounded * (3 - (2 * bounded));
+}
+
+function streamCenterY(manifest, worldX) {
+  const stream = manifest.stream;
+  return stream.baseY
+    + (Math.sin(((worldX / stream.wavelengthA) * Math.PI * 2)
+      + (stream.phaseA / 1000)) * stream.amplitudeA)
+    + (Math.sin(((worldX / stream.wavelengthB) * Math.PI * 2)
+      + (stream.phaseB / 1000)) * stream.amplitudeB);
+}
+
+export function forestStreamCenterY(manifest, worldX) {
+  validateForestEnvironmentManifest(manifest);
+  if (!Number.isSafeInteger(worldX) || worldX < 0 || worldX > manifest.world.width) {
+    throw new Error('Stream query requires an in-world safe-integer x coordinate.');
+  }
+  return Math.round(streamCenterY(manifest, worldX));
 }
 
 export function forestEnvironmentAt(manifest, position) {
@@ -174,22 +230,39 @@ export function forestEnvironmentAt(manifest, position) {
   const rockyPermille = Math.round(rockyBlend * 1000);
   const rocky = rockyPermille >= 500;
   const transition = rockyPermille > 0 && rockyPermille < 1000;
-  const treeDensityPermille = Math.round(1000 - (rockyBlend * 330));
+  const streamDistance = Math.round(Math.abs(position.worldY
+    - streamCenterY(manifest, position.worldX)));
+  const inWater = streamDistance <= manifest.stream.halfWidth;
+  const onBank = !inWater
+    && streamDistance <= manifest.stream.halfWidth + manifest.stream.bankWidth;
+  const hydrologyState = inWater ? 'water' : onBank ? 'bank' : 'land';
+  const landTreeDensity = Math.round(1000 - (rockyBlend * 330));
+  const treeDensityPermille = inWater ? 0 : onBank ? Math.round(landTreeDensity * 0.35)
+    : landTreeDensity;
+  const groundSurfaceId = inWater ? 'shallow-stream' : onBank ? 'stream-bank'
+    : rocky ? 'weathered-rock-grass' : 'grove-moss';
 
   return {
     schemaVersion: manifest.schemaVersion,
     worldGenerationVersion: manifest.worldGenerationVersion,
     dominantRegionId: rocky ? 'rocky-rise' : 'calm-grove',
-    groundSurfaceId: rocky ? 'weathered-rock-grass' : 'grove-moss',
+    groundSurfaceId,
     habitatId: rocky ? 'rocky-edge' : 'neutral-grove',
     transition: {
       state: transition ? 'intergrade' : rocky ? 'rocky-core' : 'grove-core',
       rockyBlendPermille: rockyPermille
     },
+    hydrology: {
+      state: hydrologyState,
+      distanceToCenter: streamDistance,
+      waterHalfWidth: manifest.stream.halfWidth,
+      bankWidth: manifest.stream.bankWidth,
+      flowDirection: manifest.stream.flowDirection
+    },
     suitability: {
       treeDensityPermille,
-      discoveries: 'either-surface',
-      clearingObjects: 'either-surface'
+      discoveries: inWater ? 'forbidden-water' : 'land-and-bank',
+      clearingObjects: inWater || onBank ? 'dry-land-only' : 'either-land-surface'
     }
   };
 }
@@ -213,6 +286,7 @@ export function forestGroundDetailAt(manifest, cell) {
     (cell.row * FOREST_GROUND_DETAIL_CELL_SIZE) + 8 + (unit(`${decision}:y`) * 32)
   ));
   const environment = forestEnvironmentAt(manifest, { worldX, worldY });
+  if (environment.hydrology.state === 'water') return null;
   const rockyBlend = environment.transition.rockyBlendPermille / 1000;
   const stoneChance = 0.012 + (rockyBlend * 0.17);
   const gravelChance = 0.035 + (rockyBlend * 0.29);
@@ -246,4 +320,83 @@ export function forestGroundDetailAt(manifest, cell) {
 
 export function resolveForestRockPalette(paletteId) {
   return FOREST_ROCK_PALETTES.find(({ id }) => id === paletteId) || null;
+}
+
+export function validateForestStreamCrossing(crossing, world) {
+  validateWorld(world);
+  if (!exactKeys(crossing, CROSSING_KEYS)
+    || crossing.schemaVersion !== FOREST_CROSSING_SCHEMA_VERSION
+    || crossing.generationVersion !== FOREST_CROSSING_GENERATION_VERSION
+    || ![
+      'forest-crossing-v5-stream-footbridge-primary',
+      'forest-crossing-v5-stream-footbridge-secondary'
+    ].includes(crossing.id)
+    || crossing.type !== FOREST_BRIDGE_TYPE
+    || !boundedInteger(crossing.worldX, 0, world.width)
+    || !boundedInteger(crossing.worldY, 0, world.height)
+    || crossing.orientation !== 'world-angle'
+    || !boundedInteger(crossing.angleMilliradians, -6283, 6283)
+    || !boundedInteger(crossing.halfWidth, 20, 60)
+    || !boundedInteger(crossing.halfLength, 70, 160)
+    || !boundedInteger(crossing.maximumElevationPixels, 4, 24)) {
+    throw new Error('Forest stream crossing is malformed.');
+  }
+  return crossing;
+}
+
+export function forestBridgeContains(crossing, position, padding = 0) {
+  if (!crossing || crossing.type !== FOREST_BRIDGE_TYPE
+    || !Number.isFinite(position?.worldX) || !Number.isFinite(position?.worldY)
+    || !Number.isFinite(padding)) return false;
+  const local = forestBridgeLocalCoordinates(crossing, position);
+  return Math.abs(local.lateral) <= crossing.halfWidth + padding
+    && Math.abs(local.longitudinal) <= crossing.halfLength + padding;
+}
+
+export function forestBridgeRailCollides(crossing, position, radius = 0) {
+  if (!crossing || crossing.type !== FOREST_BRIDGE_TYPE
+    || !Number.isFinite(position?.worldX) || !Number.isFinite(position?.worldY)
+    || !Number.isFinite(radius) || radius < 0) return false;
+  const local = forestBridgeLocalCoordinates(crossing, position);
+  const railLateral = crossing.halfWidth + 2;
+  const railHalfThickness = 3;
+  return Math.abs(local.longitudinal) <= crossing.halfLength + railHalfThickness
+    && Math.abs(Math.abs(local.lateral) - railLateral) <= radius + railHalfThickness;
+}
+
+export function forestBridgeLocalCoordinates(crossing, position) {
+  if (!crossing || !Number.isFinite(crossing.angleMilliradians)
+    || !Number.isFinite(position?.worldX) || !Number.isFinite(position?.worldY)) {
+    return { longitudinal: Number.POSITIVE_INFINITY, lateral: Number.POSITIVE_INFINITY };
+  }
+  const angle = crossing.angleMilliradians / 1000;
+  const directionX = Math.cos(angle);
+  const directionY = Math.sin(angle);
+  const deltaX = position.worldX - crossing.worldX;
+  const deltaY = position.worldY - crossing.worldY;
+  return {
+    longitudinal: (deltaX * directionX) + (deltaY * directionY),
+    lateral: (-deltaX * directionY) + (deltaY * directionX)
+  };
+}
+
+export function forestBridgeWorldPosition(crossing, longitudinal, lateral = 0) {
+  const angle = crossing.angleMilliradians / 1000;
+  return {
+    worldX: crossing.worldX + (Math.cos(angle) * longitudinal)
+      - (Math.sin(angle) * lateral),
+    worldY: crossing.worldY + (Math.sin(angle) * longitudinal)
+      + (Math.cos(angle) * lateral)
+  };
+}
+
+export function forestBridgeElevationAt(crossing, position) {
+  if (!forestBridgeContains(crossing, position)) return 0;
+  const angle = crossing.angleMilliradians / 1000;
+  if (Math.abs(Math.cos(angle)) < 0.001) return 0;
+  const { longitudinal } = forestBridgeLocalCoordinates(crossing, position);
+  const progress = Math.max(0, 1 - (Math.abs(longitudinal) / crossing.halfLength));
+  if (progress < 0.001) return 0;
+  const easedRamp = Math.sin(progress * Math.PI / 2);
+  return Math.max(1, Math.round(easedRamp * crossing.maximumElevationPixels));
 }
