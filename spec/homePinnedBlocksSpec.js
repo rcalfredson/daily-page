@@ -1,4 +1,8 @@
-import { HOME_PINNED_BLOCK_LIMIT, mergePinnedHomeBlocks } from '../server/db/blockService.js';
+import {
+  HOME_PINNED_BLOCK_LIMIT,
+  mergePinnedHomeBlocks,
+  replaceWithPreferredTranslationVariants
+} from '../server/db/blockService.js';
 
 describe('home pinned blocks', () => {
   function block(id, overrides = {}) {
@@ -73,5 +77,26 @@ describe('home pinned blocks', () => {
     expect(result.slice(0, HOME_PINNED_BLOCK_LIMIT).map(b => b._id))
       .toEqual(['pinned-1', 'pinned-2', 'pinned-3']);
     expect(result.map(b => b._id)).not.toContain('pinned-4');
+  });
+
+  it('uses an older preferred-language translation after age-band deduplication', () => {
+    const newerRussian = block('newer-ru', {
+      groupId: 'translated-post',
+      lang: 'ru',
+      createdAt: new Date('2026-07-08T00:00:00.000Z')
+    });
+    const olderEnglish = block('older-en', {
+      groupId: 'translated-post',
+      lang: 'en',
+      createdAt: new Date('2026-07-01T00:00:00.000Z')
+    });
+
+    const result = replaceWithPreferredTranslationVariants(
+      [newerRussian, block('untranslated', { lang: 'ru' })],
+      [olderEnglish],
+      'en'
+    );
+
+    expect(result.map(b => b._id)).toEqual(['older-en', 'untranslated']);
   });
 });

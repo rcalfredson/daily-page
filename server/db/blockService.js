@@ -450,10 +450,48 @@ export async function getTopBlocksWithFallback(options = {}) {
     ? { type: 'all' }
     : { type: 'days', value: maxDaysUsed };
 
+  const preferredBlocks = await loadPreferredTranslationVariants(
+    collected,
+    preferredLang,
+    { lockedOnly }
+  );
+
   return {
-    blocks: mergePinnedHomeBlocks(pinnedBlocks, collected, { limit: target }),
+    blocks: mergePinnedHomeBlocks(pinnedBlocks, preferredBlocks, { limit: target }),
     period
   };
+}
+
+export function replaceWithPreferredTranslationVariants(blocks, preferredTranslations, preferredLang) {
+  const preferredByGroup = new Map(
+    (preferredTranslations || [])
+      .filter(block => block?.groupId && block?.lang === preferredLang)
+      .map(block => [String(block.groupId), block])
+  );
+
+  return (blocks || []).map(block => {
+    if (!block?.groupId || block.lang === preferredLang) return block;
+    return preferredByGroup.get(String(block.groupId)) || block;
+  });
+}
+
+async function loadPreferredTranslationVariants(blocks, preferredLang, { lockedOnly = false } = {}) {
+  const groupIds = [...new Set(
+    (blocks || [])
+      .filter(block => block?.groupId && block.lang !== preferredLang)
+      .map(block => block.groupId)
+  )];
+
+  if (groupIds.length === 0) return blocks;
+
+  const match = publiclyVisibleBlockMatch({
+    groupId: { $in: groupIds },
+    lang: preferredLang
+  });
+  if (lockedOnly) match.status = 'locked';
+
+  const preferredTranslations = await Block.find(match).lean().exec();
+  return replaceWithPreferredTranslationVariants(blocks, preferredTranslations, preferredLang);
 }
 
 export function mergePinnedHomeBlocks(pinnedBlocks, ordinaryBlocks, { limit = 20 } = {}) {
