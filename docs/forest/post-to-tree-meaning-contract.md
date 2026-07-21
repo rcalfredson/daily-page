@@ -253,8 +253,11 @@ the intended baseline display and with representative source data. No conclusion
 about mutable activity or surrounding features
 until representative product data and humane visual studies exist.
 
-Habitat here is an explicit two-value fixture input used only to prove selection. It is not inferred
-from rooms, placement, terrain, or user behavior. Terrain regions, habitat transitions, water,
-environmental grammar, and biome generation remain Milestone 8 work. The future derivation seam
-documented above records the intended dependency without committing Milestone 8 to this experiment's
-two habitat names or to an untested placement algorithm.
+Habitat in the Milestone 7 control remains an explicit two-value fixture input used only to prove
+selection. It is not inferred from rooms, placement, terrain, or user behavior. Milestone 8A now
+exercises the future derivation seam in the separately selectable `first-regions` profile: placement
+is chosen first, the shared environment query supplies captured habitat, and mapping v1 projects the
+tree afterward. The Milestone 7 fixtures and `post-tree-meaning` scene remain unchanged. The bounded
+environment grammar and its persistence boundary are documented in
+[`environment-region-contract.md`](./environment-region-contract.md); water and crossings remain
+later work.

@@ -1,3 +1,5 @@
+import { createForestEnvironmentManifest } from '../../public/js/forest-environment.js';
+
 export const DEFAULT_FOREST_PRESSURE_PROFILE_ID = 'representative';
 export const FOREST_SCENE_CELL_SIZE = 480;
 export const FOREST_SCENE_PRELOAD_CELL_COUNT = 1;
@@ -34,6 +36,23 @@ export const FOREST_PRESSURE_PROFILES = Object.freeze([
     pressure: false,
     projectedWriting: true,
     layout: Object.freeze({ seed: 'projected-writing-grove', assetPoolSize: 24 })
+  }),
+  Object.freeze({
+    id: 'first-regions',
+    label: 'First environmental regions',
+    description: '60 position-derived writing trees span a calm grove, soft intergrade, and rocky rise.',
+    pressure: false,
+    projectedWriting: true,
+    projectedEnvironment: true,
+    layout: Object.freeze({
+      seed: 'first-environmental-regions',
+      placementCount: 60,
+      specimenPoolSize: 12,
+      environmentManifest: Object.freeze(createForestEnvironmentManifest({
+        seed: 'first-environmental-regions',
+        world: Object.freeze({ width: 3000, height: 1800 })
+      }))
+    })
   }),
   Object.freeze({
     id: 'asset-variety',

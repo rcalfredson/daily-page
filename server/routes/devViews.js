@@ -17,7 +17,10 @@ import {
 } from '../services/forestSceneAssetTransport.js';
 import { generateForestSceneLayout } from '../services/forestSceneLayout.js';
 import { createForestExploration } from '../services/forestSceneExploration.js';
-import { composeProjectedForestScene } from '../services/forestProjectedScene.js';
+import {
+  composeEnvironmentProjectedForestScene,
+  composeProjectedForestScene
+} from '../services/forestProjectedScene.js';
 import {
   FOREST_PRESSURE_PROFILES,
   FOREST_SCENE_MAX_ASSET_REQUEST,
@@ -78,7 +81,9 @@ function forestSceneForProfile(profile) {
   if (!profile.projectedWriting) {
     return { scene: createForestExploration(baseLayout), assetProjections: new Map() };
   }
-  const projected = composeProjectedForestScene(baseLayout);
+  const projected = profile.projectedEnvironment
+    ? composeEnvironmentProjectedForestScene(baseLayout)
+    : composeProjectedForestScene(baseLayout);
   return {
     scene: createForestExploration(projected.layout, { fixtures: projected.fixtures }),
     assetProjections: projected.assetProjections
@@ -99,6 +104,37 @@ function initialForestCellIds(scene) {
     width: 1,
     height: 1
   }, scene.world, FOREST_SCENE_CELL_SIZE, FOREST_SCENE_PRELOAD_CELL_COUNT);
+}
+
+function forestEnvironmentSummary(scene) {
+  if (!scene.environment) return null;
+  const countBy = field => Object.fromEntries([...new Set(scene.placements.map(
+    placement => placement[field]
+  ))].sort().map(value => [value, scene.placements.filter(
+    placement => placement[field] === value
+  ).length]));
+  return {
+    regions: countBy('originatingRegionId'),
+    habitats: countBy('originatingHabitatId'),
+    phenotypes: countBy('phenotypeId'),
+    transitions: countBy('transitionState'),
+    boulderRegions: Object.fromEntries([...new Set(scene.terrainFeatures.map(
+      feature => feature.originatingRegionId
+    ))].sort().map(value => [value, scene.terrainFeatures.filter(
+      feature => feature.originatingRegionId === value
+    ).length])),
+    boulderVariants: Object.fromEntries([...new Set(scene.terrainFeatures.map(
+      feature => feature.variantId
+    ))].sort().map(value => [value, scene.terrainFeatures.filter(
+      feature => feature.variantId === value
+    ).length])),
+    boulderPalettes: Object.fromEntries([...new Set(scene.terrainFeatures.map(
+      feature => feature.rockPaletteId
+    ))].sort().map(value => [value, scene.terrainFeatures.filter(
+      feature => feature.rockPaletteId === value
+    ).length])),
+    placement: scene.environmentPlacementDiagnostics
+  };
 }
 
 function validRequestedForestCellIds(value, world) {
@@ -219,7 +255,8 @@ router.get(
       profile,
       rasterTransport: FOREST_ASSET_TRANSPORT_RASTER,
       pressureProfiles: FOREST_PRESSURE_PROFILES,
-      serverDiagnostics
+      serverDiagnostics,
+      environmentSummary: forestEnvironmentSummary(layout)
     });
   }
 );

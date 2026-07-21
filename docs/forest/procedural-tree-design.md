@@ -725,13 +725,14 @@ browser, generalized object scripting, or entity-component framework.
 
 ### Development pressure profiles
 
-The development route accepts six labeled profiles through its on-page profile links:
+The development route accepts seven labeled profiles through its on-page profile links:
 
 | Profile | Placements | Unique runtime assets | Purpose |
 | --- | ---: | ---: | --- |
 | Representative grove | 180 | up to 16 | The unchanged calm default and normal comparison point. |
 | Botanical range | 180 | up to 24 | Balances all three registered phenotypes without semantic writing projection. |
 | Projected writing grove | 180 | 23 | Cycles the 24 Milestone 7 meaning-contract fixtures through a separately selectable semantic scene. |
+| First environmental regions | 60 | 60 | Proves position-derived habitat, a soft grove-to-rocky-rise transition, and independent density and botanical tendencies. |
 | Asset variety | 180 | 60 | Isolates the cost of a moderately broader asset set. |
 | Unique assets | 180 | 180 | Exercises the current eager asset boundary at maximum variety. |
 | Large world | 600 | 60 | Separates placement, culling, and movement cost from asset variety. |
@@ -772,6 +773,11 @@ staging alone improves startup and whether the preload ring prevents region-entr
 raster transport may be evaluated separately if JSON color-run payloads remain material. Asset
 eviction, WebGL, atlases, and generalized loading remain out of scope until further evidence and
 explicit approval.
+
+The first environment profile's shared query, position-first projection, identity rules, suitability
+table, fixed-seed distributions, and measured evidence are documented in
+[`environment-region-contract.md`](./environment-region-contract.md). It does not change the
+480-pixel regional asset transport abstraction or the established profiles in this table.
 
 ### Development lossless-raster transport experiment
 

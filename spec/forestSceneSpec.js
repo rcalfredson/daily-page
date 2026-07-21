@@ -126,7 +126,7 @@ describe('static Activity Forest scene', () => {
     const unique = resolveForestPressureProfile('unique-assets');
     const large = resolveForestPressureProfile('large-world');
 
-    expect(FOREST_PRESSURE_PROFILES.length).toBe(6);
+    expect(FOREST_PRESSURE_PROFILES.length).toBe(7);
     expect(representative.pressure).toBeFalse();
     expect(representative.layout).toEqual({});
     expect(resolveForestPressureProfile('unknown')).toBe(representative);

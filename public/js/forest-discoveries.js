@@ -164,6 +164,11 @@ export function validateForestDiscoveryPlacement(discovery, scene, placed = [], 
   ) < radius + tree.collisionRadius + FOREST_DISCOVERY_TREE_CLEARANCE)) {
     return { valid: false, reason: 'tree-interaction-space' };
   }
+  if ((scene.terrainFeatures || []).some((feature) => Math.hypot(
+    discovery.worldX - feature.worldX, discovery.worldY - feature.worldY
+  ) < radius + feature.collisionRadius + FOREST_DISCOVERY_OVERLAY_CLEARANCE)) {
+    return { valid: false, reason: 'terrain-feature-collision' };
+  }
   const spawn = scene.exploration?.spawn;
   if (spawn && Math.hypot(discovery.worldX - spawn.worldX, discovery.worldY - spawn.worldY)
     < FOREST_DISCOVERY_ENTRANCE_CLEARANCE) {

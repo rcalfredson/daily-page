@@ -13,6 +13,7 @@ import {
   FOREST_DISCOVERY_PICKUP_RADIUS,
   FOREST_DISCOVERY_TYPE
 } from './forest-discoveries.js';
+import { FOREST_BOULDER_TYPE } from './forest-environment.js';
 
 export function placementVisualRect(placement, asset) {
   const scale = placement.scale;
@@ -40,13 +41,16 @@ export function visibleForestPlacements(placements, assetsByKey, viewport, margi
 
 export function visibleForestObjects(objects, viewport, margin = 24) {
   return objects.filter((object) => {
-    const horizontalRadius = object.type === FOREST_STEPPING_STONE_TYPE ? 14
+    const horizontalRadius = object.type === FOREST_BOULDER_TYPE ? Math.ceil(object.width / 2)
+      : object.type === FOREST_STEPPING_STONE_TYPE ? 14
       : object.type === FOREST_DISCOVERY_TYPE ? 10
         : object.type === FOREST_STONE_BENCH_TYPE ? 24 : 16;
-    const upperRadius = object.type === FOREST_STEPPING_STONE_TYPE ? 7
+    const upperRadius = object.type === FOREST_BOULDER_TYPE ? object.height
+      : object.type === FOREST_STEPPING_STONE_TYPE ? 7
       : object.type === FOREST_DISCOVERY_TYPE ? 10
         : object.type === FOREST_SEED_POD_LANTERN_TYPE ? 48 : 32;
-    const lowerRadius = object.type === FOREST_STEPPING_STONE_TYPE ? 7
+    const lowerRadius = object.type === FOREST_BOULDER_TYPE ? 8
+      : object.type === FOREST_STEPPING_STONE_TYPE ? 7
       : object.type === FOREST_DISCOVERY_TYPE ? 8 : 28;
     return (
       object.worldX + horizontalRadius

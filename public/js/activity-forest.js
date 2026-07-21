@@ -57,6 +57,13 @@ import {
   nearbyForestWritingForBench,
   renderNearbyForestWritingCandidates
 } from './forest-nearby-writing.js';
+import {
+  FOREST_BOULDER_TYPE,
+  FOREST_GROUND_DETAIL_CELL_SIZE,
+  forestEnvironmentAt,
+  forestGroundDetailAt,
+  resolveForestRockPalette
+} from './forest-environment.js';
 
 const payload = document.getElementById('activity-forest-scene');
 const viewportElement = document.querySelector('[data-forest-viewport]');
@@ -135,7 +142,9 @@ if (payload && viewportElement && canvas) {
     commitment: document.querySelector('[data-forest-commitment-diagnostic]'),
     clearingAction: document.querySelector('[data-forest-clearing-last-action]'),
     benchWriting: document.querySelector('[data-forest-bench-writing-diagnostic]'),
-    benchResurfaced: document.querySelector('[data-forest-bench-resurfaced]')
+    benchResurfaced: document.querySelector('[data-forest-bench-resurfaced]'),
+    environmentPlayer: document.querySelector('[data-forest-environment-player]'),
+    environmentPaint: document.querySelector('[data-forest-environment-paint]')
   };
   const loadedCellIds = new Set(scene.assetLoading.initialCellIds);
   const pendingCellIds = new Set();
@@ -149,8 +158,11 @@ if (payload && viewportElement && canvas) {
   const windByPlacementId = new Map(scene.placements.map((placement) => (
     [placement.id, forestPlacementWindParameters(placement)]
   )));
+  const terrainFeatures = scene.terrainFeatures || [];
+  const environmentGroundCells = new Map();
   const visibilityCache = createForestVisibilityCache(
-    scene.placements, assetsByKey, 24, [...placedObjects, ...availableDiscoveries]
+    scene.placements, assetsByKey, 24,
+    [...terrainFeatures, ...placedObjects, ...availableDiscoveries]
   );
   const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   let focusedItem = null;
@@ -224,7 +236,7 @@ if (payload && viewportElement && canvas) {
   }
 
   function setDiscoveryObjects() {
-    visibilityCache.setObjects([...placedObjects, ...availableDiscoveries]);
+    visibilityCache.setObjects([...terrainFeatures, ...placedObjects, ...availableDiscoveries]);
   }
 
   function regenerateDiscoveryOffering() {
@@ -493,15 +505,121 @@ if (payload && viewportElement && canvas) {
     scheduleRequiredRegions();
   }
 
+  function environmentGroundCell(column, row) {
+    const key = `${column}:${row}`;
+    if (!environmentGroundCells.has(key)) {
+      const sampleX = Math.min(scene.world.width,
+        (column * FOREST_GROUND_DETAIL_CELL_SIZE) + 24);
+      const sampleY = Math.min(scene.world.height,
+        (row * FOREST_GROUND_DETAIL_CELL_SIZE) + 24);
+      environmentGroundCells.set(key, {
+        environment: forestEnvironmentAt(scene.environment, { worldX: sampleX, worldY: sampleY }),
+        detail: forestGroundDetailAt(scene.environment, { column, row })
+      });
+    }
+    return environmentGroundCells.get(key);
+  }
+
+  function terrainColor(blend, variation) {
+    const grove = [100, 126, 88];
+    const rocky = [119, 121, 94];
+    return `rgb(${grove.map((value, index) => Math.round(
+      value + ((rocky[index] - value) * blend) + variation
+    )).join(', ')})`;
+  }
+
+  function paintGroundDetail(detail) {
+    if (!detail) return;
+    const x = Math.round(detail.worldX - camera.x);
+    const y = Math.round(detail.worldY - camera.y);
+    const rocky = detail.rockyBlendPermille / 1000;
+    const rockPalette = resolveForestRockPalette(detail.rockPaletteId)
+      || resolveForestRockPalette('mossed-green');
+    if (detail.type === 'grass-tuft') {
+      context.fillStyle = rocky > 0.55 ? '#687852' : '#4f784c';
+      const spread = 2 + (detail.variant % 2);
+      context.fillRect(x - spread - 2, y - 2, 2, 5);
+      context.fillRect(x - 1, y - 5 - (detail.variant % 2), 2, 8 + (detail.variant % 2));
+      context.fillRect(x + spread, y - 3, 2, 6);
+      context.fillStyle = rocky > 0.55 ? '#8b9162' : '#7fa15b';
+      context.fillRect(x, y - 4, 1, 3);
+    } else if (detail.type === 'gravel-patch') {
+      context.fillStyle = rockPalette.colors.mid;
+      context.fillRect(x - 11, y - 3, 7, 3);
+      context.fillRect(x - 5, y - 5, 12, 5);
+      context.fillRect(x + 5, y - 2, 8, 4);
+      context.fillStyle = rockPalette.colors.light;
+      context.fillRect(x - 8, y - 3, 3, 2);
+      context.fillRect(x - 1, y - 5, 4, 2);
+      context.fillRect(x + 7, y - 1, 3, 2);
+      context.fillStyle = rockPalette.colors.dark;
+      context.fillRect(x - 3, y, 4, 2);
+      if (detail.variant > 1) context.fillRect(x + 11, y + 1, 3, 2);
+    } else if (detail.type === 'small-stone') {
+      context.fillStyle = 'rgba(43, 53, 45, 0.22)';
+      context.fillRect(x - 7, y + 2, 15, 3);
+      context.fillStyle = rockPalette.colors.dark;
+      context.fillRect(x - 6, y - 2, 13, 5);
+      context.fillRect(x - 3, y - 4, 8, 2);
+      context.fillStyle = rockPalette.colors.light;
+      context.fillRect(x - 3, y - 3, 7, 2);
+      context.fillStyle = rockPalette.colors.highlight;
+      context.fillRect(x - 2, y - 3, 4, 1);
+    } else {
+      context.fillStyle = rocky > 0.5 ? '#858064' : '#71815b';
+      context.fillRect(x - 10, y - 3, 9, 3);
+      context.fillRect(x - 3, y - 4, 11, 5);
+      context.fillRect(x + 7, y - 1, 5, 3);
+      context.fillStyle = rocky > 0.5 ? '#99906d' : '#829367';
+      context.fillRect(x - 1, y - 3, 6, 2);
+    }
+  }
+
   function paintGround() {
-    context.fillStyle = '#617858';
-    context.fillRect(0, 0, camera.width, camera.height);
-    const bandHeight = 320;
-    const firstBandY = Math.floor(camera.y / bandHeight) * bandHeight;
-    for (let worldY = firstBandY; worldY <= camera.y + camera.height; worldY += bandHeight) {
-      context.fillStyle = Math.floor(worldY / bandHeight) % 2 === 0
-        ? 'rgba(202, 211, 170, 0.045)' : 'rgba(31, 67, 48, 0.035)';
-      context.fillRect(0, worldY - camera.y, camera.width, bandHeight);
+    const groundStartedAt = window.performance.now();
+    if (scene.environment) {
+      const cellSize = FOREST_GROUND_DETAIL_CELL_SIZE;
+      const firstColumn = Math.max(0, Math.floor(camera.x / cellSize));
+      const lastColumn = Math.min(Math.ceil(scene.world.width / cellSize) - 1,
+        Math.floor((camera.x + camera.width) / cellSize));
+      const firstRow = Math.max(0, Math.floor(camera.y / cellSize));
+      const lastRow = Math.min(Math.ceil(scene.world.height / cellSize) - 1,
+        Math.floor((camera.y + camera.height) / cellSize));
+      let queryCount = 0;
+      let detailCount = 0;
+      for (let row = firstRow; row <= lastRow; row += 1) {
+        for (let column = firstColumn; column <= lastColumn; column += 1) {
+          const cell = environmentGroundCell(column, row);
+          queryCount += 1;
+          const blend = cell.environment.transition.rockyBlendPermille / 1000;
+          const variation = ((column * 3) + (row * 5)) % 3 - 1;
+          context.fillStyle = terrainColor(blend, variation * 2);
+          context.fillRect((column * cellSize) - camera.x, (row * cellSize) - camera.y,
+            cellSize + 1, cellSize + 1);
+          if (cell.detail) detailCount += 1;
+        }
+      }
+      for (let row = firstRow; row <= lastRow; row += 1) {
+        for (let column = firstColumn; column <= lastColumn; column += 1) {
+          paintGroundDetail(environmentGroundCell(column, row).detail);
+        }
+      }
+      if (diagnostics.environmentPaint) {
+        diagnostics.environmentPaint.textContent = `${queryCount} visible cells · ${
+          detailCount} terrain details · ${(
+          window.performance.now() - groundStartedAt).toFixed(1)} ms last`;
+      }
+    } else {
+      context.fillStyle = '#617858';
+      context.fillRect(0, 0, camera.width, camera.height);
+      const bandHeight = 320;
+      const firstBandY = Math.floor(camera.y / bandHeight) * bandHeight;
+      for (let worldY = firstBandY; worldY <= camera.y + camera.height;
+        worldY += bandHeight) {
+        context.fillStyle = Math.floor(worldY / bandHeight) % 2 === 0
+          ? 'rgba(202, 211, 170, 0.045)' : 'rgba(31, 67, 48, 0.035)';
+        context.fillRect(0, worldY - camera.y, camera.width, bandHeight);
+      }
     }
     context.beginPath();
     for (let screenY = 0; screenY <= camera.height + 16; screenY += 16) {
@@ -548,6 +666,44 @@ if (payload && viewportElement && canvas) {
         context.drawImage(layer.sprite, originX, originY,
           asset.dimensions.width * placement.scale, asset.dimensions.height * placement.scale);
       }
+    }
+  }
+
+  function paintBoulder(boulder) {
+    const x = Math.round(boulder.worldX - camera.x);
+    const y = Math.round(boulder.worldY - camera.y);
+    const width = boulder.width;
+    const height = boulder.height;
+    const left = x - Math.floor(width / 2);
+    const palette = resolveForestRockPalette(boulder.rockPaletteId)
+      || resolveForestRockPalette('mossed-green');
+    context.fillStyle = 'rgba(34, 44, 38, 0.28)';
+    context.beginPath();
+    context.ellipse(x, y + 1, Math.floor(width * 0.55), Math.max(5, Math.floor(height * 0.2)),
+      0, 0, Math.PI * 2);
+    context.fill();
+    context.fillStyle = palette.colors.dark;
+    context.fillRect(left + 2, y - height + 10, width - 4, height - 10);
+    context.fillRect(left + 7, y - height + 5, width - 15, 7);
+    context.fillStyle = palette.colors.mid;
+    context.fillRect(left + 4, y - height + 8, width - 10, height - 13);
+    context.fillRect(left + 10, y - height + 3, width - 21, 8);
+    context.fillStyle = palette.colors.light;
+    context.fillRect(left + 11, y - height + 4, Math.max(9, width - 25), 5);
+    context.fillRect(left + 6, y - height + 10, Math.max(8, Math.floor(width * 0.38)), 4);
+    context.fillStyle = palette.colors.dark;
+    context.fillRect(left + Math.floor(width * 0.58), y - height + 12, 3, height - 16);
+    if (boulder.variantId !== 'low') {
+      context.fillRect(left + Math.floor(width * 0.3), y - 8, Math.floor(width * 0.42), 3);
+    }
+    context.fillStyle = palette.colors.highlight;
+    context.fillRect(left + 12, y - height + 4, Math.max(5, Math.floor(width * 0.2)), 2);
+    if (boulder.variantId === 'mossy-outcrop') {
+      context.fillStyle = palette.colors.accent;
+      context.fillRect(left + 5, y - height + 8, 14, 4);
+      context.fillRect(left + 9, y - height + 5, 11, 3);
+      context.fillStyle = palette.colors.accentLight;
+      context.fillRect(left + 11, y - height + 5, 7, 2);
     }
   }
 
@@ -718,6 +874,7 @@ if (payload && viewportElement && canvas) {
       else if (item.kind === 'marker') paintMarker(item.object);
       else if (item.kind === FOREST_STEPPING_STONE_TYPE) paintSteppingStone(item.object);
       else if (item.kind === FOREST_DISCOVERY_TYPE) paintDiscovery(item.object);
+      else if (item.kind === FOREST_BOULDER_TYPE) paintBoulder(item.object);
       else if (isForestClearingObject(item.object)) {
         if (item.object.id !== clearingEditor.movingId) {
           paintClearingObject(item.object, false, elapsedSeconds);
@@ -736,9 +893,18 @@ if (payload && viewportElement && canvas) {
       visibleObjects.filter(({ type }) => type === 'marker').length} markers · ${
       visibleObjects.filter(({ type }) => type === FOREST_STEPPING_STONE_TYPE).length} stones · ${
       visibleObjects.filter(isForestClearingObject).length} clearing objects · ${
-      visibleObjects.filter(({ type }) => type === FOREST_DISCOVERY_TYPE).length} discoveries`;
+      visibleObjects.filter(({ type }) => type === FOREST_DISCOVERY_TYPE).length} discoveries · ${
+      visibleObjects.filter(({ type }) => type === FOREST_BOULDER_TYPE).length} boulders`;
     diagnostics.camera.textContent = `${camera.x}, ${camera.y}`;
     diagnostics.player.textContent = `${Math.round(player.worldX)}, ${Math.round(player.worldY)}`;
+    if (scene.environment && diagnostics.environmentPlayer) {
+      const environment = forestEnvironmentAt(scene.environment, {
+        worldX: Math.round(player.worldX), worldY: Math.round(player.worldY)
+      });
+      diagnostics.environmentPlayer.textContent = `${environment.dominantRegionId} · ${
+        environment.groundSurfaceId} · ${environment.habitatId} · ${
+        environment.transition.state} (${environment.transition.rockyBlendPermille}‰ rocky)`;
+    }
     const duration = window.performance.now() - start;
     diagnostics.duration.textContent = `${duration.toFixed(1)} ms`;
 
@@ -803,7 +969,8 @@ if (payload && viewportElement && canvas) {
     const moving = hasMovement() && !dialog.open && !objectDialog.open && !forestMenu.open;
     if (moving) {
       Object.assign(player, moveForestPlayer(player, movementDirection(), elapsed,
-        scene.world, [...scene.placements, ...forestSolidClearingPlacements(placedObjects)]));
+        scene.world, [...scene.placements, ...terrainFeatures,
+          ...forestSolidClearingPlacements(placedObjects)]));
       followPlayer();
       updateFocus();
       if (trailEditor.active && trailEditor.tool !== 'remove') {
@@ -1097,6 +1264,7 @@ if (payload && viewportElement && canvas) {
   const clearingReasonText = {
     'world-bounds': 'That object would cross the edge of the world.',
     'tree-collision': 'That position overlaps a tree.',
+    'terrain-feature-collision': 'That position overlaps a boulder.',
     'tree-interaction-space': 'Keep writing-tree interaction space clear.',
     'entrance-collision': 'Keep the entrance and spawn clear.',
     'protected-entrance': 'Keep the entrance and spawn clear.',
@@ -1265,6 +1433,7 @@ if (payload && viewportElement && canvas) {
   const trailReasonText = {
     'world-bounds': 'That stone would cross the edge of the world.',
     'tree-collision': 'That position overlaps a tree.',
+    'terrain-feature-collision': 'That position overlaps a boulder.',
     'protected-entrance': 'Keep the entrance clearing open.',
     'entrance-collision': 'Keep the entrance clearing open.',
     'tree-interaction-space': 'That stone is too close to the tree trunk.',

@@ -213,6 +213,11 @@ export function validateForestObjectPlacement(object, scene, otherObjects = []) 
   ) < radius + placement.collisionRadius)) {
     return { valid: false, reason: 'tree-collision' };
   }
+  if ((scene.terrainFeatures || []).some((feature) => Math.hypot(
+    object.worldX - feature.worldX, object.worldY - feature.worldY
+  ) < radius + feature.collisionRadius)) {
+    return { valid: false, reason: 'terrain-feature-collision' };
+  }
   const spawn = scene.exploration?.spawn;
   if (spawn && Math.hypot(object.worldX - spawn.worldX, object.worldY - spawn.worldY)
     < radius + spawn.radius) return { valid: false, reason: 'entrance-collision' };
