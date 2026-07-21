@@ -1,6 +1,8 @@
 import { FOREST_RENDERER_VERSION_V3 } from './forestTreeGeneratorV3.js';
 import { forestPostTreeFixtures } from './forestPostTreeFixtures.js';
 import { treeAssetCacheKey } from './forest/v3/treeAsset.js';
+import { projectPostToForestTree } from './forestPostTreeProjection.js';
+import { forestEnvironmentAt } from '../../public/js/forest-environment.js';
 
 function assetKeyForProjection(projection) {
   return treeAssetCacheKey({
@@ -61,5 +63,79 @@ export function composeProjectedForestScene(
     layout: { ...baseLayout, placements },
     assetProjections,
     fixtures: fixtures.map(writingFixture)
+  };
+}
+
+function environmentWritingFixture(placement, index, source) {
+  const environment = forestEnvironmentAt(source.environment, {
+    worldX: placement.worldX,
+    worldY: placement.worldY
+  });
+  if (environment.habitatId !== placement.originatingHabitatId) {
+    throw new Error('Writing placement habitat must come from its stable world position.');
+  }
+  const ordinal = String(index + 1).padStart(2, '0');
+  const post = {
+    id: `forest-region-writing-${ordinal}`,
+    roomId: ['daily-inspiration', 'history', 'physics'][index % 3],
+    createdAt: new Date(Date.UTC(2024 + (index % 3), index % 12, 4 + (index % 20)))
+      .toISOString(),
+    wordCount: 180 + (index * 37),
+    collaboratorCount: index % 4,
+    translationCount: index % 3,
+    commentCount: index % 7,
+    reactionCount: index % 9,
+    questApproved: index % 5 === 0
+  };
+  const projection = projectPostToForestTree(post, { habitat: environment.habitatId });
+  return {
+    fixtureId: `forest-region-fixture-${ordinal}`,
+    title: `Field Note from ${environment.dominantRegionId === 'rocky-rise'
+      ? 'the Rocky Rise' : 'the Calm Grove'} ${ordinal}`,
+    roomName: post.roomId.split('-').map(word => `${word[0].toUpperCase()}${word.slice(1)}`)
+      .join(' '),
+    excerpt: 'A bounded fixture showing that this writing tree inherited habitat from its position.',
+    post,
+    context: { habitat: environment.habitatId },
+    environment,
+    projection
+  };
+}
+
+export function composeEnvironmentProjectedForestScene(baseLayout) {
+  if (!baseLayout?.environment || !baseLayout?.placements?.length) {
+    throw new Error('Environment-projected scenes require an environment-aware base layout.');
+  }
+  const fixtures = baseLayout.placements.map((placement, index) => (
+    environmentWritingFixture(placement, index, baseLayout)
+  ));
+  const assetProjections = new Map();
+  const placements = baseLayout.placements.map((placement, index) => {
+    const fixture = fixtures[index];
+    const assetKey = assetKeyForProjection(fixture.projection);
+    assetProjections.set(assetKey, fixture.projection);
+    return {
+      ...placement,
+      phenotypeId: fixture.projection.phenotype.id,
+      treeSeed: fixture.projection.specimen.seed,
+      assetKey,
+      fixtureId: fixture.fixtureId
+    };
+  });
+  return {
+    layout: { ...baseLayout, placements },
+    assetProjections,
+    fixtures: fixtures.map((fixture) => {
+      const writing = writingFixture(fixture);
+      return {
+        ...writing,
+        treeMeaning: {
+          ...writing.treeMeaning,
+          originatingRegionId: fixture.environment.dominantRegionId,
+          groundSurfaceId: fixture.environment.groundSurfaceId,
+          transitionState: fixture.environment.transition.state
+        }
+      };
+    })
   };
 }

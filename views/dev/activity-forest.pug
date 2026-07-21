@@ -11,13 +11,15 @@ block content
   main.activity-forest
     header.activity-forest__header
       div
-        p.activity-forest__eyebrow= profile.pressure ? 'Development pressure test' : profile.projectedWriting ? 'Meaning-contract scene' : 'Development preview'
+        p.activity-forest__eyebrow= profile.pressure ? 'Development pressure test' : profile.projectedEnvironment ? 'Environment-contract scene' : profile.projectedWriting ? 'Meaning-contract scene' : 'Development preview'
         h1 Activity Forest
           if profile.pressure || profile.projectedWriting
             |  — #{profile.label}
         p.activity-forest__lede
           if profile.pressure
             | #{profile.description} This mode is development-only and does not change the default grove.
+          else if profile.projectedEnvironment
+            | #{profile.description} Walk north and east from the familiar corridor to cross the broad intergrade into the rocky rise.
           else if profile.projectedWriting
             | #{profile.description} Inspect trees while walking to compare their bounded habitat and creation-season decisions.
           else
@@ -110,6 +112,40 @@ block content
       div
         dt Generated base
         dd v#{scene.baseIdentity.sceneVersion} · #{scene.baseIdentity.seed} · #{scene.baseIdentity.layoutKey}
+      if scene.environment
+        div
+          dt Environment contract
+          dd schema v#{scene.environment.schemaVersion} · world v#{scene.environment.worldGenerationVersion} · ground v#{scene.environment.groundPresentationVersion} · #{scene.environment.seed} · #{scene.environment.grammarId}
+        div
+          dt Current environment
+          dd(data-forest-environment-player) —
+        div
+          dt Environment painting
+          dd(data-forest-environment-paint) —
+        div
+          dt Region placements
+          dd= Object.entries(environmentSummary.regions).map(([id, count]) => `${id} ${count}`).join(' · ')
+        div
+          dt Habitat placements
+          dd= Object.entries(environmentSummary.habitats).map(([id, count]) => `${id} ${count}`).join(' · ')
+        div
+          dt Phenotype placements
+          dd= Object.entries(environmentSummary.phenotypes).map(([id, count]) => `${id} ${count}`).join(' · ')
+        div
+          dt Transition placements
+          dd= Object.entries(environmentSummary.transitions).map(([id, count]) => `${id} ${count}`).join(' · ')
+        div
+          dt Generated boulders
+          dd= Object.entries(environmentSummary.boulderRegions).map(([id, count]) => `${id} ${count}`).join(' · ')
+        div
+          dt Boulder forms
+          dd= Object.entries(environmentSummary.boulderVariants).map(([id, count]) => `${id} ${count}`).join(' · ')
+        div
+          dt Boulder palettes
+          dd= Object.entries(environmentSummary.boulderPalettes).map(([id, count]) => `${id} ${count}`).join(' · ')
+        div
+          dt Placement attempts
+          dd #{environmentSummary.placement.acceptedPlacementCount} accepted / #{environmentSummary.placement.attemptedCandidateCount} attempted · #{environmentSummary.placement.densityRejectionCount} density · #{environmentSummary.placement.corridorRejectionCount} corridor · #{environmentSummary.placement.spacingRejectionCount} spacing · #{environmentSummary.placement.termination}
       div
         dt Personal overlay
         dd(data-forest-overlay) —

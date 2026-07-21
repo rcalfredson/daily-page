@@ -5,6 +5,11 @@ import {
 } from './forest/v3/phenotype.js';
 import { createRandom, hashSeed } from './forest/v3/random.js';
 import { treeAssetCacheKey } from './forest/v3/treeAsset.js';
+import { forestEnvironmentAt } from '../../public/js/forest-environment.js';
+import {
+  FOREST_TERRAIN_FEATURE_GENERATION_VERSION,
+  generateForestTerrainFeatures
+} from './forestTerrainFeatures.js';
 
 export const FOREST_SCENE_VERSION = 1;
 export const FOREST_BASE_IDENTITY_SCHEMA_VERSION = 1;
@@ -45,7 +50,10 @@ export function forestBaseIdentity(config) {
     scale: config.scale,
     specimenPoolSize: config.specimenPoolSize,
     assetPoolSize: config.assetPoolSize || null,
-    phenotypeWeights: config.phenotypeWeights
+    phenotypeWeights: config.phenotypeWeights,
+    environmentManifest: config.environmentManifest || null,
+    terrainFeatureGenerationVersion: config.environmentManifest
+      ? FOREST_TERRAIN_FEATURE_GENERATION_VERSION : null
   })).toString(16).padStart(8, '0');
   return Object.freeze({
     schemaVersion: FOREST_BASE_IDENTITY_SCHEMA_VERSION,
@@ -55,13 +63,17 @@ export function forestBaseIdentity(config) {
   });
 }
 
-function selectPhenotype(config, sceneSeed, candidateIndex) {
+function selectPhenotype(config, sceneSeed, candidateIndex, habitatId = null) {
   const total = FOREST_PHENOTYPES.reduce((sum, phenotype) => (
-    sum + (config.phenotypeWeights[phenotype.id] || 0)
+    sum + (habitatId
+      ? phenotype.postTreeMeaning.habitatWeights[habitatId]
+      : (config.phenotypeWeights[phenotype.id] || 0))
   ), 0);
   let selection = decisionRandom(sceneSeed, candidateIndex, 'phenotype') * total;
   return FOREST_PHENOTYPES.find((phenotype) => {
-    selection -= config.phenotypeWeights[phenotype.id] || 0;
+    selection -= habitatId
+      ? phenotype.postTreeMeaning.habitatWeights[habitatId]
+      : (config.phenotypeWeights[phenotype.id] || 0);
     return selection < 0;
   }) || FOREST_PHENOTYPES[0];
 }
@@ -96,8 +108,16 @@ function normalizeConfig(options) {
 
 export function generateForestSceneLayout(options = {}) {
   const config = normalizeConfig(options);
+  if (config.environmentManifest && (
+    config.environmentManifest.world.width !== config.world.width
+      || config.environmentManifest.world.height !== config.world.height
+  )) throw new Error('Forest environment and scene world bounds must match.');
   const placements = [];
   const maximumCandidates = config.placementCount * 100;
+  let densityRejectionCount = 0;
+  let corridorRejectionCount = 0;
+  let spacingRejectionCount = 0;
+  let attemptedCandidateCount = 0;
 
   for (let candidateIndex = 0;
     candidateIndex < maximumCandidates && placements.length < config.placementCount;
@@ -109,11 +129,26 @@ export function generateForestSceneLayout(options = {}) {
     const worldY = Math.round(config.edgeMargin
       + (decisionRandom(config.seed, candidateIndex, 'y') * usableHeight));
     const pathDistance = Math.abs(worldX - forestCorridorCenter(worldY, config.world.width));
+    const environment = config.environmentManifest
+      ? forestEnvironmentAt(config.environmentManifest, { worldX, worldY }) : null;
+    attemptedCandidateCount += 1;
+    if (environment && decisionRandom(config.seed, candidateIndex, 'environment-density') * 1000
+      >= environment.suitability.treeDensityPermille) {
+      densityRejectionCount += 1;
+      continue;
+    }
     const overlapsTrunk = placements.some((placement) => (
       Math.hypot(placement.worldX - worldX, placement.worldY - worldY)
         < config.minimumSpacing
     ));
-    if (pathDistance < config.corridorHalfWidth || overlapsTrunk) continue;
+    if (pathDistance < config.corridorHalfWidth) {
+      corridorRejectionCount += 1;
+      continue;
+    }
+    if (overlapsTrunk) {
+      spacingRejectionCount += 1;
+      continue;
+    }
 
     const specimenIndex = config.assetPoolSize
       ? placements.length % config.assetPoolSize
@@ -123,7 +158,8 @@ export function generateForestSceneLayout(options = {}) {
     const phenotype = selectPhenotype(
       config,
       config.seed,
-      config.assetPoolSize ? specimenIndex : candidateIndex
+      config.assetPoolSize && !environment ? specimenIndex : candidateIndex,
+      environment?.habitatId
     );
     const { treeSeed, assetKey } = specimenIdentity(
       config, config.seed, phenotype, specimenIndex
@@ -132,7 +168,7 @@ export function generateForestSceneLayout(options = {}) {
     const scale = config.scale.minimum + Math.floor(
       decisionRandom(config.seed, candidateIndex, 'scale') * scaleRange
     );
-    placements.push({
+    const placement = {
       id: `forest-scene-v${FOREST_SCENE_VERSION}-${config.seed}-${candidateIndex}`,
       worldX,
       worldY,
@@ -140,14 +176,25 @@ export function generateForestSceneLayout(options = {}) {
       phenotypeId: phenotype.id,
       treeSeed,
       assetKey
-    });
+    };
+    if (environment) {
+      Object.assign(placement, {
+        originatingRegionId: environment.dominantRegionId,
+        originatingHabitatId: environment.habitatId,
+        groundSurfaceId: environment.groundSurfaceId,
+        transitionState: environment.transition.state,
+        rockyBlendPermille: environment.transition.rockyBlendPermille,
+        treeDensityPermille: environment.suitability.treeDensityPermille
+      });
+    }
+    placements.push(placement);
   }
 
   if (placements.length !== config.placementCount) {
     throw new Error(`Could only place ${placements.length} of ${config.placementCount} trees.`);
   }
 
-  return {
+  const scene = {
     version: FOREST_SCENE_VERSION,
     seed: config.seed,
     baseIdentity: forestBaseIdentity(config),
@@ -155,4 +202,20 @@ export function generateForestSceneLayout(options = {}) {
     corridor: { halfWidth: config.corridorHalfWidth },
     placements
   };
+  if (config.environmentManifest) {
+    scene.environment = JSON.parse(JSON.stringify(config.environmentManifest));
+    scene.environmentPlacementDiagnostics = {
+      attemptedCandidateCount,
+      acceptedPlacementCount: placements.length,
+      densityRejectionCount,
+      corridorRejectionCount,
+      spacingRejectionCount,
+      termination: 'requested-count-reached'
+    };
+    scene.terrainFeatureGenerationVersion = FOREST_TERRAIN_FEATURE_GENERATION_VERSION;
+    scene.terrainFeatures = generateForestTerrainFeatures(
+      scene, worldY => forestCorridorCenter(worldY, scene.world.width)
+    );
+  }
+  return scene;
 }
