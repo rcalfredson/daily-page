@@ -284,6 +284,27 @@ describe('first Activity Forest environment grammar', () => {
     expect(() => forestStreamBankProfileAt(environment, 20, 0)).toThrow();
   });
 
+  it('keeps creek-bank geometry and decoration stable across viewport cache ranges', () => {
+    const environment = manifest();
+    const centerYAt = worldX => forestStreamCenterY(environment, Math.round(worldX));
+    const first = buildForestStreamBankModel3d(environment, {
+      firstX: 0, lastX: 384
+    }, centerYAt);
+    const shifted = buildForestStreamBankModel3d(environment, {
+      firstX: 192, lastX: 576
+    }, centerYAt);
+    const inOverlap = value => value >= 192 && value < 384;
+    const overlapping = model => ({
+      surfaces: model.surfaces.filter(surface => inOverlap(surface.points[0].x)),
+      details: model.details.filter(detail => (
+        !detail.role.startsWith('log') && inOverlap(detail.from.x)
+      )),
+      marks: model.marks.filter(mark => inOverlap(mark.point.x))
+    });
+
+    expect(overlapping(first)).toEqual(overlapping(shifted));
+  });
+
   it('keeps the player collision circle out of the projected water edge', () => {
     const environment = manifest();
     const worldX = 100;

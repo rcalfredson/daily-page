@@ -374,8 +374,8 @@ export function buildForestStreamBankModel3d(manifest, range, centerYAt) {
     * definition.sampleStep);
   const model = { definitionId: definition.id, surfaces: [], details: [], marks: [] };
   for (const side of [-1, 1]) {
-    let ordinal = 0;
     for (let startX = firstX; startX < lastX; startX += definition.sampleStep) {
+      const ordinal = Math.floor(startX / definition.sampleStep);
       const endX = Math.min(lastX, startX + definition.sampleStep);
       const startProfile = forestStreamBankProfileAt(manifest, startX, side);
       const endProfile = forestStreamBankProfileAt(manifest, endX, side);
@@ -399,7 +399,6 @@ export function buildForestStreamBankModel3d(manifest, range, centerYAt) {
       }
       appendSegmentDetails(model, manifest, startProfile, endProfile,
         startCenterY, endCenterY, ordinal);
-      ordinal += 1;
     }
     const firstSection = Math.floor(firstX / definition.compositionSectionLength) - 1;
     const lastSection = Math.ceil(lastX / definition.compositionSectionLength) + 1;
