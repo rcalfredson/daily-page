@@ -150,8 +150,12 @@ block content
           dt Terrain roles
           dd= Object.entries(environmentSummary.terrainRoles).map(([id, count]) => `${id} ${count}`).join(' · ')
         div
-          dt Stream crossing
-          dd #{environmentSummary.crossing.type} · #{environmentSummary.crossing.worldX}, #{environmentSummary.crossing.worldY} · #{environmentSummary.crossing.halfWidth * 2} × #{environmentSummary.crossing.halfLength * 2} · #{(environmentSummary.crossing.angleMilliradians / 1000 * 180 / Math.PI).toFixed(1)}° · +#{environmentSummary.crossing.maximumElevationPixels}px crown
+          dt Stream-bank model
+          dd #{environmentSummary.streamBank.definitionId} v#{environmentSummary.streamBank.modelVersion} · #{environmentSummary.streamBank.compositionIds.join(' · ')}
+        each crossing, crossingIndex in environmentSummary.crossings
+          div
+            dt Stream crossing #{crossingIndex + 1}
+            dd #{crossing.definitionId} · #{crossing.worldX}, #{crossing.worldY} · #{crossing.halfWidth * 2} × #{crossing.halfLength * 2} · #{(crossing.angleMilliradians / 1000 * 180 / Math.PI).toFixed(1)}° · +#{crossing.maximumElevationPixels}px crown
         div
           dt Placement attempts
           dd #{environmentSummary.placement.acceptedPlacementCount} accepted / #{environmentSummary.placement.attemptedCandidateCount} attempted · #{environmentSummary.placement.densityRejectionCount} density · #{environmentSummary.placement.corridorRejectionCount} corridor · #{environmentSummary.placement.spacingRejectionCount} spacing · #{environmentSummary.placement.termination}

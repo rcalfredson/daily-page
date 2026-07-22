@@ -1,4 +1,18 @@
 import {
+  buildForestBridgeModel3d,
+  FOREST_BRIDGE_DEFINITIONS,
+  forestBridgePoint3d,
+  projectForestPoint3d,
+  resolveForestBridgeDefinition
+} from '../public/js/forest-bridges.js';
+import {
+  buildForestStreamBankModel3d,
+  FOREST_STREAM_BANK_COMPOSITIONS,
+  forestStreamBankProfileAt,
+  forestStreamWaterDepthAt,
+  forestStreamWaterPoint3d
+} from '../public/js/forest-stream-banks.js';
+import {
   createForestEnvironmentManifest,
   FOREST_BOULDER_TYPE,
   FOREST_BRIDGE_TYPE,
@@ -15,6 +29,7 @@ import {
   forestEnvironmentAt,
   forestGroundDetailAt,
   forestStreamCenterY,
+  forestStreamWaterContains,
   resolveForestRockPalette,
   validateForestEnvironmentManifest,
   validateForestStreamCrossing
@@ -194,6 +209,107 @@ describe('first Activity Forest environment grammar', () => {
     expect(() => forestGroundDetailAt(environment, {
       column: 0, row: 0, viewport: 'ignored'
     })).toThrow();
+  });
+
+  it('constructs varied continuous creek banks and recessed water from bounded 3D profiles', () => {
+    const environment = manifest();
+    const profiles = [];
+    for (let worldX = 0; worldX <= world.width; worldX += 17) {
+      for (const side of [-1, 1]) {
+        const profile = forestStreamBankProfileAt(environment, worldX, side);
+        profiles.push(profile);
+        expect(profile).toEqual(forestStreamBankProfileAt(environment, worldX, side));
+        expect(profile.waterDepth).toBeGreaterThanOrEqual(5);
+        expect(profile.waterDepth).toBeLessThanOrEqual(14);
+        expect(profile.slopeRun).toBeGreaterThanOrEqual(20);
+        expect(profile.slopeRun).toBeLessThanOrEqual(42);
+        expect(Math.abs(profile.innerOffset)).toBeLessThanOrEqual(9);
+      }
+    }
+    expect(new Set(profiles.map(({ compositionId }) => compositionId))).toEqual(
+      new Set(FOREST_STREAM_BANK_COMPOSITIONS.map(({ id }) => id))
+    );
+    expect(Math.max(...profiles.map(({ waterDepth }) => waterDepth))
+      - Math.min(...profiles.map(({ waterDepth }) => waterDepth))).toBeGreaterThan(5);
+    expect(Math.max(...profiles.map(({ slopeRun }) => slopeRun))
+      - Math.min(...profiles.map(({ slopeRun }) => slopeRun))).toBeGreaterThan(12);
+    expect(Math.max(...profiles.map(({ innerOffset }) => innerOffset))
+      - Math.min(...profiles.map(({ innerOffset }) => innerOffset))).toBeGreaterThan(10);
+    for (let worldX = 1; worldX < world.width; worldX += 31) {
+      expect(Math.abs(forestStreamWaterDepthAt(environment, worldX)
+        - forestStreamWaterDepthAt(environment, worldX - 1))).toBeLessThan(0.2);
+    }
+
+    const model = buildForestStreamBankModel3d(environment, {
+      firstX: 0, lastX: world.width
+    }, worldX => forestStreamCenterY(environment, Math.round(worldX)));
+    expect(model.surfaces.length).toBeGreaterThan(1400);
+    expect(new Set(model.surfaces.map(({ side }) => side))).toEqual(new Set([-1, 1]));
+    expect(model.surfaces.every(({ points }) => points.every(point => (
+      point.z <= 0 && point.z >= -14
+    )))).toBeTrue();
+    expect(new Set(model.surfaces.map(({ stratum }) => stratum)))
+      .toEqual(new Set([0, 1, 2, 3]));
+    const colorChannels = color => [1, 3, 5].map(index => (
+      Number.parseInt(color.slice(index, index + 2), 16)
+    ));
+    for (const side of [-1, 1]) {
+      for (const stratum of [0, 1, 2, 3]) {
+        const surfaces = model.surfaces.filter(surface => (
+          surface.side === side && surface.stratum === stratum
+        ));
+        for (let index = 1; index < surfaces.length; index += 1) {
+          const previous = colorChannels(surfaces[index - 1].fill);
+          const current = colorChannels(surfaces[index].fill);
+          expect(Math.hypot(...previous.map((channel, channelIndex) => (
+            channel - current[channelIndex]
+          )))).toBeLessThan(6);
+        }
+      }
+    }
+    expect(new Set(model.details.map(({ role }) => role))).toEqual(new Set([
+      'lip', 'cap-shadow', 'undercut', 'grass', 'dirt', 'root', 'log', 'log-branch'
+    ]));
+    expect(new Set(model.marks.map(({ role }) => role))).toEqual(new Set(['rock', 'soil']));
+    const water = forestStreamWaterPoint3d(environment, 500, 0,
+      forestStreamCenterY(environment, 500));
+    expect(water.z).toBeLessThan(0);
+    expect(projectForestPoint3d(water).y).toBeGreaterThan(water.y);
+    const boundaryX = 210;
+    const beforeBoundary = forestStreamBankProfileAt(environment, boundaryX - 0.01, -1);
+    const afterBoundary = forestStreamBankProfileAt(environment, boundaryX + 0.01, -1);
+    expect(beforeBoundary.nextCompositionId).toBe(afterBoundary.compositionId);
+    expect(beforeBoundary.compositionMix).toBeGreaterThan(0.999);
+    expect(afterBoundary.compositionMix).toBeLessThan(0.001);
+    expect(() => forestStreamBankProfileAt(environment, 20, 0)).toThrow();
+  });
+
+  it('keeps the player collision circle out of the projected water edge', () => {
+    const environment = manifest();
+    const worldX = 100;
+    const centerY = forestStreamCenterY(environment, worldX);
+    const profile = forestStreamBankProfileAt(environment, worldX, -1);
+    const waterEdgeY = centerY - (environment.stream.halfWidth
+      + Math.max(0, profile.innerOffset));
+    expect(forestStreamWaterContains(environment, {
+      worldX, worldY: waterEdgeY - 9
+    }, 10)).toBeTrue();
+    expect(forestStreamWaterContains(environment, {
+      worldX, worldY: waterEdgeY - 11
+    }, 10)).toBeFalse();
+
+    const scene = generateForestSceneLayout(resolveForestPressureProfile('first-regions').layout);
+    const safeX = 100;
+    const safeCenterY = forestStreamCenterY(scene.environment, safeX);
+    const safeProfile = forestStreamBankProfileAt(scene.environment, safeX, -1);
+    const safeEdgeY = safeCenterY - (scene.environment.stream.halfWidth
+      + Math.max(0, safeProfile.innerOffset));
+    expect(forestTerrainTraversableAt(scene, {
+      worldX: safeX, worldY: safeEdgeY - 9, radius: 10
+    })).toBeFalse();
+    expect(forestTerrainTraversableAt(scene, {
+      worldX: safeX, worldY: safeEdgeY - 11, radius: 10
+    })).toBeTrue();
   });
 
   it('invalidates generated-base identity when environment seed or grammar inputs change', () => {
@@ -428,7 +544,7 @@ describe('first Activity Forest environment grammar', () => {
     const verticalBridge = { ...bridge, angleMilliradians: 1571 };
     expect(forestBridgeElevationAt(verticalBridge, {
       worldX: verticalBridge.worldX, worldY: verticalBridge.worldY
-    })).toBe(0);
+    })).toBe(verticalBridge.maximumElevationPixels);
     const almostVerticalBridge = { ...bridge, angleMilliradians: 1560 };
     expect(forestBridgeElevationAt(almostVerticalBridge, {
       worldX: almostVerticalBridge.worldX, worldY: almostVerticalBridge.worldY
@@ -461,6 +577,44 @@ describe('first Activity Forest environment grammar', () => {
       .toBeLessThan(-bridge.halfLength + 5);
     expect(forestBridgeLocalCoordinates(secondBridge, walk(secondBridge)).longitudinal)
       .toBeLessThan(-secondBridge.halfLength + 5);
+  });
+
+  it('builds each bridge as parameterized 3D geometry before projecting it to the canvas', () => {
+    const scene = generateForestSceneLayout(resolveForestPressureProfile('first-regions').layout);
+    expect(FOREST_BRIDGE_DEFINITIONS.length).toBeGreaterThan(0);
+    for (const bridge of scene.crossings) {
+      const definition = resolveForestBridgeDefinition(bridge.definitionId);
+      const model = buildForestBridgeModel3d(bridge);
+      expect(definition).not.toBeNull();
+      expect(model.definitionId).toBe(definition.id);
+      expect(model.surfaces.filter(({ role }) => role === 'plank').length)
+        .toBeGreaterThan(15);
+      expect(model.surfaces.some(({ points }) => points.some(point => point.z < 0))).toBeTrue();
+      expect(model.details.filter(({ role }) => role === 'grain').length).toBeGreaterThan(15);
+      expect(model.details.filter(({ role }) => role === 'nail').length).toBeGreaterThan(20);
+      expect(model.members.filter(({ role }) => role === 'post').length).toBeGreaterThan(10);
+      expect(model.members.filter(({ role }) => role === 'rail').length).toBeGreaterThan(8);
+
+      const center = forestBridgePoint3d(bridge, 0, 0);
+      const end = forestBridgePoint3d(bridge, bridge.halfLength, 0);
+      expect(center.z).toBeCloseTo(bridge.maximumElevationPixels, 6);
+      expect(end.z).toBeCloseTo(0, 6);
+      const centerProjection = projectForestPoint3d(center, { x: 25, y: 40 });
+      expect(centerProjection.x).toBeCloseTo(center.x - 25, 6);
+      expect(centerProjection.y).toBeCloseTo(center.y - 40 - center.z, 6);
+    }
+
+    const firstModel = buildForestBridgeModel3d(scene.crossings[0]);
+    const secondModel = buildForestBridgeModel3d(scene.crossings[1]);
+    const firstPlank = firstModel.surfaces.find(({ role }) => role === 'plank');
+    const secondPlank = secondModel.surfaces.find(({ role }) => role === 'plank');
+    const projectedDirection = (plank) => {
+      const from = projectForestPoint3d(plank.points[1]);
+      const to = projectForestPoint3d(plank.points[2]);
+      return Math.atan2(to.y - from.y, to.x - from.x);
+    };
+    expect(Math.abs(projectedDirection(firstPlank) - projectedDirection(secondPlank)))
+      .toBeGreaterThan(0.7);
   });
 
   it('keeps the environment-profile discovery offering finite and out of water', () => {
@@ -509,6 +663,7 @@ describe('first Activity Forest environment grammar', () => {
   it('keeps painting viewport-bounded and applies explicit water suitability', async () => {
     const fs = await import('node:fs');
     const painter = fs.readFileSync('public/js/activity-forest.js', 'utf8');
+    const bridgeGeometry = fs.readFileSync('public/js/forest-bridges.js', 'utf8');
     const overlay = fs.readFileSync('public/js/forest-world-overlay.js', 'utf8');
     expect(painter).toContain('forestEnvironmentAt(scene.environment');
     expect(painter).toContain('forestGroundDetailAt(scene.environment');
@@ -519,21 +674,24 @@ describe('first Activity Forest environment grammar', () => {
     expect(painter).toContain('streamFlowVariation(markIndex, lane');
     expect(painter).toContain('paintStreamColorBand(7, 20');
     expect(painter).toContain('const grove = [82, 132, 76]');
-    expect(painter).toContain("paintStreamRibbon(stream.halfWidth, '#247486')");
+    expect(painter).toContain("paintStreamWaterSurface('#247486')");
     expect(painter).toContain('paintStreamSurfaceTexture(stream)');
-    expect(painter).toContain('paintStreamEdgeTexture(stream)');
+    expect(painter).toContain('paintStreamEdgeTexture()');
+    expect(painter).toContain('paintStreamBank(-1)');
+    expect(painter).toContain('paintStreamBank(1)');
     expect(painter).toContain("terrainRole === 'bank-boulder'");
     expect(painter).toContain('ambientMotionActive ? Math.floor(elapsedSeconds * 6) : 0');
     expect(painter).toContain('const flowIdentity = markIndex - flowCycle');
     expect(painter).toContain('forestStreamCenterY(scene.environment, streamQueryX)');
-    expect(painter).toContain('forestBridgeWorldPosition(bridge');
-    expect(painter).toContain('forestBridgeWorldPosition(bridge, longitudinal, 0)');
+    expect(painter).toContain('buildForestBridgeModel3d(bridge)');
+    expect(painter).toContain('projectForestPoint3d(point, camera)');
     expect(painter).toContain('crossings.forEach(paintBridgeDeck)');
     expect(painter).toContain('crossings.forEach(paintBridgeRails)');
-    expect(painter).toContain('bridge, 1, plankOrdinal');
-    expect(painter).toContain('bridge, 2, plankOrdinal + 1');
-    expect(painter).toContain("context.strokeStyle = '#2f2924'");
-    expect(painter).toContain('const elevationRatio = forestBridgeElevationAt');
+    expect(bridgeGeometry).toContain("shape: 'circular-segment'");
+    expect(bridgeGeometry).toContain('forestBridgePoint3d(bridge');
+    expect(bridgeGeometry).toContain('surfaces: Object.freeze(surfaces)');
+    expect(bridgeGeometry).toContain('details: Object.freeze(details)');
+    expect(bridgeGeometry).toContain('members: Object.freeze(members)');
     expect(overlay).toContain('forestEnvironmentAt');
     const grove = forestEnvironmentAt(manifest(), { worldX: 100, worldY: 100 });
     const rockyManifest = manifest();

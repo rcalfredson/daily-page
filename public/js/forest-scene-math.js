@@ -17,7 +17,7 @@ import {
   FOREST_BOULDER_TYPE,
   forestBridgeContains,
   forestBridgeRailCollides,
-  forestEnvironmentAt
+  forestStreamWaterContains
 } from './forest-environment.js';
 
 export function placementVisualRect(placement, asset) {
@@ -260,10 +260,7 @@ export function forestTerrainTraversableAt(scene, position) {
   if (crossings.some(crossing => forestBridgeRailCollides(
     crossing, position, position.radius || 0
   ))) return false;
-  const environment = forestEnvironmentAt(scene.environment, {
-    worldX: Math.round(position.worldX), worldY: Math.round(position.worldY)
-  });
-  if (environment.hydrology.state !== 'water') return true;
+  if (!forestStreamWaterContains(scene.environment, position, position.radius || 0)) return true;
   return crossings.some(crossing => forestBridgeContains(
     crossing, position, -(position.radius || 0)
   ));
