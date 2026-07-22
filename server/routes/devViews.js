@@ -35,6 +35,11 @@ import {
   forestSceneCellIdsForViewport,
   forestScenePlacementCellId
 } from '../../public/js/forest-scene-math.js';
+import {
+  FOREST_STREAM_BANK_COMPOSITIONS,
+  FOREST_STREAM_BANK_DEFINITION_ID,
+  FOREST_STREAM_BANK_MODEL_VERSION
+} from '../../public/js/forest-stream-banks.js';
 
 const router = express.Router();
 
@@ -139,7 +144,12 @@ function forestEnvironmentSummary(scene) {
     ))].sort().map(value => [value, scene.terrainFeatures.filter(
       feature => feature.terrainRole === value
     ).length])),
-    crossing: scene.crossing,
+    streamBank: {
+      definitionId: FOREST_STREAM_BANK_DEFINITION_ID,
+      modelVersion: FOREST_STREAM_BANK_MODEL_VERSION,
+      compositionIds: FOREST_STREAM_BANK_COMPOSITIONS.map(({ id }) => id)
+    },
+    crossings: scene.crossings,
     placement: scene.environmentPlacementDiagnostics
   };
 }

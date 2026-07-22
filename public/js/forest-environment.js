@@ -1,13 +1,20 @@
+import {
+  FOREST_BRIDGE_TYPE,
+  forestBridgeProfileHeight,
+  resolveForestBridgeDefinition
+} from './forest-bridges.js';
+import { forestStreamBankProfileAt } from './forest-stream-banks.js';
+
 export const FOREST_ENVIRONMENT_SCHEMA_VERSION = 2;
 export const FOREST_WORLD_GENERATION_VERSION = 2;
-export const FOREST_GROUND_PRESENTATION_VERSION = 11;
+export const FOREST_GROUND_PRESENTATION_VERSION = 13;
 export const FOREST_ENVIRONMENT_GRAMMAR_ID = 'grove-rocky-rise-and-stream';
 export const FOREST_GROUND_DETAIL_VERSION = 1;
 export const FOREST_GROUND_DETAIL_CELL_SIZE = 48;
 export const FOREST_BOULDER_TYPE = 'generated-boulder';
-export const FOREST_BRIDGE_TYPE = 'arched-footbridge';
-export const FOREST_CROSSING_SCHEMA_VERSION = 2;
-export const FOREST_CROSSING_GENERATION_VERSION = 5;
+export { FOREST_BRIDGE_TYPE } from './forest-bridges.js';
+export const FOREST_CROSSING_SCHEMA_VERSION = 3;
+export const FOREST_CROSSING_GENERATION_VERSION = 6;
 export const FOREST_ROCK_PALETTES = Object.freeze([
   Object.freeze({
     id: 'mossed-green', weight: 40,
@@ -65,7 +72,7 @@ const POSITION_KEYS = Object.freeze(['worldX', 'worldY']);
 const CELL_KEYS = Object.freeze(['column', 'row']);
 const CROSSING_KEYS = Object.freeze([
   'schemaVersion', 'generationVersion', 'id', 'type', 'worldX', 'worldY', 'orientation',
-  'angleMilliradians', 'halfWidth', 'halfLength', 'maximumElevationPixels'
+  'angleMilliradians', 'definitionId', 'halfWidth', 'halfLength', 'maximumElevationPixels'
 ]);
 
 function exactKeys(value, expected) {
@@ -208,6 +215,19 @@ export function forestStreamCenterY(manifest, worldX) {
   return Math.round(streamCenterY(manifest, worldX));
 }
 
+export function forestStreamWaterContains(manifest, position, padding = 0) {
+  if (!Number.isFinite(position?.worldX) || !Number.isFinite(position?.worldY)
+    || !Number.isFinite(padding) || padding < 0
+    || position.worldX < 0 || position.worldX > manifest.world.width) return false;
+  const centerY = streamCenterY(manifest, position.worldX);
+  const farProfile = forestStreamBankProfileAt(manifest, position.worldX, -1);
+  const nearProfile = forestStreamBankProfileAt(manifest, position.worldX, 1);
+  const farHalfWidth = manifest.stream.halfWidth + Math.max(0, farProfile.innerOffset);
+  const nearHalfWidth = manifest.stream.halfWidth + Math.max(0, nearProfile.innerOffset);
+  return position.worldY + padding >= centerY - farHalfWidth
+    && position.worldY - padding <= centerY + nearHalfWidth;
+}
+
 export function forestEnvironmentAt(manifest, position) {
   validateForestEnvironmentManifest(manifest);
   if (!exactKeys(position, POSITION_KEYS)
@@ -328,14 +348,15 @@ export function validateForestStreamCrossing(crossing, world) {
     || crossing.schemaVersion !== FOREST_CROSSING_SCHEMA_VERSION
     || crossing.generationVersion !== FOREST_CROSSING_GENERATION_VERSION
     || ![
-      'forest-crossing-v5-stream-footbridge-primary',
-      'forest-crossing-v5-stream-footbridge-secondary'
+      'forest-crossing-v6-stream-footbridge-primary',
+      'forest-crossing-v6-stream-footbridge-secondary'
     ].includes(crossing.id)
     || crossing.type !== FOREST_BRIDGE_TYPE
     || !boundedInteger(crossing.worldX, 0, world.width)
     || !boundedInteger(crossing.worldY, 0, world.height)
     || crossing.orientation !== 'world-angle'
     || !boundedInteger(crossing.angleMilliradians, -6283, 6283)
+    || resolveForestBridgeDefinition(crossing.definitionId)?.type !== crossing.type
     || !boundedInteger(crossing.halfWidth, 20, 60)
     || !boundedInteger(crossing.halfLength, 70, 160)
     || !boundedInteger(crossing.maximumElevationPixels, 4, 24)) {
@@ -392,11 +413,6 @@ export function forestBridgeWorldPosition(crossing, longitudinal, lateral = 0) {
 
 export function forestBridgeElevationAt(crossing, position) {
   if (!forestBridgeContains(crossing, position)) return 0;
-  const angle = crossing.angleMilliradians / 1000;
-  if (Math.abs(Math.cos(angle)) < 0.001) return 0;
   const { longitudinal } = forestBridgeLocalCoordinates(crossing, position);
-  const progress = Math.max(0, 1 - (Math.abs(longitudinal) / crossing.halfLength));
-  if (progress < 0.001) return 0;
-  const easedRamp = Math.sin(progress * Math.PI / 2);
-  return Math.max(1, Math.round(easedRamp * crossing.maximumElevationPixels));
+  return Math.round(forestBridgeProfileHeight(crossing, longitudinal));
 }

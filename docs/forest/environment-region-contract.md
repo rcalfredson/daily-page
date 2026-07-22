@@ -100,11 +100,34 @@ pathfinder.
 
 The stream center is a seed-derived base Y plus two bounded sine waves with different wavelengths.
 It crosses the full finite world from west to east and is queryable analytically without a raster.
-Distance to that center classifies water, bank, or land. The fixed profile uses a 44-pixel water
-half-width and 22-pixel bank width. Water and bank shapes are painted in visible 16-pixel samples
-after the corridor, so the stream cuts across the route rather than appearing beneath it.
+Distance to that center classifies water, bank, or land. The gameplay profile retains its 44-pixel
+water half-width and 22-pixel bank classification so traversal and placement remain planar.
 
-Three broad, independently meandering tonal bands break the water into deep teal, middle blue-green,
+Presentation uses the registered `varied-incised-creek-bank` definition. Smooth deterministic
+anchors vary water depth from 5–14 pixels, each side's slope run from 20–42 pixels, and broad plus
+fine edge displacement independently along the creek. The generator samples those profiles into
+three-dimensional bank-face quads: the outer edge remains on the world ground at `z = 0`, while the
+irregular inner edge meets a recessed water surface at negative `z`. The shared forest projection
+maps those points to canvas space. The far bank is painted first, then the recessed water, then the
+near bank, giving the channel coherent occlusion without adding general terrain-elevation physics.
+
+Seeded 210-pixel composition anchors choose grassy, rocky, bare-dirt, or fallen-log-jam influence,
+then smoothstep-blend continuously toward the next anchor instead of changing material at a section
+line. Each bank face is divided into four irregular 3D strata with progressively darker values from
+the ground cap to the waterline, but broken cap shadows and material clusters keep those strata from
+reading as regular masonry courses. A highlighted grass overhang, dark waterline undercut, roots,
+clustered soil pixels, top-lit embedded rocks, dirt striations, and occasional multi-member fallen
+logs provide scale and slope cues. A translucent shallow shelf carries muted soil color and pebbles
+past the waterline so the bank appears to continue below the surface. Both geometry and material
+remain continuous at sample boundaries, and visible geometry is generated and cached in bounded
+world-X chunks rather than across the whole world every frame.
+
+Movement remains planar, but traversal tests the player's full collision circle against the same
+irregular water edge used by presentation. The original analytic half-width remains a conservative
+minimum. Only the rotated, radius-inset bridge deck may admit a player whose circle intersects water;
+this prevents visual edge displacement from making the character appear to wade beside a bridge.
+
+Three broad, independently meandering tonal bands break the recessed water into deep teal, middle blue-green,
 and lighter shallow regions without creating hard tile boundaries. Stable world-anchored clusters
 of two-tone pixels dapple those large shapes, while separate moss, soil, shallow-water, and shadow
 notches articulate both banks. Above them, four sparse flow lanes contain short two- or three-step
@@ -124,15 +147,23 @@ evaluated in local longitudinal/lateral coordinates,
 so its containment and traversal contract supports arbitrary world angles. Player collision remains
 two-dimensional: water rejects movement unless the player's collision circle is inside the rotated
 deck rectangle, and each visible side rail rejects circle overlap over both water and dry approaches.
-The open ends remain unobstructed. Presentation alone evaluates a sine-shaped elevation curve from zero at either
-approach to a 24-pixel crown whenever the bridge is not parallel to the viewport Y axis. A deep
-two-tone curved fascia, crown-lit plank palette, explicit transverse seams, uneven seed-stable plank
-widths and outer ends, restrained grain, iron nails, four
-bridge-aligned stone abutments, and irregular log posts and rails make the rustic arch readable.
-Adjacent planks share the same procedurally chosen seam endpoints, preventing gaps while retaining
-hand-built variation. Every lateral point at one longitudinal position—including fascia and rails
-outside the walkable rectangle—uses the centerline elevation. The deck, player, posts, and rails
-therefore share one structural arch, so walking appears to rise and descend while world position,
+The open ends remain unobstructed.
+
+Presentation is generated from the registered `rustic-timber-arch` bridge definition. That
+definition groups the circular-segment profile, deck and plank dimensions, fascia depth, rail and
+post spacing, abutments, and palette in one parameter object so another bridge form can be added by
+registering a different definition rather than retuning screen-space drawing commands. Each instance
+supplies only its world position, angle, footprint, span, and crown.
+
+The generator constructs plank surfaces, plank ends, curved fascia segments, posts, and handrail
+members as three-dimensional points in the bridge's rotated local coordinate system. A single
+orthographic world projection maps `(x, y, z)` to canvas `(x, y - z)`, matching the forest's planar
+ground and sprite convention. Depth values order surfaces and members before painting. The deck uses
+a true circular-segment arch from zero at either approach to its configured crown; vertical thickness,
+post height, and rail height are offsets on that same profile instead of canvas-Y approximations.
+Both differently angled instances therefore retain the same proportions. Crown-lit uneven planks,
+transverse seams, iron nails, two-tone curved fascia, bridge-aligned stone abutments, and log rails
+retain the rustic pixel-art treatment. The player uses the same profile height while world position,
 collision, focus, and camera remain planar.
 This is not general elevation physics, jumping, slopes, or a bridge-construction system.
 

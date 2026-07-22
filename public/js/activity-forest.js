@@ -58,10 +58,19 @@ import {
   renderNearbyForestWritingCandidates
 } from './forest-nearby-writing.js';
 import {
+  buildForestBridgeModel3d
+} from './forest-bridges.js';
+import { projectForestPoint3d } from './forest-projection.js';
+import {
+  buildForestStreamBankModel3d,
+  forestStreamBankEdgePoint3d,
+  forestStreamWaterDepthAt,
+  forestStreamWaterPoint3d
+} from './forest-stream-banks.js';
+import {
   FOREST_BOULDER_TYPE,
   FOREST_GROUND_DETAIL_CELL_SIZE,
   forestBridgeElevationAt,
-  forestBridgeWorldPosition,
   forestEnvironmentAt,
   forestGroundDetailAt,
   forestStreamCenterY,
@@ -77,12 +86,16 @@ if (payload && viewportElement && canvas) {
   const initialResponseDecodeStartedAt = window.performance.now();
   const scene = JSON.parse(payload.textContent);
   const crossings = scene.crossings || (scene.crossing ? [scene.crossing] : []);
+  const bridgeModels = new Map(crossings.map(bridge => (
+    [bridge.id, buildForestBridgeModel3d(bridge)]
+  )));
   const initialResponseDecodeDuration = window.performance.now() - initialResponseDecodeStartedAt;
   const assetsByKey = new Map();
   const fixturesById = new Map(scene.exploration.fixtures.map((fixture) => [fixture.id, fixture]));
   const context = canvas.getContext('2d');
   const spritesByKey = new Map();
   const camera = { x: 0, y: 0, width: 0, height: 0 };
+  let streamBankModelCache = null;
   const player = { ...scene.exploration.spawn };
   const overlayPersistence = createForestDevOverlayPersistence(window.localStorage);
   const persistedOverlay = overlayPersistence.load(scene.baseIdentity);
@@ -641,22 +654,149 @@ if (payload && viewportElement && canvas) {
     context.fill();
   }
 
-  function paintStreamRibbon(halfWidth, fillStyle) {
-    const firstX = Math.max(0, Math.floor(camera.x / 16) * 16);
-    const lastX = Math.min(scene.world.width, Math.ceil(
-      (camera.x + camera.width) / 16
-    ) * 16);
+  function streamQueryX(worldX) {
+    return Math.max(0, Math.min(scene.world.width, Math.round(worldX)));
+  }
+
+  function streamScreenPoint(worldX, lateral = 0) {
+    const queryX = streamQueryX(worldX);
+    return projectForestPoint3d(forestStreamWaterPoint3d(
+      scene.environment, worldX, lateral,
+      forestStreamCenterY(scene.environment, queryX)
+    ), camera);
+  }
+
+  function streamBankEdgeScreenPoint(worldX, side, position = 'inner') {
+    const queryX = streamQueryX(worldX);
+    visibleStreamBankModel();
+    const key = `${worldX}:${side}:${position}`;
+    let point = streamBankModelCache.edgePoints.get(key);
+    if (!point) {
+      point = forestStreamBankEdgePoint3d(
+        scene.environment, worldX, side,
+        forestStreamCenterY(scene.environment, queryX), position
+      );
+      streamBankModelCache.edgePoints.set(key, point);
+    }
+    return projectForestPoint3d(point, camera);
+  }
+
+  function visibleStreamBankModel() {
+    const chunk = 192;
+    const firstX = Math.max(0, Math.floor((camera.x - 96) / chunk) * chunk);
+    const lastX = Math.min(scene.world.width,
+      Math.ceil((camera.x + camera.width + 96) / chunk) * chunk);
+    if (!streamBankModelCache || streamBankModelCache.firstX !== firstX
+      || streamBankModelCache.lastX !== lastX) {
+      streamBankModelCache = {
+        firstX,
+        lastX,
+        edgePoints: new Map(),
+        model: buildForestStreamBankModel3d(scene.environment, { firstX, lastX },
+          worldX => forestStreamCenterY(scene.environment, streamQueryX(worldX)))
+      };
+    }
+    return streamBankModelCache.model;
+  }
+
+  function paintStreamBankDetail(detail) {
+    const from = projectForestPoint3d(detail.from, camera);
+    const to = projectForestPoint3d(detail.to, camera);
+    const stroke = (color, width, offsetX = 0, offsetY = 0) => {
+      context.beginPath();
+      context.moveTo(Math.round(from.x + offsetX), Math.round(from.y + offsetY));
+      context.lineTo(Math.round(to.x + offsetX), Math.round(to.y + offsetY));
+      context.strokeStyle = color;
+      context.lineWidth = width;
+      context.stroke();
+    };
+    context.lineCap = detail.role.startsWith('log') || detail.role === 'grass'
+      ? 'round' : 'butt';
+    if (detail.role === 'lip') {
+      stroke(detail.colors[0], detail.width + 2, 0, 1);
+      stroke(detail.colors[1], detail.width, 0, -1);
+    } else if (detail.role === 'grass') {
+      stroke(detail.colors[0], detail.width, 0, 1);
+      stroke(detail.colors[1], 1);
+      const direction = to.x >= from.x ? 1 : -1;
+      stroke(detail.colors[1], 1, -direction * 3, 1);
+      stroke(detail.colors[1], 1, direction * 3, 2);
+    } else {
+      stroke(detail.colors[0], detail.width);
+      stroke(detail.colors[1], Math.max(1, Math.floor(detail.width / 3)), 0,
+        detail.role === 'undercut' ? -1 : 0);
+    }
+    context.lineCap = 'butt';
+  }
+
+  function paintStreamBankMark(mark) {
+    const point = projectForestPoint3d(mark.point, camera);
+    const x = Math.round(point.x);
+    const y = Math.round(point.y);
+    const size = mark.size;
+    if (mark.role === 'rock') {
+      const half = Math.floor(size / 2);
+      const crown = 2 + (mark.variant % 2);
+      bridgePolygon([
+        { x: x - half - 1, y: y + 1 },
+        { x: x - half + crown, y: y - Math.floor(size * 0.35) },
+        { x: x + half - 1, y: y - Math.floor(size * 0.25) },
+        { x: x + half + 1, y: y + 1 },
+        { x: x + half - 2, y: y + 3 },
+        { x: x - half + 1, y: y + 3 }
+      ], mark.colors[0]);
+      context.fillStyle = mark.colors[1];
+      context.fillRect(x - half + crown - 1, y - Math.floor(size * 0.35),
+        Math.max(3, size - crown - 1), Math.max(2, Math.floor(size * 0.35)));
+      context.fillStyle = '#bcc3a4';
+      context.fillRect(x - half + crown, y - Math.floor(size * 0.35),
+        Math.max(2, Math.floor(size * 0.35)), 1);
+      if (size > 8) {
+        context.fillStyle = '#515b50';
+        context.fillRect(x + half - 2, y - 1, 2, 2);
+      }
+      return;
+    }
+    context.fillStyle = mark.colors[0];
+    context.fillRect(x - Math.floor(size / 2), y, size, 2);
+    context.fillStyle = mark.colors[1];
+    context.fillRect(x - Math.floor(size / 3), y - 1,
+      Math.max(2, Math.floor(size * 0.66)), 1 + (mark.variant % 2));
+  }
+
+  function paintStreamBank(side) {
+    const model = visibleStreamBankModel();
+    for (const surface of model.surfaces.filter(candidate => candidate.side === side)) {
+      bridgePolygon(surface.points.map(point => {
+        const projected = projectForestPoint3d(point, camera);
+        return { x: Math.round(projected.x), y: Math.round(projected.y) };
+      }), surface.fill);
+    }
+    model.details.filter(detail => detail.side === side).forEach(paintStreamBankDetail);
+    model.marks.filter(candidate => candidate.side === side).forEach(paintStreamBankMark);
+  }
+
+  function paintStreamWaterSurface(fillStyle) {
+    const surfaces = visibleStreamBankModel().surfaces;
+    const farBank = surfaces.filter(({ side, stratum }) => side === -1 && stratum === 3);
+    const nearBank = surfaces.filter(({ side, stratum }) => side === 1 && stratum === 3);
     context.beginPath();
-    for (let worldX = firstX; worldX <= lastX; worldX += 16) {
-      const screenX = worldX - camera.x;
-      const screenY = forestStreamCenterY(scene.environment, worldX) - camera.y - halfWidth;
-      if (worldX === firstX) context.moveTo(screenX, screenY);
-      else context.lineTo(screenX, screenY);
-    }
-    for (let worldX = lastX; worldX >= firstX; worldX -= 16) {
-      context.lineTo(worldX - camera.x,
-        forestStreamCenterY(scene.environment, worldX) - camera.y + halfWidth);
-    }
+    farBank.forEach((surface, index) => {
+      const points = index === 0 ? [surface.points[1], surface.points[2]] : [surface.points[2]];
+      for (const value of points) {
+        const point = projectForestPoint3d(value, camera);
+        if (index === 0 && value === points[0]) context.moveTo(point.x, point.y);
+        else context.lineTo(point.x, point.y);
+      }
+    });
+    [...nearBank].reverse().forEach((surface, index) => {
+      const values = index === 0 ? [surface.points[2], surface.points[1]]
+        : [surface.points[1]];
+      for (const value of values) {
+        const point = projectForestPoint3d(value, camera);
+        context.lineTo(point.x, point.y);
+      }
+    });
     context.closePath();
     context.fillStyle = fillStyle;
     context.fill();
@@ -682,13 +822,6 @@ if (payload && viewportElement && canvas) {
     return value - Math.floor(value);
   }
 
-  function bridgePresentationVariation(bridge, decision, ordinal = 0, side = 0) {
-    const value = Math.sin((bridge.worldX * 0.071)
-      + (bridge.worldY * 0.037) + (decision * 47.31)
-      + (ordinal * 91.73) + (side * 19.17)) * 43758.5453;
-    return value - Math.floor(value);
-  }
-
   function paintStreamColorBand(lane, halfWidth, fillStyle, wavelength, phase) {
     const firstX = Math.max(0, Math.floor(camera.x / 16) * 16);
     const lastX = Math.min(scene.world.width, Math.ceil(
@@ -697,18 +830,18 @@ if (payload && viewportElement && canvas) {
     const edge = (worldX, side) => {
       const meander = Math.sin((worldX / wavelength) + phase) * 4;
       const widthVariation = Math.sin((worldX / (wavelength * 0.57)) + phase + 1.7) * 2;
-      return forestStreamCenterY(scene.environment, worldX) + lane + meander
-        + (side * (halfWidth + widthVariation));
+      return streamScreenPoint(worldX, lane + meander
+        + (side * (halfWidth + widthVariation)));
     };
     context.beginPath();
     for (let worldX = firstX; worldX <= lastX; worldX += 16) {
-      const pointX = worldX - camera.x;
-      const pointY = edge(worldX, -1) - camera.y;
-      if (worldX === firstX) context.moveTo(pointX, pointY);
-      else context.lineTo(pointX, pointY);
+      const point = edge(worldX, -1);
+      if (worldX === firstX) context.moveTo(point.x, point.y);
+      else context.lineTo(point.x, point.y);
     }
     for (let worldX = lastX; worldX >= firstX; worldX -= 16) {
-      context.lineTo(worldX - camera.x, edge(worldX, 1) - camera.y);
+      const point = edge(worldX, 1);
+      context.lineTo(point.x, point.y);
     }
     context.closePath();
     context.fillStyle = fillStyle;
@@ -730,11 +863,9 @@ if (payload && viewportElement && canvas) {
         const lane = -stream.halfWidth + 7 + (laneIndex * 11)
           + Math.floor((streamFlowVariation(identity, laneIndex, 13) - 0.5) * 5);
         if (Math.abs(lane) >= stream.halfWidth - 3) continue;
-        const worldY = forestStreamCenterY(scene.environment, Math.max(0, Math.min(
-          scene.world.width, Math.round(worldX)
-        ))) + lane;
-        const x = Math.round(worldX - camera.x);
-        const y = Math.round(worldY - camera.y);
+        const point = streamScreenPoint(worldX, lane);
+        const x = Math.round(point.x);
+        const y = Math.round(point.y);
         const width = 2 + Math.floor(streamFlowVariation(identity, laneIndex, 14) * 7);
         const colorIndex = Math.floor(streamFlowVariation(identity, laneIndex, 15)
           * waterColors.length);
@@ -747,42 +878,74 @@ if (payload && viewportElement && canvas) {
     }
   }
 
-  function paintStreamEdgeTexture(stream) {
+  function paintStreamEdgeTexture() {
     const edgeSpacing = 14;
     const firstColumn = Math.floor((camera.x - edgeSpacing) / edgeSpacing);
     const lastColumn = Math.ceil((camera.x + camera.width + edgeSpacing) / edgeSpacing);
     for (let column = firstColumn; column <= lastColumn; column += 1) {
       const worldX = column * edgeSpacing;
       const queryX = Math.max(0, Math.min(scene.world.width, Math.round(worldX)));
-      const centerY = forestStreamCenterY(scene.environment, queryX);
       for (const side of [-1, 1]) {
         const identity = column + (side * 401);
-        const notch = Math.floor(streamFlowVariation(identity, side, 21) * 5);
         const width = 4 + Math.floor(streamFlowVariation(identity, side, 22) * 8);
-        const waterY = centerY + (side * (stream.halfWidth - 2 + notch));
+        const water = streamBankEdgeScreenPoint(queryX, side);
         context.fillStyle = side < 0 ? '#58a09a' : '#1d6577';
-        context.fillRect(Math.round(worldX - camera.x), Math.round(waterY - camera.y), width, 2);
-        if (streamFlowVariation(identity, side, 23) > 0.4) {
-          const bankY = centerY + (side * (stream.halfWidth + 5 + notch));
-          context.fillStyle = streamFlowVariation(identity, side, 24) > 0.5
-            ? '#527342' : '#789054';
-          context.fillRect(Math.round(worldX - camera.x) + 3,
-            Math.round(bankY - camera.y), Math.max(3, width - 3), 2);
-        }
+        context.fillRect(Math.round(water.x), Math.round(water.y), width, 2);
+      }
+    }
+  }
+
+  function paintStreamShallows() {
+    const surfaces = visibleStreamBankModel().surfaces;
+    for (const side of [-1, 1]) {
+      const edge = surfaces.filter(({ side: candidateSide, stratum }) => (
+        candidateSide === side && stratum === 3
+      ));
+      if (!edge.length) continue;
+      const inner = [edge[0].points[1], ...edge.map(surface => surface.points[2])];
+      const submerged = inner.map(point => ({ ...point, y: point.y - (side * 13) }));
+      context.beginPath();
+      [...inner, ...submerged.reverse()].forEach((value, index) => {
+        const point = projectForestPoint3d(value, camera);
+        if (index === 0) context.moveTo(point.x, point.y);
+        else context.lineTo(point.x, point.y);
+      });
+      context.closePath();
+      context.fillStyle = side < 0 ? 'rgba(151, 145, 91, 0.25)'
+        : 'rgba(105, 101, 69, 0.32)';
+      context.fill();
+    }
+    const spacing = 27;
+    const firstColumn = Math.floor((camera.x - spacing) / spacing);
+    const lastColumn = Math.ceil((camera.x + camera.width + spacing) / spacing);
+    for (let column = firstColumn; column <= lastColumn; column += 1) {
+      const worldX = column * spacing;
+      for (const side of [-1, 1]) {
+        const identity = column + (side * 613);
+        if (streamFlowVariation(identity, side, 31) < 0.38) continue;
+        const edge = streamBankEdgeScreenPoint(worldX, side);
+        const x = Math.round(edge.x + ((streamFlowVariation(identity, side, 32) - 0.5) * 8));
+        const y = Math.round(edge.y - (side * (4
+          + (streamFlowVariation(identity, side, 33) * 5))));
+        const width = 3 + Math.floor(streamFlowVariation(identity, side, 34) * 5);
+        context.fillStyle = 'rgba(43, 61, 56, 0.48)';
+        context.fillRect(x - 1, y + 1, width + 2, 2);
+        context.fillStyle = 'rgba(170, 177, 139, 0.44)';
+        context.fillRect(x, y, width, 2);
       }
     }
   }
 
   function paintStream(elapsedSeconds) {
     const stream = scene.environment.stream;
-    paintStreamRibbon(stream.halfWidth + stream.bankWidth, '#61794b');
-    paintStreamRibbon(stream.halfWidth + 6, '#336d67');
-    paintStreamRibbon(stream.halfWidth, '#247486');
+    paintStreamBank(-1);
+    paintStreamWaterSurface('#247486');
     paintStreamColorBand(7, 20, '#2f8190', 176, 0.4);
     paintStreamColorBand(-22, 7, '#4b9b9b', 127, 2.1);
     paintStreamColorBand(27, 5, '#1d687d', 151, 4.6);
+    paintStreamShallows();
     paintStreamSurfaceTexture(stream);
-    paintStreamEdgeTexture(stream);
+    paintStreamEdgeTexture();
     const spacing = 76;
     const firstMark = Math.floor((camera.x - spacing) / spacing);
     const lastMark = Math.ceil((camera.x + camera.width + spacing) / spacing);
@@ -808,9 +971,10 @@ if (payload && viewportElement && canvas) {
           const streamQueryX = Math.round(worldX);
           const laneStep = segment === 1 ? stepDirection * 2 : 0;
           const baseY = forestStreamCenterY(scene.environment, streamQueryX) + lane + laneStep;
-          const worldY = baseY + streamFlowDeflection(worldX, baseY);
-          const screenX = Math.round(worldX - camera.x);
-          const screenY = Math.round(worldY - camera.y);
+          const deflection = streamFlowDeflection(worldX, baseY);
+          const point = streamScreenPoint(worldX, lane + laneStep + deflection);
+          const screenX = Math.round(point.x);
+          const screenY = Math.round(point.y);
           const segmentWidth = Math.max(5,
             Math.ceil(length / segmentCount) + (segment === 1 ? 2 : 0));
           context.fillStyle = lane === -9 || lane === 28 ? '#a1d0bd' : '#79c3bb';
@@ -827,17 +991,12 @@ if (payload && viewportElement && canvas) {
         }
       }
     }
+    paintStreamBank(1);
   }
 
-  function bridgeScreenPoint(bridge, longitudinal, lateral = 0, elevated = true) {
-    const world = forestBridgeWorldPosition(bridge, longitudinal, lateral);
-    const elevationPosition = forestBridgeWorldPosition(bridge, longitudinal, 0);
-    const elevation = elevated
-      ? forestBridgeElevationAt(bridge, elevationPosition) : 0;
-    return {
-      x: Math.round(world.worldX - camera.x),
-      y: Math.round(world.worldY - camera.y - elevation)
-    };
+  function bridgeScreenPoint(point) {
+    const projected = projectForestPoint3d(point, camera);
+    return { x: Math.round(projected.x), y: Math.round(projected.y) };
   }
 
   function bridgePolygon(points, fillStyle) {
@@ -851,192 +1010,74 @@ if (payload && viewportElement && canvas) {
     context.fill();
   }
 
+  function bridgeSurfaceDepth(surface) {
+    return surface.points.reduce((sum, point) => (
+      sum + projectForestPoint3d(point, camera).depth
+    ), 0) / surface.points.length;
+  }
+
   function paintBridgeDeck(bridge) {
-    const sideDrop = 11;
-
-    for (const endSign of [-1, 1]) {
-      for (const side of [-1, 1]) {
-        const inner = endSign * (bridge.halfLength - 8);
-        const outer = endSign * (bridge.halfLength + 7);
-        const nearSide = side * (bridge.halfWidth - 4);
-        const farSide = side * (bridge.halfWidth + 10);
-        bridgePolygon([
-          bridgeScreenPoint(bridge, inner, nearSide, false),
-          bridgeScreenPoint(bridge, inner, farSide, false),
-          bridgeScreenPoint(bridge, outer, farSide, false),
-          bridgeScreenPoint(bridge, outer, nearSide, false)
-        ], '#555344');
-        bridgePolygon([
-          bridgeScreenPoint(bridge, inner + (endSign * 2), nearSide, false),
-          bridgeScreenPoint(bridge, inner + (endSign * 2),
-            side * (bridge.halfWidth + 6), false),
-          bridgeScreenPoint(bridge, outer - (endSign * 2),
-            side * (bridge.halfWidth + 6), false),
-          bridgeScreenPoint(bridge, outer - (endSign * 2), nearSide, false)
-        ], '#85806a');
-      }
-    }
-
-    bridgePolygon([
-      bridgeScreenPoint(bridge, -bridge.halfLength, -bridge.halfWidth - 6, false),
-      bridgeScreenPoint(bridge, -bridge.halfLength, bridge.halfWidth + 6, false),
-      bridgeScreenPoint(bridge, bridge.halfLength, bridge.halfWidth + 6, false),
-      bridgeScreenPoint(bridge, bridge.halfLength, -bridge.halfWidth - 6, false)
-    ].map(point => ({ x: point.x + 3, y: point.y + 7 })), 'rgba(27, 39, 37, 0.34)');
-
-    for (const side of [-1, 1]) {
-      const archEdge = [];
-      for (let longitudinal = -bridge.halfLength; longitudinal < bridge.halfLength;
-        longitudinal += 12) {
-        const next = Math.min(bridge.halfLength, longitudinal + 12);
-        const start = bridgeScreenPoint(bridge, longitudinal, side * (bridge.halfWidth + 1));
-        const end = bridgeScreenPoint(bridge, next, side * (bridge.halfWidth + 1));
-        if (!archEdge.length) archEdge.push(start);
-        archEdge.push(end);
-        bridgePolygon([start, end, { x: end.x, y: end.y + sideDrop },
-          { x: start.x, y: start.y + sideDrop }], side < 0 ? '#493225' : '#392a22');
-      }
+    const model = bridgeModels.get(bridge.id);
+    const roleOrder = { shadow: 0, abutment: 1, fascia: 2, 'plank-end': 3, plank: 4 };
+    const surfaces = [...model.surfaces].sort((left, right) => (
+      roleOrder[left.role] - roleOrder[right.role]
+      || bridgeSurfaceDepth(left) - bridgeSurfaceDepth(right)
+      || left.ordinal - right.ordinal
+    ));
+    for (const surface of surfaces) {
+      const points = surface.points.map(bridgeScreenPoint);
+      bridgePolygon(points, surface.fill);
+      if (surface.role !== 'plank') continue;
       context.beginPath();
-      archEdge.forEach((point, index) => {
-        if (index === 0) context.moveTo(point.x, point.y + sideDrop);
-        else context.lineTo(point.x, point.y + sideDrop);
-      });
-      context.strokeStyle = '#2f2924';
-      context.lineWidth = 3;
-      context.lineJoin = 'round';
-      context.stroke();
-      context.beginPath();
-      archEdge.forEach((point, index) => {
-        if (index === 0) context.moveTo(point.x, point.y + 2);
-        else context.lineTo(point.x, point.y + 2);
-      });
-      context.strokeStyle = '#805536';
-      context.lineWidth = 2;
-      context.stroke();
-    }
-
-    bridgePolygon([
-      bridgeScreenPoint(bridge, -bridge.halfLength, -bridge.halfWidth),
-      bridgeScreenPoint(bridge, -bridge.halfLength, bridge.halfWidth),
-      bridgeScreenPoint(bridge, bridge.halfLength, bridge.halfWidth),
-      bridgeScreenPoint(bridge, bridge.halfLength, -bridge.halfWidth)
-    ], '#563a29');
-
-    let longitudinal = -bridge.halfLength;
-    let plankOrdinal = 0;
-    while (longitudinal < bridge.halfLength) {
-      const plankWidth = 6 + Math.floor(bridgePresentationVariation(
-        bridge, 1, plankOrdinal
-      ) * 5);
-      const next = Math.min(bridge.halfLength, longitudinal + plankWidth);
-      const startLeftInset = Math.floor(bridgePresentationVariation(
-        bridge, 2, plankOrdinal
-      ) * 3);
-      const startRightInset = Math.floor(bridgePresentationVariation(
-        bridge, 3, plankOrdinal
-      ) * 3);
-      const endLeftInset = Math.floor(bridgePresentationVariation(
-        bridge, 2, plankOrdinal + 1
-      ) * 3);
-      const endRightInset = Math.floor(bridgePresentationVariation(
-        bridge, 3, plankOrdinal + 1
-      ) * 3);
-      const plank = [
-        bridgeScreenPoint(bridge, longitudinal, -bridge.halfWidth + startLeftInset),
-        bridgeScreenPoint(bridge, longitudinal, bridge.halfWidth - startRightInset),
-        bridgeScreenPoint(bridge, next, bridge.halfWidth - endRightInset),
-        bridgeScreenPoint(bridge, next, -bridge.halfWidth + endLeftInset)
-      ];
-      const plankCenter = forestBridgeWorldPosition(bridge,
-        longitudinal + (plankWidth * 0.5), 0);
-      const elevationRatio = forestBridgeElevationAt(bridge, plankCenter)
-        / bridge.maximumElevationPixels;
-      const plankColors = elevationRatio > 0.72
-        ? ['#b87f49', '#c08a52', '#a87243', '#b7804c']
-        : elevationRatio > 0.34
-          ? ['#a66f42', '#b57d49', '#96613b', '#aa7243']
-          : ['#925f3c', '#a36c41', '#835536', '#98623c'];
-      const colorIndex = Math.floor(bridgePresentationVariation(bridge, 4, plankOrdinal)
-        * plankColors.length);
-      bridgePolygon(plank, plankColors[colorIndex]);
-      context.beginPath();
-      const seamStart = bridgeScreenPoint(bridge, longitudinal,
-        -bridge.halfWidth + startLeftInset + 2);
-      const seamEnd = bridgeScreenPoint(bridge, longitudinal,
-        bridge.halfWidth - startRightInset - 2);
-      context.moveTo(seamStart.x, seamStart.y);
-      context.lineTo(seamEnd.x, seamEnd.y);
-      context.strokeStyle = elevationRatio > 0.72 ? '#795033' : '#65452f';
+      context.moveTo(points[0].x, points[0].y);
+      context.lineTo(points[1].x, points[1].y);
+      context.strokeStyle = surface.points[0].z > bridge.maximumElevationPixels * 0.72
+        ? model.palette.seamHigh : model.palette.seam;
       context.lineWidth = 1;
       context.stroke();
-      const grainCenter = -bridge.halfWidth + 12
-        + (bridgePresentationVariation(bridge, 5, plankOrdinal) * (bridge.halfWidth * 1.25));
-      const grainLength = 5 + Math.floor(bridgePresentationVariation(
-        bridge, 6, plankOrdinal
-      ) * 7);
-      bridgePolygon([
-        bridgeScreenPoint(bridge, longitudinal + (plankWidth * 0.52),
-          grainCenter - grainLength),
-        bridgeScreenPoint(bridge, longitudinal + (plankWidth * 0.52),
-          grainCenter + grainLength),
-        bridgeScreenPoint(bridge, longitudinal + (plankWidth * 0.52) + 1,
-          grainCenter + grainLength),
-        bridgeScreenPoint(bridge, longitudinal + (plankWidth * 0.52) + 1,
-          grainCenter - grainLength)
-      ], bridgePresentationVariation(bridge, 6, plankOrdinal) > 0.72
-        ? '#5b3b2a' : '#c0874f');
-      if (plankOrdinal % 3 !== 1) {
-        for (const side of [-1, 1]) {
-          const nail = bridgeScreenPoint(bridge, longitudinal + 2,
-            side * (bridge.halfWidth - 6));
-          context.fillStyle = '#3d342d';
-          context.fillRect(nail.x, nail.y, 2, 2);
-        }
+    }
+    for (const detail of model.details) {
+      const from = bridgeScreenPoint(detail.from);
+      const to = bridgeScreenPoint(detail.to);
+      context.strokeStyle = detail.color;
+      context.fillStyle = detail.color;
+      if (detail.role === 'nail') {
+        context.fillRect(from.x - 1, from.y - 1, detail.width, detail.width);
+        continue;
       }
-      longitudinal = next;
-      plankOrdinal += 1;
+      context.beginPath();
+      context.moveTo(from.x, from.y);
+      context.lineTo(to.x, to.y);
+      context.lineWidth = detail.width;
+      context.stroke();
     }
   }
 
+  function paintBridgeMember(member) {
+    const from = bridgeScreenPoint(member.from);
+    const to = bridgeScreenPoint(member.to);
+    context.beginPath();
+    context.moveTo(from.x, from.y);
+    context.lineTo(to.x, to.y);
+    context.strokeStyle = member.colors[0];
+    context.lineWidth = member.width;
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+    context.stroke();
+    context.strokeStyle = member.colors[1];
+    context.lineWidth = Math.max(1, Math.floor(member.width / 3));
+    context.stroke();
+  }
+
   function paintBridgeRails(bridge) {
-    for (const side of [-1, 1]) {
-      const railPoints = [];
-      let longitudinal = -bridge.halfLength;
-      let postOrdinal = 0;
-      while (longitudinal <= bridge.halfLength) {
-        const point = bridgeScreenPoint(bridge, longitudinal, side * (bridge.halfWidth + 2));
-        const postHeight = 10 + Math.floor(bridgePresentationVariation(
-          bridge, 7, postOrdinal, side
-        ) * 5);
-        railPoints.push({ x: point.x, y: point.y - postHeight + 2 });
-        context.fillStyle = '#493325';
-        context.fillRect(point.x - 3, point.y - postHeight, 6, postHeight + 5);
-        context.fillStyle = '#9e6b40';
-        context.fillRect(point.x - 1, point.y - postHeight + 1, 2, postHeight - 1);
-        context.fillStyle = '#c08a55';
-        context.fillRect(point.x - 1, point.y - postHeight - 1, 3, 2);
-        longitudinal += 19 + Math.floor(bridgePresentationVariation(
-          bridge, 8, postOrdinal, side
-        ) * 7);
-        postOrdinal += 1;
-      }
-      const end = bridgeScreenPoint(bridge, bridge.halfLength,
-        side * (bridge.halfWidth + 2));
-      railPoints.push({ x: end.x, y: end.y - 9 });
-      context.beginPath();
-      railPoints.forEach((point, index) => {
-        if (index === 0) context.moveTo(point.x, point.y);
-        else context.lineTo(point.x, point.y);
-      });
-      context.strokeStyle = '#473126';
-      context.lineWidth = 6;
-      context.lineCap = 'round';
-      context.lineJoin = 'round';
-      context.stroke();
-      context.strokeStyle = '#9f6b3e';
-      context.lineWidth = 2;
-      context.stroke();
-    }
+    const model = bridgeModels.get(bridge.id);
+    [...model.members].sort((left, right) => {
+      const leftDepth = (projectForestPoint3d(left.from, camera).depth
+        + projectForestPoint3d(left.to, camera).depth) / 2;
+      const rightDepth = (projectForestPoint3d(right.from, camera).depth
+        + projectForestPoint3d(right.to, camera).depth) / 2;
+      return leftDepth - rightDepth || left.ordinal - right.ordinal;
+    }).forEach(paintBridgeMember);
   }
 
   function paintTree(placement, elapsedSeconds) {
@@ -1073,7 +1114,9 @@ if (payload && viewportElement && canvas) {
 
   function paintBoulder(boulder) {
     const x = Math.round(boulder.worldX - camera.x);
-    const y = Math.round(boulder.worldY - camera.y);
+    const waterDepth = boulder.terrainRole === 'stream-boulder'
+      ? forestStreamWaterDepthAt(scene.environment, boulder.worldX) : 0;
+    const y = Math.round(boulder.worldY - camera.y + waterDepth);
     const width = boulder.width;
     const height = boulder.height;
     const left = x - Math.floor(width / 2);

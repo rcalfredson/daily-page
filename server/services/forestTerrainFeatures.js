@@ -10,6 +10,7 @@ import {
   validateForestStreamCrossing
 } from '../../public/js/forest-environment.js';
 import { createRandom, hashSeed } from './forest/v3/random.js';
+import { FOREST_BRIDGE_DEFINITION_ID } from '../../public/js/forest-bridges.js';
 
 export { FOREST_CROSSING_GENERATION_VERSION, FOREST_CROSSING_SCHEMA_VERSION };
 
@@ -57,7 +58,7 @@ export function generateForestStreamCrossing(scene, corridorCenterAt) {
   return validateForestStreamCrossing({
     schemaVersion: FOREST_CROSSING_SCHEMA_VERSION,
     generationVersion: FOREST_CROSSING_GENERATION_VERSION,
-    id: 'forest-crossing-v5-stream-footbridge-primary',
+    id: 'forest-crossing-v6-stream-footbridge-primary',
     type: FOREST_BRIDGE_TYPE,
     worldX: best.worldX,
     worldY: best.worldY,
@@ -65,6 +66,7 @@ export function generateForestStreamCrossing(scene, corridorCenterAt) {
     angleMilliradians: 1100 + Math.floor(decisionUnit(
       scene.environment.seed, best.worldX, best.worldY, 'bridge-angle'
     ) * 100),
+    definitionId: FOREST_BRIDGE_DEFINITION_ID,
     halfWidth: 31,
     halfLength,
     maximumElevationPixels: 24
@@ -88,12 +90,13 @@ export function generateForestStreamCrossings(scene, corridorCenterAt) {
     const candidate = validateForestStreamCrossing({
       schemaVersion: FOREST_CROSSING_SCHEMA_VERSION,
       generationVersion: FOREST_CROSSING_GENERATION_VERSION,
-      id: 'forest-crossing-v5-stream-footbridge-secondary',
+      id: 'forest-crossing-v6-stream-footbridge-secondary',
       type: FOREST_BRIDGE_TYPE,
       worldX,
       worldY: forestStreamCenterY(scene.environment, worldX),
       orientation: 'world-angle',
       angleMilliradians,
+      definitionId: FOREST_BRIDGE_DEFINITION_ID,
       halfWidth: 29,
       halfLength,
       maximumElevationPixels: 20
