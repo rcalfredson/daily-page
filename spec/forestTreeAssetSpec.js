@@ -5,6 +5,7 @@ import {
 } from '../server/services/forestTreeGeneratorV3.js';
 import {
   buildForestTreeAsset,
+  FOREST_TREE_MAX_PERCH_ANCHORS,
   FOREST_TREE_ASSET_SCHEMA_VERSION,
   treeAssetCacheKey
 } from '../server/services/forest/v3/treeAsset.js';
@@ -50,6 +51,21 @@ describe('v3 forest runtime tree assets', () => {
     expect(first.anchor.y).toBe(120);
     expect(first.bounds.width).toBeGreaterThan(0);
     expect(first.bounds.height).toBeGreaterThan(0);
+    expect(first.perchAnchors.length).toBeGreaterThan(0);
+    expect(first.perchAnchors.length).toBeLessThanOrEqual(FOREST_TREE_MAX_PERCH_ANCHORS);
+  });
+
+  it('exposes only bounded anchors that meet real generated branch pixels', () => {
+    const generation = generateForestTreeV3(post, { seed: 202 });
+    const asset = buildForestTreeAsset(generation);
+
+    for (const anchor of asset.perchAnchors) {
+      expect(Object.keys(anchor).sort()).toEqual(['depth', 'id', 'layer', 'x', 'y']);
+      expect(anchor.layer).toBe(anchor.depth < 0 ? 'behind-wood' : 'front-of-wood');
+      expect(generation.wood.mask.slice(anchor.y - 2, anchor.y + 3).some(row => (
+        row.slice(anchor.x - 2, anchor.x + 3).some(Boolean)
+      ))).toBeTrue();
+    }
   });
 
   it('contains display runs and limited identity but excludes generation diagnostics', () => {

@@ -787,6 +787,12 @@ two-dimensional. Side rails use the same local coordinates as bounded solid segm
 the player circle from crossing them over water or dry approaches while leaving both ends open.
 Reduced motion freezes water flow at a stable phase.
 
+Milestone 9's page-lifetime actor ownership, bounded bird state machine, generated branch-anchor
+seam, rendering hooks, motion policy, and initial measurements are documented in
+[`transient-life-contract.md`](./transient-life-contract.md). Transient actors remain outside the
+generated base, writing projection, personal overlay, discovery and material ledgers, and all
+production persistence.
+
 ### Development lossless-raster transport experiment
 
 The Activity Forest route offers a development-only transport selector alongside every pressure
@@ -794,7 +800,8 @@ profile. `color-runs` remains the calm representative scene's default. The exper
 `lossless-raster` option leaves the placement manifest and versioned runtime identity unchanged but
 replaces each static layer or foliage-group run array with a transparent, lossless PNG payload
 carried as base64 in the existing initial and regional JSON responses. Raster assets retain the schema, renderer,
-phenotype, seed, cache key, dimensions, bounds, anchor, architectural identity, and ordered
+phenotype, seed, cache key, dimensions, bounds, anchor, bounded perch anchors, architectural
+identity, and ordered
 `rear-foliage`, `wood`, and `front-foliage` layer ids. They deliberately do not combine those layers
 into a single image.
 

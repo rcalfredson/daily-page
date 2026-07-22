@@ -76,6 +76,15 @@ import {
   forestStreamCenterY,
   resolveForestRockPalette
 } from './forest-environment.js';
+import {
+  advanceForestTransientLife,
+  createForestTransientLife,
+  FOREST_BIRD_VARIANTS,
+  forestBirdPerchPoint,
+  forestTransientBirdForTree,
+  forestTransientFlight,
+  forestTransientLifeDiagnostic
+} from './forest-transient-life.js';
 
 const payload = document.getElementById('activity-forest-scene');
 const viewportElement = document.querySelector('[data-forest-viewport]');
@@ -85,6 +94,7 @@ if (payload && viewportElement && canvas) {
   const scriptStartedAt = window.performance.now();
   const initialResponseDecodeStartedAt = window.performance.now();
   const scene = JSON.parse(payload.textContent);
+  const transientLife = createForestTransientLife(scene);
   const crossings = scene.crossings || (scene.crossing ? [scene.crossing] : []);
   const bridgeModels = new Map(crossings.map(bridge => (
     [bridge.id, buildForestBridgeModel3d(bridge)]
@@ -161,7 +171,9 @@ if (payload && viewportElement && canvas) {
     benchWriting: document.querySelector('[data-forest-bench-writing-diagnostic]'),
     benchResurfaced: document.querySelector('[data-forest-bench-resurfaced]'),
     environmentPlayer: document.querySelector('[data-forest-environment-player]'),
-    environmentPaint: document.querySelector('[data-forest-environment-paint]')
+    environmentPaint: document.querySelector('[data-forest-environment-paint]'),
+    transientLife: document.querySelector('[data-forest-transient-life]'),
+    transientDuration: document.querySelector('[data-forest-transient-duration]')
   };
   const loadedCellIds = new Set(scene.assetLoading.initialCellIds);
   const pendingCellIds = new Set();
@@ -172,6 +184,7 @@ if (payload && viewportElement && canvas) {
   const seenAssetKeys = new Set();
   const movementRenders = { count: 0, total: 0, maximum: 0 };
   const ambientRenders = { count: 0, total: 0, maximum: 0 };
+  const transientUpdates = { count: 0, total: 0, maximum: 0 };
   const windByPlacementId = new Map(scene.placements.map((placement) => (
     [placement.id, forestPlacementWindParameters(placement)]
   )));
@@ -1097,6 +1110,7 @@ if (payload && viewportElement && canvas) {
       context.stroke();
     }
     for (const layer of spritesByKey.get(placement.assetKey)) {
+      if (layer.id === 'wood') paintPerchedBirds(placement, 'behind-wood');
       if (layer.motionGroups) {
         for (const group of layer.motionGroups) {
           const displacement = forestFoliageMotionGroupDisplacement(
@@ -1109,7 +1123,61 @@ if (payload && viewportElement && canvas) {
         context.drawImage(layer.sprite, originX, originY,
           asset.dimensions.width * placement.scale, asset.dimensions.height * placement.scale);
       }
+      if (layer.id === 'wood') paintPerchedBirds(placement, 'front-of-wood');
     }
+  }
+
+  function birdVariant(actor) {
+    return FOREST_BIRD_VARIANTS.find(({ id }) => id === actor.variantId)
+      || FOREST_BIRD_VARIANTS[0];
+  }
+
+  function paintBird(actor, x, y, flying = false) {
+    const palette = birdVariant(actor);
+    const wingUp = flying && ambientMotionActive
+      && Math.floor(actor.behavior.elapsedMilliseconds / 120) % 2 === 0;
+    context.fillStyle = 'rgba(25, 35, 31, 0.22)';
+    if (!flying) context.fillRect(x - 3, y + 1, 7, 2);
+    context.fillStyle = palette.wing;
+    if (wingUp) {
+      context.fillRect(x - 6, y - 6, 4, 3);
+      context.fillRect(x + 3, y - 6, 4, 3);
+    } else if (flying) {
+      context.fillRect(x - 7, y - 3, 5, 2);
+      context.fillRect(x + 3, y - 3, 5, 2);
+    } else {
+      context.fillRect(x - 4, y - 5, 5, 4);
+    }
+    context.fillStyle = palette.body;
+    context.fillRect(x - 3, y - 6, 7, 5);
+    context.fillRect(x + 2, y - 8, 4, 4);
+    context.fillStyle = palette.breast;
+    context.fillRect(x + 1, y - 4, 3, 3);
+    context.fillStyle = '#1e2929';
+    context.fillRect(x + 4, y - 7, 1, 1);
+    context.fillStyle = '#c59445';
+    context.fillRect(x + 6, y - 6, 2, 1);
+    if (!flying) {
+      context.fillRect(x - 1, y - 1, 1, 2);
+      context.fillRect(x + 2, y - 1, 1, 2);
+    }
+  }
+
+  function paintPerchedBirds(placement, perchLayer) {
+    const actor = forestTransientBirdForTree(
+      transientLife, placement.id, reducedMotionQuery.matches
+    );
+    if (!actor) return;
+    const point = forestBirdPerchPoint(
+      actor, scene.placements, assetsByKey, actor.behavior.routeIndex
+    );
+    if (!point || point.layer !== perchLayer) return;
+    paintBird(actor, Math.round(point.x - camera.x), Math.round(point.projectedY - camera.y));
+  }
+
+  function paintFlyingBird(actor) {
+    const point = projectForestPoint3d(actor.behavior.flight, camera);
+    paintBird(actor, Math.round(point.x), Math.round(point.y), true);
   }
 
   function paintBoulder(boulder) {
@@ -1332,8 +1400,16 @@ if (payload && viewportElement && canvas) {
     }
     paintTrailJoins();
     const visibility = visibilityCache.read(camera, player);
-    for (const item of visibility.depthOrder) {
+    const flight = forestTransientFlight(transientLife, camera, reducedMotionQuery.matches);
+    const depthOrder = flight ? [...visibility.depthOrder, {
+      kind: 'transient-flight', id: flight.id,
+      worldY: flight.behavior.flight.y + flight.behavior.flight.z, actor: flight
+    }].sort((left, right) => (
+      left.worldY - right.worldY || left.id.localeCompare(right.id)
+    )) : visibility.depthOrder;
+    for (const item of depthOrder) {
       if (item.kind === 'player') paintPlayer();
+      else if (item.kind === 'transient-flight') paintFlyingBird(item.actor);
       else if (item.kind === 'marker') paintMarker(item.object);
       else if (item.kind === FOREST_STEPPING_STONE_TYPE) paintSteppingStone(item.object);
       else if (item.kind === FOREST_DISCOVERY_TYPE) paintDiscovery(item.object);
@@ -1361,6 +1437,13 @@ if (payload && viewportElement && canvas) {
       visibleObjects.filter(({ type }) => type === FOREST_BOULDER_TYPE).length} boulders`;
     diagnostics.camera.textContent = `${camera.x}, ${camera.y}`;
     diagnostics.player.textContent = `${Math.round(player.worldX)}, ${Math.round(player.worldY)}`;
+    const transientDiagnostic = forestTransientLifeDiagnostic(transientLife);
+    diagnostics.transientLife.textContent = `${transientDiagnostic.count} birds · ${
+      transientDiagnostic.counts.perched} perched · ${transientDiagnostic.counts.flight
+    } flight · ${transientDiagnostic.autonomousTransitions} autonomous · ${
+      transientDiagnostic.playerStartledTransitions} startled · ${
+      transientDiagnostic.selectionExhaustions} exhausted${
+      transientDiagnostic.suppressedByReducedMotion ? ' · reduced-motion frozen' : ''}`;
     if (scene.environment && diagnostics.environmentPlayer) {
       const environment = forestEnvironmentAt(scene.environment, {
         worldX: Math.round(player.worldX), worldY: Math.round(player.worldY)
@@ -1435,6 +1518,22 @@ if (payload && viewportElement && canvas) {
     if (lastFrameTime === null) lastFrameTime = timestamp;
     const elapsed = Math.min(0.05, (timestamp - lastFrameTime) / 1000);
     lastFrameTime = timestamp;
+    const transientStartedAt = window.performance.now();
+    advanceForestTransientLife(transientLife, {
+      elapsedMilliseconds: elapsed * 1000,
+      placements: scene.placements,
+      assetsByKey,
+      viewport: camera,
+      documentHidden: document.hidden,
+      reducedMotion: reducedMotionQuery.matches
+    });
+    const transientDuration = window.performance.now() - transientStartedAt;
+    transientUpdates.count += 1;
+    transientUpdates.total += transientDuration;
+    transientUpdates.maximum = Math.max(transientUpdates.maximum, transientDuration);
+    diagnostics.transientDuration.textContent = `${transientDuration.toFixed(2)} ms last / ${
+      (transientUpdates.total / transientUpdates.count).toFixed(2)} ms avg / ${
+      transientUpdates.maximum.toFixed(2)} ms max`;
     const moving = hasMovement() && !dialog.open && !objectDialog.open && !forestMenu.open;
     if (moving) {
       Object.assign(player, moveForestPlayer(player, movementDirection(), elapsed,
