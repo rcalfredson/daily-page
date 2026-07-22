@@ -40,6 +40,7 @@ import {
   FOREST_STREAM_BANK_DEFINITION_ID,
   FOREST_STREAM_BANK_MODEL_VERSION
 } from '../../public/js/forest-stream-banks.js';
+import { FOREST_TRANSIENT_LIFE_VERSION } from '../../public/js/forest-transient-life.js';
 
 const router = express.Router();
 
@@ -273,6 +274,7 @@ router.get(
       rasterTransport: FOREST_ASSET_TRANSPORT_RASTER,
       pressureProfiles: FOREST_PRESSURE_PROFILES,
       serverDiagnostics,
+      transientLifeVersion: FOREST_TRANSIENT_LIFE_VERSION,
       environmentSummary: forestEnvironmentSummary(layout)
     });
   }

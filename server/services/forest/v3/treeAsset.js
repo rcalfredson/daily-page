@@ -1,5 +1,41 @@
-export const FOREST_TREE_ASSET_SCHEMA_VERSION = 2;
+export const FOREST_TREE_ASSET_SCHEMA_VERSION = 3;
 export const FOREST_RENDERER_ID = 'daily-page-forest-v3';
+export const FOREST_TREE_MAX_PERCH_ANCHORS = 5;
+
+export function deriveForestTreePerchAnchors(generationResult) {
+  const { nodes, segments, wood } = generationResult;
+  return segments.filter((segment) => {
+    const from = nodes[segment.fromId];
+    const to = nodes[segment.toId];
+    const horizontal = Math.abs(to.x - from.x);
+    const vertical = Math.abs(to.y - from.y);
+    return segment.generation >= 1
+      && segment.radius >= 0.5
+      && horizontal >= 2.25
+      && vertical <= horizontal * 0.85
+      && Math.min(from.y, to.y) <= wood.groundY - 20;
+  }).map((segment) => {
+    const from = nodes[segment.fromId];
+    const to = nodes[segment.toId];
+    const x = Math.round((from.x + to.x) / 2);
+    const y = Math.round((from.y + to.y) / 2);
+    const depth = Math.round(((from.depth + to.depth) / 2) * 10) / 10;
+    return {
+      id: `perch-${String(segment.toId).padStart(3, '0')}`,
+      x,
+      y,
+      depth,
+      layer: depth < 0 ? 'behind-wood' : 'front-of-wood'
+    };
+  }).sort((left, right) => (
+    left.y - right.y || Math.abs(left.x - generationResult.nodes[0].x)
+      - Math.abs(right.x - generationResult.nodes[0].x) || left.id.localeCompare(right.id)
+  )).filter((anchor, index, anchors) => (
+    anchors.slice(0, index).every(other => Math.hypot(
+      anchor.x - other.x, anchor.y - other.y
+    ) >= 9)
+  )).slice(0, FOREST_TREE_MAX_PERCH_ANCHORS);
+}
 
 function visualBounds(layers, width, height) {
   const runs = layers.flatMap(layer => (
@@ -64,6 +100,7 @@ export function buildForestTreeAsset(generationResult) {
     dimensions: { width: wood.width, height: wood.height },
     anchor: { x: generationResult.nodes[0].x, y: wood.groundY },
     bounds: visualBounds(layers, wood.width, wood.height),
+    perchAnchors: deriveForestTreePerchAnchors(generationResult),
     layers,
     identity: {
       architecture: {

@@ -199,6 +199,7 @@ describe('static Activity Forest scene', () => {
     expect(rasterAsset.dimensions).toEqual(runtimeAsset.dimensions);
     expect(rasterAsset.bounds).toEqual(runtimeAsset.bounds);
     expect(rasterAsset.anchor).toEqual(runtimeAsset.anchor);
+    expect(rasterAsset.perchAnchors).toEqual(runtimeAsset.perchAnchors);
     expect(rasterAsset.identity).toEqual(runtimeAsset.identity);
     expect(rasterAsset.layers.map(({ id }) => id)).toEqual([
       'rear-foliage', 'wood', 'front-foliage'
