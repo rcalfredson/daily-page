@@ -1,18 +1,23 @@
 # Activity Forest Transient-Life Contract
 
-## Milestone 9 Pass 1 scope
+## Milestone 9 Pass 2 checkpoint
 
 This contract owns disposable, page-lifetime actors that make the forest feel inhabited without
 adding rewards, tasks, persistence, or a generalized agent system. Pass 1 proves the boundary with
-one small bird family. It deliberately does not yet include branch hops, ground foraging, player
-startle, flock staggering, or the visiting hiker; those remain the next staged slices.
+one small bird family. Pass 2 adds genuine branch hops, one ground-foraging pair, player startle,
+and a bounded return lifecycle. The visiting hiker remains the separate Pass 3 slice.
 
-The pure browser boundary is `public/js/forest-transient-life.js`. Version **1** supports only the
-actor states `perched` and `flight`, actor schema version **1**, three code-owned palette variants,
-and a maximum cast of four birds. At most one bird may be in autonomous flight at once. Each bird
-has a stable id, visual variant, anchor selector, and route of no more than three distinct tree
-placement ids. Its behavior record separately owns the current state, route index, bounded timer,
-transition count, and optional flight points.
+The pure browser boundary is `public/js/forest-transient-life.js`. Version **2** supports the actor
+states `perched`, `branch-hop`, `ground-forage`, `ground-wander`, and `flight`, actor schema version
+**2**, three
+code-owned palette variants, and a maximum cast of four birds. Two begin in trees and two form the
+only ground group. At most one autonomous bird movement may begin at once; the paired player-startle
+response may put both ground birds in flight as one bounded flock. Each bird has a stable id, visual
+variant, anchor selector, optional group id, and route of no more than three distinct tree placement
+ids. Its behavior record separately owns current state, route and anchor indices, bounded timers,
+hop count, transition count, optional ground contact, and optional motion points.
+Ground actors additionally retain a capped retreat-attempt count used only while resolving a
+temporarily unavailable perch asset.
 
 The scene seed reproduces the initial cast, variants, tree routes, and anchor choices. The page owns
 the clock: reload restarts the transient scene and its quiet intervals. No actor record is written
@@ -20,7 +25,8 @@ to local storage, a production database, the personal overlay, generated-base id
 discoveries, inventory, materials, construction state, writing fixtures, tree semantic projection,
 or tree cache identity beyond the separately versioned perch geometry described below. Camera,
 viewport, asset request order, frame rate, post metrics, room identity, and mutable activity do not
-select actor identity or ecological suitability.
+select actor identity or ecological suitability. A changed personal overlay may veto a ground
+candidate as an authored obstacle, but it does not alter bird identity or candidate order.
 
 ## Honest perch geometry
 
@@ -48,6 +54,13 @@ therefore occlude either bird. A bird with an unloaded or invalid asset is not d
 it remains at its stable route index and records bounded destination exhaustion rather than choosing
 a request-order-dependent replacement.
 
+Branch hops use two distinct anchors from that same validated list. They last 420 ms, rise only six
+pixels, and remain inside the tree's rear/wood/front hooks rather than becoming free canvas motion.
+A bird makes no more than two hops before its next tree-to-tree flight. Roughly one-third of stable
+bird identities initially favor the anchor farthest from the trunk, providing occasional readable
+silhouettes without outlines or painting birds above foliage. Other perches retain the naturally
+heavy canopy occlusion accepted at the Pass 1 checkpoint.
+
 ## Simulation, projection, and lifecycle
 
 The ambient render loop advances all actors together. It uses a 50 ms fixed step and performs no
@@ -60,31 +73,70 @@ seconds and later remain within 9–17.5 seconds. A route has at most three tree
 selection always terminates and does not immediately reverse between only two trees in the normal
 proof cast.
 
+One deterministic ground-group candidate is selected from at most 48 attempts, 170–420 pixels from
+the entrance. Its complete footprint must be in world bounds, on dry land beyond the stream bank,
+outside every bridge deck and approach, clear of tree collision, terrain features, and authored
+objects. Ground birds remain non-solid. Their feet use ordinary ground-Y depth order. Each receives
+a stable identity-derived forage period, phase, and optional second peck, avoiding synchronized
+head movement without introducing randomness from frame timing; they never enter focus selection.
+
+While calm, each bird independently alternates foraging with an 8–30-pixel walk while its flock mate
+continues pecking. The browser injects one random 32-bit page-session seed, and a bounded transient
+PRNG is consumed only when a wander decision is due. The path therefore differs between page
+sessions without depending on frame rate, camera position, asset requests, or post identity. A walk
+may vary the pair's separation from 14 to 64 pixels, must pass the complete ground-suitability query,
+and begins from that bird's current position. There is no home-point tether: over successive valid
+steps the loose flock can gradually traverse connected dry ground. Only one bird walks at a time,
+and at most eight candidates are tried; exhaustion leaves it safely in place. The group's live center
+follows both birds. A player startle interrupts a walk from its current projected point rather than
+waiting for a deterministic route to finish.
+
+The group initially stays calm if a player is already near it. It arms only after the player is
+more than 142 pixels away, then reacts at 88 pixels. Its two stable delays differ by 180 ms, producing
+a legible stagger instead of one rigid sprite. At the startle, each bird selects the nearest suitable
+tree from its current position, preferring distinct destinations for the pair; this uses placement
+data rather than asset-load or camera order. The birds create no reward, loss, achievement, prompt,
+damage, or inventory change. After both have rested for 26
+seconds and the player has moved beyond the reset radius, they return to the same valid ground point
+one at a time. This makes repeated startling deliberately inefficient while avoiding permanent
+ecosystem loss.
+
+If a selected retreat perch is temporarily unavailable, a ground bird tries the next member of its
+three-tree route up to four times, with bounded 0.5, 1, and 2-second backoff between retries. Four
+failures exhaust the retreat. If
+its flock mate already reached a tree, that bird returns to the ground; if neither departed, the
+group simply becomes calm again. Thus missing regional assets cannot create per-step retry churn or
+strand a split flock indefinitely.
+
 Actors outside the 160-pixel simulation margin do not advance. Flight rendering joins ordinary
-ground-depth ordering; perched rendering uses the narrower tree-layer hooks. Birds are non-solid,
-never enter focus selection, and cannot open a prompt or dialog. Pass 2 still needs visual review
-and refinement around bank, bridge-deck, and rail occlusion before that integration is accepted as
-final.
+ground-depth ordering; perched rendering uses the narrower tree-layer hooks. Bridge rails normally
+occlude a low bird, while a flight whose altitude clears a bridge crown and rail allowance is drawn
+after those rails. Ground selection forbids banks and bridges, and ordinary elevated flights remain
+above the ground-painted stream and projected bank surfaces. Birds are non-solid, never enter focus
+selection, and cannot open a prompt or dialog.
 
 When the page is hidden, transient updates stop and no hidden elapsed time is reconciled on resume.
 With `prefers-reduced-motion`, state transitions and wing animation stop. The still presentation is
-limited to the first two cast members; an already airborne bird freezes at its current point rather
-than repeatedly teleporting. Interaction with trees, discoveries, objects, editors, dialogs,
+limited to the first two tree-perched cast members; ground foraging, branch hops, flock launch, and
+wing animation are suppressed. An already airborne bird freezes at its current point rather than
+repeatedly teleporting. Interaction with trees, discoveries, objects, editors, dialogs,
 keyboard movement, and touch movement remains unchanged.
 
 ## Diagnostics and measured boundary
 
-Development diagnostics report total birds, perched and flying counts, autonomous and
-player-startled transition counts, destination-selection exhaustion, reduced-motion suppression,
-and transient update duration separately from total rendering. The player-startled count remains
-zero until the Pass 2 ground-flock slice.
+Development diagnostics report total birds, counts for all five states, branch hops, autonomous and
+player-startled transitions, ground-group lifecycle, destination-selection exhaustion,
+reduced-motion suppression, and transient update duration separately from total rendering.
 
-On Node 24, the representative `first-regions` pure-update harness completed 100,000 calls in
-696.35 ms, or **0.006963 ms per call**, with four actors and the production 60-placement scene. This
-is a bounded implementation measurement, not a browser frame-time claim. The first cast resolved
-all twelve route assets to five genuine anchors each when those assets were prepared. Browser
-render duration, pixel scale, silhouettes, motion cadence, themes, and bridge/stream occlusion still
-require the Pass 1 human visual checkpoint.
+On Node 24.15.0, the final Pass 2 `first-regions` harness ran five all-actors-active samples of
+100,000 update calls against the production 60-placement scene. The sorted samples were 1,241.16,
+1,258.01, 1,524.87, 1,658.53, and 2,390.97 ms. The median was **1,524.87 ms**, or **0.015249 ms per
+call**, with four actors and no viewport culling. This is a deliberately stricter bounded
+implementation measurement, not a browser frame-time claim. The ground point resolved on the first
+bounded attempt at `(1699, 1698)`; focused evidence covers staggered retreat, bounded unavailable
+perches, return recovery, free wandering, reduced-motion suppression, and bridge/stream depth
+classification. Human review accepted bird scale, coasting motion, natural canopy occlusion,
+individual peck timing, and the loose-flock walking behavior in the composed scene.
 
 This boundary is intentionally not an NPC framework, behavior tree, ecology simulation, navmesh,
 or persistence model. Adding the visiting hiker must reuse the ownership/update/render separation

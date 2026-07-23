@@ -80,9 +80,10 @@ import {
   advanceForestTransientLife,
   createForestTransientLife,
   FOREST_BIRD_VARIANTS,
+  forestBirdForagePecking,
   forestBirdPerchPoint,
-  forestTransientBirdForTree,
-  forestTransientFlight,
+  forestTransientBirdsForTree,
+  forestTransientDepthItems,
   forestTransientLifeDiagnostic
 } from './forest-transient-life.js';
 
@@ -94,7 +95,6 @@ if (payload && viewportElement && canvas) {
   const scriptStartedAt = window.performance.now();
   const initialResponseDecodeStartedAt = window.performance.now();
   const scene = JSON.parse(payload.textContent);
-  const transientLife = createForestTransientLife(scene);
   const crossings = scene.crossings || (scene.crossing ? [scene.crossing] : []);
   const bridgeModels = new Map(crossings.map(bridge => (
     [bridge.id, buildForestBridgeModel3d(bridge)]
@@ -119,6 +119,13 @@ if (payload && viewportElement && canvas) {
     scene, discoveryState.cycle, placedObjects
   );
   let availableDiscoveries = availableForestDiscoveries(discoveryOffering, discoveryState);
+  const transientSessionSeed = new Uint32Array(1);
+  if (window.crypto?.getRandomValues) window.crypto.getRandomValues(transientSessionSeed);
+  else transientSessionSeed[0] = Math.round(window.performance.timeOrigin) >>> 0;
+  const transientLife = createForestTransientLife(scene, {
+    objects: placedObjects,
+    sessionSeed: transientSessionSeed[0]
+  });
   const keys = { left: false, right: false, up: false, down: false };
   const touch = {
     pointerId: null, originX: 0, originY: 0, x: 0, y: 0, maximumDistance: 0
@@ -1132,12 +1139,17 @@ if (payload && viewportElement && canvas) {
       || FOREST_BIRD_VARIANTS[0];
   }
 
-  function paintBird(actor, x, y, flying = false) {
+  function paintBird(actor, x, y, pose = 'perched') {
     const palette = birdVariant(actor);
+    const flying = pose === 'flight';
+    const groundWandering = pose === 'ground-wander';
+    const hopping = pose === 'branch-hop';
+    const ground = pose === 'ground-forage' || groundWandering;
+    const pecking = ground && forestBirdForagePecking(actor, ambientMotionActive);
     const wingUp = flying && ambientMotionActive
       && Math.floor(actor.behavior.elapsedMilliseconds / 120) % 2 === 0;
     context.fillStyle = 'rgba(25, 35, 31, 0.22)';
-    if (!flying) context.fillRect(x - 3, y + 1, 7, 2);
+    if (!flying && !hopping) context.fillRect(x - 3, y + 1, 7, 2);
     context.fillStyle = palette.wing;
     if (wingUp) {
       context.fillRect(x - 6, y - 6, 4, 3);
@@ -1150,34 +1162,51 @@ if (payload && viewportElement && canvas) {
     }
     context.fillStyle = palette.body;
     context.fillRect(x - 3, y - 6, 7, 5);
-    context.fillRect(x + 2, y - 8, 4, 4);
+    context.fillRect(x + 2, y - (pecking ? 5 : 8), 4, 4);
     context.fillStyle = palette.breast;
     context.fillRect(x + 1, y - 4, 3, 3);
     context.fillStyle = '#1e2929';
-    context.fillRect(x + 4, y - 7, 1, 1);
+    context.fillRect(x + 4, y - (pecking ? 4 : 7), 1, 1);
     context.fillStyle = '#c59445';
-    context.fillRect(x + 6, y - 6, 2, 1);
-    if (!flying) {
+    context.fillRect(x + 6, y - (pecking ? 3 : 6), 2, 1);
+    if (!flying && !hopping) {
       context.fillRect(x - 1, y - 1, 1, 2);
       context.fillRect(x + 2, y - 1, 1, 2);
     }
   }
 
   function paintPerchedBirds(placement, perchLayer) {
-    const actor = forestTransientBirdForTree(
+    const actors = forestTransientBirdsForTree(
       transientLife, placement.id, reducedMotionQuery.matches
     );
-    if (!actor) return;
-    const point = forestBirdPerchPoint(
-      actor, scene.placements, assetsByKey, actor.behavior.routeIndex
-    );
-    if (!point || point.layer !== perchLayer) return;
-    paintBird(actor, Math.round(point.x - camera.x), Math.round(point.projectedY - camera.y));
+    for (const actor of actors) {
+      const point = actor.behavior.state === 'branch-hop' ? actor.behavior.motion
+        : forestBirdPerchPoint(actor, scene.placements, assetsByKey, actor.behavior.routeIndex);
+      const pointLayer = actor.behavior.state === 'branch-hop'
+        ? (actor.behavior.elapsedMilliseconds < actor.behavior.durationMilliseconds / 2
+          ? actor.behavior.motion.from.layer : actor.behavior.motion.to.layer)
+        : point?.layer;
+      if (!point || pointLayer !== perchLayer) continue;
+      paintBird(actor, Math.round(point.x - camera.x), Math.round(point.projectedY - camera.y),
+        actor.behavior.state);
+    }
   }
 
   function paintFlyingBird(actor) {
-    const point = projectForestPoint3d(actor.behavior.flight, camera);
-    paintBird(actor, Math.round(point.x), Math.round(point.y), true);
+    const point = projectForestPoint3d(actor.behavior.motion, camera);
+    paintBird(actor, Math.round(point.x), Math.round(point.y), 'flight');
+  }
+
+  function paintGroundBird(actor) {
+    const point = actor.behavior.state === 'ground-wander'
+      ? actor.behavior.motion : actor.behavior.groundPoint;
+    const anticipating = transientLife.groundGroup?.startled
+      && actor.behavior.elapsedMilliseconds < actor.behavior.startleDelayMilliseconds;
+    const lift = anticipating ? Math.round(Math.sin(
+      actor.behavior.elapsedMilliseconds / actor.behavior.startleDelayMilliseconds * Math.PI
+    ) * 2) : 0;
+    paintBird(actor, Math.round(point.x - camera.x),
+      Math.round(point.projectedY - camera.y - lift), actor.behavior.state);
   }
 
   function paintBoulder(boulder) {
@@ -1400,16 +1429,16 @@ if (payload && viewportElement && canvas) {
     }
     paintTrailJoins();
     const visibility = visibilityCache.read(camera, player);
-    const flight = forestTransientFlight(transientLife, camera, reducedMotionQuery.matches);
-    const depthOrder = flight ? [...visibility.depthOrder, {
-      kind: 'transient-flight', id: flight.id,
-      worldY: flight.behavior.flight.y + flight.behavior.flight.z, actor: flight
-    }].sort((left, right) => (
+    const { items: actorItems, highBridgeFlights } = forestTransientDepthItems(
+      transientLife, camera, reducedMotionQuery.matches, crossings
+    );
+    const depthOrder = actorItems.length ? [...visibility.depthOrder, ...actorItems].sort((left, right) => (
       left.worldY - right.worldY || left.id.localeCompare(right.id)
     )) : visibility.depthOrder;
     for (const item of depthOrder) {
       if (item.kind === 'player') paintPlayer();
       else if (item.kind === 'transient-flight') paintFlyingBird(item.actor);
+      else if (item.kind === 'transient-ground-bird') paintGroundBird(item.actor);
       else if (item.kind === 'marker') paintMarker(item.object);
       else if (item.kind === FOREST_STEPPING_STONE_TYPE) paintSteppingStone(item.object);
       else if (item.kind === FOREST_DISCOVERY_TYPE) paintDiscovery(item.object);
@@ -1428,6 +1457,7 @@ if (payload && viewportElement && canvas) {
       paintClearingObject(clearingEditor.preview.object, true, elapsedSeconds);
     }
     crossings.forEach(paintBridgeRails);
+    highBridgeFlights.forEach(paintFlyingBird);
     const { visible, visibleObjects } = visibility;
     diagnostics.visible.textContent = `${visible.length} / ${scene.placements.length} trees · ${
       visibleObjects.filter(({ type }) => type === 'marker').length} markers · ${
@@ -1439,11 +1469,15 @@ if (payload && viewportElement && canvas) {
     diagnostics.player.textContent = `${Math.round(player.worldX)}, ${Math.round(player.worldY)}`;
     const transientDiagnostic = forestTransientLifeDiagnostic(transientLife);
     diagnostics.transientLife.textContent = `${transientDiagnostic.count} birds · ${
-      transientDiagnostic.counts.perched} perched · ${transientDiagnostic.counts.flight
-    } flight · ${transientDiagnostic.autonomousTransitions} autonomous · ${
+      transientDiagnostic.counts.perched} perched · ${transientDiagnostic.counts['branch-hop']
+    } hopping · ${transientDiagnostic.counts['ground-forage']} ground · ${
+      transientDiagnostic.counts['ground-wander']} wandering · ${
+      transientDiagnostic.counts.flight} flight · ${transientDiagnostic.branchHops} branch hops · ${
+      transientDiagnostic.autonomousTransitions} autonomous · ${
       transientDiagnostic.playerStartledTransitions} startled · ${
       transientDiagnostic.selectionExhaustions} exhausted${
-      transientDiagnostic.suppressedByReducedMotion ? ' · reduced-motion frozen' : ''}`;
+      transientDiagnostic.suppressedByReducedMotion ? ' · reduced-motion frozen' : ''} · ${
+      transientDiagnostic.groundGroup}`;
     if (scene.environment && diagnostics.environmentPlayer) {
       const environment = forestEnvironmentAt(scene.environment, {
         worldX: Math.round(player.worldX), worldY: Math.round(player.worldY)
@@ -1521,9 +1555,12 @@ if (payload && viewportElement && canvas) {
     const transientStartedAt = window.performance.now();
     advanceForestTransientLife(transientLife, {
       elapsedMilliseconds: elapsed * 1000,
+      scene,
+      objects: placedObjects,
       placements: scene.placements,
       assetsByKey,
       viewport: camera,
+      player,
       documentHidden: document.hidden,
       reducedMotion: reducedMotionQuery.matches
     });
