@@ -1,10 +1,16 @@
 import {
   forestBridgeContains,
+  forestBridgeWorldPosition,
   forestEnvironmentAt
 } from './forest-environment.js';
+import {
+  advanceForestHumanoidMotion,
+  createForestHumanoidMotion
+} from './forest-humanoid.js';
 
-export const FOREST_TRANSIENT_LIFE_VERSION = 2;
+export const FOREST_TRANSIENT_LIFE_VERSION = 3;
 export const FOREST_TRANSIENT_ACTOR_SCHEMA_VERSION = 2;
+export const FOREST_TRANSIENT_VISITOR_SCHEMA_VERSION = 1;
 export const FOREST_TRANSIENT_BIRD_LIMIT = 4;
 export const FOREST_TRANSIENT_GROUND_BIRD_COUNT = 2;
 export const FOREST_TRANSIENT_VISIBLE_REDUCED_MOTION_LIMIT = 2;
@@ -15,6 +21,80 @@ export const FOREST_TRANSIENT_STARTLE_RADIUS = 88;
 export const FOREST_TRANSIENT_STARTLE_RESET_RADIUS = 142;
 export const FOREST_TRANSIENT_GROUND_RADIUS = 9;
 export const FOREST_TRANSIENT_MAX_RETREAT_ATTEMPTS = 4;
+export const FOREST_TRANSIENT_VISITOR_INTERACTION_RADIUS = 58;
+
+const GOOD_GOURD_HYMN = [
+  'Good Gourd, the Pumpkin Lord, mercy’s growing on the vine,',
+  'Good Gourd, the Pumpkin Lord, come scoop his seeds divine,',
+  'Good Gourd, the Pumpkin Lord, he’ll squash your every sin,',
+  'As a pure purée, as a pious pie, or as a good old carved-out grin.'
+].join('\n');
+
+function visitorDialogueNode(id, text, choices = []) {
+  return Object.freeze({
+    id,
+    text,
+    choices: Object.freeze(choices.map(choice => Object.freeze(choice)))
+  });
+}
+
+export const FOREST_TRANSIENT_VISITOR_DIALOGUE = Object.freeze({
+  start: 'meeting',
+  nodes: Object.freeze([
+    visitorDialogueNode(
+      'meeting',
+      '“Name’s Tansy Rook. I’ve buried more boots than kin.”',
+      [
+        { label: '“That’s a lot of walking.”', next: 'long-road' },
+        { label: '“More boots than kin?”', next: 'buried-boots' }
+      ]
+    ),
+    visitorDialogueNode(
+      'long-road',
+      [
+        '“Walking’s the easy part. Stopping somewhere that expects explanations—that wears the soles.',
+        'These days I stop among trees. Decent company. They remember what you meant, not merely what you managed to say.”'
+      ].join('\n\n'),
+      [
+        { label: '“Don’t you get lonely?”', next: 'loneliness' },
+        { label: '“What keeps you going?”', next: 'keeps-going' }
+      ]
+    ),
+    visitorDialogueNode(
+      'buried-boots',
+      [
+        '“Kin complain when buried. Boots have manners.',
+        'These days I stop among trees. Decent company. They remember what you meant, not merely what you managed to say.”'
+      ].join('\n\n'),
+      [
+        { label: '“Don’t you get lonely?”', next: 'loneliness' },
+        { label: '“What keeps you going?”', next: 'keeps-going' }
+      ]
+    ),
+    visitorDialogueNode(
+      'loneliness',
+      [
+        '“Certainly. Loneliness is only solitude asking to be introduced. On the worst evenings I keep faith with Good Gourd, the Pumpkin Lord. A road-prayer goes like this:',
+        `${GOOD_GOURD_HYMN}”`
+      ].join('\n\n')
+    ),
+    visitorDialogueNode(
+      'keeps-going',
+      [
+        '“Mostly another bend in the road. Beyond that, I keep faith with Good Gourd, the Pumpkin Lord. When the road asks why, I answer:',
+        `${GOOD_GOURD_HYMN}”`
+      ].join('\n\n')
+    )
+  ])
+});
+
+export function forestTransientVisitorDialogueNode(id) {
+  return FOREST_TRANSIENT_VISITOR_DIALOGUE.nodes.find(node => node.id === id)
+    || FOREST_TRANSIENT_VISITOR_DIALOGUE.nodes[0];
+}
+
+export const FOREST_TRANSIENT_VISITOR_AFTER_DIALOGUE =
+  '“A good road to you, little miscreant. Leave a few mysteries untrampled.”';
 
 export const FOREST_BIRD_VARIANTS = Object.freeze([
   Object.freeze({ id: 'moss-cap', body: '#63714d', wing: '#394b40', breast: '#d7c58f' }),
@@ -187,6 +267,67 @@ export function selectForestTransientGroundGroup(scene, objects = []) {
   return { point: null, attempts: 48, exhausted: true };
 }
 
+function visitorRouteAt(scene, point, angle, objects) {
+  for (const direction of [-1, 1]) {
+    const routePoint = {
+      worldX: Math.round(point.worldX + (Math.cos(angle) * 34 * direction)),
+      worldY: Math.round(point.worldY + (Math.sin(angle) * 34 * direction))
+    };
+    const samples = [routePoint, ...[0.25, 0.5, 0.75].map(progress => ({
+      worldX: Math.round(point.worldX + ((routePoint.worldX - point.worldX) * progress)),
+      worldY: Math.round(point.worldY + ((routePoint.worldY - point.worldY) * progress))
+    }))];
+    if (samples.every(sample => forestTransientGroundSuitability(
+      scene, sample, objects
+    ).valid)) {
+      return [point, routePoint];
+    }
+  }
+  return null;
+}
+
+export function selectForestTransientVisitor(scene, objects = []) {
+  const spawn = scene.exploration.spawn;
+  const crossings = [...(scene.crossings || [])].sort((left, right) => (
+    Math.hypot(left.worldX - spawn.worldX, left.worldY - spawn.worldY)
+      - Math.hypot(right.worldX - spawn.worldX, right.worldY - spawn.worldY)
+      || left.id.localeCompare(right.id)
+  ));
+  let attempts = 0;
+  for (const crossing of crossings) {
+    const angle = crossing.angleMilliradians / 1000;
+    for (const side of [-1, 1]) {
+      for (const lateral of [-34, 34, 0]) {
+        attempts += 1;
+        const point = forestBridgeWorldPosition(
+          crossing, side * (crossing.halfLength + 58), lateral
+        );
+        const rounded = { worldX: Math.round(point.worldX), worldY: Math.round(point.worldY) };
+        if (!forestTransientGroundSuitability(scene, rounded, objects).valid) continue;
+        const route = visitorRouteAt(scene, rounded, angle + (Math.PI / 2), objects);
+        if (route) return { point: rounded, route, landmarkId: crossing.id, attempts,
+          exhausted: false };
+      }
+    }
+  }
+  for (let attempt = 0; attempt < 48; attempt += 1) {
+    attempts += 1;
+    const angle = stableUnit(`${scene.seed}:visitor:${attempt}:angle`) * Math.PI * 2;
+    const distance = 210 + Math.round(stableUnit(
+      `${scene.seed}:visitor:${attempt}:distance`
+    ) * 230);
+    const point = {
+      worldX: Math.round(spawn.worldX + (Math.cos(angle) * distance)),
+      worldY: Math.round(spawn.worldY + (Math.sin(angle) * distance))
+    };
+    if (!forestTransientGroundSuitability(scene, point, objects).valid) continue;
+    const route = visitorRouteAt(scene, point, angle + (Math.PI / 2), objects);
+    if (route) return { point, route, landmarkId: 'entrance-trail', attempts,
+      exhausted: false };
+  }
+  return { point: null, route: [], landmarkId: null, attempts, exhausted: true };
+}
+
 function groundPoint(center, actorIndex) {
   const side = actorIndex % 2 ? 1 : -1;
   const worldX = center.worldX + (side * 9);
@@ -241,6 +382,30 @@ export function createForestTransientLife(scene, {
     };
   });
   const groundActors = actors.filter(({ groupId }) => groupId);
+  const visitorObstacles = groundSelection.point ? [{
+    worldX: groundSelection.point.worldX,
+    worldY: groundSelection.point.worldY,
+    collisionRadius: 64
+  }] : [];
+  const visitorSelection = selectForestTransientVisitor(scene, [...objects, ...visitorObstacles]);
+  const visitorIdentity = stableHash(`${scene.seed}:visitor:tansy-rook`);
+  const visitor = visitorSelection.point ? {
+    schemaVersion: FOREST_TRANSIENT_VISITOR_SCHEMA_VERSION,
+    id: 'forest-visitor-v1-01',
+    kind: 'visitor',
+    name: 'Tansy Rook',
+    profileId: 'visitor',
+    landmarkId: visitorSelection.landmarkId,
+    route: visitorSelection.route,
+    routeIndex: 0,
+    position: visitorSelection.point,
+    state: 'resting',
+    elapsedMilliseconds: 0,
+    durationMilliseconds: 12000 + (visitorIdentity % 7000),
+    transitionCount: 0,
+    conversationCompleted: false,
+    humanoidMotion: createForestHumanoidMotion('left')
+  } : null;
   return {
     version: FOREST_TRANSIENT_LIFE_VERSION,
     seed: `${scene.seed}:transient-life-v${FOREST_TRANSIENT_LIFE_VERSION}`,
@@ -248,6 +413,7 @@ export function createForestTransientLife(scene, {
     elapsedMilliseconds: 0,
     remainderMilliseconds: 0,
     actors,
+    visitor,
     groundGroup: groundSelection.point ? {
       id: 'forest-ground-flock-v1-01',
       center: groundSelection.point,
@@ -261,7 +427,9 @@ export function createForestTransientLife(scene, {
       autonomousTransitions: 0,
       playerStartledTransitions: 0,
       branchHops: 0,
-      selectionExhaustions: count < FOREST_TRANSIENT_BIRD_LIMIT || groundSelection.exhausted ? 1 : 0,
+      visitorTransitions: 0,
+      selectionExhaustions: count < FOREST_TRANSIENT_BIRD_LIMIT || groundSelection.exhausted
+        || visitorSelection.exhausted ? 1 : 0,
       suppressedByReducedMotion: false,
       lastStepCount: 0
     }
@@ -305,23 +473,59 @@ function validGroundGroup(group) {
     && Number.isInteger(group.selectionAttempts));
 }
 
+function validWorldPoint(point) {
+  return exactKeys(point, ['worldX', 'worldY'])
+    && Number.isFinite(point.worldX) && Number.isFinite(point.worldY);
+}
+
+function validHumanoidMotion(motion) {
+  return exactKeys(motion, [
+    'facingRadians', 'targetFacingRadians', 'speed', 'distance', 'stepPhase'
+  ]) && ['facingRadians', 'targetFacingRadians', 'speed', 'distance', 'stepPhase'].every(
+    key => Number.isFinite(motion[key])
+  ) && motion.speed >= 0 && motion.distance >= 0;
+}
+
+function validVisitor(visitor) {
+  return visitor === null || (exactKeys(visitor, [
+    'schemaVersion', 'id', 'kind', 'name', 'profileId', 'landmarkId', 'route', 'routeIndex',
+    'position', 'state', 'elapsedMilliseconds', 'durationMilliseconds', 'transitionCount',
+    'conversationCompleted', 'humanoidMotion'
+  ]) && visitor.schemaVersion === FOREST_TRANSIENT_VISITOR_SCHEMA_VERSION
+    && visitor.id === 'forest-visitor-v1-01' && visitor.kind === 'visitor'
+    && visitor.name === 'Tansy Rook' && visitor.profileId === 'visitor'
+    && typeof visitor.landmarkId === 'string' && visitor.landmarkId.length <= 200
+    && Array.isArray(visitor.route) && visitor.route.length === 2
+    && visitor.route.every(validWorldPoint)
+    && Number.isInteger(visitor.routeIndex) && [0, 1].includes(visitor.routeIndex)
+    && validWorldPoint(visitor.position)
+    && ['resting', 'walking'].includes(visitor.state)
+    && Number.isFinite(visitor.elapsedMilliseconds) && visitor.elapsedMilliseconds >= 0
+    && Number.isFinite(visitor.durationMilliseconds) && visitor.durationMilliseconds >= 0
+    && Number.isInteger(visitor.transitionCount) && visitor.transitionCount >= 0
+    && typeof visitor.conversationCompleted === 'boolean'
+    && validHumanoidMotion(visitor.humanoidMotion));
+}
+
 export function validateForestTransientLife(life) {
   if (!exactKeys(life, [
     'version', 'seed', 'randomState', 'elapsedMilliseconds', 'remainderMilliseconds', 'actors',
-    'groundGroup', 'diagnostics'
+    'visitor', 'groundGroup', 'diagnostics'
   ]) || life.version !== FOREST_TRANSIENT_LIFE_VERSION
     || typeof life.seed !== 'string' || life.seed.length > 200
     || !Number.isInteger(life.randomState) || life.randomState < 0
     || !Number.isFinite(life.elapsedMilliseconds)
     || !Number.isFinite(life.remainderMilliseconds)
     || !Array.isArray(life.actors) || life.actors.length > FOREST_TRANSIENT_BIRD_LIMIT
+    || !validVisitor(life.visitor)
     || !validGroundGroup(life.groundGroup)
     || !exactKeys(life.diagnostics, [
       'autonomousTransitions', 'playerStartledTransitions', 'branchHops',
-      'selectionExhaustions', 'suppressedByReducedMotion', 'lastStepCount'
+      'visitorTransitions', 'selectionExhaustions', 'suppressedByReducedMotion', 'lastStepCount'
     ])
     || !['autonomousTransitions', 'playerStartledTransitions', 'branchHops',
-      'selectionExhaustions', 'lastStepCount'].every(key => Number.isInteger(life.diagnostics[key])
+      'visitorTransitions', 'selectionExhaustions', 'lastStepCount'].every(
+      key => Number.isInteger(life.diagnostics[key])
         && life.diagnostics[key] >= 0)
     || typeof life.diagnostics.suppressedByReducedMotion !== 'boolean') return false;
   return life.actors.every(actor => exactKeys(actor, [
@@ -707,7 +911,66 @@ function updateGroundGroup(life, scene, objects, placements, assetsByKey, player
   }
 }
 
-function updateStep(life, scene, objects, placements, assetsByKey, viewport, player) {
+function updateVisitor(life, viewport, paused = false) {
+  const visitor = life.visitor;
+  if (!visitor || paused || !pointWithinSimulationMargin({
+    x: visitor.position.worldX, projectedY: visitor.position.worldY
+  }, viewport)) return;
+  const elapsedSeconds = FOREST_TRANSIENT_FIXED_STEP_MILLISECONDS / 1000;
+  if (visitor.state === 'resting') {
+    visitor.humanoidMotion = advanceForestHumanoidMotion(visitor.humanoidMotion, {
+      from: visitor.position, to: visitor.position, elapsedSeconds
+    });
+    visitor.elapsedMilliseconds += FOREST_TRANSIENT_FIXED_STEP_MILLISECONDS;
+    if (visitor.elapsedMilliseconds < visitor.durationMilliseconds) return;
+    visitor.state = 'walking';
+    visitor.elapsedMilliseconds = 0;
+    const destination = visitor.route[(visitor.routeIndex + 1) % visitor.route.length];
+    visitor.durationMilliseconds = Math.round(Math.hypot(
+      destination.worldX - visitor.position.worldX,
+      destination.worldY - visitor.position.worldY
+    ) / 0.032);
+    visitor.transitionCount += 1;
+    life.diagnostics.autonomousTransitions += 1;
+    life.diagnostics.visitorTransitions += 1;
+    return;
+  }
+  const from = { ...visitor.position };
+  visitor.elapsedMilliseconds = Math.min(
+    visitor.durationMilliseconds,
+    visitor.elapsedMilliseconds + FOREST_TRANSIENT_FIXED_STEP_MILLISECONDS
+  );
+  const targetIndex = (visitor.routeIndex + 1) % visitor.route.length;
+  const destination = visitor.route[targetIndex];
+  const origin = visitor.route[visitor.routeIndex];
+  const progress = visitor.elapsedMilliseconds / visitor.durationMilliseconds;
+  visitor.position = {
+    worldX: origin.worldX + ((destination.worldX - origin.worldX) * progress),
+    worldY: origin.worldY + ((destination.worldY - origin.worldY) * progress)
+  };
+  visitor.humanoidMotion = advanceForestHumanoidMotion(visitor.humanoidMotion, {
+    from,
+    to: visitor.position,
+    direction: {
+      x: destination.worldX - origin.worldX,
+      y: destination.worldY - origin.worldY
+    },
+    elapsedSeconds
+  });
+  if (progress < 1) return;
+  visitor.state = 'resting';
+  visitor.routeIndex = targetIndex;
+  visitor.elapsedMilliseconds = 0;
+  visitor.durationMilliseconds = 13000
+    + ((stableHash(`${life.seed}:visitor-rest:${visitor.transitionCount}`)) % 9000);
+  visitor.transitionCount += 1;
+  life.diagnostics.autonomousTransitions += 1;
+  life.diagnostics.visitorTransitions += 1;
+}
+
+function updateStep(life, scene, objects, placements, assetsByKey, viewport, player,
+  visitorPaused) {
+  updateVisitor(life, viewport, visitorPaused);
   updateGroundGroup(life, scene, objects, placements, assetsByKey, player, viewport);
   let transitionStarted = life.actors.some(actor => (
     ['flight', 'branch-hop', 'ground-wander'].includes(actor.behavior.state)
@@ -750,6 +1013,7 @@ export function advanceForestTransientLife(life, {
   assetsByKey = new Map(),
   viewport = null,
   player = null,
+  visitorPaused = false,
   documentHidden = false,
   reducedMotion = false
 } = {}) {
@@ -762,7 +1026,7 @@ export function advanceForestTransientLife(life, {
   );
   while (life.remainderMilliseconds >= FOREST_TRANSIENT_FIXED_STEP_MILLISECONDS
     && life.diagnostics.lastStepCount < FOREST_TRANSIENT_MAX_STEPS_PER_UPDATE) {
-    updateStep(life, scene, objects, placements, assetsByKey, viewport, player);
+    updateStep(life, scene, objects, placements, assetsByKey, viewport, player, visitorPaused);
     life.remainderMilliseconds -= FOREST_TRANSIENT_FIXED_STEP_MILLISECONDS;
     life.elapsedMilliseconds += FOREST_TRANSIENT_FIXED_STEP_MILLISECONDS;
     life.diagnostics.lastStepCount += 1;
@@ -808,6 +1072,12 @@ export function forestTransientDepthItems(life, viewport, reducedMotion = false,
     forestTransientFlightAboveBridgeRails(actor, crossings)
   ));
   const items = [
+    ...(life.visitor && pointWithinSimulationMargin({
+      x: life.visitor.position.worldX, projectedY: life.visitor.position.worldY
+    }, viewport) ? [{
+        kind: 'transient-visitor', id: life.visitor.id,
+        worldY: life.visitor.position.worldY, visitor: life.visitor
+      }] : []),
     ...forestTransientGroundBirds(life, viewport, reducedMotion).map(actor => ({
       kind: 'transient-ground-bird', id: actor.id,
       worldY: actor.behavior.state === 'ground-wander'
@@ -821,6 +1091,25 @@ export function forestTransientDepthItems(life, viewport, reducedMotion = false,
   return { items, highBridgeFlights };
 }
 
+export function forestTransientVisitorFocus(life, player,
+  interactionRadius = FOREST_TRANSIENT_VISITOR_INTERACTION_RADIUS) {
+  if (!life.visitor || !player) return null;
+  const distance = Math.hypot(
+    player.worldX - life.visitor.position.worldX,
+    player.worldY - life.visitor.position.worldY
+  );
+  return distance <= interactionRadius ? {
+    kind: 'visitor', id: life.visitor.id, value: life.visitor, distance,
+    reach: interactionRadius
+  } : null;
+}
+
+export function completeForestTransientVisitorConversation(life) {
+  if (!life.visitor) return false;
+  life.visitor.conversationCompleted = true;
+  return true;
+}
+
 export function forestTransientLifeDiagnostic(life) {
   const counts = Object.fromEntries(BIRD_STATES.map(state => [
     state, life.actors.filter(actor => actor.behavior.state === state).length
@@ -831,6 +1120,9 @@ export function forestTransientLifeDiagnostic(life) {
     autonomousTransitions: life.diagnostics.autonomousTransitions,
     playerStartledTransitions: life.diagnostics.playerStartledTransitions,
     branchHops: life.diagnostics.branchHops,
+    visitor: life.visitor ? `${life.visitor.name} · ${life.visitor.state} · ${
+      life.visitor.conversationCompleted ? 'spoken-with' : 'unmet'}` : 'unavailable',
+    visitorTransitions: life.diagnostics.visitorTransitions,
     selectionExhaustions: life.diagnostics.selectionExhaustions,
     suppressedByReducedMotion: life.diagnostics.suppressedByReducedMotion,
     groundGroup: life.groundGroup ? (life.groundGroup.startled ? 'retreating-or-away'

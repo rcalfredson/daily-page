@@ -78,14 +78,25 @@ import {
 } from './forest-environment.js';
 import {
   advanceForestTransientLife,
+  completeForestTransientVisitorConversation,
   createForestTransientLife,
   FOREST_BIRD_VARIANTS,
+  FOREST_TRANSIENT_VISITOR_AFTER_DIALOGUE,
+  FOREST_TRANSIENT_VISITOR_DIALOGUE,
   forestBirdForagePecking,
   forestBirdPerchPoint,
   forestTransientBirdsForTree,
   forestTransientDepthItems,
-  forestTransientLifeDiagnostic
+  forestTransientLifeDiagnostic,
+  forestTransientVisitorDialogueNode,
+  forestTransientVisitorFocus
 } from './forest-transient-life.js';
+import {
+  advanceForestHumanoidMotion,
+  createForestHumanoidMotion,
+  FOREST_HUMANOID_PROFILES,
+  paintForestHumanoid
+} from './forest-humanoid.js';
 
 const payload = document.getElementById('activity-forest-scene');
 const viewportElement = document.querySelector('[data-forest-viewport]');
@@ -107,6 +118,7 @@ if (payload && viewportElement && canvas) {
   const camera = { x: 0, y: 0, width: 0, height: 0 };
   let streamBankModelCache = null;
   const player = { ...scene.exploration.spawn };
+  const playerMotion = createForestHumanoidMotion(player.facing);
   const overlayPersistence = createForestDevOverlayPersistence(window.localStorage);
   const persistedOverlay = overlayPersistence.load(scene.baseIdentity);
   let overlay = persistedOverlay.overlay;
@@ -131,6 +143,14 @@ if (payload && viewportElement && canvas) {
     pointerId: null, originX: 0, originY: 0, x: 0, y: 0, maximumDistance: 0
   };
   const dialog = document.querySelector('[data-forest-dialog]');
+  const visitorDialog = document.querySelector('[data-forest-visitor-dialog]');
+  const visitorDialogueText = visitorDialog.querySelector('[data-forest-visitor-text]');
+  const visitorDialogueNext = visitorDialog.querySelector('[data-forest-visitor-next]');
+  const visitorDialogueReplies = visitorDialog.querySelector('[data-forest-visitor-replies]');
+  const visitorDialogueChoices = [
+    ...visitorDialog.querySelectorAll('[data-forest-visitor-choice]')
+  ];
+  let visitorDialogueNodeId = FOREST_TRANSIENT_VISITOR_DIALOGUE.start;
   const prompt = document.querySelector('[data-forest-prompt]');
   const joystick = document.querySelector('[data-forest-joystick]');
   const joystickStick = joystick.querySelector('[data-forest-joystick-stick]');
@@ -1394,25 +1414,40 @@ if (payload && viewportElement && canvas) {
       maximum, forestBridgeElevationAt(bridge, player)
     ), 0);
     const y = Math.round(player.worldY - camera.y - elevation);
-    context.fillStyle = 'rgba(22, 35, 31, 0.28)';
-    context.fillRect(x - 8, y - 3, 16, 5);
-    context.fillStyle = '#ead9b6';
-    context.fillRect(x - 4, y - 19, 8, 8);
-    context.fillStyle = '#263b3b';
-    context.fillRect(x - 6, y - 12, 12, 11);
-    context.fillStyle = '#b96045';
-    context.fillRect(x - 7, y - 21, 14, 4);
-    context.fillRect(x - 5, y - 24, 10, 3);
+    paintForestHumanoid(context, x, y, {
+      profile: FOREST_HUMANOID_PROFILES.player,
+      motion: playerMotion,
+      reducedMotion: reducedMotionQuery.matches
+    });
+  }
+
+  function paintVisitor(visitor, elapsedSeconds) {
+    const x = Math.round(visitor.position.worldX - camera.x);
+    const idleLift = ambientMotionActive && visitor.state === 'resting'
+      && Math.sin(elapsedSeconds * 0.9) > 0.92 ? 1 : 0;
+    const y = Math.round(visitor.position.worldY - camera.y - idleLift);
+    paintForestHumanoid(context, x, y, {
+      profile: FOREST_HUMANOID_PROFILES.visitor,
+      motion: visitor.humanoidMotion,
+      reducedMotion: reducedMotionQuery.matches,
+      resting: visitor.state === 'resting'
+    });
   }
 
   function updateFocus() {
-    focusedItem = focusedForestSceneItem(player, scene.placements.filter(
+    const sceneFocus = focusedForestSceneItem(player, scene.placements.filter(
       ({ assetKey }) => assetsByKey.has(assetKey)
     ), placedObjects, scene.exploration.interactionRadius, availableDiscoveries);
+    const visitorFocus = forestTransientVisitorFocus(transientLife, player);
+    focusedItem = [sceneFocus, visitorFocus].filter(Boolean).sort((left, right) => (
+      left.distance - right.distance || left.kind.localeCompare(right.kind)
+        || left.id.localeCompare(right.id)
+    ))[0] || null;
     prompt.hidden = !focusedItem || trailEditor.active || clearingEditor.active;
     const action = focusedItem?.kind === FOREST_DISCOVERY_TYPE
       ? `gather ${forestDiscoveryMaterial(focusedItem.value.material).label.toLowerCase()}`
-      : focusedItem?.kind === 'marker' ? 'inspect marker' : 'inspect';
+      : focusedItem?.kind === 'marker' ? 'inspect marker'
+        : focusedItem?.kind === 'visitor' ? `talk with ${focusedItem.value.name}` : 'inspect';
     prompt.querySelector('[data-forest-prompt-keyboard]').textContent =
       `Press E or Enter to ${action}`;
     prompt.querySelector('[data-forest-prompt-touch]').textContent = `Tap to ${action}`;
@@ -1437,6 +1472,7 @@ if (payload && viewportElement && canvas) {
     )) : visibility.depthOrder;
     for (const item of depthOrder) {
       if (item.kind === 'player') paintPlayer();
+      else if (item.kind === 'transient-visitor') paintVisitor(item.visitor, elapsedSeconds);
       else if (item.kind === 'transient-flight') paintFlyingBird(item.actor);
       else if (item.kind === 'transient-ground-bird') paintGroundBird(item.actor);
       else if (item.kind === 'marker') paintMarker(item.object);
@@ -1477,7 +1513,8 @@ if (payload && viewportElement && canvas) {
       transientDiagnostic.playerStartledTransitions} startled · ${
       transientDiagnostic.selectionExhaustions} exhausted${
       transientDiagnostic.suppressedByReducedMotion ? ' · reduced-motion frozen' : ''} · ${
-      transientDiagnostic.groundGroup}`;
+      transientDiagnostic.groundGroup} · ${transientDiagnostic.visitor} · ${
+      transientDiagnostic.visitorTransitions} visitor transitions`;
     if (scene.environment && diagnostics.environmentPlayer) {
       const environment = forestEnvironmentAt(scene.environment, {
         worldX: Math.round(player.worldX), worldY: Math.round(player.worldY)
@@ -1553,6 +1590,10 @@ if (payload && viewportElement && canvas) {
     const elapsed = Math.min(0.05, (timestamp - lastFrameTime) / 1000);
     lastFrameTime = timestamp;
     const transientStartedAt = window.performance.now();
+    const previousVisitorPosition = transientLife.visitor ? {
+      worldX: transientLife.visitor.position.worldX,
+      worldY: transientLife.visitor.position.worldY
+    } : null;
     advanceForestTransientLife(transientLife, {
       elapsedMilliseconds: elapsed * 1000,
       scene,
@@ -1562,20 +1603,36 @@ if (payload && viewportElement && canvas) {
       viewport: camera,
       player,
       documentHidden: document.hidden,
-      reducedMotion: reducedMotionQuery.matches
+      reducedMotion: reducedMotionQuery.matches,
+      visitorPaused: visitorDialog.open || dialog.open || objectDialog.open || forestMenu.open
+        || trailEditor.active || clearingEditor.active
     });
     const transientDuration = window.performance.now() - transientStartedAt;
+    const visitorMoved = previousVisitorPosition && transientLife.visitor
+      && (previousVisitorPosition.worldX !== transientLife.visitor.position.worldX
+        || previousVisitorPosition.worldY !== transientLife.visitor.position.worldY);
     transientUpdates.count += 1;
     transientUpdates.total += transientDuration;
     transientUpdates.maximum = Math.max(transientUpdates.maximum, transientDuration);
     diagnostics.transientDuration.textContent = `${transientDuration.toFixed(2)} ms last / ${
       (transientUpdates.total / transientUpdates.count).toFixed(2)} ms avg / ${
       transientUpdates.maximum.toFixed(2)} ms max`;
-    const moving = hasMovement() && !dialog.open && !objectDialog.open && !forestMenu.open;
+    const moving = hasMovement() && !visitorDialog.open && !dialog.open
+      && !objectDialog.open && !forestMenu.open;
     if (moving) {
-      Object.assign(player, moveForestPlayer(player, movementDirection(), elapsed,
+      const previousPlayer = { ...player };
+      const direction = movementDirection();
+      const nextPlayer = moveForestPlayer(player, direction, elapsed,
         scene.world, [...scene.placements, ...terrainFeatures,
-          ...forestSolidClearingPlacements(placedObjects)], scene));
+          ...forestSolidClearingPlacements(placedObjects)], scene);
+      Object.assign(player, nextPlayer);
+      Object.assign(playerMotion, advanceForestHumanoidMotion(playerMotion, {
+        from: previousPlayer,
+        to: nextPlayer,
+        direction,
+        elapsedSeconds: elapsed,
+        reducedMotion: reducedMotionQuery.matches
+      }));
       followPlayer();
       updateFocus();
       if (trailEditor.active && trailEditor.tool !== 'remove') {
@@ -1584,6 +1641,14 @@ if (payload && viewportElement && canvas) {
       if (clearingEditor.active) {
         previewClearingAt(player.worldX, player.worldY - 56, false);
       }
+    } else {
+      Object.assign(playerMotion, advanceForestHumanoidMotion(playerMotion, {
+        from: player,
+        to: player,
+        elapsedSeconds: elapsed,
+        reducedMotion: reducedMotionQuery.matches
+      }));
+      if (visitorMoved) updateFocus();
     }
     render(timestamp / 1000, moving, frameGap);
     if (moving || ambientMotionActive) scheduledFrame = requestAnimationFrame(frame);
@@ -1796,6 +1861,32 @@ if (payload && viewportElement && canvas) {
     openFixtureWriting(fixture, 'A writing remembered here');
   }
 
+  function renderVisitorDialogue() {
+    const completed = transientLife.visitor?.conversationCompleted;
+    const node = forestTransientVisitorDialogueNode(visitorDialogueNodeId);
+    const choices = completed ? [] : node.choices;
+    visitorDialogueText.textContent = completed
+      ? FOREST_TRANSIENT_VISITOR_AFTER_DIALOGUE
+      : node.text;
+    visitorDialogueReplies.hidden = choices.length === 0;
+    visitorDialogueChoices.forEach((button, index) => {
+      const choice = choices[index];
+      button.hidden = !choice;
+      button.textContent = choice?.label || '';
+    });
+    visitorDialogueNext.hidden = choices.length > 0;
+    return choices.length > 0 ? visitorDialogueChoices[0] : visitorDialogueNext;
+  }
+
+  function openVisitorConversation() {
+    if (!transientLife.visitor || visitorDialog.open) return;
+    clearMovement();
+    visitorDialogueNodeId = FOREST_TRANSIENT_VISITOR_DIALOGUE.start;
+    const firstControl = renderVisitorDialogue();
+    visitorDialog.showModal();
+    firstControl.focus();
+  }
+
   function openFixtureWriting(fixture, eyebrow) {
     if (!fixture) return;
     dialog.querySelector('[data-forest-dialog-eyebrow]').textContent = eyebrow;
@@ -1847,6 +1938,7 @@ if (payload && viewportElement && canvas) {
 
   function activateFocusedItem() {
     if (focusedItem?.kind === FOREST_DISCOVERY_TYPE) collectDiscovery(focusedItem.value);
+    else if (focusedItem?.kind === 'visitor') openVisitorConversation();
     else openInspection();
   }
 
@@ -2217,6 +2309,7 @@ if (payload && viewportElement && canvas) {
   function resetPlayer() {
     clearMovement();
     Object.assign(player, scene.exploration.spawn);
+    Object.assign(playerMotion, createForestHumanoidMotion(player.facing));
     followPlayer();
     updateFocus();
     requestRender();
@@ -2290,7 +2383,7 @@ if (payload && viewportElement && canvas) {
   });
   viewportElement.addEventListener('pointerdown', (event) => {
     if (event.pointerType === 'mouse' && clearingEditor.active
-      && !event.target.closest('button') && !dialog.open
+      && !event.target.closest('button') && !visitorDialog.open && !dialog.open
       && !objectDialog.open && !forestMenu.open) {
       event.preventDefault();
       const viewportRect = viewportElement.getBoundingClientRect();
@@ -2300,7 +2393,8 @@ if (payload && viewportElement && canvas) {
       return;
     }
     if (event.pointerType === 'mouse' && trailEditor.active
-      && !event.target.closest('button') && !dialog.open && !forestMenu.open) {
+      && !event.target.closest('button') && !visitorDialog.open && !dialog.open
+      && !forestMenu.open) {
       event.preventDefault();
       const viewportRect = viewportElement.getBoundingClientRect();
       commitTrailAt(camera.x + event.clientX - viewportRect.left,
@@ -2308,7 +2402,8 @@ if (payload && viewportElement && canvas) {
       viewportElement.focus();
       return;
     }
-    if (event.pointerType === 'mouse' || event.target.closest('button') || dialog.open
+    if (event.pointerType === 'mouse' || event.target.closest('button') || visitorDialog.open
+      || dialog.open
       || forestMenu.open) return;
     event.preventDefault();
     touch.pointerId = event.pointerId;
@@ -2364,6 +2459,25 @@ if (payload && viewportElement && canvas) {
     requestRender();
   });
   dialog.querySelector('[data-forest-dialog-close]').addEventListener('click', () => dialog.close());
+  visitorDialogueChoices.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      const node = forestTransientVisitorDialogueNode(visitorDialogueNodeId);
+      const choice = node.choices[index];
+      if (!choice) return;
+      visitorDialogueNodeId = choice.next;
+      renderVisitorDialogue().focus();
+    });
+  });
+  visitorDialogueNext.addEventListener('click', () => {
+    completeForestTransientVisitorConversation(transientLife);
+    visitorDialog.close();
+  });
+  visitorDialog.addEventListener('close', () => {
+    clearMovement();
+    viewportElement.focus();
+    updateFocus();
+    requestRender();
+  });
   prompt.addEventListener('click', () => {
     if (!trailEditor.active) activateFocusedItem();
   });

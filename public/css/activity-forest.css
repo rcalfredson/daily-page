@@ -493,6 +493,20 @@ html[data-theme='dark'] .activity-forest .activity-forest__prompt {
 }
 .activity-forest__dialog-context { margin: 0.3rem 0 1.2rem; color: #5f6a61; }
 .activity-forest__dialog-excerpt { font-size: 1.08rem; line-height: 1.65; }
+.activity-forest__visitor-text { white-space: pre-line; }
+.activity-forest__visitor-replies { margin-top: 1.25rem; }
+.activity-forest__visitor-reply-label {
+  margin: 0 0 0.5rem;
+  color: #6d705f;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.activity-forest__visitor-reply-buttons {
+  display: grid;
+  gap: 0.55rem;
+}
+.activity-forest__visitor-reply-buttons button { width: 100%; text-align: left; }
 .activity-forest__tree-meaning {
   margin: 1rem 0;
   padding: 0.85rem;
