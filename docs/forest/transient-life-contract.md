@@ -1,13 +1,14 @@
 # Activity Forest Transient-Life Contract
 
-## Milestone 9 Pass 2 checkpoint
+## Milestone 9 Pass 3 checkpoint
 
 This contract owns disposable, page-lifetime actors that make the forest feel inhabited without
 adding rewards, tasks, persistence, or a generalized agent system. Pass 1 proves the boundary with
 one small bird family. Pass 2 adds genuine branch hops, one ground-foraging pair, player startle,
-and a bounded return lifecycle. The visiting hiker remains the separate Pass 3 slice.
+and a bounded return lifecycle. Pass 3 adds one original older visiting hiker and a compact,
+non-consequential conversation.
 
-The pure browser boundary is `public/js/forest-transient-life.js`. Version **2** supports the actor
+The pure browser boundary is `public/js/forest-transient-life.js`. Version **3** supports the bird
 states `perched`, `branch-hop`, `ground-forage`, `ground-wander`, and `flight`, actor schema version
 **2**, three
 code-owned palette variants, and a maximum cast of four birds. Two begin in trees and two form the
@@ -18,6 +19,13 @@ ids. Its behavior record separately owns current state, route and anchor indices
 hop count, transition count, optional ground contact, and optional motion points.
 Ground actors additionally retain a capped retreat-attempt count used only while resolving a
 temporarily unavailable perch asset.
+
+The same boundary owns one visitor record with visitor schema version **1**. The visitor is not part
+of the bird actor array: her stable identity, two-point local route, disposable position, rest/walk
+state, humanoid motion, and page-lifetime conversation completion remain a separate discriminated
+record. `public/js/forest-humanoid.js` presentation version **3** is shared by the player and visitor.
+It projects a continuously eased world-facing angle into a pixel silhouette and derives planted-foot
+walking and capped running cadence from actual travel rather than key-down time.
 
 The scene seed reproduces the initial cast, variants, tree routes, and anchor choices. The page owns
 the clock: reload restarts the transient scene and its quiet intervals. No actor record is written
@@ -122,22 +130,49 @@ wing animation are suppressed. An already airborne bird freezes at its current p
 repeatedly teleporting. Interaction with trees, discoveries, objects, editors, dialogs,
 keyboard movement, and touch movement remains unchanged.
 
+## One quiet wayfarer
+
+Tansy Rook is an original fictional older traveler rather than a depiction of any historical hiker.
+She wears patched moss and bark colors, gray hair, a pointed weathered hood, and carries a walking
+staff. A bounded selector first tries dry ground near a bridge approach and otherwise tries points
+210–440 pixels from the entrance. Both endpoints of her 34-pixel local route must pass the same dry,
+bounded, bridge-, tree-, terrain-, and authored-object-clear suitability query used by ground life.
+She is also kept clear of the initial ground flock.
+
+Tansy rests for 12–22 seconds and occasionally walks her route at 32 pixels per second. She is
+non-solid and joins ordinary ground-Y depth ordering. Simulation stops outside the existing margin,
+while dialogs, the forest menu, and clearing or trail editors pause her locally. Reduced motion
+preserves her current position as a stable resting presentation. Her restrained idle lift is purely
+visual and stops with ambient motion.
+
+At 58 pixels she enters the existing nearest-focus competition and uses the same E/Enter and touch
+prompt as other interactions. Her dialog has five bounded nodes and two reply moments. Each offers
+two short responses, then immediately reconverges on the same next topic; this small braided shape
+is code-owned conversation copy, not a generalized choice graph. It has no quest, schedule, gift,
+reward, inventory effect, relationship state, or database write. Conversation completion is a
+page-lifetime boolean used only to replace repeats with one farewell observation. Both endings lead
+into her eccentric hymn to “Good Gourd, the Pumpkin Lord”; neither produces a lore ledger or
+gameplay effect.
+She remains quietly present after the conversation.
+
 ## Diagnostics and measured boundary
 
-Development diagnostics report total birds, counts for all five states, branch hops, autonomous and
-player-startled transitions, ground-group lifecycle, destination-selection exhaustion,
-reduced-motion suppression, and transient update duration separately from total rendering.
+Development diagnostics report total birds, counts for all five bird states, branch hops,
+autonomous and player-startled transitions, visitor state and transitions, ground-group lifecycle,
+destination-selection exhaustion, reduced-motion suppression, and transient update duration
+separately from total rendering.
 
-On Node 24.15.0, the final Pass 2 `first-regions` harness ran five all-actors-active samples of
-100,000 update calls against the production 60-placement scene. The sorted samples were 1,241.16,
-1,258.01, 1,524.87, 1,658.53, and 2,390.97 ms. The median was **1,524.87 ms**, or **0.015249 ms per
-call**, with four actors and no viewport culling. This is a deliberately stricter bounded
+On Node 24.15.0, the final Pass 3 `first-regions` harness ran five all-actors-active samples of
+100,000 update calls against the production 60-placement scene. The sorted samples were 1,249.62,
+1,276.15, 1,308.82, 1,603.93, and 2,285.63 ms. The median was **1,308.82 ms**, or **0.013088 ms per
+call**, with four birds, one visitor, and no viewport culling. This is a deliberately stricter bounded
 implementation measurement, not a browser frame-time claim. The ground point resolved on the first
 bounded attempt at `(1699, 1698)`; focused evidence covers staggered retreat, bounded unavailable
-perches, return recovery, free wandering, reduced-motion suppression, and bridge/stream depth
-classification. Human review accepted bird scale, coasting motion, natural canopy occlusion,
-individual peck timing, and the loose-flock walking behavior in the composed scene.
+perches, return recovery, free wandering, visitor selection, walk/rest transitions, dialog pausing,
+focus, conversation completion, reduced-motion suppression, and bridge/stream depth classification.
+Human review accepted the bird presentation and the shared continuously oriented humanoid scale,
+gait, palette, and silhouette before the visitor reused that boundary.
 
 This boundary is intentionally not an NPC framework, behavior tree, ecology simulation, navmesh,
-or persistence model. Adding the visiting hiker must reuse the ownership/update/render separation
-without generalizing it prematurely.
+or persistence model. The visitor reuses the ownership/update/render separation without introducing
+an extensible agent framework, real-user presence, schedules, needs, or persistence.

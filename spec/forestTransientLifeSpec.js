@@ -1,5 +1,6 @@
 import {
   advanceForestTransientLife,
+  completeForestTransientVisitorConversation,
   createForestTransientLife,
   FOREST_TRANSIENT_BIRD_LIMIT,
   FOREST_TRANSIENT_FIXED_STEP_MILLISECONDS,
@@ -8,6 +9,7 @@ import {
   FOREST_TRANSIENT_MAX_STEPS_PER_UPDATE,
   FOREST_TRANSIENT_STARTLE_RADIUS,
   FOREST_TRANSIENT_STARTLE_RESET_RADIUS,
+  FOREST_TRANSIENT_VISITOR_DIALOGUE,
   forestBirdForagePecking,
   forestBirdPerchPoint,
   forestTransientBirdsForTree,
@@ -17,7 +19,10 @@ import {
   forestTransientGroundBirds,
   forestTransientGroundSuitability,
   forestTransientLifeDiagnostic,
+  forestTransientVisitorDialogueNode,
+  forestTransientVisitorFocus,
   selectForestTransientGroundGroup,
+  selectForestTransientVisitor,
   validateForestTransientLife,
   validForestPerchAnchor
 } from '../public/js/forest-transient-life.js';
@@ -120,6 +125,85 @@ describe('Activity Forest transient-life boundary', () => {
       worldX: selection.point.worldX, worldY: selection.point.worldY
     }, [{ worldX: selection.point.worldX, worldY: selection.point.worldY,
       collisionRadius: 12 }]).reason).toBe('authored-object-ground');
+  });
+
+  it('places one original visitor on a bounded valid two-point route', () => {
+    const { scene } = fixture();
+    const selection = selectForestTransientVisitor(scene);
+    const life = createForestTransientLife(scene);
+
+    expect(selection.exhausted).toBeFalse();
+    expect(selection.route.length).toBe(2);
+    expect(selection.route.every(point => (
+      forestTransientGroundSuitability(scene, point).valid
+    ))).toBeTrue();
+    expect([0.25, 0.5, 0.75].every((progress) => forestTransientGroundSuitability(scene, {
+      worldX: Math.round(selection.route[0].worldX
+        + ((selection.route[1].worldX - selection.route[0].worldX) * progress)),
+      worldY: Math.round(selection.route[0].worldY
+        + ((selection.route[1].worldY - selection.route[0].worldY) * progress))
+    }).valid)).toBeTrue();
+    expect(life.visitor.name).toBe('Tansy Rook');
+    expect(life.visitor.kind).toBe('visitor');
+    expect(life.visitor.state).toBe('resting');
+    expect(validateForestTransientLife(life)).toBeTrue();
+  });
+
+  it('walks the visitor slowly between two rests and pauses her for dialogs', () => {
+    const { scene, assetsByKey } = fixture();
+    const life = createForestTransientLife(scene);
+    const visitor = life.visitor;
+    visitor.durationMilliseconds = 0;
+    const options = activeOptions(scene, assetsByKey);
+
+    advanceForestTransientLife(life, { ...options, elapsedMilliseconds: 50 });
+    expect(visitor.state).toBe('walking');
+    const walkingSnapshot = JSON.parse(JSON.stringify(visitor));
+    advanceForestTransientLife(life, {
+      ...options, elapsedMilliseconds: 200, visitorPaused: true
+    });
+    expect(visitor).toEqual(walkingSnapshot);
+    for (let index = 0; index < 8 && visitor.state === 'walking'; index += 1) {
+      advanceForestTransientLife(life, { ...options, elapsedMilliseconds: 200 });
+    }
+    expect(visitor.state).toBe('resting');
+    expect(visitor.routeIndex).toBe(1);
+    expect(life.diagnostics.visitorTransitions).toBe(2);
+    expect(validateForestTransientLife(life)).toBeTrue();
+  });
+
+  it('keeps visitor interaction bounded, optional, and still under reduced motion', () => {
+    const { scene, assetsByKey } = fixture();
+    const life = createForestTransientLife(scene);
+    const initial = JSON.parse(JSON.stringify(life.visitor));
+    const player = { ...life.visitor.position };
+
+    expect(forestTransientVisitorFocus(life, player)?.value).toBe(life.visitor);
+    expect(FOREST_TRANSIENT_VISITOR_DIALOGUE.nodes.length).toBe(5);
+    const nodeIds = FOREST_TRANSIENT_VISITOR_DIALOGUE.nodes.map(({ id }) => id);
+    const choices = FOREST_TRANSIENT_VISITOR_DIALOGUE.nodes.flatMap(node => node.choices);
+    expect(forestTransientVisitorDialogueNode(
+      FOREST_TRANSIENT_VISITOR_DIALOGUE.start
+    ).choices.length).toBe(2);
+    expect(choices.length).toBe(6);
+    expect(choices.every(choice => nodeIds.includes(choice.next))).toBeTrue();
+    expect(Math.max(...FOREST_TRANSIENT_VISITOR_DIALOGUE.nodes.map(
+      node => node.choices.length
+    ))).toBe(2);
+    const endings = FOREST_TRANSIENT_VISITOR_DIALOGUE.nodes.filter(
+      node => node.choices.length === 0
+    );
+    expect(endings.length).toBe(2);
+    expect(endings.every(node => node.text.includes('Pumpkin Lord'))).toBeTrue();
+    expect(endings.every(node => node.text.startsWith('“'))).toBeTrue();
+    expect(endings.every(node => node.text.endsWith('”'))).toBeTrue();
+    expect(completeForestTransientVisitorConversation(life)).toBeTrue();
+    expect(life.visitor.conversationCompleted).toBeTrue();
+    life.visitor = initial;
+    advanceForestTransientLife(life, {
+      ...activeOptions(scene, assetsByKey), elapsedMilliseconds: 10000, reducedMotion: true
+    });
+    expect(life.visitor).toEqual(initial);
   });
 
   it('validates exact perch shapes and favors a readable real anchor for one-third of identities', () => {

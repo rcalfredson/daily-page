@@ -247,7 +247,7 @@ block content
         dt Transient update
         dd(data-forest-transient-duration) No transient frames yet
       div
-        dt Nearby tree
+        dt Nearby focus
         dd(data-forest-focus) None
       div
         dt Last render
@@ -287,6 +287,24 @@ block content
             dd(data-forest-meaning-tint)
         ul(data-forest-meaning-reasons)
       button(type='button' data-forest-dialog-close) Return to the forest
+
+    dialog.activity-forest__dialog(
+      data-forest-visitor-dialog
+      aria-labelledby='forest-visitor-title'
+    )
+      p.activity-forest__dialog-eyebrow A traveler between roads
+      h2#forest-visitor-title Tansy Rook
+      p.activity-forest__dialog-context Weathered wayfarer · keeper of improbable faith
+      p.activity-forest__dialog-excerpt.activity-forest__visitor-text(
+        data-forest-visitor-text
+        aria-live='polite'
+      )
+      .activity-forest__visitor-replies(data-forest-visitor-replies hidden)
+        p.activity-forest__visitor-reply-label What do you say?
+        .activity-forest__visitor-reply-buttons(role='group' aria-label='Choose your reply')
+          button(type='button' data-forest-visitor-choice='0')
+          button(type='button' data-forest-visitor-choice='1')
+      button(type='button' data-forest-visitor-next hidden) Wish her a good road
 
     dialog.activity-forest__dialog(data-forest-object-dialog aria-labelledby='forest-object-title')
       p.activity-forest__dialog-eyebrow A clearing object
