@@ -475,7 +475,11 @@ export function replaceWithPreferredTranslationVariants(blocks, preferredTransla
   });
 }
 
-async function loadPreferredTranslationVariants(blocks, preferredLang, { lockedOnly = false } = {}) {
+async function loadPreferredTranslationVariants(
+  blocks,
+  preferredLang,
+  { lockedOnly = false, roomId = null, status = null } = {}
+) {
   const groupIds = [...new Set(
     (blocks || [])
       .filter(block => block?.groupId && block.lang !== preferredLang)
@@ -484,12 +488,15 @@ async function loadPreferredTranslationVariants(blocks, preferredLang, { lockedO
 
   if (groupIds.length === 0) return blocks;
 
-  const match = publiclyVisibleBlockMatch({
+  const variantMatch = {
     groupId: { $in: groupIds },
     lang: preferredLang
-  });
-  if (lockedOnly) match.status = 'locked';
+  };
+  if (roomId) variantMatch.roomId = roomId;
+  if (status) variantMatch.status = status;
+  else if (lockedOnly) variantMatch.status = 'locked';
 
+  const match = publiclyVisibleBlockMatch(variantMatch);
   const preferredTranslations = await Block.find(match).lean().exec();
   return replaceWithPreferredTranslationVariants(blocks, preferredTranslations, preferredLang);
 }
@@ -597,7 +604,12 @@ export async function getBlocksByRoomWithFallback({
     }
 
     if (blocks.length > 0) {
-      return { blocks, period: win };
+      const preferredBlocks = await loadPreferredTranslationVariants(
+        blocks,
+        preferredLang,
+        { roomId, status }
+      );
+      return { blocks: preferredBlocks, period: win };
     }
   }
 
