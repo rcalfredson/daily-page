@@ -531,11 +531,11 @@ export function mergePinnedHomeBlocks(pinnedBlocks, ordinaryBlocks, { limit = 20
   return merged;
 }
 
-async function getPinnedHomeBlocks({ preferredLang = 'en', lockedOnly = false, limit = HOME_PINNED_BLOCK_LIMIT } = {}) {
+export async function getPinnedHomeBlocks({ preferredLang = 'en', lockedOnly = false, limit = HOME_PINNED_BLOCK_LIMIT } = {}) {
   const match = publiclyVisibleBlockMatch({ pinnedAt: { $exists: true, $ne: null } });
   if (lockedOnly) match.status = 'locked';
 
-  return Block.aggregate([
+  const pinnedBlocks = await Block.aggregate([
     { $match: match },
     { $sort: { pinnedAt: -1, createdAt: -1 } },
     { $group: { _id: '$groupId', docs: { $push: '$$ROOT' } } },
@@ -567,6 +567,22 @@ async function getPinnedHomeBlocks({ preferredLang = 'en', lockedOnly = false, l
     { $sort: { pinnedAt: -1, createdAt: -1 } },
     { $limit: Number(limit) }
   ]).exec();
+
+  // Pinning one document pins its translation group, but the aggregation above
+  // can only choose among variants that carry pinnedAt themselves. Resolve the
+  // user's preferred variant across the whole group after selecting the pins.
+  const preferredBlocks = await loadPreferredTranslationVariants(
+    pinnedBlocks,
+    preferredLang,
+    { lockedOnly }
+  );
+
+  // The selected translation may not be the document on which the pin was set.
+  // Carry the anchor's pin metadata over for ordering and the pinned badge.
+  return preferredBlocks.map((block, index) => ({
+    ...block,
+    pinnedAt: pinnedBlocks[index]?.pinnedAt
+  }));
 }
 
 // Fallback para bloques por room (locked o in-progress)
