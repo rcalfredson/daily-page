@@ -1,8 +1,10 @@
 import {
+  getPinnedHomeBlocks,
   HOME_PINNED_BLOCK_LIMIT,
   mergePinnedHomeBlocks,
   replaceWithPreferredTranslationVariants
 } from '../server/db/blockService.js';
+import Block from '../server/db/models/Block.js';
 
 describe('home pinned blocks', () => {
   function block(id, overrides = {}) {
@@ -98,5 +100,48 @@ describe('home pinned blocks', () => {
     );
 
     expect(result.map(b => b._id)).toEqual(['older-en', 'untranslated']);
+  });
+
+  it('uses a preferred-language translation when only another variant is pinned', async () => {
+    const pinnedAt = new Date('2026-07-08T00:00:00.000Z');
+    const pinnedRussian = block('pinned-ru', {
+      groupId: 'translated-post',
+      lang: 'ru',
+      pinnedAt
+    });
+    const hindiTranslation = block('older-hi', {
+      groupId: 'translated-post',
+      lang: 'hi',
+      createdAt: new Date('2026-06-01T00:00:00.000Z')
+    });
+
+    spyOn(Block, 'aggregate').and.returnValue({
+      exec: async () => [pinnedRussian]
+    });
+    const findSpy = spyOn(Block, 'find').and.returnValue({
+      lean() {
+        return this;
+      },
+      exec: async () => [hindiTranslation]
+    });
+
+    const result = await getPinnedHomeBlocks({ preferredLang: 'hi' });
+
+    expect(result.map(item => item._id)).toEqual(['older-hi']);
+    expect(result[0].pinnedAt).toEqual(pinnedAt);
+    expect(findSpy).toHaveBeenCalledWith({
+      $and: [
+        {
+          groupId: { $in: ['translated-post'] },
+          lang: 'hi'
+        },
+        {
+          $or: [
+            { visibility: 'public' },
+            { visibility: 'unlisted', status: 'locked' }
+          ]
+        }
+      ]
+    });
   });
 });
