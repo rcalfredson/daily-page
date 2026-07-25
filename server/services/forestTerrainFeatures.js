@@ -53,19 +53,22 @@ export function generateForestStreamCrossing(scene, corridorCenterAt) {
     const difference = Math.abs(worldY - forestStreamCenterY(scene.environment, worldX));
     if (!best || difference < best.difference) best = { worldX, worldY, difference };
   }
-  const halfLength = scene.environment.stream.halfWidth
+  const angleMilliradians = 1100 + Math.floor(decisionUnit(
+    scene.environment.seed, best.worldX, best.worldY, 'bridge-angle'
+  ) * 100);
+  const angle = angleMilliradians / 1000;
+  const requiredSpan = scene.environment.stream.halfWidth
     + scene.environment.stream.bankWidth + 34;
+  const halfLength = Math.min(160, Math.ceil(requiredSpan / Math.abs(Math.sin(angle))));
   return validateForestStreamCrossing({
     schemaVersion: FOREST_CROSSING_SCHEMA_VERSION,
     generationVersion: FOREST_CROSSING_GENERATION_VERSION,
-    id: 'forest-crossing-v6-stream-footbridge-primary',
+    id: 'forest-crossing-v7-stream-footbridge-primary',
     type: FOREST_BRIDGE_TYPE,
     worldX: best.worldX,
     worldY: best.worldY,
     orientation: 'world-angle',
-    angleMilliradians: 1100 + Math.floor(decisionUnit(
-      scene.environment.seed, best.worldX, best.worldY, 'bridge-angle'
-    ) * 100),
+    angleMilliradians,
     definitionId: FOREST_BRIDGE_DEFINITION_ID,
     halfWidth: 31,
     halfLength,
@@ -90,7 +93,7 @@ export function generateForestStreamCrossings(scene, corridorCenterAt) {
     const candidate = validateForestStreamCrossing({
       schemaVersion: FOREST_CROSSING_SCHEMA_VERSION,
       generationVersion: FOREST_CROSSING_GENERATION_VERSION,
-      id: 'forest-crossing-v6-stream-footbridge-secondary',
+      id: 'forest-crossing-v7-stream-footbridge-secondary',
       type: FOREST_BRIDGE_TYPE,
       worldX,
       worldY: forestStreamCenterY(scene.environment, worldX),

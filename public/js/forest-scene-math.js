@@ -15,7 +15,7 @@ import {
 } from './forest-discoveries.js';
 import {
   FOREST_BOULDER_TYPE,
-  forestBridgeContains,
+  forestBridgeDeckTraversable,
   forestBridgeRailCollides,
   forestStreamWaterContains
 } from './forest-environment.js';
@@ -261,8 +261,8 @@ export function forestTerrainTraversableAt(scene, position) {
     crossing, position, position.radius || 0
   ))) return false;
   if (!forestStreamWaterContains(scene.environment, position, position.radius || 0)) return true;
-  return crossings.some(crossing => forestBridgeContains(
-    crossing, position, -(position.radius || 0)
+  return crossings.some(crossing => forestBridgeDeckTraversable(
+    crossing, position, position.radius || 0
   ));
 }
 

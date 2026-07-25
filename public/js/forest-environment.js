@@ -14,7 +14,7 @@ export const FOREST_GROUND_DETAIL_CELL_SIZE = 48;
 export const FOREST_BOULDER_TYPE = 'generated-boulder';
 export { FOREST_BRIDGE_TYPE } from './forest-bridges.js';
 export const FOREST_CROSSING_SCHEMA_VERSION = 3;
-export const FOREST_CROSSING_GENERATION_VERSION = 6;
+export const FOREST_CROSSING_GENERATION_VERSION = 7;
 export const FOREST_ROCK_PALETTES = Object.freeze([
   Object.freeze({
     id: 'mossed-green', weight: 40,
@@ -348,8 +348,8 @@ export function validateForestStreamCrossing(crossing, world) {
     || crossing.schemaVersion !== FOREST_CROSSING_SCHEMA_VERSION
     || crossing.generationVersion !== FOREST_CROSSING_GENERATION_VERSION
     || ![
-      'forest-crossing-v6-stream-footbridge-primary',
-      'forest-crossing-v6-stream-footbridge-secondary'
+      'forest-crossing-v7-stream-footbridge-primary',
+      'forest-crossing-v7-stream-footbridge-secondary'
     ].includes(crossing.id)
     || crossing.type !== FOREST_BRIDGE_TYPE
     || !boundedInteger(crossing.worldX, 0, world.width)
@@ -372,6 +372,16 @@ export function forestBridgeContains(crossing, position, padding = 0) {
   const local = forestBridgeLocalCoordinates(crossing, position);
   return Math.abs(local.lateral) <= crossing.halfWidth + padding
     && Math.abs(local.longitudinal) <= crossing.halfLength + padding;
+}
+
+export function forestBridgeDeckTraversable(crossing, position, radius = 0) {
+  if (!crossing || crossing.type !== FOREST_BRIDGE_TYPE
+    || !Number.isFinite(position?.worldX) || !Number.isFinite(position?.worldY)
+    || !Number.isFinite(radius) || radius < 0) return false;
+  const local = forestBridgeLocalCoordinates(crossing, position);
+  const epsilon = 0.000001;
+  return Math.abs(local.lateral) <= crossing.halfWidth - radius + epsilon
+    && Math.abs(local.longitudinal) <= crossing.halfLength + radius + epsilon;
 }
 
 export function forestBridgeRailCollides(crossing, position, radius = 0) {

@@ -22,6 +22,7 @@ import {
   FOREST_ROCK_PALETTES,
   FOREST_WORLD_GENERATION_VERSION,
   forestBridgeContains,
+  forestBridgeDeckTraversable,
   forestBridgeElevationAt,
   forestBridgeLocalCoordinates,
   forestBridgeRailCollides,
@@ -516,6 +517,11 @@ describe('first Activity Forest environment grammar', () => {
     const secondAngle = secondBridge.angleMilliradians / 1000;
     expect(Math.abs(Math.cos(angle))).toBeGreaterThan(0.25);
     expect(Math.abs(Math.sin(angle))).toBeGreaterThan(0.25);
+    const requiredPrimarySpan = scene.environment.stream.halfWidth
+      + scene.environment.stream.bankWidth + 34;
+    expect(bridge.halfLength).toBe(Math.ceil(
+      requiredPrimarySpan / Math.abs(Math.sin(angle))
+    ));
     expect(Math.abs(secondAngle - angle)).toBeGreaterThan(0.75);
     expect(validateForestStreamCrossing(secondBridge, scene.world)).toBe(secondBridge);
     expect(secondBridge.worldY).toBe(forestStreamCenterY(
@@ -578,6 +584,27 @@ describe('first Activity Forest environment grammar', () => {
     expect(forestTerrainTraversableAt(scene, {
       worldX: offBridgeX, worldY: offBridgeStreamY, radius: 10
     })).toBeFalse();
+
+    let waterTransitionCount = 0;
+    for (const crossing of scene.crossings) {
+      for (const endSign of [-1, 1]) {
+        for (let longitudinal = crossing.halfLength - 10;
+          longitudinal <= crossing.halfLength + 10; longitudinal += 2) {
+          for (let lateral = -crossing.halfWidth + 12;
+            lateral <= crossing.halfWidth - 12; lateral += 2) {
+            const position = {
+              ...forestBridgeWorldPosition(crossing, endSign * longitudinal, lateral),
+              radius: 10
+            };
+            if (!forestStreamWaterContains(scene.environment, position, position.radius)) continue;
+            waterTransitionCount += 1;
+            expect(forestBridgeDeckTraversable(crossing, position, position.radius)).toBeTrue();
+            expect(forestTerrainTraversableAt(scene, position)).toBeTrue();
+          }
+        }
+      }
+    }
+    expect(waterTransitionCount).toBeGreaterThan(0);
 
     const walk = (crossing) => {
       const crossingAngle = crossing.angleMilliradians / 1000;
