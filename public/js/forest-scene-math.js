@@ -352,8 +352,12 @@ export function forestDepthOrder(placements, player, objects = []) {
     ...objects.map((object) => ({ kind: object.type || 'marker', id: object.id,
       worldY: object.worldY, object })),
     { kind: 'player', id: '~player', worldY: player.worldY, player }
-  ].sort((left, right) => left.worldY - right.worldY
-    || (left.kind === right.kind ? left.id.localeCompare(right.id)
-      : left.kind === 'player' ? 1 : right.kind === 'player' ? -1
-        : left.kind.localeCompare(right.kind)));
+  ].sort((left, right) => {
+    const layerDifference = Number(left.kind !== FOREST_STEPPING_STONE_TYPE)
+      - Number(right.kind !== FOREST_STEPPING_STONE_TYPE);
+    return layerDifference || left.worldY - right.worldY
+      || (left.kind === right.kind ? left.id.localeCompare(right.id)
+        : left.kind === 'player' ? 1 : right.kind === 'player' ? -1
+          : left.kind.localeCompare(right.kind));
+  });
 }
