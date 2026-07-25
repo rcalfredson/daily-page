@@ -1358,12 +1358,12 @@ if (payload && viewportElement && canvas) {
     }
   }
 
-  function paintTrailJoins() {
-    const byId = new Map(placedObjects.map((object) => [object.id, object]));
+  function paintTrailJoins(objects = placedObjects) {
+    const byId = new Map(objects.map((object) => [object.id, object]));
     context.lineWidth = 5;
     context.lineCap = 'round';
     context.strokeStyle = 'rgba(112, 94, 66, 0.36)';
-    for (const join of forestSteppingStoneJoins(placedObjects)) {
+    for (const join of forestSteppingStoneJoins(objects)) {
       const from = byId.get(join.fromId);
       const to = byId.get(join.toId);
       context.beginPath();
@@ -1462,7 +1462,14 @@ if (payload && viewportElement && canvas) {
       paintStream(elapsedSeconds);
       crossings.forEach(paintBridgeDeck);
     }
-    paintTrailJoins();
+    const trailJoinObjects = trailEditor.tool === 'move' && trailEditor.preview
+      ? placedObjects.map((object) => (
+        object.id === trailEditor.movingId ? trailEditor.preview.stone : object
+      )) : placedObjects;
+    paintTrailJoins(trailJoinObjects);
+    if (trailEditor.active && trailEditor.preview) {
+      paintSteppingStone(trailEditor.preview.stone, true);
+    }
     const visibility = visibilityCache.read(camera, player);
     const { items: actorItems, highBridgeFlights } = forestTransientDepthItems(
       transientLife, camera, reducedMotionQuery.matches, crossings
@@ -1476,7 +1483,9 @@ if (payload && viewportElement && canvas) {
       else if (item.kind === 'transient-flight') paintFlyingBird(item.actor);
       else if (item.kind === 'transient-ground-bird') paintGroundBird(item.actor);
       else if (item.kind === 'marker') paintMarker(item.object);
-      else if (item.kind === FOREST_STEPPING_STONE_TYPE) paintSteppingStone(item.object);
+      else if (item.kind === FOREST_STEPPING_STONE_TYPE) {
+        if (item.object.id !== trailEditor.movingId) paintSteppingStone(item.object);
+      }
       else if (item.kind === FOREST_DISCOVERY_TYPE) paintDiscovery(item.object);
       else if (item.kind === FOREST_BOULDER_TYPE) paintBoulder(item.object);
       else if (isForestClearingObject(item.object)) {
@@ -1485,9 +1494,6 @@ if (payload && viewportElement && canvas) {
         }
       }
       else paintTree(item.placement, elapsedSeconds);
-    }
-    if (trailEditor.active && trailEditor.preview) {
-      paintSteppingStone(trailEditor.preview.stone, true);
     }
     if (clearingEditor.active && clearingEditor.preview) {
       paintClearingObject(clearingEditor.preview.object, true, elapsedSeconds);
@@ -1723,7 +1729,8 @@ if (payload && viewportElement && canvas) {
     if (clearingEditor.active) {
       commitClearingPlacement();
     } else if (trailEditor.active) {
-      commitTrailAt(worldX, worldY);
+      if (trailEditor.tool === 'remove') commitTrailAt(worldX, worldY);
+      else commitTrailPlacementAtPreview();
       viewportElement.focus();
     }
   }
@@ -2167,6 +2174,9 @@ if (payload && viewportElement && canvas) {
     trailToggle.setAttribute('aria-pressed', String(trailEditor.active));
     trailToggle.textContent = trailEditor.active ? 'Editing trail' : 'Edit trail';
     trailModeLabel.textContent = `Trail editing: ${trailEditor.tool}`;
+    document.querySelector('[data-forest-trail-place]').textContent =
+      trailEditor.tool === 'move' && trailEditor.movingId ? 'Move here'
+        : trailEditor.tool === 'place' ? 'Place here' : 'Place new';
     for (const tool of ['place', 'move', 'remove']) {
       document.querySelector(`[data-forest-trail-${tool}]`).setAttribute(
         'aria-pressed', String(trailEditor.tool === tool)
@@ -2184,9 +2194,10 @@ if (payload && viewportElement && canvas) {
       reportTrail('Stand near a stone, then choose Move nearest.', 'no nearby stone');
     } else if (tool === 'remove') {
       reportTrail('Choose a stone to remove. Removal is rejected if it would split the trail.');
+    } else if (tool === 'move') {
+      previewTrailAt(player.worldX, player.worldY, false);
     } else {
-      reportTrail(tool === 'move' ? 'Choose a new clear position for the selected stone.'
-        : 'Choose clear ground; connected stones stay 26–96 px apart.');
+      reportTrail('Choose clear ground; connected stones stay 26–96 px apart.');
     }
     requestRender();
   }
@@ -2221,7 +2232,9 @@ if (payload && viewportElement && canvas) {
       worldX, worldY, id, scene, otherObjects
     );
     const validity = trailEditor.preview;
-    reportTrail(validity.valid ? 'Valid position. Click or press Enter to save.'
+    const action = trailEditor.tool === 'move' ? 'Move here' : 'Place here';
+    reportTrail(validity.valid
+      ? `Valid preview. Tap or click the forest, choose ${action}, or press Enter to save.`
       : (trailReasonText[validity.reason] || validity.reason),
     validity.valid ? 'valid preview' : `invalid: ${validity.reason}`);
     if (shouldRender) requestRender();
@@ -2240,7 +2253,16 @@ if (payload && viewportElement && canvas) {
     }
     setOverlay(result.overlay, `trail ${action} saved locally`);
     trailEditor.preview = null;
-    if (trailEditor.tool === 'move') trailEditor.movingId = null;
+    if (action === 'moved') {
+      trailEditor.movingId = null;
+      setTrailTool('place');
+      previewTrailAt(player.worldX, player.worldY, false);
+      reportTrail(trailEditor.preview
+        ? 'Stone moved. Place mode restored; walk to a valid position for the next stone.'
+        : 'Stone moved. Place mode restored, but this focused trail has reached its limit.',
+      'moved · place mode');
+      return true;
+    }
     reportTrail(`Stone ${action}. The overlay is saved locally.`, action);
     return true;
   }
@@ -2270,6 +2292,13 @@ if (payload && viewportElement && canvas) {
     saveTrailResult(overlayWithForestSteppingStone(
       overlay, trailEditor.preview.stone, scene
     ), trailEditor.tool === 'move' ? 'moved' : 'placed');
+  }
+
+  function commitTrailPlacementAtPreview() {
+    commitTrailAt(
+      trailEditor.preview?.stone.worldX ?? player.worldX,
+      trailEditor.preview?.stone.worldY ?? player.worldY
+    );
   }
 
   function placeMarker() {
@@ -2366,8 +2395,7 @@ if (payload && viewportElement && canvas) {
       toggleTrailEditor(false);
     } else if (trailEditor.active && event.key === 'Enter') {
       event.preventDefault();
-      commitTrailAt(trailEditor.preview?.stone.worldX ?? player.worldX,
-        trailEditor.preview?.stone.worldY ?? player.worldY);
+      commitTrailPlacementAtPreview();
     } else if ((event.key === 'e' || event.key === 'E' || event.key === 'Enter')
       && focusedItem) {
       event.preventDefault();
@@ -2420,13 +2448,15 @@ if (payload && viewportElement && canvas) {
     viewportElement.focus();
   });
   viewportElement.addEventListener('pointermove', (event) => {
-    if (event.pointerType === 'mouse' && clearingEditor.active) {
+    if (event.pointerType === 'mouse' && clearingEditor.active
+      && !event.target.closest('button')) {
       const viewportRect = viewportElement.getBoundingClientRect();
       previewClearingAt(camera.x + event.clientX - viewportRect.left,
         camera.y + event.clientY - viewportRect.top);
       return;
     }
-    if (event.pointerType === 'mouse' && trailEditor.active) {
+    if (event.pointerType === 'mouse' && trailEditor.active
+      && !event.target.closest('button')) {
       const viewportRect = viewportElement.getBoundingClientRect();
       previewTrailAt(camera.x + event.clientX - viewportRect.left,
         camera.y + event.clientY - viewportRect.top);
@@ -2508,7 +2538,14 @@ if (payload && viewportElement && canvas) {
     toggleTrailEditor();
   });
   document.querySelector('[data-forest-trail-place]').addEventListener('click', () => {
-    setTrailTool('place');
+    if (trailEditor.tool === 'move' && trailEditor.movingId) {
+      commitTrailPlacementAtPreview();
+      viewportElement.focus();
+      return;
+    }
+    if (trailEditor.tool !== 'place') setTrailTool('place');
+    previewTrailAt(player.worldX, player.worldY, false);
+    commitTrailPlacementAtPreview();
     viewportElement.focus();
   });
   document.querySelector('[data-forest-trail-move]').addEventListener('click', () => {

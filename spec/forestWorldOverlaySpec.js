@@ -344,14 +344,14 @@ describe('Activity Forest personal overlay contract', () => {
       .toBe('unsupported-version');
   });
 
-  it('culls stones by their bounded footprint and uses stable ground-Y depth ordering and joins', () => {
+  it('culls stones by their bounded footprint and keeps their ground layer below the player', () => {
     const stones = [
       createForestSteppingStone(50, 60, 'forest-stone-v1-02'),
       createForestSteppingStone(50, 60, 'forest-stone-v1-01'),
       createForestSteppingStone(100, 60, 'forest-stone-v1-03')
     ];
     const visible = visibleForestObjects(stones, { x: 55, y: 55, width: 40, height: 20 }, 0);
-    const order = forestDepthOrder([], { worldX: 0, worldY: 60 }, visible);
+    const order = forestDepthOrder([], { worldX: 0, worldY: 20 }, visible);
 
     expect(visible.map(({ id }) => id)).toEqual([
       'forest-stone-v1-01', 'forest-stone-v1-02', 'forest-stone-v1-03'
