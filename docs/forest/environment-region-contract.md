@@ -16,17 +16,23 @@ per-pixel biome raster.
 
 ## Versions and bounded vocabulary
 
-The initial contract uses:
+The active implementation uses:
 
 - environment schema version **2**;
 - world/environment generation version **2**;
-- ground-presentation version **11** (lusher ground and water plus shared bridge arch rendering);
+- ground-presentation version **13**;
 - generated terrain-feature schema version **2** and generation version **5**;
-- crossing schema version **2** and generation version **5**;
+- crossing schema version **3** and generation version **7**;
 - grammar id `grove-rocky-rise-and-stream`;
 - code-owned regions `calm-grove` and `rocky-rise`;
 - surfaces `grove-moss`, `weathered-rock-grass`, `stream-bank`, and `shallow-stream`;
 - captured habitats `neutral-grove` and `rocky-edge`.
+
+The Milestone 8 checkpoint originally recorded ground-presentation version 11 and crossing schema /
+generation versions 2 / 5. Version 13 introduced the projected incised-bank and registered 3D
+bridge presentation; crossing schema 3 added the bridge-definition identity; crossing generation 7
+contains the later bridge-approach traversability repair. These historical values remain useful
+milestone evidence but are not the active runtime contract.
 
 The manifest contains only these versions and ids, a bounded seed and world, seven integer
 parameters describing the rocky rise, and ten bounded stream parameters. The query accepts an exact `{ worldX, worldY }` object of
@@ -186,7 +192,7 @@ captured habitat at the accepted position
         ↓
 post-to-tree mapping v1 (phenotype, seed, permanent palette)
         ↓
-renderer-v3 runtime asset schema 2
+renderer-v3 runtime asset schema 3
 ```
 
 The composer deliberately re-queries every accepted position and rejects a mismatch with the
@@ -223,7 +229,8 @@ to an old development overlay silently.
   traversability changes increment crossing generation version.
 - Meaning changes increment the post-to-tree mapping version.
 - Renderer or phenotype pixel changes retain their existing renderer/asset invalidators.
-- Runtime tree-asset schema remains version 2; renderer cache version remains 4.
+- Runtime tree-asset schema is version 3; renderer cache version remains 4. Schema 3 adds bounded
+  perch-anchor geometry without changing tree pixels.
 - Explanation-only wording does not change layout or tree pixels.
 
 A future persistent writing tree captures its habitat and semantic projection at creation.
