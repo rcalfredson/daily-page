@@ -8,9 +8,15 @@ specimen, a broad habitat hint softly biases phenotype eligibility, and creation
 bounded permanent foliage tint. It is not a production post query, migration system, biome model,
 or final semantic mapping.
 
+In this contract, **post** is the product-facing term for the modern writing entity internally named
+`Block`. It does not refer to the separate legacy `Page` model. Milestone 7 uses bounded post-shaped
+fixtures; the production owner-writing contract selects real Blocks/posts and supplies the precise
+ownership and lifecycle boundary.
+
 The contract lives in `server/services/forestPostTreeProjection.js`. Projection schema version 1
-and mapping version 1 are separate from runtime tree-asset schema version 2, renderer cache version
-4, and each phenotype's asset version.
+and mapping version 1 are separate from active runtime tree-asset schema version 3, renderer cache
+version 4, and each phenotype's asset version. Milestone 7 originally used runtime asset schema 2;
+the later schema-3 addition of bounded perch anchors did not change this meaning projection.
 
 ## Input and decision policy
 
@@ -173,10 +179,11 @@ palette change or mapping-version change gets a different key. This preserves th
 nonvisual explanation changes do not invalidate pixels while no two different rendered outputs
 share an identity.
 
-Runtime asset schema version remains 2. Projected assets retain the same ordered rear foliage,
-wood, and front foliage layers, up to three motion groups per foliage layer, architectural identity,
-dimensions, anchor, and bounds. Neither the projection nor explanations are added to runtime assets
-or either transport. Explicit-seed generator and diagnostic behavior remains unchanged.
+Runtime asset schema version is now 3. Projected assets retain the same ordered rear foliage, wood,
+and front foliage layers, up to three motion groups per foliage layer, architectural identity,
+dimensions, anchor, bounds, and the later bounded perch-anchor metadata. Neither the projection nor
+explanations are added to runtime assets or either transport. Explicit-seed generator and
+diagnostic behavior remains unchanged.
 
 ## Forest Lab evidence
 
@@ -240,9 +247,10 @@ times, making paired comparisons reachable without expanding the asset pool.
 
 On Node 24.15.0, one local cold preparation of all 23 projected assets took about 1.37 seconds. The
 complete asset array serialized to 2,874,169 bytes as color runs and 206,394 bytes through the
-existing lossless-raster transport. Runtime assets retain schema 2, renderer version 4, their
-registered phenotype versions, ordered layers, and at most three foliage motion groups. These are
-local architecture observations, not browser or baseline-device frame-time claims.
+existing lossless-raster transport. Those measurements were captured under runtime asset schema 2.
+Active assets now use schema 3, renderer version 4, their registered phenotype versions, ordered
+layers, and at most three foliage motion groups. These are local architecture observations, not
+browser or baseline-device frame-time claims.
 
 ## Remaining unknowns and Milestone 8 boundary
 

@@ -224,8 +224,10 @@ blend. Invalid density, bias, or foliage-style values fail generation instead of
 inputs. No runtime phenotype switch or asset-contract field was added.
 
 These shared capabilities changed the renderer vocabulary, so renderer v3's cache version advanced
-from 3 to 4. The runtime tree-asset schema remains version 2. The conifer starts at phenotype asset
-version 1; the two established phenotype versions remain 2. Their broadleaf pixels and layer runs
+from 3 to 4. At this checkpoint the runtime tree-asset schema remained version 2; the later
+transient-life milestone advanced it to 3 to add bounded perch anchors without changing tree
+pixels. The conifer starts at phenotype asset version 1; the two established phenotype versions
+remain 2. Their broadleaf pixels and layer runs
 for explicit prior inputs are unchanged, but the renderer-version component deliberately gives
 every new asset a fresh cache key rather than silently reusing version-3 entries. The default scene keeps
 its established 68/32 deciduous/lanternwood selection and generated-base configuration; the conifer
