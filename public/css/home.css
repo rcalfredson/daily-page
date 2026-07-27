@@ -959,6 +959,11 @@ html[data-theme="dark"] .home-support-widget__fill {
   gap: 1rem;
   position: sticky;
   top: calc(var(--site-header-height, 0px) + 1rem);
+  max-height: calc(100vh - var(--site-header-height, 0px) - 2rem);
+  max-height: calc(100dvh - var(--site-header-height, 0px) - 2rem);
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
 }
 
 .home-discovery__panel {
@@ -1019,14 +1024,27 @@ html[data-theme='dark'] .home-discovery .trending-tags-widget {
 
 .home-quests-heading {
   display: flex;
+  flex-wrap: wrap;
   align-items: start;
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 0.8rem;
 }
 
+.home-quests-heading > div {
+  min-width: 0;
+  flex: 1 1 12rem;
+}
+
 .home-quests-heading h2 {
   margin-bottom: 0;
+  overflow-wrap: anywhere;
+}
+
+.home-quests-heading .home-quests-card__link {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .home-quest-list {
@@ -1197,6 +1215,9 @@ html[data-theme='dark'] .home-quests-heading h2 {
 
   .home-discovery__sidebar {
     position: static;
+    max-height: none;
+    overflow-y: visible;
+    overscroll-behavior-y: auto;
   }
 
   .home-discovery__panel:not(.is-active) {

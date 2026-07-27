@@ -323,6 +323,8 @@ html[data-theme="dark"] .chart-container {
     padding-right: 0.45rem;
     padding-left: 0.45rem;
     text-align: center;
+    overflow-wrap: anywhere;
+    white-space: normal;
   }
 }
 
@@ -438,6 +440,5 @@ html[data-theme="dark"] .tag-activity .chart-container {
     padding-right: 0.25rem;
     padding-left: 0.25rem;
     font-size: 0.78rem;
-    white-space: normal;
   }
 }
