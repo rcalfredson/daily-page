@@ -21,7 +21,8 @@
     "room-i18n:migrate": "node scripts/migrations/populateRoomI18n.js",
     "collaborators:cleanup": "node scripts/migrations/cleanBlockCollaborators.js",
     "visibility:migrate-unlisted": "node scripts/migrations/migratePrivateVisibilityToUnlisted.js",
-    "quest:import": "node scripts/quests/importQuest.js"
+    "quest:import": "node scripts/quests/importQuest.js",
+    "account-deletion:fixture": "node scripts/dev/accountDeletionFixture.js"
   },
   "repository": {
     "type": "git",

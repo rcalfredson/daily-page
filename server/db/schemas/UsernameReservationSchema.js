@@ -2,7 +2,7 @@ import { Schema } from 'mongoose';
 
 const usernameReservationSchema = new Schema({
   _id: { type: String, required: true },
-  expiresAt: { type: Date, required: true, index: true },
+  expiresAt: { type: Date, required: true },
   reason: { type: String, enum: ['account-deleted'], required: true }
 }, {
   strict: true,
