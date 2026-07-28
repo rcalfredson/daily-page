@@ -364,7 +364,9 @@ export async function getTopBlocksWithFallback(options = {}) {
     limit = 20,
     preferredLang = "en",
     includePinnedHome = false,
-    pinnedLimit = HOME_PINNED_BLOCK_LIMIT
+    pinnedLimit = HOME_PINNED_BLOCK_LIMIT,
+    roomId = null,
+    status = null
   } = options;
 
   const now = Date.now();
@@ -412,12 +414,24 @@ export async function getTopBlocksWithFallback(options = {}) {
 
     const cacheKey =
       w.toDays == null
-        ? `top-blocks-band-all-${lockedOnly}-${preferredLang}-${BAND_FETCH}`
-        : `top-blocks-band-${w.fromDays}-${w.toDays}-${lockedOnly}-${preferredLang}-${BAND_FETCH}`;
+        ? `top-blocks-band-all-${lockedOnly}-${preferredLang}-${roomId || 'global'}-${status || 'any'}-${BAND_FETCH}`
+        : `top-blocks-band-${w.fromDays}-${w.toDays}-${lockedOnly}-${preferredLang}-${roomId || 'global'}-${status || 'any'}-${BAND_FETCH}`;
 
     const bandBlocks = await cache.get(
       cacheKey,
       async () => {
+        if (roomId) {
+          return await findByRoomWithLangPref({
+            roomId,
+            preferredLang,
+            status,
+            sortBy: 'voteCount',
+            limit: BAND_FETCH,
+            startDate,
+            endDate,
+          });
+        }
+
         return await findTopGlobalWithLangPref({
           preferredLang,
           lockedOnly,
@@ -453,7 +467,7 @@ export async function getTopBlocksWithFallback(options = {}) {
   const preferredBlocks = await loadPreferredTranslationVariants(
     collected,
     preferredLang,
-    { lockedOnly }
+    { lockedOnly, roomId, status }
   );
 
   return {

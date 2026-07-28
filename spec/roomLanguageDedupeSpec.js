@@ -1,5 +1,8 @@
 import Block from '../server/db/models/Block.js';
-import { getBlocksByRoomWithFallback } from '../server/db/blockService.js';
+import {
+  getBlocksByRoomWithFallback,
+  getTopBlocksWithFallback
+} from '../server/db/blockService.js';
 
 describe('room dashboard language deduplication', () => {
   it('uses an older preferred-language counterpart after recency-window deduplication', async () => {
@@ -52,5 +55,52 @@ describe('room dashboard language deduplication', () => {
         }
       ]
     });
+  });
+
+  it('fills the locked-post target from progressively older room activity', async () => {
+    const recent = {
+      _id: 'recent-room-post',
+      groupId: 'recent-room-group',
+      roomId: 'cumulative-room',
+      status: 'locked',
+      visibility: 'public',
+      lang: 'en',
+      voteCount: 3
+    };
+    const older = {
+      ...recent,
+      _id: 'older-room-post',
+      groupId: 'older-room-group',
+      voteCount: 8
+    };
+    let band = 0;
+
+    const aggregateSpy = spyOn(Block, 'aggregate').and.callFake(() => ({
+      exec: async () => {
+        band += 1;
+        if (band === 1) return [recent];
+        if (band === 2) return [older];
+        return [];
+      }
+    }));
+
+    const result = await getTopBlocksWithFallback({
+      roomId: 'cumulative-room',
+      status: 'locked',
+      lockedOnly: true,
+      limit: 2,
+      preferredLang: 'en'
+    });
+
+    expect(result.blocks.map(block => block._id)).toEqual([
+      'recent-room-post',
+      'older-room-post'
+    ]);
+    expect(result.period).toEqual({ type: 'days', value: 7 });
+    expect(aggregateSpy.calls.count()).toBe(2);
+
+    const firstMatch = aggregateSpy.calls.argsFor(0)[0][0].$match;
+    expect(firstMatch.$and[0].roomId).toBe('cumulative-room');
+    expect(firstMatch.status).toBe('locked');
   });
 });
