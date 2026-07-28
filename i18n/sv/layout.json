@@ -8,6 +8,7 @@
     "openMenu": "Öppna huvudmenyn",
     "closeMenu": "Stäng huvudmenyn",
     "privacy": "Sekretesspolicy",
+    "anonymousAuthor": "Anonym",
     "uiFallbackNotice": "{requested} är inte översatt än. Visar {current} för tillfället.",
     "copyButton": {
       "copy": "Kopiera",

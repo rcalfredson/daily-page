@@ -84,7 +84,10 @@ import { stripLegacyLang } from './server/middleware/stripLegacyLang.js';
 import { uiLangFallbackNotice } from './server/middleware/uiLangFallbackNotice.js';
 import { uiPrefixAndLangContext } from './server/middleware/uiPrefix.js';
 import { findUserById } from './server/db/userService.js';
-import { toBlockPreviewDTO } from './server/utils/block.js';
+import {
+  blockAuthorDisplayName,
+  toBlockPreviewDTO
+} from './server/utils/block.js';
 
 if (['1', 'true', 'yes', 'on'].includes(
   String(process.env.DISABLE_BACKGROUND_JOBS || '').trim().toLowerCase()
@@ -186,6 +189,12 @@ async function getSupportFundingViewModel() {
     app.use(addSeoLocals);
     app.use(addHreflangLocals);
     app.use(initI18n(['layout', 'nav', 'modals', 'notifications', 'errors']));
+    app.use((req, res, next) => {
+      const anonymousLabel = res.locals.t('layout.anonymousAuthor');
+      res.locals.blockAuthorDisplayName = (block) =>
+        blockAuthorDisplayName(block, anonymousLabel);
+      next();
+    });
     app.options('*', cors(corsOptionsDelegate));
 
     app.use(express.static('public'));

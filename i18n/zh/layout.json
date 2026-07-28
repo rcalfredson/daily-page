@@ -8,6 +8,7 @@
     "openMenu": "打开主菜单",
     "closeMenu": "关闭主菜单",
     "privacy": "隐私政策",
+    "anonymousAuthor": "匿名用户",
     "uiFallbackNotice": "{requested} 尚未翻译。当前暂时显示 {current}。",
     "copyButton": {
       "copy": "复制",

@@ -8,6 +8,7 @@
     "openMenu": "Avaa päävalikko",
     "closeMenu": "Sulje päävalikko",
     "privacy": "Tietosuojakäytäntö",
+    "anonymousAuthor": "Nimetön",
     "uiFallbackNotice": "{requested} ei ole vielä käännetty. Näytetään toistaiseksi {current}.",
     "copyButton": {
       "copy": "Kopioi",

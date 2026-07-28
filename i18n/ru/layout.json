@@ -8,6 +8,7 @@
     "openMenu": "Открыть главное меню",
     "closeMenu": "Закрыть главное меню",
     "privacy": "Политика конфиденциальности",
+    "anonymousAuthor": "Аноним",
     "uiFallbackNotice": "{requested} пока не переведен. Сейчас показывается {current}.",
     "copyButton": {
       "copy": "Копировать",

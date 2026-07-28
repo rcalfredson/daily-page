@@ -8,6 +8,7 @@
     "openMenu": "Hauptmenu offnen",
     "closeMenu": "Hauptmenu schliessen",
     "privacy": "Datenschutzerklarung",
+    "anonymousAuthor": "Anonym",
     "uiFallbackNotice": "{requested} ist noch nicht ubersetzt. Vorerst wird {current} angezeigt.",
     "copyButton": {
       "copy": "Kopieren",

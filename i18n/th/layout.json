@@ -8,6 +8,7 @@
     "openMenu": "เปิดเมนูหลัก",
     "closeMenu": "ปิดเมนูหลัก",
     "privacy": "ข้อกําหนดปริยาย",
+    "anonymousAuthor": "นิรนาม",
     "uiFallbackNotice": "{requested} ยังแปลไม่ได้ ปัจจุบันมี {current}.",
     "copyButton": {
       "copy": "คัดลอก",

@@ -1,4 +1,8 @@
-import { toBlockPreviewDTO } from '../server/utils/block.js';
+import {
+  blockAuthorDisplayName,
+  blockAuthorProfilePath,
+  toBlockPreviewDTO
+} from '../server/utils/block.js';
 
 describe('block preview DTO', () => {
   const bannerImage = {
@@ -45,5 +49,44 @@ describe('block preview DTO', () => {
     const preview = toBlockPreviewDTO(makeBlock({ pinnedAt }));
 
     expect(preview.pinnedAt).toEqual(pinnedAt);
+  });
+
+  it('links deletion-anonymized posts to the protected anonymous profile', () => {
+    const block = makeBlock({
+      creator: 'anonymous',
+      authorshipState: 'anonymous'
+    });
+
+    expect(blockAuthorProfilePath(block)).toBe('/users/anonymous');
+    expect(toBlockPreviewDTO(block).authorProfilePath).toBe('/users/anonymous');
+  });
+
+  it('keeps deleted-author attribution unlinked', () => {
+    const block = makeBlock({
+      creator: 'Deleted author',
+      authorshipState: 'deleted-author'
+    });
+
+    expect(blockAuthorProfilePath(block)).toBeNull();
+    expect(toBlockPreviewDTO(block).authorProfilePath).toBeNull();
+  });
+
+  it('retains profile links for live named and legacy anonymous posts', () => {
+    expect(blockAuthorProfilePath(makeBlock({ creator: 'writer name' })))
+      .toBe('/users/writer%20name');
+    expect(blockAuthorProfilePath(makeBlock({ creator: 'anonymous' })))
+      .toBe('/users/anonymous');
+  });
+
+  it('localizes only the displayed anonymous identity', () => {
+    const block = makeBlock({
+      creator: 'anonymous',
+      authorshipState: 'anonymous'
+    });
+
+    expect(blockAuthorDisplayName(block, 'Anónimo')).toBe('Anónimo');
+    expect(block.creator).toBe('anonymous');
+    expect(blockAuthorProfilePath(block)).toBe('/users/anonymous');
+    expect(blockAuthorDisplayName(makeBlock(), 'Anónimo')).toBe('writer');
   });
 });

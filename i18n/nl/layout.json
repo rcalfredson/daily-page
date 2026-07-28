@@ -8,6 +8,7 @@
     "openMenu": "Hoofdmenu openen",
     "closeMenu": "Sluit het hoofdmenu",
     "privacy": "Privacybeleid",
+    "anonymousAuthor": "Anoniem",
     "uiFallbackNotice": "{requested} is nog niet vertaald. Voorlopig wordt {current} weergegeven.",
     "copyButton": {
       "copy": "Kopiëren",

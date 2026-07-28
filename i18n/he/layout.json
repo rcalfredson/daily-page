@@ -8,6 +8,7 @@
     "openMenu": "פתח את התפריט הראשי",
     "closeMenu": "סגור את התפריט הראשי",
     "privacy": "מדיניות פרטיות",
+    "anonymousAuthor": "אנונימי",
     "uiFallbackNotice": "{requested} עדיין לא תורגם. מציג את {current} לעת עתה.",
     "copyButton": {
       "copy": "העתק",

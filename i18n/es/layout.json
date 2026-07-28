@@ -8,6 +8,7 @@
     "openMenu": "Abrir menú principal",
     "closeMenu": "Cerrar menú principal",
     "privacy": "Política de privacidad",
+    "anonymousAuthor": "Anónimo",
     "uiFallbackNotice": "{requested} todavía no está traducido. Mostrando {current} por ahora.",
     "copyButton": {
       "copy": "Copiar",

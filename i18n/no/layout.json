@@ -8,6 +8,7 @@
     "openMenu": "Åpne hovedmenyen",
     "closeMenu": "Lukk hovedmenyen",
     "privacy": "Personvernerklæring",
+    "anonymousAuthor": "Anonym",
     "uiFallbackNotice": "{requested} er ikke oversatt ennå. Viser {current} for nå.",
     "copyButton": {
       "copy": "Kopier",

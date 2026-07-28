@@ -22,11 +22,10 @@ section.home-discovery__panel.home-discovery__panel--posts.is-active(
                   i.fas.fa-thumbtack(aria-hidden='true')
             p(lang=(uiLang || 'en'))
               | #{t('home.trendingBlocks.createdBy')} 
-              if !block.authorshipState || block.authorshipState === 'live'
-                - const u = encodeURIComponent(block.creator || '')
-                a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
+              if block.authorProfilePath
+                a.user-profile-link(href=uiPath(block.authorProfilePath))= blockAuthorDisplayName(block)
               else
-                span= block.creator
+                span= blockAuthorDisplayName(block)
               |  #{t('home.trendingBlocks.in')} 
               a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('home.trendingBlocks.unknownRoom')
               |  #{t('home.trendingBlocks.on')}

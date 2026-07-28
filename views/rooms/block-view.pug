@@ -111,16 +111,16 @@ block content
           .block-meta-card(lang=(uiLang || 'en'))
             .block-meta-author
               if authorProfile && authorProfile.profilePath
-                a.block-author-avatar(href=uiPath(authorProfile.profilePath) aria-label=t('blockView.labels.viewAuthorProfile', { username: authorProfile.username }))
-                  img(src=authorProfile.avatarUrl alt=t('blockView.labels.authorAvatarAlt', { username: authorProfile.username }))
+                a.block-author-avatar(href=uiPath(authorProfile.profilePath) aria-label=t('blockView.labels.viewAuthorProfile', { username: authorProfile.displayName }))
+                  img(src=authorProfile.avatarUrl alt=t('blockView.labels.authorAvatarAlt', { username: authorProfile.displayName }))
                 .block-author-copy
                   span.meta-label= t('blockView.labels.author')
-                  a.user-profile-link.block-author-name(href=uiPath(authorProfile.profilePath))= authorProfile.username
+                  a.user-profile-link.block-author-name(href=uiPath(authorProfile.profilePath))= authorProfile.displayName
               else
                 span.block-author-avatar.block-author-avatar--placeholder(aria-hidden='true')
                 .block-author-copy
                   span.meta-label= t('blockView.labels.author')
-                  span.block-author-name= (authorProfile && authorProfile.username) || t('blockView.labels.unknownAuthor')
+                  span.block-author-name= (authorProfile && authorProfile.displayName) || t('blockView.labels.unknownAuthor')
 
             .block-meta-details
               .meta-item
