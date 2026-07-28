@@ -134,6 +134,7 @@ export function buildAccountDeletionService({
         visibility: 1,
         status: 1
       }, { session }).lean();
+      const allOwnedPostIds = allOwnedPosts.map((post) => asId(post._id));
       const retainableIds = disposition === 'delete'
         ? []
         : allOwnedPosts
@@ -185,6 +186,10 @@ export function buildAccountDeletionService({
           },
           { session }
         );
+      }
+      if (allOwnedPostIds.length) {
+        await db.Session.deleteMany({ _id: { $in: allOwnedPostIds } }, { session });
+        await db.Backup.deleteMany({ _id: { $in: allOwnedPostIds } }, { session });
       }
 
       const deletedComments = await db.BlockComment.find({
@@ -293,8 +298,6 @@ export function buildAccountDeletionService({
         await db.Block.deleteMany({ _id: { $in: deletedPostIds } }, { session });
         await db.BlockReaction.deleteMany({ blockId: { $in: deletedPostIds } }, { session });
         await db.Flag.deleteMany({ blockId: { $in: deletedPostIds } }, { session });
-        await db.Session.deleteMany({ _id: { $in: deletedPostIds } }, { session });
-        await db.Backup.deleteMany({ _id: { $in: deletedPostIds } }, { session });
         await db.Block.updateMany(
           { originalBlock: { $in: deletedPostIds } },
           { $unset: { originalBlock: 1, originalAuthor: 1 } },
@@ -353,7 +356,7 @@ export function buildAccountDeletionService({
             }
           }
         ],
-        { session }
+        { session, updatePipeline: true }
       );
 
       if (uniqueDeletedCommentIds.length) {

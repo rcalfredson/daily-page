@@ -140,6 +140,22 @@ describe('account deletion lifecycle', () => {
       { _id: { $in: ['working-unlisted'] } },
       { session: 'session' }
     );
+    expect(models.Session.deleteMany).toHaveBeenCalledWith(
+      {
+        _id: {
+          $in: ['public-post', 'locked-unlisted', 'working-unlisted']
+        }
+      },
+      { session: 'session' }
+    );
+    expect(models.Backup.deleteMany).toHaveBeenCalledWith(
+      {
+        _id: {
+          $in: ['public-post', 'locked-unlisted', 'working-unlisted']
+        }
+      },
+      { session: 'session' }
+    );
     expect(models.UsernameReservation.updateOne).toHaveBeenCalledWith(
       { _id: 'writer' },
       {
@@ -151,6 +167,13 @@ describe('account deletion lifecycle', () => {
       { upsert: true, session: 'session' }
     );
     expect(models.AuthSession.updateMany).toHaveBeenCalled();
+    const voteUpdate = models.Block.updateMany.calls.allArgs().find(([, update]) => (
+      Array.isArray(update)
+    ));
+    expect(voteUpdate?.[2]).toEqual({
+      session: 'session',
+      updatePipeline: true
+    });
     expect(models.User.deleteOne).toHaveBeenCalled();
     expect(clearCache).toHaveBeenCalled();
   });

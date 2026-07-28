@@ -64,7 +64,8 @@ idempotently, and never infer ownership from a retained post or username.
   Review events retain workflow history but change the deleted user actor to a system actor.
   Non-active quests lose the deleted administrator id; active quest administration must be
   transferred or archived before deletion.
-- Collaborative session and collaboration-backup mappings for deleted posts are removed.
+- Collaborative session and collaboration-backup mappings for every owned post are removed,
+  including retained posts, so stale live-editing state cannot survive ownership removal.
 - All in-process application caches are cleared after commit.
 
 ## Username reuse
