@@ -70,8 +70,11 @@ block content
                 include ../partials/_draft_badge
               p(lang=(uiLang || 'en'))
                 = t('tags.detail.blockInfo.createdBy') + ' '
-                - const u = encodeURIComponent(block.creator || '')
-                a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
+                if !block.authorshipState || block.authorshipState === 'live'
+                  - const u = encodeURIComponent(block.creator || '')
+                  a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
+                else
+                  span= block.creator
                 = ' ' + t('tags.detail.blockInfo.inRoom') + ' '
                 a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId || t('tags.detail.blockInfo.unknownRoom')
                 = ' ' + t('tags.detail.blockInfo.onDate') + ' '

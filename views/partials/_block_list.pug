@@ -23,8 +23,11 @@ mixin blockList(blocks, period, label, room_id)
 
           p(lang=(uiLang || 'en'))
             | #{t('blockList.createdBy')} 
-            - const u = encodeURIComponent(block.creator || '')
-            a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
+            if !block.authorshipState || block.authorshipState === 'live'
+              - const u = encodeURIComponent(block.creator || '')
+              a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
+            else
+              span= block.creator
             |  #{t('blockList.on')} 
             - const blockCreatedAt = new Date(block.createdAt)
             time(

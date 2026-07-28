@@ -8,6 +8,7 @@ import {
   updateUserStreak
 } from '../../db/userService.js';
 import User from '../../db/models/User.js';
+import UsernameReservation from '../../db/models/UsernameReservation.js';
 import { isAuthenticated } from '../../middleware/auth.js'
 import { getUiLangFromReq } from '../../services/localeContext.js';
 import { uploadProfilePic } from '../../services/uploadProfilePic.js';
@@ -52,8 +53,9 @@ const useUserAPI = (app) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    const reservedUsernames = ['anonymous', 'admin', 'root', 'null'];
-    if (reservedUsernames.includes(username.trim().toLowerCase())) {
+    const normalizedUsername = username.trim();
+    const reservedUsernames = ['anonymous', 'deleted author', 'deleted-author', 'admin', 'root', 'null'];
+    if (reservedUsernames.includes(normalizedUsername.toLowerCase())) {
       return res.status(400).json({ error: 'That username is reserved. Please choose another.' });
     }
 
@@ -65,9 +67,19 @@ const useUserAPI = (app) => {
       }
 
       // Check if username is already in use
-      const existingUsernameUser = await findUserByUsername(username); // <-- Add this check
+      const existingUsernameUser = await findUserByUsername(normalizedUsername);
       if (existingUsernameUser) {
         return res.status(400).json({ error: 'Username already in use' });
+      }
+      const quarantinedUsername = await UsernameReservation.exists({
+        _id: normalizedUsername,
+        expiresAt: { $gt: new Date() }
+      });
+      if (quarantinedUsername) {
+        return res.status(400).json({
+          error: 'That username is temporarily unavailable.',
+          code: 'USERNAME_QUARANTINED'
+        });
       }
 
       // Hash the password
@@ -79,7 +91,7 @@ const useUserAPI = (app) => {
       // Create the new user
       const userId = await createUser({
         email,
-        username,
+        username: normalizedUsername,
         password: hashedPassword, // Save the hashed password
         verified: false,
         verificationToken,
@@ -93,7 +105,7 @@ const useUserAPI = (app) => {
       // Envía email de verificación
       const { subject, html } = await buildVerifyEmail({
         uiLang,
-        username,
+        username: normalizedUsername,
         verifyLink,
         hours: 24
       });

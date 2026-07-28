@@ -7,19 +7,101 @@ import { isAuthenticated, noCache } from '../../middleware/auth.js'
 import { getUiLangFromReq } from '../../services/localeContext.js';
 import { sendEmail } from '../../services/mailgunService.js';
 import { buildPasswordResetEmail } from '../../services/emailTemplates/passwordReset.js';
-import { consumeRecoveryCode, generateRecoveryCodes, hashRecoveryCodes } from '../../services/recoveryCodes.js';
+import {
+  consumeRecoveryCode,
+  generateRecoveryCodes,
+  hashRecoveryCodes,
+  verifyRecoveryCode
+} from '../../services/recoveryCodes.js';
 import { generateTotpSecret, makeOtpAuthUrl, verifyTotp } from '../../services/totp.js';
 import {
   authenticateRequest,
+  clearAuthCookie,
   createAuthSession,
   revokeAuthSessionForRequest,
   revokeAuthSessionsForUser
 } from '../../services/authSessions.js';
+import {
+  AccountDeletionError,
+  deleteAccount
+} from '../../services/accountDeletion.js';
+import { cleanUpAccountDeletionMedia } from '../../services/accountDeletionMedia.js';
 
 const router = Router();
 
 function isRememberMeEnabled(value) {
   return value === true || value === 'true' || value === 'on' || value === '1';
+}
+
+export function buildDeleteAccountHandler({
+  UserModel = User,
+  comparePassword = bcrypt.compare,
+  verifyTotpFn = verifyTotp,
+  verifyRecoveryCodeFn = verifyRecoveryCode,
+  deleteAccountFn = deleteAccount,
+  cleanUpMediaFn = cleanUpAccountDeletionMedia,
+  clearCookieFn = clearAuthCookie,
+  logger = console
+} = {}) {
+  return async function deleteAccountHandler(req, res) {
+    const { currentPassword, twoFactorCode, disposition, confirmation } = req.body || {};
+
+    if (!currentPassword || !disposition || confirmation !== 'DELETE') {
+      return res.status(400).json({ ok: false, code: 'MISSING_DELETION_CONFIRMATION' });
+    }
+
+    try {
+      const user = await UserModel.findById(req.user.id);
+      if (!user) {
+        clearCookieFn(res);
+        return res.status(401).json({ ok: false, code: 'NOT_AUTHENTICATED' });
+      }
+
+      if (!await comparePassword(currentPassword, user.password)) {
+        return res.status(400).json({ ok: false, code: 'INVALID_CURRENT_PASSWORD' });
+      }
+
+      if (user.twoFactorEnabled) {
+        const validTotp = verifyTotpFn({ secret: user.twoFactorSecret, token: twoFactorCode });
+        const validRecoveryCode = validTotp
+          ? false
+          : await verifyRecoveryCodeFn(user, twoFactorCode);
+        if (!validTotp && !validRecoveryCode) {
+          return res.status(400).json({ ok: false, code: 'INVALID_TWO_FACTOR_CODE' });
+        }
+      }
+
+      const result = await deleteAccountFn({
+        userId: req.user.id,
+        disposition
+      });
+      clearCookieFn(res);
+
+      // S3 is outside the database transaction. This bounded, idempotent pass
+      // makes the common case immediate; the scheduled job retries failures.
+      await cleanUpMediaFn({ limit: 1, ownerUserId: req.user.id });
+
+      return res.status(200).json({
+        ok: true,
+        code: 'ACCOUNT_DELETED',
+        retainedPosts: result.retainedPosts,
+        deletedPosts: result.deletedPosts
+      });
+    } catch (error) {
+      if (error instanceof AccountDeletionError) {
+        return res.status(error.status).json({
+          ok: false,
+          code: error.code,
+          details: error.details
+        });
+      }
+      logger.error('Error deleting account:', {
+        name: error?.name || 'Error',
+        code: error?.code || null
+      });
+      return res.status(500).json({ ok: false, code: 'INTERNAL_ERROR' });
+    }
+  };
 }
 
 const useAuthAPI = (app) => {
@@ -207,6 +289,8 @@ const useAuthAPI = (app) => {
       return res.status(500).json({ ok: false, code: 'INTERNAL_ERROR' });
     }
   });
+
+  router.post('/delete-account', isAuthenticated, noCache, buildDeleteAccountHandler());
 
   router.post('/2fa/setup', isAuthenticated, async (req, res) => {
     const { currentPassword } = req.body;

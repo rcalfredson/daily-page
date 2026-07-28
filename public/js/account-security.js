@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const manualKey = document.querySelector('[data-manual-key]');
   const recoveryCodesPanel = document.querySelector('.recovery-codes-panel');
   const recoveryCodesList = document.querySelector('[data-recovery-codes]');
+  const deletionForm = document.getElementById('deleteAccountForm');
+  const deletionFeedback = document.getElementById('deletionFeedback');
 
   const show = (element, message, ok) => {
     if (!element) return;
@@ -139,6 +141,29 @@ document.addEventListener('DOMContentLoaded', () => {
       show(twoFactorFeedback, messageFor(twoFactorFeedback, data?.code), false);
     } catch (error) {
       show(twoFactorFeedback, twoFactorFeedback?.dataset.unexpectedError, false);
+    }
+  });
+
+  deletionForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(deletionForm);
+    const submitButton = deletionForm.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
+
+    try {
+      const { res, data } = await postJson(
+        '/api/v1/auth/delete-account',
+        Object.fromEntries(formData.entries())
+      );
+      if (res.ok) {
+        window.location.assign('/');
+        return;
+      }
+      show(deletionFeedback, messageFor(deletionFeedback, data?.code), false);
+    } catch (error) {
+      show(deletionFeedback, deletionFeedback?.dataset.unexpectedError, false);
+    } finally {
+      if (submitButton) submitButton.disabled = false;
     }
   });
 });

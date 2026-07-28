@@ -71,8 +71,11 @@ mixin renderBlockList(blocks)
               include ../partials/_draft_badge
             p(lang=(uiLang || 'en'))
               | #{t('bestOf.labels.createdBy')} 
-              - const u = encodeURIComponent(block.creator || '')
-              a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
+              if !block.authorshipState || block.authorshipState === 'live'
+                - const u = encodeURIComponent(block.creator || '')
+                a.user-profile-link(href=uiPath(`/users/${u}`))= block.creator
+              else
+                span= block.creator
               |  #{t('bestOf.labels.inRoom')} 
               if block.roomId
                 a.room-link(href=uiPath(`/rooms/${block.roomId}`))= block.roomDisplayName || block.roomId
