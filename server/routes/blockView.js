@@ -176,7 +176,8 @@ router.get(
               thread: null
             }),
         req.user?.id ? findUserById(req.user.id) : Promise.resolve(null),
-        block.creator && block.creator !== 'anonymous'
+        (!block.authorshipState || block.authorshipState === 'live')
+          && block.creator && block.creator !== 'anonymous'
           ? findUserByUsername(block.creator)
           : Promise.resolve(null),
         getBlockEditorialContext(block),
@@ -205,7 +206,8 @@ router.get(
       const authorProfile = block.creator
         ? {
           username: block.creator,
-          profilePath: block.creator !== 'anonymous'
+          profilePath: (!block.authorshipState || block.authorshipState === 'live')
+            && block.creator !== 'anonymous'
             ? `/users/${encodeURIComponent(block.creator)}`
             : null,
           avatarUrl: authorUser?.profilePic || '/assets/img/default-pic.png'

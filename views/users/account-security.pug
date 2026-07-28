@@ -130,3 +130,67 @@ block content
         data-generic-error=t('accountSecurity.feedback.genericError')
         data-unexpected-error=t('accountSecurity.feedback.unexpectedError')
       )
+
+    .security-panel.security-panel-danger
+      h2= t('accountSecurity.deletion.title')
+      p= t('accountSecurity.deletion.description')
+      ul.deletion-summary
+        li= t('accountSecurity.deletion.summary.immediate')
+        li= t('accountSecurity.deletion.summary.privatePosts')
+        li= t('accountSecurity.deletion.summary.username')
+      form#deleteAccountForm.security-form
+        fieldset.deletion-choices
+          legend= t('accountSecurity.deletion.choiceLegend')
+          label.deletion-choice
+            input(type="radio" name="disposition" value="delete" required)
+            span
+              strong= t('accountSecurity.deletion.choices.delete.title')
+              small= t('accountSecurity.deletion.choices.delete.description')
+          label.deletion-choice
+            input(type="radio" name="disposition" value="deleted-author" required)
+            span
+              strong= t('accountSecurity.deletion.choices.deletedAuthor.title')
+              small= t('accountSecurity.deletion.choices.deletedAuthor.description')
+          label.deletion-choice
+            input(type="radio" name="disposition" value="anonymous" required)
+            span
+              strong= t('accountSecurity.deletion.choices.anonymous.title')
+              small= t('accountSecurity.deletion.choices.anonymous.description')
+        .form-group
+          label(for="deleteCurrentPassword")= t('accountSecurity.deletion.currentPassword')
+          input#deleteCurrentPassword(
+            type="password"
+            name="currentPassword"
+            required
+            autocomplete="current-password"
+          )
+        if account.twoFactorEnabled
+          .form-group
+            label(for="deleteTwoFactorCode")= t('accountSecurity.deletion.twoFactorCode')
+            input#deleteTwoFactorCode(
+              type="text"
+              name="twoFactorCode"
+              required
+              autocomplete="one-time-code"
+            )
+        .form-group
+          label(for="deleteConfirmation")= t('accountSecurity.deletion.confirmationLabel')
+          input#deleteConfirmation(
+            type="text"
+            name="confirmation"
+            required
+            autocomplete="off"
+            pattern="DELETE"
+          )
+        button.security-button.security-button-danger(type="submit")= t('accountSecurity.deletion.submit')
+      p#deletionFeedback.security-feedback(
+        hidden
+        data-missing-deletion-confirmation=t('accountSecurity.deletion.feedback.missingConfirmation')
+        data-invalid-current-password=t('accountSecurity.feedback.invalidCurrentPassword')
+        data-invalid-two-factor-code=t('accountSecurity.deletion.feedback.invalidTwoFactorCode')
+        data-invalid-disposition=t('accountSecurity.deletion.feedback.invalidDisposition')
+        data-active-quest-admin=t('accountSecurity.deletion.feedback.activeQuestAdmin')
+        data-account-not-found=t('accountSecurity.deletion.feedback.accountNotFound')
+        data-generic-error=t('accountSecurity.feedback.genericError')
+        data-unexpected-error=t('accountSecurity.feedback.unexpectedError')
+      )

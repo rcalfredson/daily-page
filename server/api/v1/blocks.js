@@ -326,6 +326,9 @@ const useBlockAPI = (app) => {
       if (!block) {
         return res.status(404).json({ error: 'Block not found.' });
       }
+      if (block.authorshipState && block.authorshipState !== 'live') {
+        return res.status(403).json({ error: 'This post no longer has an editable owner.' });
+      }
 
       const collaboratorId = req.user
         ? req.user.username

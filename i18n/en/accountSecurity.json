@@ -45,6 +45,41 @@
       "regenerate": "Generate New Recovery Codes",
       "warning": "Store them somewhere safe. They will not be shown again."
     },
+    "deletion": {
+      "title": "Delete Account",
+      "description": "Account deletion is immediate and cannot be undone. Choose what happens to your published posts.",
+      "summary": {
+        "immediate": "Your profile, comments, reactions, votes, and access sessions will be removed.",
+        "privatePosts": "In-progress unlisted posts will always be deleted. Locked unlisted posts are treated like public posts.",
+        "username": "Your username will remain unavailable for 365 days."
+      },
+      "choiceLegend": "Published post disposition",
+      "choices": {
+        "delete": {
+          "title": "Delete my authored posts",
+          "description": "Delete every post you own, including translations you authored."
+        },
+        "deletedAuthor": {
+          "title": "Keep posts as “Deleted author”",
+          "description": "Keep public and locked unlisted posts without an owner, profile link, edit token, or account identifier."
+        },
+        "anonymous": {
+          "title": "Keep posts as anonymous",
+          "description": "Keep public and locked unlisted posts without an owner or any stable author linkage."
+        }
+      },
+      "currentPassword": "Current password",
+      "twoFactorCode": "Authenticator or recovery code",
+      "confirmationLabel": "Type DELETE to confirm",
+      "submit": "Permanently Delete Account",
+      "feedback": {
+        "missingConfirmation": "Choose a post disposition, enter your password, and type DELETE.",
+        "invalidTwoFactorCode": "That authenticator or recovery code did not work.",
+        "invalidDisposition": "Choose what should happen to your published posts.",
+        "activeQuestAdmin": "Transfer or archive every active quest you administer before deleting your account.",
+        "accountNotFound": "This account no longer exists."
+      }
+    },
     "feedback": {
       "passwordChanged": "Your password was updated.",
       "setupReady": "Scan the QR code, then enter the 6-digit code to finish setup.",

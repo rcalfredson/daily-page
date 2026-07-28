@@ -88,6 +88,12 @@ const blockSchema = new Schema({
   roomId: { type: String, required: true, index: true },
   creator: { type: String, required: true },
   userId: { type: String, required: false, index: true },
+  authorshipState: {
+    type: String,
+    enum: ['live', 'deleted-author', 'anonymous'],
+    default: 'live',
+    index: true
+  },
   editToken: { type: String, required: false },
   collaborators: { type: [String], default: [] },
   visibility: { type: String, enum: ['public', 'unlisted'], default: 'public' },

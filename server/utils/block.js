@@ -18,6 +18,7 @@ export function parseEditTokens(rawTokens) {
 
 export function isLoggedInBlockCreator(user, block) {
   if (!user || !block) return false;
+  if (block.authorshipState && block.authorshipState !== 'live') return false;
   if (idsMatch(user.id, block.userId)) return true;
 
   return !block.userId &&
@@ -39,6 +40,7 @@ export function canManageBlock(user, block, editTokens) {
 
 export function canEditBlockContent(user, block) {
   if (!block) return false;
+  if (block.authorshipState && block.authorshipState !== 'live') return false;
   if (block.status === 'locked') return isLoggedInBlockCreator(user, block);
   return true;
 }
@@ -60,6 +62,7 @@ export function toBlockPreviewDTO(block, {
       _id: block._id,
       title: block.title,
       creator: block.creator,
+      authorshipState: block.authorshipState,
       createdAt: block.createdAt,
       pinnedAt: block.pinnedAt,
       roomId: block.roomId,
@@ -88,6 +91,7 @@ export function toBlockPreviewDTO(block, {
     _id: block._id,
     title: block.title,
     creator: block.creator,
+    authorshipState: block.authorshipState,
     createdAt: block.createdAt,
     pinnedAt: block.pinnedAt,
     roomId: block.roomId,

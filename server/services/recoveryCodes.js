@@ -34,6 +34,16 @@ export async function hashRecoveryCodes(codes) {
   return Promise.all(codes.map((code) => bcrypt.hash(normalizeRecoveryCode(code), 10)));
 }
 
+export async function verifyRecoveryCode(user, code) {
+  const normalized = normalizeRecoveryCode(code);
+  if (!normalized || normalized.length < RECOVERY_CODE_LENGTH) return false;
+
+  for (const hash of user.twoFactorRecoveryCodes || []) {
+    if (await bcrypt.compare(normalized, hash)) return true;
+  }
+  return false;
+}
+
 export async function consumeRecoveryCode(user, code) {
   const normalized = normalizeRecoveryCode(code);
   if (!normalized || normalized.length < RECOVERY_CODE_LENGTH) return false;

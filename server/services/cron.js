@@ -3,6 +3,7 @@ import { cleanUpExpiredSessions } from '../db/sessionService.js';
 import { expireQuestClaims } from '../db/questSubmissionService.js';
 import { getFeaturedContent } from './featuredContent.js';
 import { startBlockJobs } from './blockService.js';
+import { cleanUpAccountDeletionMedia } from './accountDeletionMedia.js';
 
 // Home cache warmers
 import {
@@ -79,6 +80,14 @@ const jobs = [
       await cleanUpExpiredQuestClaims();
     } catch (error) {
       console.error('Failed to clean up expired quest claims:', error);
+    }
+  }, null),
+
+  new CronJob('23 * * * *', async () => {
+    try {
+      await cleanUpAccountDeletionMedia();
+    } catch (error) {
+      console.error('Failed account-deletion media cleanup job:', error?.name || 'Error');
     }
   }, null),
 

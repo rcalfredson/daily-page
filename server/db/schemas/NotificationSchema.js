@@ -48,7 +48,6 @@ const notificationSchema = new Schema(
 
 notificationSchema.pre('validate', function validateNotificationReferences() {
   if (['block_comment', 'comment_reply'].includes(this.type)) {
-    if (!this.actorUserId) this.invalidate('actorUserId', 'Comment notifications require an actor.');
     if (!this.blockId) this.invalidate('blockId', 'Comment notifications require a block.');
     if (!this.commentId) this.invalidate('commentId', 'Comment notifications require a comment.');
     return;

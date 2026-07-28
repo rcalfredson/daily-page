@@ -13,7 +13,7 @@ import { getPeerIDs } from '../db/sessionService.js';
 import { addI18n } from '../services/i18n.js';
 import { getUiLang } from '../services/localeContext.js';
 import { generateAnonymousId } from '../utils/anonymousId.js';
-import { canManageBlock, parseEditTokens } from '../utils/block.js';
+import { canEditBlockContent, canManageBlock, parseEditTokens } from '../utils/block.js';
 import { canonicalBlockEditPath } from '../utils/canonical.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 
@@ -120,7 +120,9 @@ router.get(
         operation: QUEST_BLOCK_OPERATIONS.CONTENT
       });
 
-      if ((block.status === 'locked' && !canManage) || !questMutationPolicy.allowed) {
+      if (!canEditBlockContent(user, block)
+        || (block.status === 'locked' && !canManage)
+        || !questMutationPolicy.allowed) {
         return res.redirect(`/rooms/${room_id}/blocks/${block_id}`);
       }
 

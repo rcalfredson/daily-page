@@ -33,7 +33,7 @@ const questSchema = new Schema({
   name_i18n: { type: Map, of: String, required: true },
   description_i18n: { type: Map, of: String, required: true },
   instructions_i18n: { type: Map, of: String, required: true },
-  administratorUserId: { type: String, required: true, trim: true, index: true },
+  administratorUserId: { type: String, default: null, trim: true, index: true },
   allowedRoomIds: {
     type: [String],
     required: true,

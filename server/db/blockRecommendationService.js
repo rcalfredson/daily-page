@@ -13,6 +13,7 @@ const CANDIDATE_FIELDS = [
   'content',
   'tags',
   'creator',
+  'authorshipState',
   'voteCount',
   'createdAt'
 ].join(' ');
@@ -96,6 +97,7 @@ function toViewModel(block) {
     description: description.slice(0, 180),
     tags: (block.tags || []).slice(0, 3),
     creator: block.creator,
+    authorshipState: block.authorshipState,
     createdAt: block.createdAt,
     score: block.recommendationScore
   };

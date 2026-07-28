@@ -40,7 +40,7 @@ reviewHistoryEventSchema.pre('validate', function validateReviewActor() {
 const questSubmissionSchema = new Schema({
   questId: { type: String, required: true, index: true },
   questItemId: { type: String, default: null, index: true },
-  ownerUserId: { type: String, required: true, index: true },
+  ownerUserId: { type: String, default: null, index: true },
   blockId: { type: String, required: true, index: true },
   blockGroupId: { type: String, required: true, index: true },
   status: { type: String, required: true, enum: QUEST_SUBMISSION_STATUSES, default: 'draft', index: true },
