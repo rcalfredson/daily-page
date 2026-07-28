@@ -8,6 +8,7 @@
     "openMenu": "メインメニューを開く",
     "closeMenu": "メインメニューを閉じる",
     "privacy": "プライバシーポリシー",
+    "anonymousAuthor": "匿名",
     "uiFallbackNotice": "{requested} はまだ翻訳されていません。今は {current} を表示しています。",
     "copyButton": {
       "copy": "コピー",

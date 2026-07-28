@@ -8,6 +8,7 @@
     "openMenu": "Buka menu utama",
     "closeMenu": "Tutup menu utama",
     "privacy": "Kebijakan Privasi",
+    "anonymousAuthor": "Anonim",
     "uiFallbackNotice": "{requested} belum diterjemahkan. Menampilkan {current} untuk saat ini.",
     "copyButton": {
       "copy": "Salin",

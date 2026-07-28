@@ -30,7 +30,7 @@ if view === 'items'
             if item.post
               a.quest-item-post(href=uiPath(`/rooms/${item.post.roomId}/blocks/${item.post.id}`))
                 span= item.post.title
-                small= t('quests.items.byCreator', { username: item.post.creator })
+                small= t('quests.items.byCreator', { username: blockAuthorDisplayName(item.post) })
             else if item.state === 'available'
               p.quest-item-note= t('quests.items.availableNote')
             else
@@ -89,7 +89,7 @@ else
             .quest-post-card__body
               h3
                 a(href=uiPath(`/rooms/${post.roomId}/blocks/${post._id}`))= post.title
-              p= t('quests.posts.byCreator', { username: post.creator })
+              p= t('quests.posts.byCreator', { username: blockAuthorDisplayName(post) })
               if post.approvedAt
                 - const approvedDate = new Date(post.approvedAt)
                 p

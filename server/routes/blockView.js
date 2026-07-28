@@ -23,7 +23,12 @@ import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
 import { addI18n } from '../services/i18n.js';
-import { canManageBlock, parseEditTokens } from '../utils/block.js';
+import {
+  blockAuthorDisplayName,
+  blockAuthorProfilePath,
+  canManageBlock,
+  parseEditTokens
+} from '../utils/block.js';
 import { canonicalBlockPath } from '../utils/canonical.js';
 
 const router = express.Router();
@@ -206,10 +211,8 @@ router.get(
       const authorProfile = block.creator
         ? {
           username: block.creator,
-          profilePath: (!block.authorshipState || block.authorshipState === 'live')
-            && block.creator !== 'anonymous'
-            ? `/users/${encodeURIComponent(block.creator)}`
-            : null,
+          displayName: blockAuthorDisplayName(block, t('layout.anonymousAuthor')),
+          profilePath: blockAuthorProfilePath(block),
           avatarUrl: authorUser?.profilePic || '/assets/img/default-pic.png'
         }
         : null;

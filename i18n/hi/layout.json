@@ -8,6 +8,7 @@
     "openMenu": "मुख्य मेनू खोलें",
     "closeMenu": "मुख्य मेनू बंद करें",
     "privacy": "गोपनीयता नीति",
+    "anonymousAuthor": "गुमनाम",
     "uiFallbackNotice": "{requested} का अभी तक अनुवाद नहीं किया गया है. अभी {current} दिखा रहा हूँ।",
     "copyButton": {
       "copy": "प्रतिलिपि",

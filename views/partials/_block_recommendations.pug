@@ -14,7 +14,7 @@ aside.block-recommendations(aria-labelledby='recommendations-heading' lang=(uiLa
             span.block-recommendation__summary(lang=(recommendation.lang || 'en') dir=(textDirForLang ? textDirForLang(recommendation.lang || 'en') : 'ltr'))= recommendation.description
           span.block-recommendation__meta
             if recommendation.creator
-              span= t('blockView.recommendations.byAuthor', { author: recommendation.creator })
+              span= t('blockView.recommendations.byAuthor', { author: blockAuthorDisplayName(recommendation) })
             if recommendationDate
               time(datetime=recommendationDate.toISOString())= recommendationDate.toLocaleDateString(uiLang || undefined, { dateStyle: 'medium' })
           if recommendation.tags && recommendation.tags.length

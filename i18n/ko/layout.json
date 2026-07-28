@@ -8,6 +8,7 @@
     "openMenu": "주 메뉴 열기",
     "closeMenu": "주 메뉴 닫기",
     "privacy": "개인정보 처리방침",
+    "anonymousAuthor": "익명",
     "uiFallbackNotice": "{requested}은(는) 아직 번역되지 않았습니다. 현재 {current}로 표시합니다.",
     "copyButton": {
       "copy": "복사",

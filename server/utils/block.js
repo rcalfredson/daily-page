@@ -45,6 +45,32 @@ export function canEditBlockContent(user, block) {
   return true;
 }
 
+export function blockAuthorProfilePath(block) {
+  const creator = String(block?.creator || '').trim();
+  if (!creator) return null;
+
+  if (block.authorshipState === 'anonymous' || creator === 'anonymous') {
+    return '/users/anonymous';
+  }
+
+  if (block.authorshipState && block.authorshipState !== 'live') {
+    return null;
+  }
+
+  return `/users/${encodeURIComponent(creator)}`;
+}
+
+export function blockAuthorDisplayName(block, anonymousLabel = 'Anonymous') {
+  const creator = String(block?.creator || '').trim();
+  if (!creator) return '';
+
+  if (block.authorshipState === 'anonymous' || creator === 'anonymous') {
+    return String(anonymousLabel || '').trim() || 'Anonymous';
+  }
+
+  return creator;
+}
+
 export function toBlockPreviewDTO(block, {
   userId = null,
   previewChars = 1400,
@@ -63,6 +89,7 @@ export function toBlockPreviewDTO(block, {
       title: block.title,
       creator: block.creator,
       authorshipState: block.authorshipState,
+      authorProfilePath: blockAuthorProfilePath(block),
       createdAt: block.createdAt,
       pinnedAt: block.pinnedAt,
       roomId: block.roomId,
@@ -92,6 +119,7 @@ export function toBlockPreviewDTO(block, {
     title: block.title,
     creator: block.creator,
     authorshipState: block.authorshipState,
+    authorProfilePath: blockAuthorProfilePath(block),
     createdAt: block.createdAt,
     pinnedAt: block.pinnedAt,
     roomId: block.roomId,
