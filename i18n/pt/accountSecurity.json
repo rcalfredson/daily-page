@@ -62,6 +62,41 @@
       "warning": "Guarde-os em um lugar seguro. Eles não serão mostrados novamente.",
       "regenerateDescription": "Gere um novo conjunto de códigos de recuperação se você perdeu o conjunto anterior. Isso invalida os códigos antigos.",
       "regenerate": "Gerar novos códigos de recuperação"
+    },
+    "deletion": {
+      "title": "Excluir conta",
+      "description": "A exclusão da conta é imediata e não pode ser desfeita. Escolha o que acontecerá com seus posts publicados.",
+      "summary": {
+        "immediate": "Seu perfil, comentários, reações, votos e sessões de acesso serão removidos.",
+        "privatePosts": "Posts não listados em andamento sempre serão excluídos. Posts não listados bloqueados são tratados como posts públicos.",
+        "username": "Seu nome de usuário permanecerá indisponível por 365 dias."
+      },
+      "choiceLegend": "O que fazer com seus posts publicados",
+      "choices": {
+        "delete": {
+          "title": "Excluir meus posts",
+          "description": "Excluir todos os seus posts, incluindo traduções de sua autoria."
+        },
+        "deletedAuthor": {
+          "title": "Manter como “Autor excluído”",
+          "description": "Manter os posts públicos e os posts não listados bloqueados sem proprietário, link para perfil, token de edição ou identificador de conta."
+        },
+        "anonymous": {
+          "title": "Manter de forma anônima",
+          "description": "Manter os posts públicos e os posts não listados bloqueados sem proprietário nem qualquer vínculo estável com quem os escreveu."
+        }
+      },
+      "currentPassword": "Senha atual",
+      "twoFactorCode": "Código do autenticador ou de recuperação",
+      "confirmationLabel": "Digite DELETE para confirmar",
+      "submit": "Excluir conta permanentemente",
+      "feedback": {
+        "missingConfirmation": "Escolha o que fazer com os posts, insira sua senha e digite DELETE.",
+        "invalidTwoFactorCode": "Esse código do autenticador ou de recuperação não funcionou.",
+        "invalidDisposition": "Escolha o que deve acontecer com seus posts publicados.",
+        "activeQuestAdmin": "Transfira ou arquive todas as missões ativas que você administra antes de excluir sua conta.",
+        "accountNotFound": "Esta conta não existe mais."
+      }
     }
   }
 }
