@@ -11,7 +11,7 @@
     "support": "Ủng hộ",
     "otherProjects": "Dự án khác",
     "auth": {
-      "welcomePrefix": "Chào mừng,",
+      "welcomePrefix": "Chào mừng, ",
       "welcomeFallbackUser": "Bạn",
       "welcomeSuffix": "!"
     },

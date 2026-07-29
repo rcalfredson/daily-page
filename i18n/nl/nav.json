@@ -11,7 +11,7 @@
     "support": "Steun",
     "otherProjects": "Andere projecten",
     "auth": {
-      "welcomePrefix": "Welkom,",
+      "welcomePrefix": "Welkom, ",
       "welcomeFallbackUser": "Jij",
       "welcomeSuffix": "!"
     },

@@ -11,7 +11,7 @@
     "support": "Support",
     "otherProjects": "Andra projekt",
     "auth": {
-      "welcomePrefix": "Välkommen,",
+      "welcomePrefix": "Välkommen, ",
       "welcomeFallbackUser": "dig",
       "welcomeSuffix": "!"
     },

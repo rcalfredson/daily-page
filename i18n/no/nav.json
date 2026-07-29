@@ -11,7 +11,7 @@
     "support": "Støtte",
     "otherProjects": "Andre prosjekter",
     "auth": {
-      "welcomePrefix": "Velkomst,",
+      "welcomePrefix": "Velkomst, ",
       "welcomeFallbackUser": "du",
       "welcomeSuffix": "!"
     },
