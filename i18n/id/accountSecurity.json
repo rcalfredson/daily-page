@@ -62,6 +62,41 @@
       "warning": "Simpan di tempat yang aman. Kode ini tidak akan ditampilkan lagi.",
       "regenerateDescription": "Buat kumpulan kode pemulihan baru jika Anda kehilangan kumpulan sebelumnya. Ini akan membuat kode lama tidak berlaku.",
       "regenerate": "Buat Kode Pemulihan Baru"
+    },
+    "deletion": {
+      "title": "Hapus Akun",
+      "description": "Penghapusan akun dilakukan seketika dan tidak dapat dibatalkan. Pilih tindakan untuk postingan Anda yang telah diterbitkan.",
+      "summary": {
+        "immediate": "Profil, komentar, reaksi, suara, dan semua sesi login Anda akan dihapus.",
+        "privatePosts": "Postingan tidak terdaftar yang sedang dikerjakan akan selalu dihapus. Postingan tidak terdaftar yang terkunci diperlakukan seperti postingan publik.",
+        "username": "Nama pengguna Anda akan tetap tidak tersedia selama 365 hari."
+      },
+      "choiceLegend": "Tindakan untuk postingan yang diterbitkan",
+      "choices": {
+        "delete": {
+          "title": "Hapus postingan yang saya tulis",
+          "description": "Hapus semua postingan milik Anda, termasuk terjemahan yang Anda tulis."
+        },
+        "deletedAuthor": {
+          "title": "Pertahankan postingan dengan atribusi “Penulis dihapus”",
+          "description": "Pertahankan postingan publik dan postingan tidak terdaftar yang terkunci tanpa pemilik, tautan profil, token edit, atau pengenal akun."
+        },
+        "anonymous": {
+          "title": "Pertahankan postingan secara anonim",
+          "description": "Pertahankan postingan publik dan postingan tidak terdaftar yang terkunci tanpa pemilik atau hubungan tetap dengan penulis mana pun."
+        }
+      },
+      "currentPassword": "Kata sandi saat ini",
+      "twoFactorCode": "Kode autentikator atau pemulihan",
+      "confirmationLabel": "Ketik DELETE untuk mengonfirmasi",
+      "submit": "Hapus Akun Secara Permanen",
+      "feedback": {
+        "missingConfirmation": "Pilih tindakan untuk postingan, masukkan kata sandi Anda, lalu ketik DELETE.",
+        "invalidTwoFactorCode": "Kode autentikator atau pemulihan tersebut tidak berhasil.",
+        "invalidDisposition": "Pilih tindakan untuk postingan Anda yang telah diterbitkan.",
+        "activeQuestAdmin": "Alihkan pengelolaan atau arsipkan setiap misi aktif yang Anda kelola sebelum menghapus akun.",
+        "accountNotFound": "Akun ini sudah tidak ada."
+      }
     }
   }
 }

@@ -9,6 +9,7 @@
     "closeMenu": "Tutup menu utama",
     "privacy": "Kebijakan Privasi",
     "anonymousAuthor": "Anonim",
+    "deletedAuthor": "Penulis dihapus",
     "uiFallbackNotice": "{requested} belum diterjemahkan. Menampilkan {current} untuk saat ini.",
     "copyButton": {
       "copy": "Salin",

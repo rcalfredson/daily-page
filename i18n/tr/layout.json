@@ -9,6 +9,7 @@
     "closeMenu": "Ana menüyü kapat",
     "privacy": "Gizlilik Politikası",
     "anonymousAuthor": "Anonim",
+    "deletedAuthor": "Silinmiş yazar",
     "uiFallbackNotice": "{requested} henüz çevrilmedi. Şimdilik {current} gösteriliyor.",
     "copyButton": {
       "copy": "Kopyala",
