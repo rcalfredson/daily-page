@@ -62,6 +62,41 @@
       "warning": "Conservez-les dans un endroit sûr. Ils ne seront plus affichés.",
       "regenerateDescription": "Générez un nouveau jeu de codes de récupération si vous avez perdu le précédent. Cela invalide les anciens codes.",
       "regenerate": "Générer de nouveaux codes de récupération"
+    },
+    "deletion": {
+      "title": "Supprimer le compte",
+      "description": "La suppression du compte est immédiate et irréversible. Choisissez ce qu'il adviendra de vos publications.",
+      "summary": {
+        "immediate": "Votre profil, vos commentaires, vos réactions et vos votes, ainsi que vos sessions d'accès, seront supprimés.",
+        "privatePosts": "Les publications en cours qui ne sont pas répertoriées seront toujours supprimées. Les publications verrouillées non répertoriées sont traitées comme les publications publiques.",
+        "username": "Votre nom d'utilisateur restera indisponible pendant 365 jours."
+      },
+      "choiceLegend": "Que faire de vos publications",
+      "choices": {
+        "delete": {
+          "title": "Supprimer mes publications",
+          "description": "Supprimer toutes vos publications, y compris les traductions que vous avez rédigées."
+        },
+        "deletedAuthor": {
+          "title": "Conserver avec la mention « Auteur supprimé »",
+          "description": "Conserver les publications publiques et les publications verrouillées non répertoriées sans propriétaire, lien vers un profil, jeton de modification ni identifiant de compte."
+        },
+        "anonymous": {
+          "title": "Conserver de façon anonyme",
+          "description": "Conserver les publications publiques et les publications verrouillées non répertoriées sans propriétaire ni aucun lien stable avec leur auteur."
+        }
+      },
+      "currentPassword": "Mot de passe actuel",
+      "twoFactorCode": "Code d'authentification ou de récupération",
+      "confirmationLabel": "Saisissez DELETE pour confirmer",
+      "submit": "Supprimer définitivement le compte",
+      "feedback": {
+        "missingConfirmation": "Choisissez une option pour vos publications, saisissez votre mot de passe et tapez DELETE.",
+        "invalidTwoFactorCode": "Ce code d'authentification ou de récupération n'a pas fonctionné.",
+        "invalidDisposition": "Choisissez ce qu'il adviendra de vos publications.",
+        "activeQuestAdmin": "Transférez ou archivez chaque quête active que vous administrez avant de supprimer votre compte.",
+        "accountNotFound": "Ce compte n'existe plus."
+      }
     }
   }
 }
