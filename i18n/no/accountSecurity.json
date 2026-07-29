@@ -45,6 +45,41 @@
       "regenerate": "Generer nye gjenopprettingskoder",
       "warning": "Oppbevar dem et trygt sted. De vil ikke vises igjen."
     },
+    "deletion": {
+      "title": "Slett konto",
+      "description": "Kontosletting skjer umiddelbart og kan ikke angres. Velg hva som skal skje med de publiserte innleggene dine.",
+      "summary": {
+        "immediate": "Profilen, kommentarene, reaksjonene og stemmene dine samt alle påloggingsøkter blir fjernet.",
+        "privatePosts": "Pågående uoppførte innlegg blir alltid slettet. Låste uoppførte innlegg behandles som offentlige innlegg.",
+        "username": "Brukernavnet ditt vil være utilgjengelig i 365 dager."
+      },
+      "choiceLegend": "Hva skal skje med publiserte innlegg?",
+      "choices": {
+        "delete": {
+          "title": "Slett innleggene mine",
+          "description": "Slett alle innlegg du eier, inkludert oversettelser du har skrevet."
+        },
+        "deletedAuthor": {
+          "title": "Behold innlegg som «Slettet forfatter»",
+          "description": "Behold offentlige og låste uoppførte innlegg uten eier, profillenke, redigeringstoken eller konto-ID."
+        },
+        "anonymous": {
+          "title": "Behold innlegg som anonyme",
+          "description": "Behold offentlige og låste uoppførte innlegg uten eier eller noen varig kobling til en forfatter."
+        }
+      },
+      "currentPassword": "Gjeldende passord",
+      "twoFactorCode": "Autentiserings- eller gjenopprettingskode",
+      "confirmationLabel": "Skriv DELETE for å bekrefte",
+      "submit": "Slett kontoen permanent",
+      "feedback": {
+        "missingConfirmation": "Velg hva som skal skje med innleggene, skriv inn passordet ditt og skriv DELETE.",
+        "invalidTwoFactorCode": "Denne autentiserings- eller gjenopprettingskoden fungerte ikke.",
+        "invalidDisposition": "Velg hva som skal skje med de publiserte innleggene dine.",
+        "activeQuestAdmin": "Overfør eller arkiver alle aktive oppdrag du administrerer før du sletter kontoen.",
+        "accountNotFound": "Denne kontoen finnes ikke lenger."
+      }
+    },
     "feedback": {
       "passwordChanged": "Passordet ditt ble oppdatert.",
       "setupReady": "Skann QR-koden, og skriv deretter inn den 6-sifrede koden for å fullføre oppsettet.",

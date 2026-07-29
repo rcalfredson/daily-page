@@ -9,6 +9,7 @@
     "closeMenu": "Lukk hovedmenyen",
     "privacy": "Personvernerklæring",
     "anonymousAuthor": "Anonym",
+    "deletedAuthor": "Slettet forfatter",
     "uiFallbackNotice": "{requested} er ikke oversatt ennå. Viser {current} for nå.",
     "copyButton": {
       "copy": "Kopier",
