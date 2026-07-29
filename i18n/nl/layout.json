@@ -9,6 +9,7 @@
     "closeMenu": "Sluit het hoofdmenu",
     "privacy": "Privacybeleid",
     "anonymousAuthor": "Anoniem",
+    "deletedAuthor": "Verwijderde auteur",
     "uiFallbackNotice": "{requested} is nog niet vertaald. Voorlopig wordt {current} weergegeven.",
     "copyButton": {
       "copy": "Kopiëren",
