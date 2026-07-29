@@ -1,4 +1,4 @@
-export const FOREST_OWNER_WRITING_POLICY_VERSION = 1;
+export const FOREST_OWNER_WRITING_POLICY_VERSION = 2;
 
 export const FOREST_WRITING_CLASSIFICATIONS = Object.freeze({
   ELIGIBLE: 'eligible',
@@ -11,6 +11,8 @@ export const FOREST_WRITING_REASON_CODES = Object.freeze({
   UNSUPPORTED_RECORD_TYPE: 'unsupported-record-type',
   LEGACY_OWNERSHIP_UNRESOLVED: 'legacy-ownership-unresolved',
   INVALID_RECORD_OWNER: 'invalid-record-owner',
+  NON_LIVE_AUTHORSHIP: 'non-live-authorship',
+  UNSUPPORTED_AUTHORSHIP_STATE: 'unsupported-authorship-state',
   OWNER_MISMATCH: 'owner-mismatch',
   INVALID_BLOCK_IDENTITY: 'invalid-block-identity',
   INVALID_GROUP_IDENTITY: 'invalid-group-identity',
@@ -32,9 +34,10 @@ export const FOREST_TRANSLATION_DISCOVERY = Object.freeze({
 });
 
 const RECORD_FIELDS = Object.freeze([
-  'recordType', 'blockId', 'userId', 'groupId', 'status', 'visibility', 'lang'
+  'recordType', 'blockId', 'userId', 'authorshipState', 'groupId', 'status', 'visibility', 'lang'
 ]);
 const INPUT_FIELDS = Object.freeze(['authenticatedOwnerId', 'record']);
+const SUPPORTED_AUTHORSHIP_STATES = Object.freeze(['live', 'deleted-author', 'anonymous']);
 const SUPPORTED_STATUSES = Object.freeze(['in-progress', 'locked']);
 const SUPPORTED_VISIBILITIES = Object.freeze(['public', 'unlisted']);
 const OBJECT_ID_PATTERN = /^[a-f0-9]{24}$/i;
@@ -61,6 +64,10 @@ function validLanguage(value) {
     && LANGUAGE_PATTERN.test(value);
 }
 
+function authorshipState(record) {
+  return record.authorshipState === undefined ? 'live' : record.authorshipState;
+}
+
 function decision(classification, reasonCode, logicalIdentity = null) {
   return {
     policyVersion: FOREST_OWNER_WRITING_POLICY_VERSION,
@@ -85,18 +92,6 @@ function classifyRecordShape(record) {
     return decision(
       FOREST_WRITING_CLASSIFICATIONS.INELIGIBLE,
       FOREST_WRITING_REASON_CODES.UNSUPPORTED_RECORD_TYPE
-    );
-  }
-  if (record.userId === undefined || record.userId === null || record.userId === '') {
-    return decision(
-      FOREST_WRITING_CLASSIFICATIONS.UNRESOLVED,
-      FOREST_WRITING_REASON_CODES.LEGACY_OWNERSHIP_UNRESOLVED
-    );
-  }
-  if (!canonicalObjectId(record.userId)) {
-    return decision(
-      FOREST_WRITING_CLASSIFICATIONS.UNRESOLVED,
-      FOREST_WRITING_REASON_CODES.INVALID_RECORD_OWNER
     );
   }
   if (!canonicalObjectId(record.blockId)) {
@@ -129,6 +124,12 @@ function classifyRecordShape(record) {
       FOREST_WRITING_REASON_CODES.UNSUPPORTED_VISIBILITY
     );
   }
+  if (!SUPPORTED_AUTHORSHIP_STATES.includes(authorshipState(record))) {
+    return decision(
+      FOREST_WRITING_CLASSIFICATIONS.UNRESOLVED,
+      FOREST_WRITING_REASON_CODES.UNSUPPORTED_AUTHORSHIP_STATE
+    );
+  }
   return null;
 }
 
@@ -137,7 +138,25 @@ export function classifyForestOwnerWriting(input) {
   const shapeDecision = classifyRecordShape(record);
   if (shapeDecision) return shapeDecision;
 
+  if (authorshipState(record) !== 'live') {
+    return decision(
+      FOREST_WRITING_CLASSIFICATIONS.INELIGIBLE,
+      FOREST_WRITING_REASON_CODES.NON_LIVE_AUTHORSHIP
+    );
+  }
+  if (record.userId === undefined || record.userId === null || record.userId === '') {
+    return decision(
+      FOREST_WRITING_CLASSIFICATIONS.UNRESOLVED,
+      FOREST_WRITING_REASON_CODES.LEGACY_OWNERSHIP_UNRESOLVED
+    );
+  }
   const recordOwnerId = canonicalObjectId(record.userId);
+  if (!recordOwnerId) {
+    return decision(
+      FOREST_WRITING_CLASSIFICATIONS.UNRESOLVED,
+      FOREST_WRITING_REASON_CODES.INVALID_RECORD_OWNER
+    );
+  }
   if (recordOwnerId !== authenticatedOwnerId) {
     return decision(
       FOREST_WRITING_CLASSIFICATIONS.INELIGIBLE,
@@ -168,7 +187,33 @@ export function classifyForestTranslationDiscovery(input) {
     };
   }
 
-  if (canonicalObjectId(record.userId) === authenticatedOwnerId) {
+  const retainedAuthorship = authorshipState(record) !== 'live';
+  const hasRecordOwner = record.userId !== undefined
+    && record.userId !== null
+    && record.userId !== '';
+  if (retainedAuthorship && hasRecordOwner) {
+    return {
+      policyVersion: FOREST_OWNER_WRITING_POLICY_VERSION,
+      classification: FOREST_TRANSLATION_DISCOVERY.UNRESOLVED,
+      reasonCode: FOREST_WRITING_REASON_CODES.INVALID_RECORD_OWNER
+    };
+  }
+  if (!retainedAuthorship && !hasRecordOwner) {
+    return {
+      policyVersion: FOREST_OWNER_WRITING_POLICY_VERSION,
+      classification: FOREST_TRANSLATION_DISCOVERY.UNRESOLVED,
+      reasonCode: FOREST_WRITING_REASON_CODES.LEGACY_OWNERSHIP_UNRESOLVED
+    };
+  }
+  const recordOwnerId = retainedAuthorship ? null : canonicalObjectId(record.userId);
+  if (!retainedAuthorship && !recordOwnerId) {
+    return {
+      policyVersion: FOREST_OWNER_WRITING_POLICY_VERSION,
+      classification: FOREST_TRANSLATION_DISCOVERY.UNRESOLVED,
+      reasonCode: FOREST_WRITING_REASON_CODES.INVALID_RECORD_OWNER
+    };
+  }
+  if (recordOwnerId === authenticatedOwnerId) {
     return {
       policyVersion: FOREST_OWNER_WRITING_POLICY_VERSION,
       classification: FOREST_TRANSLATION_DISCOVERY.AVAILABLE,
