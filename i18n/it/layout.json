@@ -9,6 +9,7 @@
     "closeMenu": "Chiudi menu principale",
     "privacy": "Informativa sulla privacy",
     "anonymousAuthor": "Anonimo",
+    "deletedAuthor": "Autore eliminato",
     "uiFallbackNotice": "{requested} non e ancora tradotto. Per ora viene mostrato {current}.",
     "copyButton": {
       "copy": "Copia",
