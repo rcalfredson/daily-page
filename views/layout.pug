@@ -13,8 +13,12 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
         each alt in hreflang
           link(rel="alternate" hreflang=alt.lang href=alt.href)
       meta(name="viewport" content="width=device-width, initial-scale=1.0")
-      link(rel="preload" href="/assets/fonts/Rubik-Light.ttf" as="font" type="font/ttf" crossorigin)
-      link(rel="preload" href="/assets/fonts/Rubik-Medium.ttf" as="font" type="font/ttf" crossorigin)
+      if htmlLang === 'vi'
+        link(rel="preload" href="/assets/fonts/BeVietnamPro-Light.ttf" as="font" type="font/ttf" crossorigin)
+        link(rel="preload" href="/assets/fonts/BeVietnamPro-Medium.ttf" as="font" type="font/ttf" crossorigin)
+      else
+        link(rel="preload" href="/assets/fonts/Rubik-Light.ttf" as="font" type="font/ttf" crossorigin)
+        link(rel="preload" href="/assets/fonts/Rubik-Medium.ttf" as="font" type="font/ttf" crossorigin)
       script.
         (function () {
           try {
