@@ -20,7 +20,9 @@ is deliberately revised.
 
 Retained posts have no `userId` or edit token and have an explicit non-live `authorshipState`.
 They cannot be managed by a later account, a collaborator, an old edit-token cookie, or username
-fallback. User-facing surfaces must not link their author label to a profile.
+fallback. `Deleted author` attribution is localized plain text with no profile link. Anonymous
+attribution links to the protected `/users/anonymous` presentation page, but that link represents
+no owner account, stable author identity, or edit authority.
 
 ## Authoritative lifecycle
 
