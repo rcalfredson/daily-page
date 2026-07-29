@@ -545,10 +545,10 @@ async function getSupportFundingViewModel() {
             roomEditorialClusters
           ] = await Promise.all([
             getRoomMetadata(room_id, uiLang),
-            getBlocksByRoomWithFallback({
+            getTopBlocksWithFallback({
               roomId: room_id,
-              userId,
               status: 'locked',
+              lockedOnly: true,
               limit: 20,
               preferredLang: preferredContentLang,
             }),
@@ -597,7 +597,10 @@ async function getSupportFundingViewModel() {
 
           const date = DateHelper.currentDateI18n(uiLang || 'en', 'Europe/London');
 
-          const showInProgressTab = (inProgressPeriod !== 'all' && inProgressBlocks.length > 0);
+          const lockedPeriodLabel = lockedPeriod?.type === 'all'
+            ? 'all'
+            : (lockedPeriod?.value ?? lockedPeriod);
+          const showInProgressTab = (inProgressBlocks.length > 0);
           const showLockedTab = (lockedBlocks.length > 0);
           const useTabs = (showLockedTab ? 1 : 0) + (showInProgressTab ? 1 : 0) >= 2;
 
@@ -610,7 +613,7 @@ async function getSupportFundingViewModel() {
 
             lockedBlocks: lightLocked,
             inProgressBlocks: lightInProg,
-            lockedPeriod,
+            lockedPeriod: lockedPeriodLabel,
             inProgressPeriod,
             showInProgressTab,
             showLockedTab,
