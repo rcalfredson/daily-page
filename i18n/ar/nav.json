@@ -11,7 +11,7 @@
     "support": "يدعم",
     "otherProjects": "مشاريع أخرى",
     "auth": {
-      "welcomePrefix": "مرحباً،",
+      "welcomePrefix": "مرحباً، ",
       "welcomeFallbackUser": "أنت",
       "welcomeSuffix": "!"
     },

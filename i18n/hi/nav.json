@@ -11,7 +11,7 @@
     "support": "सहायता",
     "otherProjects": "अन्य परियोजनाएँ",
     "auth": {
-      "welcomePrefix": "स्वागत,",
+      "welcomePrefix": "स्वागत, ",
       "welcomeFallbackUser": "आप",
       "welcomeSuffix": "!"
     },
