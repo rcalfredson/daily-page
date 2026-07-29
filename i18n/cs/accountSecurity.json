@@ -22,6 +22,41 @@
       "regenerateDescription": "Pokud jste předchozí sadu ztratili, vygenerujte novou. Všechny staré obnovovací kódy tím přestanou platit.",
       "regenerate": "Vygenerovat nové obnovovací kódy", "warning": "Uložte je na bezpečné místo. Znovu se již nezobrazí."
     },
+    "deletion": {
+      "title": "Smazat účet",
+      "description": "Účet bude smazán okamžitě a tuto akci nelze vrátit zpět. Zvolte, co se má stát s vašimi publikovanými příspěvky.",
+      "summary": {
+        "immediate": "Váš profil, komentáře, reakce, hlasy a všechny přihlašovací relace budou odstraněny.",
+        "privatePosts": "Rozpracované neveřejné příspěvky budou vždy smazány. Uzamčené neveřejné příspěvky se považují za veřejné.",
+        "username": "Vaše uživatelské jméno zůstane 365 dní nedostupné."
+      },
+      "choiceLegend": "Co se má stát s publikovanými příspěvky?",
+      "choices": {
+        "delete": {
+          "title": "Smazat mé příspěvky",
+          "description": "Smazat všechny příspěvky, které vlastníte, včetně vámi vytvořených překladů."
+        },
+        "deletedAuthor": {
+          "title": "Ponechat příspěvky jako „Smazaný autor“",
+          "description": "Ponechat veřejné a uzamčené neveřejné příspěvky bez vlastníka, odkazu na profil, tokenu pro úpravy nebo identifikátoru účtu."
+        },
+        "anonymous": {
+          "title": "Ponechat příspěvky anonymně",
+          "description": "Ponechat veřejné a uzamčené neveřejné příspěvky bez vlastníka nebo jakékoli trvalé vazby na autora."
+        }
+      },
+      "currentPassword": "Současné heslo",
+      "twoFactorCode": "Ověřovací nebo obnovovací kód",
+      "confirmationLabel": "Pro potvrzení napište DELETE",
+      "submit": "Trvale smazat účet",
+      "feedback": {
+        "missingConfirmation": "Zvolte, co se má stát s příspěvky, zadejte heslo a napište DELETE.",
+        "invalidTwoFactorCode": "Tento ověřovací nebo obnovovací kód nefungoval.",
+        "invalidDisposition": "Zvolte, co se má stát s vašimi publikovanými příspěvky.",
+        "activeQuestAdmin": "Před smazáním účtu předejte správu všech aktivních výprav nebo je archivujte.",
+        "accountNotFound": "Tento účet již neexistuje."
+      }
+    },
     "feedback": {
       "passwordChanged": "Vaše heslo bylo aktualizováno.",
       "setupReady": "Naskenujte QR kód a poté dokončete nastavení zadáním šestimístného kódu.",
