@@ -105,14 +105,17 @@ describe('quest read services', () => {
       ]);
       return queryResult([{
         _id: 'block-1', title: 'Tioga, PA', roomId: 'united-states',
-        lang: 'en', creator: 'Alice'
+        lang: 'en', creator: 'Deleted author', authorshipState: 'deleted-author'
       }]);
     });
 
     const result = await listQuestItems({ questId: 'quest-1', state: 'pending' });
     expect(result.items[0].state).toBe('pending');
     expect(result.items[0].post).toEqual(jasmine.objectContaining({
-      id: 'block-1', roomId: 'united-states'
+      id: 'block-1',
+      roomId: 'united-states',
+      creator: 'Deleted author',
+      authorshipState: 'deleted-author'
     }));
   });
 
@@ -131,14 +134,16 @@ describe('quest read services', () => {
       title: 'Tioga, PA',
       roomId: 'united-states',
       lang: 'en',
-      creator: 'Alice'
+      creator: 'Deleted author',
+      authorshipState: 'deleted-author'
     }]));
 
     const result = await listApprovedQuestPosts({ questId: 'quest-1' });
     expect(result.posts).toEqual([jasmine.objectContaining({
       _id: 'block-1',
       approvedSequence: 4,
-      contributorCount: 2
+      contributorCount: 2,
+      authorshipState: 'deleted-author'
     })]);
     expect(result.total).toBe(1);
   });

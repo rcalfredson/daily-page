@@ -9,6 +9,7 @@
     "closeMenu": "Закрыть главное меню",
     "privacy": "Политика конфиденциальности",
     "anonymousAuthor": "Аноним",
+    "deletedAuthor": "Автор удалён",
     "uiFallbackNotice": "{requested} пока не переведен. Сейчас показывается {current}.",
     "copyButton": {
       "copy": "Копировать",

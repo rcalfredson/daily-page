@@ -84,9 +84,21 @@ describe('block preview DTO', () => {
       authorshipState: 'anonymous'
     });
 
-    expect(blockAuthorDisplayName(block, 'Anónimo')).toBe('Anónimo');
+    expect(blockAuthorDisplayName(block, { anonymous: 'Anónimo' })).toBe('Anónimo');
     expect(block.creator).toBe('anonymous');
     expect(blockAuthorProfilePath(block)).toBe('/users/anonymous');
-    expect(blockAuthorDisplayName(makeBlock(), 'Anónimo')).toBe('writer');
+    expect(blockAuthorDisplayName(makeBlock(), { anonymous: 'Anónimo' })).toBe('writer');
+  });
+
+  it('localizes deleted-author attribution without changing its stored marker', () => {
+    const block = makeBlock({
+      creator: 'Deleted author',
+      authorshipState: 'deleted-author'
+    });
+
+    expect(blockAuthorDisplayName(block, { deletedAuthor: 'Auteur supprimé' }))
+      .toBe('Auteur supprimé');
+    expect(block.creator).toBe('Deleted author');
+    expect(blockAuthorProfilePath(block)).toBeNull();
   });
 });

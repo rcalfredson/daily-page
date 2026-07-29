@@ -60,12 +60,19 @@ export function blockAuthorProfilePath(block) {
   return `/users/${encodeURIComponent(creator)}`;
 }
 
-export function blockAuthorDisplayName(block, anonymousLabel = 'Anonymous') {
+export function blockAuthorDisplayName(block, {
+  anonymous = 'Anonymous',
+  deletedAuthor = 'Deleted author'
+} = {}) {
   const creator = String(block?.creator || '').trim();
   if (!creator) return '';
 
   if (block.authorshipState === 'anonymous' || creator === 'anonymous') {
-    return String(anonymousLabel || '').trim() || 'Anonymous';
+    return String(anonymous || '').trim() || 'Anonymous';
+  }
+
+  if (block.authorshipState === 'deleted-author') {
+    return String(deletedAuthor || '').trim() || 'Deleted author';
   }
 
   return creator;

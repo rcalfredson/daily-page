@@ -190,9 +190,11 @@ async function getSupportFundingViewModel() {
     app.use(addHreflangLocals);
     app.use(initI18n(['layout', 'nav', 'modals', 'notifications', 'errors']));
     app.use((req, res, next) => {
-      const anonymousLabel = res.locals.t('layout.anonymousAuthor');
-      res.locals.blockAuthorDisplayName = (block) =>
-        blockAuthorDisplayName(block, anonymousLabel);
+      const authorLabels = {
+        anonymous: res.locals.t('layout.anonymousAuthor'),
+        deletedAuthor: res.locals.t('layout.deletedAuthor')
+      };
+      res.locals.blockAuthorDisplayName = (block) => blockAuthorDisplayName(block, authorLabels);
       next();
     });
     app.options('*', cors(corsOptionsDelegate));
