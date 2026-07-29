@@ -24,7 +24,6 @@ import optionalAuth from '../middleware/optionalAuth.js';
 import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
 import { addI18n } from '../services/i18n.js';
 import {
-  blockAuthorDisplayName,
   blockAuthorProfilePath,
   canManageBlock,
   parseEditTokens
@@ -211,7 +210,7 @@ router.get(
       const authorProfile = block.creator
         ? {
           username: block.creator,
-          displayName: blockAuthorDisplayName(block, t('layout.anonymousAuthor')),
+          displayName: res.locals.blockAuthorDisplayName(block),
           profilePath: blockAuthorProfilePath(block),
           avatarUrl: authorUser?.profilePic || '/assets/img/default-pic.png'
         }

@@ -175,7 +175,7 @@ export async function listQuestItems({
   const blockIds = [...new Set(submissions.map(submission => id(submission.blockId)).filter(Boolean))];
   const blocks = blockIds.length
     ? await Block.find(publiclyVisibleBlockMatch({ _id: { $in: blockIds } }))
-      .select('_id title roomId lang creator')
+      .select('_id title roomId lang creator authorshipState')
       .lean()
     : [];
   const blockById = new Map(blocks.map(block => [id(block._id), block]));
@@ -199,7 +199,8 @@ export async function listQuestItems({
           title: block.title,
           roomId: block.roomId,
           lang: block.lang,
-          creator: block.creator
+          creator: block.creator,
+          authorshipState: block.authorshipState
         } : null
       };
     }),
@@ -273,7 +274,7 @@ export async function listApprovedQuestPosts({ questId, page = 1, limit = 12 }) 
   const blockIds = submissions.map(submission => id(submission.blockId));
   const blocks = blockIds.length
     ? await Block.find(publiclyVisibleBlockMatch({ _id: { $in: blockIds } }))
-      .select('_id title description roomId lang creator bannerImage createdAt')
+      .select('_id title description roomId lang creator authorshipState bannerImage createdAt')
       .lean()
     : [];
   const blockById = new Map(blocks.map(block => [id(block._id), block]));
