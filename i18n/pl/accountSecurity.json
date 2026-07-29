@@ -45,6 +45,41 @@
       "regenerate": "Wygeneruj nowe kody odzyskiwania",
       "warning": "Przechowuj je w bezpiecznym miejscu. Nie zostaną pokazane ponownie."
     },
+    "deletion": {
+      "title": "Usuń konto",
+      "description": "Usunięcie konta następuje natychmiast i jest nieodwracalne. Wybierz, co ma się stać z Twoimi opublikowanymi postami.",
+      "summary": {
+        "immediate": "Twój profil, komentarze, reakcje, głosy i wszystkie sesje logowania zostaną usunięte.",
+        "privatePosts": "Niepubliczne posty w trakcie tworzenia zawsze zostaną usunięte. Zablokowane posty niepubliczne są traktowane jak posty publiczne.",
+        "username": "Twoja nazwa użytkownika pozostanie niedostępna przez 365 dni."
+      },
+      "choiceLegend": "Co zrobić z opublikowanymi postami?",
+      "choices": {
+        "delete": {
+          "title": "Usuń moje posty",
+          "description": "Usuń wszystkie posty, których jesteś właścicielem, w tym utworzone przez Ciebie tłumaczenia."
+        },
+        "deletedAuthor": {
+          "title": "Zachowaj posty jako „Usunięty autor”",
+          "description": "Zachowaj publiczne i zablokowane posty niepubliczne bez właściciela, linku do profilu, tokenu edycji ani identyfikatora konta."
+        },
+        "anonymous": {
+          "title": "Zachowaj posty jako anonimowe",
+          "description": "Zachowaj publiczne i zablokowane posty niepubliczne bez właściciela ani trwałego powiązania z autorem."
+        }
+      },
+      "currentPassword": "Obecne hasło",
+      "twoFactorCode": "Kod uwierzytelniający lub odzyskiwania",
+      "confirmationLabel": "Wpisz DELETE, aby potwierdzić",
+      "submit": "Usuń konto na stałe",
+      "feedback": {
+        "missingConfirmation": "Wybierz, co ma się stać z postami, podaj hasło i wpisz DELETE.",
+        "invalidTwoFactorCode": "Ten kod uwierzytelniający lub odzyskiwania nie zadziałał.",
+        "invalidDisposition": "Wybierz, co ma się stać z Twoimi opublikowanymi postami.",
+        "activeQuestAdmin": "Przed usunięciem konta przekaż zarządzanie każdą aktywną misją lub ją zarchiwizuj.",
+        "accountNotFound": "To konto już nie istnieje."
+      }
+    },
     "feedback": {
       "passwordChanged": "Hasło zostało zaktualizowane.",
       "setupReady": "Zeskanuj kod QR, a następnie wpisz 6-cyfrowy kod, aby zakończyć konfigurację.",
