@@ -62,6 +62,41 @@
       "warning": "Bewahre sie an einem sicheren Ort auf. Sie werden nicht erneut angezeigt.",
       "regenerateDescription": "Erzeuge einen neuen Satz Wiederherstellungscodes, wenn du den bisherigen Satz verloren hast. Dadurch werden alte Codes ungültig.",
       "regenerate": "Neue Wiederherstellungscodes erzeugen"
+    },
+    "deletion": {
+      "title": "Konto löschen",
+      "description": "Die Kontolöschung erfolgt sofort und kann nicht rückgängig gemacht werden. Wähle, was mit deinen veröffentlichten Beiträgen geschehen soll.",
+      "summary": {
+        "immediate": "Dein Profil, deine Kommentare, Reaktionen und Stimmen sowie alle Anmeldesitzungen werden gelöscht.",
+        "privatePosts": "Nicht gelistete Beiträge in Bearbeitung werden immer gelöscht. Gesperrte, nicht gelistete Beiträge werden wie öffentliche Beiträge behandelt.",
+        "username": "Dein Benutzername bleibt 365 Tage lang nicht verfügbar."
+      },
+      "choiceLegend": "Was soll mit deinen Beiträgen geschehen?",
+      "choices": {
+        "delete": {
+          "title": "Meine Beiträge löschen",
+          "description": "Alle Beiträge löschen, die dir gehören, einschließlich der von dir verfassten Übersetzungen."
+        },
+        "deletedAuthor": {
+          "title": "Als „Gelöschter Autor“ behalten",
+          "description": "Öffentliche Beiträge und gesperrte, nicht gelistete Beiträge ohne Eigentümer, Profillink, Bearbeitungstoken oder Kontokennung behalten."
+        },
+        "anonymous": {
+          "title": "Anonym behalten",
+          "description": "Öffentliche Beiträge und gesperrte, nicht gelistete Beiträge ohne Eigentümer und ohne dauerhafte Verbindung zur verfassenden Person behalten."
+        }
+      },
+      "currentPassword": "Aktuelles Passwort",
+      "twoFactorCode": "Authenticator- oder Wiederherstellungscode",
+      "confirmationLabel": "Gib zur Bestätigung DELETE ein",
+      "submit": "Konto endgültig löschen",
+      "feedback": {
+        "missingConfirmation": "Wähle aus, was mit deinen Beiträgen geschehen soll, gib dein Passwort ein und tippe DELETE.",
+        "invalidTwoFactorCode": "Dieser Authenticator- oder Wiederherstellungscode hat nicht funktioniert.",
+        "invalidDisposition": "Wähle aus, was mit deinen veröffentlichten Beiträgen geschehen soll.",
+        "activeQuestAdmin": "Übertrage oder archiviere jede aktive Quest, die du verwaltest, bevor du dein Konto löschst.",
+        "accountNotFound": "Dieses Konto existiert nicht mehr."
+      }
     }
   }
 }

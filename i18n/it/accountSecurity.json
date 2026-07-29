@@ -62,6 +62,41 @@
       "warning": "Conservali in un posto sicuro. Non verranno mostrati di nuovo.",
       "regenerateDescription": "Genera un nuovo set di codici di recupero se hai perso quello precedente. Questo invalida i vecchi codici.",
       "regenerate": "Genera nuovi codici di recupero"
+    },
+    "deletion": {
+      "title": "Elimina l'account",
+      "description": "L'eliminazione dell'account è immediata e non può essere annullata. Scegli cosa succederà ai post che hai pubblicato.",
+      "summary": {
+        "immediate": "Il tuo profilo, i commenti, le reazioni, i voti e le sessioni di accesso verranno rimossi.",
+        "privatePosts": "I post non elencati in corso verranno sempre eliminati. I post non elencati già bloccati vengono trattati come post pubblici.",
+        "username": "Il tuo nome utente rimarrà indisponibile per 365 giorni."
+      },
+      "choiceLegend": "Cosa fare con i post pubblicati",
+      "choices": {
+        "delete": {
+          "title": "Elimina i miei post",
+          "description": "Elimina tutti i tuoi post, comprese le traduzioni che hai scritto."
+        },
+        "deletedAuthor": {
+          "title": "Mantieni come «Autore eliminato»",
+          "description": "Mantieni i post pubblici e quelli non elencati già bloccati senza proprietario, link al profilo, token di modifica o identificativo dell'account."
+        },
+        "anonymous": {
+          "title": "Mantieni in forma anonima",
+          "description": "Mantieni i post pubblici e quelli non elencati già bloccati senza proprietario né alcun collegamento stabile con chi li ha scritti."
+        }
+      },
+      "currentPassword": "Password attuale",
+      "twoFactorCode": "Codice di autenticazione o di recupero",
+      "confirmationLabel": "Digita DELETE per confermare",
+      "submit": "Elimina definitivamente l'account",
+      "feedback": {
+        "missingConfirmation": "Scegli cosa fare con i post, inserisci la password e digita DELETE.",
+        "invalidTwoFactorCode": "Il codice di autenticazione o di recupero non ha funzionato.",
+        "invalidDisposition": "Scegli cosa deve succedere ai post che hai pubblicato.",
+        "activeQuestAdmin": "Trasferisci o archivia ogni missione attiva che amministri prima di eliminare il tuo account.",
+        "accountNotFound": "Questo account non esiste più."
+      }
     }
   }
 }
