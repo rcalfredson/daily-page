@@ -20,6 +20,30 @@ Fonts
   font-display: swap;
 }
 
+/*
+ * Rubik does not include precomposed Vietnamese characters. Be Vietnam Pro
+ * is used for the complete Vietnamese UI so the browser never mixes typefaces
+ * within a word. The bundled files are licensed under the SIL OFL; see
+ * assets/fonts/LICENSE-BeVietnamPro.txt.
+ */
+@font-face {
+  font-family: 'BeVietnamPro-Regular';
+  src: url('../assets/fonts/BeVietnamPro-Regular.ttf');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BeVietnamPro-Medium';
+  src: url('../assets/fonts/BeVietnamPro-Medium.ttf');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BeVietnamPro-Light';
+  src: url('../assets/fonts/BeVietnamPro-Light.ttf');
+  font-display: swap;
+}
+
 /****************
 animations
 ****************/
@@ -85,6 +109,12 @@ General
   --z-behind-backdrop: 909;
   --z-drawer: 920;     /* the hamburger menu drawer */
   --z-popover: 930;    /* language switcher + its dropdown */
+}
+
+html:lang(vi) {
+  --font-rubik-light: 'BeVietnamPro-Light', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-rubik-regular: 'BeVietnamPro-Regular', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-rubik-medium: 'BeVietnamPro-Medium', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
 }
 
 html[data-theme="dark"] {
