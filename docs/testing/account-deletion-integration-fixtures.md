@@ -134,7 +134,8 @@ Retry deletion, then run `verify-after deleted-author`.
 - Validation and active-quest errors are announced visibly.
 - The submit button cannot be accidentally double-submitted.
 - After success, the session is gone and authenticated pages require login.
-- Retained post author labels are plain text with no profile link.
+- `Deleted author` attribution is localized plain text with no profile link.
+- Anonymous attribution links only to the protected `/users/anonymous` presentation page.
 - Retained posts offer no edit route or collaborator mutation path.
 - Deleted post URLs return not found.
 - Peer and observer control content still renders normally.
