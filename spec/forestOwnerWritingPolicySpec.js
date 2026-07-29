@@ -19,6 +19,7 @@ function block(overrides = {}) {
     groupId: GROUP_ID,
     status: 'in-progress',
     visibility: 'unlisted',
+    authorshipState: 'live',
     lang: 'en',
     ...overrides
   };
@@ -37,7 +38,7 @@ describe('forest owner-writing policy', () => {
     for (const status of ['in-progress', 'locked']) {
       for (const visibility of ['public', 'unlisted']) {
         expect(ownerDecision(block({ status, visibility }))).toEqual({
-          policyVersion: 1,
+          policyVersion: 2,
           classification: FOREST_WRITING_CLASSIFICATIONS.ELIGIBLE,
           reasonCode: FOREST_WRITING_REASON_CODES.ELIGIBLE_OWNER_BLOCK,
           logicalIdentity: {
@@ -77,6 +78,25 @@ describe('forest owner-writing policy', () => {
       reasonCode: FOREST_WRITING_REASON_CODES.INVALID_RECORD_OWNER,
       logicalIdentity: null
     }));
+  });
+
+  it('never treats a deletion-retained post as owner writing', () => {
+    for (const state of ['deleted-author', 'anonymous']) {
+      expect(ownerDecision(block({
+        userId: undefined,
+        authorshipState: state,
+        visibility: 'public'
+      }))).toEqual(jasmine.objectContaining({
+        policyVersion: 2,
+        classification: FOREST_WRITING_CLASSIFICATIONS.INELIGIBLE,
+        reasonCode: FOREST_WRITING_REASON_CODES.NON_LIVE_AUTHORSHIP,
+        logicalIdentity: null
+      }));
+      expect(ownerDecision(block({ authorshipState: state }))).toEqual(jasmine.objectContaining({
+        classification: FOREST_WRITING_CLASSIFICATIONS.INELIGIBLE,
+        reasonCode: FOREST_WRITING_REASON_CODES.NON_LIVE_AUTHORSHIP
+      }));
+    }
   });
 
   it('does not admit creator or collaborator fields into the ownership boundary', () => {
@@ -131,7 +151,7 @@ describe('forest owner-writing policy', () => {
 
     for (const [record, classification, reasonCode] of cases) {
       expect(translationDecision(record)).toEqual({
-        policyVersion: 1,
+        policyVersion: 2,
         classification,
         reasonCode
       });
@@ -143,15 +163,64 @@ describe('forest owner-writing policy', () => {
 
   it('does not reveal malformed or unsupported translations', () => {
     expect(translationDecision(block({ userId: undefined }))).toEqual({
-      policyVersion: 1,
+      policyVersion: 2,
       classification: FOREST_TRANSLATION_DISCOVERY.UNRESOLVED,
       reasonCode: FOREST_WRITING_REASON_CODES.LEGACY_OWNERSHIP_UNRESOLVED
     });
     expect(translationDecision(block({ recordType: 'Page' }))).toEqual({
-      policyVersion: 1,
+      policyVersion: 2,
       classification: FOREST_TRANSLATION_DISCOVERY.HIDDEN,
       reasonCode: FOREST_WRITING_REASON_CODES.UNSUPPORTED_RECORD_TYPE
     });
+  });
+
+  it('keeps retained public writing discoverable without restoring ownership', () => {
+    for (const authorshipState of ['deleted-author', 'anonymous']) {
+      expect(translationDecision(block({
+        userId: undefined,
+        authorshipState,
+        visibility: 'public',
+        status: 'in-progress'
+      }))).toEqual({
+        policyVersion: 2,
+        classification: FOREST_TRANSLATION_DISCOVERY.AVAILABLE,
+        reasonCode: FOREST_WRITING_REASON_CODES.PUBLIC_TRANSLATION_DISCOVERABLE
+      });
+      expect(translationDecision(block({
+        userId: undefined,
+        authorshipState,
+        visibility: 'unlisted',
+        status: 'locked'
+      }))).toEqual({
+        policyVersion: 2,
+        classification: FOREST_TRANSLATION_DISCOVERY.AVAILABLE,
+        reasonCode: FOREST_WRITING_REASON_CODES.LOCKED_UNLISTED_TRANSLATION_DISCOVERABLE
+      });
+      expect(translationDecision(block({
+        userId: undefined,
+        authorshipState,
+        visibility: 'unlisted',
+        status: 'in-progress'
+      }))).toEqual({
+        policyVersion: 2,
+        classification: FOREST_TRANSLATION_DISCOVERY.HIDDEN,
+        reasonCode: FOREST_WRITING_REASON_CODES.UNLISTED_IN_PROGRESS_TRANSLATION_HIDDEN
+      });
+    }
+  });
+
+  it('fails closed on inconsistent or unknown authorship state', () => {
+    expect(translationDecision(block({ authorshipState: 'anonymous' }))).toEqual({
+      policyVersion: 2,
+      classification: FOREST_TRANSLATION_DISCOVERY.UNRESOLVED,
+      reasonCode: FOREST_WRITING_REASON_CODES.INVALID_RECORD_OWNER
+    });
+    expect(ownerDecision(block({ authorshipState: 'future-state' }))).toEqual(
+      jasmine.objectContaining({
+        classification: FOREST_WRITING_CLASSIFICATIONS.UNRESOLVED,
+        reasonCode: FOREST_WRITING_REASON_CODES.UNSUPPORTED_AUTHORSHIP_STATE
+      })
+    );
   });
 
   it('requires a bounded exact caller-owned input shape', () => {

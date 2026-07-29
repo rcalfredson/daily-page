@@ -58,14 +58,19 @@ labels the data as a development fixture or a different future source.
 - `Block` is the supported modern writing record. The legacy `Page` shape lacks equivalent stable
   ownership and lifecycle evidence.
 - Blocks may contain stable `userId`, mutable legacy `creator` text, collaborator usernames,
-  `public` or `unlisted` visibility, `in-progress` or `locked` status, translation `groupId`,
-  language, and translation ancestry.
+  `live`, `deleted-author`, or `anonymous` authorship state, `public` or `unlisted` visibility,
+  `in-progress` or `locked` status, translation `groupId`, language, and translation ancestry.
 - Public site discovery already treats a Block as publicly visible when it is `public`, or when it
   is both `unlisted` and `locked`.
 - Direct writing routes and translation resolution remain ordinary writing-system concerns; the
   forest must recheck their authorization rather than treating a loaded scene as authority.
-- There is no complete account-deletion feature. Its lifecycle must be implemented separately
-  before production forest deletion can be claimed complete.
+- Account deletion is implemented through an owner-keyed `AccountDeletionRequest`, immediate
+  session revocation and User deletion, three post dispositions, username quarantine, database
+  cascade, and retryable profile-media cleanup. Retained posts explicitly lose `userId` and edit
+  authority and become `deleted-author` or `anonymous`.
+- `AccountDeletionRequest` is the downstream forest-cleanup seam. Future durable forest state must
+  converge idempotently by `ownerUserId` without enlarging account deletion into one unbounded
+  forest transaction.
 - The present forest is development-only and fixture-backed. Its overlay and discovery persistence
   use separate base-specific `localStorage` keys.
 - Generated scenes already use deterministic 480-world-unit regional cells, bounded regional
@@ -164,6 +169,7 @@ Block, group, title, language, or route values.
 A writing record is eligible when all of the following are true:
 
 - it is a supported `Block`;
+- its authorship state is `live` (or is absent on a compatible pre-field record);
 - its stable `userId` is present, valid, and exactly equals the authenticated owner id;
 - its Block and translation-group identities are valid;
 - its language is bounded and valid;
@@ -177,7 +183,9 @@ version; private data must not be inferred from the current two-value schema.
 
 Creator-only legacy records remain `unresolved` and fail closed. They require an explicit ownership
 repair or migration outside this policy. Collaborators are allowed on an eligible owner-authored
-Block but do not gain tree ownership or mutation authority.
+Block but do not gain tree ownership or mutation authority. A `deleted-author` or `anonymous`
+retained post can never create, preserve, restore, or transfer an owner tree, even if malformed
+historical data still carries an owner id.
 
 ### Automatic entry and hiding
 
@@ -203,6 +211,9 @@ Translation availability is dynamic inspection data and remains separate from el
 | Foreign-authored and public, in-progress or locked | Discoverable |
 | Foreign-authored, unlisted, and locked | Discoverable |
 | Foreign-authored, unlisted, and in-progress | Hidden |
+| Deletion-retained `deleted-author` or `anonymous`, public | Discoverable without ownership |
+| Deletion-retained `deleted-author` or `anonymous`, unlisted and locked | Discoverable without ownership |
+| Deletion-retained `deleted-author` or `anonymous`, unlisted and in-progress | Hidden; this state is deleted by the account lifecycle |
 | Legacy, malformed, deleted, or unsupported | Hidden or explicitly unresolved; never disclosed |
 
 This follows the site's ordinary discovery rule that locked unlisted writing is visible through
@@ -420,7 +431,7 @@ unbounded array inside the owner-world root.
 | Delete last owner variant | Deactivate tree; keep minimal tombstone | Preserve reservation and recoverable authored relationship | Inspection exposes no stale writing; supported |
 | Restore same logical identity | Reactivate captured tree | Restore reservation/personal placement | Tombstone proves identity; supported |
 | Recreate under a new logical identity | Create a new tree | New deterministic reservation | Old tombstone remains separate; supported |
-| Owner account deletion | Personal forest enters account-deletion workflow | Delete or retain only according to chosen account disposition | Upstream account feature required; operationally deferred |
+| Owner account deletion | Revoke owner access and deactivate every owner tree; retained posts cannot preserve ownership | Delete owner-private forest state regardless of source-post disposition | Consume `AccountDeletionRequest` by `ownerUserId`; cleanup is idempotent downstream convergence |
 | Personal relocation | Preserve tree, source, projection, habitat, specimen, and asset | Replace only personal location delta | Server validates density/collision/revision; supported contract |
 | Explicit ecological reprojection | Same logical tree with auditable projection replacement | Placement requires explicit migration decision | Never implied by relocation or edit; supported contract |
 | Meaning-mapping upgrade | Preserve historical projection by default | Preserve | Explicit replacement only; supported contract |
@@ -429,11 +440,21 @@ unbounded array inside the owner-world root.
 | Overlay schema upgrade | Preserve objects and commitments | Copy, validate, then cut over shard revisions | Resumable; unsupported version read-only; supported contract |
 | Partial durable failure | Last known-good revision remains authoritative | No partial live mutation | Retry by idempotency key or resume cursor; supported contract |
 
-Account deletion is documented in the separate ignored starter prompt
-`tmp/account-deletion-lifecycle-starter-prompt.md`. The forest contract assumes that the eventual
-account workflow can distinguish deletion of writing from retained tombstoned or anonymous writing.
-Regardless of source-writing disposition, owner-private forest state, exports, recovery revisions,
-caches, and backups must follow the selected account retention/deletion policy.
+Account deletion is implemented and documented in
+[`docs/account-deletion-lifecycle-contract.md`](../account-deletion-lifecycle-contract.md). Its
+`delete`, `deleted-author`, and `anonymous` choices govern source posts only. They never retain or
+transfer the deleted account's private forest.
+
+The database deletion transaction writes an owner-keyed request, removes the User, revokes sessions,
+and applies the selected post disposition. Durable forest cleanup must use that request as an
+idempotent downstream boundary. It must revoke access immediately through the missing User/session,
+clean every forest root, tree, overlay shard, ledger, export, cache, and recovery record by
+`ownerUserId`, and record or otherwise guarantee convergence before deletion evidence can expire.
+It must not pull an arbitrarily large future forest into the existing all-or-nothing transaction.
+
+Posts retained as `deleted-author` or `anonymous` have no `userId` or edit authority and cannot
+create or preserve an owner tree. They may remain dynamically discoverable as translations in
+another active owner's forest when they satisfy the ordinary public visibility rule.
 
 ## Authorization and privacy boundaries
 
@@ -593,14 +614,15 @@ bounded Block identity/lifecycle fields. It returns `eligible`, `ineligible`, or
 a bounded reason code. It:
 
 - accepts the four supported owner status/visibility combinations;
+- requires live authorship and rejects deletion-retained authorship as owner writing;
 - returns the owner/group logical identity;
 - excludes Page and owner mismatch;
 - leaves creator-only and malformed ownership unresolved;
 - excludes creator, collaborator, title, body, and arbitrary fields from its input; and
 - fails closed on unknown identity, language, status, or visibility evidence.
 
-`classifyForestTranslationDiscovery` independently implements the accepted owner and foreign
-translation discovery matrix.
+`classifyForestTranslationDiscovery` independently implements the accepted owner, foreign, and
+deletion-retained translation discovery matrix without restoring ownership.
 
 `classifyForestWritingLifecycle` consumes an enumerated event plus only the event-specific,
 caller-authorized booleans it needs. It classifies creation, joining, foreign translation refresh,
@@ -634,7 +656,14 @@ On Node 24.15.0 at the Milestone 1 handoff:
 
 These tests prove deterministic policy behavior and guard existing repository contracts. They do
 not prove production persistence, real-world emotional meaning, public access, mobile performance,
-or the unimplemented account-deletion lifecycle.
+or downstream cleanup of forest records that do not yet exist.
+
+After account deletion introduced explicit Block `authorshipState`, the owner-writing policy
+advanced to version 2. Its focused owner-writing and lifecycle selection passed 20 specs; the
+combined forest, account-deletion, attribution, and permission selection passed 233 specs; and the
+complete repository suite passed 756 specs on Node 24.15.0. This compatibility update proves that
+deletion-retained writing cannot regain tree ownership while remaining eligible for ordinary
+public translation discovery.
 
 ## Runtime version reconciliation
 
@@ -642,7 +671,7 @@ The active runtime constants at this milestone are:
 
 | Boundary | Active version |
 | --- | ---: |
-| Owner-writing policy | 1 |
+| Owner-writing policy | 2 |
 | Writing-lifecycle policy | 1 |
 | Post-tree projection schema / meaning mapping | 1 / 1 |
 | Runtime tree asset schema | 3 |
@@ -673,8 +702,9 @@ preserving why the historical versions existed.
 - Public/private region presentation, visiting, guest, and social policy.
 - Legacy creator-only ownership repair or backfill.
 - General archive semantics, which the current Block lifecycle does not provide.
-- Exact retention durations and complete account-deletion behavior.
-- The account-deletion implementation described by the separate starter prompt.
+- Exact forest-specific recovery, backup, export, and cleanup retention durations.
+- A durable forest-cleanup acknowledgement or equivalent convergence guarantee attached to the
+  implemented account-deletion request before durable forest records are introduced.
 - Shared visual caching until non-disclosure is demonstrated.
 - The persistence and retention of a future bounded Tansy encounter record.
 - Public monetization or membership distinctions; writing volume cannot silently become a reason
@@ -689,7 +719,7 @@ durable state, scalable records, authorization, migration, failure, reset, recov
 It is strong enough to permit planning Milestone 2's authenticated real-writing grove only after:
 
 - this contract and its policy specs pass final review;
-- the account-deletion dependency remains explicitly gated rather than falsely claimed complete;
+- Milestone 2 honors the implemented account-deletion disposition and downstream cleanup seam;
 - Milestone 2 retains owner-only private delivery;
 - production adapters use owner-constrained queries and idempotent reconciliation; and
 - real-history layout and payload behavior are measured without imposing arbitrary truncation.
