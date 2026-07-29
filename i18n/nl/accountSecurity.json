@@ -45,6 +45,41 @@
       "regenerate": "Genereer nieuwe herstelcodes",
       "warning": "Bewaar ze op een veilige plek. Ze zullen niet meer getoond worden."
     },
+    "deletion": {
+      "title": "Account verwijderen",
+      "description": "Uw account wordt onmiddellijk verwijderd en dit kan niet ongedaan worden gemaakt. Kies wat er met uw gepubliceerde berichten gebeurt.",
+      "summary": {
+        "immediate": "Uw profiel, opmerkingen, reacties, stemmen en aanmeldsessies worden verwijderd.",
+        "privatePosts": "Niet-vermelde berichten die nog in bewerking zijn, worden altijd verwijderd. Vergrendelde niet-vermelde berichten worden behandeld als openbare berichten.",
+        "username": "Uw gebruikersnaam blijft 365 dagen niet beschikbaar."
+      },
+      "choiceLegend": "Wat moet er met uw gepubliceerde berichten gebeuren?",
+      "choices": {
+        "delete": {
+          "title": "Mijn berichten verwijderen",
+          "description": "Alle berichten verwijderen die van u zijn, inclusief vertalingen die u hebt geschreven."
+        },
+        "deletedAuthor": {
+          "title": "Bewaren als ‘Verwijderde auteur’",
+          "description": "Openbare en vergrendelde niet-vermelde berichten bewaren zonder eigenaar, profiellink, bewerkingstoken of account-ID."
+        },
+        "anonymous": {
+          "title": "Anoniem bewaren",
+          "description": "Openbare en vergrendelde niet-vermelde berichten bewaren zonder eigenaar en zonder blijvende koppeling aan de auteur."
+        }
+      },
+      "currentPassword": "Huidig wachtwoord",
+      "twoFactorCode": "Authenticator- of herstelcode",
+      "confirmationLabel": "Typ DELETE om te bevestigen",
+      "submit": "Account definitief verwijderen",
+      "feedback": {
+        "missingConfirmation": "Kies wat er met uw berichten moet gebeuren, voer uw wachtwoord in en typ DELETE.",
+        "invalidTwoFactorCode": "Die authenticator- of herstelcode werkte niet.",
+        "invalidDisposition": "Kies wat er met uw gepubliceerde berichten moet gebeuren.",
+        "activeQuestAdmin": "Draag elke actieve quest die u beheert over of archiveer deze voordat u uw account verwijdert.",
+        "accountNotFound": "Dit account bestaat niet meer."
+      }
+    },
     "feedback": {
       "passwordChanged": "Uw wachtwoord is bijgewerkt.",
       "setupReady": "Scan de QR-code en voer vervolgens de 6-cijferige code in om de installatie te voltooien.",

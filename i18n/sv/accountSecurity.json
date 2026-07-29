@@ -45,6 +45,41 @@
       "regenerate": "Generera nya återställningskoder",
       "warning": "Förvara dem på ett säkert ställe. De kommer inte att visas igen."
     },
+    "deletion": {
+      "title": "Ta bort konto",
+      "description": "Kontot tas bort omedelbart och åtgärden kan inte ångras. Välj vad som ska hända med dina publicerade inlägg.",
+      "summary": {
+        "immediate": "Din profil, dina kommentarer, reaktioner och röster samt alla inloggningssessioner tas bort.",
+        "privatePosts": "Pågående olistade inlägg tas alltid bort. Låsta olistade inlägg behandlas som offentliga inlägg.",
+        "username": "Ditt användarnamn förblir otillgängligt i 365 dagar."
+      },
+      "choiceLegend": "Vad ska hända med dina publicerade inlägg?",
+      "choices": {
+        "delete": {
+          "title": "Ta bort mina inlägg",
+          "description": "Ta bort alla inlägg som tillhör dig, inklusive översättningar som du har skrivit."
+        },
+        "deletedAuthor": {
+          "title": "Behåll som ”Borttagen författare”",
+          "description": "Behåll offentliga och låsta olistade inlägg utan ägare, profillänk, redigeringstoken eller kontoidentifierare."
+        },
+        "anonymous": {
+          "title": "Behåll anonymt",
+          "description": "Behåll offentliga och låsta olistade inlägg utan ägare eller någon varaktig koppling till författaren."
+        }
+      },
+      "currentPassword": "Aktuellt lösenord",
+      "twoFactorCode": "Kod från autentiseringsapp eller återställningskod",
+      "confirmationLabel": "Skriv DELETE för att bekräfta",
+      "submit": "Ta bort kontot permanent",
+      "feedback": {
+        "missingConfirmation": "Välj vad som ska hända med dina inlägg, ange ditt lösenord och skriv DELETE.",
+        "invalidTwoFactorCode": "Autentiserings- eller återställningskoden fungerade inte.",
+        "invalidDisposition": "Välj vad som ska hända med dina publicerade inlägg.",
+        "activeQuestAdmin": "Överlåt eller arkivera alla aktiva uppdrag som du administrerar innan du tar bort ditt konto.",
+        "accountNotFound": "Det här kontot finns inte längre."
+      }
+    },
     "feedback": {
       "passwordChanged": "Ditt lösenord har uppdaterats.",
       "setupReady": "Skanna QR-koden och ange sedan den 6-siffriga koden för att avsluta installationen.",

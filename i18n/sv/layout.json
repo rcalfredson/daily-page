@@ -9,6 +9,7 @@
     "closeMenu": "Stäng huvudmenyn",
     "privacy": "Sekretesspolicy",
     "anonymousAuthor": "Anonym",
+    "deletedAuthor": "Borttagen författare",
     "uiFallbackNotice": "{requested} är inte översatt än. Visar {current} för tillfället.",
     "copyButton": {
       "copy": "Kopiera",
