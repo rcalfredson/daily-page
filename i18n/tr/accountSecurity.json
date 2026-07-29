@@ -45,6 +45,41 @@
       "regenerate": "Yeni Kurtarma Kodları Oluşturun",
       "warning": "Bunları güvenli bir yerde saklayın. Bir daha gösterilmeyecekler."
     },
+    "deletion": {
+      "title": "Hesabı Sil",
+      "description": "Hesap silme işlemi anında gerçekleşir ve geri alınamaz. Yayınlanmış gönderilerinize ne olacağını seçin.",
+      "summary": {
+        "immediate": "Profiliniz, yorumlarınız, tepkileriniz, oylarınız ve tüm erişim oturumlarınız kaldırılacaktır.",
+        "privatePosts": "Devam eden liste dışı gönderiler her zaman silinir. Kilitli liste dışı gönderiler, herkese açık gönderiler gibi değerlendirilir.",
+        "username": "Kullanıcı adınız 365 gün boyunca kullanılamayacaktır."
+      },
+      "choiceLegend": "Yayınlanmış gönderilere uygulanacak işlem",
+      "choices": {
+        "delete": {
+          "title": "Gönderilerimi sil",
+          "description": "Size ait tüm gönderileri, yazdığınız çeviriler dahil olmak üzere silin."
+        },
+        "deletedAuthor": {
+          "title": "Gönderileri “Silinmiş yazar” olarak tut",
+          "description": "Herkese açık ve kilitli liste dışı gönderileri bir sahibi, profil bağlantısı, düzenleme belirteci veya hesap tanımlayıcısı olmadan tutun."
+        },
+        "anonymous": {
+          "title": "Gönderileri anonim olarak tut",
+          "description": "Herkese açık ve kilitli liste dışı gönderileri sahibi veya herhangi bir kalıcı yazar bağlantısı olmadan tutun."
+        }
+      },
+      "currentPassword": "Mevcut şifre",
+      "twoFactorCode": "Kimlik doğrulayıcı veya kurtarma kodu",
+      "confirmationLabel": "Onaylamak için DELETE yazın",
+      "submit": "Hesabı Kalıcı Olarak Sil",
+      "feedback": {
+        "missingConfirmation": "Gönderilere uygulanacak işlemi seçin, şifrenizi girin ve DELETE yazın.",
+        "invalidTwoFactorCode": "Bu kimlik doğrulayıcı veya kurtarma kodu işe yaramadı.",
+        "invalidDisposition": "Yayınlanmış gönderilerinize ne olacağını seçin.",
+        "activeQuestAdmin": "Hesabınızı silmeden önce yönettiğiniz tüm aktif görevleri devredin veya arşivleyin.",
+        "accountNotFound": "Bu hesap artık mevcut değil."
+      }
+    },
     "feedback": {
       "passwordChanged": "Şifreniz güncellendi.",
       "setupReady": "QR kodunu tarayın ve kurulumu tamamlamak için 6 haneli kodu girin.",
