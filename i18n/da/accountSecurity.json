@@ -45,6 +45,41 @@
       "regenerate": "Generer nye gendannelseskoder",
       "warning": "Opbevar dem et sikkert sted. De vil ikke blive vist igen."
     },
+    "deletion": {
+      "title": "Slet konto",
+      "description": "Sletningen af kontoen sker med det samme og kan ikke fortrydes. Vælg, hvad der skal ske med dine offentliggjorte indlæg.",
+      "summary": {
+        "immediate": "Din profil, dine kommentarer, reaktioner, stemmer og login-sessioner bliver fjernet.",
+        "privatePosts": "Igangværende, ikke-opførte indlæg slettes altid. Låste, ikke-opførte indlæg behandles som offentlige indlæg.",
+        "username": "Dit brugernavn kan ikke bruges igen i 365 dage."
+      },
+      "choiceLegend": "Hvad skal der ske med offentliggjorte indlæg?",
+      "choices": {
+        "delete": {
+          "title": "Slet mine indlæg",
+          "description": "Slet alle indlæg, du ejer, inklusive oversættelser, du har skrevet."
+        },
+        "deletedAuthor": {
+          "title": "Behold indlæg med “Slettet forfatter”",
+          "description": "Behold offentlige og låste, ikke-opførte indlæg uden ejer, profillink, redigeringstoken eller konto-id."
+        },
+        "anonymous": {
+          "title": "Behold indlæg anonymt",
+          "description": "Behold offentlige og låste, ikke-opførte indlæg uden en ejer eller nogen vedvarende tilknytning til en forfatter."
+        }
+      },
+      "currentPassword": "Nuværende adgangskode",
+      "twoFactorCode": "Kode fra autentificeringsapp eller gendannelseskode",
+      "confirmationLabel": "Skriv DELETE for at bekræfte",
+      "submit": "Slet konto permanent",
+      "feedback": {
+        "missingConfirmation": "Vælg, hvad der skal ske med indlæggene, indtast din adgangskode, og skriv DELETE.",
+        "invalidTwoFactorCode": "Koden fra autentificeringsappen eller gendannelseskoden virkede ikke.",
+        "invalidDisposition": "Vælg, hvad der skal ske med dine offentliggjorte indlæg.",
+        "activeQuestAdmin": "Overfør eller arkivér alle aktive quests, du administrerer, før du sletter din konto.",
+        "accountNotFound": "Denne konto findes ikke længere."
+      }
+    },
     "feedback": {
       "passwordChanged": "Din adgangskode blev opdateret.",
       "setupReady": "Scan QR-koden, og indtast derefter den 6-cifrede kode for at afslutte opsætningen.",
