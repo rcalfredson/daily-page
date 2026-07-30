@@ -9,6 +9,7 @@
     "closeMenu": "סגור את התפריט הראשי",
     "privacy": "מדיניות פרטיות",
     "anonymousAuthor": "אנונימי",
+    "deletedAuthor": "מחבר שנמחק",
     "uiFallbackNotice": "{requested} עדיין לא תורגם. מציג את {current} לעת עתה.",
     "copyButton": {
       "copy": "העתק",
