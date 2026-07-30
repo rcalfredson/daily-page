@@ -45,6 +45,41 @@
       "regenerate": "새 복구 코드 생성",
       "warning": "안전한 곳에 보관하세요. 다시 표시되지 않습니다."
     },
+    "deletion": {
+      "title": "계정 삭제",
+      "description": "계정은 즉시 삭제되며 되돌릴 수 없습니다. 게시된 게시물을 어떻게 처리할지 선택하세요.",
+      "summary": {
+        "immediate": "프로필, 댓글, 반응, 투표 및 모든 로그인 세션이 삭제됩니다.",
+        "privatePosts": "목록에 없는 진행 중 게시물은 항상 삭제됩니다. 목록에 없지만 잠긴 게시물은 공개 게시물처럼 처리됩니다.",
+        "username": "사용자 이름은 365일 동안 사용할 수 없습니다."
+      },
+      "choiceLegend": "게시된 게시물 처리 방법",
+      "choices": {
+        "delete": {
+          "title": "내가 작성한 게시물 삭제",
+          "description": "직접 작성한 번역을 포함해 내가 소유한 모든 게시물을 삭제합니다."
+        },
+        "deletedAuthor": {
+          "title": "게시물을 “삭제된 작성자”로 유지",
+          "description": "공개 게시물과 목록에 없지만 잠긴 게시물을 소유자, 프로필 링크, 편집 토큰 또는 계정 식별자 없이 유지합니다."
+        },
+        "anonymous": {
+          "title": "게시물을 익명으로 유지",
+          "description": "공개 게시물과 목록에 없지만 잠긴 게시물을 소유자나 특정 작성자와의 지속적인 연결 없이 유지합니다."
+        }
+      },
+      "currentPassword": "현재 비밀번호",
+      "twoFactorCode": "인증 코드 또는 복구 코드",
+      "confirmationLabel": "확인하려면 “DELETE” 입력",
+      "submit": "계정 영구 삭제",
+      "feedback": {
+        "missingConfirmation": "게시물 처리 방법을 선택하고 비밀번호를 입력한 다음 확인 문구로 “DELETE”를 입력하세요.",
+        "invalidTwoFactorCode": "인증 코드 또는 복구 코드가 올바르지 않습니다.",
+        "invalidDisposition": "게시된 게시물을 어떻게 처리할지 선택하세요.",
+        "activeQuestAdmin": "계정을 삭제하기 전에 관리 중인 모든 활성 퀘스트를 이관하거나 보관하세요.",
+        "accountNotFound": "이 계정은 더 이상 존재하지 않습니다."
+      }
+    },
     "feedback": {
       "passwordChanged": "비밀번호가 업데이트되었습니다.",
       "setupReady": "QR 코드를 스캔한 다음 6자리 코드를 입력해 설정을 완료하세요.",
