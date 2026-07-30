@@ -45,6 +45,41 @@
       "regenerate": "Tạo mã khôi phục mới",
       "warning": "Hãy cất giữ chúng ở nơi nào đó an toàn. Chúng sẽ không được hiển thị lại."
     },
+    "deletion": {
+      "title": "Xóa tài khoản",
+      "description": "Tài khoản sẽ bị xóa ngay lập tức và không thể hoàn tác. Hãy chọn cách xử lý các bài đăng đã xuất bản của bạn.",
+      "summary": {
+        "immediate": "Hồ sơ, bình luận, phản ứng, phiếu bầu và tất cả phiên đăng nhập của bạn sẽ bị xóa.",
+        "privatePosts": "Các bài đăng không công khai còn đang soạn luôn bị xóa. Các bài đăng không công khai đã khóa được xử lý như bài đăng công khai.",
+        "username": "Tên người dùng của bạn sẽ không khả dụng trong 365 ngày."
+      },
+      "choiceLegend": "Cách xử lý bài đăng đã xuất bản",
+      "choices": {
+        "delete": {
+          "title": "Xóa các bài đăng tôi đã viết",
+          "description": "Xóa mọi bài đăng thuộc sở hữu của bạn, bao gồm cả các bản dịch do bạn thực hiện."
+        },
+        "deletedAuthor": {
+          "title": "Giữ bài đăng với tên tác giả “Tác giả đã bị xóa”",
+          "description": "Giữ các bài đăng công khai và bài đăng không công khai đã khóa mà không có chủ sở hữu, liên kết hồ sơ, mã chỉnh sửa hoặc mã định danh tài khoản."
+        },
+        "anonymous": {
+          "title": "Giữ bài đăng ở chế độ ẩn danh",
+          "description": "Giữ các bài đăng công khai và bài đăng không công khai đã khóa mà không có chủ sở hữu hoặc mối liên hệ cố định nào với bất kỳ tác giả nào."
+        }
+      },
+      "currentPassword": "Mật khẩu hiện tại",
+      "twoFactorCode": "Mã xác thực hoặc mã khôi phục",
+      "confirmationLabel": "Nhập DELETE để xác nhận",
+      "submit": "Xóa tài khoản vĩnh viễn",
+      "feedback": {
+        "missingConfirmation": "Chọn cách xử lý bài đăng, nhập mật khẩu rồi nhập DELETE.",
+        "invalidTwoFactorCode": "Mã xác thực hoặc mã khôi phục đó không hợp lệ.",
+        "invalidDisposition": "Hãy chọn cách xử lý các bài đăng đã xuất bản của bạn.",
+        "activeQuestAdmin": "Chuyển giao hoặc lưu trữ mọi nhiệm vụ đang hoạt động mà bạn quản lý trước khi xóa tài khoản.",
+        "accountNotFound": "Tài khoản này không còn tồn tại."
+      }
+    },
     "feedback": {
       "passwordChanged": "Mật khẩu của bạn đã được cập nhật.",
       "setupReady": "Quét mã QR, sau đó nhập mã gồm 6 chữ số để hoàn tất thiết lập.",

@@ -9,6 +9,7 @@
     "closeMenu": "Đóng menu chính",
     "privacy": "Chính sách bảo mật",
     "anonymousAuthor": "Ẩn danh",
+    "deletedAuthor": "Tác giả đã bị xóa",
     "uiFallbackNotice": "{requested} chưa được dịch. Hiện đang hiển thị {current}.",
     "copyButton": {
       "copy": "Sao chép",
