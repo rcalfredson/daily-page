@@ -10,7 +10,7 @@
 #nav-login,
 #nav-logout {
   display: inline-block;
-  font-family: var(--font-rubik-regular);
+  font-family: var(--font-ui-regular);
   font-size: 13px;
   padding: 0px 10px;
   margin: unset;
@@ -58,7 +58,7 @@ html[data-theme="dark"] .welcome-message__user {
 }
 
 #welcome-message {
-  font-family: var(--font-rubik-regular);
+  font-family: var(--font-ui-regular);
   font-size: 14px;
   margin: 0 6px 0 0;
   color: #333;
@@ -123,7 +123,7 @@ html[data-theme="dark"] .welcome-message__user {
 }
 
 .nav-mobile-only a {
-  font-family: var(--font-rubik-regular);
+  font-family: var(--font-ui-regular);
 }
 
 @media (max-width: 480px) {

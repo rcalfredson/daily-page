@@ -51,7 +51,7 @@ html[data-theme="dark"] .quests-page label {
 .quests-eyebrow {
   margin: 0 0 0.45rem;
   color: var(--highlight-color);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   font-size: 0.78rem;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -149,7 +149,7 @@ html[data-theme="dark"] .quests-page label {
 .quest-card__cta {
   margin-top: auto;
   color: var(--link-color);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
 }
 
 .quest-badge {
@@ -286,7 +286,7 @@ html[data-theme="dark"] .quests-page label {
   padding: 0.28rem 0.65rem;
   background: var(--secondary-bg);
   color: var(--muted-text-color);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   font-size: 0.76rem;
 }
 
@@ -320,7 +320,7 @@ html[data-theme="dark"] .quests-page label {
 }
 
 .quest-achievement-card__copy a {
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
 }
 
 .quest-achievement-card__copy span,
@@ -573,7 +573,7 @@ html[data-theme="dark"] .quests-page label {
 
 .quest-review-history summary {
   cursor: pointer;
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
 }
 
 .quest-review-history ol {
@@ -604,7 +604,7 @@ html[data-theme="dark"] .quests-page label {
 .quest-review-form > label {
   width: fit-content;
   color: var(--text-color);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   font-size: 0.9rem;
 }
 
@@ -640,7 +640,7 @@ html[data-theme="dark"] .quests-page label {
 .quest-copy-card h2,
 .quest-instructions summary {
   margin: 0;
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   font-size: 1.15rem;
 }
 
@@ -686,7 +686,7 @@ html[data-theme="dark"] .quests-page label {
 .quest-tabs a.active {
   background: var(--secondary-bg);
   color: var(--text-color);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
 }
 
 .quest-tab-panel {
@@ -889,7 +889,7 @@ html[data-theme="dark"] .quests-page .quest-button--danger {
 
 .quest-leaderboard-rank {
   color: var(--muted-text-color);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   text-align: center;
 }
 

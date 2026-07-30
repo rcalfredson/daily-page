@@ -21,9 +21,8 @@ Fonts
 }
 
 /*
- * Rubik does not include precomposed Vietnamese characters. Be Vietnam Pro
- * is used for the complete Vietnamese UI so the browser never mixes typefaces
- * within a word. The bundled files are licensed under the SIL OFL; see
+ * Be Vietnam Pro is the default UI typeface for every script it supports.
+ * The bundled files are licensed under the SIL OFL; see
  * assets/fonts/LICENSE-BeVietnamPro.txt.
  */
 @font-face {
@@ -83,9 +82,9 @@ General
 ****************/
 
 :root {
-  --font-rubik-light: 'Rubik-Light', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-  --font-rubik-regular: 'Rubik-Regular', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-  --font-rubik-medium: 'Rubik-Medium', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-ui-light: 'BeVietnamPro-Light', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-ui-regular: 'BeVietnamPro-Regular', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-ui-medium: 'BeVietnamPro-Medium', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
   --primary-bg: #ffffff;
   --secondary-bg: #f9f9f9;
   --text-color: #333;
@@ -111,10 +110,55 @@ General
   --z-popover: 930;    /* language switcher + its dropdown */
 }
 
-html:lang(vi) {
-  --font-rubik-light: 'BeVietnamPro-Light', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-  --font-rubik-regular: 'BeVietnamPro-Regular', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-  --font-rubik-medium: 'BeVietnamPro-Medium', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+/* Be Vietnam Pro keeps Latin text consistent; Rubik supplies Cyrillic and Hebrew. */
+html:lang(ru),
+html:lang(he) {
+  --font-ui-light: 'BeVietnamPro-Light', 'Rubik-Light', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-ui-regular: 'BeVietnamPro-Regular', 'Rubik-Regular', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-ui-medium: 'BeVietnamPro-Medium', 'Rubik-Medium', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+
+/* Noto supplies scripts neither bundled family covers, after Be handles Latin text. */
+html:lang(el) {
+  --font-ui-light: 'BeVietnamPro-Light', 'Noto Sans', system-ui, sans-serif;
+  --font-ui-regular: 'BeVietnamPro-Regular', 'Noto Sans', system-ui, sans-serif;
+  --font-ui-medium: 'BeVietnamPro-Medium', 'Noto Sans', system-ui, sans-serif;
+}
+
+html:lang(ar) {
+  --font-ui-light: 'BeVietnamPro-Light', 'Noto Sans Arabic', Tahoma, Arial, sans-serif;
+  --font-ui-regular: 'BeVietnamPro-Regular', 'Noto Sans Arabic', Tahoma, Arial, sans-serif;
+  --font-ui-medium: 'BeVietnamPro-Medium', 'Noto Sans Arabic', Tahoma, Arial, sans-serif;
+}
+
+html:lang(hi) {
+  --font-ui-light: 'BeVietnamPro-Light', 'Noto Sans Devanagari', 'Nirmala UI', Mangal, sans-serif;
+  --font-ui-regular: 'BeVietnamPro-Regular', 'Noto Sans Devanagari', 'Nirmala UI', Mangal, sans-serif;
+  --font-ui-medium: 'BeVietnamPro-Medium', 'Noto Sans Devanagari', 'Nirmala UI', Mangal, sans-serif;
+}
+
+html:lang(th) {
+  --font-ui-light: 'BeVietnamPro-Light', 'Noto Sans Thai', Thonburi, Tahoma, sans-serif;
+  --font-ui-regular: 'BeVietnamPro-Regular', 'Noto Sans Thai', Thonburi, Tahoma, sans-serif;
+  --font-ui-medium: 'BeVietnamPro-Medium', 'Noto Sans Thai', Thonburi, Tahoma, sans-serif;
+}
+
+html:lang(ja) {
+  --font-ui-light: 'BeVietnamPro-Light', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-ui-regular: 'BeVietnamPro-Regular', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-ui-medium: 'BeVietnamPro-Medium', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+}
+
+html:lang(ko) {
+  --font-ui-light: 'BeVietnamPro-Light', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --font-ui-regular: 'BeVietnamPro-Regular', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --font-ui-medium: 'BeVietnamPro-Medium', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+}
+
+html:lang(zh) {
+  --font-ui-light: 'BeVietnamPro-Light', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-ui-regular: 'BeVietnamPro-Regular', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-ui-medium: 'BeVietnamPro-Medium', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
 html[data-theme="dark"] {
@@ -145,7 +189,7 @@ html {
 }
 
 body {
-  font-family: var(--font-rubik-light);
+  font-family: var(--font-ui-light);
   background-color: var(--primary-bg);
   color: var(--text-color);
   margin: 0;
@@ -240,7 +284,7 @@ a.brand {
 h1 {
   margin: 0 0 0 0px;
   padding-bottom: 20px;
-  font-family: var(--font-rubik-regular);
+  font-family: var(--font-ui-regular);
 }
 
 h2 {
@@ -467,7 +511,7 @@ tbody tr:last-child {
 }
 
 strong {
-  font-family: var(--font-rubik-regular);
+  font-family: var(--font-ui-regular);
 }
 
 .hide,
@@ -497,7 +541,7 @@ NavBar
 }
 
 .main-menu div a {
-  font-family: var(--font-rubik-regular);
+  font-family: var(--font-ui-regular);
 }
 
 a.brand {
@@ -517,6 +561,7 @@ a.brand {
 }
 
 .logo {
+  font-family: 'BeVietnamPro-Medium', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
   transition: all 0.3s ease-in-out 0s;
   padding-left: 0;          /* because spacing is handled by gap now */
   white-space: nowrap;
@@ -1061,7 +1106,7 @@ button {
   border-radius: 5px;
   border: 1px solid rgb(17, 87, 170);
   margin: 0 0 10px 10px;
-  font-family: var(--font-rubik-light);
+  font-family: var(--font-ui-light);
   font-size: 12px;
   line-height: 32px;
   color: rgb(17, 87, 170);
@@ -1181,7 +1226,7 @@ Archive and static pages
 }
 
 #viewer {
-  font-family: var(--font-rubik-light);
+  font-family: var(--font-ui-light);
   padding-left: 20px;
 }
 
@@ -1264,7 +1309,7 @@ CodeMirror
 }
 
 .CodeMirror pre {
-  font-family: var(--font-rubik-regular);
+  font-family: var(--font-ui-regular);
   font-size: 21px;
 }
 

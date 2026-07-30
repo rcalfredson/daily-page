@@ -17,7 +17,7 @@
 .forest-lab__eyebrow {
   margin: 0 0 0.4rem;
   color: var(--highlight-color);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -96,7 +96,7 @@
 .forest-comparison__title {
   margin: 0;
   padding: 0.8rem 0.8rem 0.2rem;
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   font-size: 0.92rem;
 }
 
@@ -104,7 +104,7 @@
   margin: 0;
   padding: 0 0.8rem 0.35rem;
   color: var(--highlight-color);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   font-size: 0.72rem;
 }
 
@@ -308,7 +308,7 @@
   padding: 0.65rem 0.9rem;
   background: var(--highlight-color);
   color: var(--highlight-contrast);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   text-decoration: none;
 }
 

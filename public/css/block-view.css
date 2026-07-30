@@ -64,7 +64,7 @@ hr {
 .block-quest-card__name,
 .block-quest-card__action {
   color: var(--link-color);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
 }
 
 .block-quest-card__item,

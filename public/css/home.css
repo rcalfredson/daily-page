@@ -69,7 +69,7 @@
 
 .home-quests-card__link {
   color: var(--link-color);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   white-space: nowrap;
 }
 

@@ -48,7 +48,7 @@ html[data-theme='dark'] .activity-forest label {
 .activity-forest__eyebrow {
   margin: 0 0 0.35rem;
   color: var(--highlight-color);
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -586,7 +586,7 @@ html[data-theme='dark'] .activity-forest .activity-forest__object-text-label inp
 
 .activity-forest__diagnostics dd {
   margin: 0.15rem 0 0;
-  font-family: var(--font-rubik-medium);
+  font-family: var(--font-ui-medium);
   font-size: 0.82rem;
 }
 

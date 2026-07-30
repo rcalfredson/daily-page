@@ -1,5 +1,8 @@
 doctype html
 - const htmlLang = uiLang || lang || 'en';
+- const baseLang = htmlLang.split('-')[0];
+- const notoFamilyByLang = { el: 'Noto+Sans', ar: 'Noto+Sans+Arabic', hi: 'Noto+Sans+Devanagari', th: 'Noto+Sans+Thai', ja: 'Noto+Sans+JP', ko: 'Noto+Sans+KR', zh: 'Noto+Sans+SC' };
+- const notoFamily = notoFamilyByLang[baseLang];
 html(lang=htmlLang dir=(uiDir || 'ltr'))
   head
     block head
@@ -13,12 +16,15 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
         each alt in hreflang
           link(rel="alternate" hreflang=alt.lang href=alt.href)
       meta(name="viewport" content="width=device-width, initial-scale=1.0")
-      if htmlLang === 'vi'
-        link(rel="preload" href="/assets/fonts/BeVietnamPro-Light.ttf" as="font" type="font/ttf" crossorigin)
-        link(rel="preload" href="/assets/fonts/BeVietnamPro-Medium.ttf" as="font" type="font/ttf" crossorigin)
-      else
+      link(rel="preload" href="/assets/fonts/BeVietnamPro-Medium.ttf" as="font" type="font/ttf" crossorigin)
+      link(rel="preload" href="/assets/fonts/BeVietnamPro-Light.ttf" as="font" type="font/ttf" crossorigin)
+      if baseLang === 'ru' || baseLang === 'he'
         link(rel="preload" href="/assets/fonts/Rubik-Light.ttf" as="font" type="font/ttf" crossorigin)
         link(rel="preload" href="/assets/fonts/Rubik-Medium.ttf" as="font" type="font/ttf" crossorigin)
+      else if notoFamily
+        link(rel="preconnect" href="https://fonts.googleapis.com")
+        link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
+        link(rel="stylesheet" href=`https://fonts.googleapis.com/css2?family=${notoFamily}:wght@300..800&display=swap`)
       script.
         (function () {
           try {
@@ -70,7 +76,7 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
               loading="eager"
               decoding="async"
             )
-            span.logo= t('layout.siteName')
+            span.logo Daily Page
           a(href="#main-menu"
             id="main-menu-toggle"
             class="menu-toggle"
