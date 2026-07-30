@@ -9,6 +9,7 @@
     "closeMenu": "ปิดเมนูหลัก",
     "privacy": "ข้อกําหนดปริยาย",
     "anonymousAuthor": "นิรนาม",
+    "deletedAuthor": "ผู้เขียนที่ลบบัญชีแล้ว",
     "uiFallbackNotice": "{requested} ยังแปลไม่ได้ ปัจจุบันมี {current}.",
     "copyButton": {
       "copy": "คัดลอก",
