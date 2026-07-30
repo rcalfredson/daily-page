@@ -62,6 +62,41 @@
       "warning": "请将它们保存在安全位置。它们不会再次显示。",
       "regenerateDescription": "如果你丢失了之前的恢复代码，请生成一组新的恢复代码。这会使旧代码失效。",
       "regenerate": "生成新的恢复代码"
+    },
+    "deletion": {
+      "title": "删除账户",
+      "description": "账户将被立即删除，且无法撤销。请选择如何处理你已发布的帖子。",
+      "summary": {
+        "immediate": "你的个人资料、评论、反应、投票和所有登录会话都将被删除。",
+        "privatePosts": "进行中的未列出帖子一律会被删除。已锁定的未列出帖子会按公开帖子处理。",
+        "username": "你的用户名将在 365 天内无法使用。"
+      },
+      "choiceLegend": "已发布帖子的处理方式",
+      "choices": {
+        "delete": {
+          "title": "删除我创作的帖子",
+          "description": "删除你拥有的所有帖子，包括你创作的翻译帖子。"
+        },
+        "deletedAuthor": {
+          "title": "保留帖子并标注为“已删除作者”",
+          "description": "保留公开帖子和已锁定的未列出帖子，且不附带所有者、个人资料链接、编辑令牌或账户标识符。"
+        },
+        "anonymous": {
+          "title": "匿名保留帖子",
+          "description": "保留公开帖子和已锁定的未列出帖子，且没有所有者，也不会与任何作者建立稳定关联。"
+        }
+      },
+      "currentPassword": "当前密码",
+      "twoFactorCode": "认证器代码或恢复代码",
+      "confirmationLabel": "输入 DELETE 以确认",
+      "submit": "永久删除账户",
+      "feedback": {
+        "missingConfirmation": "请选择帖子处理方式，输入密码，然后输入 DELETE。",
+        "invalidTwoFactorCode": "该认证器代码或恢复代码无效。",
+        "invalidDisposition": "请选择如何处理你已发布的帖子。",
+        "activeQuestAdmin": "删除账户前，请移交或归档你管理的所有活跃任务。",
+        "accountNotFound": "此账户已不存在。"
+      }
     }
   }
 }
