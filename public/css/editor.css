@@ -410,7 +410,7 @@ button.toolbar-insert-button i {
   min-width: 50px;
   max-width: min(300px, 100%);
   font-size: clamp(1.3rem, 3vw, 1.5rem);
-  font-family: var(--font-rubik-regular);
+  font-family: var(--font-ui-regular);
   color: var(--text-color);
   border: 1px solid var(--border-color);
   padding: 4px 8px;
@@ -464,7 +464,7 @@ button.toolbar-insert-button i {
 
 /* Ensure the textarea doesn't overlap the edit button */
 #description-edit {
-  font-family: var(--font-rubik-light);
+  font-family: var(--font-ui-light);
   margin-top: 15px;
 }
 
