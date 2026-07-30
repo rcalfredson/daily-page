@@ -45,6 +45,41 @@
       "regenerate": "Luo uudet palautuskoodit",
       "warning": "Säilytä ne turvallisessa paikassa. Niitä ei näytetä uudelleen."
     },
+    "deletion": {
+      "title": "Tilin poistaminen",
+      "description": "Tili poistetaan välittömästi, eikä poistoa voi perua. Valitse, miten julkaistuja tekstejäsi käsitellään.",
+      "summary": {
+        "immediate": "Profiilisi, kommenttisi, reaktiosi, äänesi ja kaikki kirjautumisistuntosi poistetaan.",
+        "privatePosts": "Keskeneräiset listaamattomat julkaisut poistetaan aina. Lukittuja listaamattomia julkaisuja käsitellään julkisten julkaisujen tavoin.",
+        "username": "Käyttäjänimesi ei ole käytettävissä 365 päivään."
+      },
+      "choiceLegend": "Julkaisujesi käsittely",
+      "choices": {
+        "delete": {
+          "title": "Poista kirjoittamani julkaisut",
+          "description": "Poista kaikki omistamasi julkaisut, mukaan lukien kirjoittamasi käännökset."
+        },
+        "deletedAuthor": {
+          "title": "Säilytä julkaisut merkinnällä ”Poistettu tekijä”",
+          "description": "Säilytä julkiset ja lukitut listaamattomat julkaisut ilman omistajaa, profiililinkkiä, muokkaustunnusta tai tilin tunnistetta."
+        },
+        "anonymous": {
+          "title": "Säilytä julkaisut nimettöminä",
+          "description": "Säilytä julkiset ja lukitut listaamattomat julkaisut ilman omistajaa tai pysyvää yhteyttä kehenkään tekijään."
+        }
+      },
+      "currentPassword": "Nykyinen salasana",
+      "twoFactorCode": "Tunnistussovelluksen koodi tai palautuskoodi",
+      "confirmationLabel": "Vahvista kirjoittamalla DELETE",
+      "submit": "Poista tili pysyvästi",
+      "feedback": {
+        "missingConfirmation": "Valitse, mitä julkaisuille tehdään, syötä salasanasi ja kirjoita DELETE.",
+        "invalidTwoFactorCode": "Tunnistussovelluksen koodi tai palautuskoodi ei toiminut.",
+        "invalidDisposition": "Valitse, miten julkaistuja tekstejäsi käsitellään.",
+        "activeQuestAdmin": "Siirrä tai arkistoi jokainen hallinnoimasi aktiivinen tehtävä ennen tilisi poistamista.",
+        "accountNotFound": "Tätä tiliä ei enää ole."
+      }
+    },
     "feedback": {
       "passwordChanged": "Salasanasi päivitettiin.",
       "setupReady": "Skannaa QR-koodi ja viimeistele määritys syöttämällä 6-numeroinen koodi.",

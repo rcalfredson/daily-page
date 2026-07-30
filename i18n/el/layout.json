@@ -9,6 +9,7 @@
     "closeMenu": "Κλείσιμο κύριου μενού",
     "privacy": "Πολιτική απορρήτου",
     "anonymousAuthor": "Ανώνυμος",
+    "deletedAuthor": "Διαγραμμένος συντάκτης",
     "uiFallbackNotice": "Η γλώσσα {requested} δεν έχει μεταφραστεί ακόμη. Προς το παρόν εμφανίζεται η γλώσσα {current}.",
     "copyButton": { "copy": "Αντιγραφή", "copied": "Αντιγράφηκε!" },
     "copyright": "© {year}",

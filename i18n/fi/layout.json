@@ -9,6 +9,7 @@
     "closeMenu": "Sulje päävalikko",
     "privacy": "Tietosuojakäytäntö",
     "anonymousAuthor": "Nimetön",
+    "deletedAuthor": "Poistettu tekijä",
     "uiFallbackNotice": "{requested} ei ole vielä käännetty. Näytetään toistaiseksi {current}.",
     "copyButton": {
       "copy": "Kopioi",
