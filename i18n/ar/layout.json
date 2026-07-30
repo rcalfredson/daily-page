@@ -9,6 +9,7 @@
     "closeMenu": "إغلاق القائمة الرئيسية",
     "privacy": "سياسة الخصوصية",
     "anonymousAuthor": "مجهول",
+    "deletedAuthor": "مؤلف محذوف",
     "uiFallbackNotice": "{requested} لم تتم ترجمته بعد. يتم الآن عرض {current} في الوقت الحالي.",
     "copyButton": {
       "copy": "ينسخ",
