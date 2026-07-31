@@ -87,7 +87,7 @@ const blockSchema = new Schema({
   },
   roomId: { type: String, required: true, index: true },
   creator: { type: String, required: true },
-  userId: { type: String, required: false, index: true },
+  userId: { type: String, required: false },
   authorshipState: {
     type: String,
     enum: ['live', 'deleted-author', 'anonymous'],
@@ -157,6 +157,7 @@ blockSchema.index({ groupId: 1, lang: 1 }, { unique: true });
 blockSchema.index({ creator: 1, createdAt: -1 });
 blockSchema.index({ collaborators: 1, createdAt: -1 });
 blockSchema.index({ updatedAt: -1, roomId: 1 });
+blockSchema.index({ userId: 1, _id: 1 });
 
 // Text search index for MVP search
 // Notes:
