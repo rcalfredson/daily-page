@@ -757,9 +757,13 @@ hr {
 
 .interact-section {
   display: flex;
+  flex: 1 1 34rem;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.5rem;
+  max-width: 50rem;
+  min-width: 0;
   margin-left: auto;
   align-self: flex-start;
 }
@@ -771,7 +775,8 @@ hr {
   }
 
   .title-main {
-    flex-basis: 0;
+    flex-basis: 36rem;
+    min-width: min(100%, 34rem);
   }
 
   .block-meta-card {
@@ -785,8 +790,11 @@ hr {
 
 .interact-section a.block-edit-btn,
 .interact-section button.delete-btn,
-.interact-section button.share-btn {
-  white-space: nowrap;
+.interact-section button.share-btn,
+.interact-section #flag-block-btn {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .block-edit-btn,
@@ -884,20 +892,20 @@ hr {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
+  justify-content: flex-end;
   gap: 0.5rem;
   margin-top: 0.5rem;
   align-content: flex-start;
+  width: 100%;
 }
 
 .action-buttons.left-align {
   justify-content: flex-start;
 }
 
-.action-buttons>* {
-  flex-shrink: 0;
-  /* Don't allow buttons to shrink */
-  min-width: max-content;
-  /* Makes them only as small as their content */
+.action-buttons > * {
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 #flag-block-btn {
