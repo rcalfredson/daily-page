@@ -22,7 +22,8 @@
     "collaborators:cleanup": "node scripts/migrations/cleanBlockCollaborators.js",
     "visibility:migrate-unlisted": "node scripts/migrations/migratePrivateVisibilityToUnlisted.js",
     "quest:import": "node scripts/quests/importQuest.js",
-    "account-deletion:fixture": "node scripts/dev/accountDeletionFixture.js"
+    "account-deletion:fixture": "node scripts/dev/accountDeletionFixture.js",
+    "forest:placement-preview": "node scripts/dev/renderForestOwnerGrovePlacementPreview.js"
   },
   "repository": {
     "type": "git",
