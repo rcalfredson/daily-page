@@ -16,7 +16,7 @@ import {
 
 export const FOREST_OWNER_TREE_RECONSTRUCTION_VERSION = 1;
 export const FOREST_OWNER_TREE_IDENTITY_VERSION = 1;
-export const FOREST_OWNER_TREE_PLACEMENT_VERSION = 1;
+export const FOREST_OWNER_TREE_RECONSTRUCTION_PLACEMENT_VERSION = 1;
 
 const DEFAULT_WORLD = Object.freeze({
   width: 3_200,
@@ -95,10 +95,10 @@ export function deriveForestOwnerTreeId({
   return `writing-tree-${shortDigest(`owner-tree:${version}:${owner}:${group}`)}`;
 }
 
-export function deriveForestOwnerTreePlacement({
+export function deriveForestOwnerTreeReconstructionPlacement({
   ownerUserId,
   groupId,
-  placementVersion = FOREST_OWNER_TREE_PLACEMENT_VERSION,
+  placementVersion = FOREST_OWNER_TREE_RECONSTRUCTION_PLACEMENT_VERSION,
   world,
 }) {
   const owner = requireString(ownerUserId, 'ownerUserId');
@@ -186,7 +186,7 @@ function reconstructWith({
         height: normalizedWorld.height,
       },
     });
-  const placement = deriveForestOwnerTreePlacement({
+  const placement = deriveForestOwnerTreeReconstructionPlacement({
     ownerUserId: selection.ownerUserId,
     groupId: selection.translationGroupId,
     placementVersion,
@@ -249,7 +249,7 @@ export function buildForestOwnerTreeReconstructor({
     environmentManifest,
     world = DEFAULT_WORLD,
     identityVersion = FOREST_OWNER_TREE_IDENTITY_VERSION,
-    placementVersion = FOREST_OWNER_TREE_PLACEMENT_VERSION,
+    placementVersion = FOREST_OWNER_TREE_RECONSTRUCTION_PLACEMENT_VERSION,
   }) {
     return reconstructWith({
       selection,
