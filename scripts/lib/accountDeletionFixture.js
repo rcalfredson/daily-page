@@ -18,6 +18,24 @@ export function fixtureObjectId(scenario, key) {
     .slice(0, 24);
 }
 
+export function fixtureUuid(scenario, key) {
+  const hex = crypto
+    .createHash('sha256')
+    .update(`${ACCOUNT_DELETION_FIXTURE_TAG}:${scenario}:${key}`)
+    .digest('hex')
+    .slice(0, 32)
+    .split('');
+  hex[12] = '4';
+  hex[16] = '8';
+  return [
+    hex.slice(0, 8).join(''),
+    hex.slice(8, 12).join(''),
+    hex.slice(12, 16).join(''),
+    hex.slice(16, 20).join(''),
+    hex.slice(20).join('')
+  ].join('-');
+}
+
 export function assertFixtureScenario(scenario) {
   if (!ACCOUNT_DELETION_FIXTURE_SCENARIOS.includes(scenario)) {
     throw new Error(
@@ -482,6 +500,79 @@ export function buildAccountDeletionFixture({
     updatedAt: fixtureDate(now, 120)
   };
 
+  const forestId = fixtureUuid(scenario, 'forest:owner-world');
+  const forestOwnerWorld = {
+    forestId,
+    ownerUserId: owner._id,
+    worldSeed: crypto
+      .createHash('sha256')
+      .update(`${ACCOUNT_DELETION_FIXTURE_TAG}:${scenario}:forest-seed`)
+      .digest('base64url'),
+    placementPolicyVersion: 1,
+    nextCandidateSlot: 3,
+    placementRevision: 1,
+    environmentPolicyVersion: 1,
+    environmentSchemaVersion: 1,
+    worldGenerationVersion: 1,
+    createdAt: fixtureDate(now, 116),
+    updatedAt: fixtureDate(now, 116)
+  };
+  const forestSourcePosts = [
+    posts.ownerPublicDraft,
+    posts.ownerPublicLocked,
+    posts.ownerUnlistedLocked
+  ];
+  const forestWritingTrees = forestSourcePosts.map((post, slot) => ({
+    writingTreeId: fixtureUuid(scenario, `forest:writing-tree:${slot}`),
+    forestId,
+    ownerUserId: owner._id,
+    translationGroupId: post.groupId,
+    sourceStateChangedAt: post.createdAt,
+    foundingSource: {
+      blockId: post._id,
+      createdAt: post.createdAt
+    },
+    placement: {
+      policyVersion: 1,
+      slot,
+      worldX: (slot - 1) * 96,
+      worldY: slot * 72
+    },
+    placementIndex: {
+      version: 1,
+      cellX: slot - 1,
+      cellY: slot
+    },
+    originatingEnvironment: {
+      policyVersion: 1,
+      schemaVersion: 1,
+      worldGenerationVersion: 1,
+      regionId: 'fixture-grove',
+      habitatId: 'fixture-habitat',
+      groundSurfaceId: 'fixture-ground',
+      transitionState: 'fixture-core'
+    },
+    projection: {
+      revision: 1,
+      schemaVersion: 1,
+      mappingVersion: 1,
+      specimenSeed: slot + 1,
+      phenotypeId: 'open-crown-deciduous',
+      phenotypeAssetVersion: 1,
+      creationSeason: 'summer',
+      foliagePaletteId: 'summer-green',
+      projectionFingerprint: `fixture-v1:seed-${slot + 1}:open-crown-deciduous@1`,
+      visualFingerprint: `fixture-v1:summer-green:${slot + 1}`
+    },
+    policyEvidence: {
+      ownerWritingPolicyVersion: 2,
+      ownerVariantSelectionVersion: 1,
+      writingLifecyclePolicyVersion: 1
+    },
+    createdAt: post.createdAt,
+    updatedAt: post.updatedAt
+  }));
+
   return {
     scenario,
     users,
@@ -496,6 +587,8 @@ export function buildAccountDeletionFixture({
     sessions,
     backups,
     quest,
+    forestOwnerWorld,
+    forestWritingTrees,
     ids: {
       userIds: Object.values(users).map((user) => user._id),
       postIds: Object.values(posts).map((post) => post._id),
@@ -506,7 +599,9 @@ export function buildAccountDeletionFixture({
       commentReportIds: commentReports.map((report) => report._id),
       authSessionIds: authSessions.map((session) => session._id),
       rateEventIds: rateEvents.map((event) => event._id),
-      questId: quest._id
+      questId: quest._id,
+      forestId,
+      writingTreeIds: forestWritingTrees.map((tree) => tree.writingTreeId)
     }
   };
 }

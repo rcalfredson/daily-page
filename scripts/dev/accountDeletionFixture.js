@@ -25,6 +25,10 @@ import {
   cleanUpAccountDeletionForests
 } from '../../server/services/accountDeletionForestCleanup.js';
 import {
+  acquireForestLedgerFence,
+  ForestLedgerFenceError
+} from '../../server/services/forestLedgerFence.js';
+import {
   ACCOUNT_DELETION_FIXTURE_ROOM_ID,
   ACCOUNT_DELETION_FIXTURE_SCENARIOS,
   ACCOUNT_DELETION_FIXTURE_TAG,
@@ -107,6 +111,8 @@ async function connectFixtureDatabase() {
   }
   await repairFixtureTtlIndex(UsernameReservation, 'expiresAt');
   await AccountDeletionRequest.createIndexes();
+  await ForestOwnerWorld.createIndexes();
+  await ForestWritingTree.createIndexes();
   await UsernameReservation.createIndexes();
 }
 
@@ -322,6 +328,8 @@ async function seedFixtureScenario(scenario, { activeQuest = false } = {}) {
     await Session.insertMany(fixture.sessions, { session });
     await Backup.insertMany(fixture.backups, { session });
     await Quest.create([fixture.quest], { session });
+    await ForestOwnerWorld.create([fixture.forestOwnerWorld], { session });
+    await ForestWritingTree.insertMany(fixture.forestWritingTrees, { session });
   });
 
   const baseUrl = String(process.env.BASE_URL || 'http://localhost:3000').replace(/\/+$/u, '');
@@ -369,7 +377,16 @@ function makeCheckCollector() {
 async function verifyBefore(scenario) {
   const fixture = scenarioDefinition(scenario);
   const check = makeCheckCollector();
-  const [users, posts, comments, notifications, activeSessions, quest] = await Promise.all([
+  const [
+    users,
+    posts,
+    comments,
+    notifications,
+    activeSessions,
+    quest,
+    forestOwnerWorld,
+    forestWritingTreeCount
+  ] = await Promise.all([
     User.find({ _id: { $in: fixture.ids.userIds } }).lean(),
     Block.find({ _id: { $in: fixture.ids.postIds } }).lean(),
     BlockComment.find({ _id: { $in: fixture.ids.commentIds } }).lean(),
@@ -379,7 +396,9 @@ async function verifyBefore(scenario) {
       revokedAt: null,
       expiresAt: { $gt: new Date() }
     }),
-    Quest.findById(fixture.ids.questId).lean()
+    Quest.findById(fixture.ids.questId).lean(),
+    ForestOwnerWorld.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
+    ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id })
   ]);
 
   check.expect('three fixture accounts exist', users.length === 3, users.length);
@@ -388,6 +407,16 @@ async function verifyBefore(scenario) {
   check.expect('four notifications exist', notifications.length === 4, notifications.length);
   check.expect('owner has a second active session', activeSessions >= 1, activeSessions);
   check.expect('quest guard record exists', Boolean(quest), quest?.status || null);
+  check.expect(
+    'active owner forest exists',
+    forestOwnerWorld?.status === 'active',
+    forestOwnerWorld?.status || null
+  );
+  check.expect(
+    'three owner writing trees exist',
+    forestWritingTreeCount === 3,
+    forestWritingTreeCount
+  );
   check.expect(
     'in-progress unlisted post is present before deletion',
     posts.some((post) => String(post._id) === fixture.posts.ownerUnlistedDraft._id),
@@ -426,7 +455,9 @@ async function verifyAfter(scenario) {
     collaborationSessions,
     collaborationBackups,
     staleUsernameReferences,
-    quest
+    quest,
+    forestOwnerWorld,
+    forestWritingTreeCount
   ] = await Promise.all([
     User.findById(fixture.users.owner._id).lean(),
     AccountDeletionRequest.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
@@ -450,7 +481,9 @@ async function verifyAfter(scenario) {
         { originalAuthor: fixture.users.owner.username }
       ]
     }),
-    Quest.findById(fixture.ids.questId).lean()
+    Quest.findById(fixture.ids.questId).lean(),
+    ForestOwnerWorld.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
+    ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id })
   ]);
 
   const commentsById = new Map(comments.map((comment) => [String(comment._id), comment]));
@@ -475,6 +508,12 @@ async function verifyAfter(scenario) {
       forestCleanup: request.forestCleanup,
       evidenceExpiresAt: request.evidenceExpiresAt
     } : null
+  );
+  check.expect('owner forest is deleted', forestOwnerWorld === null, forestOwnerWorld);
+  check.expect(
+    'owner writing trees are deleted',
+    forestWritingTreeCount === 0,
+    forestWritingTreeCount
   );
   check.expect(
     'username is quarantined',
@@ -630,15 +669,105 @@ async function archiveQuest(scenario) {
 
 async function deleteDirect(scenario) {
   const fixture = scenarioDefinition(scenario);
+  await withTransaction(async (session) => {
+    await acquireForestLedgerFence({
+      ownerUserId: fixture.users.owner._id,
+      session
+    });
+  });
+  const fencedOwner = await User.findById(fixture.users.owner._id).lean();
+  if (fencedOwner?.forestLedgerFence !== 1) {
+    throw new Error('Forest ledger transaction fence did not persist before deletion.');
+  }
+
   const result = await deleteAccount({
     userId: fixture.users.owner._id,
     disposition: scenario
   });
-  await cleanUpAccountDeletionForests({
+
+  const [deletingWorld, pendingRequest, treesBeforeCleanup] = await Promise.all([
+    ForestOwnerWorld.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
+    AccountDeletionRequest.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
+    ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id })
+  ]);
+  if (deletingWorld?.status !== 'deleting'
+    || pendingRequest?.forestCleanup?.status !== 'pending'
+    || pendingRequest?.evidenceExpiresAt
+    || treesBeforeCleanup !== 3) {
+    throw new Error('Deletion transaction did not establish the pending forest-cleanup boundary.');
+  }
+
+  let postDeletionFenceFailedClosed = false;
+  try {
+    await withTransaction(session => acquireForestLedgerFence({
+      ownerUserId: fixture.users.owner._id,
+      session
+    }));
+  } catch (error) {
+    postDeletionFenceFailedClosed = error instanceof ForestLedgerFenceError
+      && error.code === 'FOREST_OWNER_UNAVAILABLE';
+  }
+  if (!postDeletionFenceFailedClosed) {
+    throw new Error('Forest ledger fence did not fail closed after account deletion.');
+  }
+
+  const firstCleanup = await cleanUpAccountDeletionForests({
     limit: 1,
-    ownerUserId: fixture.users.owner._id
+    ownerUserId: fixture.users.owner._id,
+    treeBatchSize: 2,
+    maxTreeBatchesPerRequest: 1
   });
+  const [requestAfterFirstCleanup, treesAfterFirstCleanup, worldAfterFirstCleanup] = await Promise.all([
+    AccountDeletionRequest.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
+    ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestOwnerWorld.exists({ ownerUserId: fixture.users.owner._id })
+  ]);
+  if (firstCleanup.deletedTrees !== 2
+    || firstCleanup.pending !== 1
+    || treesAfterFirstCleanup !== 1
+    || !worldAfterFirstCleanup
+    || requestAfterFirstCleanup?.forestCleanup?.status !== 'pending'
+    || requestAfterFirstCleanup?.evidenceExpiresAt) {
+    throw new Error('Bounded forest cleanup did not remain pending after its first batch.');
+  }
+
+  const secondCleanup = await cleanUpAccountDeletionForests({
+    limit: 1,
+    ownerUserId: fixture.users.owner._id,
+    treeBatchSize: 2,
+    maxTreeBatchesPerRequest: 1
+  });
+  if (secondCleanup.deletedTrees !== 1 || secondCleanup.pending !== 1) {
+    throw new Error('Forest cleanup did not resume its bounded tree drain.');
+  }
+
+  const finalCleanup = await cleanUpAccountDeletionForests({
+    limit: 1,
+    ownerUserId: fixture.users.owner._id,
+    treeBatchSize: 2,
+    maxTreeBatchesPerRequest: 1
+  });
+  const idempotentCleanup = await cleanUpAccountDeletionForests({
+    limit: 1,
+    ownerUserId: fixture.users.owner._id,
+    treeBatchSize: 2,
+    maxTreeBatchesPerRequest: 1
+  });
+  if (finalCleanup.completed !== 1
+    || finalCleanup.deletedWorlds !== 1
+    || idempotentCleanup.requests !== 0) {
+    throw new Error('Forest cleanup did not converge idempotently.');
+  }
+
   console.log('Direct account-deletion service result:', result);
+  console.log('Forest cleanup integration passes:', {
+    fenceBeforeDeletion: fencedOwner.forestLedgerFence,
+    postDeletionFenceFailedClosed,
+    firstCleanup,
+    secondCleanup,
+    finalCleanup,
+    idempotentCleanup
+  });
   console.log(`Run: npm run account-deletion:fixture -- verify-after ${scenario}`);
 }
 
