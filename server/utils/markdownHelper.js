@@ -245,3 +245,35 @@ export function renderMarkdownPreview(content, opts) {
 export function renderMarkdownContent(content, opts) {
   return renderMarkdownFull(content, opts);
 }
+
+/**
+ * Extracts readable text from Markdown without passing rendered HTML into
+ * metadata attributes. This intentionally ignores image URLs while retaining
+ * their alt text.
+ *
+ * @param {string} content
+ * @returns {string}
+ */
+export function markdownToPlainText(content) {
+  const cleaned = content ? String(content).replace(/\u200B/g, '').trim() : '';
+  if (!cleaned) return '';
+
+  const tokens = md.parse(cleaned, { allowStreetViewEmbeds: false });
+  const parts = [];
+
+  for (const token of tokens) {
+    if (token.type === 'inline' && Array.isArray(token.children)) {
+      for (const child of token.children) {
+        if (['text', 'code_inline', 'image'].includes(child.type) && child.content) {
+          parts.push(child.content);
+        } else if (['softbreak', 'hardbreak'].includes(child.type)) {
+          parts.push(' ');
+        }
+      }
+    } else if (['fence', 'code_block'].includes(token.type) && token.content) {
+      parts.push(token.content);
+    }
+  }
+
+  return parts.join(' ').replace(/\s+/g, ' ').trim();
+}

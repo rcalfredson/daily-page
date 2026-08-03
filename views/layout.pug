@@ -12,6 +12,7 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
         meta(name="description" content=description)
       if canonicalUrl
         link(rel="canonical" href=canonicalUrl)
+      include partials/_social_meta
       if hreflang
         each alt in hreflang
           link(rel="alternate" hreflang=alt.lang href=alt.href)

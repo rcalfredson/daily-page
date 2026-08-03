@@ -1,7 +1,7 @@
 {
   "blockView": {
     "meta": {
-      "title": "पोस्ट - {blockTitle}",
+      "title": "{blockTitle} | Daily Page",
       "titleFallback": "अवरोध पैदा करना"
     },
     "labels": {

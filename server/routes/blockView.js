@@ -29,6 +29,7 @@ import {
   parseEditTokens
 } from '../utils/block.js';
 import { canonicalBlockPath } from '../utils/canonical.js';
+import { buildPostSeo } from '../utils/postSeo.js';
 
 const router = express.Router();
 const INITIAL_COMMENT_LIMIT = 20;
@@ -216,13 +217,11 @@ router.get(
         }
         : null;
 
-      // Page title i18n w/ safe fallback
-      const key = 'blockView.meta.title';
-      const raw = t(key, { blockTitle: block.title });
-      const title =
-        raw && raw !== key
-          ? raw
-          : `${t('blockView.meta.titleFallback')} - ${block.title}`;
+      const seo = buildPostSeo(block, {
+        siteName: t('layout.siteName'),
+        baseUrl: res.locals.baseUrl,
+        canonicalUrl: res.locals.canonicalUrl
+      });
 
       const focusedThreadAlreadyIncluded = Boolean(
         focusedCommentData?.topLevelCommentId &&
@@ -237,7 +236,7 @@ router.get(
         recommendations: recommendationItems,
         editorialContext,
         descriptionHTML,
-        title,
+        ...seo,
         header: block.title,
         translations,
         canManageBlock: canManageBlock(req.user, block, editTokens),
