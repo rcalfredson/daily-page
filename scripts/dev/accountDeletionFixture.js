@@ -9,6 +9,8 @@ import BlockReaction from '../../server/db/models/BlockReaction.js';
 import CommentRateEvent from '../../server/db/models/CommentRateEvent.js';
 import CommentReport from '../../server/db/models/CommentReport.js';
 import Flag from '../../server/db/models/Flag.js';
+import ForestOwnerWorld from '../../server/db/models/ForestOwnerWorld.js';
+import ForestWritingTree from '../../server/db/models/ForestWritingTree.js';
 import Notification from '../../server/db/models/Notification.js';
 import Quest from '../../server/db/models/Quest.js';
 import QuestItem from '../../server/db/models/QuestItem.js';
@@ -19,6 +21,9 @@ import User from '../../server/db/models/User.js';
 import UsernameReservation from '../../server/db/models/UsernameReservation.js';
 import { initMongooseConnection } from '../../server/db/mongoose.js';
 import { deleteAccount } from '../../server/services/accountDeletion.js';
+import {
+  cleanUpAccountDeletionForests
+} from '../../server/services/accountDeletionForestCleanup.js';
 import {
   ACCOUNT_DELETION_FIXTURE_ROOM_ID,
   ACCOUNT_DELETION_FIXTURE_SCENARIOS,
@@ -83,6 +88,8 @@ async function connectFixtureDatabase() {
     CommentRateEvent,
     CommentReport,
     Flag,
+    ForestOwnerWorld,
+    ForestWritingTree,
     Notification,
     Quest,
     QuestItem,
@@ -273,6 +280,8 @@ async function resetFixtureScenario(scenario, { session = null } = {}) {
   );
 
   await AuthSession.deleteMany({ userId: { $in: userIds } }, { session });
+  await ForestWritingTree.deleteMany({ ownerUserId: { $in: userIds } }, { session });
+  await ForestOwnerWorld.deleteMany({ ownerUserId: { $in: userIds } }, { session });
   await AccountDeletionRequest.deleteMany({ ownerUserId: { $in: userIds } }, { session });
   await UsernameReservation.deleteMany({ _id: { $in: usernames } }, { session });
   await User.deleteMany({ _id: { $in: userIds } }, { session });
@@ -458,6 +467,16 @@ async function verifyAfter(scenario) {
     request ? { status: request.status, disposition: request.disposition } : null
   );
   check.expect(
+    'forest cleanup converged before evidence expiry',
+    request?.forestCleanup?.status === 'completed'
+      && request?.forestCleanup?.completedAt
+      && request?.evidenceExpiresAt,
+    request ? {
+      forestCleanup: request.forestCleanup,
+      evidenceExpiresAt: request.evidenceExpiresAt
+    } : null
+  );
+  check.expect(
     'username is quarantined',
     reservation?.expiresAt > new Date(),
     reservation?.expiresAt || null
@@ -614,6 +633,10 @@ async function deleteDirect(scenario) {
   const result = await deleteAccount({
     userId: fixture.users.owner._id,
     disposition: scenario
+  });
+  await cleanUpAccountDeletionForests({
+    limit: 1,
+    ownerUserId: fixture.users.owner._id
   });
   console.log('Direct account-deletion service result:', result);
   console.log(`Run: npm run account-deletion:fixture -- verify-after ${scenario}`);

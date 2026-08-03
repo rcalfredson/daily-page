@@ -8,6 +8,7 @@ import BlockReaction from '../db/models/BlockReaction.js';
 import CommentRateEvent from '../db/models/CommentRateEvent.js';
 import CommentReport from '../db/models/CommentReport.js';
 import Flag from '../db/models/Flag.js';
+import ForestOwnerWorld from '../db/models/ForestOwnerWorld.js';
 import Notification from '../db/models/Notification.js';
 import Quest from '../db/models/Quest.js';
 import QuestItem from '../db/models/QuestItem.js';
@@ -19,7 +20,9 @@ import { ACCOUNT_WRITING_DISPOSITIONS } from '../db/schemas/AccountDeletionReque
 import * as cache from './cache.js';
 
 export const USERNAME_QUARANTINE_MS = 365 * 24 * 60 * 60 * 1000;
-export const DELETION_EVIDENCE_RETENTION_MS = 90 * 24 * 60 * 60 * 1000;
+export {
+  DELETION_EVIDENCE_RETENTION_MS
+} from './accountDeletionEvidence.js';
 
 export class AccountDeletionError extends Error {
   constructor(code, { status = 400, details = null } = {}) {
@@ -91,6 +94,7 @@ export function buildAccountDeletionService({
     CommentRateEvent,
     CommentReport,
     Flag,
+    ForestOwnerWorld,
     Notification,
     Quest,
     QuestItem,
@@ -154,11 +158,35 @@ export function buildAccountDeletionService({
         disposition,
         status: 'processing',
         startedAt: now,
+        evidenceExpiresAt: null,
         profileMedia: {
           url: user.profilePic || null,
           status: profileMediaStatus(user.profilePic)
+        },
+        forestCleanup: {
+          status: 'pending',
+          attempts: 0,
+          lastAttemptAt: null,
+          completedAt: null
         }
       }], { session });
+
+      await db.ForestOwnerWorld.updateMany(
+        { ownerUserId: asId(userId) },
+        {
+          $set: {
+            status: 'deleting',
+            'reconciliation.state': 'idle',
+            'reconciliation.phase': null,
+            'reconciliation.blockCursor': null,
+            'reconciliation.treeCursor': null,
+            'reconciliation.startedAt': null,
+            'reconciliation.leaseToken': null,
+            'reconciliation.leaseExpiresAt': null
+          }
+        },
+        { session }
+      );
 
       await db.UsernameReservation.updateOne(
         { _id: username },
@@ -406,7 +434,6 @@ export function buildAccountDeletionService({
           $set: {
             status: 'completed',
             completedAt,
-            evidenceExpiresAt: new Date(now.getTime() + DELETION_EVIDENCE_RETENTION_MS),
             counts: {
               retainedPosts: retainableIds.length,
               deletedPosts: deletedPostIds.length

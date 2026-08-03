@@ -81,7 +81,8 @@ Replace `<scenario>` with `delete`, `deleted-author`, or `anonymous`.
 request, username quarantine, retained/deleted posts, ownership and edit tokens, legacy ownership,
 translation ancestry, collaborators, votes, comments and replies, notifications, reactions,
 moderation records, rate-limit events, auth-session revocation, collaboration state, and quest
-administrator cleanup.
+administrator cleanup. It also verifies that bounded Activity Forest cleanup completed before the
+deletion request received its evidence-expiry time.
 
 For a database-only integration run that bypasses password/2FA confirmation and the browser UI,
 invoke the real deletion service directly:
@@ -92,8 +93,8 @@ npm run account-deletion:fixture -- delete-direct anonymous --write
 npm run account-deletion:fixture -- verify-after anonymous
 ```
 
-`delete-direct` exists to exercise the transactional cascade. It does not replace the manual HTTP
-authorization and UI test.
+`delete-direct` exists to exercise the transactional cascade and the zero-record Activity Forest
+cleanup boundary. It does not replace the manual HTTP authorization and UI test.
 
 To start the same scenario again, rerun its seed command. To remove it without reseeding:
 
