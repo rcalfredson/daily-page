@@ -4,6 +4,7 @@ block nav
   include ../navLinks
 
 block append head
+  include ../partials/_article_json_ld
   -
     // Helpers (baseUrl comes from res.locals via middleware)
     const makeAbs = (id) => `${baseUrl}/rooms/${room_id}/blocks/${id}`;

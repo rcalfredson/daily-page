@@ -12,7 +12,77 @@ function truncateDescription(value, maxLength = POST_META_DESCRIPTION_MAX_LENGTH
   return `${candidate.slice(0, cutAt).trimEnd()}…`;
 }
 
-export function buildPostSeo(block, { siteName, baseUrl, canonicalUrl }) {
+function isoDate(value) {
+  if (!value) return undefined;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
+function jsonLdStringify(value) {
+  return JSON.stringify(value)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
+export function buildPostArticleJsonLd(block, {
+  author,
+  baseUrl,
+  canonicalUrl,
+  description,
+  roomName
+}) {
+  const normalizedBaseUrl = String(baseUrl || '').replace(/\/$/, '');
+  const hasArticleImage = block?.bannerImage?.url &&
+    (!block.bannerImage.kind || block.bannerImage.kind === 'image');
+  const datePublished = isoDate(block?.createdAt);
+  const dateModified = isoDate(block?.updatedAt);
+  const tags = Array.isArray(block?.tags)
+    ? block.tags.map((tag) => String(tag).trim()).filter(Boolean)
+    : [];
+
+  const article = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': `${canonicalUrl}#article`,
+    url: canonicalUrl,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl
+    },
+    headline: String(block?.title || '').trim(),
+    description,
+    inLanguage: block?.lang || undefined,
+    datePublished,
+    dateModified,
+    author: author?.name
+      ? {
+          '@type': 'Person',
+          name: author.name,
+          url: author.url || undefined
+        }
+      : undefined,
+    publisher: {
+      '@id': `${normalizedBaseUrl}/#organization`
+    },
+    image: hasArticleImage ? block.bannerImage.url : undefined,
+    articleSection: roomName || undefined,
+    keywords: tags.length ? tags : undefined
+  };
+
+  return jsonLdStringify(article);
+}
+
+export function buildPostSeo(block, {
+  author,
+  siteName,
+  baseUrl,
+  canonicalUrl,
+  includeArticleJsonLd = true,
+  roomName
+}) {
   const normalizedSiteName = String(siteName || 'Daily Page').trim() || 'Daily Page';
   const postTitle = String(block?.title || normalizedSiteName).trim() || normalizedSiteName;
   const title = `${postTitle} | ${normalizedSiteName}`;
@@ -24,6 +94,15 @@ export function buildPostSeo(block, { siteName, baseUrl, canonicalUrl }) {
   const image = hasShareableBanner
     ? block.bannerImage.url
     : `${normalizedBaseUrl}/assets/img/logo-512.png`;
+  const articleJsonLd = includeArticleJsonLd
+    ? buildPostArticleJsonLd(block, {
+        author,
+        baseUrl: normalizedBaseUrl,
+        canonicalUrl,
+        description,
+        roomName
+      })
+    : null;
 
   return {
     title,
@@ -37,8 +116,7 @@ export function buildPostSeo(block, { siteName, baseUrl, canonicalUrl }) {
       : normalizedSiteName,
     socialCardType: hasShareableBanner ? 'summary_large_image' : 'summary',
     openGraphType: 'article',
-    socialPublishedTime: block?.createdAt
-      ? new Date(block.createdAt).toISOString()
-      : null
+    socialPublishedTime: isoDate(block?.createdAt) || null,
+    articleJsonLd
   };
 }
