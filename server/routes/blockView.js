@@ -2,7 +2,8 @@ import express from 'express';
 import {
   getBlockById,
   getPublicTranslations,
-  getPublicTranslationByGroupAndLang
+  getPublicTranslationByGroupAndLang,
+  isPubliclyVisibleBlock
 } from '../db/blockService.js';
 import { getBlockEditorialContext } from '../db/blockEditorialContextService.js';
 import {
@@ -218,9 +219,19 @@ router.get(
         : null;
 
       const seo = buildPostSeo(block, {
+        author: authorProfile
+          ? {
+              name: authorProfile.displayName,
+              url: authorProfile.profilePath
+                ? `${res.locals.baseUrl}${res.locals.uiPath(authorProfile.profilePath)}`
+                : undefined
+            }
+          : null,
         siteName: t('layout.siteName'),
         baseUrl: res.locals.baseUrl,
-        canonicalUrl: res.locals.canonicalUrl
+        canonicalUrl: res.locals.canonicalUrl,
+        includeArticleJsonLd: isPubliclyVisibleBlock(block),
+        roomName
       });
 
       const focusedThreadAlreadyIncluded = Boolean(
