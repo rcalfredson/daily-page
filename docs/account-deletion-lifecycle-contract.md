@@ -39,11 +39,21 @@ service:
 
 The transaction is all-or-nothing. A database error leaves the account and its sessions intact, so
 the authenticated person may safely retry. The unique request-per-owner constraint and the User
-delete guard prevent duplicate completion. Completed request evidence expires after 90 days.
+delete guard prevent duplicate completion. Completed request evidence becomes eligible for expiry
+only after required profile-media and Activity Forest cleanup reach terminal states, then expires
+after 90 days.
 
-The request's `processing` and `completed` states are the future Activity Forest cleanup boundary.
-A forest consumer must key cleanup by `ownerUserId`, revoke access at deletion start, converge
-idempotently, and never infer ownership from a retained post or username.
+The request's `processing` and `completed` states and bounded `forestCleanup` subdocument are the
+Activity Forest cleanup boundary. New requests explicitly begin with forest cleanup `pending`;
+pre-forest historical requests default to `not-required`. Account deletion marks any owner-world
+root as deleting and clears its reconciliation lease inside the bounded account transaction. A
+worker then deletes writing trees in bounded owner-keyed batches, removes the small owner-world
+root, verifies both collections are empty, and marks cleanup `completed`. Retries are idempotent.
+
+Future forest write transactions must increment `User.forestLedgerFence` before writing. Deleting
+that same User record creates a Mongo write conflict: reconciliation either commits before deletion
+and is subsequently cleaned, or cannot commit after deletion. Forest ownership is never inferred
+from a retained post or username.
 
 ## Database cascade
 
@@ -69,6 +79,9 @@ idempotently, and never infer ownership from a retained post or username.
 - Collaborative session and collaboration-backup mappings for every owned post are removed,
   including retained posts, so stale live-editing state cannot survive ownership removal.
 - All in-process application caches are cleared after commit.
+- Activity Forest access ends with session/User removal. Any existing owner-world root is marked
+  deleting in the transaction; writing trees and the root are removed afterward through bounded,
+  verified cleanup independent of source-post disposition.
 
 ## Username reuse
 
@@ -86,6 +99,13 @@ deletes all objects under the app-owned `profile-pics/{ownerUserId}-` prefix. On
 profile URL matching the configured Daily Page bucket and region authorizes that prefix cleanup.
 Failures remain `pending` and the hourly job retries them; logs include only status, attempt count,
 and error class.
+
+Deletion evidence does not receive its TTL expiry while managed profile cleanup or Activity Forest
+cleanup remains pending. `none`, `deleted`, and `not-managed` are terminal profile-media states;
+`completed` and `not-required` are terminal forest states. Whichever cleanup finishes last performs
+one atomic convergence check and schedules expiry without extending an already scheduled record.
+A separate bounded hourly convergence pass retries the expiry update if cleanup reached terminal
+state but that final scheduling write was temporarily unavailable.
 
 Externally hosted or unrecognized profile URLs are marked `not-managed`. They require action by
 the external operator and are not covered by the application deletion promise.

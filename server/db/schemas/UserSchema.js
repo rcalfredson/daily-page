@@ -17,6 +17,15 @@ const userSchema = new Schema({
   profilePic: { type: String, default: '/assets/img/default-pic.png' },
   bio: { type: String, default: '' },
   preferredUiLang: { type: String, default: 'en' },
+  forestLedgerFence: {
+    type: Number,
+    default: 0,
+    min: 0,
+    validate: {
+      validator: Number.isSafeInteger,
+      message: 'Forest ledger fence must be a non-negative safe integer.'
+    }
+  },
   streakLength: { type: Number, default: 0 },
   streakLastUpdatedAt: { type: Date, default: null },
   streakTimeZone: { type: String, default: 'UTC' },

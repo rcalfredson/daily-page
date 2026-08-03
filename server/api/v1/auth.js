@@ -26,6 +26,7 @@ import {
   deleteAccount
 } from '../../services/accountDeletion.js';
 import { cleanUpAccountDeletionMedia } from '../../services/accountDeletionMedia.js';
+import { cleanUpAccountDeletionForests } from '../../services/accountDeletionForestCleanup.js';
 
 const router = Router();
 
@@ -40,6 +41,7 @@ export function buildDeleteAccountHandler({
   verifyRecoveryCodeFn = verifyRecoveryCode,
   deleteAccountFn = deleteAccount,
   cleanUpMediaFn = cleanUpAccountDeletionMedia,
+  cleanUpForestFn = cleanUpAccountDeletionForests,
   clearCookieFn = clearAuthCookie,
   logger = console
 } = {}) {
@@ -77,9 +79,21 @@ export function buildDeleteAccountHandler({
       });
       clearCookieFn(res);
 
-      // S3 is outside the database transaction. This bounded, idempotent pass
-      // makes the common case immediate; the scheduled job retries failures.
-      await cleanUpMediaFn({ limit: 1, ownerUserId: req.user.id });
+      // External media and a potentially large forest remain outside the
+      // account transaction. These bounded passes make the common case
+      // immediate; scheduled jobs retry either cleanup independently.
+      const cleanupAttempts = await Promise.allSettled([
+        cleanUpMediaFn({ limit: 1, ownerUserId: req.user.id }),
+        cleanUpForestFn({ limit: 1, ownerUserId: req.user.id })
+      ]);
+      for (const [index, attempt] of cleanupAttempts.entries()) {
+        if (attempt.status === 'rejected') {
+          logger.error('Post-deletion cleanup attempt failed:', {
+            cleanup: index === 0 ? 'profile-media' : 'activity-forest',
+            error: attempt.reason?.name || 'Error'
+          });
+        }
+      }
 
       return res.status(200).json({
         ok: true,

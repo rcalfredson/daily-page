@@ -36,6 +36,7 @@ function makeModels(posts = []) {
     'CommentRateEvent',
     'CommentReport',
     'Flag',
+    'ForestOwnerWorld',
     'Notification',
     'Quest',
     'QuestItem',
@@ -167,6 +168,37 @@ describe('account deletion lifecycle', () => {
       { upsert: true, session: 'session' }
     );
     expect(models.AuthSession.updateMany).toHaveBeenCalled();
+    expect(models.AccountDeletionRequest.create).toHaveBeenCalledWith(
+      [jasmine.objectContaining({
+        ownerUserId: 'user-1',
+        evidenceExpiresAt: null,
+        forestCleanup: {
+          status: 'pending',
+          attempts: 0,
+          lastAttemptAt: null,
+          completedAt: null
+        }
+      })],
+      { session: 'session' }
+    );
+    expect(models.ForestOwnerWorld.updateMany).toHaveBeenCalledWith(
+      { ownerUserId: 'user-1' },
+      {
+        $set: {
+          status: 'deleting',
+          'reconciliation.state': 'idle',
+          'reconciliation.phase': null,
+          'reconciliation.blockCursor': null,
+          'reconciliation.treeCursor': null,
+          'reconciliation.startedAt': null,
+          'reconciliation.leaseToken': null,
+          'reconciliation.leaseExpiresAt': null
+        }
+      },
+      { session: 'session' }
+    );
+    const completedRequestUpdate = models.AccountDeletionRequest.updateOne.calls.mostRecent().args;
+    expect(completedRequestUpdate[1].$set.evidenceExpiresAt).toBeUndefined();
     const voteUpdate = models.Block.updateMany.calls.allArgs().find(([, update]) => (
       Array.isArray(update)
     ));
@@ -305,6 +337,7 @@ describe('account deletion lifecycle', () => {
       deletedPosts: 1
     });
     const cleanUpMediaFn = jasmine.createSpy('cleanUpMedia').and.resolveTo({});
+    const cleanUpForestFn = jasmine.createSpy('cleanUpForest').and.resolveTo({});
     const clearCookieFn = jasmine.createSpy('clearCookie');
     const handler = buildDeleteAccountHandler({
       UserModel: {
@@ -316,6 +349,7 @@ describe('account deletion lifecycle', () => {
       comparePassword: jasmine.createSpy('comparePassword').and.resolveTo(true),
       deleteAccountFn,
       cleanUpMediaFn,
+      cleanUpForestFn,
       clearCookieFn,
       logger: { error: jasmine.createSpy('error') }
     });
@@ -339,8 +373,61 @@ describe('account deletion lifecycle', () => {
       limit: 1,
       ownerUserId: 'session-user'
     });
+    expect(cleanUpForestFn).toHaveBeenCalledOnceWith({
+      limit: 1,
+      ownerUserId: 'session-user'
+    });
     expect(clearCookieFn).toHaveBeenCalledWith(res);
     expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('reports successful deletion when either immediate cleanup attempt fails', async () => {
+    const cleanupError = new Error('offline');
+    cleanupError.name = 'CleanupUnavailableError';
+    const logger = { error: jasmine.createSpy('error') };
+    const handler = buildDeleteAccountHandler({
+      UserModel: {
+        findById: jasmine.createSpy('findById').and.resolveTo({
+          password: 'hash',
+          twoFactorEnabled: false
+        })
+      },
+      comparePassword: jasmine.createSpy('comparePassword').and.resolveTo(true),
+      deleteAccountFn: jasmine.createSpy('deleteAccount').and.resolveTo({
+        retainedPosts: 0,
+        deletedPosts: 1
+      }),
+      cleanUpMediaFn: jasmine.createSpy('cleanUpMedia').and.rejectWith(cleanupError),
+      cleanUpForestFn: jasmine.createSpy('cleanUpForest').and.rejectWith(cleanupError),
+      clearCookieFn: jasmine.createSpy('clearCookie'),
+      logger
+    });
+    const res = makeResponse();
+
+    await handler({
+      user: { id: 'session-user' },
+      body: {
+        currentPassword: 'password',
+        disposition: 'delete',
+        confirmation: 'DELETE'
+      }
+    }, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(jasmine.objectContaining({
+      ok: true,
+      code: 'ACCOUNT_DELETED'
+    }));
+    expect(logger.error.calls.allArgs()).toEqual([
+      [
+        'Post-deletion cleanup attempt failed:',
+        { cleanup: 'profile-media', error: 'CleanupUnavailableError' }
+      ],
+      [
+        'Post-deletion cleanup attempt failed:',
+        { cleanup: 'activity-forest', error: 'CleanupUnavailableError' }
+      ]
+    ]);
   });
 
   it('requires a valid second factor when the account has 2FA enabled', async () => {

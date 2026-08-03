@@ -4,6 +4,10 @@ import { expireQuestClaims } from '../db/questSubmissionService.js';
 import { getFeaturedContent } from './featuredContent.js';
 import { startBlockJobs } from './blockService.js';
 import { cleanUpAccountDeletionMedia } from './accountDeletionMedia.js';
+import { cleanUpAccountDeletionForests } from './accountDeletionForestCleanup.js';
+import {
+  scheduleConvergedAccountDeletionEvidenceExpiries
+} from './accountDeletionEvidence.js';
 
 // Home cache warmers
 import {
@@ -88,6 +92,22 @@ const jobs = [
       await cleanUpAccountDeletionMedia();
     } catch (error) {
       console.error('Failed account-deletion media cleanup job:', error?.name || 'Error');
+    }
+  }, null),
+
+  new CronJob('29 * * * *', async () => {
+    try {
+      await cleanUpAccountDeletionForests();
+    } catch (error) {
+      console.error('Failed account-deletion forest cleanup job:', error?.name || 'Error');
+    }
+  }, null),
+
+  new CronJob('37 * * * *', async () => {
+    try {
+      await scheduleConvergedAccountDeletionEvidenceExpiries();
+    } catch (error) {
+      console.error('Failed account-deletion evidence expiry job:', error?.name || 'Error');
     }
   }, null),
 

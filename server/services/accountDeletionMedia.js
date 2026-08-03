@@ -4,6 +4,9 @@ import {
   S3Client
 } from '@aws-sdk/client-s3';
 import AccountDeletionRequest from '../db/models/AccountDeletionRequest.js';
+import {
+  scheduleAccountDeletionEvidenceExpiry
+} from './accountDeletionEvidence.js';
 
 function managedProfileObject(url, {
   bucket = process.env.S3_BUCKET_NAME,
@@ -68,7 +71,9 @@ export async function cleanUpAccountDeletionMedia({
   limit = 25,
   ownerUserId = null,
   AccountDeletionRequestModel = AccountDeletionRequest,
+  scheduleEvidenceExpiry = scheduleAccountDeletionEvidenceExpiry,
   s3 = makeS3Client(),
+  logger = console,
   now = new Date()
 } = {}) {
   const requests = await AccountDeletionRequestModel.find({
@@ -86,6 +91,17 @@ export async function cleanUpAccountDeletionMedia({
     if (!object) {
       request.profileMedia.status = 'not-managed';
       await request.save();
+      try {
+        await scheduleEvidenceExpiry({
+          ownerUserId: request.ownerUserId,
+          AccountDeletionRequestModel,
+          now
+        });
+      } catch (error) {
+        logger.error('Failed account-deletion evidence expiry scheduling:', {
+          error: error?.name || 'Error'
+        });
+      }
       totals.notManaged += 1;
       continue;
     }
@@ -98,10 +114,21 @@ export async function cleanUpAccountDeletionMedia({
       request.profileMedia.status = 'deleted';
       await request.save();
       totals.deleted += 1;
+      try {
+        await scheduleEvidenceExpiry({
+          ownerUserId: request.ownerUserId,
+          AccountDeletionRequestModel,
+          now
+        });
+      } catch (error) {
+        logger.error('Failed account-deletion evidence expiry scheduling:', {
+          error: error?.name || 'Error'
+        });
+      }
     } catch (error) {
       await request.save();
       totals.failed += 1;
-      console.error('Failed account-deletion profile-media cleanup:', {
+      logger.error('Failed account-deletion profile-media cleanup:', {
         attempt: request.profileMedia.attempts,
         error: error?.name || 'Error'
       });
