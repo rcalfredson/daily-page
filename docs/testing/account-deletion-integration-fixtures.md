@@ -20,7 +20,8 @@ Each disposition has an isolated scenario containing:
   surviving notification whose actor must be scrubbed;
 - reactions, moderation flags, comment reports, and a short-lived rate-limit event;
 - a second authentication session for the owner;
-- collaboration session and backup mappings for owned and peer posts; and
+- collaboration session and backup mappings for owned and peer posts;
+- one active owner forest with three durable writing trees; and
 - an archived quest owned by the fixture account, optionally made active to test the administrator
   deletion guard.
 
@@ -93,8 +94,12 @@ npm run account-deletion:fixture -- delete-direct anonymous --write
 npm run account-deletion:fixture -- verify-after anonymous
 ```
 
-`delete-direct` exists to exercise the transactional cascade and the zero-record Activity Forest
-cleanup boundary. It does not replace the manual HTTP authorization and UI test.
+`delete-direct` exercises the transactional cascade and the Activity Forest cleanup boundary. It
+acquires the real transactional forest fence, verifies that deletion changes the world to
+`deleting`, drains three trees across deliberately small bounded cleanup passes, verifies that
+evidence expiry remains unset while cleanup is pending, completes the owner-world removal, checks
+an additional cleanup pass is idempotent, and proves that the fence fails closed after the owner is
+deleted. It does not replace the manual HTTP authorization and UI test.
 
 To start the same scenario again, rerun its seed command. To remove it without reseeding:
 

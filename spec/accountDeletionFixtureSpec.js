@@ -3,6 +3,7 @@ import {
   buildAccountDeletionFixture,
   expectedRetainedPostKeys,
   fixtureObjectId,
+  fixtureUuid,
   parseAccountDeletionFixtureArgs
 } from '../scripts/lib/accountDeletionFixture.js';
 import AuthSession from '../server/db/models/AuthSession.js';
@@ -13,6 +14,8 @@ import BlockReaction from '../server/db/models/BlockReaction.js';
 import CommentRateEvent from '../server/db/models/CommentRateEvent.js';
 import CommentReport from '../server/db/models/CommentReport.js';
 import Flag from '../server/db/models/Flag.js';
+import ForestOwnerWorld from '../server/db/models/ForestOwnerWorld.js';
+import ForestWritingTree from '../server/db/models/ForestWritingTree.js';
 import Notification from '../server/db/models/Notification.js';
 import Quest from '../server/db/models/Quest.js';
 import Session from '../server/db/models/Session.js';
@@ -37,6 +40,8 @@ describe('account deletion integration fixture definitions', () => {
       expect(first.ids.postIds).toHaveSize(8);
       expect(first.ids.commentIds).toHaveSize(5);
       expect(first.ids.notificationIds).toHaveSize(4);
+      expect(first.ids.writingTreeIds).toHaveSize(3);
+      expect(first.ids.forestId).toBe(fixtureUuid(scenario, 'forest:owner-world'));
     }
 
     expect(fixtureObjectId('delete', 'user:owner'))
@@ -83,7 +88,9 @@ describe('account deletion integration fixture definitions', () => {
       ...fixture.authSessions.map((value) => new AuthSession(value)),
       ...fixture.sessions.map((value) => new Session(value)),
       ...fixture.backups.map((value) => new Backup(value)),
-      new Quest(fixture.quest)
+      new Quest(fixture.quest),
+      new ForestOwnerWorld(fixture.forestOwnerWorld),
+      ...fixture.forestWritingTrees.map((value) => new ForestWritingTree(value))
     ];
 
     for (const document of documents) {
