@@ -1,7 +1,7 @@
 {
   "blockView": {
     "meta": {
-      "title": "Bài viết - {blockTitle}",
+      "title": "{blockTitle} | Daily Page",
       "titleFallback": "Bài viết"
     },
     "labels": {

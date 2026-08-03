@@ -1,7 +1,7 @@
 {
   "blockView": {
     "meta": {
-      "title": "Postingan - {blockTitle}",
+      "title": "{blockTitle} | Daily Page",
       "titleFallback": "Postingan"
     },
     "labels": {

@@ -1,7 +1,7 @@
 {
   "blockView": {
     "meta": {
-      "title": "Inlägg - {blockTitle}",
+      "title": "{blockTitle} | Daily Page",
       "titleFallback": "Inlägg"
     },
     "labels": {

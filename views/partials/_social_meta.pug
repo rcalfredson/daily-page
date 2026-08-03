@@ -1,0 +1,24 @@
+if socialTitle
+  meta(property='og:title' content=socialTitle)
+if socialDescription
+  meta(property='og:description' content=socialDescription)
+if socialImageUrl
+  meta(property='og:image' content=socialImageUrl)
+if socialImageAlt
+  meta(property='og:image:alt' content=socialImageAlt)
+if canonicalUrl && socialTitle
+  meta(property='og:url' content=canonicalUrl)
+if openGraphType
+  meta(property='og:type' content=openGraphType)
+if socialPublishedTime
+  meta(property='article:published_time' content=socialPublishedTime)
+if socialCardType
+  meta(name='twitter:card' content=socialCardType)
+if socialTitle
+  meta(name='twitter:title' content=socialTitle)
+if socialDescription
+  meta(name='twitter:description' content=socialDescription)
+if socialImageUrl
+  meta(name='twitter:image' content=socialImageUrl)
+if socialImageAlt
+  meta(name='twitter:image:alt' content=socialImageAlt)

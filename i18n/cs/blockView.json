@@ -1,6 +1,6 @@
 {
   "blockView": {
-    "meta": { "title": "Příspěvek – {blockTitle}", "titleFallback": "Příspěvek" },
+    "meta": { "title": "{blockTitle} | Daily Page", "titleFallback": "Příspěvek" },
     "labels": {
       "room": "Místnost", "author": "Autor", "created": "Vytvořeno", "unknownAuthor": "Anonym",
       "authorAvatarAlt": "Avatar uživatele {username}", "viewAuthorProfile": "Zobrazit profil uživatele {username}",

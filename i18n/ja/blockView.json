@@ -1,7 +1,7 @@
 {
   "blockView": {
     "meta": {
-      "title": "投稿 - {blockTitle}",
+      "title": "{blockTitle} | Daily Page",
       "titleFallback": "投稿"
     },
     "labels": {

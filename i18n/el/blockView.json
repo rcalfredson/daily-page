@@ -1,6 +1,6 @@
 {
   "blockView": {
-    "meta": { "title": "Ανάρτηση - {blockTitle}", "titleFallback": "Ανάρτηση" },
+    "meta": { "title": "{blockTitle} | Daily Page", "titleFallback": "Ανάρτηση" },
     "labels": {
       "room": "Δωμάτιο",
       "author": "Συντάκτης",

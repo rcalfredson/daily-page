@@ -1,7 +1,7 @@
 {
   "blockView": {
     "meta": {
-      "title": "帖子 - {blockTitle}",
+      "title": "{blockTitle} | Daily Page",
       "titleFallback": "帖子"
     },
     "labels": {
