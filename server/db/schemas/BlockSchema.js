@@ -158,6 +158,10 @@ blockSchema.index({ creator: 1, createdAt: -1 });
 blockSchema.index({ collaborators: 1, createdAt: -1 });
 blockSchema.index({ updatedAt: -1, roomId: 1 });
 blockSchema.index({ userId: 1, _id: 1 });
+blockSchema.index(
+  { userId: 1, groupId: 1, authorshipState: 1, createdAt: 1, _id: 1 },
+  { name: 'forest_owner_group_founding_selection' }
+);
 
 // Text search index for MVP search
 // Notes:
