@@ -88,6 +88,13 @@ export async function getPublicTranslations(groupId) {
   return await Block.find(publiclyVisibleBlockMatch({ groupId })).select('lang _id title roomId');
 }
 
+export async function getPublicTranslationResolverCandidates(groupId) {
+  if (!groupId) return [];
+  return await Block.find(publiclyVisibleBlockMatch({ groupId }))
+    .select('lang _id roomId originalBlock createdAt')
+    .sort({ createdAt: 1, _id: 1 });
+}
+
 export async function getGlobalBlockStats() {
   return await cache.get(
     `global-block-stats`,

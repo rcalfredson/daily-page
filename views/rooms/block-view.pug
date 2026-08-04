@@ -5,13 +5,7 @@ block nav
 
 block append head
   include ../partials/_article_json_ld
-  -
-    // Helpers (baseUrl comes from res.locals via middleware)
-    const makeAbs = (id) => `${baseUrl}/rooms/${room_id}/blocks/${id}`;
-  each tr in translations
-    link(rel='alternate' hreflang=tr.lang href=makeAbs(tr._id))
-  // fallback for “any/unknown” language
-  link(rel='alternate' hreflang='x-default' href=makeAbs(block._id))
+  include ../partials/_block_hreflang
   link(rel='stylesheet' href='/css/block-common.css')
   link(rel='stylesheet' href='/css/block-view.css')
   link(rel='stylesheet' href='/css/block-tags.css')
