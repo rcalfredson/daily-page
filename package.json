@@ -23,7 +23,8 @@
     "visibility:migrate-unlisted": "node scripts/migrations/migratePrivateVisibilityToUnlisted.js",
     "quest:import": "node scripts/quests/importQuest.js",
     "account-deletion:fixture": "node scripts/dev/accountDeletionFixture.js",
-    "forest:placement-preview": "node scripts/dev/renderForestOwnerGrovePlacementPreview.js"
+    "forest:placement-preview": "node scripts/dev/renderForestOwnerGrovePlacementPreview.js",
+    "forest:environment-preview": "node scripts/dev/renderForestOwnerEnvironmentPreview.js"
   },
   "repository": {
     "type": "git",

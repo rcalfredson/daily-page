@@ -8,6 +8,9 @@ import {
   FOREST_WRITING_TREE_IDENTITY_VERSION,
   FOREST_WRITING_TREE_SCHEMA_VERSION
 } from '../server/db/schemas/ForestWritingTreeSchema.js';
+import {
+  resolveForestOwnerEnvironment
+} from '../server/services/forestOwnerEnvironmentResolver.js';
 
 const OWNER_USER_ID = '507f1f77bcf86cd799439011';
 const GROUP_ID = '507f191e810c19729de860ea';
@@ -217,6 +220,21 @@ describe('forest durable ledger schemas', () => {
     expect(tree.inclusionChangedAt).toBeNull();
     expect(tree.lastEligibleReconciliationEpoch).toBe(0);
     expect(tree.recordRevision).toBe(1);
+  });
+
+  it('accepts the exact signed-coordinate environment resolver snapshot', async () => {
+    const environment = resolveForestOwnerEnvironment({
+      worldSeed: 'ledger-environment-snapshot-spec',
+      worldX: -720,
+      worldY: 1_440
+    });
+    const tree = new ForestWritingTree(validWritingTree({
+      originatingEnvironment: environment.originatingEnvironment
+    }));
+
+    await expectAsync(tree.validate()).toBeResolved();
+    expect(tree.originatingEnvironment.toObject())
+      .toEqual(environment.originatingEnvironment);
   });
 
   it('keeps source activity and owner hiding as independent valid states', async () => {
