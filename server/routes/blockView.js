@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   getBlockById,
+  getPublicTranslationResolverCandidates,
   getPublicTranslations,
   getPublicTranslationByGroupAndLang,
   isPubliclyVisibleBlock
@@ -31,9 +32,35 @@ import {
 } from '../utils/block.js';
 import { canonicalBlockPath } from '../utils/canonical.js';
 import { buildPostSeo } from '../utils/postSeo.js';
+import { getPreferredContentLang } from '../services/localeContext.js';
+import { selectPublicPostTranslation } from '../services/postTranslationResolver.js';
 
 const router = express.Router();
 const INITIAL_COMMENT_LIMIT = 20;
+
+export function createPostGroupResolver({
+  getCandidates = getPublicTranslationResolverCandidates
+} = {}) {
+  return async function postGroupResolver(req, res) {
+    try {
+      const candidates = await getCandidates(req.params.group_id);
+      const selected = selectPublicPostTranslation(
+        candidates,
+        getPreferredContentLang(res)
+      );
+
+      if (!selected) return res.sendStatus(404);
+
+      res.set('Cache-Control', 'private, no-store');
+      res.vary('Accept-Language');
+      res.vary('Cookie');
+      return res.redirect(302, canonicalBlockPath(selected));
+    } catch (error) {
+      console.error(`Error resolving post group ${req.params.group_id}:`, error);
+      return res.sendStatus(500);
+    }
+  };
+}
 
 function normalizeCommentsSortDir(sortDir) {
   return sortDir === 'desc' ? 'desc' : 'asc';
@@ -43,6 +70,8 @@ function normalizeCommentId(commentId) {
   const value = String(commentId || '').trim();
   return value || null;
 }
+
+router.get('/posts/:group_id', createPostGroupResolver());
 
 async function addRecommendationRoomNames(recommendations, currentRoomId, roomMetadata, uiLang) {
   const roomIds = Array.from(new Set(

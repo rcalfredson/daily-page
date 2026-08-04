@@ -1,0 +1,4 @@
+- const makeBlockAbs = (roomId, id) => `${baseUrl}/rooms/${roomId}/blocks/${id}`;
+each tr in translations
+  link(rel='alternate' hreflang=tr.lang href=makeBlockAbs(tr.roomId || room_id, tr._id))
+link(rel='alternate' hreflang='x-default' href=`${baseUrl}/posts/${encodeURIComponent(block.groupId)}`)
