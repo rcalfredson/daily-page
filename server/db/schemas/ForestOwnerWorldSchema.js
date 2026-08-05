@@ -215,5 +215,25 @@ forestOwnerWorldSchema.index(
   { ownerUserId: 1 },
   { name: 'forest_owner_world_deletion' }
 );
+forestOwnerWorldSchema.index(
+  {
+    status: 1,
+    worldRole: 1,
+    'reconciliation.state': 1,
+    'reconciliation.leaseExpiresAt': 1,
+    ownerUserId: 1
+  },
+  { name: 'forest_owner_convergence_running' }
+);
+forestOwnerWorldSchema.index(
+  {
+    status: 1,
+    worldRole: 1,
+    'reconciliation.state': 1,
+    'reconciliation.completedAt': 1,
+    ownerUserId: 1
+  },
+  { name: 'forest_owner_convergence_due' }
+);
 
 export default forestOwnerWorldSchema;

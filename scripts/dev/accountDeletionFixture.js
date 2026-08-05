@@ -45,6 +45,9 @@ import {
   processForestOwnerGroupReconciliationJobs
 } from '../../server/services/forestOwnerGroupReconciliationQueue.js';
 import {
+  runForestOwnerConvergenceSweepStep
+} from '../../server/services/forestOwnerConvergenceSweep.js';
+import {
   ACCOUNT_DELETION_FIXTURE_ROOM_ID,
   ACCOUNT_DELETION_FIXTURE_SCENARIOS,
   ACCOUNT_DELETION_FIXTURE_TAG,
@@ -807,6 +810,51 @@ async function createTreeDirect(scenario) {
     'Asynchronous lifecycle reconciliation changed durable identity or fence ordering.'
   );
 
+  await Block.deleteOne({ _id: fixture.posts.ownerPublicLocked._id });
+  const sweepOutcomes = [];
+  const sweepDiagnostics = [];
+  for (let step = 0; step < 20; step += 1) {
+    const sweep = await runForestOwnerConvergenceSweepStep({
+      ownerUserId,
+      blockPageSize: 2,
+      treePageSize: 1,
+      now: new Date(retryTime.getTime() + ((step + 1) * 60_000))
+    });
+    sweepOutcomes.push(sweep.outcome);
+    sweepDiagnostics.push(sweep.diagnostics);
+    if (sweep.outcome === 'completed') break;
+  }
+  const [sweptWorld, sweptTrees, sweptOwner] = await Promise.all([
+    ForestOwnerWorld.findOne({ ownerUserId, worldRole: 'primary' }).lean(),
+    ForestWritingTree.find({ ownerUserId }).lean(),
+    User.findById(ownerUserId, { forestLedgerFence: 1 }).lean()
+  ]);
+  const sweptActiveTrees = sweptTrees.filter(tree => tree.sourceState === 'active');
+  const sweptInactiveTree = sweptTrees.find(
+    tree => tree.translationGroupId === firstGroupId
+  );
+  requireFixtureCondition(
+    sweepOutcomes.at(-1) === 'completed'
+      && sweepOutcomes.length <= 20
+      && sweptWorld?.reconciliation?.state === 'idle'
+      && sweptWorld?.reconciliation?.epoch === 1
+      && sweptWorld?.reconciliation?.completedAt,
+    'Convergence sweep did not finish its resumable epoch.'
+  );
+  requireFixtureCondition(
+    sweptTrees.length === 4
+      && sweptActiveTrees.length === 3
+      && sweptActiveTrees.every(tree => tree.lastEligibleReconciliationEpoch === 1)
+      && sweptInactiveTree?.sourceState === 'inactive'
+      && sweptInactiveTree?.writingTreeId === stableLifecycleEvidence.writingTreeId,
+    'Convergence sweep did not enroll historical groups and deactivate unseen evidence.'
+  );
+  requireFixtureCondition(
+    sweptWorld.placementRevision === 5
+      && sweptOwner?.forestLedgerFence === 21,
+    'Convergence sweep did not preserve allocation and fence ordering.'
+  );
+
   console.log('Transactional writing-tree creation integration passes:', {
     initialOutcomes: [created.outcome, retried.outcome],
     rollbackPreservedState: true,
@@ -831,7 +879,14 @@ async function createTreeDirect(scenario) {
       failed: failedPass,
       recovered: recoveredPass
     },
-    finalFenceRevision: asyncOwner.forestLedgerFence
+    convergenceSweep: {
+      outcomes: sweepOutcomes,
+      diagnostics: sweepDiagnostics,
+      epoch: sweptWorld.reconciliation.epoch,
+      totalTrees: sweptTrees.length,
+      activeTrees: sweptActiveTrees.length
+    },
+    finalFenceRevision: sweptOwner.forestLedgerFence
   });
 }
 
