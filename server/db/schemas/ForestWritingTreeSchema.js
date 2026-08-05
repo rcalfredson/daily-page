@@ -271,6 +271,15 @@ forestWritingTreeSchema.index(
   { name: 'forest_writing_tree_spatial_read' }
 );
 forestWritingTreeSchema.index(
+  {
+    ownerUserId: 1,
+    'placementIndex.cellX': 1,
+    'placementIndex.cellY': 1,
+    writingTreeId: 1
+  },
+  { name: 'forest_writing_tree_placement_neighborhood' }
+);
+forestWritingTreeSchema.index(
   { ownerUserId: 1, lastEligibleReconciliationEpoch: 1, writingTreeId: 1 },
   { name: 'forest_writing_tree_reconciliation_epoch' }
 );

@@ -20,6 +20,9 @@ import Notification from '../server/db/models/Notification.js';
 import Quest from '../server/db/models/Quest.js';
 import Session from '../server/db/models/Session.js';
 import User from '../server/db/models/User.js';
+import {
+  deriveForestOwnerPlacementIndex,
+} from '../server/services/forestOwnerPlacementNeighborhood.js';
 
 describe('account deletion integration fixture definitions', () => {
   it('builds deterministic, isolated ids for every scenario', () => {
@@ -42,6 +45,15 @@ describe('account deletion integration fixture definitions', () => {
       expect(first.ids.notificationIds).toHaveSize(4);
       expect(first.ids.writingTreeIds).toHaveSize(3);
       expect(first.ids.forestId).toBe(fixtureUuid(scenario, 'forest:owner-world'));
+      expect(first.forestWritingTrees.every((tree) => {
+        const expected = deriveForestOwnerPlacementIndex({
+          worldX: tree.placement.worldX,
+          worldY: tree.placement.worldY,
+        });
+        return tree.placementIndex.version === expected.version
+          && tree.placementIndex.cellX === expected.cellX
+          && tree.placementIndex.cellY === expected.cellY;
+      })).toBeTrue();
     }
 
     expect(fixtureObjectId('delete', 'user:owner'))
