@@ -114,8 +114,10 @@ npm run account-deletion:fixture -- reset anonymous --write
 
 `create-tree-direct` clears only the seeded owner's forest ledger, then verifies an initial tree
 creation, an idempotent retry, full rollback after a deliberately failed projection, and two
-concurrent requests converging on one durable tree identity. It also checks that the owner-world
-placement cursor, placement revision, and account fence advance only in committed transactions.
+concurrent requests converging on one durable tree identity. It then exercises deactivation,
+idempotent inactivity, same-tree reactivation, malformed-evidence preservation, and the
+zero-tree/zero-founder case. It checks that identity, projection, placement, the owner-world cursor,
+tree revisions, and the account fence change only where their contracts allow.
 
 To start the same scenario again, rerun its seed command. To remove it without reseeding:
 

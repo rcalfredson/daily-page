@@ -93,6 +93,38 @@ function projectedTree() {
   };
 }
 
+function groupEvidence(block) {
+  if (!block) {
+    return {
+      classification: 'ineligible',
+      reasonCode: 'no-eligible-owner-variant',
+      foundingVariant: null,
+    };
+  }
+  if (!(block.createdAt instanceof Date) || Number.isNaN(block.createdAt.getTime())) {
+    return {
+      classification: 'unresolved',
+      reasonCode: 'invalid-creation-date',
+      foundingVariant: null,
+    };
+  }
+  return {
+    classification: 'eligible',
+    reasonCode: 'eligible-owner-variant',
+    foundingVariant: {
+      blockId: String(block._id),
+      ownerUserId: String(block.userId),
+      translationGroupId: String(block.groupId),
+      authorshipState: block.authorshipState || 'live',
+      lang: block.lang,
+      status: block.status,
+      visibility: block.visibility,
+      createdAt: block.createdAt.toISOString(),
+      roomId: block.roomId,
+    },
+  };
+}
+
 function harness({
   existingTree = null,
   world = ownerWorld(),
@@ -116,20 +148,19 @@ function harness({
     }],
   }),
   projectTree = () => projectedTree(),
+  readGroupEvidence = jasmine.createSpy('readGroupEvidence')
+    .and.callFake(async () => groupEvidence(foundingBlock)),
 } = {}) {
   const deletionQuery = query(null);
   const existingTreeQuery = query(existingTree);
   const worldQuery = query(world);
-  const founderQuery = query(foundingBlock);
   const createdTrees = [];
   const models = {
     AccountDeletionRequest: {
       exists: jasmine.createSpy('AccountDeletionRequest.exists')
         .and.returnValue(deletionQuery),
     },
-    Block: {
-      findOne: jasmine.createSpy('Block.findOne').and.returnValue(founderQuery),
-    },
+    Block: {},
     ForestOwnerWorld: {
       findOne: jasmine.createSpy('ForestOwnerWorld.findOne')
         .and.returnValue(worldQuery),
@@ -168,6 +199,7 @@ function harness({
     readNeighborhood,
     allocatePlacements,
     projectTree,
+    readGroupEvidence,
     generateUuid: () => TREE_ID,
     generateWorldSeed: () => 'generated_owner_world_seed_0123456789',
   });
@@ -178,7 +210,8 @@ function harness({
     acquireFence,
     readNeighborhood,
     createdTrees,
-    queries: { deletionQuery, existingTreeQuery, worldQuery, founderQuery },
+    readGroupEvidence,
+    queries: { deletionQuery, existingTreeQuery, worldQuery },
   };
 }
 
@@ -250,7 +283,7 @@ describe('forest writing-tree transactional creation', () => {
     );
   });
 
-  it('reselects the earliest exact-owner group founder inside the transaction', async () => {
+  it('reselects exact owner/group evidence inside the transaction', async () => {
     const test = harness();
 
     await test.service({
@@ -258,21 +291,11 @@ describe('forest writing-tree transactional creation', () => {
       translationGroupId: GROUP_ID,
     });
 
-    const [filter, projection] = test.models.Block.findOne.calls.first().args;
-    expect(filter).toEqual({
-      userId: OWNER_USER_ID,
-      groupId: GROUP_ID,
-      authorshipState: { $in: ['live', null] },
+    expect(test.readGroupEvidence).toHaveBeenCalledOnceWith({
+      ownerUserId: OWNER_USER_ID,
+      translationGroupId: GROUP_ID,
+      session: 'transaction-session',
     });
-    expect(projection).toEqual(jasmine.objectContaining({
-      _id: 1,
-      createdAt: 1,
-      roomId: 1,
-    }));
-    expect(test.queries.founderQuery.sort)
-      .toHaveBeenCalledOnceWith({ createdAt: 1, _id: 1 });
-    expect(test.queries.founderQuery.session)
-      .toHaveBeenCalledOnceWith('transaction-session');
   });
 
   it('returns an existing owner/group tree without allocating again', async () => {
@@ -296,7 +319,7 @@ describe('forest writing-tree transactional creation', () => {
       diagnostics: null,
     });
     expect(test.models.ForestOwnerWorld.findOne).not.toHaveBeenCalled();
-    expect(test.models.Block.findOne).not.toHaveBeenCalled();
+    expect(test.readGroupEvidence).not.toHaveBeenCalled();
     expect(test.models.ForestWritingTree.create).not.toHaveBeenCalled();
   });
 
@@ -388,7 +411,7 @@ describe('forest writing-tree transactional creation', () => {
     await expectAsync(malformedFounder.service({
       ownerUserId: OWNER_USER_ID,
       translationGroupId: GROUP_ID,
-    })).toBeRejectedWithError(/invalid creation date/);
+    })).toBeRejectedWithError(/invalid-creation-date/);
     expect(malformedFounder.models.ForestWritingTree.create).not.toHaveBeenCalled();
 
     const malformedProjection = harness({

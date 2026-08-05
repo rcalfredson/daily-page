@@ -48,9 +48,10 @@ authorized and resolved from current Block data when the tree is inspected.
 ## Deferred caller responsibilities
 
 Milestone 2 still needs the orchestration around this service: direct Block lifecycle enqueueing,
-inactive-tree reactivation/deactivation, the cursor-based convergence sweep, and owner-authorized
-scene, regional, inspection, and non-canvas read routes. Those paths must preserve this service's
-owner/group idempotency and account-deletion fence.
+the cursor-based convergence sweep, and owner-authorized scene, regional, inspection, and
+non-canvas read routes. Exact inactive-tree reactivation/deactivation is implemented by the
+owner/group reconciliation service. Those paths must preserve this service's owner/group
+idempotency and account-deletion fence.
 
 ## Verification
 
