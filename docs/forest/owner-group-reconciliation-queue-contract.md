@@ -37,7 +37,7 @@ minute worker without processing one live lease concurrently.
 Transient failures release the lease and use exponential backoff starting at 15 seconds, capped at
 one hour. After eight attempts by default, a row becomes `failed` and stops consuming worker cycles.
 Only a normalized error code is retained. A later enqueue resets the attempt budget and revives the
-same owner/group row, while the future convergence sweep can also re-enqueue it.
+same owner/group row, while the convergence sweep independently repairs current ledger truth.
 
 `FOREST_OWNER_UNAVAILABLE` is terminal because it means account deletion has removed or suppressed
 the owner. That queue row is dropped rather than retried. Account-deletion forest cleanup also
@@ -64,5 +64,5 @@ change forest eligibility and do not enqueue work. Foreign translations enqueue 
 owner/group identity; they do not mutate another owner's tree ledger.
 
 Direct database maintenance and a process failure between a committed post write and best-effort
-enqueue can still miss an event. The resumable cursor-based owner sweep is deliberately retained as
-the convergence mechanism for those cases and for historical enrollment.
+enqueue can still miss an event. The resumable cursor-based owner sweep is the convergence mechanism
+for those cases and for historical groups in established owner worlds.

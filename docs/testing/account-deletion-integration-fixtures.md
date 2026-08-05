@@ -119,7 +119,9 @@ idempotent inactivity, same-tree reactivation, malformed-evidence preservation, 
 zero-tree/zero-founder case. It checks that identity, projection, placement, the owner-world cursor,
 tree revisions, and the account fence change only where their contracts allow. Finally, it verifies
 durable owner/group queue deduplication, lease completion, transient retry state, recovery, queue
-drain, and enqueue ordering through the account-deletion fence.
+drain, and enqueue ordering through the account-deletion fence. It then deletes one source Block
+without an event and proves the cursor-based convergence sweep enrolls missing historical groups,
+deactivates the unseen tree, and completes the owner-world epoch over bounded pages.
 
 To start the same scenario again, rerun its seed command. To remove it without reseeding:
 

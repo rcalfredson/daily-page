@@ -11,6 +11,9 @@ import {
 import {
   processForestOwnerGroupReconciliationJobs
 } from './forestOwnerGroupReconciliationQueue.js';
+import {
+  processForestOwnerConvergenceSweeps
+} from './forestOwnerConvergenceSweep.js';
 
 // Home cache warmers
 import {
@@ -119,6 +122,16 @@ const jobs = [
       await processForestOwnerGroupReconciliationJobs();
     } catch (error) {
       console.error('Failed forest owner-group reconciliation job:', {
+        error: error?.name || 'Error'
+      });
+    }
+  }, null),
+
+  new CronJob('*/5 * * * *', async () => {
+    try {
+      await processForestOwnerConvergenceSweeps();
+    } catch (error) {
+      console.error('Failed forest owner convergence sweep job:', {
         error: error?.name || 'Error'
       });
     }
