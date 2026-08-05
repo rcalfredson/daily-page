@@ -101,6 +101,22 @@ evidence expiry remains unset while cleanup is pending, completes the owner-worl
 an additional cleanup pass is idempotent, and proves that the fence fails closed after the owner is
 deleted. It does not replace the manual HTTP authorization and UI test.
 
+## Test transactional Activity Forest tree creation
+
+The same disposable fixture can exercise the real writing-tree transaction independently of
+account deletion:
+
+```bash
+npm run account-deletion:fixture -- seed anonymous --write
+npm run account-deletion:fixture -- create-tree-direct anonymous --write
+npm run account-deletion:fixture -- reset anonymous --write
+```
+
+`create-tree-direct` clears only the seeded owner's forest ledger, then verifies an initial tree
+creation, an idempotent retry, full rollback after a deliberately failed projection, and two
+concurrent requests converging on one durable tree identity. It also checks that the owner-world
+placement cursor, placement revision, and account fence advance only in committed transactions.
+
 To start the same scenario again, rerun its seed command. To remove it without reseeding:
 
 ```bash
