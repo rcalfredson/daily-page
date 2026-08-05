@@ -29,6 +29,9 @@ import {
   ForestLedgerFenceError
 } from '../../server/services/forestLedgerFence.js';
 import {
+  readForestOwnerPlacementNeighborhood
+} from '../../server/services/forestOwnerPlacementNeighborhood.js';
+import {
   ACCOUNT_DELETION_FIXTURE_ROOM_ID,
   ACCOUNT_DELETION_FIXTURE_SCENARIOS,
   ACCOUNT_DELETION_FIXTURE_TAG,
@@ -385,7 +388,8 @@ async function verifyBefore(scenario) {
     activeSessions,
     quest,
     forestOwnerWorld,
-    forestWritingTreeCount
+    forestWritingTreeCount,
+    placementNeighborhood
   ] = await Promise.all([
     User.find({ _id: { $in: fixture.ids.userIds } }).lean(),
     Block.find({ _id: { $in: fixture.ids.postIds } }).lean(),
@@ -398,7 +402,12 @@ async function verifyBefore(scenario) {
     }),
     Quest.findById(fixture.ids.questId).lean(),
     ForestOwnerWorld.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
-    ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id })
+    ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    readForestOwnerPlacementNeighborhood({
+      ownerUserId: fixture.users.owner._id,
+      worldSeed: fixture.forestOwnerWorld.worldSeed,
+      placementSlot: 0
+    })
   ]);
 
   check.expect('three fixture accounts exist', users.length === 3, users.length);
@@ -416,6 +425,15 @@ async function verifyBefore(scenario) {
     'three owner writing trees exist',
     forestWritingTreeCount === 3,
     forestWritingTreeCount
+  );
+  check.expect(
+    'owner placement neighborhood is queryable',
+    [9, 25].includes(placementNeighborhood.queriedCellCount)
+      && placementNeighborhood.occupiedPlacements.length <= 3,
+    {
+      queriedCells: placementNeighborhood.queriedCellCount,
+      occupiedPlacements: placementNeighborhood.occupiedPlacements.length
+    }
   );
   check.expect(
     'in-progress unlisted post is present before deletion',

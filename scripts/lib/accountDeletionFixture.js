@@ -540,8 +540,8 @@ export function buildAccountDeletionFixture({
     },
     placementIndex: {
       version: 1,
-      cellX: slot - 1,
-      cellY: slot
+      cellX: Math.floor(((slot - 1) * 96) / 720),
+      cellY: Math.floor((slot * 72) / 720)
     },
     originatingEnvironment: {
       policyVersion: 1,

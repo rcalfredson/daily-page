@@ -350,6 +350,12 @@ describe('forest durable ledger schemas', () => {
       'placementIndex.cellY': 1,
       writingTreeId: 1
     });
+    expect(indexes.get('forest_writing_tree_placement_neighborhood')?.fields).toEqual({
+      ownerUserId: 1,
+      'placementIndex.cellX': 1,
+      'placementIndex.cellY': 1,
+      writingTreeId: 1
+    });
     expect(indexes.get('forest_writing_tree_reconciliation_epoch')?.fields).toEqual({
       ownerUserId: 1,
       lastEligibleReconciliationEpoch: 1,
