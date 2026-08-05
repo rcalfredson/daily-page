@@ -55,7 +55,13 @@ function deletionRequest(overrides = {}) {
   };
 }
 
-function cleanupHarness({ treePages = [[]], remainingTree = null, remainingWorld = null } = {}) {
+function cleanupHarness({
+  treePages = [[]],
+  deletedJobs = 0,
+  remainingTree = null,
+  remainingJob = null,
+  remainingWorld = null
+} = {}) {
   const requests = [deletionRequest()];
   const AccountDeletionRequestModel = {
     find: jasmine.createSpy('AccountDeletionRequest.find')
@@ -70,6 +76,12 @@ function cleanupHarness({ treePages = [[]], remainingTree = null, remainingWorld
       .and.callFake(async filter => ({ deletedCount: filter._id.$in.length })),
     exists: jasmine.createSpy('ForestWritingTree.exists').and.resolveTo(remainingTree)
   };
+  const ForestOwnerGroupReconciliationJobModel = {
+    deleteMany: jasmine.createSpy('ForestOwnerGroupReconciliationJob.deleteMany')
+      .and.resolveTo({ deletedCount: deletedJobs }),
+    exists: jasmine.createSpy('ForestOwnerGroupReconciliationJob.exists')
+      .and.resolveTo(remainingJob)
+  };
   const ForestOwnerWorldModel = {
     deleteMany: jasmine.createSpy('ForestOwnerWorld.deleteMany')
       .and.resolveTo({ deletedCount: 1 }),
@@ -81,6 +93,7 @@ function cleanupHarness({ treePages = [[]], remainingTree = null, remainingWorld
 
   return {
     AccountDeletionRequestModel,
+    ForestOwnerGroupReconciliationJobModel,
     ForestWritingTreeModel,
     ForestOwnerWorldModel,
     scheduleEvidenceExpiry,
@@ -279,7 +292,8 @@ describe('account-deletion forest cleanup', () => {
 
   it('drains bounded tree pages, deletes the root, verifies absence, and completes', async () => {
     const harness = cleanupHarness({
-      treePages: [[{ _id: 'tree-1' }, { _id: 'tree-2' }], []]
+      treePages: [[{ _id: 'tree-1' }, { _id: 'tree-2' }], []],
+      deletedJobs: 1
     });
 
     const result = await cleanUpAccountDeletionForests({
@@ -297,6 +311,7 @@ describe('account-deletion forest cleanup', () => {
       pending: 0,
       failed: 0,
       deletedTrees: 2,
+      deletedReconciliationJobs: 1,
       deletedWorlds: 1
     });
     expect(harness.ForestWritingTreeModel.deleteMany).toHaveBeenCalledWith({
@@ -304,6 +319,8 @@ describe('account-deletion forest cleanup', () => {
       ownerUserId: OWNER_USER_ID
     });
     expect(harness.ForestOwnerWorldModel.deleteMany)
+      .toHaveBeenCalledOnceWith({ ownerUserId: OWNER_USER_ID });
+    expect(harness.ForestOwnerGroupReconciliationJobModel.deleteMany)
       .toHaveBeenCalledOnceWith({ ownerUserId: OWNER_USER_ID });
     expect(harness.scheduleEvidenceExpiry).toHaveBeenCalledOnceWith({
       ownerUserId: OWNER_USER_ID,
@@ -334,6 +351,23 @@ describe('account-deletion forest cleanup', () => {
     expect(result.deletedTrees).toBe(0);
     expect(harness.ForestWritingTreeModel.deleteMany).not.toHaveBeenCalled();
     expect(harness.scheduleEvidenceExpiry).toHaveBeenCalled();
+  });
+
+  it('does not declare deletion convergence while an owner queue row remains', async () => {
+    const harness = cleanupHarness({
+      treePages: [[]],
+      remainingJob: { _id: 'remaining-job' }
+    });
+
+    const result = await cleanUpAccountDeletionForests({
+      ...harness,
+      ownerUserId: OWNER_USER_ID,
+      now: NOW
+    });
+
+    expect(result.pending).toBe(1);
+    expect(result.completed).toBe(0);
+    expect(harness.scheduleEvidenceExpiry).not.toHaveBeenCalled();
   });
 
   it('keeps completed cleanup successful when immediate expiry scheduling fails', async () => {

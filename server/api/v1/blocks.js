@@ -32,6 +32,9 @@ import {
   canManageBlock,
   parseEditTokens
 } from '../../utils/block.js';
+import {
+  enqueueForestOwnerGroupReconciliationForBlock
+} from '../../services/forestOwnerGroupReconciliationQueue.js';
 
 const roomScopedRouter = Router({ mergeParams: true });
 const globalRouter = Router();
@@ -211,6 +214,7 @@ const useBlockAPI = (app) => {
         questItemId: questItemId || null,
         userId: req.user?.id || null
       });
+      await enqueueForestOwnerGroupReconciliationForBlock({ block: newBlock });
 
       // 1️⃣ Guardar el token de edición
       res.cookie('edit_tokens', JSON.stringify(existingTokens), {
@@ -453,7 +457,10 @@ const useBlockAPI = (app) => {
         Object.assign(updates, fieldUpdates);
       }
 
-      await updateBlock(block_id, updates);
+      const updatedBlock = await updateBlock(block_id, updates);
+      if (status !== undefined) {
+        await enqueueForestOwnerGroupReconciliationForBlock({ block: updatedBlock });
+      }
       res.status(200).json({ message: 'Block metadata updated successfully.' });
     } catch (error) {
       if (sendQuestMutationError(res, error)) return;
@@ -486,7 +493,8 @@ const useBlockAPI = (app) => {
         blockId: block_id,
         operation: QUEST_BLOCK_OPERATIONS.DELETE
       });
-      await deleteBlockWithQuestReconciliation({ blockId: block_id });
+      const deletedBlock = await deleteBlockWithQuestReconciliation({ blockId: block_id });
+      await enqueueForestOwnerGroupReconciliationForBlock({ block: deletedBlock });
       res.status(200).json({ message: 'Block deleted successfully.' });
     } catch (error) {
       if (sendQuestMutationError(res, error)) return;
