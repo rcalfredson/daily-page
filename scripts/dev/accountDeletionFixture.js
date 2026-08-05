@@ -36,6 +36,9 @@ import {
   createForestWritingTree
 } from '../../server/services/forestWritingTreeCreation.js';
 import {
+  reconcileForestOwnerGroup
+} from '../../server/services/forestOwnerGroupReconciliation.js';
+import {
   ACCOUNT_DELETION_FIXTURE_ROOM_ID,
   ACCOUNT_DELETION_FIXTURE_SCENARIOS,
   ACCOUNT_DELETION_FIXTURE_TAG,
@@ -588,13 +591,120 @@ async function createTreeDirect(scenario) {
     'Committed create/retry transactions did not leave the expected fence revision.'
   );
 
+  const lifecycleTreeBefore = finalTrees.find(
+    tree => tree.translationGroupId === firstGroupId
+  );
+  const stableLifecycleEvidence = {
+    writingTreeId: lifecycleTreeBefore.writingTreeId,
+    placement: lifecycleTreeBefore.placement,
+    originatingEnvironment: lifecycleTreeBefore.originatingEnvironment,
+    projection: lifecycleTreeBefore.projection
+  };
+  await Block.updateOne(
+    { _id: fixture.posts.ownerPublicLocked._id },
+    { $set: { authorshipState: 'deleted-author' } }
+  );
+  const deactivated = await reconcileForestOwnerGroup({
+    ownerUserId,
+    translationGroupId: firstGroupId,
+    now: transitionTime
+  });
+  const inactiveRetry = await reconcileForestOwnerGroup({
+    ownerUserId,
+    translationGroupId: firstGroupId,
+    now: transitionTime
+  });
+  requireFixtureCondition(
+    deactivated.outcome === 'deactivated'
+      && inactiveRetry.outcome === 'inactive'
+      && inactiveRetry.tree.recordRevision === deactivated.tree.recordRevision,
+    'Ineligible lifecycle reconciliation did not converge idempotently.'
+  );
+
+  await Block.updateOne(
+    { _id: fixture.posts.ownerPublicLocked._id },
+    { $set: { authorshipState: 'live' } }
+  );
+  const reactivated = await reconcileForestOwnerGroup({
+    ownerUserId,
+    translationGroupId: firstGroupId,
+    now: transitionTime
+  });
+  requireFixtureCondition(
+    reactivated.outcome === 'reactivated'
+      && reactivated.tree.writingTreeId === stableLifecycleEvidence.writingTreeId
+      && JSON.stringify(reactivated.tree.placement)
+        === JSON.stringify(stableLifecycleEvidence.placement)
+      && JSON.stringify(reactivated.tree.originatingEnvironment)
+        === JSON.stringify(stableLifecycleEvidence.originatingEnvironment)
+      && JSON.stringify(reactivated.tree.projection)
+        === JSON.stringify(stableLifecycleEvidence.projection),
+    'Reactivation did not preserve the established tree snapshot.'
+  );
+
+  await Block.updateOne(
+    { _id: fixture.posts.ownerPublicLocked._id },
+    { $set: { lang: 'malformed language' } }
+  );
+  const unresolved = await reconcileForestOwnerGroup({
+    ownerUserId,
+    translationGroupId: firstGroupId,
+    now: transitionTime
+  });
+  requireFixtureCondition(
+    unresolved.outcome === 'unresolved'
+      && unresolved.tree.sourceState === 'active'
+      && unresolved.tree.recordRevision === reactivated.tree.recordRevision,
+    'Malformed evidence did not preserve the last known-good tree state.'
+  );
+  await Block.updateOne(
+    { _id: fixture.posts.ownerPublicLocked._id },
+    { $set: { lang: fixture.posts.ownerPublicLocked.lang } }
+  );
+
+  const absent = await reconcileForestOwnerGroup({
+    ownerUserId,
+    translationGroupId: fixture.posts.ownerLegacyLocked.groupId,
+    now: transitionTime
+  });
+  const [lifecycleTreeAfter, lifecycleOwner, lifecycleTreeCount] = await Promise.all([
+    ForestWritingTree.findOne({
+      ownerUserId,
+      translationGroupId: firstGroupId
+    }).lean(),
+    User.findById(ownerUserId, { forestLedgerFence: 1 }).lean(),
+    ForestWritingTree.countDocuments({ ownerUserId })
+  ]);
+  requireFixtureCondition(
+    absent.outcome === 'absent' && lifecycleTreeCount === 2,
+    'Zero-tree, zero-founder reconciliation created unexpected state.'
+  );
+  requireFixtureCondition(
+    lifecycleTreeAfter.sourceState === 'active'
+      && lifecycleTreeAfter.writingTreeId === stableLifecycleEvidence.writingTreeId
+      && lifecycleTreeAfter.recordRevision === lifecycleTreeBefore.recordRevision + 2,
+    'Lifecycle reconciliation did not preserve one stable durable tree.'
+  );
+  requireFixtureCondition(
+    lifecycleOwner?.forestLedgerFence === 9,
+    'Lifecycle reconciliation did not leave the expected committed fence revision.'
+  );
+
   console.log('Transactional writing-tree creation integration passes:', {
     initialOutcomes: [created.outcome, retried.outcome],
     rollbackPreservedState: true,
     concurrentOutcomes: concurrentResults.map(item => item.outcome).sort(),
     finalTreeCount: finalTrees.length,
     finalPlacementRevision: finalWorld.placementRevision,
-    finalFenceRevision: finalOwner.forestLedgerFence
+    creationFenceRevision: finalOwner.forestLedgerFence,
+    lifecycleOutcomes: [
+      deactivated.outcome,
+      inactiveRetry.outcome,
+      reactivated.outcome,
+      unresolved.outcome,
+      absent.outcome
+    ],
+    finalFenceRevision: lifecycleOwner.forestLedgerFence
   });
 }
 

@@ -35,13 +35,15 @@ import {
   readForestOwnerPlacementNeighborhood,
 } from './forestOwnerPlacementNeighborhood.js';
 import {
+  buildForestOwnerGroupEvidenceReader,
+  FOREST_OWNER_GROUP_EVIDENCE_CLASSIFICATIONS,
+} from './forestOwnerGroupEvidence.js';
+import {
   FOREST_OWNER_VARIANT_SELECTION_VERSION,
   selectForestOwnerVariants,
 } from './forestOwnerVariantSelection.js';
 import {
   FOREST_OWNER_WRITING_POLICY_VERSION,
-  FOREST_WRITING_CLASSIFICATIONS,
-  classifyForestOwnerWriting,
 } from './forestOwnerWritingPolicy.js';
 import {
   FOREST_POST_TREE_MAPPING_VERSION,
@@ -58,17 +60,6 @@ export const FOREST_WRITING_TREE_DEFAULT_CANDIDATE_CHECKS = 128;
 
 const OBJECT_ID_PATTERN = /^[a-f0-9]{24}$/i;
 const BASE64URL_PATTERN = /^[A-Za-z0-9_-]+$/;
-const FOUNDING_BLOCK_PROJECTION = Object.freeze({
-  _id: 1,
-  userId: 1,
-  authorshipState: 1,
-  groupId: 1,
-  lang: 1,
-  status: 1,
-  visibility: 1,
-  createdAt: 1,
-  roomId: 1,
-});
 
 export class ForestWritingTreeCreationError extends Error {
   constructor(code, message) {
@@ -149,58 +140,7 @@ function result(outcome, tree, diagnostics = null) {
   });
 }
 
-function blockPolicyRecord(block) {
-  return {
-    recordType: 'Block',
-    blockId: String(block?._id || ''),
-    userId: block?.userId === undefined || block?.userId === null
-      ? block?.userId
-      : String(block.userId),
-    ...(block?.authorshipState === undefined
-      ? {}
-      : { authorshipState: block.authorshipState }),
-    groupId: block?.groupId === undefined || block?.groupId === null
-      ? block?.groupId
-      : String(block.groupId),
-    status: block?.status,
-    visibility: block?.visibility,
-    lang: block?.lang,
-  };
-}
-
-function foundingVariant(block, ownerUserId, translationGroupId) {
-  const decision = classifyForestOwnerWriting({
-    authenticatedOwnerId: ownerUserId,
-    record: blockPolicyRecord(block),
-  });
-  if (decision.classification !== FOREST_WRITING_CLASSIFICATIONS.ELIGIBLE) {
-    fail(
-      'FOUNDING_SOURCE_UNRESOLVED',
-      `founding source is not eligible: ${decision.reasonCode}`,
-    );
-  }
-  if (!(block.createdAt instanceof Date) || Number.isNaN(block.createdAt.getTime())) {
-    fail('FOUNDING_SOURCE_UNRESOLVED', 'founding source has an invalid creation date');
-  }
-  if (
-    typeof block.roomId !== 'string'
-    || block.roomId.length === 0
-    || block.roomId.length > 120
-  ) {
-    fail('FOUNDING_SOURCE_UNRESOLVED', 'founding source has an invalid room identity');
-  }
-
-  const variant = {
-    blockId: String(block._id),
-    ownerUserId,
-    translationGroupId,
-    authorshipState: block.authorshipState || 'live',
-    lang: block.lang,
-    status: block.status,
-    visibility: block.visibility,
-    createdAt: block.createdAt.toISOString(),
-    roomId: block.roomId,
-  };
+function selectFoundingVariant(variant, ownerUserId, translationGroupId) {
   const selection = selectForestOwnerVariants({
     ownerUserId,
     translationGroupId,
@@ -211,25 +151,6 @@ function foundingVariant(block, ownerUserId, translationGroupId) {
     fail('FOUNDING_SOURCE_UNRESOLVED', 'founding source selection was not active');
   }
   return selection.foundingVariant;
-}
-
-async function findFoundingVariant({
-  ownerUserId,
-  translationGroupId,
-  session,
-  BlockModel,
-}) {
-  const block = await BlockModel.findOne(
-    {
-      userId: ownerUserId,
-      groupId: translationGroupId,
-      authorshipState: { $in: ['live', null] },
-    },
-    FOUNDING_BLOCK_PROJECTION,
-  ).sort({ createdAt: 1, _id: 1 }).session(session).lean();
-  return block
-    ? foundingVariant(block, ownerUserId, translationGroupId)
-    : null;
 }
 
 function validateWorld(world) {
@@ -452,6 +373,7 @@ export function buildForestWritingTreeCreationService({
   projectTree = projectPostToForestTree,
   generateUuid = uuid,
   generateWorldSeed = worldSeed,
+  readGroupEvidence = null,
   maximumCandidateChecks = FOREST_WRITING_TREE_DEFAULT_CANDIDATE_CHECKS,
 } = {}) {
   const db = {
@@ -462,6 +384,8 @@ export function buildForestWritingTreeCreationService({
     User,
     ...models,
   };
+  const resolveGroupEvidence = readGroupEvidence
+    || buildForestOwnerGroupEvidenceReader({ BlockModel: db.Block });
   const candidateLimit = validateCandidateLimit(maximumCandidateChecks);
   for (const [name, dependency] of Object.entries({
     transactionRunner,
@@ -473,6 +397,7 @@ export function buildForestWritingTreeCreationService({
     projectTree,
     generateUuid,
     generateWorldSeed,
+    resolveGroupEvidence,
   })) {
     if (typeof dependency !== 'function') {
       fail('INVALID_TREE_CREATION_DEPENDENCY', `${name} must be a function`);
@@ -517,13 +442,27 @@ export function buildForestWritingTreeCreationService({
           generateUuid,
           generateWorldSeed,
         });
-        const founder = await findFoundingVariant({
+        const evidence = await resolveGroupEvidence({
           ownerUserId: owner,
           translationGroupId: group,
           session,
-          BlockModel: db.Block,
         });
-        if (!founder) return result('no-eligible-founder', null);
+        if (evidence.classification
+          === FOREST_OWNER_GROUP_EVIDENCE_CLASSIFICATIONS.UNRESOLVED) {
+          fail(
+            'FOUNDING_SOURCE_UNRESOLVED',
+            `founding source is unresolved: ${evidence.reasonCode}`,
+          );
+        }
+        if (evidence.classification
+          !== FOREST_OWNER_GROUP_EVIDENCE_CLASSIFICATIONS.ELIGIBLE) {
+          return result('no-eligible-founder', null);
+        }
+        const founder = selectFoundingVariant(
+          evidence.foundingVariant,
+          owner,
+          group,
+        );
 
         const reservation = await reservePlacement({
           ownerUserId: owner,
@@ -617,5 +556,3 @@ export function buildForestWritingTreeCreationService({
 }
 
 export const createForestWritingTree = buildForestWritingTreeCreationService();
-
-export { FOUNDING_BLOCK_PROJECTION };
