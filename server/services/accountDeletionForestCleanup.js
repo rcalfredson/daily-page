@@ -1,4 +1,5 @@
 import AccountDeletionRequest from '../db/models/AccountDeletionRequest.js';
+import ForestOwnerGroupReconciliationJob from '../db/models/ForestOwnerGroupReconciliationJob.js';
 import ForestOwnerWorld from '../db/models/ForestOwnerWorld.js';
 import ForestWritingTree from '../db/models/ForestWritingTree.js';
 import {
@@ -29,6 +30,7 @@ export async function cleanUpAccountDeletionForests({
   maxTreeBatchesPerRequest = 10,
   ownerUserId = null,
   AccountDeletionRequestModel = AccountDeletionRequest,
+  ForestOwnerGroupReconciliationJobModel = ForestOwnerGroupReconciliationJob,
   ForestOwnerWorldModel = ForestOwnerWorld,
   ForestWritingTreeModel = ForestWritingTree,
   scheduleEvidenceExpiry = scheduleAccountDeletionEvidenceExpiry,
@@ -61,6 +63,7 @@ export async function cleanUpAccountDeletionForests({
     pending: 0,
     failed: 0,
     deletedTrees: 0,
+    deletedReconciliationJobs: 0,
     deletedWorlds: 0
   };
 
@@ -99,16 +102,22 @@ export async function cleanUpAccountDeletionForests({
         continue;
       }
 
+      const deletedJobs = await ForestOwnerGroupReconciliationJobModel.deleteMany({
+        ownerUserId: owner
+      });
+      totals.deletedReconciliationJobs += Number(deletedJobs?.deletedCount || 0);
+
       const deletedWorlds = await ForestOwnerWorldModel.deleteMany({
         ownerUserId: owner
       });
       totals.deletedWorlds += Number(deletedWorlds?.deletedCount || 0);
 
-      const [remainingTree, remainingWorld] = await Promise.all([
+      const [remainingTree, remainingJob, remainingWorld] = await Promise.all([
         ForestWritingTreeModel.exists({ ownerUserId: owner }),
+        ForestOwnerGroupReconciliationJobModel.exists({ ownerUserId: owner }),
         ForestOwnerWorldModel.exists({ ownerUserId: owner })
       ]);
-      if (remainingTree || remainingWorld) {
+      if (remainingTree || remainingJob || remainingWorld) {
         totals.pending += 1;
         continue;
       }

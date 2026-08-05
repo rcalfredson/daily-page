@@ -61,6 +61,6 @@ inactive trees even though their placement remains reserved.
 
 ## Deferred orchestration
 
-This service accepts one exact owner/group; it does not yet enqueue itself from Block mutations.
-Remaining Milestone 2 orchestration includes the post-write lifecycle hook/queue and the resumable
-cursor-based owner sweep that recovers missed events and deactivates unseen groups.
+This service accepts one exact owner/group. The durable post-write lifecycle queue invokes it for
+new Block events. Remaining Milestone 2 orchestration includes the resumable cursor-based owner
+sweep that recovers missed events, enrolls historical writing, and deactivates unseen groups.

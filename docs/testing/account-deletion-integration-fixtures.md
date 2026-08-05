@@ -117,7 +117,9 @@ creation, an idempotent retry, full rollback after a deliberately failed project
 concurrent requests converging on one durable tree identity. It then exercises deactivation,
 idempotent inactivity, same-tree reactivation, malformed-evidence preservation, and the
 zero-tree/zero-founder case. It checks that identity, projection, placement, the owner-world cursor,
-tree revisions, and the account fence change only where their contracts allow.
+tree revisions, and the account fence change only where their contracts allow. Finally, it verifies
+durable owner/group queue deduplication, lease completion, transient retry state, recovery, queue
+drain, and enqueue ordering through the account-deletion fence.
 
 To start the same scenario again, rerun its seed command. To remove it without reseeding:
 

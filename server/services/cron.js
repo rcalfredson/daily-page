@@ -8,6 +8,9 @@ import { cleanUpAccountDeletionForests } from './accountDeletionForestCleanup.js
 import {
   scheduleConvergedAccountDeletionEvidenceExpiries
 } from './accountDeletionEvidence.js';
+import {
+  processForestOwnerGroupReconciliationJobs
+} from './forestOwnerGroupReconciliationQueue.js';
 
 // Home cache warmers
 import {
@@ -108,6 +111,16 @@ const jobs = [
       await scheduleConvergedAccountDeletionEvidenceExpiries();
     } catch (error) {
       console.error('Failed account-deletion evidence expiry job:', error?.name || 'Error');
+    }
+  }, null),
+
+  new CronJob('* * * * *', async () => {
+    try {
+      await processForestOwnerGroupReconciliationJobs();
+    } catch (error) {
+      console.error('Failed forest owner-group reconciliation job:', {
+        error: error?.name || 'Error'
+      });
     }
   }, null),
 

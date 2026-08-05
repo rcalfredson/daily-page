@@ -9,6 +9,7 @@ import BlockReaction from '../../server/db/models/BlockReaction.js';
 import CommentRateEvent from '../../server/db/models/CommentRateEvent.js';
 import CommentReport from '../../server/db/models/CommentReport.js';
 import Flag from '../../server/db/models/Flag.js';
+import ForestOwnerGroupReconciliationJob from '../../server/db/models/ForestOwnerGroupReconciliationJob.js';
 import ForestOwnerWorld from '../../server/db/models/ForestOwnerWorld.js';
 import ForestWritingTree from '../../server/db/models/ForestWritingTree.js';
 import Notification from '../../server/db/models/Notification.js';
@@ -38,6 +39,11 @@ import {
 import {
   reconcileForestOwnerGroup
 } from '../../server/services/forestOwnerGroupReconciliation.js';
+import {
+  buildForestOwnerGroupReconciliationWorker,
+  enqueueForestOwnerGroupReconciliation,
+  processForestOwnerGroupReconciliationJobs
+} from '../../server/services/forestOwnerGroupReconciliationQueue.js';
 import {
   ACCOUNT_DELETION_FIXTURE_ROOM_ID,
   ACCOUNT_DELETION_FIXTURE_SCENARIOS,
@@ -103,6 +109,7 @@ async function connectFixtureDatabase() {
     CommentRateEvent,
     CommentReport,
     Flag,
+    ForestOwnerGroupReconciliationJob,
     ForestOwnerWorld,
     ForestWritingTree,
     Notification,
@@ -122,6 +129,7 @@ async function connectFixtureDatabase() {
   }
   await repairFixtureTtlIndex(UsernameReservation, 'expiresAt');
   await AccountDeletionRequest.createIndexes();
+  await ForestOwnerGroupReconciliationJob.createIndexes();
   await ForestOwnerWorld.createIndexes();
   await ForestWritingTree.createIndexes();
   await UsernameReservation.createIndexes();
@@ -298,6 +306,10 @@ async function resetFixtureScenario(scenario, { session = null } = {}) {
 
   await AuthSession.deleteMany({ userId: { $in: userIds } }, { session });
   await ForestWritingTree.deleteMany({ ownerUserId: { $in: userIds } }, { session });
+  await ForestOwnerGroupReconciliationJob.deleteMany(
+    { ownerUserId: { $in: userIds } },
+    { session }
+  );
   await ForestOwnerWorld.deleteMany({ ownerUserId: { $in: userIds } }, { session });
   await AccountDeletionRequest.deleteMany({ ownerUserId: { $in: userIds } }, { session });
   await UsernameReservation.deleteMany({ _id: { $in: usernames } }, { session });
@@ -690,6 +702,111 @@ async function createTreeDirect(scenario) {
     'Lifecycle reconciliation did not leave the expected committed fence revision.'
   );
 
+  const firstQueued = await enqueueForestOwnerGroupReconciliation({
+    ownerUserId,
+    translationGroupId: firstGroupId,
+    now: transitionTime
+  });
+  const secondQueued = await enqueueForestOwnerGroupReconciliation({
+    ownerUserId,
+    translationGroupId: firstGroupId,
+    now: transitionTime
+  });
+  const deduplicatedJobs = await ForestOwnerGroupReconciliationJob.find({
+    ownerUserId,
+    translationGroupId: firstGroupId
+  }).lean();
+  requireFixtureCondition(
+    firstQueued.requestedRevision === 1
+      && secondQueued.requestedRevision === 2
+      && deduplicatedJobs.length === 1
+      && deduplicatedJobs[0].requestedRevision === 2,
+    'Repeated enqueueing did not deduplicate by owner/group revision.'
+  );
+
+  await Block.updateOne(
+    { _id: fixture.posts.ownerPublicLocked._id },
+    { $set: { authorshipState: 'deleted-author' } }
+  );
+  const asynchronousDeactivation = await processForestOwnerGroupReconciliationJobs({
+    limit: 1,
+    now: transitionTime
+  });
+  await Block.updateOne(
+    { _id: fixture.posts.ownerPublicLocked._id },
+    { $set: { authorshipState: 'live' } }
+  );
+  await enqueueForestOwnerGroupReconciliation({
+    ownerUserId,
+    translationGroupId: firstGroupId,
+    now: transitionTime
+  });
+  const asynchronousReactivation = await processForestOwnerGroupReconciliationJobs({
+    limit: 1,
+    now: transitionTime
+  });
+
+  await enqueueForestOwnerGroupReconciliation({
+    ownerUserId,
+    translationGroupId: concurrentGroupId,
+    now: transitionTime
+  });
+  const processWithFailure = buildForestOwnerGroupReconciliationWorker({
+    async reconcile() {
+      const error = new Error('fixture transient reconciliation failure');
+      error.name = 'FixtureTransientError';
+      throw error;
+    }
+  });
+  const failedPass = await processWithFailure({
+    limit: 1,
+    maxAttempts: 2,
+    now: transitionTime
+  });
+  const failedJob = await ForestOwnerGroupReconciliationJob.findOne({
+    ownerUserId,
+    translationGroupId: concurrentGroupId
+  }).lean();
+  requireFixtureCondition(
+    failedPass.retried === 1
+      && failedJob?.status === 'pending'
+      && failedJob?.attempts === 1
+      && failedJob?.lastErrorCode === 'FIXTURE_TRANSIENT_ERROR'
+      && failedJob?.leaseToken === null,
+    'Transient worker failure did not remain durably retryable.'
+  );
+  const retryTime = new Date(transitionTime.getTime() + 30_000);
+  await enqueueForestOwnerGroupReconciliation({
+    ownerUserId,
+    translationGroupId: concurrentGroupId,
+    now: retryTime
+  });
+  const recoveredPass = await processForestOwnerGroupReconciliationJobs({
+    limit: 1,
+    now: retryTime
+  });
+  const [asyncTree, asyncOwner, remainingJobs] = await Promise.all([
+    ForestWritingTree.findOne({
+      ownerUserId,
+      translationGroupId: firstGroupId
+    }).lean(),
+    User.findById(ownerUserId, { forestLedgerFence: 1 }).lean(),
+    ForestOwnerGroupReconciliationJob.countDocuments({ ownerUserId })
+  ]);
+  requireFixtureCondition(
+    asynchronousDeactivation.completed === 1
+      && asynchronousReactivation.completed === 1
+      && recoveredPass.completed === 1
+      && remainingJobs === 0,
+    'Asynchronous reconciliation jobs did not complete and drain.'
+  );
+  requireFixtureCondition(
+    asyncTree.sourceState === 'active'
+      && asyncTree.writingTreeId === stableLifecycleEvidence.writingTreeId
+      && asyncOwner?.forestLedgerFence === 17,
+    'Asynchronous lifecycle reconciliation changed durable identity or fence ordering.'
+  );
+
   console.log('Transactional writing-tree creation integration passes:', {
     initialOutcomes: [created.outcome, retried.outcome],
     rollbackPreservedState: true,
@@ -704,7 +821,17 @@ async function createTreeDirect(scenario) {
       unresolved.outcome,
       absent.outcome
     ],
-    finalFenceRevision: lifecycleOwner.forestLedgerFence
+    queueRequestedRevisions: [
+      firstQueued.requestedRevision,
+      secondQueued.requestedRevision
+    ],
+    asynchronousPasses: {
+      deactivation: asynchronousDeactivation,
+      reactivation: asynchronousReactivation,
+      failed: failedPass,
+      recovered: recoveredPass
+    },
+    finalFenceRevision: asyncOwner.forestLedgerFence
   });
 }
 
