@@ -129,6 +129,8 @@ describe('account deletion integration fixture definitions', () => {
       .toThrowError('reset changes data and requires --write.');
     expect(() => parseAccountDeletionFixtureArgs(['delete-direct', 'delete']))
       .toThrowError('delete-direct changes data and requires --write.');
+    expect(() => parseAccountDeletionFixtureArgs(['create-tree-direct', 'delete']))
+      .toThrowError('create-tree-direct changes data and requires --write.');
     expect(parseAccountDeletionFixtureArgs([
       'seed',
       'anonymous',

@@ -32,6 +32,10 @@ import {
   readForestOwnerPlacementNeighborhood
 } from '../../server/services/forestOwnerPlacementNeighborhood.js';
 import {
+  buildForestWritingTreeCreationService,
+  createForestWritingTree
+} from '../../server/services/forestWritingTreeCreation.js';
+import {
   ACCOUNT_DELETION_FIXTURE_ROOM_ID,
   ACCOUNT_DELETION_FIXTURE_SCENARIOS,
   ACCOUNT_DELETION_FIXTURE_TAG,
@@ -50,6 +54,7 @@ function usage() {
   console.log('  seed <scenario> --write [--active-quest]  Reset and seed one scenario.');
   console.log('  verify-before <scenario>                  Verify the login-ready fixture.');
   console.log('  delete-direct <scenario> --write          Invoke the deletion service directly.');
+  console.log('  create-tree-direct <scenario> --write     Verify transactional tree creation.');
   console.log('  verify-after <scenario>                   Verify the completed deletion.');
   console.log('  archive-quest <scenario> --write          Remove the active-quest guard.');
   console.log('  reset <scenario> --write                  Remove one fixture scenario.');
@@ -443,6 +448,156 @@ async function verifyBefore(scenario) {
   check.finish(`Pre-deletion verification (${scenario})`);
 }
 
+function requireFixtureCondition(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+async function createTreeDirect(scenario) {
+  const fixture = scenarioDefinition(scenario);
+  const ownerUserId = fixture.users.owner._id;
+  const firstGroupId = fixture.posts.ownerPublicLocked.groupId;
+  const rollbackGroupId = fixture.posts.ownerUnlistedLocked.groupId;
+  const concurrentGroupId = fixture.posts.ownerPublicDraft.groupId;
+  const transitionTime = new Date('2026-08-04T12:00:00.000Z');
+
+  requireFixtureCondition(
+    await User.exists({ _id: ownerUserId }),
+    `Seed the ${scenario} fixture before running create-tree-direct.`
+  );
+
+  await withTransaction(async (session) => {
+    await ForestWritingTree.deleteMany({ ownerUserId }, { session });
+    await ForestOwnerWorld.deleteMany({ ownerUserId }, { session });
+    await User.updateOne(
+      { _id: ownerUserId },
+      { $set: { forestLedgerFence: 0 } },
+      { session }
+    );
+  });
+
+  const created = await createForestWritingTree({
+    ownerUserId,
+    translationGroupId: firstGroupId,
+    now: transitionTime
+  });
+  const retried = await createForestWritingTree({
+    ownerUserId,
+    translationGroupId: firstGroupId,
+    now: transitionTime
+  });
+  const [firstWorld, firstTrees, firstOwner] = await Promise.all([
+    ForestOwnerWorld.findOne({ ownerUserId, worldRole: 'primary' }).lean(),
+    ForestWritingTree.find({ ownerUserId }).lean(),
+    User.findById(ownerUserId, { forestLedgerFence: 1 }).lean()
+  ]);
+  requireFixtureCondition(created.outcome === 'created', 'Initial tree creation did not create.');
+  requireFixtureCondition(retried.outcome === 'existing', 'Tree retry was not idempotent.');
+  requireFixtureCondition(
+    created.tree.writingTreeId === retried.tree.writingTreeId,
+    'Tree retry returned a different public identity.'
+  );
+  requireFixtureCondition(firstTrees.length === 1, 'Initial creation persisted multiple trees.');
+  requireFixtureCondition(
+    String(firstTrees[0].foundingSource.blockId) === fixture.posts.ownerPublicLocked._id,
+    'Initial creation captured the wrong founding source.'
+  );
+  requireFixtureCondition(
+    firstWorld?.nextCandidateSlot > 0 && firstWorld?.placementRevision === 2,
+    'Initial creation did not advance the owner-world cursor exactly once.'
+  );
+  requireFixtureCondition(
+    firstOwner?.forestLedgerFence === 2,
+    'Create and retry did not both acquire the owner transaction fence.'
+  );
+
+  const rollbackSnapshot = {
+    nextCandidateSlot: firstWorld.nextCandidateSlot,
+    placementRevision: firstWorld.placementRevision,
+    treeCount: firstTrees.length,
+    forestLedgerFence: firstOwner.forestLedgerFence
+  };
+  const createWithProjectionFailure = buildForestWritingTreeCreationService({
+    projectTree() {
+      throw new Error('fixture projection failure');
+    }
+  });
+  let projectionFailed = false;
+  try {
+    await createWithProjectionFailure({
+      ownerUserId,
+      translationGroupId: rollbackGroupId,
+      now: transitionTime
+    });
+  } catch (error) {
+    projectionFailed = error?.message === 'fixture projection failure';
+  }
+  requireFixtureCondition(projectionFailed, 'Forced projection failure did not escape.');
+
+  const [worldAfterRollback, treeCountAfterRollback, ownerAfterRollback] = await Promise.all([
+    ForestOwnerWorld.findOne({ ownerUserId, worldRole: 'primary' }).lean(),
+    ForestWritingTree.countDocuments({ ownerUserId }),
+    User.findById(ownerUserId, { forestLedgerFence: 1 }).lean()
+  ]);
+  requireFixtureCondition(
+    worldAfterRollback?.nextCandidateSlot === rollbackSnapshot.nextCandidateSlot
+      && worldAfterRollback?.placementRevision === rollbackSnapshot.placementRevision
+      && treeCountAfterRollback === rollbackSnapshot.treeCount
+      && ownerAfterRollback?.forestLedgerFence === rollbackSnapshot.forestLedgerFence,
+    'Projection failure left partial transactional state.'
+  );
+
+  const concurrentResults = await Promise.all([
+    createForestWritingTree({
+      ownerUserId,
+      translationGroupId: concurrentGroupId,
+      now: transitionTime
+    }),
+    createForestWritingTree({
+      ownerUserId,
+      translationGroupId: concurrentGroupId,
+      now: transitionTime
+    })
+  ]);
+  const [finalWorld, finalTrees, finalOwner] = await Promise.all([
+    ForestOwnerWorld.findOne({ ownerUserId, worldRole: 'primary' }).lean(),
+    ForestWritingTree.find({ ownerUserId }).sort({ writingTreeId: 1 }).lean(),
+    User.findById(ownerUserId, { forestLedgerFence: 1 }).lean()
+  ]);
+  const concurrentTrees = finalTrees.filter(
+    tree => tree.translationGroupId === concurrentGroupId
+  );
+  requireFixtureCondition(
+    concurrentResults.map(item => item.outcome).sort().join(',') === 'created,existing',
+    'Concurrent calls did not converge to one creation and one retry.'
+  );
+  requireFixtureCondition(
+    concurrentTrees.length === 1
+      && concurrentResults.every(
+        item => item.tree.writingTreeId === concurrentTrees[0].writingTreeId
+      ),
+    'Concurrent calls did not converge on one durable tree identity.'
+  );
+  requireFixtureCondition(finalTrees.length === 2, 'Concurrent creation persisted extra trees.');
+  requireFixtureCondition(
+    finalWorld?.placementRevision === 3
+      && finalWorld.nextCandidateSlot > rollbackSnapshot.nextCandidateSlot,
+    'Concurrent creation did not advance the owner world exactly once.'
+  );
+  requireFixtureCondition(
+    finalOwner?.forestLedgerFence === 4,
+    'Committed create/retry transactions did not leave the expected fence revision.'
+  );
+
+  console.log('Transactional writing-tree creation integration passes:', {
+    initialOutcomes: [created.outcome, retried.outcome],
+    rollbackPreservedState: true,
+    concurrentOutcomes: concurrentResults.map(item => item.outcome).sort(),
+    finalTreeCount: finalTrees.length,
+    finalPlacementRevision: finalWorld.placementRevision,
+    finalFenceRevision: finalOwner.forestLedgerFence
+  });
+}
+
 async function verifyAfter(scenario) {
   const fixture = scenarioDefinition(scenario);
   const check = makeCheckCollector();
@@ -807,6 +962,9 @@ async function main() {
       break;
     case 'delete-direct':
       await deleteDirect(args.scenario);
+      break;
+    case 'create-tree-direct':
+      await createTreeDirect(args.scenario);
       break;
     case 'verify-after':
       await verifyAfter(args.scenario);
