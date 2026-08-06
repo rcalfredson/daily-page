@@ -15,6 +15,7 @@ import { config } from './config/config.js';
 import useAuthAPI from './server/api/v1/auth.js';
 import useBlockAPI from './server/api/v1/blocks.js';
 import useCommentsAPI from './server/api/v1/comments.js';
+import useForestAPI from './server/api/v1/forest.js';
 import useNotificationsAPI from './server/api/v1/notifications.js';
 import useQuestAPI from './server/api/v1/quests.js';
 import usePeersAPI from './server/api/v1/peers.js';
@@ -210,6 +211,7 @@ async function getSupportFundingViewModel() {
     useAuthAPI(app);
     useBlockAPI(app);
     useCommentsAPI(app);
+    useForestAPI(app);
     useNotificationsAPI(app);
     useQuestAPI(app);
     useReactionsAPI(app);
