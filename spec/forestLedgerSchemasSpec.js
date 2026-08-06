@@ -366,6 +366,14 @@ describe('forest durable ledger schemas', () => {
       sourceState: 1,
       writingTreeId: 1
     });
+    expect(indexes.get('forest_writing_tree_non_canvas_read')?.fields).toEqual({
+      ownerUserId: 1,
+      forestId: 1,
+      sourceState: 1,
+      hiddenFromForest: 1,
+      'placement.slot': 1,
+      writingTreeId: 1
+    });
   });
 
   it('declares the exact-owner deterministic founding-selection Block index', () => {

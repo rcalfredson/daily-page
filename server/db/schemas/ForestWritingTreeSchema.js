@@ -287,5 +287,16 @@ forestWritingTreeSchema.index(
   { ownerUserId: 1, sourceState: 1, writingTreeId: 1 },
   { name: 'forest_writing_tree_lifecycle' }
 );
+forestWritingTreeSchema.index(
+  {
+    ownerUserId: 1,
+    forestId: 1,
+    sourceState: 1,
+    hiddenFromForest: 1,
+    'placement.slot': 1,
+    writingTreeId: 1
+  },
+  { name: 'forest_writing_tree_non_canvas_read' }
+);
 
 export default forestWritingTreeSchema;

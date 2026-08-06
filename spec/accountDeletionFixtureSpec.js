@@ -1,6 +1,7 @@
 import {
   ACCOUNT_DELETION_FIXTURE_SCENARIOS,
   buildAccountDeletionFixture,
+  buildForestReadPaginationPosts,
   expectedRetainedPostKeys,
   fixtureObjectId,
   fixtureUuid,
@@ -131,6 +132,8 @@ describe('account deletion integration fixture definitions', () => {
       .toThrowError('delete-direct changes data and requires --write.');
     expect(() => parseAccountDeletionFixtureArgs(['create-tree-direct', 'delete']))
       .toThrowError('create-tree-direct changes data and requires --write.');
+    expect(() => parseAccountDeletionFixtureArgs(['seed-forest-pagination', 'delete']))
+      .toThrowError('seed-forest-pagination changes data and requires --write.');
     expect(parseAccountDeletionFixtureArgs([
       'seed',
       'anonymous',
@@ -142,6 +145,32 @@ describe('account deletion integration fixture definitions', () => {
       write: true,
       activeQuest: true
     });
+  });
+
+  it('builds deterministic eligible writing for multi-page forest reads', async () => {
+    const fixture = buildAccountDeletionFixture({
+      scenario: 'deleted-author',
+      passwordHash: 'hash'
+    });
+    const first = buildForestReadPaginationPosts({
+      scenario: fixture.scenario,
+      owner: fixture.users.owner
+    });
+    const second = buildForestReadPaginationPosts({
+      scenario: fixture.scenario,
+      owner: fixture.users.owner
+    });
+
+    expect(first).toEqual(second);
+    expect(first).toHaveSize(55);
+    expect(new Set(first.map(post => post._id)).size).toBe(55);
+    expect(new Set(first.map(post => post.groupId)).size).toBe(55);
+    expect(first.some(post => post.lang === 'es')).toBeTrue();
+    expect(first.some(post => post.visibility === 'unlisted')).toBeTrue();
+    expect(first.some(post => post.status === 'in-progress')).toBeTrue();
+    for (const post of first) {
+      await expectAsync(new Block(post).validate()).toBeResolved();
+    }
   });
 
   it('rejects production and unknown CLI options', () => {

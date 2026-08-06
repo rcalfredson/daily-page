@@ -9,6 +9,7 @@ export const ACCOUNT_DELETION_FIXTURE_SCENARIOS = Object.freeze([
 export const ACCOUNT_DELETION_FIXTURE_ROOM_ID = 'account-deletion-fixture';
 export const ACCOUNT_DELETION_FIXTURE_TAG = 'account-deletion-fixture';
 export const DEFAULT_ACCOUNT_DELETION_FIXTURE_PASSWORD = 'DeletionFixture!2026';
+export const FOREST_READ_PAGINATION_FIXTURE_POST_COUNT = 55;
 
 export function fixtureObjectId(scenario, key) {
   return crypto
@@ -64,6 +65,7 @@ export function parseAccountDeletionFixtureArgs(argv) {
     'verify-before',
     'delete-direct',
     'create-tree-direct',
+    'seed-forest-pagination',
     'verify-after',
     'archive-quest'
   ];
@@ -86,12 +88,55 @@ export function parseAccountDeletionFixtureArgs(argv) {
   if (args.activeQuest && command !== 'seed') {
     throw new Error('--active-quest is only valid with the seed command.');
   }
-  if (['seed', 'reset', 'delete-direct', 'create-tree-direct', 'archive-quest'].includes(command)
+  if (['seed', 'reset', 'delete-direct', 'create-tree-direct', 'seed-forest-pagination', 'archive-quest'].includes(command)
     && !args.write) {
     throw new Error(`${command} changes data and requires --write.`);
   }
 
   return args;
+}
+
+export function buildForestReadPaginationPosts({
+  scenario,
+  owner,
+  count = FOREST_READ_PAGINATION_FIXTURE_POST_COUNT
+}) {
+  assertFixtureScenario(scenario);
+  if (!owner?._id || !owner?.username) {
+    throw new Error('A fixture owner with stable id and username is required.');
+  }
+  if (!Number.isSafeInteger(count) || count < 1 || count > 100) {
+    throw new Error('Pagination fixture count must be an integer from 1 through 100.');
+  }
+
+  const baseTime = Date.parse('2026-07-01T12:00:00.000Z');
+  return Array.from({ length: count }, (_, index) => {
+    const ordinal = index + 1;
+    const createdAt = new Date(baseTime + (index * 60_000));
+    const status = index % 2 === 0 ? 'locked' : 'in-progress';
+    return {
+      _id: fixtureObjectId(scenario, `forest-pagination:post:${ordinal}`),
+      title: `[Forest pagination] Writing tree ${String(ordinal).padStart(2, '0')}`,
+      description: 'Disposable post for the private forest cursor-pagination fixture.',
+      tags: [
+        ACCOUNT_DELETION_FIXTURE_TAG,
+        `account-deletion-${scenario}`,
+        'forest-read-pagination'
+      ],
+      content: `# Forest pagination tree ${ordinal}\n\nDisposable pagination fixture writing.`,
+      roomId: ACCOUNT_DELETION_FIXTURE_ROOM_ID,
+      creator: owner.username,
+      userId: owner._id,
+      authorshipState: 'live',
+      visibility: index % 3 === 0 ? 'unlisted' : 'public',
+      status,
+      groupId: fixtureObjectId(scenario, `forest-pagination:group:${ordinal}`),
+      lang: index % 5 === 0 ? 'es' : 'en',
+      ...(status === 'locked' ? { lockedAt: createdAt } : {}),
+      createdAt,
+      updatedAt: createdAt
+    };
+  });
 }
 
 function fixtureDate(now, minutesAgo) {
