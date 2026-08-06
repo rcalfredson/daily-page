@@ -105,15 +105,18 @@ generic `400 INVALID_FOREST_REGION_REQUEST`. Unsupported or incoherent durable s
 failures become `503 FOREST_REGION_UNAVAILABLE`. Neither response bodies nor logs include owner,
 tree, Block, group, writing, cursor-decoding, or durable-validation details.
 
-## Deferred asset and rendering boundaries
+## Authorized asset delivery
 
-The adapter and authenticated placement endpoint now form the regional read seam. The next
-production layers still need to:
+`GET /api/v1/forest/assets` now reauthorizes bounded requested asset keys against this current
+regional manifest before loading their minimum durable projections, generating/reusing shared
+visual assets, and applying the requested supported transport. Its complete policy is documented in
+`docs/forest/owner-region-asset-delivery-contract.md`.
 
-1. authorize requested asset keys against the owner's current regional manifest;
-2. generate or retrieve only the shared visual assets required by those keys;
-3. compose the initial private scene and later regional entries outside animation frames; and
-4. reauthorize writing recognition independently when a tree is inspected.
+The manifest, authenticated placement endpoint, and authenticated asset endpoint now form the
+regional server read seam. The next production layers still need to:
+
+1. compose the initial private scene and later regional entries outside animation frames; and
+2. reauthorize writing recognition independently when a tree is inspected.
 
 Writing recognition remains a separate reauthorized inspection boundary. The existing non-canvas
 owner-writing route remains the semantic fallback and does not grant authority to this manifest.
