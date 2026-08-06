@@ -1,0 +1,54 @@
+{
+  "forestWriting": {
+    "meta": {
+      "title": "Your forest writing — Daily Page",
+      "description": "Browse the posts represented by trees in your private Activity Forest."
+    },
+    "eyebrow": "Activity Forest",
+    "heading": "Your writing grove",
+    "introduction": "Every tree holds a piece of writing you’ve made. Choose one to revisit the post it grew from.",
+    "labels": {
+      "written": "Written",
+      "language": "Language",
+      "tree": "Tree"
+    },
+    "treeTypes": {
+      "deciduous": "Open-crown deciduous",
+      "lanternwood": "Sunset lanternwood",
+      "conifer": "Wind-shaped highland conifer",
+      "unknown": "Writing tree"
+    },
+    "seasons": {
+      "spring": "Spring-grown",
+      "summer": "Summer-grown",
+      "autumn": "Autumn-grown",
+      "winter": "Winter-grown",
+      "unknown": "Season remembered"
+    },
+    "openPost": "Read post",
+    "omitted": "{count} tree could not be shown because its current writing is unavailable.",
+    "reconciling": {
+      "heading": "Your forest is growing",
+      "body": "We are checking your writing and preparing an up-to-date forest. Please return shortly."
+    },
+    "empty": {
+      "heading": "No writing trees to show yet",
+      "notEstablished": "Your private forest has not been established yet.",
+      "ready": "No currently eligible, visible writing is represented in your forest."
+    },
+    "invalid": {
+      "heading": "That forest page is not available",
+      "body": "The page link was invalid or has expired.",
+      "restart": "Return to the beginning"
+    },
+    "unavailable": {
+      "heading": "Your forest is temporarily unavailable",
+      "body": "We could not safely load this view. Please try again later."
+    },
+    "pagination": {
+      "label": "Forest writing pages",
+      "previous": "← Previous page",
+      "next": "Next page →"
+    }
+  }
+}

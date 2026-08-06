@@ -1,0 +1,73 @@
+extends ../layout
+
+block append head
+  link(rel='stylesheet' href='/css/forest-writing.css')
+
+block nav
+  include ../navLinks
+
+block content
+  main.forest-writing(aria-labelledby='forest-writing-title')
+    header.forest-writing__header
+      p.forest-writing__eyebrow= t('forestWriting.eyebrow')
+      h1#forest-writing-title= t('forestWriting.heading')
+      p= t('forestWriting.introduction')
+
+    if forestStatus === 'reconciling'
+      .forest-writing__notice(role='status')
+        h2= t('forestWriting.reconciling.heading')
+        p= t('forestWriting.reconciling.body')
+    else if forestStatus === 'not-established'
+      .forest-writing__notice(role='status')
+        h2= t('forestWriting.empty.heading')
+        p= t('forestWriting.empty.notEstablished')
+    else if forestStatus === 'invalid-request'
+      .forest-writing__notice.forest-writing__notice--error(role='alert')
+        h2= t('forestWriting.invalid.heading')
+        p= t('forestWriting.invalid.body')
+        a(href=uiPath('/forest/writing'))= t('forestWriting.invalid.restart')
+    else if forestStatus === 'unavailable'
+      .forest-writing__notice.forest-writing__notice--error(role='alert')
+        h2= t('forestWriting.unavailable.heading')
+        p= t('forestWriting.unavailable.body')
+    else if trees.length
+      if omittedUnavailableCount
+        p.forest-writing__notice(role='status')= t('forestWriting.omitted', { count: omittedUnavailableCount })
+      ol.forest-writing__list
+        each tree in trees
+          li.forest-writing__tree
+            article.forest-writing__card
+              .forest-writing__tree-mark(class=`forest-writing__tree-mark--${tree.treeTypeClass}` aria-hidden='true')
+                i.fa.fa-tree
+              .forest-writing__card-body
+                h2(lang=tree.writing.lang dir=(textDirForLang ? textDirForLang(tree.writing.lang) : 'ltr'))
+                  a(href=tree.writing.path)= tree.writing.title
+                p.forest-writing__source
+                  time(
+                    datetime=tree.writing.createdAt
+                    data-local-date-time
+                    data-date-style='medium'
+                  )= tree.writing.formattedCreatedAt
+                  span(aria-hidden='true') ·
+                  a(href=uiPath(`/rooms/${encodeURIComponent(tree.writing.roomId)}`))= tree.writing.roomName
+                  if tree.writing.showLanguage
+                    span(aria-hidden='true') ·
+                    span= tree.writing.languageName
+                p.forest-writing__botanical
+                  span.forest-writing__species= tree.treeTypeLabel
+                  span(aria-hidden='true') ·
+                  span= tree.seasonLabel
+                a.forest-writing__open(href=tree.writing.path)
+                  = t('forestWriting.openPost')
+                  span(aria-hidden='true')  →
+    else
+      .forest-writing__notice(role='status')
+        h2= t('forestWriting.empty.heading')
+        p= t('forestWriting.empty.ready')
+
+    if previousUrl || nextUrl
+      nav.forest-writing__pagination(aria-label=t('forestWriting.pagination.label'))
+        if previousUrl
+          a.forest-writing__previous(href=uiPath(previousUrl))= t('forestWriting.pagination.previous')
+        if nextUrl
+          a.forest-writing__next(href=uiPath(nextUrl))= t('forestWriting.pagination.next')

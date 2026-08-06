@@ -48,10 +48,14 @@ import {
   runForestOwnerConvergenceSweepStep
 } from '../../server/services/forestOwnerConvergenceSweep.js';
 import {
+  listForestOwnerWritingTrees
+} from '../../server/services/forestOwnerNonCanvasRead.js';
+import {
   ACCOUNT_DELETION_FIXTURE_ROOM_ID,
   ACCOUNT_DELETION_FIXTURE_SCENARIOS,
   ACCOUNT_DELETION_FIXTURE_TAG,
   buildAccountDeletionFixture,
+  buildForestReadPaginationPosts,
   DEFAULT_ACCOUNT_DELETION_FIXTURE_PASSWORD,
   expectedRetainedPostKeys,
   parseAccountDeletionFixtureArgs
@@ -67,6 +71,7 @@ function usage() {
   console.log('  verify-before <scenario>                  Verify the login-ready fixture.');
   console.log('  delete-direct <scenario> --write          Invoke the deletion service directly.');
   console.log('  create-tree-direct <scenario> --write     Verify transactional tree creation.');
+  console.log('  seed-forest-pagination <scenario> --write Add enough real trees for two read pages.');
   console.log('  verify-after <scenario>                   Verify the completed deletion.');
   console.log('  archive-quest <scenario> --write          Remove the active-quest guard.');
   console.log('  reset <scenario> --write                  Remove one fixture scenario.');
@@ -890,6 +895,111 @@ async function createTreeDirect(scenario) {
   });
 }
 
+async function seedForestPagination(scenario) {
+  const fixture = scenarioDefinition(scenario);
+  const ownerUserId = fixture.users.owner._id;
+  const [owner, world] = await Promise.all([
+    User.findById(ownerUserId).lean(),
+    ForestOwnerWorld.findOne({ ownerUserId, worldRole: 'primary' }).lean()
+  ]);
+  requireFixtureCondition(
+    owner && world?.status === 'active' && world?.reconciliation?.state === 'idle',
+    `Seed and verify the ${scenario} fixture before adding forest pagination records.`
+  );
+
+  const posts = buildForestReadPaginationPosts({ scenario, owner });
+  await Block.bulkWrite(posts.map(({ _id, ...post }) => ({
+    updateOne: {
+      filter: { _id },
+      update: { $set: post },
+      upsert: true
+    }
+  })), { ordered: true });
+
+  const reconciliationOutcomes = {};
+  for (const post of posts) {
+    const result = await reconcileForestOwnerGroup({
+      ownerUserId,
+      translationGroupId: post.groupId,
+      now: new Date()
+    });
+    reconciliationOutcomes[result.outcome] = (reconciliationOutcomes[result.outcome] || 0) + 1;
+  }
+
+  const firstPage = await listForestOwnerWritingTrees({
+    ownerUserId,
+    preferredContentLang: 'en'
+  });
+  const secondPage = firstPage.page.nextCursor
+    ? await listForestOwnerWritingTrees({
+      ownerUserId,
+      preferredContentLang: 'en',
+      cursor: firstPage.page.nextCursor
+    })
+    : null;
+  const thirdPage = secondPage?.page.nextCursor
+    ? await listForestOwnerWritingTrees({
+      ownerUserId,
+      preferredContentLang: 'en',
+      cursor: secondPage.page.nextCursor
+    })
+    : null;
+  const returnedToSecondPage = thirdPage?.page.previousCursor
+    ? await listForestOwnerWritingTrees({
+      ownerUserId,
+      preferredContentLang: 'en',
+      cursor: thirdPage.page.previousCursor
+    })
+    : null;
+  const paginationGroupIds = posts.map(post => post.groupId);
+  const [postCount, treeCount] = await Promise.all([
+    Block.countDocuments({ _id: { $in: posts.map(post => post._id) } }),
+    ForestWritingTree.countDocuments({
+      ownerUserId,
+      translationGroupId: { $in: paginationGroupIds },
+      sourceState: 'active',
+      hiddenFromForest: false
+    })
+  ]);
+  requireFixtureCondition(
+    postCount === posts.length && treeCount === posts.length,
+    'Pagination fixture did not converge to one active tree per disposable post.'
+  );
+  requireFixtureCondition(
+    firstPage.status === 'ready'
+      && firstPage.trees.length === 25
+      && firstPage.page.nextCursor
+      && secondPage?.status === 'ready'
+      && secondPage.trees.length === 25
+      && secondPage.page.previousCursor
+      && secondPage.page.nextCursor
+      && thirdPage?.status === 'ready'
+      && thirdPage.trees.length >= 5
+      && thirdPage.page.previousCursor
+      && thirdPage.page.nextCursor === null
+      && returnedToSecondPage?.trees.map(tree => tree.writingTreeId).join(',')
+        === secondPage.trees.map(tree => tree.writingTreeId).join(','),
+    'The private forest read did not round-trip across three cursor-linked pages.'
+  );
+
+  const baseUrl = String(process.env.BASE_URL || 'http://localhost:3000').replace(/\/+$/u, '');
+  console.log('Seeded and verified private forest pagination fixture:', {
+    database: mongoose.connection.name,
+    scenario,
+    addedPostCount: postCount,
+    activePaginationTreeCount: treeCount,
+    reconciliationOutcomes,
+    firstPageTreeCount: firstPage.trees.length,
+    secondPageTreeCount: secondPage.trees.length,
+    thirdPageTreeCount: thirdPage.trees.length,
+    backwardRoundTripMatches: true,
+    route: `${baseUrl}/en/forest/writing`,
+    username: fixture.users.owner.username,
+    password: process.env.ACCOUNT_DELETION_FIXTURE_PASSWORD
+      || DEFAULT_ACCOUNT_DELETION_FIXTURE_PASSWORD
+  });
+}
+
 async function verifyAfter(scenario) {
   const fixture = scenarioDefinition(scenario);
   const check = makeCheckCollector();
@@ -1257,6 +1367,9 @@ async function main() {
       break;
     case 'create-tree-direct':
       await createTreeDirect(args.scenario);
+      break;
+    case 'seed-forest-pagination':
+      await seedForestPagination(args.scenario);
       break;
     case 'verify-after':
       await verifyAfter(args.scenario);
