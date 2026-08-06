@@ -2,6 +2,11 @@ import { Router } from 'express';
 
 import optionalAuth from '../../middleware/optionalAuth.js';
 import {
+  deliverForestOwnerRegionAssets,
+  ForestOwnerRegionAssetDeliveryError,
+  FOREST_OWNER_REGION_MAX_ASSET_REQUEST
+} from '../../services/forestOwnerRegionAssetDelivery.js';
+import {
   ForestOwnerRegionManifestError,
   readForestOwnerRegionManifest
 } from '../../services/forestOwnerRegionManifest.js';
@@ -9,8 +14,10 @@ import {
 const router = Router();
 
 const QUERY_FIELDS = Object.freeze(['cells', 'cursor', 'limit']);
+const ASSET_QUERY_FIELDS = Object.freeze(['cells', 'cursor', 'assetKeys', 'transport']);
 const CELL_ID_PATTERN = /^(-?(?:0|[1-9]\d*)):(-?(?:0|[1-9]\d*))$/;
 const CELLS_QUERY_MAX_LENGTH = 256;
+const ASSET_KEYS_QUERY_MAX_LENGTH = FOREST_OWNER_REGION_MAX_ASSET_REQUEST * 401;
 
 function invalidRequest(message) {
   throw new ForestOwnerRegionManifestError('INVALID_OWNER_REGION_INPUT', message);
@@ -45,6 +52,30 @@ function manifestRequest(query) {
     cells: parseCells(query.cells),
     cursor: query.cursor || null,
     limit: query.limit
+  };
+}
+
+function assetRequest(query) {
+  if (!query || typeof query !== 'object' || Array.isArray(query)) {
+    invalidRequest('The asset query is invalid.');
+  }
+  const extraFields = Object.keys(query).filter(field => !ASSET_QUERY_FIELDS.includes(field));
+  if (extraFields.length) invalidRequest('The asset query contains unsupported fields.');
+  if (Array.isArray(query.cursor)
+    || Array.isArray(query.assetKeys)
+    || Array.isArray(query.transport)) {
+    invalidRequest('The asset query contains repeated scalar fields.');
+  }
+  if (typeof query.assetKeys !== 'string'
+    || !query.assetKeys.length
+    || query.assetKeys.length > ASSET_KEYS_QUERY_MAX_LENGTH) {
+    invalidRequest('assetKeys must be a bounded comma-separated string.');
+  }
+  return {
+    cells: parseCells(query.cells),
+    cursor: query.cursor || null,
+    assetKeys: query.assetKeys.split(','),
+    transport: query.transport
   };
 }
 
@@ -89,13 +120,58 @@ export function buildForestOwnerRegionRouteHandler({
   };
 }
 
-const handler = buildForestOwnerRegionRouteHandler();
+export function buildForestOwnerRegionAssetRouteHandler({
+  deliverAssets = deliverForestOwnerRegionAssets
+} = {}) {
+  return async function forestOwnerRegionAssetRoute(req, res) {
+    if (!req.user?.id) {
+      return res.status(401).json({
+        error: 'AUTHENTICATION_REQUIRED',
+        code: 'AUTHENTICATION_REQUIRED'
+      });
+    }
+    try {
+      const request = assetRequest(req.query);
+      const delivery = await deliverAssets({
+        ownerUserId: req.user.id,
+        ...request
+      });
+      return res.status(200).json(delivery);
+    } catch (error) {
+      if ((error instanceof ForestOwnerRegionManifestError
+          && error.code === 'INVALID_OWNER_REGION_INPUT')
+        || (error instanceof ForestOwnerRegionAssetDeliveryError
+          && error.code === 'INVALID_OWNER_REGION_ASSET_INPUT')) {
+        return res.status(400).json({
+          error: 'INVALID_FOREST_ASSET_REQUEST',
+          code: 'INVALID_FOREST_ASSET_REQUEST'
+        });
+      }
+      if (error instanceof ForestOwnerRegionAssetDeliveryError
+        && error.code === 'OWNER_REGION_ASSET_UNAVAILABLE') {
+        return res.status(404).json({
+          error: 'FOREST_ASSETS_UNAVAILABLE',
+          code: 'FOREST_ASSETS_UNAVAILABLE'
+        });
+      }
+      console.error('Forest owner asset request failed:', error?.name || 'Error');
+      return res.status(503).json({
+        error: 'FOREST_ASSET_DELIVERY_UNAVAILABLE',
+        code: 'FOREST_ASSET_DELIVERY_UNAVAILABLE'
+      });
+    }
+  };
+}
+
+const regionHandler = buildForestOwnerRegionRouteHandler();
+const assetHandler = buildForestOwnerRegionAssetRouteHandler();
 
 const useForestAPI = (app) => {
   app.use('/api/v1/forest', router);
   router.use(privateForestApiResponse);
   router.use(optionalAuth);
-  router.get('/regions', handler);
+  router.get('/regions', regionHandler);
+  router.get('/assets', assetHandler);
 };
 
 export default useForestAPI;
