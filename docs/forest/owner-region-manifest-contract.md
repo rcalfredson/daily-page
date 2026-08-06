@@ -81,16 +81,39 @@ rendering a newer-looking tree under old durable identity.
 Malformed or unsupported returned records make the regional response unavailable. More than
 `limit + 1` returned records likewise fails rather than silently trusting an unbounded model result.
 
-## Deferred HTTP and rendering boundaries
+## Authenticated regional HTTP boundary
 
-This adapter is the pure regional read seam. The next production layer still needs to:
+The private endpoint is:
 
-1. require current authentication and derive the owner solely from the session;
-2. parse a bounded cell request and translate adapter errors into non-enumerating responses;
-3. apply private, no-store cache headers and the appropriate `Vary` behavior;
-4. authorize requested asset keys against the owner's current regional manifest;
-5. generate or retrieve only the shared visual assets required by those keys; and
-6. compose the initial private scene and later regional entries outside animation frames.
+```text
+GET /api/v1/forest/regions?cells=-1:1,0:1&limit=100&cursor=opaque-continuation
+```
+
+`cells` is required and contains canonical comma-separated `cellX:cellY` pairs. Leading zeroes,
+explicit plus signs, negative zero, repeated query scalars, and unknown query fields are rejected.
+`limit` and `cursor` are optional and retain the adapter's bounds and exact-region cursor binding.
+
+The endpoint uses the existing current-session middleware and derives owner identity only from
+`req.user.id`. An `ownerUserId`, username, or other forged query field is rejected before the
+manifest service runs. A missing, expired, revoked, or otherwise stale session receives a generic
+`401 AUTHENTICATION_REQUIRED` and causes no manifest read.
+
+Every response sets `Cache-Control: private, no-store` and varies on `Cookie`. Adapter
+`not-established`, `reconciling`, and `ready` manifests are successful `200` responses because all
+three are honest expected world states. Malformed syntax, bounds, and cursor failures become the
+generic `400 INVALID_FOREST_REGION_REQUEST`. Unsupported or incoherent durable state and unexpected
+failures become `503 FOREST_REGION_UNAVAILABLE`. Neither response bodies nor logs include owner,
+tree, Block, group, writing, cursor-decoding, or durable-validation details.
+
+## Deferred asset and rendering boundaries
+
+The adapter and authenticated placement endpoint now form the regional read seam. The next
+production layers still need to:
+
+1. authorize requested asset keys against the owner's current regional manifest;
+2. generate or retrieve only the shared visual assets required by those keys;
+3. compose the initial private scene and later regional entries outside animation frames; and
+4. reauthorize writing recognition independently when a tree is inspected.
 
 Writing recognition remains a separate reauthorized inspection boundary. The existing non-canvas
 owner-writing route remains the semantic fallback and does not grant authority to this manifest.
@@ -100,4 +123,6 @@ owner-writing route remains the semantic fallback and does not grant authority t
 `spec/forestOwnerRegionManifestSpec.js` verifies honest empty states, exact signed-cell queries,
 canonicalization, bounds, lifecycle filtering, privacy-safe serialization, region-bound cursor
 continuation, stale spatial identity, and unsupported world/projection/asset versions without a
-database.
+database. `spec/forestOwnerRegionApiSpec.js` verifies private response headers, current-session-only
+ownership, forged-owner rejection, canonical query parsing, generic errors, and the successful
+transport of honest empty/reconciling states.
