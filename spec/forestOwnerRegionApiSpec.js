@@ -1,6 +1,7 @@
 import {
   buildForestOwnerRegionAssetRouteHandler,
   buildForestOwnerRegionRouteHandler,
+  buildForestOwnerTreeInspectionRouteHandler,
   privateForestApiResponse
 } from '../server/api/v1/forest.js';
 import {
@@ -9,6 +10,9 @@ import {
 import {
   ForestOwnerRegionManifestError
 } from '../server/services/forestOwnerRegionManifest.js';
+import {
+  ForestOwnerTreeInspectionError
+} from '../server/services/forestOwnerTreeInspection.js';
 
 const OWNER_USER_ID = '507f1f77bcf86cd799439011';
 const OTHER_OWNER_USER_ID = '507f1f77bcf86cd799439012';
@@ -173,6 +177,112 @@ describe('forest owner region API', () => {
     });
     expect(JSON.stringify(console.error.calls.allArgs())).not.toContain(privateDetail);
     expect(JSON.stringify(res.body)).not.toContain(privateDetail);
+  });
+});
+
+describe('forest owner tree inspection API', () => {
+  it('rejects missing authentication before inspecting private writing', async () => {
+    const inspectTree = jasmine.createSpy('inspectTree');
+    const handler = buildForestOwnerTreeInspectionRouteHandler({ inspectTree });
+    const res = response();
+
+    await handler({ user: null, params: { writingTreeId: 'invalid' }, query: {} }, res);
+
+    expect(res.statusCode).toBe(401);
+    expect(res.body.code).toBe('AUTHENTICATION_REQUIRED');
+    expect(inspectTree).not.toHaveBeenCalled();
+  });
+
+  it('derives owner and preferred language from authenticated request context', async () => {
+    const inspection = { inspectionVersion: 1, status: 'ready' };
+    const inspectTree = jasmine.createSpy('inspectTree').and.resolveTo(inspection);
+    const handler = buildForestOwnerTreeInspectionRouteHandler({ inspectTree });
+    const res = response();
+    res.locals = { uiLang: 'es' };
+
+    await handler({
+      user: { id: OWNER_USER_ID },
+      params: { writingTreeId: '22222222-2222-4222-8222-222222222222' },
+      query: { cursor: 'opaque', limit: '12' },
+      body: { ownerUserId: OTHER_OWNER_USER_ID }
+    }, res);
+
+    expect(inspectTree).toHaveBeenCalledOnceWith({
+      ownerUserId: OWNER_USER_ID,
+      writingTreeId: '22222222-2222-4222-8222-222222222222',
+      preferredContentLang: 'es',
+      cursor: 'opaque',
+      limit: '12'
+    });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toBe(inspection);
+  });
+
+  it('maps malformed and unavailable trees to generic non-enumerating responses', async () => {
+    const cases = [
+      {
+        error: new ForestOwnerTreeInspectionError(
+          'INVALID_TREE_INSPECTION_INPUT', 'private invalid detail'
+        ),
+        status: 400,
+        code: 'INVALID_FOREST_TREE_INSPECTION_REQUEST'
+      },
+      {
+        error: new ForestOwnerTreeInspectionError(
+          'TREE_INSPECTION_NOT_FOUND', 'private missing detail'
+        ),
+        status: 404,
+        code: 'FOREST_TREE_UNAVAILABLE'
+      }
+    ];
+    for (const testCase of cases) {
+      const handler = buildForestOwnerTreeInspectionRouteHandler({
+        inspectTree: jasmine.createSpy('inspectTree').and.rejectWith(testCase.error)
+      });
+      const res = response();
+
+      await handler({
+        user: { id: OWNER_USER_ID },
+        params: { writingTreeId: '22222222-2222-4222-8222-222222222222' },
+        query: {}
+      }, res);
+
+      expect(res.statusCode).toBe(testCase.status);
+      expect(res.body.code).toBe(testCase.code);
+      expect(JSON.stringify(res.body)).not.toContain('private');
+    }
+  });
+
+  it('rejects forged query authority and logs generic unexpected failures', async () => {
+    const inspectTree = jasmine.createSpy('inspectTree');
+    const malformed = buildForestOwnerTreeInspectionRouteHandler({ inspectTree });
+    const malformedResponse = response();
+
+    await malformed({
+      user: { id: OWNER_USER_ID },
+      params: { writingTreeId: '22222222-2222-4222-8222-222222222222' },
+      query: { ownerUserId: OTHER_OWNER_USER_ID }
+    }, malformedResponse);
+
+    expect(malformedResponse.statusCode).toBe(400);
+    expect(inspectTree).not.toHaveBeenCalled();
+
+    const privateDetail = `${OWNER_USER_ID}:private-inspection-title`;
+    const failed = buildForestOwnerTreeInspectionRouteHandler({
+      inspectTree: jasmine.createSpy('inspectTree').and.rejectWith(new Error(privateDetail))
+    });
+    const failedResponse = response();
+    spyOn(console, 'error');
+
+    await failed({
+      user: { id: OWNER_USER_ID },
+      params: { writingTreeId: '22222222-2222-4222-8222-222222222222' },
+      query: {}
+    }, failedResponse);
+
+    expect(failedResponse.statusCode).toBe(503);
+    expect(failedResponse.body.code).toBe('FOREST_TREE_INSPECTION_UNAVAILABLE');
+    expect(JSON.stringify(console.error.calls.allArgs())).not.toContain(privateDetail);
   });
 });
 
