@@ -91,9 +91,13 @@ weather, lighting, three-dimensional assets, or movable orthographic/perspective
 
 ## Current boundary
 
-The resolver supplies environment classification and placement exclusion only. It does not create
-the owner world, query occupied neighborhoods, reserve a candidate slot, or write a tree. Those
-operations belong to the forthcoming transactional ledger-creation service.
+The shared pure grammar now lives in `public/js/owner-forest-environment.js`. The server resolver
+adds strict policy input and output validation around that sampler for placement classification and
+exclusion. The private production `/forest` bootstrap supplies the same opaque owner-world seed and
+versions to the browser, which uses the shared sampler for restrained flat ground presentation.
+
+The resolver does not create the owner world, query occupied neighborhoods, reserve a candidate
+slot, or write a tree. It also does not make browser ground or collision authoritative.
 
 For lightweight spatial review, run:
 
