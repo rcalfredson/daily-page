@@ -11,6 +11,10 @@ ul
   li
     .app
       a.link(href=uiPath('/rooms'))= t('nav.rooms')
+  if user
+    li
+      .forest
+        a.link(href=uiPath('/forest'))= t('nav.forest')
   li
     .quests
       a.link(href=uiPath('/quests'))= t('nav.quests')

@@ -1,0 +1,55 @@
+{
+  "forestScene": {
+    "meta": {
+      "title": "Your Activity Forest — Daily Page",
+      "description": "Walk through the private forest grown from your Daily Page writing."
+    },
+    "eyebrow": "Activity Forest",
+    "heading": "Your writing, growing into a place",
+    "introduction": "Walk through the grove formed by your writing. This first view is quiet and read-only while the forest’s deeper interactions continue to grow.",
+    "browseWriting": "Browse forest writing",
+    "returnToCenter": "Return to the center",
+    "help": "Move with the arrow keys or WASD, or touch and drag in the forest. Press Enter or E near a tree, or select it directly, to inspect its writing.",
+    "viewportLabel": "Explore your private Activity Forest",
+    "loading": "Growing the nearby grove…",
+    "treeNearby": "A writing tree is nearby.",
+    "inspect": {
+      "action": "Inspect tree",
+      "eyebrow": "Writing tree",
+      "close": "Close tree details",
+      "loading": "Remembering the writing held by this tree…",
+      "unavailable": "This tree’s writing is not available right now.",
+      "reconciling": "Your forest is still updating. Please try this tree again shortly.",
+      "readPost": "Read post →",
+      "translations": "Available translations",
+      "moreTranslations": "Show more translations"
+    },
+    "treeTypes": {
+      "deciduous": "Open-crown deciduous",
+      "lanternwood": "Sunset lanternwood",
+      "conifer": "Wind-shaped highland conifer",
+      "unknown": "Writing tree"
+    },
+    "seasons": {
+      "spring": "Spring-grown",
+      "summer": "Summer-grown",
+      "autumn": "Autumn-grown",
+      "winter": "Winter-grown",
+      "unknown": "Season unknown"
+    },
+    "noScript": "The visual forest requires JavaScript, but all represented writing remains available in the writing grove.",
+    "empty": {
+      "heading": "Your forest is ready to begin",
+      "body": "Write an eligible post and its tree will begin establishing your private forest."
+    },
+    "reconciling": {
+      "heading": "Your forest is growing",
+      "body": "We are checking your writing and preparing an up-to-date grove. Please return shortly.",
+      "retry": "Check again"
+    },
+    "unavailable": {
+      "heading": "Your forest is temporarily unavailable",
+      "body": "We could not safely load the forest right now. Your writing remains available from the writing grove."
+    }
+  }
+}
