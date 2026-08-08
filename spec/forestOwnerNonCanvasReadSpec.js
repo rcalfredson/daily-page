@@ -49,6 +49,8 @@ function tree(overrides = {}) {
     translationGroupId: GROUP_ID,
     sourceState: 'active',
     hiddenFromForest: false,
+    inclusionChangedAt: null,
+    recordRevision: 4,
     foundingSource: {
       blockId: BLOCK_ID,
       createdAt: new Date('2025-03-10T10:00:00.000Z')
@@ -154,6 +156,11 @@ describe('forest owner non-canvas read', () => {
     expect(result.status).toBe('ready');
     expect(result.trees).toEqual([{
       writingTreeId: TREE_ID,
+      inclusion: {
+        hidden: false,
+        changedAt: null,
+        recordRevision: 4
+      },
       placement: { worldX: -120, worldY: 340 },
       projection: {
         phenotypeId: 'open-crown-deciduous',
@@ -245,8 +252,9 @@ describe('forest owner non-canvas read', () => {
     const backward = decodeForestOwnerNonCanvasCursor(laterPage.page.previousCursor);
 
     expect(backward).toEqual({
-      version: 2,
+      version: 3,
       direction: 'before',
+      inclusion: 'visible',
       anchorPlacementSlot: 7,
       anchorWritingTreeId: TREE_ID
     });
@@ -285,6 +293,40 @@ describe('forest owner non-canvas read', () => {
       code: 'INVALID_FOREST_READ_INPUT'
     }));
     expect(test.ForestOwnerWorldModel.findOne).not.toHaveBeenCalled();
+  });
+
+  it('lists active hidden trees through a cursor-bound owner management view', async () => {
+    const hiddenTree = tree({
+      hiddenFromForest: true,
+      inclusionChangedAt: new Date('2026-08-07T12:00:00.000Z')
+    });
+    const test = harness({ trees: [hiddenTree] });
+    const result = await test.list({ ownerUserId: OWNER_USER_ID, inclusion: 'hidden' });
+
+    expect(result.trees[0].inclusion).toEqual({
+      hidden: true,
+      changedAt: '2026-08-07T12:00:00.000Z',
+      recordRevision: 4
+    });
+    expect(test.ForestWritingTreeModel.find.calls.first().args[0].hiddenFromForest).toBeTrue();
+  });
+
+  it('rejects replaying a visible-page cursor against hidden management', async () => {
+    const extra = tree({
+      writingTreeId: '33333333-3333-4333-8333-333333333333',
+      translationGroupId: '507f191e810c19729de860eb',
+      placement: { slot: 8, worldX: 80, worldY: 420 }
+    });
+    const visible = harness({ trees: [tree(), extra] });
+    const page = await visible.list({ ownerUserId: OWNER_USER_ID, limit: 1 });
+    const hidden = harness();
+
+    await expectAsync(hidden.list({
+      ownerUserId: OWNER_USER_ID,
+      inclusion: 'hidden',
+      cursor: page.page.nextCursor
+    })).toBeRejectedWith(jasmine.objectContaining({ code: 'INVALID_FOREST_READ_INPUT' }));
+    expect(hidden.ForestOwnerWorldModel.findOne).not.toHaveBeenCalled();
   });
 
   it('fails closed on unsupported tree records', async () => {
@@ -336,7 +378,7 @@ describe('forest writing route', () => {
     const handler = buildForestWritingRouteHandler({ listWritingTrees });
     const req = {
       user: { id: OWNER_USER_ID, username: 'owner' },
-      query: { ownerUserId: OTHER_OWNER_USER_ID }
+      query: {}
     };
     const res = response();
 
@@ -345,7 +387,8 @@ describe('forest writing route', () => {
     expect(listWritingTrees).toHaveBeenCalledOnceWith({
       ownerUserId: OWNER_USER_ID,
       preferredContentLang: 'en',
-      cursor: null
+      cursor: null,
+      inclusion: 'visible'
     });
     expect(res.status).toHaveBeenCalledOnceWith(200);
     expect(res.render.calls.first().args[0]).toBe('forest/writing');

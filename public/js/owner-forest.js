@@ -62,6 +62,7 @@ if (payload && copyPayload && viewport && canvas) {
   let loadFailure = false;
   let inspectedTreeId = null;
   let inspectionRequest = 0;
+  let inspectedTreeRevision = null;
   let translationCursor = null;
   let translationsLoading = false;
   const translationPaths = new Set();
@@ -82,6 +83,7 @@ if (payload && copyPayload && viewport && canvas) {
   const inspectionDate = document.querySelector('[data-owner-forest-inspection-date]');
   const inspectionLanguage = document.querySelector('[data-owner-forest-inspection-language]');
   const inspectionLink = document.querySelector('[data-owner-forest-inspection-link]');
+  const hideTree = document.querySelector('[data-owner-forest-hide-tree]');
   const translationsWrap = document.querySelector('[data-owner-forest-translations-wrap]');
   const translationsList = document.querySelector('[data-owner-forest-translations]');
   const translationsMore = document.querySelector('[data-owner-forest-translations-more]');
@@ -142,6 +144,7 @@ if (payload && copyPayload && viewport && canvas) {
 
   function closeInspection({ restoreFocus = true } = {}) {
     inspectedTreeId = null;
+    inspectedTreeRevision = null;
     inspectionRequest += 1;
     translationCursor = null;
     translationsLoading = false;
@@ -226,6 +229,8 @@ if (payload && copyPayload && viewport && canvas) {
         ).format(new Date(result.writing.createdAt));
         inspectionLanguage.textContent = languageName(result.writing.lang);
         inspectionLink.href = localizedPath(result.writing.path);
+        inspectedTreeRevision = result.tree.recordRevision;
+        hideTree.disabled = false;
         inspectionContent.hidden = false;
         setInspectionStatus('');
       }
@@ -596,6 +601,35 @@ if (payload && copyPayload && viewport && canvas) {
   translationsMore.addEventListener('click', () => {
     const placement = placementsById.get(inspectedTreeId);
     if (placement) requestInspection(placement, { append: true });
+  });
+  hideTree.addEventListener('click', async () => {
+    const treeId = inspectedTreeId;
+    const revision = inspectedTreeRevision;
+    if (!treeId || !Number.isSafeInteger(revision) || hideTree.disabled) return;
+    hideTree.disabled = true;
+    setInspectionStatus(copy.inclusionSaving);
+    try {
+      const response = await window.fetch(
+        `/api/v1/forest/trees/${encodeURIComponent(treeId)}/inclusion`,
+        {
+          method: 'PATCH',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hidden: true, expectedRevision: revision })
+        }
+      );
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw Object.assign(new Error('inclusion failed'), { code: error.code });
+      }
+      placementsById.delete(treeId);
+      closeInspection();
+      setStatus(copy.treeHidden);
+    } catch (error) {
+      setInspectionStatus(error.code === 'FOREST_TREE_INCLUSION_CONFLICT'
+        ? copy.inclusionConflict : copy.inclusionUnavailable);
+      hideTree.disabled = false;
+    }
   });
   reset.addEventListener('click', () => {
     clearPointer();

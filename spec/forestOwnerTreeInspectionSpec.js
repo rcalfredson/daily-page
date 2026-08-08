@@ -45,6 +45,7 @@ function tree(overrides = {}) {
     translationGroupId: GROUP_ID,
     sourceState: 'active',
     hiddenFromForest: false,
+    recordRevision: 4,
     foundingSource: {
       blockId: BLOCK_ID,
       createdAt: new Date('2025-03-10T10:00:00.000Z'),
@@ -152,6 +153,7 @@ describe('forest owner tree inspection', () => {
       id: TREE_ID,
       phenotypeId: 'open-crown-deciduous',
       creationSeason: 'spring',
+      recordRevision: 4,
     });
     expect(result.writing).toEqual({
       title: 'Un paseo bajo ramas antiguas',

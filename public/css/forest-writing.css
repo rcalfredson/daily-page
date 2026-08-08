@@ -41,6 +41,23 @@
   text-decoration: none;
 }
 
+.forest-writing__views {
+  display: flex;
+  gap: 0.6rem;
+  margin: 1.25rem 0;
+}
+.forest-writing__views a {
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  text-decoration: none;
+}
+.forest-writing__views a[aria-current='page'] {
+  border-color: #63875f;
+  background: color-mix(in srgb, Canvas 84%, #63875f 16%);
+}
+.forest-writing__mutation-status { margin: 0 0 1rem; }
+
 .forest-writing__list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 27rem), 1fr));
@@ -138,6 +155,9 @@
 }
 
 .forest-writing__botanical {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.25rem;
   width: fit-content;
   margin: 0 0 1rem;
   padding: 0.28rem 0.6rem;
@@ -161,13 +181,42 @@
 
 .forest-writing__open {
   width: fit-content;
-  margin-top: auto;
+  margin: 0;
   padding: 0.48rem 0.78rem;
   border: 1px solid color-mix(in srgb, #64855d 48%, transparent);
   border-radius: 0.45rem;
   background: color-mix(in srgb, #64855d 15%, transparent);
   text-decoration: none;
 }
+.forest-writing__card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: auto;
+}
+.forest-writing__card-actions .forest-writing__inclusion {
+  float: none;
+  width: fit-content;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.48rem 0.78rem;
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, Canvas 94%, #64855d 6%);
+  color: var(--text-color);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+  cursor: pointer;
+}
+.forest-writing__card-actions .forest-writing__inclusion:hover,
+.forest-writing__card-actions .forest-writing__inclusion:focus-visible {
+  background: color-mix(in srgb, Canvas 84%, #64855d 16%);
+  text-decoration: underline;
+}
+.forest-writing__inclusion:disabled { cursor: wait; opacity: 0.65; }
 
 .forest-writing__open:hover,
 .forest-writing__open:focus-visible {
@@ -218,5 +267,102 @@
     width: 3.5rem;
     height: 3.5rem;
     font-size: 1.55rem;
+  }
+}
+
+@media (max-width: 24rem) {
+  .forest-writing {
+    margin-top: 1rem;
+  }
+
+  .forest-writing__header {
+    margin-bottom: 1.5rem;
+  }
+
+  .forest-writing__eyebrow {
+    font-size: 0.72rem;
+  }
+
+  .forest-writing__header h1 {
+    font-size: 1.8rem;
+  }
+
+  .forest-writing__header > p:not(.forest-writing__eyebrow) {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .forest-writing__enter {
+    margin-top: 0.8rem;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.92rem;
+  }
+
+  .forest-writing__views {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 1rem 0;
+  }
+
+  .forest-writing__views a {
+    padding: 0.38rem 0.65rem;
+    font-size: 0.88rem;
+  }
+
+  .forest-writing__list {
+    gap: 0.8rem;
+  }
+
+  .forest-writing__card {
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    gap: 0.7rem;
+    padding: 0.8rem;
+  }
+
+  .forest-writing__tree-mark {
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.25rem;
+  }
+
+  .forest-writing__card-body {
+    display: contents;
+  }
+
+  .forest-writing__tree h2 {
+    grid-column: 2;
+    align-self: center;
+    margin-bottom: 0;
+    font-size: 1.05rem;
+  }
+
+  .forest-writing__source,
+  .forest-writing__botanical,
+  .forest-writing__card-actions {
+    grid-column: 1 / -1;
+  }
+
+  .forest-writing__source {
+    margin-bottom: 0;
+    font-size: 0.82rem;
+  }
+
+  .forest-writing__botanical {
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0;
+    font-size: 0.76rem;
+  }
+
+  .forest-writing__card-actions {
+    gap: 0.45rem;
+    margin-top: 0;
+  }
+
+  .forest-writing__open,
+  .forest-writing__card-actions .forest-writing__inclusion {
+    padding: 0.42rem 0.62rem;
+    font-size: 0.88rem;
+    line-height: 1.3;
   }
 }

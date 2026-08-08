@@ -18,10 +18,12 @@ export function privateForestResponse(req, res, next) {
   next();
 }
 
-function forestWritingUrl(cursor) {
-  return cursor
-    ? `/forest/writing?cursor=${encodeURIComponent(cursor)}`
-    : '/forest/writing';
+function forestWritingUrl(cursor, inclusion) {
+  const query = new URLSearchParams();
+  if (inclusion === 'hidden') query.set('view', 'hidden');
+  if (cursor) query.set('cursor', cursor);
+  const suffix = query.size ? `?${query}` : '';
+  return `/forest/writing${suffix}`;
 }
 
 function treePresentation(phenotypeId, t) {
@@ -73,10 +75,19 @@ export function buildForestWritingRouteHandler({
     const uiLang = getUiLang(res);
 
     try {
+      const inclusion = req.query.view === undefined ? 'visible' : req.query.view;
+      if (Array.isArray(inclusion)
+        || Array.isArray(req.query.cursor)
+        || Object.keys(req.query).some(field => !['cursor', 'view'].includes(field))) {
+        throw new ForestOwnerNonCanvasReadError(
+          'INVALID_FOREST_READ_INPUT', 'The forest writing query is invalid.'
+        );
+      }
       const result = await listWritingTrees({
         ownerUserId: req.user.id,
         preferredContentLang: getPreferredContentLang(res),
-        cursor: req.query.cursor || null
+        cursor: req.query.cursor || null,
+        inclusion
       });
       const roomIds = [...new Set(result.trees.map(tree => tree.writing.roomId))];
       const roomNames = new Map(await Promise.all(roomIds.map(async roomId => {
@@ -114,13 +125,14 @@ export function buildForestWritingRouteHandler({
         user: req.user,
         uiLang,
         forestStatus: result.status,
+        inclusion,
         trees,
         omittedUnavailableCount: result.page.omittedUnavailableCount,
         previousUrl: result.page.previousCursor
-          ? forestWritingUrl(result.page.previousCursor)
+          ? forestWritingUrl(result.page.previousCursor, inclusion)
           : null,
         nextUrl: result.page.nextCursor
-          ? forestWritingUrl(result.page.nextCursor)
+          ? forestWritingUrl(result.page.nextCursor, inclusion)
           : null
       });
     } catch (error) {
@@ -132,6 +144,7 @@ export function buildForestWritingRouteHandler({
           user: req.user,
           uiLang,
           forestStatus: 'invalid-request',
+          inclusion: 'visible',
           trees: [],
           omittedUnavailableCount: 0,
           previousUrl: null,
@@ -145,6 +158,7 @@ export function buildForestWritingRouteHandler({
         user: req.user,
         uiLang,
         forestStatus: 'unavailable',
+        inclusion: 'visible',
         trees: [],
         omittedUnavailableCount: 0,
         previousUrl: null,

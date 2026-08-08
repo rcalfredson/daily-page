@@ -13,8 +13,8 @@ import {
 import { canonicalBlockPath } from '../utils/canonical.js';
 import { selectForestOwnerVariants } from './forestOwnerVariantSelection.js';
 
-export const FOREST_OWNER_NON_CANVAS_READ_VERSION = 1;
-export const FOREST_OWNER_NON_CANVAS_CURSOR_VERSION = 2;
+export const FOREST_OWNER_NON_CANVAS_READ_VERSION = 2;
+export const FOREST_OWNER_NON_CANVAS_CURSOR_VERSION = 3;
 export const FOREST_OWNER_NON_CANVAS_DEFAULT_PAGE_SIZE = 25;
 export const FOREST_OWNER_NON_CANVAS_MAX_PAGE_SIZE = 50;
 
@@ -34,9 +34,11 @@ const TREE_PROJECTION = Object.freeze({
   translationGroupId: 1,
   sourceState: 1,
   hiddenFromForest: 1,
+  inclusionChangedAt: 1,
   foundingSource: 1,
   placement: 1,
-  projection: 1
+  projection: 1,
+  recordRevision: 1
 });
 
 const BLOCK_PROJECTION = Object.freeze({
@@ -100,16 +102,24 @@ function pageSize(value) {
   return normalized;
 }
 
-function encodeCursor(tree, direction) {
+function inclusionState(value) {
+  if (!['visible', 'hidden'].includes(value)) {
+    fail('INVALID_FOREST_READ_INPUT', 'inclusion must be visible or hidden.');
+  }
+  return value;
+}
+
+function encodeCursor(tree, direction, inclusion) {
   return Buffer.from(JSON.stringify({
     version: FOREST_OWNER_NON_CANVAS_CURSOR_VERSION,
     direction,
+    inclusion,
     anchorPlacementSlot: tree.placement.slot,
     anchorWritingTreeId: tree.writingTreeId
   })).toString('base64url');
 }
 
-function decodeCursor(value) {
+function decodeCursor(value, inclusion = 'visible') {
   if (value === undefined || value === null || value === '') return null;
   if (typeof value !== 'string' || value.length > CURSOR_MAX_LENGTH) {
     fail('INVALID_FOREST_READ_INPUT', 'cursor must be a bounded opaque string.');
@@ -120,7 +130,7 @@ function decodeCursor(value) {
     const fields = decoded && typeof decoded === 'object' && !Array.isArray(decoded)
       ? Object.keys(decoded)
       : [];
-    if (decoded?.version === 1
+    if (decoded?.version === 1 && inclusion === 'visible'
       && fields.length === 3
       && fields.includes('afterPlacementSlot')
       && fields.includes('afterWritingTreeId')
@@ -130,17 +140,28 @@ function decodeCursor(value) {
       return {
         version: FOREST_OWNER_NON_CANVAS_CURSOR_VERSION,
         direction: 'after',
+        inclusion: 'visible',
         anchorPlacementSlot: decoded.afterPlacementSlot,
         anchorWritingTreeId: decoded.afterWritingTreeId
       };
     }
-    if (fields.length !== 4
+    if (decoded?.version === 2 && inclusion === 'visible'
+      && fields.length === 4
+      && ['after', 'before'].includes(decoded.direction)
+      && Number.isSafeInteger(decoded.anchorPlacementSlot)
+      && decoded.anchorPlacementSlot >= 0
+      && UUID_V4_PATTERN.test(decoded.anchorWritingTreeId || '')) {
+      return { ...decoded, version: FOREST_OWNER_NON_CANVAS_CURSOR_VERSION, inclusion };
+    }
+    if (fields.length !== 5
       || !fields.includes('version')
       || !fields.includes('direction')
+      || !fields.includes('inclusion')
       || !fields.includes('anchorPlacementSlot')
       || !fields.includes('anchorWritingTreeId')
       || decoded.version !== FOREST_OWNER_NON_CANVAS_CURSOR_VERSION
       || !['after', 'before'].includes(decoded.direction)
+      || decoded.inclusion !== inclusion
       || !Number.isSafeInteger(decoded.anchorPlacementSlot)
       || decoded.anchorPlacementSlot < 0
       || !UUID_V4_PATTERN.test(decoded.anchorWritingTreeId || '')) {
@@ -168,7 +189,7 @@ function eligibleBlockMatch(ownerUserId, groupIds) {
   };
 }
 
-function validTree(tree, world, ownerUserId) {
+function validTree(tree, world, ownerUserId, inclusion) {
   return tree?.schemaVersion === FOREST_WRITING_TREE_SCHEMA_VERSION
     && tree?.identityVersion === FOREST_WRITING_TREE_IDENTITY_VERSION
     && UUID_V4_PATTERN.test(tree?.writingTreeId || '')
@@ -176,7 +197,10 @@ function validTree(tree, world, ownerUserId) {
     && tree?.ownerUserId === ownerUserId
     && tree?.forestId === world.forestId
     && tree?.sourceState === 'active'
-    && tree?.hiddenFromForest === false
+    && tree?.hiddenFromForest === (inclusion === 'hidden')
+    && (tree.hiddenFromForest ? tree.inclusionChangedAt instanceof Date : true)
+    && Number.isSafeInteger(tree?.recordRevision)
+    && tree.recordRevision >= 1
     && OBJECT_ID_PATTERN.test(tree?.translationGroupId || '')
     && OBJECT_ID_PATTERN.test(tree?.foundingSource?.blockId || '')
     && Number.isSafeInteger(tree?.placement?.slot)
@@ -232,13 +256,13 @@ async function queryRows(query) {
   return typeof leanQuery.exec === 'function' ? leanQuery.exec() : leanQuery;
 }
 
-function treeFilter({ ownerUserId, forestId, cursor }) {
+function treeFilter({ ownerUserId, forestId, cursor, inclusion }) {
   const operator = cursor?.direction === 'before' ? '$lt' : '$gt';
   return {
     ownerUserId,
     forestId,
     sourceState: 'active',
-    hiddenFromForest: false,
+    hiddenFromForest: inclusion === 'hidden',
     ...(cursor ? {
       $or: [
         { 'placement.slot': { [operator]: cursor.anchorPlacementSlot } },
@@ -259,13 +283,15 @@ export function buildForestOwnerNonCanvasReadService({
   return async function listForestOwnerWritingTrees({
     ownerUserId: ownerValue,
     preferredContentLang = 'en',
+    inclusion: inclusionValue = 'visible',
     cursor = null,
     limit
   }) {
     const ownerUserId = canonicalObjectId(ownerValue, 'ownerUserId');
     const language = canonicalLanguage(preferredContentLang);
     const resolvedLimit = pageSize(limit);
-    const decodedCursor = decodeCursor(cursor);
+    const inclusion = inclusionState(inclusionValue);
+    const decodedCursor = decodeCursor(cursor, inclusion);
 
     const world = await queryRows(ForestOwnerWorldModel.findOne({
       ownerUserId,
@@ -313,7 +339,7 @@ export function buildForestOwnerNonCanvasReadService({
     const readingBackward = decodedCursor?.direction === 'before';
     const sortDirection = readingBackward ? -1 : 1;
     const treeQuery = ForestWritingTreeModel.find(
-      treeFilter({ ownerUserId, forestId: world.forestId, cursor: decodedCursor }),
+      treeFilter({ ownerUserId, forestId: world.forestId, cursor: decodedCursor, inclusion }),
       TREE_PROJECTION
     ).sort({ 'placement.slot': sortDirection, writingTreeId: sortDirection })
       .limit(resolvedLimit + 1);
@@ -323,7 +349,7 @@ export function buildForestOwnerNonCanvasReadService({
     }
     const pageRows = rows.slice(0, resolvedLimit);
     if (readingBackward) pageRows.reverse();
-    if (pageRows.some(tree => !validTree(tree, world, ownerUserId))) {
+    if (pageRows.some(tree => !validTree(tree, world, ownerUserId, inclusion))) {
       fail('FOREST_READ_UNAVAILABLE', 'The writing-tree page contains unsupported state.');
     }
 
@@ -402,6 +428,11 @@ export function buildForestOwnerNonCanvasReadService({
       }
       trees.push({
         writingTreeId: tree.writingTreeId,
+        inclusion: {
+          hidden: tree.hiddenFromForest,
+          changedAt: tree.inclusionChangedAt?.toISOString?.() || null,
+          recordRevision: tree.recordRevision
+        },
         placement: {
           worldX: tree.placement.worldX,
           worldY: tree.placement.worldY
@@ -438,12 +469,12 @@ export function buildForestOwnerNonCanvasReadService({
         previousCursor: pageRows.length && (
           readingBackward ? rows.length > resolvedLimit : Boolean(decodedCursor)
         )
-          ? encodeCursor(pageRows[0], 'before')
+          ? encodeCursor(pageRows[0], 'before', inclusion)
           : null,
         nextCursor: pageRows.length && (
           readingBackward ? Boolean(decodedCursor) : rows.length > resolvedLimit
         )
-          ? encodeCursor(pageRows.at(-1), 'after')
+          ? encodeCursor(pageRows.at(-1), 'after', inclusion)
           : null
       }
     };
