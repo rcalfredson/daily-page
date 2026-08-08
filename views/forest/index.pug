@@ -85,6 +85,11 @@ block content
                   span(data-owner-forest-inspection-language)
                 a.button.owner-forest__read-post(data-owner-forest-inspection-link)
                   = t('forestScene.inspect.readPost')
+                .owner-forest__inclusion-actions
+                  button.owner-forest__hide-tree(type='button' data-owner-forest-hide-tree)
+                    = t('forestScene.inspect.hide')
+                  a.owner-forest__manage-hidden(href=uiPath('/forest/writing?view=hidden'))
+                    = t('forestScene.inspect.manageHidden')
                 .owner-forest__translations(data-owner-forest-translations-wrap hidden)
                   h3= t('forestScene.inspect.translations')
                   ul(data-owner-forest-translations)
@@ -100,6 +105,10 @@ block content
           inspectionLoading: t('forestScene.inspect.loading'),
           inspectionUnavailable: t('forestScene.inspect.unavailable'),
           inspectionReconciling: t('forestScene.inspect.reconciling'),
+          inclusionSaving: t('forestScene.inspect.inclusionSaving'),
+          inclusionConflict: t('forestScene.inspect.inclusionConflict'),
+          inclusionUnavailable: t('forestScene.inspect.inclusionUnavailable'),
+          treeHidden: t('forestScene.inspect.treeHidden'),
           treeTypes: {
             'open-crown-deciduous': t('forestScene.treeTypes.deciduous'),
             'sunset-lanternwood': t('forestScene.treeTypes.lanternwood'),

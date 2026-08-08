@@ -27,6 +27,20 @@
     },
     "openPost": "Read post",
     "enterForest": "Enter your forest",
+    "views": {
+      "label": "Forest writing visibility",
+      "visible": "In your forest",
+      "hidden": "Hidden trees"
+    },
+    "inclusion": {
+      "hide": "Hide from forest",
+      "unhide": "Unhide tree",
+      "saving": "Updating your forest…",
+      "hidden": "The tree was hidden from your forest.",
+      "unhidden": "Tree restored to your forest.",
+      "conflict": "This tree changed elsewhere. Reload the page and try again.",
+      "unavailable": "The tree could not be updated right now. Please try again."
+    },
     "omitted": "{count} tree could not be shown because its current writing is unavailable.",
     "reconciling": {
       "heading": "Your forest is growing",
@@ -35,7 +49,8 @@
     "empty": {
       "heading": "No writing trees to show yet",
       "notEstablished": "Your private forest has not been established yet.",
-      "ready": "No currently eligible, visible writing is represented in your forest."
+      "ready": "No currently eligible, visible writing is represented in your forest.",
+      "hidden": "You have not hidden any currently eligible writing trees."
     },
     "invalid": {
       "heading": "That forest page is not available",

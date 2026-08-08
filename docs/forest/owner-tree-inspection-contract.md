@@ -80,8 +80,9 @@ the close action, or selecting the
 restrained backdrop dismisses the panel, restores the nearby-tree prompt, and returns focus directly
 to the forest viewport. The
 panel shows tree type and captured creation season, selected writing title/date/language, canonical
-post action, and bounded translation links. Player and camera position remain page-lifetime
-transient state.
+post action, bounded translation links, and the owner-only durable hide action. A successful hide
+removes the placement from the current scene and directs restoration to the hidden writing view.
+Player and camera position remain page-lifetime transient state.
 
 ## Verification
 

@@ -2,6 +2,7 @@ extends ../layout
 
 block append head
   link(rel='stylesheet' href='/css/forest-writing.css')
+  script(type='module' src='/js/forest-writing.js')
 
 block nav
   include ../navLinks
@@ -13,6 +14,23 @@ block content
       h1#forest-writing-title= t('forestWriting.heading')
       p= t('forestWriting.introduction')
       a.forest-writing__enter(href=uiPath('/forest'))= t('forestWriting.enterForest')
+
+    nav.forest-writing__views(aria-label=t('forestWriting.views.label'))
+      a(
+        href=uiPath('/forest/writing')
+        aria-current=(inclusion === 'visible' ? 'page' : null)
+      )= t('forestWriting.views.visible')
+      a(
+        href=uiPath('/forest/writing?view=hidden')
+        aria-current=(inclusion === 'hidden' ? 'page' : null)
+      )= t('forestWriting.views.hidden')
+
+    p.forest-writing__mutation-status(
+      data-forest-inclusion-status
+      role='status'
+      aria-live='polite'
+      hidden
+    )
 
     if forestStatus === 'reconciling'
       .forest-writing__notice(role='status')
@@ -58,13 +76,21 @@ block content
                   span.forest-writing__species= tree.treeTypeLabel
                   span(aria-hidden='true') ·
                   span= tree.seasonLabel
-                a.forest-writing__open(href=tree.writing.path)
-                  = t('forestWriting.openPost')
-                  span(aria-hidden='true')  →
+                .forest-writing__card-actions
+                  a.forest-writing__open(href=tree.writing.path)
+                    = t('forestWriting.openPost')
+                    span(aria-hidden='true')  →
+                  button.forest-writing__inclusion(
+                    type='button'
+                    data-forest-inclusion
+                    data-tree-id=tree.writingTreeId
+                    data-tree-revision=tree.inclusion.recordRevision
+                    data-hidden=tree.inclusion.hidden ? 'true' : 'false'
+                  )= tree.inclusion.hidden ? t('forestWriting.inclusion.unhide') : t('forestWriting.inclusion.hide')
     else
       .forest-writing__notice(role='status')
         h2= t('forestWriting.empty.heading')
-        p= t('forestWriting.empty.ready')
+        p= inclusion === 'hidden' ? t('forestWriting.empty.hidden') : t('forestWriting.empty.ready')
 
     if previousUrl || nextUrl
       nav.forest-writing__pagination(aria-label=t('forestWriting.pagination.label'))
@@ -72,3 +98,13 @@ block content
           a.forest-writing__previous(href=uiPath(previousUrl))= t('forestWriting.pagination.previous')
         if nextUrl
           a.forest-writing__next(href=uiPath(nextUrl))= t('forestWriting.pagination.next')
+
+    -
+      const inclusionCopy = {
+        saving: t('forestWriting.inclusion.saving'),
+        hidden: t('forestWriting.inclusion.hidden'),
+        unhidden: t('forestWriting.inclusion.unhidden'),
+        conflict: t('forestWriting.inclusion.conflict'),
+        unavailable: t('forestWriting.inclusion.unavailable')
+      };
+    script#forest-inclusion-copy(type='application/json')!= JSON.stringify(inclusionCopy).replace(/</g, '\u003c')

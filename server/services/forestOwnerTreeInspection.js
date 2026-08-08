@@ -46,6 +46,7 @@ const TREE_PROJECTION = Object.freeze({
   hiddenFromForest: 1,
   foundingSource: 1,
   projection: 1,
+  recordRevision: 1,
 });
 const BLOCK_PROJECTION = Object.freeze({
   _id: 1,
@@ -191,6 +192,8 @@ function validateTree(tree, world, ownerUserId, writingTreeId) {
     || tree.ownerUserId !== ownerUserId
     || tree.sourceState !== 'active'
     || tree.hiddenFromForest !== false
+    || !Number.isSafeInteger(tree.recordRevision)
+    || tree.recordRevision < 1
     || !OBJECT_ID_PATTERN.test(tree.translationGroupId || '')
     || !OBJECT_ID_PATTERN.test(tree.foundingSource?.blockId || '')
     || tree.projection?.revision !== FOREST_WRITING_TREE_PROJECTION_REVISION
@@ -396,6 +399,7 @@ export function buildForestOwnerTreeInspectionService({
         id: tree.writingTreeId,
         phenotypeId: phenotype.id,
         creationSeason: tree.projection.creationSeason,
+        recordRevision: tree.recordRevision,
       },
       writing: {
         title: displayBlock.title,

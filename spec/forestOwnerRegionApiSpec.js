@@ -1,6 +1,7 @@
 import {
   buildForestOwnerRegionAssetRouteHandler,
   buildForestOwnerRegionRouteHandler,
+  buildForestOwnerTreeInclusionRouteHandler,
   buildForestOwnerTreeInspectionRouteHandler,
   privateForestApiResponse
 } from '../server/api/v1/forest.js';
@@ -13,6 +14,9 @@ import {
 import {
   ForestOwnerTreeInspectionError
 } from '../server/services/forestOwnerTreeInspection.js';
+import {
+  ForestOwnerTreeInclusionError
+} from '../server/services/forestOwnerTreeInclusion.js';
 
 const OWNER_USER_ID = '507f1f77bcf86cd799439011';
 const OTHER_OWNER_USER_ID = '507f1f77bcf86cd799439012';
@@ -283,6 +287,64 @@ describe('forest owner tree inspection API', () => {
     expect(failedResponse.statusCode).toBe(503);
     expect(failedResponse.body.code).toBe('FOREST_TREE_INSPECTION_UNAVAILABLE');
     expect(JSON.stringify(console.error.calls.allArgs())).not.toContain(privateDetail);
+  });
+});
+
+describe('forest owner tree inclusion API', () => {
+  it('derives the owner from the session and accepts only the exact mutation body', async () => {
+    const setInclusion = jasmine.createSpy('setInclusion').and.resolveTo({ outcome: 'hidden' });
+    const handler = buildForestOwnerTreeInclusionRouteHandler({ setInclusion });
+    const res = response();
+    await handler({
+      user: { id: OWNER_USER_ID },
+      params: { writingTreeId: '22222222-2222-4222-8222-222222222222' },
+      body: { hidden: true, expectedRevision: 4 }
+    }, res);
+    expect(setInclusion).toHaveBeenCalledOnceWith({
+      ownerUserId: OWNER_USER_ID,
+      writingTreeId: '22222222-2222-4222-8222-222222222222',
+      hidden: true,
+      expectedRevision: 4
+    });
+    expect(res.statusCode).toBe(200);
+
+    const malformed = response();
+    await handler({
+      user: { id: OWNER_USER_ID }, params: { writingTreeId: 'tree' },
+      body: { hidden: true, expectedRevision: 4, ownerUserId: OTHER_OWNER_USER_ID }
+    }, malformed);
+    expect(malformed.statusCode).toBe(400);
+    expect(setInclusion).toHaveBeenCalledTimes(1);
+  });
+
+  it('maps absence and conflicts without exposing private error details', async () => {
+    for (const testCase of [
+      ['TREE_INCLUSION_NOT_FOUND', 404, 'FOREST_TREE_UNAVAILABLE'],
+      ['TREE_INCLUSION_CONFLICT', 409, 'FOREST_TREE_INCLUSION_CONFLICT']
+    ]) {
+      const handler = buildForestOwnerTreeInclusionRouteHandler({
+        setInclusion: jasmine.createSpy('setInclusion').and.rejectWith(
+          new ForestOwnerTreeInclusionError(testCase[0], 'private tree detail')
+        )
+      });
+      const res = response();
+      await handler({
+        user: { id: OWNER_USER_ID }, params: { writingTreeId: 'tree' },
+        body: { hidden: false, expectedRevision: 2 }
+      }, res);
+      expect(res.statusCode).toBe(testCase[1]);
+      expect(res.body.code).toBe(testCase[2]);
+      expect(JSON.stringify(res.body)).not.toContain('private');
+    }
+  });
+
+  it('rejects unauthenticated mutation before reading its body', async () => {
+    const setInclusion = jasmine.createSpy('setInclusion');
+    const handler = buildForestOwnerTreeInclusionRouteHandler({ setInclusion });
+    const res = response();
+    await handler({ user: null, params: {}, body: null }, res);
+    expect(res.statusCode).toBe(401);
+    expect(setInclusion).not.toHaveBeenCalled();
   });
 });
 

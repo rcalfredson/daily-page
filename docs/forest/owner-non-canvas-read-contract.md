@@ -4,9 +4,9 @@
 
 `GET /forest/writing` is the first production-facing Activity Forest read surface. It is an
 authenticated, server-rendered alternative to canvas exploration that lets an owner recognize the
-writing currently represented in their forest and follow its canonical post link. It does not
-render the production forest scene, inspect foreign translations, mutate tree state, or establish
-navigation entry points elsewhere in the site.
+writing currently represented in their forest, follow its canonical post link, and manage
+reversible tree inclusion. It does not render the production forest scene, inspect foreign
+translations, or mutate source writing.
 
 The initial player-facing presentation calls this collection the owner's **writing grove**. Cards
 use current title, localized room and date context, a human-readable language only when it differs
@@ -38,8 +38,11 @@ group: the preferred-language owner variant, the current founding owner variant,
 eligible owner fallback. A database aggregation chooses the earliest candidate without returning
 the complete translation history to application memory.
 
-Hidden and inactive trees are excluded at the tree query. If a ledger tree no longer has a current
-eligible owner Block, it is omitted rather than restoring stale writing from founding evidence.
+Inactive trees are excluded at the tree query. The default view also excludes hidden trees, while
+the explicit owner-only `?view=hidden` management view selects active hidden trees. Cursors bind to
+one inclusion view and cannot be replayed across the visible/hidden boundary. If a ledger tree no
+longer has a current eligible owner Block, it is omitted rather than restoring stale writing from
+founding evidence.
 
 ## Honest states and failures
 
@@ -54,7 +57,7 @@ they do not include owner, tree, group, Block, title, or route values.
 
 ## Deferred work
 
-The production canvas scene and regional routes, dedicated tree inspection, hide/unhide controls,
-site navigation entry, richer multilingual translation discovery, and final visual design remain
-separate Milestone 2 work. Those surfaces should reuse this service's session-owned, current-source,
-bounded-read boundary rather than treating a previously loaded scene as authorization.
+The production canvas scene, regional routes, tree inspection, hide/unhide controls, site
+navigation, and multilingual translation discovery now reuse this session-owned, current-source,
+bounded-read boundary. Final lifecycle, privacy, distribution, performance, and visual evidence
+remain Milestone 2 work.

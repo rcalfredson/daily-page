@@ -15,6 +15,10 @@ import {
   ForestOwnerTreeInspectionError,
   inspectForestOwnerTree
 } from '../../services/forestOwnerTreeInspection.js';
+import {
+  ForestOwnerTreeInclusionError,
+  setForestOwnerTreeInclusion
+} from '../../services/forestOwnerTreeInclusion.js';
 
 const router = Router();
 
@@ -102,6 +106,21 @@ function inspectionRequest(query) {
     );
   }
   return { cursor: query.cursor || null, limit: query.limit };
+}
+
+function inclusionRequest(body) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    throw new ForestOwnerTreeInclusionError(
+      'INVALID_TREE_INCLUSION_INPUT', 'The inclusion body is invalid.'
+    );
+  }
+  const fields = Object.keys(body);
+  if (fields.length !== 2 || !fields.includes('hidden') || !fields.includes('expectedRevision')) {
+    throw new ForestOwnerTreeInclusionError(
+      'INVALID_TREE_INCLUSION_INPUT', 'The inclusion body contains unsupported fields.'
+    );
+  }
+  return { hidden: body.hidden, expectedRevision: body.expectedRevision };
 }
 
 export function privateForestApiResponse(req, res, next) {
@@ -230,9 +249,55 @@ export function buildForestOwnerTreeInspectionRouteHandler({
   };
 }
 
+export function buildForestOwnerTreeInclusionRouteHandler({
+  setInclusion = setForestOwnerTreeInclusion
+} = {}) {
+  return async function forestOwnerTreeInclusionRoute(req, res) {
+    if (!req.user?.id) {
+      return res.status(401).json({
+        error: 'AUTHENTICATION_REQUIRED', code: 'AUTHENTICATION_REQUIRED'
+      });
+    }
+    try {
+      const result = await setInclusion({
+        ownerUserId: req.user.id,
+        writingTreeId: req.params.writingTreeId,
+        ...inclusionRequest(req.body)
+      });
+      return res.status(200).json(result);
+    } catch (error) {
+      if (error instanceof ForestOwnerTreeInclusionError) {
+        if (error.code === 'INVALID_TREE_INCLUSION_INPUT') {
+          return res.status(400).json({
+            error: 'INVALID_FOREST_TREE_INCLUSION_REQUEST',
+            code: 'INVALID_FOREST_TREE_INCLUSION_REQUEST'
+          });
+        }
+        if (error.code === 'TREE_INCLUSION_NOT_FOUND') {
+          return res.status(404).json({
+            error: 'FOREST_TREE_UNAVAILABLE', code: 'FOREST_TREE_UNAVAILABLE'
+          });
+        }
+        if (error.code === 'TREE_INCLUSION_CONFLICT') {
+          return res.status(409).json({
+            error: 'FOREST_TREE_INCLUSION_CONFLICT',
+            code: 'FOREST_TREE_INCLUSION_CONFLICT'
+          });
+        }
+      }
+      console.error('Forest owner tree inclusion failed:', error?.name || 'Error');
+      return res.status(503).json({
+        error: 'FOREST_TREE_INCLUSION_UNAVAILABLE',
+        code: 'FOREST_TREE_INCLUSION_UNAVAILABLE'
+      });
+    }
+  };
+}
+
 const regionHandler = buildForestOwnerRegionRouteHandler();
 const assetHandler = buildForestOwnerRegionAssetRouteHandler();
 const inspectionHandler = buildForestOwnerTreeInspectionRouteHandler();
+const inclusionHandler = buildForestOwnerTreeInclusionRouteHandler();
 
 const useForestAPI = (app) => {
   app.use('/api/v1/forest', router);
@@ -241,6 +306,7 @@ const useForestAPI = (app) => {
   router.get('/regions', regionHandler);
   router.get('/assets', assetHandler);
   router.get('/trees/:writingTreeId/inspection', inspectionHandler);
+  router.patch('/trees/:writingTreeId/inclusion', inclusionHandler);
 };
 
 export default useForestAPI;

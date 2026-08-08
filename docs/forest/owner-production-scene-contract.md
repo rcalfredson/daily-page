@@ -6,12 +6,18 @@
 owner only from the current session, sets `Cache-Control: private, no-store`, varies on `Cookie`, and
 never accepts an owner id or username parameter as authority.
 
-The first view is intentionally read-only. It supports signed-world exploration, restrained owner-
-environment ground, regional writing-tree loading, reusable procedural assets, tree proximity
-focus, reauthorized writing inspection, keyboard movement, touch-drag movement, reduced motion, and
-a direct semantic fallback to `/forest/writing`. It does not include development profiles,
+The first view is intentionally read-oriented, with reversible owner-tree inclusion as its only
+durable mutation. It supports signed-world exploration, restrained owner-environment ground,
+regional writing-tree loading, reusable procedural assets, tree proximity focus, reauthorized
+writing inspection, keyboard movement, touch-drag movement, reduced motion, and a direct semantic
+fallback to `/forest/writing`. It does not include development profiles,
 diagnostics, streams, bridges, visitors, discoveries, trails, gathering, construction, clearing
 mutation, or `localStorage` authority.
+
+The owner may hide a currently inspected tree through the durable inclusion endpoint. Success
+removes that placement from the page-lifetime scene immediately; restoration remains available in
+the hidden-tree writing management view. The browser never treats its local removal as mutation
+authority.
 
 Regional manifests and assets contain no writing metadata. A nearby tree can open the private
 inspection boundary documented in `owner-tree-inspection-contract.md`; that boundary rechecks the
