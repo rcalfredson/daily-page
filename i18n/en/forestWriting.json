@@ -26,6 +26,7 @@
       "unknown": "Season remembered"
     },
     "openPost": "Read post",
+    "enterForest": "Enter your forest",
     "omitted": "{count} tree could not be shown because its current writing is unavailable.",
     "reconciling": {
       "heading": "Your forest is growing",

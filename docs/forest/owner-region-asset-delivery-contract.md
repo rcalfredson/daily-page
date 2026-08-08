@@ -94,12 +94,12 @@ not currently authorized or whose backing projection became unavailable receives
 receive `503 FOREST_ASSET_DELIVERY_UNAVAILABLE`. Response bodies and route logs omit the underlying
 private identity and validation detail.
 
-## Deferred browser work
+## Production browser consumer
 
-The placement and visual-asset APIs now provide the server boundaries needed by the production
-forest page. The browser route still needs to choose its initial cells, fetch placement pages,
-request only missing visible/preload asset keys in batches of 24, prepare assets outside animation
-frames, and preserve empty, reconciling, reduced-motion, keyboard, and failure behavior.
+The private production `/forest` page now chooses a signed 3×3 neighborhood around its centered
+player, fetches placement pages to completion, requests only missing asset keys in batches of 24,
+and prepares lossless raster sprites with yields between assets. Empty, reconciling, unavailable,
+no-JavaScript, reduced-motion, keyboard, touch, and regional-failure behavior remain explicit.
 
 Writing recognition remains a separate reauthorized inspection endpoint. Possession of an asset
 key, visual asset, placement manifest, or previously rendered tree grants no writing access.

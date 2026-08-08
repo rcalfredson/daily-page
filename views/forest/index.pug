@@ -1,0 +1,117 @@
+extends ../layout
+
+block append head
+  link(rel='stylesheet' href='/css/owner-forest.css')
+  if forestStatus === 'ready'
+    script(type='module' src='/js/owner-forest.js')
+
+block nav
+  include ../navLinks
+
+block content
+  main.owner-forest(aria-labelledby='owner-forest-title')
+    header.owner-forest__header
+      div
+        p.owner-forest__eyebrow= t('forestScene.eyebrow')
+        h1#owner-forest-title= t('forestScene.heading')
+        p.owner-forest__lede= t('forestScene.introduction')
+      .owner-forest__actions
+        a.button(href=uiPath('/forest/writing'))= t('forestScene.browseWriting')
+        if forestStatus === 'ready'
+          button(type='button' data-owner-forest-reset)= t('forestScene.returnToCenter')
+
+    if forestStatus === 'not-established'
+      .owner-forest__notice(role='status')
+        h2= t('forestScene.empty.heading')
+        p= t('forestScene.empty.body')
+    else if forestStatus === 'reconciling'
+      .owner-forest__notice(role='status')
+        h2= t('forestScene.reconciling.heading')
+        p= t('forestScene.reconciling.body')
+        a.button(href=uiPath('/forest'))= t('forestScene.reconciling.retry')
+    else if forestStatus === 'unavailable'
+      .owner-forest__notice(role='alert')
+        h2= t('forestScene.unavailable.heading')
+        p= t('forestScene.unavailable.body')
+    else
+      p#owner-forest-help.owner-forest__help= t('forestScene.help')
+      .owner-forest__stage(data-owner-forest-stage)
+        .owner-forest__viewport(
+          tabindex='0'
+          role='application'
+          aria-label=t('forestScene.viewportLabel')
+          aria-describedby='owner-forest-help'
+          data-owner-forest-viewport
+        )
+          canvas.owner-forest__canvas(data-owner-forest-canvas)
+          .owner-forest__joystick(data-owner-forest-joystick hidden aria-hidden='true')
+            .owner-forest__joystick-stick(data-owner-forest-joystick-stick)
+          p.owner-forest__status(data-owner-forest-status role='status' aria-live='polite')
+            = t('forestScene.loading')
+          .owner-forest__nearby(data-owner-forest-nearby hidden)
+            span= t('forestScene.treeNearby')
+            button(type='button' data-owner-forest-inspect)= t('forestScene.inspect.action')
+          .owner-forest__inspection-backdrop(
+            aria-hidden='true'
+            data-owner-forest-inspection-backdrop
+            hidden
+          )
+          aside.owner-forest__inspection(
+            role='dialog'
+            aria-label=t('forestScene.inspect.eyebrow')
+            data-owner-forest-inspection
+            hidden
+          )
+            .owner-forest__inspection-header
+              p.owner-forest__eyebrow= t('forestScene.inspect.eyebrow')
+              button.owner-forest__inspection-close(
+                type='button'
+                aria-label=t('forestScene.inspect.close')
+                data-owner-forest-inspection-close
+              ) ×
+            .owner-forest__inspection-scroll
+              p.owner-forest__inspection-status(
+                role='status'
+                aria-live='polite'
+                data-owner-forest-inspection-status
+              )
+              .owner-forest__inspection-content(data-owner-forest-inspection-content hidden)
+                h2#owner-forest-inspection-title(data-owner-forest-inspection-title)
+                p.owner-forest__inspection-meta
+                  span(data-owner-forest-inspection-species)
+                  span(aria-hidden='true') ·
+                  time(data-owner-forest-inspection-date)
+                  span(aria-hidden='true') ·
+                  span(data-owner-forest-inspection-language)
+                a.button.owner-forest__read-post(data-owner-forest-inspection-link)
+                  = t('forestScene.inspect.readPost')
+                .owner-forest__translations(data-owner-forest-translations-wrap hidden)
+                  h3= t('forestScene.inspect.translations')
+                  ul(data-owner-forest-translations)
+                  button(type='button' data-owner-forest-translations-more hidden)
+                    = t('forestScene.inspect.moreTranslations')
+      noscript
+        .owner-forest__notice
+          p= t('forestScene.noScript')
+          a(href=uiPath('/forest/writing'))= t('forestScene.browseWriting')
+      script#owner-forest-bootstrap(type='application/json')!= JSON.stringify(bootstrap).replace(/</g, '\u003c')
+      -
+        const forestCopy = {
+          inspectionLoading: t('forestScene.inspect.loading'),
+          inspectionUnavailable: t('forestScene.inspect.unavailable'),
+          inspectionReconciling: t('forestScene.inspect.reconciling'),
+          treeTypes: {
+            'open-crown-deciduous': t('forestScene.treeTypes.deciduous'),
+            'sunset-lanternwood': t('forestScene.treeTypes.lanternwood'),
+            'wind-shaped-highland-conifer': t('forestScene.treeTypes.conifer')
+          },
+          unknownTreeType: t('forestScene.treeTypes.unknown'),
+          seasons: {
+            spring: t('forestScene.seasons.spring'),
+            summer: t('forestScene.seasons.summer'),
+            autumn: t('forestScene.seasons.autumn'),
+            winter: t('forestScene.seasons.winter'),
+            unknown: t('forestScene.seasons.unknown')
+          }
+        };
+      script#owner-forest-copy(type='application/json')!= JSON.stringify(forestCopy).replace(/</g, '\u003c')

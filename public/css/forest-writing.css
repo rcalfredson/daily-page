@@ -23,12 +23,22 @@
   line-height: 1.08;
 }
 
-.forest-writing__header > p:last-child {
+.forest-writing__header > p:not(.forest-writing__eyebrow) {
   max-width: 42rem;
   margin-bottom: 0;
   color: color-mix(in srgb, currentColor 72%, transparent);
   font-size: 1.05rem;
   line-height: 1.6;
+}
+
+.forest-writing__enter {
+  display: inline-flex;
+  margin-top: 1rem;
+  border: 1px solid color-mix(in srgb, #63875f 60%, currentColor);
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  background: color-mix(in srgb, Canvas 88%, #63875f 12%);
+  text-decoration: none;
 }
 
 .forest-writing__list {

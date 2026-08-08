@@ -50,10 +50,12 @@ authorized and resolved from current Block data when the tree is inspected.
 Direct Block lifecycle enqueueing and the cursor-based convergence sweep now orchestrate this
 service. The private owner non-canvas writing route supplies the first production-facing read, and
 the owner-region manifest adapter and authenticated endpoint supply the bounded durable-tree-to-scene
-read seam, including current regional visual-asset authorization and generation. Milestone 2 still
-needs the scene page, browser scene composition, and a dedicated inspection route. Exact inactive-
-tree reactivation/deactivation is implemented by the owner/group reconciliation service. Those
-paths must preserve this service's owner/group idempotency and account-deletion fence.
+read seam, including current regional visual-asset authorization and generation. The private
+production scene now composes those regions and uses a separately reauthorized inspection endpoint
+to resolve current owner display writing and discoverable translations. Milestone 2 still needs
+final lifecycle/privacy/performance evidence. Exact inactive-tree reactivation/deactivation is
+implemented by the owner/group reconciliation service. Those paths must preserve this service's
+owner/group idempotency and account-deletion fence.
 
 ## Verification
 

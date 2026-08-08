@@ -12,6 +12,7 @@ block content
       p.forest-writing__eyebrow= t('forestWriting.eyebrow')
       h1#forest-writing-title= t('forestWriting.heading')
       p= t('forestWriting.introduction')
+      a.forest-writing__enter(href=uiPath('/forest'))= t('forestWriting.enterForest')
 
     if forestStatus === 'reconciling'
       .forest-writing__notice(role='status')
