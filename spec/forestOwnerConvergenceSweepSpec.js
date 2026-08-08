@@ -347,9 +347,33 @@ describe('forest owner convergence sweep worker', () => {
     expect(ForestOwnerWorldModel.find.calls.argsFor(1)[0])
       .toEqual(forestOwnerConvergenceDueIdleWorldFilter(NOW, 60_000));
     expect(runSweepStep.calls.allArgs()).toEqual([
-      [{ ownerUserId: OWNER_USER_ID, now: NOW }],
-      [{ ownerUserId: '507f1f77bcf86cd799439012', now: NOW }],
+      [{ ownerUserId: OWNER_USER_ID, now: NOW, maxSteps: 10 }],
+      [{ ownerUserId: '507f1f77bcf86cd799439012', now: NOW, maxSteps: 10 }],
     ]);
+  });
+
+  it('allows a smaller bounded per-owner step budget', async () => {
+    const ForestOwnerWorldModel = {
+      find: jasmine.createSpy('find').and.returnValues(
+        findQuery([{ ownerUserId: OWNER_USER_ID }]),
+        findQuery([]),
+      ),
+    };
+    const runSweepStep = jasmine.createSpy('runSweepStep').and.resolveTo({
+      outcome: 'progressed',
+    });
+    const worker = buildForestOwnerConvergenceSweepWorker({
+      ForestOwnerWorldModel,
+      runSweepStep,
+    });
+
+    await worker({ stepsPerOwner: 3, now: NOW });
+
+    expect(runSweepStep).toHaveBeenCalledOnceWith({
+      ownerUserId: OWNER_USER_ID,
+      now: NOW,
+      maxSteps: 3,
+    });
   });
 
   it('isolates owner failures and logs no owner identity', async () => {
