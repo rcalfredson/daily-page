@@ -1,5 +1,9 @@
 import crypto from 'node:crypto';
 
+import {
+  projectPostToForestTree
+} from '../../server/services/forestPostTreeProjection.js';
+
 export const ACCOUNT_DELETION_FIXTURE_SCENARIOS = Object.freeze([
   'delete',
   'deleted-author',
@@ -10,6 +14,29 @@ export const ACCOUNT_DELETION_FIXTURE_ROOM_ID = 'account-deletion-fixture';
 export const ACCOUNT_DELETION_FIXTURE_TAG = 'account-deletion-fixture';
 export const DEFAULT_ACCOUNT_DELETION_FIXTURE_PASSWORD = 'DeletionFixture!2026';
 export const FOREST_READ_PAGINATION_FIXTURE_POST_COUNT = 55;
+
+function buildFixtureTreeProjection({ writingTreeId, post }) {
+  const projected = projectPostToForestTree({
+    id: writingTreeId,
+    createdAt: post.createdAt.toISOString(),
+    roomId: post.roomId
+  }, {
+    habitat: 'neutral-grove'
+  });
+
+  return {
+    revision: 1,
+    schemaVersion: projected.schemaVersion,
+    mappingVersion: projected.mappingVersion,
+    specimenSeed: projected.specimen.seed,
+    phenotypeId: projected.phenotype.id,
+    phenotypeAssetVersion: projected.phenotype.version,
+    creationSeason: projected.permanentTraits.creationSeason,
+    foliagePaletteId: projected.permanentTraits.foliagePaletteId,
+    projectionFingerprint: projected.identity.projectionFingerprint,
+    visualFingerprint: projected.identity.visualFingerprint
+  };
+}
 
 export function fixtureObjectId(scenario, key) {
   return crypto
@@ -569,56 +596,48 @@ export function buildAccountDeletionFixture({
     posts.ownerPublicLocked,
     posts.ownerUnlistedLocked
   ];
-  const forestWritingTrees = forestSourcePosts.map((post, slot) => ({
-    writingTreeId: fixtureUuid(scenario, `forest:writing-tree:${slot}`),
-    forestId,
-    ownerUserId: owner._id,
-    translationGroupId: post.groupId,
-    sourceStateChangedAt: post.createdAt,
-    foundingSource: {
-      blockId: post._id,
-      createdAt: post.createdAt
-    },
-    placement: {
-      policyVersion: 1,
-      slot,
-      worldX: (slot - 1) * 96,
-      worldY: slot * 72
-    },
-    placementIndex: {
-      version: 1,
-      cellX: Math.floor(((slot - 1) * 96) / 720),
-      cellY: Math.floor((slot * 72) / 720)
-    },
-    originatingEnvironment: {
-      policyVersion: 1,
-      schemaVersion: 1,
-      worldGenerationVersion: 1,
-      regionId: 'fixture-grove',
-      habitatId: 'fixture-habitat',
-      groundSurfaceId: 'fixture-ground',
-      transitionState: 'fixture-core'
-    },
-    projection: {
-      revision: 1,
-      schemaVersion: 1,
-      mappingVersion: 1,
-      specimenSeed: slot + 1,
-      phenotypeId: 'open-crown-deciduous',
-      phenotypeAssetVersion: 1,
-      creationSeason: 'summer',
-      foliagePaletteId: 'summer-green',
-      projectionFingerprint: `fixture-v1:seed-${slot + 1}:open-crown-deciduous@1`,
-      visualFingerprint: `fixture-v1:summer-green:${slot + 1}`
-    },
-    policyEvidence: {
-      ownerWritingPolicyVersion: 2,
-      ownerVariantSelectionVersion: 1,
-      writingLifecyclePolicyVersion: 1
-    },
-    createdAt: post.createdAt,
-    updatedAt: post.updatedAt
-  }));
+  const forestWritingTrees = forestSourcePosts.map((post, slot) => {
+    const writingTreeId = fixtureUuid(scenario, `forest:writing-tree:${slot}`);
+    return {
+      writingTreeId,
+      forestId,
+      ownerUserId: owner._id,
+      translationGroupId: post.groupId,
+      sourceStateChangedAt: post.createdAt,
+      foundingSource: {
+        blockId: post._id,
+        createdAt: post.createdAt
+      },
+      placement: {
+        policyVersion: 1,
+        slot,
+        worldX: (slot - 1) * 96,
+        worldY: slot * 72
+      },
+      placementIndex: {
+        version: 1,
+        cellX: Math.floor(((slot - 1) * 96) / 720),
+        cellY: Math.floor((slot * 72) / 720)
+      },
+      originatingEnvironment: {
+        policyVersion: 1,
+        schemaVersion: 1,
+        worldGenerationVersion: 1,
+        regionId: 'fixture-grove',
+        habitatId: 'neutral-grove',
+        groundSurfaceId: 'fixture-ground',
+        transitionState: 'fixture-core'
+      },
+      projection: buildFixtureTreeProjection({ writingTreeId, post }),
+      policyEvidence: {
+        ownerWritingPolicyVersion: 2,
+        ownerVariantSelectionVersion: 1,
+        writingLifecyclePolicyVersion: 1
+      },
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt
+    };
+  });
 
   return {
     scenario,
