@@ -24,6 +24,19 @@ import User from '../server/db/models/User.js';
 import {
   deriveForestOwnerPlacementIndex,
 } from '../server/services/forestOwnerPlacementNeighborhood.js';
+import {
+  buildForestOwnerRegionManifestService,
+} from '../server/services/forestOwnerRegionManifest.js';
+
+function resolvedQuery(value) {
+  const query = {
+    sort: jasmine.createSpy('sort').and.callFake(() => query),
+    limit: jasmine.createSpy('limit').and.callFake(() => query),
+    lean: jasmine.createSpy('lean').and.callFake(() => query),
+    exec: jasmine.createSpy('exec').and.resolveTo(value),
+  };
+  return query;
+}
 
 describe('account deletion integration fixture definitions', () => {
   it('builds deterministic, isolated ids for every scenario', () => {
@@ -109,6 +122,41 @@ describe('account deletion integration fixture definitions', () => {
     for (const document of documents) {
       await expectAsync(document.validate()).toBeResolved();
     }
+  });
+
+  it('produces baseline trees accepted by the explorable-region contract', async () => {
+    const fixture = buildAccountDeletionFixture({
+      scenario: 'deleted-author',
+      passwordHash: 'hash',
+      now: new Date('2026-08-06T12:00:00.000Z'),
+    });
+    const world = new ForestOwnerWorld(fixture.forestOwnerWorld).toObject();
+    const trees = fixture.forestWritingTrees.map((tree) => (
+      new ForestWritingTree(tree).toObject()
+    ));
+    const cells = [...new Map(trees.map((tree) => [
+      `${tree.placementIndex.cellX}:${tree.placementIndex.cellY}`,
+      {
+        cellX: tree.placementIndex.cellX,
+        cellY: tree.placementIndex.cellY,
+      },
+    ])).values()];
+    const readRegion = buildForestOwnerRegionManifestService({
+      ForestOwnerWorldModel: {
+        findOne: jasmine.createSpy('findOne').and.returnValue(resolvedQuery(world)),
+      },
+      ForestWritingTreeModel: {
+        find: jasmine.createSpy('find').and.returnValue(resolvedQuery(trees)),
+      },
+    });
+
+    const result = await readRegion({
+      ownerUserId: fixture.users.owner._id,
+      cells,
+    });
+
+    expect(result.status).toBe('ready');
+    expect(result.placements).toHaveSize(trees.length);
   });
 
   it('defines the exact retained set for each disposition', () => {
