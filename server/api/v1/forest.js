@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import optionalAuth from '../../middleware/optionalAuth.js';
+import { getPreferredContentLang } from '../../services/localeContext.js';
 import {
   deliverForestOwnerRegionAssets,
   ForestOwnerRegionAssetDeliveryError,
@@ -10,11 +11,16 @@ import {
   ForestOwnerRegionManifestError,
   readForestOwnerRegionManifest
 } from '../../services/forestOwnerRegionManifest.js';
+import {
+  ForestOwnerTreeInspectionError,
+  inspectForestOwnerTree
+} from '../../services/forestOwnerTreeInspection.js';
 
 const router = Router();
 
 const QUERY_FIELDS = Object.freeze(['cells', 'cursor', 'limit']);
 const ASSET_QUERY_FIELDS = Object.freeze(['cells', 'cursor', 'assetKeys', 'transport']);
+const INSPECTION_QUERY_FIELDS = Object.freeze(['cursor', 'limit']);
 const CELL_ID_PATTERN = /^(-?(?:0|[1-9]\d*)):(-?(?:0|[1-9]\d*))$/;
 const CELLS_QUERY_MAX_LENGTH = 256;
 const ASSET_KEYS_QUERY_MAX_LENGTH = FOREST_OWNER_REGION_MAX_ASSET_REQUEST * 401;
@@ -77,6 +83,25 @@ function assetRequest(query) {
     assetKeys: query.assetKeys.split(','),
     transport: query.transport
   };
+}
+
+function inspectionRequest(query) {
+  if (!query || typeof query !== 'object' || Array.isArray(query)) {
+    throw new ForestOwnerTreeInspectionError(
+      'INVALID_TREE_INSPECTION_INPUT',
+      'The inspection query is invalid.'
+    );
+  }
+  const extraFields = Object.keys(query).filter(
+    field => !INSPECTION_QUERY_FIELDS.includes(field)
+  );
+  if (extraFields.length || Array.isArray(query.cursor) || Array.isArray(query.limit)) {
+    throw new ForestOwnerTreeInspectionError(
+      'INVALID_TREE_INSPECTION_INPUT',
+      'The inspection query contains unsupported fields.'
+    );
+  }
+  return { cursor: query.cursor || null, limit: query.limit };
 }
 
 export function privateForestApiResponse(req, res, next) {
@@ -163,8 +188,51 @@ export function buildForestOwnerRegionAssetRouteHandler({
   };
 }
 
+export function buildForestOwnerTreeInspectionRouteHandler({
+  inspectTree = inspectForestOwnerTree
+} = {}) {
+  return async function forestOwnerTreeInspectionRoute(req, res) {
+    if (!req.user?.id) {
+      return res.status(401).json({
+        error: 'AUTHENTICATION_REQUIRED',
+        code: 'AUTHENTICATION_REQUIRED'
+      });
+    }
+    try {
+      const inspection = await inspectTree({
+        ownerUserId: req.user.id,
+        writingTreeId: req.params.writingTreeId,
+        preferredContentLang: getPreferredContentLang(res),
+        ...inspectionRequest(req.query)
+      });
+      return res.status(200).json(inspection);
+    } catch (error) {
+      if (error instanceof ForestOwnerTreeInspectionError
+        && error.code === 'INVALID_TREE_INSPECTION_INPUT') {
+        return res.status(400).json({
+          error: 'INVALID_FOREST_TREE_INSPECTION_REQUEST',
+          code: 'INVALID_FOREST_TREE_INSPECTION_REQUEST'
+        });
+      }
+      if (error instanceof ForestOwnerTreeInspectionError
+        && error.code === 'TREE_INSPECTION_NOT_FOUND') {
+        return res.status(404).json({
+          error: 'FOREST_TREE_UNAVAILABLE',
+          code: 'FOREST_TREE_UNAVAILABLE'
+        });
+      }
+      console.error('Forest owner tree inspection failed:', error?.name || 'Error');
+      return res.status(503).json({
+        error: 'FOREST_TREE_INSPECTION_UNAVAILABLE',
+        code: 'FOREST_TREE_INSPECTION_UNAVAILABLE'
+      });
+    }
+  };
+}
+
 const regionHandler = buildForestOwnerRegionRouteHandler();
 const assetHandler = buildForestOwnerRegionAssetRouteHandler();
+const inspectionHandler = buildForestOwnerTreeInspectionRouteHandler();
 
 const useForestAPI = (app) => {
   app.use('/api/v1/forest', router);
@@ -172,6 +240,7 @@ const useForestAPI = (app) => {
   router.use(optionalAuth);
   router.get('/regions', regionHandler);
   router.get('/assets', assetHandler);
+  router.get('/trees/:writingTreeId/inspection', inspectionHandler);
 };
 
 export default useForestAPI;
