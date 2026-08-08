@@ -19,9 +19,11 @@ coordination rather than correctness authority: duplicate page work is safe beca
 reconciliation is idempotent, while cursor updates compare the world id, owner, status, epoch,
 phase, and lease token.
 
-Each invocation processes one page by default, then makes an unfinished lease reclaimable. The
-scheduled worker prioritizes expired running worlds before starting due idle worlds, preventing a
-large untouched population from starving recovery.
+Each direct step invocation processes one page by default, then makes an unfinished lease
+reclaimable. The scheduled worker gives each selected world up to ten bounded steps in one pass and
+prioritizes expired running worlds before starting due idle worlds. This lets ordinary histories
+return to `idle` within one worker pass while preserving cursors and reclaimable leases for larger
+histories and failures.
 
 ## Owner-Block phase
 
@@ -54,8 +56,8 @@ returns the world to `idle`, clears all active cursors and lease fields, and rec
 The cron worker runs every five minutes and selects at most five worlds per pass. It first selects
 expired running leases, then fills the remaining bound with idle worlds that have never completed or
 last completed at least six hours ago. Owner errors are isolated and logged by error class only.
-The service bounds owner selection at 25, tree pages at 100, steps per direct invocation at 10, and
-leases between 30 seconds and 15 minutes.
+The scheduled default is ten steps per selected owner. The service bounds owner selection at 25,
+tree pages at 100, steps per invocation at 10, and leases between 30 seconds and 15 minutes.
 
 ## Current enrollment boundary
 

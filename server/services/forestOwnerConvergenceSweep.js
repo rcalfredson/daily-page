@@ -37,6 +37,7 @@ export const FOREST_OWNER_CONVERGENCE_DEFAULT_LEASE_MS = 300_000;
 export const FOREST_OWNER_CONVERGENCE_DEFAULT_OWNER_LIMIT = 5;
 export const FOREST_OWNER_CONVERGENCE_MAX_OWNER_LIMIT = 25;
 export const FOREST_OWNER_CONVERGENCE_DEFAULT_INTERVAL_MS = 21_600_000;
+export const FOREST_OWNER_CONVERGENCE_DEFAULT_STEPS_PER_OWNER = 10;
 
 const OBJECT_ID_PATTERN = /^[a-f0-9]{24}$/i;
 const UUID_V4_PATTERN = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
@@ -482,6 +483,7 @@ export function buildForestOwnerConvergenceSweepWorker({
   return async function processForestOwnerConvergenceSweeps({
     limit = FOREST_OWNER_CONVERGENCE_DEFAULT_OWNER_LIMIT,
     intervalMs = FOREST_OWNER_CONVERGENCE_DEFAULT_INTERVAL_MS,
+    stepsPerOwner = FOREST_OWNER_CONVERGENCE_DEFAULT_STEPS_PER_OWNER,
     now = null,
   } = {}) {
     const ownerLimit = boundedInteger(
@@ -491,6 +493,7 @@ export function buildForestOwnerConvergenceSweepWorker({
       FOREST_OWNER_CONVERGENCE_MAX_OWNER_LIMIT,
     );
     const interval = boundedInteger(intervalMs, 'intervalMs', 0, MAXIMUM_INTERVAL_MS);
+    const stepLimit = boundedInteger(stepsPerOwner, 'stepsPerOwner', 1, MAXIMUM_STEPS);
     const fixedTime = now === null ? null : validDate(now, 'now');
     const selectedAt = fixedTime || validDate(clock(), 'clock()');
     const running = await ForestOwnerWorldModel.find(
@@ -527,6 +530,7 @@ export function buildForestOwnerConvergenceSweepWorker({
         const result = await runSweepStep({
           ownerUserId: canonicalObjectId(world.ownerUserId, 'ownerUserId'),
           now: attemptedAt,
+          maxSteps: stepLimit,
         });
         if (result.outcome === 'progressed') totals.progressed += 1;
         else if (result.outcome === 'completed') totals.completed += 1;
