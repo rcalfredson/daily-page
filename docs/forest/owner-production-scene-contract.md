@@ -117,7 +117,7 @@ The scene shows semantic live-region messages for loading, loaded tree count, an
 failure. Server-rendered not-established, reconciling, unavailable, and no-JavaScript states keep
 the writing-grove link available without Canvas interaction.
 
-## Verification and deferred work
+## Verification and next boundary
 
 `spec/forestOwnerSceneBootstrapSpec.js` verifies supported world identity, privacy-safe bootstrap,
 honest states, session-derived ownership, generic route failure, and localized routing.
@@ -128,8 +128,19 @@ ground-detail distribution. `npm run forest:environment-preview` renders the fix
 overview in `tmp/` for visual review. Existing manifest and asset suites remain authority for
 regional privacy and generation.
 
-The next production boundary is end-to-end lifecycle, privacy, distribution, and performance
-evidence, including canonical writing return continuity. Later scene iteration should measure and
-visually review regional loading, ground treatment, viewport coverage, touch feel, keyboard focus,
-reduced motion, empty/high-count histories, and cold/warm asset behavior before adding richer
-environment or gameplay systems.
+Milestone 2 verification additionally exercises end-to-end lifecycle and account deletion, stale
+and cross-owner authorization, canonical writing return, hide/unhide behavior, empty and
+reconciling states, and separately seeded 55-tree and 600-tree histories. The pressure profile
+measures bounded writing pages, signed regional neighborhoods, aggregate payloads, and authorized
+cold/warm asset preparation in the development environment. Human review covers desktop and
+narrow-width layout, touch and keyboard movement, inspection focus, reduced motion, regional
+travel, and the restrained version-2 ground treatment. These measurements support bounded behavior
+but are not production-network, universal-mobile, or final-capacity guarantees.
+
+The next production boundary is Milestone 3's account-backed authored overlay and mutation
+protocol. Richer biome topology, interactive environmental objects, gathering, inventory, trails,
+and construction remain outside this read-oriented production scene until their durable authority,
+idempotency, concurrency, migration, recovery, and deletion behavior is accepted.
+
+The consolidated Milestone 2 evidence and completion judgment are recorded in
+[`milestone-2-owner-writing-grove-evaluation.md`](milestone-2-owner-writing-grove-evaluation.md).

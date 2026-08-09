@@ -55,9 +55,18 @@ founding evidence.
 Unknown schema and identity versions fail closed. Logs name only the error class at this boundary;
 they do not include owner, tree, group, Block, title, or route values.
 
-## Deferred work
+## Milestone 2 completion evidence
 
 The production canvas scene, regional routes, tree inspection, hide/unhide controls, site
 navigation, and multilingual translation discovery now reuse this session-owned, current-source,
-bounded-read boundary. Final lifecycle, privacy, distribution, performance, and visual evidence
-remain Milestone 2 work.
+bounded-read boundary.
+
+Lifecycle and account-deletion integration exercises creation, deactivation, same-identity
+reactivation, deletion, restoration, retained authorship, queued reconciliation, convergence, and
+complete owner cleanup. Focused route and policy suites cover stale sessions, cross-owner absence,
+private no-store responses, cursor binding, current-source authorization, and inclusion conflicts.
+Separately reseeded 55-tree and 600-tree profiles prove forward/backward continuation without
+duplication or silent omission and provide aggregate development-environment payload and timing
+evidence. Human desktop, narrow-width, keyboard, touch, reduced-motion, visible/hidden, and
+high-count reviews confirm that the semantic list remains a usable alternative and management
+surface. These reviews do not establish universal device or production-network performance.
