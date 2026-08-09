@@ -9,7 +9,7 @@ describe('forest owner environment preview', () => {
     const second = buildForestOwnerEnvironmentPreviewSvg(options);
 
     expect(second).toBe(first);
-    expect(first).toContain('Owner environment v1');
+    expect(first).toContain('Owner ground presentation v2');
     expect(first).toContain('environment-preview-spec');
     expect(first).toContain('600 trees');
     expect(first).toContain('habitat exclusions');

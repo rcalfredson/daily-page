@@ -2,7 +2,7 @@ export const FOREST_OWNER_ENVIRONMENT_POLICY_VERSION = 1;
 export const FOREST_OWNER_ENVIRONMENT_SCHEMA_VERSION = 1;
 export const FOREST_OWNER_WORLD_GENERATION_VERSION = 1;
 export const FOREST_OWNER_ENVIRONMENT_GRAMMAR_ID = 'owner-grove-patchwork-v1';
-export const FOREST_OWNER_GROUND_PRESENTATION_VERSION = 1;
+export const FOREST_OWNER_GROUND_PRESENTATION_VERSION = 2;
 
 export const FOREST_OWNER_ENVIRONMENT_CONFIG = Object.freeze({
   coarseCellSize: 1_920,
@@ -15,6 +15,17 @@ export const FOREST_OWNER_ENVIRONMENT_CONFIG = Object.freeze({
   groveTreeDensityPermille: 940,
   rockyTreeDensityPermille: 680
 });
+
+export const FOREST_OWNER_GROUND_PRESENTATION_CONFIG = Object.freeze({
+  tileSize: 48,
+  originClearingInnerRadius: 240,
+  originClearingOuterRadius: 760,
+  detailDensityPermille: 300
+});
+
+const GROUND_GROVE_COLOR = Object.freeze([82, 119, 72]);
+const GROUND_ROCKY_COLOR = Object.freeze([112, 108, 84]);
+const GROUND_ORIGIN_COLOR = Object.freeze([96, 130, 80]);
 
 const MAX_SEED_LENGTH = 80;
 const MAX_COORDINATE_MAGNITUDE = 1_000_000_000;
@@ -38,6 +49,10 @@ function smoothstep(value) {
 
 function interpolate(left, right, amount) {
   return left + ((right - left) * amount);
+}
+
+function clamp(value, minimum, maximum) {
+  return Math.max(minimum, Math.min(maximum, value));
 }
 
 function latticeUnit(worldSeed, scale, cellX, cellY) {
@@ -101,5 +116,80 @@ export function sampleOwnerForestEnvironment({ worldSeed, worldX, worldY }) {
     rockinessPermille: rockiness,
     treeDensityPermille: density,
     treeAllowed: suitabilityRoll < density
+  });
+}
+
+function originClearingPermille(worldX, worldY) {
+  const config = FOREST_OWNER_GROUND_PRESENTATION_CONFIG;
+  const distance = Math.hypot(worldX, worldY);
+  const progress = clamp(
+    (distance - config.originClearingInnerRadius)
+      / (config.originClearingOuterRadius - config.originClearingInnerRadius),
+    0,
+    1
+  );
+  return Math.round((1 - smoothstep(progress)) * 1_000);
+}
+
+function groundDetail({ worldSeed, worldX, worldY, rockinessPermille, clearingPermille }) {
+  const detailRoll = Math.floor(unit([
+    FOREST_OWNER_ENVIRONMENT_GRAMMAR_ID, worldSeed, 'ground-detail', worldX, worldY
+  ].join(':')) * 1_000);
+  const clearingReduction = Math.round(clearingPermille * 0.12);
+  if (detailRoll >= FOREST_OWNER_GROUND_PRESENTATION_CONFIG.detailDensityPermille
+    - clearingReduction) return null;
+
+  const variantRoll = Math.floor(unit([
+    FOREST_OWNER_ENVIRONMENT_GRAMMAR_ID, worldSeed, 'ground-detail-kind', worldX, worldY
+  ].join(':')) * 1_000);
+  let kind;
+  if (rockinessPermille >= 560) kind = variantRoll < 380 ? 'stone' : 'pebbles';
+  else if (rockinessPermille >= 420) kind = variantRoll < 460 ? 'pebbles' : 'grass';
+  else kind = variantRoll < 320 ? 'moss' : 'grass';
+
+  const offset = axis => Math.round((unit([
+    FOREST_OWNER_ENVIRONMENT_GRAMMAR_ID, worldSeed, `ground-detail-${axis}`, worldX, worldY
+  ].join(':')) - 0.5) * 560);
+  const scalePermille = 720 + Math.floor(unit([
+    FOREST_OWNER_ENVIRONMENT_GRAMMAR_ID, worldSeed, 'ground-detail-scale', worldX, worldY
+  ].join(':')) * 520);
+  return Object.freeze({
+    kind,
+    offsetXPermille: offset('x'),
+    offsetYPermille: offset('y'),
+    scalePermille
+  });
+}
+
+export function sampleOwnerForestGroundPresentation({ worldSeed, worldX, worldY }) {
+  const environment = sampleOwnerForestEnvironment({ worldSeed, worldX, worldY });
+  const clearingPermille = originClearingPermille(worldX, worldY);
+  const clearing = clearingPermille / 1_000;
+  const softenedRockiness = Math.min(environment.rockinessPermille, 320);
+  const presentedRockiness = Math.round(interpolate(
+    environment.rockinessPermille,
+    softenedRockiness,
+    clearing * 0.72
+  ));
+  const rocky = presentedRockiness / 1_000;
+  const clearingColorAmount = clearing * 0.34;
+  const color = GROUND_GROVE_COLOR.map((channel, index) => Math.round(interpolate(
+    interpolate(channel, GROUND_ROCKY_COLOR[index], rocky),
+    GROUND_ORIGIN_COLOR[index],
+    clearingColorAmount
+  )));
+  const detail = groundDetail({
+    worldSeed,
+    worldX,
+    worldY,
+    rockinessPermille: presentedRockiness,
+    clearingPermille
+  });
+  return Object.freeze({
+    presentationVersion: FOREST_OWNER_GROUND_PRESENTATION_VERSION,
+    color: Object.freeze({ red: color[0], green: color[1], blue: color[2] }),
+    rockinessPermille: presentedRockiness,
+    originClearingPermille: clearingPermille,
+    detail
   });
 }

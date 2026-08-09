@@ -5,6 +5,9 @@ import { fileURLToPath } from 'url';
 import sharp from 'sharp';
 
 import {
+  sampleOwnerForestGroundPresentation,
+} from '../../public/js/owner-forest-environment.js';
+import {
   buildForestOwnerEnvironmentPlacementExclusion,
   resolveForestOwnerEnvironment,
 } from '../../server/services/forestOwnerEnvironmentResolver.js';
@@ -32,17 +35,37 @@ function xml(value) {
     .replaceAll("'", '&apos;');
 }
 
-function mix(left, right, amount) {
-  return Math.round(left + ((right - left) * amount));
+function environmentColor(presentation) {
+  const { red, green, blue } = presentation.color;
+  return `rgb(${red},${green},${blue})`;
 }
 
-function environmentColor(rockinessPermille) {
-  const amount = rockinessPermille / 1_000;
-  const grove = [170, 188, 126];
-  const rocky = [137, 132, 106];
-  return `rgb(${grove.map((value, index) => (
-    mix(value, rocky[index], amount)
-  )).join(',')})`;
+function detailSvg(presentation, x, y, size) {
+  const detail = presentation.detail;
+  if (!detail) return '';
+  const centerX = x + (size / 2) + ((detail.offsetXPermille / 1_000) * size);
+  const centerY = y + (size / 2) + ((detail.offsetYPermille / 1_000) * size);
+  const scale = Math.max(0.65, detail.scalePermille / 1_000) * (size / 13);
+  if (detail.kind === 'grass') {
+    return `<path d="M ${centerX.toFixed(2)} ${(centerY + scale).toFixed(2)}`
+      + ` l ${(-0.8 * scale).toFixed(2)} ${(-2.1 * scale).toFixed(2)}`
+      + ` M ${centerX.toFixed(2)} ${(centerY + scale).toFixed(2)}`
+      + ` l ${(0.7 * scale).toFixed(2)} ${(-2.4 * scale).toFixed(2)}"`
+      + ' fill="none" stroke="#315637" stroke-width="0.7" opacity="0.62" />';
+  }
+  if (detail.kind === 'moss') {
+    return `<circle cx="${centerX.toFixed(2)}" cy="${centerY.toFixed(2)}"`
+      + ` r="${(1.25 * scale).toFixed(2)}" fill="#98974d" opacity="0.48" />`;
+  }
+  if (detail.kind === 'pebbles') {
+    return `<circle cx="${(centerX - scale).toFixed(2)}" cy="${centerY.toFixed(2)}"`
+      + ` r="${(0.85 * scale).toFixed(2)}" fill="#686956" opacity="0.62" />`
+      + `<circle cx="${(centerX + scale).toFixed(2)}" cy="${(centerY + (0.4 * scale)).toFixed(2)}"`
+      + ` r="${(0.6 * scale).toFixed(2)}" fill="#777560" opacity="0.58" />`;
+  }
+  return `<ellipse cx="${centerX.toFixed(2)}" cy="${centerY.toFixed(2)}"`
+    + ` rx="${(1.8 * scale).toFixed(2)}" ry="${scale.toFixed(2)}"`
+    + ' fill="#5d5e50" stroke="#40483e" stroke-width="0.45" opacity="0.68" />';
 }
 
 function previewFixture(worldSeed) {
@@ -85,11 +108,12 @@ function panelSvg(fixture, panelX, panelY) {
   const cellPixels = PLOT_SIZE / GRID_SIZE;
   const worldCell = (fixture.extent * 2) / GRID_SIZE;
   const cells = [];
+  const details = [];
   for (let row = 0; row < GRID_SIZE; row += 1) {
     for (let column = 0; column < GRID_SIZE; column += 1) {
       const worldX = Math.round(-fixture.extent + ((column + 0.5) * worldCell));
       const worldY = Math.round(-fixture.extent + ((row + 0.5) * worldCell));
-      const environment = resolveForestOwnerEnvironment({
+      const presentation = sampleOwnerForestGroundPresentation({
         worldSeed: fixture.worldSeed,
         worldX,
         worldY,
@@ -99,8 +123,14 @@ function panelSvg(fixture, panelX, panelY) {
         + ` y="${(plotY + (row * cellPixels)).toFixed(2)}"`
         + ` width="${(cellPixels + 0.2).toFixed(2)}"`
         + ` height="${(cellPixels + 0.2).toFixed(2)}"`
-        + ` fill="${environmentColor(environment.ecology.rockinessPermille)}" />`,
+        + ` fill="${environmentColor(presentation)}" />`,
       );
+      details.push(detailSvg(
+        presentation,
+        plotX + (column * cellPixels),
+        plotY + (row * cellPixels),
+        cellPixels,
+      ));
     }
   }
   const scale = PLOT_SIZE / (fixture.extent * 2);
@@ -127,6 +157,7 @@ function panelSvg(fixture, panelX, panelY) {
         · habitat exclusions ${fixture.exclusionRejectionCount}
       </text>
       ${cells.join('\n')}
+      ${details.join('\n')}
       <rect x="${plotX}" y="${plotY}" width="${PLOT_SIZE}" height="${PLOT_SIZE}"
         fill="none" stroke="#777365" stroke-width="1" />
       <line x1="${plotX}" y1="${plotY + (PLOT_SIZE / 2)}"
@@ -156,9 +187,10 @@ export function buildForestOwnerEnvironmentPreviewSvg({
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"
   viewBox="0 0 ${width} ${height}" role="img"
   aria-labelledby="preview-title preview-description">
-  <title id="preview-title">Activity Forest owner environment version 1</title>
+  <title id="preview-title">Activity Forest owner ground presentation version 2</title>
   <desc id="preview-description">
-    Signed-coordinate habitat patches and 600 environment-filtered trees for two owner-world seeds.
+    Signed-coordinate habitat patches, quiet ground landmarks, origin clearing, and 600
+    environment-filtered trees for two owner-world seeds.
   </desc>
   <style>
     text { font-family: "Be Vietnam Pro", Inter, system-ui, sans-serif; fill: #24372d; }
@@ -171,10 +203,10 @@ export function buildForestOwnerEnvironmentPreviewSvg({
   </style>
   <rect width="100%" height="100%" fill="#f1eee2" />
   <text x="${PAGE_PADDING}" y="48" class="page-title">
-    Owner environment v1 · signed-coordinate validation
+    Owner ground presentation v2 · signed-coordinate validation
   </text>
   <text x="${PAGE_PADDING}" y="77" class="page-subtitle">
-    Smooth seeded habitat patches; tree points include deterministic suitability filtering
+    Blended habitat patches, quiet landmarks, and a calmer origin; tree points retain v1 ecology
   </text>
   <g transform="translate(${PAGE_PADDING}, 105)">
     <rect x="0" y="-12" width="22" height="14" fill="rgb(170,188,126)" />

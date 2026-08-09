@@ -1,4 +1,8 @@
-import { sampleOwnerForestEnvironment } from '../public/js/owner-forest-environment.js';
+import {
+  FOREST_OWNER_GROUND_PRESENTATION_CONFIG,
+  sampleOwnerForestEnvironment,
+  sampleOwnerForestGroundPresentation
+} from '../public/js/owner-forest-environment.js';
 import {
   decodeOwnerForestRaster,
   moveOwnerForestPlayer,
@@ -154,5 +158,50 @@ describe('owner forest browser scene policy', () => {
         treeAllowed: server.suitability.treeAllowed
       });
     }
+  });
+
+  it('derives stable quiet ground detail without changing environment identity', () => {
+    const worldSeed = 'owner-ground-presentation-spec';
+    const first = sampleOwnerForestGroundPresentation({
+      worldSeed, worldX: 24, worldY: 24
+    });
+    const second = sampleOwnerForestGroundPresentation({
+      worldSeed, worldX: 24, worldY: 24
+    });
+    const environment = sampleOwnerForestEnvironment({
+      worldSeed, worldX: 24, worldY: 24
+    });
+
+    expect(second).toEqual(first);
+    expect(first.presentationVersion).toBe(2);
+    expect(first.originClearingPermille).toBe(1000);
+    expect(first.rockinessPermille).toBeLessThanOrEqual(environment.rockinessPermille);
+    expect(Object.values(first.color).every(channel => (
+      Number.isSafeInteger(channel) && channel >= 0 && channel <= 255
+    ))).toBeTrue();
+    expect(FOREST_OWNER_GROUND_PRESENTATION_CONFIG.tileSize).toBe(48);
+  });
+
+  it('distributes bounded ground motifs across calm, transition, and rocky areas', () => {
+    const details = [];
+    for (let worldY = -2400; worldY <= 2400; worldY += 96) {
+      for (let worldX = -2400; worldX <= 2400; worldX += 96) {
+        const presentation = sampleOwnerForestGroundPresentation({
+          worldSeed: 'owner-ground-detail-distribution', worldX, worldY
+        });
+        if (presentation.detail) details.push(presentation.detail);
+      }
+    }
+
+    expect(details.length).toBeGreaterThan(300);
+    expect(new Set(details.map(detail => detail.kind))).toEqual(
+      new Set(['grass', 'moss', 'pebbles', 'stone'])
+    );
+    expect(details.every(detail => (
+      Math.abs(detail.offsetXPermille) <= 280
+      && Math.abs(detail.offsetYPermille) <= 280
+      && detail.scalePermille >= 720
+      && detail.scalePermille <= 1239
+    ))).toBeTrue();
   });
 });

@@ -13,7 +13,10 @@ import {
   FOREST_HUMANOID_PROFILES,
   paintForestHumanoid
 } from './forest-humanoid.js';
-import { sampleOwnerForestEnvironment } from './owner-forest-environment.js';
+import {
+  FOREST_OWNER_GROUND_PRESENTATION_CONFIG,
+  sampleOwnerForestGroundPresentation
+} from './owner-forest-environment.js';
 import {
   decodeOwnerForestRaster,
   moveOwnerForestPlayer,
@@ -360,21 +363,65 @@ if (payload && copyPayload && viewport && canvas) {
   function groundSample(column, row) {
     const id = `${column}:${row}`;
     if (!groundSamples.has(id)) {
-      groundSamples.set(id, sampleOwnerForestEnvironment({
+      const cell = FOREST_OWNER_GROUND_PRESENTATION_CONFIG.tileSize;
+      groundSamples.set(id, sampleOwnerForestGroundPresentation({
         worldSeed: bootstrap.environment.seed,
         worldX: Math.max(-OWNER_FOREST_COORDINATE_LIMIT, Math.min(
-          OWNER_FOREST_COORDINATE_LIMIT, column * 64
+          OWNER_FOREST_COORDINATE_LIMIT, (column * cell) + (cell / 2)
         )),
         worldY: Math.max(-OWNER_FOREST_COORDINATE_LIMIT, Math.min(
-          OWNER_FOREST_COORDINATE_LIMIT, row * 64
+          OWNER_FOREST_COORDINATE_LIMIT, (row * cell) + (cell / 2)
         ))
       }));
     }
     return groundSamples.get(id);
   }
 
+  function paintGroundDetail(detail, x, y, cell) {
+    if (!detail) return;
+    const scale = detail.scalePermille / 1_000;
+    const centerX = x + (cell / 2) + ((detail.offsetXPermille / 1_000) * cell);
+    const centerY = y + (cell / 2) + ((detail.offsetYPermille / 1_000) * cell);
+    if (detail.kind === 'grass') {
+      context.strokeStyle = 'rgba(40, 78, 45, 0.42)';
+      context.lineWidth = 1;
+      context.beginPath();
+      context.moveTo(centerX, centerY + (3 * scale));
+      context.lineTo(centerX - (2 * scale), centerY - (3 * scale));
+      context.moveTo(centerX, centerY + (3 * scale));
+      context.lineTo(centerX + (1.5 * scale), centerY - (4 * scale));
+      context.moveTo(centerX + (1.5 * scale), centerY + (3 * scale));
+      context.lineTo(centerX + (4 * scale), centerY - (2 * scale));
+      context.stroke();
+      return;
+    }
+    if (detail.kind === 'moss') {
+      context.fillStyle = 'rgba(151, 151, 75, 0.3)';
+      context.fillRect(centerX - (3 * scale), centerY, 3 * scale, 1.5 * scale);
+      context.fillRect(centerX + scale, centerY - (2 * scale), 2 * scale, 1.5 * scale);
+      return;
+    }
+    if (detail.kind === 'pebbles') {
+      context.fillStyle = 'rgba(102, 102, 83, 0.42)';
+      context.beginPath();
+      context.ellipse(centerX - (2 * scale), centerY, 2.5 * scale, 1.4 * scale,
+        -0.15, 0, Math.PI * 2);
+      context.ellipse(centerX + (2.5 * scale), centerY + scale, 1.8 * scale,
+        1.1 * scale, 0.2, 0, Math.PI * 2);
+      context.fill();
+      return;
+    }
+    context.fillStyle = 'rgba(91, 92, 79, 0.5)';
+    context.strokeStyle = 'rgba(59, 69, 58, 0.36)';
+    context.lineWidth = 1;
+    context.beginPath();
+    context.ellipse(centerX, centerY, 5 * scale, 2.8 * scale, -0.12, 0, Math.PI * 2);
+    context.fill();
+    context.stroke();
+  }
+
   function paintGround() {
-    const cell = 64;
+    const cell = FOREST_OWNER_GROUND_PRESENTATION_CONFIG.tileSize;
     const firstX = Math.floor(camera.x / cell);
     const lastX = Math.ceil((camera.x + camera.width) / cell);
     const firstY = Math.floor(camera.y / cell);
@@ -382,18 +429,12 @@ if (payload && copyPayload && viewport && canvas) {
     for (let row = firstY; row <= lastY; row += 1) {
       for (let column = firstX; column <= lastX; column += 1) {
         const sample = groundSample(column, row);
-        const rocky = sample.rockinessPermille / 1000;
-        const red = Math.round(91 + (rocky * 22));
-        const green = Math.round(126 - (rocky * 16));
-        const blue = Math.round(76 + (rocky * 2));
+        const x = (column * cell) - camera.x;
+        const y = (row * cell) - camera.y;
+        const { red, green, blue } = sample.color;
         context.fillStyle = `rgb(${red}, ${green}, ${blue})`;
-        context.fillRect((column * cell) - camera.x, (row * cell) - camera.y, cell + 1, cell + 1);
-        if ((column + row) % 3 === 0) {
-          context.fillStyle = rocky > 0.56 ? 'rgba(112, 111, 94, 0.34)'
-            : 'rgba(180, 171, 102, 0.18)';
-          context.fillRect((column * cell) - camera.x + 18,
-            (row * cell) - camera.y + 24, rocky > 0.56 ? 9 : 5, 2);
-        }
+        context.fillRect(x, y, cell + 1, cell + 1);
+        paintGroundDetail(sample.detail, x, y, cell);
       }
     }
   }
