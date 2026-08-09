@@ -7,6 +7,13 @@ import {
   fixtureUuid,
   parseAccountDeletionFixtureArgs
 } from '../scripts/lib/accountDeletionFixture.js';
+import {
+  buildForestOwnerPressurePosts,
+  forestPressureNeighborhoods,
+  FOREST_OWNER_PRESSURE_TREE_COUNT,
+  summarizeForestPressureCells,
+  summarizeForestPressureTimings
+} from '../scripts/lib/forestOwnerPressureFixture.js';
 import AuthSession from '../server/db/models/AuthSession.js';
 import Backup from '../server/db/models/Backup.js';
 import Block from '../server/db/models/Block.js';
@@ -182,6 +189,8 @@ describe('account deletion integration fixture definitions', () => {
       .toThrowError('create-tree-direct changes data and requires --write.');
     expect(() => parseAccountDeletionFixtureArgs(['seed-forest-pagination', 'delete']))
       .toThrowError('seed-forest-pagination changes data and requires --write.');
+    expect(() => parseAccountDeletionFixtureArgs(['seed-forest-pressure', 'delete']))
+      .toThrowError('seed-forest-pressure changes data and requires --write.');
     expect(parseAccountDeletionFixtureArgs([
       'seed',
       'anonymous',
@@ -219,6 +228,64 @@ describe('account deletion integration fixture definitions', () => {
     for (const post of first) {
       await expectAsync(new Block(post).validate()).toBeResolved();
     }
+  });
+
+  it('builds 600 deterministic eligible owner groups for forest pressure review', async () => {
+    const fixture = buildAccountDeletionFixture({
+      scenario: 'anonymous',
+      passwordHash: 'hash'
+    });
+    const first = buildForestOwnerPressurePosts({
+      scenario: fixture.scenario,
+      owner: fixture.users.owner
+    });
+    const second = buildForestOwnerPressurePosts({
+      scenario: fixture.scenario,
+      owner: fixture.users.owner
+    });
+
+    expect(first).toEqual(second);
+    expect(first).toHaveSize(FOREST_OWNER_PRESSURE_TREE_COUNT);
+    expect(new Set(first.map(post => post._id)).size)
+      .toBe(FOREST_OWNER_PRESSURE_TREE_COUNT);
+    expect(new Set(first.map(post => post.groupId)).size)
+      .toBe(FOREST_OWNER_PRESSURE_TREE_COUNT);
+    expect(first.some(post => post.lang === 'es')).toBeTrue();
+    expect(first.some(post => post.visibility === 'unlisted')).toBeTrue();
+    expect(first.some(post => post.status === 'in-progress')).toBeTrue();
+    for (const post of first) {
+      await expectAsync(new Block(post).validate()).toBeResolved();
+    }
+  });
+
+  it('summarizes pressure timings and selects bounded spatial neighborhoods', () => {
+    expect(summarizeForestPressureTimings([9.126, 1, 5, 3, 7])).toEqual({
+      samples: 5,
+      totalMs: 25.13,
+      minimumMs: 1,
+      medianMs: 5,
+      p95Ms: 9.13,
+      maximumMs: 9.13
+    });
+    const cells = summarizeForestPressureCells([
+      { placementIndex: { cellX: 0, cellY: 0 } },
+      { placementIndex: { cellX: 0, cellY: 0 } },
+      { placementIndex: { cellX: 3, cellY: -2 } },
+      { placementIndex: { cellX: -1, cellY: 1 } }
+    ]);
+    expect(cells).toEqual(jasmine.objectContaining({
+      treeCount: 4,
+      occupiedCellCount: 3,
+      cellSpanX: 5,
+      cellSpanY: 4,
+      occupancy: { minimum: 1, median: 1, p95: 2, maximum: 2 }
+    }));
+    const neighborhoods = forestPressureNeighborhoods(cells);
+    expect(neighborhoods.map(item => item.label)).toEqual(['center', 'outer']);
+    expect(neighborhoods.every(item => item.cells.length === 9)).toBeTrue();
+    expect(new Set(neighborhoods.flatMap(item => (
+      item.cells.map(cell => `${item.label}:${cell.cellX}:${cell.cellY}`)
+    ))).size).toBe(18);
   });
 
   it('rejects production and unknown CLI options', () => {
