@@ -10,6 +10,11 @@ Milestone 1 is a contract and pure-policy milestone. It does **not** authorize a
 route, database schemas, account-backed persistence, a background job system, public visiting, or
 upload of development `localStorage` state.
 
+Milestone 2 subsequently implemented the accepted owner-writing grove boundary. Its final evidence,
+completion judgment, active versions, limitations, and Milestone 3 handoff are recorded in
+[`milestone-2-owner-writing-grove-evaluation.md`](milestone-2-owner-writing-grove-evaluation.md).
+The forward-looking gates later in this Milestone 1 record remain historical decision context.
+
 The repository baseline inspected for this contract was `master` at `fb68322`. The production-data
 audit was explicitly authorized, aggregate-only, and read-only. The bounded policy code introduced
 by this milestone is:

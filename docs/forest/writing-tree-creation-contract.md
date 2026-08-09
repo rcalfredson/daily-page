@@ -45,17 +45,25 @@ entered its ledger state, not when the founding post was authored. Titles, bodie
 languages, and display translations are intentionally absent from the tree snapshot and must be
 authorized and resolved from current Block data when the tree is inspected.
 
-## Deferred caller responsibilities
+## Caller integration and completion evidence
 
 Direct Block lifecycle enqueueing and the cursor-based convergence sweep now orchestrate this
 service. The private owner non-canvas writing route supplies the first production-facing read, and
 the owner-region manifest adapter and authenticated endpoint supply the bounded durable-tree-to-scene
 read seam, including current regional visual-asset authorization and generation. The private
 production scene now composes those regions and uses a separately reauthorized inspection endpoint
-to resolve current owner display writing and discoverable translations. Milestone 2 still needs
-final lifecycle/privacy/performance evidence. Exact inactive-tree reactivation/deactivation is
-implemented by the owner/group reconciliation service. Those paths must preserve this service's
-owner/group idempotency and account-deletion fence.
+to resolve current owner display writing and discoverable translations. Exact inactive-tree
+reactivation/deactivation is implemented by the owner/group reconciliation service. Those paths
+preserve this service's owner/group idempotency and account-deletion fence.
+
+Milestone 2 lifecycle and account-deletion evidence is exercised by the direct integration fixture,
+queued reconciliation tests, convergence-sweep tests, and the three account-deletion dispositions.
+Owner-only route, region, asset, inspection, and inclusion suites exercise privacy and stale-state
+boundaries. The separately reseeded 55-tree and 600-tree profiles exercise bounded writing and
+regional continuation, aggregate payloads, authorized asset preparation, and high-count browser
+travel. These are production-shaped development measurements rather than production latency
+service levels; commands and limitations are recorded in
+`docs/testing/account-deletion-integration-fixtures.md`.
 
 ## Verification
 
