@@ -60,6 +60,32 @@ describe('post SEO metadata', () => {
     expect(metadata.socialCardType).toBe('summary');
   });
 
+  it('prefers a complete sentence when a description exceeds the metadata limit', () => {
+    const completeSentence =
+      'Build a core–satellite portfolio with clear boundaries and explicit rebalancing rules.';
+    const metadata = buildPostSeo({
+      title: 'A resilient portfolio',
+      description: `${completeSentence} The follow-up thought ${'continues '.repeat(20)}past the limit.`
+    }, options);
+
+    expect(completeSentence.length)
+      .toBeGreaterThanOrEqual(Math.floor(POST_META_DESCRIPTION_MAX_LENGTH * 0.5));
+    expect(metadata.description).toBe(completeSentence);
+    expect(metadata.socialDescription).toBe(completeSentence);
+    expect(JSON.parse(metadata.articleJsonLd).description).toBe(completeSentence);
+  });
+
+  it('uses a word-boundary ellipsis when the first sentence is too long', () => {
+    const metadata = buildPostSeo({
+      title: 'One long thought',
+      description: `${'A continuous explanation without a sentence boundary '.repeat(5)}ends here.`
+    }, options);
+
+    expect(metadata.description.length).toBeLessThanOrEqual(POST_META_DESCRIPTION_MAX_LENGTH);
+    expect(metadata.description.endsWith('…')).toBeTrue();
+    expect(metadata.description.endsWith(' …')).toBeFalse();
+  });
+
   it('includes a valid publication timestamp when one exists', () => {
     const metadata = buildPostSeo({
       title: 'Dated post',
