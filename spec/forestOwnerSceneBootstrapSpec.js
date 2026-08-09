@@ -87,7 +87,7 @@ describe('forest owner scene bootstrap', () => {
       policyVersion: 1,
       schemaVersion: 1,
       worldGenerationVersion: 1,
-      groundPresentationVersion: 1,
+      groundPresentationVersion: 2,
       grammarId: 'owner-grove-patchwork-v1',
       seed: WORLD_SEED
     });

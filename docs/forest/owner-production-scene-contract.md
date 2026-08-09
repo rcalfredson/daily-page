@@ -83,11 +83,18 @@ server placement and browser presentation. It preserves the version-1 coarse/fin
 noise field, calm-grove/rocky-rise identity, intergrade, ground-surface selection, and suitability
 calculation.
 
-The production view samples that field into restrained 64-unit flat ground tiles. Calm and rocky
-areas receive related colors and sparse detail without importing the development stream, bridges,
-boulders, or finite terrain manifest. Ground presentation version 1 is compatible with a later
-height field and movable 3D camera: durable `(worldX, worldY)` remain horizontal ground anchors,
-while this flat view is only the current camera/terrain presentation.
+Ground presentation version 2 samples that field into restrained 48-unit flat tiles. Closely
+related colors follow the continuous rockiness field, while deterministic grass, moss, pebble, and
+small-stone marks give calm cores, intergrades, and rocky rises quiet local recognition. A soft
+presentation-only influence makes the signed origin somewhat calmer and more open without changing
+tree habitat, placement eligibility, collision, or durable world identity.
+
+Ground details are derived only from the private world seed and signed tile coordinates. They are
+painted below the player and writing trees, confer no interaction or resource identity, and require
+no database record. The production scene still does not import the development stream, bridges,
+interactive boulders, or finite terrain manifest. This flat presentation remains compatible with a
+later height field and movable 3D camera: durable `(worldX, worldY)` remain horizontal ground
+anchors, while the current terrain and camera are replaceable presentation.
 
 ## Regional browser pipeline
 
@@ -116,8 +123,10 @@ the writing-grove link available without Canvas interaction.
 honest states, session-derived ownership, generic route failure, and localized routing.
 `spec/ownerForestSceneSpec.js` verifies signed 3×3 cell selection, asset batching, signed camera and
 movement, touch dead-zone and joystick policy, maximum-displacement gesture intent, collision
-behavior, and exact server/browser environment parity. Existing manifest and asset suites remain
-authority for regional privacy and generation.
+behavior, exact server/browser environment parity, deterministic origin treatment, and bounded
+ground-detail distribution. `npm run forest:environment-preview` renders the fixed-seed version-2
+overview in `tmp/` for visual review. Existing manifest and asset suites remain authority for
+regional privacy and generation.
 
 The next production boundary is end-to-end lifecycle, privacy, distribution, and performance
 evidence, including canonical writing return continuity. Later scene iteration should measure and
