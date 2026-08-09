@@ -51,6 +51,16 @@ import {
   listForestOwnerWritingTrees
 } from '../../server/services/forestOwnerNonCanvasRead.js';
 import {
+  deliverForestOwnerRegionAssets
+} from '../../server/services/forestOwnerRegionAssetDelivery.js';
+import {
+  FOREST_OWNER_REGION_MAX_PAGE_SIZE,
+  readForestOwnerRegionManifest
+} from '../../server/services/forestOwnerRegionManifest.js';
+import {
+  FOREST_ASSET_TRANSPORT_RASTER
+} from '../../server/services/forestSceneAssetTransport.js';
+import {
   ACCOUNT_DELETION_FIXTURE_ROOM_ID,
   ACCOUNT_DELETION_FIXTURE_SCENARIOS,
   ACCOUNT_DELETION_FIXTURE_TAG,
@@ -60,6 +70,14 @@ import {
   expectedRetainedPostKeys,
   parseAccountDeletionFixtureArgs
 } from '../lib/accountDeletionFixture.js';
+import {
+  buildForestOwnerPressurePosts,
+  forestPressureNeighborhoods,
+  FOREST_OWNER_PRESSURE_TAG,
+  FOREST_OWNER_PRESSURE_TREE_COUNT,
+  summarizeForestPressureCells,
+  summarizeForestPressureTimings
+} from '../lib/forestOwnerPressureFixture.js';
 
 function usage() {
   console.log('Usage: npm run account-deletion:fixture -- <command> <scenario> [options]');
@@ -71,7 +89,8 @@ function usage() {
   console.log('  verify-before <scenario>                  Verify the login-ready fixture.');
   console.log('  delete-direct <scenario> --write          Invoke the deletion service directly.');
   console.log('  create-tree-direct <scenario> --write     Verify transactional tree creation.');
-  console.log('  seed-forest-pagination <scenario> --write Add enough real trees for two read pages.');
+  console.log('  seed-forest-pagination <scenario> --write Seed and verify three writing pages.');
+  console.log('  seed-forest-pressure <scenario> --write   Seed and measure 600 real trees.');
   console.log('  verify-after <scenario>                   Verify the completed deletion.');
   console.log('  archive-quest <scenario> --write          Remove the active-quest guard.');
   console.log('  reset <scenario> --write                  Remove one fixture scenario.');
@@ -898,13 +917,21 @@ async function createTreeDirect(scenario) {
 async function seedForestPagination(scenario) {
   const fixture = scenarioDefinition(scenario);
   const ownerUserId = fixture.users.owner._id;
-  const [owner, world] = await Promise.all([
+  const [owner, world, pressureRecords] = await Promise.all([
     User.findById(ownerUserId).lean(),
-    ForestOwnerWorld.findOne({ ownerUserId, worldRole: 'primary' }).lean()
+    ForestOwnerWorld.findOne({ ownerUserId, worldRole: 'primary' }).lean(),
+    Block.countDocuments({
+      userId: ownerUserId,
+      tags: FOREST_OWNER_PRESSURE_TAG
+    })
   ]);
   requireFixtureCondition(
     owner && world?.status === 'active' && world?.reconciliation?.state === 'idle',
     `Seed and verify the ${scenario} fixture before adding forest pagination records.`
+  );
+  requireFixtureCondition(
+    pressureRecords === 0,
+    `Reseed the ${scenario} scenario before switching from 600-tree to 55-tree pressure.`
   );
 
   const posts = buildForestReadPaginationPosts({ scenario, owner });
@@ -998,6 +1025,272 @@ async function seedForestPagination(scenario) {
     password: process.env.ACCOUNT_DELETION_FIXTURE_PASSWORD
       || DEFAULT_ACCOUNT_DELETION_FIXTURE_PASSWORD
   });
+}
+
+function elapsedMilliseconds(startedAt) {
+  return Number(process.hrtime.bigint() - startedAt) / 1_000_000;
+}
+
+async function measured(work) {
+  const startedAt = process.hrtime.bigint();
+  const result = await work();
+  return { result, elapsedMs: elapsedMilliseconds(startedAt) };
+}
+
+function serializedBytes(value) {
+  return Buffer.byteLength(JSON.stringify(value), 'utf8');
+}
+
+function fixtureDistribution(values) {
+  return Object.fromEntries([...values.reduce((counts, value) => (
+    counts.set(value, (counts.get(value) || 0) + 1)
+  ), new Map()).entries()].sort(([left], [right]) => left.localeCompare(right)));
+}
+
+async function measureWritingPages(ownerUserId) {
+  const durations = [];
+  const seenTreeIds = new Set();
+  const seenCursors = new Set();
+  let cursor = null;
+  let pageCount = 0;
+  let totalBytes = 0;
+  let maximumPageRows = 0;
+  let omittedUnavailableCount = 0;
+  do {
+    const page = await measured(() => listForestOwnerWritingTrees({
+      ownerUserId,
+      preferredContentLang: 'en',
+      cursor
+    }));
+    requireFixtureCondition(page.result.status === 'ready', 'Writing pressure read was not ready.');
+    durations.push(page.elapsedMs);
+    totalBytes += serializedBytes(page.result);
+    maximumPageRows = Math.max(maximumPageRows, page.result.trees.length);
+    omittedUnavailableCount += page.result.page.omittedUnavailableCount;
+    for (const tree of page.result.trees) {
+      requireFixtureCondition(
+        !seenTreeIds.has(tree.writingTreeId),
+        'Writing pressure pagination returned a duplicate tree.'
+      );
+      seenTreeIds.add(tree.writingTreeId);
+    }
+    pageCount += 1;
+    const nextCursor = page.result.page.nextCursor;
+    if (nextCursor) {
+      requireFixtureCondition(
+        !seenCursors.has(nextCursor),
+        'Writing pressure pagination repeated a cursor.'
+      );
+      seenCursors.add(nextCursor);
+    }
+    cursor = nextCursor;
+    requireFixtureCondition(pageCount <= 100, 'Writing pressure pagination exceeded 100 pages.');
+  } while (cursor);
+  return {
+    pageCount,
+    returnedTreeCount: seenTreeIds.size,
+    maximumPageRows,
+    omittedUnavailableCount,
+    serializedBytes: totalBytes,
+    timings: summarizeForestPressureTimings(durations)
+  };
+}
+
+async function measureNeighborhood(ownerUserId, neighborhood) {
+  const durations = [];
+  const pages = [];
+  let cursor = null;
+  let pageCount = 0;
+  let placementCount = 0;
+  let totalBytes = 0;
+  do {
+    const requestCursor = cursor;
+    const page = await measured(() => readForestOwnerRegionManifest({
+      ownerUserId,
+      cells: neighborhood.cells,
+      cursor: requestCursor,
+      limit: FOREST_OWNER_REGION_MAX_PAGE_SIZE
+    }));
+    requireFixtureCondition(page.result.status === 'ready', 'Pressure region was not ready.');
+    durations.push(page.elapsedMs);
+    pages.push({ cursor: requestCursor, manifest: page.result });
+    pageCount += 1;
+    placementCount += page.result.placements.length;
+    totalBytes += serializedBytes(page.result);
+    cursor = page.result.page.nextCursor;
+    requireFixtureCondition(pageCount <= 10, 'Pressure region exceeded 10 pages.');
+  } while (cursor);
+  return {
+    label: neighborhood.label,
+    cells: neighborhood.cells,
+    pageCount,
+    placementCount,
+    serializedBytes: totalBytes,
+    timings: summarizeForestPressureTimings(durations),
+    pages
+  };
+}
+
+async function measureAssetDelivery(ownerUserId, neighborhood) {
+  const firstPage = neighborhood.pages[0];
+  const assetKeys = [...new Set(firstPage.manifest.placements.map(
+    placement => placement.assetKey
+  ))].slice(0, 24);
+  requireFixtureCondition(assetKeys.length > 0, 'Pressure region had no assets to measure.');
+  const input = {
+    ownerUserId,
+    cells: neighborhood.cells,
+    cursor: firstPage.cursor,
+    assetKeys,
+    transport: FOREST_ASSET_TRANSPORT_RASTER
+  };
+  const cold = await measured(() => deliverForestOwnerRegionAssets(input));
+  const warm = await measured(() => deliverForestOwnerRegionAssets(input));
+  for (const delivery of [cold.result, warm.result]) {
+    requireFixtureCondition(
+      delivery.status === 'ready' && delivery.assets.length === assetKeys.length,
+      'Pressure asset delivery did not return every authorized asset.'
+    );
+  }
+  return {
+    neighborhood: neighborhood.label,
+    requestedAssetCount: assetKeys.length,
+    transport: FOREST_ASSET_TRANSPORT_RASTER,
+    cold: {
+      elapsedMs: summarizeForestPressureTimings([cold.elapsedMs]).totalMs,
+      serializedBytes: serializedBytes(cold.result)
+    },
+    warm: {
+      elapsedMs: summarizeForestPressureTimings([warm.elapsedMs]).totalMs,
+      serializedBytes: serializedBytes(warm.result)
+    }
+  };
+}
+
+async function seedForestPressure(scenario) {
+  const fixture = scenarioDefinition(scenario);
+  const ownerUserId = fixture.users.owner._id;
+  const [owner, world, paginationRecords] = await Promise.all([
+    User.findById(ownerUserId).lean(),
+    ForestOwnerWorld.findOne({ ownerUserId, worldRole: 'primary' }).lean(),
+    Block.countDocuments({
+      userId: ownerUserId,
+      tags: 'forest-read-pagination'
+    })
+  ]);
+  requireFixtureCondition(
+    owner && world?.status === 'active' && world?.reconciliation?.state === 'idle',
+    `Seed and verify the ${scenario} fixture before adding forest pressure records.`
+  );
+  requireFixtureCondition(
+    paginationRecords === 0,
+    `Reseed the ${scenario} scenario before switching from 55-tree to 600-tree pressure.`
+  );
+
+  const posts = buildForestOwnerPressurePosts({ scenario, owner });
+  const insert = await measured(() => Block.bulkWrite(posts.map(({ _id, ...post }) => ({
+    updateOne: {
+      filter: { _id },
+      update: { $set: post },
+      upsert: true
+    }
+  })), { ordered: true }));
+
+  const reconciliationDurations = [];
+  const reconciliationOutcomes = {};
+  for (let index = 0; index < posts.length; index += 1) {
+    const reconciliation = await measured(() => reconcileForestOwnerGroup({
+      ownerUserId,
+      translationGroupId: posts[index].groupId,
+      now: new Date()
+    }));
+    reconciliationDurations.push(reconciliation.elapsedMs);
+    reconciliationOutcomes[reconciliation.result.outcome] =
+      (reconciliationOutcomes[reconciliation.result.outcome] || 0) + 1;
+    if ((index + 1) % 100 === 0) {
+      console.log(`Forest pressure reconciliation: ${index + 1}/${posts.length}`);
+    }
+  }
+
+  const groupIds = posts.map(post => post.groupId);
+  const [pressurePostCount, pressureTrees, visibleTreeCount] = await Promise.all([
+    Block.countDocuments({
+      userId: ownerUserId,
+      tags: FOREST_OWNER_PRESSURE_TAG
+    }),
+    ForestWritingTree.find({
+      ownerUserId,
+      translationGroupId: { $in: groupIds }
+    }, {
+      _id: 0,
+      sourceState: 1,
+      hiddenFromForest: 1,
+      placementIndex: 1
+    }).lean(),
+    ForestWritingTree.countDocuments({
+      ownerUserId,
+      sourceState: 'active',
+      hiddenFromForest: false
+    })
+  ]);
+  requireFixtureCondition(
+    pressurePostCount === FOREST_OWNER_PRESSURE_TREE_COUNT
+      && pressureTrees.length === FOREST_OWNER_PRESSURE_TREE_COUNT
+      && pressureTrees.every(tree => (
+        tree.sourceState === 'active' && tree.hiddenFromForest === false
+      )),
+    'Pressure fixture did not converge to 600 active visible trees.'
+  );
+
+  const cellSummary = summarizeForestPressureCells(pressureTrees);
+  const neighborhoods = [];
+  for (const definition of forestPressureNeighborhoods(cellSummary)) {
+    neighborhoods.push(await measureNeighborhood(ownerUserId, definition));
+  }
+  const writing = await measureWritingPages(ownerUserId);
+  requireFixtureCondition(
+    writing.returnedTreeCount === visibleTreeCount,
+    'Writing pressure pagination did not return every active visible tree.'
+  );
+  const assetNeighborhood = neighborhoods.slice().sort((left, right) => (
+    right.placementCount - left.placementCount
+  ))[0];
+  const assets = await measureAssetDelivery(ownerUserId, assetNeighborhood);
+
+  const report = {
+    database: mongoose.connection.name,
+    scenario,
+    generatedPressurePosts: pressurePostCount,
+    activeVisibleTreesIncludingBaseline: visibleTreeCount,
+    sourceDistribution: {
+      status: fixtureDistribution(posts.map(post => post.status)),
+      visibility: fixtureDistribution(posts.map(post => post.visibility)),
+      language: fixtureDistribution(posts.map(post => post.lang))
+    },
+    setup: {
+      blockUpsertMs: summarizeForestPressureTimings([insert.elapsedMs]).totalMs,
+      reconciliationOutcomes,
+      reconciliationTimings: summarizeForestPressureTimings(reconciliationDurations)
+    },
+    spatialDistribution: {
+      treeCount: cellSummary.treeCount,
+      occupiedCellCount: cellSummary.occupiedCellCount,
+      cellSpanX: cellSummary.cellSpanX,
+      cellSpanY: cellSummary.cellSpanY,
+      occupancy: cellSummary.occupancy
+    },
+    writing,
+    regionalNeighborhoods: neighborhoods.map(neighborhood => ({
+      label: neighborhood.label,
+      pageCount: neighborhood.pageCount,
+      placementCount: neighborhood.placementCount,
+      serializedBytes: neighborhood.serializedBytes,
+      timings: neighborhood.timings
+    })),
+    assets
+  };
+  console.log('Activity Forest 600-tree pressure fixture passes:');
+  console.log(JSON.stringify(report, null, 2));
 }
 
 async function verifyAfter(scenario) {
@@ -1370,6 +1663,9 @@ async function main() {
       break;
     case 'seed-forest-pagination':
       await seedForestPagination(args.scenario);
+      break;
+    case 'seed-forest-pressure':
+      await seedForestPressure(args.scenario);
       break;
     case 'verify-after':
       await verifyAfter(args.scenario);

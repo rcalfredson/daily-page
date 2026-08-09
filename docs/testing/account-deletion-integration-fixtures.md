@@ -129,6 +129,66 @@ To start the same scenario again, rerun its seed command. To remove it without r
 npm run account-deletion:fixture -- reset <scenario> --write
 ```
 
+## Test bounded writing and large-forest pressure
+
+The 55-tree pagination and 600-tree pressure profiles must be run from separately reseeded fixture
+scenarios so that their measurements do not accumulate into one larger, ambiguous history.
+
+To exercise three forward and backward writing pages:
+
+```bash
+npm run account-deletion:fixture -- seed anonymous --write
+npm run account-deletion:fixture -- seed-forest-pagination anonymous --write
+```
+
+To create 600 disposable eligible owner groups through the production reconciliation service and
+measure the resulting private forest:
+
+```bash
+npm run account-deletion:fixture -- seed anonymous --write
+npm run account-deletion:fixture -- seed-forest-pressure anonymous --write
+```
+
+Run the development server with scheduled background work disabled before seeding this profile:
+
+```bash
+DISABLE_BACKGROUND_JOBS=true npm start
+```
+
+The pressure command performs every exact owner/group reconciliation directly, so disabling the
+scheduled queue and convergence workers does not skip tree creation. It prevents the periodic
+whole-world convergence sweep from claiming the newly seeded world during the several-minute bulk
+setup and temporarily replacing the forest with its reconciling state. Disabling background jobs
+after a sweep has already started will not complete that sweep; either let the normally configured
+worker finish first or reseed after restarting with background jobs disabled.
+
+The pressure command reports only aggregate synthetic evidence:
+
+- source status, visibility, and language counts;
+- Block-upsert and per-group reconciliation timings and outcomes;
+- occupied spatial-cell count, span, and occupancy percentiles;
+- complete bounded writing-page counts, bytes, omissions, and timing samples;
+- center, densest, and outer signed 3-by-3 regional page counts, placements, bytes, and timings; and
+- one authorized batch of at most 24 lossless-raster assets measured cold and warm in the fixture
+  process.
+
+The command verifies that every pressure Block has one active visible durable tree, writing cursors
+return every active visible tree without duplication, each regional request remains within the
+production 250-placement page bound, and both asset passes return every authorized key. Exact
+titles, owner ids, group ids, tree ids, positions, asset keys, routes, and cursors are not printed.
+
+The fixture process starts with empty process-local tree and raster caches, so the first asset pass
+is the local cold sample and the immediately repeated pass is the warm sample. These timings are
+diagnostic baselines for the named machine, not universal latency budgets. Browser network,
+preparation, frame, memory, and travel behavior should still be reviewed manually against the
+seeded `/en/forest` route.
+
+Reseeding or resetting the scenario removes both pressure records and their forest ledger:
+
+```bash
+npm run account-deletion:fixture -- reset anonymous --write
+```
+
 ## Test the active-quest guard
 
 Seed any scenario with an active quest:

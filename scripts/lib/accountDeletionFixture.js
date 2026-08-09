@@ -93,6 +93,7 @@ export function parseAccountDeletionFixtureArgs(argv) {
     'delete-direct',
     'create-tree-direct',
     'seed-forest-pagination',
+    'seed-forest-pressure',
     'verify-after',
     'archive-quest'
   ];
@@ -115,7 +116,8 @@ export function parseAccountDeletionFixtureArgs(argv) {
   if (args.activeQuest && command !== 'seed') {
     throw new Error('--active-quest is only valid with the seed command.');
   }
-  if (['seed', 'reset', 'delete-direct', 'create-tree-direct', 'seed-forest-pagination', 'archive-quest'].includes(command)
+  if (['seed', 'reset', 'delete-direct', 'create-tree-direct', 'seed-forest-pagination',
+    'seed-forest-pressure', 'archive-quest'].includes(command)
     && !args.write) {
     throw new Error(`${command} changes data and requires --write.`);
   }
