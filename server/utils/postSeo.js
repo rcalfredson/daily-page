@@ -6,9 +6,22 @@ function truncateDescription(value, maxLength = POST_META_DESCRIPTION_MAX_LENGTH
   const normalized = String(value || '').replace(/\s+/g, ' ').trim();
   if (normalized.length <= maxLength) return normalized;
 
+  const sentenceCandidate = normalized.slice(0, maxLength);
+  const minimumSentenceLength = Math.floor(maxLength * 0.5);
+  const sentenceEndPattern = /[.!?](?:["'’”)\]]*)(?=\s|$)/gu;
+  let sentenceEnd = -1;
+
+  for (const match of sentenceCandidate.matchAll(sentenceEndPattern)) {
+    const end = match.index + match[0].length;
+    if (end >= minimumSentenceLength) sentenceEnd = end;
+  }
+
+  if (sentenceEnd >= 0) return sentenceCandidate.slice(0, sentenceEnd);
+
   const candidate = normalized.slice(0, maxLength - 1);
   const lastSpace = candidate.lastIndexOf(' ');
-  const cutAt = lastSpace >= Math.floor(maxLength * 0.6) ? lastSpace : candidate.length;
+  const minimumWordBoundary = Math.floor(maxLength * 0.6);
+  const cutAt = lastSpace >= minimumWordBoundary ? lastSpace : candidate.length;
   return `${candidate.slice(0, cutAt).trimEnd()}…`;
 }
 
