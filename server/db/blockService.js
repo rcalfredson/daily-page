@@ -3,6 +3,11 @@ import Block from './models/Block.js';
 import * as cache from '../services/cache.js';
 import { normalizeEditorialInput } from './editorial.js';
 import { normalizeBannerImageInput } from './bannerImage.js';
+import {
+  annotateResolvedPost,
+  assertSupportedContentLanguage,
+  resolvePostTranslation
+} from '../services/postTranslationResolver.js';
 
 const DEFAULT_TTL = 5000; // Cache for 5 seconds (adjust as needed)
 
@@ -46,10 +51,93 @@ export function isPubliclyVisibleBlock(block) {
   );
 }
 
+export function localeFamilySelectionStages(preferredLang) {
+  return [
+    { $sort: { createdAt: 1, _id: 1 } },
+    {
+      $group: {
+        _id: '$groupId',
+        docs: { $push: '$$ROOT' },
+        familyVoteCount: { $max: '$voteCount' }
+      }
+    },
+    {
+      $project: {
+        familyVoteCount: 1,
+        preferred: {
+          $filter: {
+            input: '$docs',
+            as: 'd',
+            cond: { $eq: ['$$d.lang', preferredLang] }
+          }
+        },
+        sources: {
+          $filter: {
+            input: '$docs',
+            as: 'd',
+            cond: { $eq: [{ $ifNull: ['$$d.originalBlock', null] }, null] }
+          }
+        },
+        docs: 1
+      }
+    },
+    {
+      $project: {
+        best: {
+          $cond: [
+            { $gt: [{ $size: '$preferred' }, 0] },
+            { $arrayElemAt: ['$preferred', 0] },
+            {
+              $cond: [
+                { $gt: [{ $size: '$sources' }, 0] },
+                { $arrayElemAt: ['$sources', 0] },
+                { $arrayElemAt: ['$docs', 0] }
+              ]
+            }
+          ]
+        },
+        source: {
+          $cond: [
+            { $gt: [{ $size: '$sources' }, 0] },
+            { $arrayElemAt: ['$sources', 0] },
+            { $arrayElemAt: ['$docs', 0] }
+          ]
+        },
+        familyVoteCount: 1
+      }
+    },
+    {
+      $replaceRoot: {
+        newRoot: {
+          $mergeObjects: [
+            '$best',
+            {
+              familyVoteCount: '$familyVoteCount',
+              familyCreatedAt: '$source.createdAt'
+            }
+          ]
+        }
+      }
+    }
+  ];
+}
+
 // Create a new block
 export async function createBlock(data) {
   if (!data.groupId) data.groupId = new mongoose.Types.ObjectId().toString();
-  if (!data.lang) data.lang = 'en';
+  data.lang = assertSupportedContentLanguage(data.lang || 'en');
+  if (!data.originalBlock) {
+    data.sourceLanguage = assertSupportedContentLanguage(
+      data.sourceLanguage || data.lang,
+      'sourceLanguage'
+    );
+    if (!data.audienceScope) data.audienceScope = 'global';
+    if (!data.translationPriority) data.translationPriority = 'normal';
+  } else {
+    delete data.sourceLanguage;
+    delete data.audienceScope;
+    delete data.translationPriority;
+  }
   if (Object.prototype.hasOwnProperty.call(data, 'editorial')) {
     const { value } = normalizeEditorialInput(data.editorial);
     if (value !== undefined) data.editorial = value;
@@ -85,13 +173,28 @@ export async function getTranslations(groupId) {
 }
 
 export async function getPublicTranslations(groupId) {
-  return await Block.find(publiclyVisibleBlockMatch({ groupId })).select('lang _id title roomId');
+  const translations = await Block.find(publiclyVisibleBlockMatch({ groupId }))
+    .select('lang _id title roomId')
+    .sort({ createdAt: 1, _id: 1 });
+  const seenLanguages = new Set();
+  return translations.filter(translation => {
+    if (seenLanguages.has(translation.lang)) return false;
+    seenLanguages.add(translation.lang);
+    return true;
+  });
 }
 
 export async function getPublicTranslationResolverCandidates(groupId) {
   if (!groupId) return [];
   return await Block.find(publiclyVisibleBlockMatch({ groupId }))
-    .select('lang _id roomId originalBlock createdAt')
+    .select('lang _id roomId originalBlock sourceLanguage audienceScope translationPriority createdAt')
+    .sort({ createdAt: 1, _id: 1 });
+}
+
+export async function getTranslationResolverCandidates(groupId) {
+  if (!groupId) return [];
+  return Block.find({ groupId })
+    .select('lang _id roomId originalBlock sourceLanguage audienceScope translationPriority createdAt')
     .sort({ createdAt: 1, _id: 1 });
 }
 
@@ -137,9 +240,9 @@ export async function getTotalTags() {
   }, [], { ttlMs: TTL.totalTags, jitterMs: JITTER, staleTtlMs: HOME_STALE_TTL });
 }
 
-export async function getAllTagsWithCounts(timeframe = 'all') {
+export async function getAllTagsWithCounts(timeframe = 'all', preferredLang = 'en') {
   return await cache.get(
-    `all-tags-with-counts-${timeframe}`,
+    `all-tags-with-counts-${timeframe}-${preferredLang}`,
     async () => {
       const matchStage = {};
 
@@ -164,8 +267,13 @@ export async function getAllTagsWithCounts(timeframe = 'all') {
         }
       }
 
+      const familyDateMatch = matchStage.createdAt
+        ? [{ $match: { familyCreatedAt: matchStage.createdAt } }]
+        : [];
       const pipeline = [
-        { $match: publiclyVisibleBlockMatch(matchStage) },
+        { $match: publiclyVisibleBlockMatch() },
+        ...localeFamilySelectionStages(preferredLang),
+        ...familyDateMatch,
         { $unwind: '$tags' }
       ];
 
@@ -248,7 +356,10 @@ export async function getRandomBlockFromLastYear(options = {}) {
     { $sample: { size: 1 } },
   ]).exec();
 
-  if (preferred?.[0]) return { block: preferred[0], period: { type: 'days', value: days } };
+  if (preferred?.[0]) {
+    const [block] = await resolvePostFamiliesForLocale(preferred, preferredLang);
+    return { block, period: { type: 'days', value: days } };
+  }
 
   // 2) Fallback: any language
   const anyLang = await Block.aggregate([
@@ -256,7 +367,10 @@ export async function getRandomBlockFromLastYear(options = {}) {
     { $sample: { size: 1 } },
   ]).exec();
 
-  return { block: anyLang?.[0] || null, period: { type: 'days', value: days } };
+  const [block] = anyLang?.[0]
+    ? await resolvePostFamiliesForLocale(anyLang, preferredLang)
+    : [];
+  return { block: block || null, period: { type: 'days', value: days } };
 }
 
 export async function getTopBlocksByTimeframe(
@@ -471,7 +585,7 @@ export async function getTopBlocksWithFallback(options = {}) {
     ? { type: 'all' }
     : { type: 'days', value: maxDaysUsed };
 
-  const preferredBlocks = await loadPreferredTranslationVariants(
+  const preferredBlocks = await resolvePostFamiliesForLocale(
     collected,
     preferredLang,
     { lockedOnly, roomId, status }
@@ -484,22 +598,35 @@ export async function getTopBlocksWithFallback(options = {}) {
 }
 
 export function replaceWithPreferredTranslationVariants(blocks, preferredTranslations, preferredLang) {
-  const preferredByGroup = new Map(
-    (preferredTranslations || [])
-      .filter(block => block?.groupId && block?.lang === preferredLang)
-      .map(block => [String(block.groupId), block])
-  );
+  const variantsByGroup = new Map();
+  for (const candidate of [...(blocks || []), ...(preferredTranslations || [])]) {
+    if (!candidate?.groupId) continue;
+    const key = String(candidate.groupId);
+    if (!variantsByGroup.has(key)) variantsByGroup.set(key, new Map());
+    variantsByGroup.get(key).set(String(candidate._id), candidate);
+  }
 
   return (blocks || []).map(block => {
-    if (!block?.groupId || block.lang === preferredLang) return block;
-    return preferredByGroup.get(String(block.groupId)) || block;
+    if (!block?.groupId) return block;
+    const family = [...(variantsByGroup.get(String(block.groupId))?.values() || [])];
+    const resolved = resolvePostTranslation(family, preferredLang);
+    if (resolved?.isSourceFallback && resolved.diagnostics.length) {
+      console.warn('Malformed post translation family', {
+        groupId: String(block.groupId),
+        diagnostics: resolved.diagnostics
+      });
+    }
+    return annotateResolvedPost(resolved, {
+      familyVoteCount: block.familyVoteCount ?? block.voteCount,
+      familyCreatedAt: block.familyCreatedAt ?? block.createdAt,
+      familyPinnedAt: block.familyPinnedAt ?? block.pinnedAt
+    }) || block;
   });
 }
 
-async function loadPreferredTranslationVariants(
+export async function resolvePostFamiliesForLocale(
   blocks,
-  preferredLang,
-  { lockedOnly = false, roomId = null, status = null } = {}
+  preferredLang
 ) {
   const groupIds = [...new Set(
     (blocks || [])
@@ -509,13 +636,7 @@ async function loadPreferredTranslationVariants(
 
   if (groupIds.length === 0) return blocks;
 
-  const variantMatch = {
-    groupId: { $in: groupIds },
-    lang: preferredLang
-  };
-  if (roomId) variantMatch.roomId = roomId;
-  if (status) variantMatch.status = status;
-  else if (lockedOnly) variantMatch.status = 'locked';
+  const variantMatch = { groupId: { $in: groupIds } };
 
   const match = publiclyVisibleBlockMatch(variantMatch);
   const preferredTranslations = await Block.find(match).lean().exec();
@@ -592,7 +713,7 @@ export async function getPinnedHomeBlocks({ preferredLang = 'en', lockedOnly = f
   // Pinning one document pins its translation group, but the aggregation above
   // can only choose among variants that carry pinnedAt themselves. Resolve the
   // user's preferred variant across the whole group after selecting the pins.
-  const preferredBlocks = await loadPreferredTranslationVariants(
+  const preferredBlocks = await resolvePostFamiliesForLocale(
     pinnedBlocks,
     preferredLang,
     { lockedOnly }
@@ -641,7 +762,7 @@ export async function getBlocksByRoomWithFallback({
     }
 
     if (blocks.length > 0) {
-      const preferredBlocks = await loadPreferredTranslationVariants(
+      const preferredBlocks = await resolvePostFamiliesForLocale(
         blocks,
         preferredLang,
         { roomId, status }
@@ -659,6 +780,7 @@ export async function getTrendingTagsWithFallback(options = {}) {
     limit = 10,
     sortBy = 'totalBlocks',
     minCount = 1,
+    preferredLang = 'en',
   } = options;
 
   const now = Date.now();
@@ -677,56 +799,65 @@ export async function getTrendingTagsWithFallback(options = {}) {
   // Pull extra candidates per band so merging still yields a strong top-N
   const BAND_FETCH = Math.max(target * 5, 50);
 
-  const makePipeline = (startDate, endDate, bandLimit) => {
-    const stageMatch = publiclyVisibleBlockMatch({ createdAt: { $gte: startDate, $lte: endDate } });
-    const stageAfterGroupMatch =
-      minCount > 1 ? [{ $match: { totalBlocks: { $gte: minCount } } }] : [];
-    const stageSort = { [sortBy]: -1, totalVotes: -1, totalBlocks: -1, _id: 1 };
-
-    return [
-      { $match: stageMatch },
+  const bandStarts = windows.map(window => (
+    window.toDays == null
+      ? new Date(0)
+      : new Date(now - window.toDays * 24 * 60 * 60 * 1000)
+  ));
+  const bandRows = await cache.get(
+    `trending-tags-family-bands-${preferredLang}`,
+    async () => Block.aggregate([
+      { $match: publiclyVisibleBlockMatch() },
+      ...localeFamilySelectionStages(preferredLang),
+      { $match: { familyCreatedAt: { $lte: endNow } } },
+      {
+        $addFields: {
+          familyAgeBand: {
+            $switch: {
+              branches: bandStarts.slice(0, -1).map((startDate, band) => ({
+                case: { $gte: ['$familyCreatedAt', startDate] },
+                then: band
+              })),
+              default: windows.length - 1
+            }
+          }
+        }
+      },
       { $unwind: '$tags' },
       {
         $group: {
-          _id: '$tags',
+          _id: { band: '$familyAgeBand', tag: '$tags' },
           totalBlocks: { $sum: 1 },
-          totalVotes: { $sum: '$voteCount' },
+          totalVotes: { $sum: '$familyVoteCount' }
         }
-      },
-      ...stageAfterGroupMatch,
-      { $sort: stageSort },
-      { $limit: Number(bandLimit) },
-    ];
-  };
+      }
+    ]).exec(),
+    [],
+    { ttlMs: TTL.trendingTags, jitterMs: JITTER, staleTtlMs: HOME_STALE_TTL }
+  );
 
   const totals = new Map(); // tag -> { _id, totalBlocks, totalVotes }
   let maxDaysUsed = 1;
   let usedAllTime = false;
 
-  for (const w of windows) {
+  for (const [band, w] of windows.entries()) {
     // If we already have a lot of distinct tags, we can stop early.
     // (Still safe: final slice will choose best.)
     if (totals.size >= target * 3) break;
 
-    const startDate = w.toDays == null
-      ? new Date(0)
-      : new Date(now - w.toDays * 24 * 60 * 60 * 1000);
-
-    const endDate = w.fromDays === 0
-      ? endNow
-      : new Date(now - w.fromDays * 24 * 60 * 60 * 1000);
-
-    const cacheKey =
-      w.toDays == null
-        ? `trending-tags-band-all-${BAND_FETCH}-${sortBy}-min${minCount}`
-        : `trending-tags-band-${w.fromDays}-${w.toDays}-${BAND_FETCH}-${sortBy}-min${minCount}`;
-
-    const bandTags = await cache.get(
-      cacheKey,
-      async () => Block.aggregate(makePipeline(startDate, endDate, BAND_FETCH)).exec(),
-      [],
-      { ttlMs: TTL.trendingTags, jitterMs: JITTER, staleTtlMs: HOME_STALE_TTL }
-    );
+    const bandTags = (bandRows || [])
+      .filter(row => row?._id?.band === band && row.totalBlocks >= minCount)
+      .sort((a, b) => {
+        const primary = (b[sortBy] || 0) - (a[sortBy] || 0);
+        if (primary !== 0) return primary;
+        const votes = (b.totalVotes || 0) - (a.totalVotes || 0);
+        if (votes !== 0) return votes;
+        const blocks = (b.totalBlocks || 0) - (a.totalBlocks || 0);
+        if (blocks !== 0) return blocks;
+        return String(a._id?.tag || '').localeCompare(String(b._id?.tag || ''));
+      })
+      .slice(0, BAND_FETCH)
+      .map(row => ({ ...row, _id: row._id.tag }));
 
     if (Array.isArray(bandTags) && bandTags.length > 0) {
       for (const row of bandTags) {
@@ -824,7 +955,8 @@ export async function findByUserWithLangPref({
     { $limit: limit }
   ];
 
-  return await Block.aggregate(pipeline).exec();
+  const families = await Block.aggregate(pipeline).exec();
+  return resolvePostFamiliesForLocale(families, preferredLang);
 }
 
 export async function findDraftsByUser({
@@ -980,7 +1112,8 @@ export async function findByRoomWithLangPref({
     { $limit: limit }
   ];
 
-  return await Block.aggregate(pipeline).exec();
+  const families = await Block.aggregate(pipeline).exec();
+  return resolvePostFamiliesForLocale(families, preferredLang);
 }
 
 export async function findByDateWithLangPref({
@@ -1030,7 +1163,8 @@ export async function findByDateWithLangPref({
     { $limit: limit }
   ];
 
-  return Block.aggregate(pipeline).exec();
+  const families = await Block.aggregate(pipeline).exec();
+  return resolvePostFamiliesForLocale(families, preferredLang);
 }
 
 async function findTopGlobalWithLangPref({ preferredLang, lockedOnly, limit, startDate, endDate }) {
@@ -1076,7 +1210,7 @@ export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy 
   if (sortBy !== 'createdAt') {
     sortStage.createdAt = -1;
   }
-  return Block.aggregate([
+  const families = await Block.aggregate([
     { $match: publiclyVisibleBlockMatch({ tags: tag }) },
     { $sort: sortStage },
     { $group: { _id: "$groupId", docs: { $push: "$$ROOT" } } },
@@ -1109,6 +1243,7 @@ export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy 
     { $skip: skip },
     { $limit: limit }
   ]).exec();
+  return resolvePostFamiliesForLocale(families, preferredLang);
 }
 
 // Get blocks by roomId

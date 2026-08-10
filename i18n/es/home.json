@@ -75,6 +75,10 @@
       "unknownRoom": "Sala desconocida",
       "empty24h": "Todavía no hay posts en las últimas 24 horas. ¡Vuelve pronto, compa!"
     },
+    "sourceFallback": {
+      "title": "Aún no traducido al {language}",
+      "description": "Estas publicaciones se muestran en el idioma en el que se escribieron originalmente."
+    },
     "supportWidget": {
       "eyebrow": "Apoyo al sitio",
       "title": "El apoyo mensual mantiene Daily Page en línea.",

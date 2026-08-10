@@ -17,6 +17,11 @@ function envFlag(value, fallback = false) {
   return ['1', 'true', 'yes', 'on'].includes(String(value).trim().toLowerCase());
 }
 
+function positiveInteger(value, fallback) {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
+}
+
 function parseMonthlyDonateOptions(value) {
   const optionsByAmount = new Map();
 
@@ -93,6 +98,7 @@ export const config = {
   homeShowSupport: envFlag(process.env.HOME_SHOW_SUPPORT),
   homeShowFeaturedPost: envFlag(process.env.HOME_SHOW_FEATURED_POST),
   homeShowFeaturedRoom: envFlag(process.env.HOME_SHOW_FEATURED_ROOM),
+  homeSourceFallbackLimit: positiveInteger(process.env.HOME_SOURCE_FALLBACK_LIMIT, 6),
 
   // Support page funding display
   supportMonthlyGoalUsd: process.env.SUPPORT_MONTHLY_GOAL_USD,

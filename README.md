@@ -213,6 +213,8 @@ npm run room-i18n:export   Export room i18n source data
 npm run room-i18n:migrate  Populate localized room metadata
 npm run visibility:migrate-unlisted -- --write
                            Migrate legacy visibility=private posts to unlisted
+npm run block-language:backfill
+                           Dry-run/report source-language family metadata
 ```
 
 Note: `npm test` runs `pretest`, and `pretest` currently invokes ESLint with `--fix` on a small set of files. Be aware of that before running tests in a dirty worktree.

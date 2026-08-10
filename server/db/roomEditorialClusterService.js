@@ -1,5 +1,6 @@
 import Block from './models/Block.js';
 import { publiclyVisibleBlockMatch } from './blockService.js';
+import { resolvePostTranslation } from '../services/postTranslationResolver.js';
 
 const ROOM_EDITORIAL_FIELDS = [
   '_id',
@@ -7,6 +8,8 @@ const ROOM_EDITORIAL_FIELDS = [
   'roomId',
   'lang',
   'groupId',
+  'originalBlock',
+  'sourceLanguage',
   'status',
   'visibility',
   'createdAt',
@@ -58,36 +61,18 @@ function compareClusterSummaries(a, b) {
   return compareClusterBlocks(a.sortBlock, b.sortBlock);
 }
 
-function pickPreferredBlock(existingBlock, candidateBlock, preferredLang) {
-  if (!existingBlock) return candidateBlock;
-
-  const existingIsPreferred = existingBlock.lang === preferredLang;
-  const candidateIsPreferred = candidateBlock.lang === preferredLang;
-
-  if (existingIsPreferred !== candidateIsPreferred) {
-    return candidateIsPreferred ? candidateBlock : existingBlock;
-  }
-
-  const existingCreated = existingBlock.createdAt ? new Date(existingBlock.createdAt).getTime() : Number.POSITIVE_INFINITY;
-  const candidateCreated = candidateBlock.createdAt ? new Date(candidateBlock.createdAt).getTime() : Number.POSITIVE_INFINITY;
-
-  if (candidateCreated !== existingCreated) {
-    return candidateCreated < existingCreated ? candidateBlock : existingBlock;
-  }
-
-  return candidateBlock;
-}
-
 function dedupeTranslations(blocks, preferredLang) {
   const byGroup = new Map();
 
   for (const block of blocks) {
     const key = block.groupId || toId(block._id);
-    const current = byGroup.get(key);
-    byGroup.set(key, pickPreferredBlock(current, block, preferredLang));
+    if (!byGroup.has(key)) byGroup.set(key, []);
+    byGroup.get(key).push(block);
   }
 
-  return Array.from(byGroup.values());
+  return Array.from(byGroup.values())
+    .map(family => resolvePostTranslation(family, preferredLang)?.record)
+    .filter(Boolean);
 }
 
 function resolveClusterLabel(blocks, entryPoint) {

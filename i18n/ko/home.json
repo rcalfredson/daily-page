@@ -75,6 +75,10 @@
       "unknownRoom": "알 수 없는 방",
       "empty24h": "최근 24시간 동안 게시물이 없습니다. 곧 다시 확인해 보세요!"
     },
+    "sourceFallback": {
+      "title": "아직 {language}(으)로 번역되지 않음",
+      "description": "이 게시물은 처음 작성된 언어로 표시됩니다."
+    },
     "supportWidget": {
       "eyebrow": "사이트 후원",
       "title": "월간 후원이 Daily Page를 온라인에 유지합니다.",

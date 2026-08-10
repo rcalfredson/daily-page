@@ -1,5 +1,6 @@
 import Block from './models/Block.js';
 import { isPubliclyVisibleBlock, publiclyVisibleBlockMatch } from './blockService.js';
+import { resolvePostTranslation } from '../services/postTranslationResolver.js';
 
 const REFERENCE_BLOCK_FIELDS = [
   '_id',
@@ -7,6 +8,8 @@ const REFERENCE_BLOCK_FIELDS = [
   'roomId',
   'lang',
   'groupId',
+  'originalBlock',
+  'sourceLanguage',
   'status',
   'visibility',
   'createdAt',
@@ -76,10 +79,10 @@ async function fetchReferenceBlocks(referenceIds) {
     .lean();
 }
 
-async function fetchPreferredTranslations(groupIds, lang, roomId) {
+async function fetchPreferredTranslations(groupIds, lang) {
   if (!groupIds.length || !lang) return [];
   return Block.find({
-    ...publiclyVisibleBlockMatch({ groupId: { $in: groupIds }, lang, roomId })
+    ...publiclyVisibleBlockMatch({ groupId: { $in: groupIds } })
   })
     .select(REFERENCE_BLOCK_FIELDS)
     .lean();
@@ -144,9 +147,17 @@ export async function getBlockEditorialContext(block, options = {}) {
       .map((item) => item.groupId)
   );
 
-  const preferredTranslations = await fetchPreferredTranslations(translationGroupIds, lang, roomId);
+  const preferredTranslations = await fetchPreferredTranslations(translationGroupIds, lang);
+  const candidatesByGroup = new Map();
+  for (const item of preferredTranslations) {
+    if (!candidatesByGroup.has(item.groupId)) candidatesByGroup.set(item.groupId, []);
+    candidatesByGroup.get(item.groupId).push(item);
+  }
   const preferredTranslationsByGroup = new Map(
-    preferredTranslations.map((item) => [item.groupId, item])
+    [...candidatesByGroup].map(([groupId, candidates]) => [
+      groupId,
+      resolvePostTranslation(candidates, lang)?.record || null
+    ])
   );
 
   function resolveReference(id) {

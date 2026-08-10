@@ -75,6 +75,10 @@
       "unknownRoom": "Phòng không xác định",
       "empty24h": "Chưa có bài viết nào trong 24 giờ qua. Hãy quay lại sớm nhé!"
     },
+    "sourceFallback": {
+      "title": "Chưa được dịch sang {language}",
+      "description": "Các bài viết này được hiển thị bằng ngôn ngữ nguyên bản."
+    },
     "supportWidget": {
       "eyebrow": "Hỗ trợ trang web",
       "title": "Hỗ trợ hàng tháng giúp Daily Page luôn trực tuyến.",

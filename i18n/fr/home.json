@@ -75,6 +75,10 @@
       "unknownRoom": "Salon inconnu",
       "empty24h": "Aucune publication au cours des dernières 24 heures. Revenez bientôt !"
     },
+    "sourceFallback": {
+      "title": "Pas encore traduit en {language}",
+      "description": "Ces publications sont affichées dans la langue dans laquelle elles ont été écrites à l’origine."
+    },
     "supportWidget": {
       "eyebrow": "Soutien au site",
       "title": "Le soutien mensuel garde Daily Page en ligne.",

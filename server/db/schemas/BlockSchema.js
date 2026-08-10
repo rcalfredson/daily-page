@@ -3,6 +3,7 @@ import {
   isValidBannerImageUrl,
   isValidBannerStreetViewUrl
 } from '../bannerImage.js';
+import { SUPPORTED_UI_LANGS } from '../../services/localeContext.js';
 
 const bannerImageSchema = new Schema({
   kind: {
@@ -124,6 +125,7 @@ const blockSchema = new Schema({
   lang: {
     type: String,       // ISO 639-1
     required: true,
+    enum: SUPPORTED_UI_LANGS,
     index: true,
     minlength: 2,
     maxlength: 5,
@@ -137,6 +139,23 @@ const blockSchema = new Schema({
   originalBlock: {
     type: String,  // block._id
     required: false,
+  },
+  // Family-level metadata lives on the canonical source record. Translations
+  // inherit it through originalBlock instead of carrying mutable copies.
+  sourceLanguage: {
+    type: String,
+    enum: SUPPORTED_UI_LANGS,
+    default: undefined,
+  },
+  audienceScope: {
+    type: String,
+    enum: ['global', 'regional', 'local', 'personal'],
+    default: undefined,
+  },
+  translationPriority: {
+    type: String,
+    enum: ['high', 'normal', 'low'],
+    default: undefined,
   },
   editorial: {
     type: editorialSchema,

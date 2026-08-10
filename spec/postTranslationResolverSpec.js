@@ -1,6 +1,9 @@
 import pug from 'pug';
 import { createPostGroupResolver } from '../server/routes/blockView.js';
-import { selectPublicPostTranslation } from '../server/services/postTranslationResolver.js';
+import {
+  resolvePostTranslation,
+  selectPublicPostTranslation
+} from '../server/services/postTranslationResolver.js';
 
 describe('post translation group resolver', () => {
   function post(id, lang, overrides = {}) {
@@ -45,6 +48,41 @@ describe('post translation group resolver', () => {
         createdAt: new Date('2026-03-01T00:00:00.000Z')
       })
     ], 'fr')._id).toBe('translation-id');
+  });
+
+  it('falls back to an English source instead of unrelated Portuguese or Vietnamese variants', () => {
+    const english = post('english-id', 'en', { sourceLanguage: 'en' });
+    const portuguese = post('portuguese-id', 'pt', { originalBlock: 'english-id' });
+    const vietnamese = post('vietnamese-id', 'vi', { originalBlock: 'english-id' });
+
+    const result = resolvePostTranslation([portuguese, vietnamese, english], 'ru');
+
+    expect(result.record).toBe(english);
+    expect(result.isExactLocaleMatch).toBeFalse();
+    expect(result.isSourceFallback).toBeTrue();
+    expect(result.displayedLanguage).toBe('en');
+    expect(result.canonicalSourceId).toBe('english-id');
+  });
+
+  it('falls back to a Czech source even when an English translation exists', () => {
+    const czech = post('czech-id', 'cs', { sourceLanguage: 'cs' });
+    const english = post('english-id', 'en', { originalBlock: 'czech-id' });
+
+    expect(resolvePostTranslation([english, czech], 'ru').record).toBe(czech);
+    expect(resolvePostTranslation([english, czech], 'cs').isExactLocaleMatch).toBeTrue();
+  });
+
+  it('handles untranslated legacy posts and reports malformed duplicates deterministically', () => {
+    const legacy = post('legacy-id', 'de');
+    expect(resolvePostTranslation([legacy], 'ru').record).toBe(legacy);
+
+    const newerDuplicate = post('newer-id', 'de', {
+      originalBlock: 'legacy-id',
+      createdAt: new Date('2026-02-01T00:00:00.000Z')
+    });
+    const result = resolvePostTranslation([newerDuplicate, legacy], 'de');
+    expect(result.record).toBe(legacy);
+    expect(result.diagnostics.map(item => item.code)).toContain('duplicate-language');
   });
 
   it('redirects the group URL without making the negotiated response cacheable', async () => {

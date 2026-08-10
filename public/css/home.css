@@ -8,6 +8,32 @@
   text-decoration: underline dashed;
 }
 
+.home-source-fallbacks {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.home-source-fallbacks h3 {
+  margin-bottom: 0.25rem;
+}
+
+.home-source-fallbacks__description {
+  margin-top: 0;
+  color: var(--muted-text-color);
+}
+
+.home-language-badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding: 0.18rem 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  color: var(--muted-text-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
 .join-room {
   font-weight: bold;
   color: #007bff;

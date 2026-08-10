@@ -35,6 +35,10 @@ import {
 import {
   enqueueForestOwnerGroupReconciliationForBlock
 } from '../../services/forestOwnerGroupReconciliationQueue.js';
+import {
+  assertSupportedContentLanguage,
+  resolvePostTranslation
+} from '../../services/postTranslationResolver.js';
 
 const roomScopedRouter = Router({ mergeParams: true });
 const globalRouter = Router();
@@ -141,6 +145,8 @@ const useBlockAPI = (app) => {
       lang,
       groupId,
       originalBlock,
+      audienceScope,
+      translationPriority,
       editorial,
       bannerImage,
       timeZone,
@@ -157,9 +163,31 @@ const useBlockAPI = (app) => {
       return res.status(401).json({ error: 'Sign in to create a quest contribution.' });
     }
 
-    if (groupId) {
-      const exists = await Block.exists({ groupId });
-      if (!exists) return res.status(400).json({ error: 'Invalid groupId.' });
+    let sourceBlock = null;
+    if (originalBlock) {
+      const requestedSource = await getBlockById(originalBlock);
+      if (!requestedSource) {
+        return res.status(400).json({ error: 'Source block not found.' });
+      }
+      const family = await Block.find({ groupId: requestedSource.groupId })
+        .select('_id roomId creator groupId lang originalBlock sourceLanguage createdAt')
+        .lean();
+      sourceBlock = resolvePostTranslation(family, '__source_only__')?.canonicalSourceRecord
+        || requestedSource;
+      if (groupId && String(groupId) !== String(requestedSource.groupId)) {
+        return res.status(400).json({ error: 'groupId does not match the source block family.' });
+      }
+    } else if (groupId) {
+      return res.status(400).json({ error: 'A groupId requires an originalBlock.' });
+    }
+
+    let normalizedLang;
+    try {
+      normalizedLang = assertSupportedContentLanguage(
+        lang || req.user?.preferredLang || 'en'
+      );
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
     }
 
 
@@ -184,9 +212,15 @@ const useBlockAPI = (app) => {
       userId: req.user?.id || null,
       roomId: room_id,
       editToken: uuidv4(),
-      lang: lang || (req.user?.preferredLang ?? 'en'),
-      groupId: groupId || null //service rellenerá si null
+      lang: normalizedLang,
+      groupId: sourceBlock?.groupId || groupId || null
     };
+
+    if (!sourceBlock) {
+      blockData.sourceLanguage = normalizedLang;
+      blockData.audienceScope = audienceScope || 'global';
+      blockData.translationPriority = translationPriority || 'normal';
+    }
 
     if (normalizedEditorial?.value !== undefined) {
       blockData.editorial = normalizedEditorial.value;
@@ -198,13 +232,9 @@ const useBlockAPI = (app) => {
     existingTokens.push(blockData.editToken);
 
     // if this is a translation, record its source & author
-    if (originalBlock) {
-      const source = await getBlockById(originalBlock);
-      if (!source) {
-        return res.status(400).json({ error: "Source block not found." });
-      }
-      blockData.originalBlock = originalBlock;
-      blockData.originalAuthor = source.creator;
+    if (sourceBlock) {
+      blockData.originalBlock = String(sourceBlock._id);
+      blockData.originalAuthor = sourceBlock.creator;
     }
 
     try {

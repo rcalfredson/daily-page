@@ -75,6 +75,10 @@
       "unknownRoom": "不明なルーム",
       "empty24h": "過去24時間の投稿はまだありません。またすぐ確認してください！"
     },
+    "sourceFallback": {
+      "title": "まだ{language}に翻訳されていません",
+      "description": "これらの投稿は、最初に書かれた言語で表示されています。"
+    },
     "supportWidget": {
       "eyebrow": "サイト支援",
       "title": "月間支援がDaily Pageをオンラインに保ちます。",

@@ -75,6 +75,10 @@
       "unknownRoom": "Onbekende kamer",
       "empty24h": "Nog geen berichten in de afgelopen 24 uur. Kom snel nog eens terug, compa!"
     },
+    "sourceFallback": {
+      "title": "Nog niet vertaald naar {language}",
+      "description": "Deze berichten worden weergegeven in de taal waarin ze oorspronkelijk zijn geschreven."
+    },
     "supportWidget": {
       "eyebrow": "Sitesteun",
       "title": "Maandelijkse steun houdt Daily Page online.",

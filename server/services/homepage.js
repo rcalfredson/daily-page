@@ -11,3 +11,25 @@ export function getHomeActivityVisibility({ comments = [], reactions = [] } = {}
     showRecentReactions: reactions.length >= HOME_ACTIVITY_MINIMUM
   };
 }
+
+export function partitionHomePostsByLocale(blocks, {
+  exactLimit = 20,
+  fallbackLimit = 6
+} = {}) {
+  const exact = [];
+  const sourceFallbacks = [];
+  const seenGroups = new Set();
+
+  for (const block of blocks || []) {
+    const familyKey = String(block?.groupId || block?._id || '');
+    if (!familyKey || seenGroups.has(familyKey)) continue;
+    seenGroups.add(familyKey);
+    if (block.selection?.isSourceFallback) sourceFallbacks.push(block);
+    else exact.push(block);
+  }
+
+  return {
+    exact: exact.slice(0, exactLimit),
+    sourceFallbacks: sourceFallbacks.slice(0, fallbackLimit)
+  };
+}

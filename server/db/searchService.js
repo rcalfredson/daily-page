@@ -1,5 +1,8 @@
 import Block from './models/Block.js';
-import { publiclyVisibleBlockMatch } from './blockService.js';
+import {
+  publiclyVisibleBlockMatch,
+  resolvePostFamiliesForLocale
+} from './blockService.js';
 
 function clampInt(val, def, min, max) {
   const n = Number.parseInt(val, 10);
@@ -107,5 +110,27 @@ export async function searchBlocks({
     }
   ];
 
-  return Block.aggregate(pipeline).exec();
+  const familyAnchors = await Block.aggregate(pipeline).exec();
+  const scoreByGroup = new Map(
+    familyAnchors.map(block => [String(block.groupId), block.score])
+  );
+  const resolved = await resolvePostFamiliesForLocale(
+    familyAnchors,
+    preferredLang || '__source_only__'
+  );
+  return resolved.map(block => ({
+    _id: block._id,
+    groupId: block.groupId,
+    title: block.title,
+    description: block.description,
+    tags: block.tags,
+    roomId: block.roomId,
+    lang: block.lang,
+    voteCount: block.voteCount,
+    createdAt: block.createdAt,
+    updatedAt: block.updatedAt,
+    score: scoreByGroup.get(String(block.groupId)),
+    snippet: String(block.content || '').slice(0, 240),
+    selection: block.selection
+  }));
 }
