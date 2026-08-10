@@ -933,30 +933,6 @@ article h2 {
   }
 }
 
-@media (max-width: 700px) {
-  header.navbar-header {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "brand brand"
-      "utilities menu";
-    row-gap: 8px;
-  }
-
-  a.brand {
-    grid-area: brand;
-  }
-
-  .navbar-right {
-    grid-area: utilities;
-    justify-self: start;
-  }
-
-  .menu-toggle {
-    grid-area: menu;
-    justify-self: end;
-  }
-}
-
 @media (max-width: 380px) {
   .site-header .navbar {
     padding-left: 10px;
@@ -969,6 +945,10 @@ article h2 {
 
   .navbar-right {
     gap: 6px;
+  }
+
+  .brand .logo {
+    display: none;
   }
 
   .search-quick {
