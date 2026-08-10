@@ -910,6 +910,10 @@ article h2 {
 }
 
 @media (max-width: 979px) {
+  .site-header .navbar {
+    margin-bottom: 0;
+  }
+
   header.navbar-header {
     grid-template-columns: minmax(0, 1fr) auto auto;
     gap: 8px;
@@ -933,6 +937,12 @@ article h2 {
   }
 }
 
+@media (max-width: 420px) {
+  .brand .logo {
+    display: none;
+  }
+}
+
 @media (max-width: 380px) {
   .site-header .navbar {
     padding-left: 10px;
@@ -945,10 +955,6 @@ article h2 {
 
   .navbar-right {
     gap: 6px;
-  }
-
-  .brand .logo {
-    display: none;
   }
 
   .search-quick {
