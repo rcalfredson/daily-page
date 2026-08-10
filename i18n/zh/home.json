@@ -75,6 +75,10 @@
       "unknownRoom": "未知房间",
       "empty24h": "最近 24 小时还没有帖子。稍后再来看看吧，朋友！"
     },
+    "sourceFallback": {
+      "title": "尚未翻译成{language}",
+      "description": "这些文章以最初撰写时使用的语言显示。"
+    },
     "supportWidget": {
       "eyebrow": "网站支持",
       "title": "月度支持让 Daily Page 保持在线。",

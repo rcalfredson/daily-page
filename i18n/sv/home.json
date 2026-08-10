@@ -75,6 +75,10 @@
       "unknownRoom": "Okänt rum",
       "empty24h": "Inga inlägg ännu under de senaste 24 timmarna. Kom tillbaka snart, kompa!"
     },
+    "sourceFallback": {
+      "title": "Ännu inte översatt till {language}",
+      "description": "Dessa inlägg visas på det språk som de ursprungligen skrevs på."
+    },
     "supportWidget": {
       "eyebrow": "Stöd till webbplatsen",
       "title": "Månatligt stöd håller Daily Page online.",

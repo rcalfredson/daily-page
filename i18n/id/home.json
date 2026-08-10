@@ -75,6 +75,10 @@
       "unknownRoom": "Ruang Tidak Dikenal",
       "empty24h": "Belum ada postingan dalam 24 jam terakhir. Cek lagi segera, kawan!"
     },
+    "sourceFallback": {
+      "title": "Belum diterjemahkan ke {language}",
+      "description": "Tulisan ini ditampilkan dalam bahasa aslinya."
+    },
     "supportWidget": {
       "eyebrow": "Dukungan situs",
       "title": "Dukungan bulanan menjaga Daily Page tetap online.",

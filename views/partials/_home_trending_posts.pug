@@ -4,23 +4,21 @@ section.home-discovery__panel.home-discovery__panel--posts.is-active(
   aria-labelledby='home-tab-posts'
   data-home-panel='posts'
 )
-  h2
-    = t('home.trendingBlocks.title')
-    if blocksPeriod > 1
-      |  #{t('home.trendingBlocks.suffixDays', {days: blocksPeriod})}
-  if topBlocks.length
+  mixin homeBlockList(blocks, showLanguageBadge)
     ul.block-list
-      each block in topBlocks
-        li.block-preview(lang=(block.lang || 'en'))
+      each block in blocks
+        li.block-preview(lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))
           +blockBanner(block, 'card', block.roomId)
           div.content
             .title-row(class=block.pinnedAt ? 'title-row--pinned' : null)
               a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))= block.title
               include _draft_badge
+              if showLanguageBadge
+                span.home-language-badge= t(`layout.languages.${block.lang}`) || block.lang
               if block.pinnedAt
                 span.home-pinned-badge(title=t('home.featured.blockRibbon') aria-label=t('home.featured.blockRibbon'))
                   i.fas.fa-thumbtack(aria-hidden='true')
-            p(lang=(uiLang || 'en'))
+            p(lang=(uiLang || 'en') dir=(textDirForLang ? textDirForLang(uiLang || 'en') : 'ltr'))
               | #{t('home.trendingBlocks.createdBy')} 
               if block.authorProfilePath
                 a.user-profile-link(href=uiPath(block.authorProfilePath))= blockAuthorDisplayName(block)
@@ -39,5 +37,16 @@ section.home-discovery__panel.home-discovery__panel--posts.is-active(
           footer.block-footer
             include _reaction_counts
             include _vote_controls
+  h2
+    = t('home.trendingBlocks.title')
+    if blocksPeriod > 1
+      |  #{t('home.trendingBlocks.suffixDays', {days: blocksPeriod})}
+  if topBlocks.length
+    +homeBlockList(topBlocks, false)
   else
     p= t('home.trendingBlocks.empty24h')
+  if sourceFallbackBlocks && sourceFallbackBlocks.length
+    section.home-source-fallbacks(aria-labelledby='home-source-fallback-title')
+      h3#home-source-fallback-title= t('home.sourceFallback.title', { language: t(`layout.languages.${preferredContentLang}`) || preferredContentLang })
+      p.home-source-fallbacks__description= t('home.sourceFallback.description')
+      +homeBlockList(sourceFallbackBlocks, true)

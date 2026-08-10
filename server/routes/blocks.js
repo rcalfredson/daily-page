@@ -4,7 +4,11 @@ import { config } from '../../config/config.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
 import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
-import { getBlockById, getTranslationByGroupAndLang } from '../db/blockService.js';
+import {
+  getBlockById,
+  getTranslationByGroupAndLang,
+  getTranslationResolverCandidates
+} from '../db/blockService.js';
 import { getRoomMetadata } from '../db/roomService.js';
 import { getQuestMutationPolicyForBlock } from '../db/questBlockMutationService.js';
 import { getQuestContributionStartContext } from '../db/questService.js';
@@ -78,6 +82,7 @@ router.get(
       return block;
     },
     getTranslation: getTranslationByGroupAndLang,
+    getCandidates: getTranslationResolverCandidates,
     canonicalPathForBlock: canonicalBlockEditPath,
   }),
   async (req, res) => {

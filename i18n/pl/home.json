@@ -70,6 +70,10 @@
       "unknownRoom": "Nieznany pokój",
       "empty24h": "Brak postów w ostatnich 24 godzinach. Zajrzyj wkrótce!"
     },
+    "sourceFallback": {
+      "title": "Jeszcze nie przetłumaczono na {language}",
+      "description": "Te posty są wyświetlane w języku, w którym zostały pierwotnie napisane."
+    },
     "supportWidget": {
       "eyebrow": "Wsparcie strony",
       "title": "Miesięczne wsparcie utrzymuje Daily Page online.",

@@ -75,6 +75,10 @@
       "unknownRoom": "Tuntematon huone",
       "empty24h": "Ei julkaisuja viimeisen 24 tunnin aikana. Tarkista pian uudelleen!"
     },
+    "sourceFallback": {
+      "title": "Ei vielä käännetty kielelle {language}",
+      "description": "Nämä julkaisut näytetään kielellä, jolla ne alun perin kirjoitettiin."
+    },
     "supportWidget": {
       "eyebrow": "Sivuston tuki",
       "title": "Kuukausituki pitää Daily Pagen verkossa.",

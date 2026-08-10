@@ -132,8 +132,7 @@ describe('home pinned blocks', () => {
     expect(findSpy).toHaveBeenCalledWith({
       $and: [
         {
-          groupId: { $in: ['translated-post'] },
-          lang: 'hi'
+          groupId: { $in: ['translated-post'] }
         },
         {
           $or: [

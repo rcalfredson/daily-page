@@ -42,7 +42,7 @@ router.get(
       // If no explicit timeframe, auto-pick the first non-empty one
       if (!requestedTimeframe) {
         for (const tf of timeframesOrder) {
-          const candidateTags = await getAllTagsWithCounts(tf);
+          const candidateTags = await getAllTagsWithCounts(tf, uiLang);
           if (candidateTags && candidateTags.length > 0) {
             tags = candidateTags;
             timeframe = tf;
@@ -52,11 +52,11 @@ router.get(
 
         // If still empty, default to 'all'
         if (!tags.length) {
-          tags = await getAllTagsWithCounts('all');
+          tags = await getAllTagsWithCounts('all', uiLang);
           timeframe = 'all';
         }
       } else {
-        tags = await getAllTagsWithCounts(requestedTimeframe);
+        tags = await getAllTagsWithCounts(requestedTimeframe, uiLang);
         timeframe = requestedTimeframe;
       }
 

@@ -75,6 +75,10 @@
       "unknownRoom": "Unbekannter Raum",
       "empty24h": "Noch keine Beitrage in den letzten 24 Stunden. Schau bald wieder vorbei!"
     },
+    "sourceFallback": {
+      "title": "Noch nicht ins {language} übersetzt",
+      "description": "Diese Beiträge werden in der Sprache angezeigt, in der sie ursprünglich verfasst wurden."
+    },
     "supportWidget": {
       "eyebrow": "Website-Support",
       "title": "Monatliche Unterstützung hält Daily Page online.",

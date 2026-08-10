@@ -23,12 +23,12 @@ export function addHreflangLocals(req, res, next) {
 
   res.locals.hreflang = indexableLangs.map((lang) => ({
     lang,
-    href: `${base}/${lang}${unprefixed === '/' ? '' : unprefixed}`,
+    href: `${base}/${lang}${unprefixed === '/' ? '/' : unprefixed}`,
   }));
 
   res.locals.hreflang.push({
     lang: 'x-default',
-    href: `${base}/en${unprefixed === '/' ? '' : unprefixed}`,
+    href: `${base}/en${unprefixed === '/' ? '/' : unprefixed}`,
   });
 
   next();

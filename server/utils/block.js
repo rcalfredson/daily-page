@@ -93,6 +93,7 @@ export function toBlockPreviewDTO(block, {
   if (meta.isTitleOnly) {
     return {
       _id: block._id,
+      groupId: block.groupId,
       title: block.title,
       creator: block.creator,
       authorshipState: block.authorshipState,
@@ -104,6 +105,7 @@ export function toBlockPreviewDTO(block, {
       status: block.status,
       originalAuthor: block.originalAuthor,
       originalBlock: block.originalBlock,
+      selection: block.selection,
       bannerImage: block.bannerImage,
       userVote,
       voteCount: block.voteCount,
@@ -123,6 +125,7 @@ export function toBlockPreviewDTO(block, {
 
   return {
     _id: block._id,
+    groupId: block.groupId,
     title: block.title,
     creator: block.creator,
     authorshipState: block.authorshipState,
@@ -134,6 +137,7 @@ export function toBlockPreviewDTO(block, {
     status: block.status,
     originalAuthor: block.originalAuthor,
     originalBlock: block.originalBlock,
+    selection: block.selection,
     bannerImage: block.bannerImage,
     userVote,
     voteCount: block.voteCount,

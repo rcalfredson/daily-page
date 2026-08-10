@@ -1,6 +1,7 @@
 // server/middleware/resolveBlockLangParam.js
 import { buildRedirectQuery } from '../services/urlPolicy.js';
 import { withQuery } from '../utils/urls.js';
+import { resolvePostTranslation } from '../services/postTranslationResolver.js';
 
 /**
  * For block routes:
@@ -14,6 +15,7 @@ import { withQuery } from '../utils/urls.js';
 export function resolveBlockLangParam({
   loadBlock,                 // async (req) => block|null (MUST verify room match if relevant)
   getTranslation,            // async (groupId, lang) => block|null
+  getCandidates,             // optional async (groupId) => complete family
   canonicalPathForBlock,     // (block) => string
 }) {
   return async function resolveBlockLangParamMiddleware(req, res, next) {
@@ -35,7 +37,12 @@ export function resolveBlockLangParam({
     // Try to resolve translation only when it differs from the current block language
     if (requestedLang !== block.lang) {
       try {
-        const target = await getTranslation(block.groupId, requestedLang);
+        const target = getCandidates
+          ? resolvePostTranslation(
+              await getCandidates(block.groupId),
+              requestedLang
+            )?.record
+          : await getTranslation(block.groupId, requestedLang);
         if (target) finalBlock = target;
       } catch (err) {
         return next(err);

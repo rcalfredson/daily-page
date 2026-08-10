@@ -47,7 +47,11 @@ import { initI18n, addI18n } from './server/services/i18n.js'
 import { startJobs } from './server/services/cron.js';
 import * as google from './server/services/google.js';
 import { timeIt } from './server/services/perf.js';
-import { getHomeActivitySince, getHomeActivityVisibility } from './server/services/homepage.js';
+import {
+  getHomeActivitySince,
+  getHomeActivityVisibility,
+  partitionHomePostsByLocale
+} from './server/services/homepage.js';
 import { getRecurringSupportMonthlyTotalUsd } from './server/db/supportFundingService.js';
 import { listPublicQuestsOverview } from './server/db/questService.js';
 
@@ -673,8 +677,8 @@ async function getSupportFundingViewModel() {
             [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding, questsRes] = await Promise.all([
               config.homeShowFeaturedPost ? getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }) : null,
               config.homeShowFeaturedRoom ? getFeaturedRoomWithFallback() : null,
-              getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang, includePinnedHome: true }),
-              getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' }),
+              getTopBlocksWithFallback({ lockedOnly: false, limit: 20 + config.homeSourceFallbackLimit, preferredLang: preferredContentLang, includePinnedHome: true }),
+              getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks', preferredLang: preferredContentLang }),
               getGlobalBlockStats(),
               getTotalRooms(),
               getTotalTags(),
@@ -687,8 +691,8 @@ async function getSupportFundingViewModel() {
             const perfResults = await Promise.all([
               timeIt('featuredBlock', () => config.homeShowFeaturedPost ? getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }) : null),
               timeIt('featuredRoomRaw', () => config.homeShowFeaturedRoom ? getFeaturedRoomWithFallback() : null),
-              timeIt('topBlocks', () => getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang: preferredContentLang, includePinnedHome: true })),
-              timeIt('trendingTags', () => getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' })),
+              timeIt('topBlocks', () => getTopBlocksWithFallback({ lockedOnly: false, limit: 20 + config.homeSourceFallbackLimit, preferredLang: preferredContentLang, includePinnedHome: true })),
+              timeIt('trendingTags', () => getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks', preferredLang: preferredContentLang })),
               timeIt('globalBlockStats', () => getGlobalBlockStats()),
               timeIt('totalRooms', () => getTotalRooms()),
               timeIt('totalTags', () => getTotalTags()),
@@ -722,7 +726,7 @@ async function getSupportFundingViewModel() {
 
           // Post-procesamiento mínimo (sin I/O extra)
           const fb = fbRes?.featuredBlock || null;
-          const featuredBlock = fb ?
+          const featuredBlock = fb && !fb.selection?.isSourceFallback ?
             {
               ...fb,
               ...titleOnlyMeta(fb, { graceDays: 7 }),
@@ -743,7 +747,13 @@ async function getSupportFundingViewModel() {
 
           // Mapear top blocks a DTO con userId
           const blocksPeriod = topRes?.period || null;
-          const topBlocks = (topRes?.blocks || []).map(b => toBlockPreviewDTO(b, { userId }));
+          const resolvedTopBlocks = (topRes?.blocks || []).map(b => toBlockPreviewDTO(b, { userId }));
+          const partitionedTopBlocks = partitionHomePostsByLocale(resolvedTopBlocks, {
+            exactLimit: 20,
+            fallbackLimit: config.homeSourceFallbackLimit
+          });
+          const topBlocks = partitionedTopBlocks.exact;
+          const sourceFallbackBlocks = partitionedTopBlocks.sourceFallbacks;
 
           // Tags + period
           const trendingTags = tagsRes?.tags || [];
@@ -766,6 +776,7 @@ async function getSupportFundingViewModel() {
             description: t('home.meta.description'),
 
             topBlocks,
+            sourceFallbackBlocks,
             blocksPeriod,
             featuredBlock,
             featuredBlockPeriod,

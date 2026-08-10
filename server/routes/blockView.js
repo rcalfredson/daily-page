@@ -33,7 +33,7 @@ import {
 import { canonicalBlockPath } from '../utils/canonical.js';
 import { buildPostSeo } from '../utils/postSeo.js';
 import { getPreferredContentLang } from '../services/localeContext.js';
-import { selectPublicPostTranslation } from '../services/postTranslationResolver.js';
+import { resolvePostTranslation } from '../services/postTranslationResolver.js';
 
 const router = express.Router();
 const INITIAL_COMMENT_LIMIT = 20;
@@ -44,12 +44,19 @@ export function createPostGroupResolver({
   return async function postGroupResolver(req, res) {
     try {
       const candidates = await getCandidates(req.params.group_id);
-      const selected = selectPublicPostTranslation(
+      const resolution = resolvePostTranslation(
         candidates,
         getPreferredContentLang(res)
       );
+      const selected = resolution?.record;
 
       if (!selected) return res.sendStatus(404);
+      if (resolution.isSourceFallback && resolution.diagnostics.length) {
+        console.warn('Malformed public post translation family', {
+          groupId: req.params.group_id,
+          diagnostics: resolution.diagnostics
+        });
+      }
 
       res.set('Cache-Control', 'private, no-store');
       res.vary('Accept-Language');
@@ -149,6 +156,7 @@ router.get(
       return block;
     },
     getTranslation: getPublicTranslationByGroupAndLang,
+    getCandidates: getPublicTranslationResolverCandidates,
     canonicalPathForBlock: canonicalBlockPath,
   }),
   async (req, res) => {

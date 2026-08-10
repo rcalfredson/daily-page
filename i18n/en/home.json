@@ -75,6 +75,10 @@
       "unknownRoom": "Unknown Room",
       "empty24h": "No posts yet in the last 24 hours. Check back soon, compa!"
     },
+    "sourceFallback": {
+      "title": "Not yet translated into {language}",
+      "description": "These posts are shown in the language in which they were originally written."
+    },
     "supportWidget": {
       "eyebrow": "Site support",
       "title": "Monthly support keeps Daily Page online.",

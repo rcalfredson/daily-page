@@ -42,10 +42,7 @@ describe('room dashboard language deduplication', () => {
     expect(findSpy).toHaveBeenCalledWith({
       $and: [
         {
-          groupId: { $in: ['translated-post'] },
-          lang: 'en',
-          roomId: 'general',
-          status: 'locked'
+          groupId: { $in: ['translated-post'] }
         },
         {
           $or: [
