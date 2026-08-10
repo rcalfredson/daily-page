@@ -1268,7 +1268,10 @@ export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy 
   if (sortBy !== 'createdAt') {
     sortStage.createdAt = -1;
   }
-  const families = await Block.aggregate([
+  // Keep locale selection inside the tagged subset. Resolving the selected page
+  // against every variant in each family adds a second, content-heavy query and
+  // can replace a tagged result with a translation that does not carry the tag.
+  return Block.aggregate([
     { $match: publiclyVisibleBlockMatch({ tags: tag }) },
     { $sort: sortStage },
     { $group: { _id: "$groupId", docs: { $push: "$$ROOT" } } },
@@ -1301,7 +1304,6 @@ export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy 
     { $skip: skip },
     { $limit: limit }
   ]).exec();
-  return resolvePostFamiliesForLocale(families, preferredLang);
 }
 
 // Get blocks by roomId
