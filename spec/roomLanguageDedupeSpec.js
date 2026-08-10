@@ -1,10 +1,15 @@
 import Block from '../server/db/models/Block.js';
+import * as cache from '../server/services/cache.js';
 import {
   getBlocksByRoomWithFallback,
   getTopBlocksWithFallback
 } from '../server/db/blockService.js';
 
 describe('room dashboard language deduplication', () => {
+  afterEach(() => {
+    cache.clear();
+  });
+
   it('uses an older preferred-language counterpart after recency-window deduplication', async () => {
     const newerRussian = {
       _id: 'newer-ru',
@@ -99,5 +104,42 @@ describe('room dashboard language deduplication', () => {
     const firstMatch = aggregateSpy.calls.argsFor(0)[0][0].$match;
     expect(firstMatch.$and[0].roomId).toBe('cumulative-room');
     expect(firstMatch.status).toBe('locked');
+  });
+
+  it('caches the fully resolved locale result', async () => {
+    const russian = {
+      _id: 'resolved-cache-ru',
+      groupId: 'resolved-cache-group',
+      roomId: 'resolved-cache-room',
+      status: 'locked',
+      visibility: 'public',
+      lang: 'ru',
+      voteCount: 3
+    };
+    const english = { ...russian, _id: 'resolved-cache-en', lang: 'en' };
+    const aggregateSpy = spyOn(Block, 'aggregate').and.returnValue({
+      exec: async () => [russian]
+    });
+    const findSpy = spyOn(Block, 'find').and.returnValue({
+      lean() {
+        return this;
+      },
+      exec: async () => [english]
+    });
+    const options = {
+      roomId: 'resolved-cache-room',
+      status: 'locked',
+      lockedOnly: true,
+      limit: 1,
+      preferredLang: 'en'
+    };
+
+    const first = await getTopBlocksWithFallback(options);
+    const second = await getTopBlocksWithFallback(options);
+
+    expect(first.blocks.map(block => block._id)).toEqual(['resolved-cache-en']);
+    expect(second).toBe(first);
+    expect(aggregateSpy).toHaveBeenCalledTimes(1);
+    expect(findSpy).toHaveBeenCalledTimes(1);
   });
 });

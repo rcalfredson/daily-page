@@ -50,6 +50,8 @@ import { timeIt } from './server/services/perf.js';
 import {
   getHomeActivitySince,
   getHomeActivityVisibility,
+  getHomeTopBlocksOptions,
+  getHomeTrendingTagsOptions,
   partitionHomePostsByLocale
 } from './server/services/homepage.js';
 import { getRecurringSupportMonthlyTotalUsd } from './server/db/supportFundingService.js';
@@ -677,8 +679,8 @@ async function getSupportFundingViewModel() {
             [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding, questsRes] = await Promise.all([
               config.homeShowFeaturedPost ? getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }) : null,
               config.homeShowFeaturedRoom ? getFeaturedRoomWithFallback() : null,
-              getTopBlocksWithFallback({ lockedOnly: false, limit: 20 + config.homeSourceFallbackLimit, preferredLang: preferredContentLang, includePinnedHome: true }),
-              getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks', preferredLang: preferredContentLang }),
+              getTopBlocksWithFallback(getHomeTopBlocksOptions(preferredContentLang, config.homeSourceFallbackLimit)),
+              getTrendingTagsWithFallback(getHomeTrendingTagsOptions(preferredContentLang)),
               getGlobalBlockStats(),
               getTotalRooms(),
               getTotalTags(),
@@ -691,8 +693,8 @@ async function getSupportFundingViewModel() {
             const perfResults = await Promise.all([
               timeIt('featuredBlock', () => config.homeShowFeaturedPost ? getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }) : null),
               timeIt('featuredRoomRaw', () => config.homeShowFeaturedRoom ? getFeaturedRoomWithFallback() : null),
-              timeIt('topBlocks', () => getTopBlocksWithFallback({ lockedOnly: false, limit: 20 + config.homeSourceFallbackLimit, preferredLang: preferredContentLang, includePinnedHome: true })),
-              timeIt('trendingTags', () => getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks', preferredLang: preferredContentLang })),
+              timeIt('topBlocks', () => getTopBlocksWithFallback(getHomeTopBlocksOptions(preferredContentLang, config.homeSourceFallbackLimit))),
+              timeIt('trendingTags', () => getTrendingTagsWithFallback(getHomeTrendingTagsOptions(preferredContentLang))),
               timeIt('globalBlockStats', () => getGlobalBlockStats()),
               timeIt('totalRooms', () => getTotalRooms()),
               timeIt('totalTags', () => getTotalTags()),
