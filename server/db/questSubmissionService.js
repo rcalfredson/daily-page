@@ -214,12 +214,13 @@ async function evaluateQuestCompletion({
   let completedCount;
   let targetCount;
   if (quest.type === 'set') {
-    [completedCount, targetCount] = await Promise.all([
-      QuestItemModel.countDocuments({
-        questId, active: true, approvedSubmissionId: { $ne: null }
-      }, { session }),
-      QuestItemModel.countDocuments({ questId, active: true }, { session })
-    ]);
+    completedCount = await QuestItemModel.countDocuments({
+      questId, active: true, approvedSubmissionId: { $ne: null }
+    }, { session });
+    targetCount = await QuestItemModel.countDocuments(
+      { questId, active: true },
+      { session }
+    );
   } else {
     completedCount = await QuestSubmissionModel.countDocuments({
       questId, status: 'approved'
@@ -248,11 +249,9 @@ export function buildQuestSubmissionService({
 } = {}) {
   async function createQuestSubmission({ questId, itemId = null, blockId, ownerUserId, now = new Date() }) {
     return translateDuplicateSubmissionError(() => transactionRunner(async session => {
-      const [quest, block, owner] = await Promise.all([
-        QuestModel.findById(id(questId), null, { session }),
-        BlockModel.findById(id(blockId), null, { session }),
-        UserModel.findById(id(ownerUserId), null, { session })
-      ]);
+      const quest = await QuestModel.findById(id(questId), null, { session });
+      const block = await BlockModel.findById(id(blockId), null, { session });
+      const owner = await UserModel.findById(id(ownerUserId), null, { session });
       requireFound(quest, QUEST_ERROR_CODES.NOT_FOUND);
       requireFound(owner, QUEST_ERROR_CODES.FORBIDDEN, 403);
       assertQuestAcceptsNewWork(quest);
