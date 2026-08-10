@@ -1,54 +1,60 @@
-a(
-  href="#main-menu-toggle"
-  id="main-menu-close"
-  class="menu-close"
-  aria-label=t('layout.closeMenu')
-)
-  span(class="sr-only")= t('layout.closeMenu')
-  span(class="fa fa-close" aria-hidden="true")
+-
+  const currentNavPath = typeof unprefixedPath === 'string' ? unprefixedPath : '/';
+  const navPathStartsWith = (path) => currentNavPath === path || currentNavPath.startsWith(`${path}/`);
 
-ul
-  li
-    .app
-      a.link(href=uiPath('/rooms'))= t('nav.rooms')
+.main-menu__header
+  a.main-menu__brand(href=uiPath('/'))
+    img(src='/assets/img/logo.svg' alt='' width='24' height='24')
+    span= t('layout.siteName')
+  a(
+    href='#main-menu-toggle'
+    id='main-menu-close'
+    class='menu-close'
+    aria-label=t('layout.closeMenu')
+  )
+    span(class='sr-only')= t('layout.closeMenu')
+    span(class='fa fa-close' aria-hidden='true')
+
+ul.main-menu__list
+  li.main-menu__item
+    a.link(href=uiPath('/rooms') aria-current=navPathStartsWith('/rooms') ? 'page' : null)= t('nav.rooms')
   if user
-    li
-      .forest
-        a.link(href=uiPath('/forest'))= t('nav.forest')
-  li
-    .quests
-      a.link(href=uiPath('/quests'))= t('nav.quests')
-  li
-    .tags
-      a.link(href=uiPath('/tags'))= t('nav.tags')
-  li
-    .archive
-      a.link(href=uiPath('/archive'))= t('nav.archive')
-  li.nav-desktop-hide
-    .search
-      a.link(href=uiPath('/search'))= t('nav.search')
-  li
-    .best-of
-      a.link(href=uiPath('/archive/best-of'))= t('nav.bestOf')
-  li
-    .about
-      a.link(href=uiPath('/about'))= t('nav.about')
-  li
-    .support
-      a.link(href=uiPath('/support'))= t('nav.support')
-  li
-    .random
-      a.link(href=uiPath('/random'))= t('nav.otherProjects')
-  
-  // Mobile-only auth links
+    li.main-menu__item
+      a.link(href=uiPath('/forest') aria-current=navPathStartsWith('/forest') ? 'page' : null)= t('nav.forest')
+  li.main-menu__item
+    a.link(href=uiPath('/quests') aria-current=navPathStartsWith('/quests') ? 'page' : null)= t('nav.quests')
+  li.main-menu__item
+    a.link(href=uiPath('/tags') aria-current=navPathStartsWith('/tags') ? 'page' : null)= t('nav.tags')
+  li.main-menu__item
+    a.link(
+      href=uiPath('/archive')
+      aria-current=(navPathStartsWith('/archive') && !navPathStartsWith('/archive/best-of')) ? 'page' : null
+    )= t('nav.archive')
+  li.main-menu__item
+    a.link(href=uiPath('/archive/best-of') aria-current=navPathStartsWith('/archive/best-of') ? 'page' : null)= t('nav.bestOf')
+
+  li.main-menu__divider(aria-hidden='true')
+
+  li.main-menu__item.main-menu__item--secondary
+    a.link(href=uiPath('/about') aria-current=navPathStartsWith('/about') ? 'page' : null)= t('nav.about')
+  li.main-menu__item.main-menu__item--secondary
+    a.link(href=uiPath('/support') aria-current=navPathStartsWith('/support') ? 'page' : null)= t('nav.support')
+  li.main-menu__item.main-menu__item--secondary
+    a.link(href=uiPath('/random') aria-current=navPathStartsWith('/random') ? 'page' : null)= t('nav.otherProjects')
+
+  if user
+    li.main-menu__divider.main-menu__account-divider.main-menu__account-divider--user(aria-hidden='true')
+  else
+    li.main-menu__divider.main-menu__account-divider.main-menu__account-divider--guest(aria-hidden='true')
+
   if !user
-    li.nav-mobile-only#login
-        a#nav-login-menu.link(href=uiPath('/login'))= t('layout.login')
+    li.nav-mobile-only.main-menu__item.main-menu__item--account#login
+      a#nav-login-menu.link(href=uiPath('/login'))= t('layout.login')
 
   if user
-    li.nav-mobile-only#dashboard
-      a.link(href=uiPath('/dashboard'))= t('nav.dashboard')
+    li.nav-mobile-only.main-menu__item.main-menu__item--account#dashboard
+      a.link(href=uiPath('/dashboard') aria-current=navPathStartsWith('/dashboard') ? 'page' : null)= t('nav.dashboard')
 
   if user
-    li.nav-mobile-only#logout
-      a#nav-logout-menu.link(href="#")= t('layout.logout')
+    li.nav-mobile-only.main-menu__item.main-menu__item--account.main-menu__item--logout#logout
+      a#nav-logout-menu.link(href='#')= t('layout.logout')

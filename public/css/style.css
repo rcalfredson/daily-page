@@ -601,60 +601,186 @@ a.brand {
   color: rgb(83, 175, 218);
 }
 
-/*
- Default styles + Mobile first
- Offscreen menu style
-*/
+/* Mobile navigation drawer */
+
+body.main-menu-open {
+  overflow: hidden;
+}
 
 .main-menu {
-  position: absolute;
-  display: none;
-  left: -200px;
-  top: 0;
-  height: 100%;
-  overflow-y: scroll;
-  overflow-x: visible;
-  transition: left 0.3s ease, box-shadow 0.3s ease;
+  position: fixed;
+  inset: 0 auto 0 0;
   z-index: var(--z-drawer);
+  display: flex;
+  flex-direction: column;
+  width: min(86vw, 320px);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  color: var(--text-color);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--highlight-color) 5%, transparent), transparent 34%),
+    var(--surface-bg);
+  border-inline-end: 1px solid var(--border-color);
+  border-radius: 0 20px 20px 0;
+  box-shadow: 18px 0 50px rgba(0, 0, 0, 0.3);
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-104%);
+  transition:
+    transform 220ms cubic-bezier(0.2, 0, 0, 1),
+    visibility 0s linear 220ms;
 }
 
-.main-menu ul {
-  list-style: none;
-  margin: 0;
-  padding: 2.5em 0 0;
-  /* Hide shadow w/ -8px while 'closed' */
-  -webkit-box-shadow: -8px 0 8px rgba(0, 0, 0, .5);
-  -moz-box-shadow: -8px 0 8px rgba(0, 0, 0, .5);
-  box-shadow: -8px 0 8px rgba(0, 0, 0, .5);
-  min-height: 100%;
-  width: 200px;
-  background: #1a1a1a;
+html[dir="rtl"] .main-menu {
+  inset: 0 0 0 auto;
+  border-right: 0;
+  border-left: 1px solid var(--border-color);
+  border-radius: 20px 0 0 20px;
+  box-shadow: -18px 0 50px rgba(0, 0, 0, 0.3);
+  transform: translateX(104%);
 }
 
-.main-menu a {
-  display: block;
-  padding: .75em 15px;
-  line-height: 1em;
-  font-size: 1em;
-  color: #fff;
+.main-menu__header {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 68px;
+  padding: 10px 12px 10px 18px;
+  border-bottom: 1px solid color-mix(in srgb, var(--border-color) 72%, transparent);
+}
+
+html[dir="rtl"] .main-menu__header {
+  padding-right: 18px;
+  padding-left: 12px;
+}
+
+.main-menu__brand {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  gap: 10px;
+  color: var(--text-color);
+  font-family: var(--font-ui-medium);
+  font-size: 1rem;
   text-decoration: none;
-  border-bottom: 1px solid #383838;
 }
 
-.main-menu li:first-child a {
-  border-top: 1px solid #383838;
-}
-
-.main-menu a:hover,
-.main-menu a:focus {
-  background: #333;
-  text-decoration: underline;
+.main-menu__brand img {
+  display: block;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .main-menu .menu-close {
-  position: absolute;
-  right: 0;
-  top: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  color: var(--muted-text-color);
+  text-decoration: none;
+}
+
+.main-menu .menu-close:hover,
+.main-menu .menu-close:focus-visible {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+}
+
+.main-menu .menu-close:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.main-menu__list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0;
+  padding: 12px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  list-style: none;
+}
+
+.main-menu__item {
+  flex: 0 0 auto;
+}
+
+.main-menu__item > .link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 46px;
+  margin: 1px 0;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 11px;
+  color: var(--text-color);
+  font-family: var(--font-ui-regular);
+  font-size: 0.95rem;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.main-menu__item > .link:hover,
+.main-menu__item > .link:focus-visible {
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+  text-decoration: none;
+}
+
+.main-menu__item > .link:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: -1px;
+}
+
+.main-menu__item > .link[aria-current="page"] {
+  color: var(--link-color);
+  background: color-mix(in srgb, var(--highlight-color) 13%, var(--surface-raised-bg));
+  box-shadow: inset 3px 0 0 var(--highlight-color);
+  font-family: var(--font-ui-medium);
+}
+
+html[dir="rtl"] .main-menu__item > .link[aria-current="page"] {
+  box-shadow: inset -3px 0 0 var(--highlight-color);
+}
+
+.main-menu__divider {
+  flex: 0 0 auto;
+  height: 1px;
+  margin: 10px 12px;
+  background: color-mix(in srgb, var(--border-color) 75%, transparent);
+}
+
+.main-menu__account-divider {
+  display: none;
+  margin-top: auto;
+}
+
+@media (max-width: 840px) {
+  body[data-is-logged-in="true"] .main-menu__account-divider--user {
+    display: list-item;
+  }
+}
+
+@media (max-width: 560px) {
+  body[data-is-logged-in="false"] .main-menu__account-divider--guest {
+    display: list-item;
+  }
+}
+
+.main-menu__item--logout > .link {
+  color: var(--danger-color);
 }
 
 .search-quick {
@@ -738,57 +864,51 @@ article h2 {
 
 .main-menu:target,
 .main-menu[aria-expanded="true"] {
-  display: block;
-  left: 0;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(0);
+  transition-delay: 0s;
   outline: none;
-  -moz-box-shadow: 3px 0 12px rgba(0, 0, 0, .25);
-  -webkit-box-shadow: 3px 0 12px rgba(0, 0, 0, .25);
-  box-shadow: 3px 0 12px rgba(0, 0, 0, .25);
 }
 
-.main-menu:target .menu-close,
-.main-menu[aria-expanded="true"] .menu-close {
-  z-index: 1001;
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-backdrop);
+  background: rgba(4, 7, 12, 0.58);
+  backdrop-filter: blur(2px);
+  cursor: default;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 200ms ease,
+    visibility 0s linear 200ms;
 }
-
-.main-menu:target ul,
-.main-menu[aria-expanded="true"] ul {
-  position: relative;
-  z-index: 1000;
-}
-
-/* 
- We could us `.main-menu:target:after`, but
- it wouldn't be clickable.
-*/
 
 .main-menu:target+.backdrop,
 .main-menu[aria-expanded="true"]+.backdrop {
-  position: absolute;
   display: block;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: var(--z-backdrop);
-  background: #000;
-  background: rgba(0, 0, 0, .85);
-  cursor: default;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
 }
 
-@supports (position: fixed) {
-
+@media (prefers-reduced-motion: reduce) {
   .main-menu,
-  .main-menu:target+.backdrop,
-  .main-menu[aria-expanded="true"]+.backdrop {
-    position: fixed;
+  .backdrop {
+    transition-duration: 0.01ms;
   }
 }
 
 @media (min-width: 980px) {
 
   .menu-toggle,
-  .main-menu .menu-close {
+  .main-menu__header,
+  .main-menu .menu-close,
+  .backdrop,
+  .main-menu__divider {
     display: none;
   }
 
@@ -811,20 +931,30 @@ article h2 {
   nav#main-menu.main-menu {
     grid-area: nav;
     position: relative;
-    left: auto;
-    top: auto;
+    inset: auto;
     height: auto;
     display: block;
+    width: auto;
     overflow-x: auto;
     overflow-y: hidden;
     min-width: 0;
     padding-left: 0;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    transition: none;
+    color: inherit;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }
 
   .main-menu ul {
     display: flex;
+    flex-direction: row;
     justify-content: flex-start;
     padding: 0;
     -webkit-box-shadow: none;
@@ -886,6 +1016,24 @@ article h2 {
     border: 0 !important;
     /* Remove borders from off-canvas styling */
     padding-bottom: 3px;
+  }
+
+  .main-menu__item > .link,
+  .main-menu__item > .link[aria-current="page"] {
+    display: block;
+    min-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 28px;
+    padding: 2px 0 3px;
+    border-radius: 0;
+    color: var(--link-color);
+    background: none;
+    box-shadow: none;
+    font-family: var(--font-ui-regular);
+    font-size: 14px;
+    line-height: normal;
   }
 
   .nav-desktop-hide {
