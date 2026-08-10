@@ -50,6 +50,7 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
       link(rel="stylesheet" href="/css/notifications.css")
       link(rel="stylesheet" href="/css/ui-lang-switcher.css")
       link(rel="stylesheet" href="/css/copy-btn.css")
+      script(defer src="/js/navigation-drawer.js")
       script(defer src="/js/auth.js")
       link(rel="icon" type="image/svg+xml" href="/assets/img/logo.svg")
       link(rel="apple-touch-icon" href="/assets/img/logo.svg")
@@ -81,15 +82,17 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
           a(href="#main-menu"
             id="main-menu-toggle"
             class="menu-toggle"
-            aria-label=t('layout.openMenu'))
+            aria-label=t('layout.openMenu')
+            aria-controls="main-menu"
+            aria-expanded="false")
             span(class="sr-only")= t('layout.openMenu')
             span(class="fa fa-bars" aria-hidden="true")
-          nav#main-menu.main-menu
+          nav#main-menu.main-menu(aria-label=t('layout.openMenu'))
             block nav
           a(href="#main-menu-toggle"
             class="backdrop"
             tabindex="-1"
-            aria-hidden="true" hidden)
+            aria-hidden="true")
           .navbar-right
             .auth-wrapper
               p#welcome-message(
