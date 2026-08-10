@@ -201,6 +201,39 @@ describe('transactional quest submission service', () => {
     expect(harness.transactionRunner).toHaveBeenCalledTimes(1);
   });
 
+  it('loads transaction context sequentially on a shared session', async () => {
+    const harness = makeHarness();
+    const calls = [];
+    for (const [label, collection] of [
+      ['quest', harness.quests],
+      ['block', harness.blocks],
+      ['owner', harness.users]
+    ]) {
+      const findById = collection.findById.bind(collection);
+      collection.findById = async (...args) => {
+        calls.push(`${label}:start`);
+        await Promise.resolve();
+        const result = await findById(...args);
+        calls.push(`${label}:end`);
+        return result;
+      };
+    }
+
+    await harness.service.createQuestSubmission({
+      questId: 'quest-1',
+      itemId: 'item-1',
+      blockId: 'block-1',
+      ownerUserId: 'owner-1',
+      now: NOW
+    });
+
+    expect(calls).toEqual([
+      'quest:start', 'quest:end',
+      'block:start', 'block:end',
+      'owner:start', 'owner:end'
+    ]);
+  });
+
   it('creates count submissions without items and excludes translations of a live qualifying post', async () => {
     const harness = makeHarness();
     const created = await harness.service.createQuestSubmission({
