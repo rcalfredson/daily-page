@@ -23,6 +23,10 @@ import {
   expireQuestItemClaim,
   withdrawQuestSubmission
 } from './questSubmissionService.js';
+import * as cache from '../services/cache.js';
+
+const QUEST_OVERVIEW_TTL = 5 * 60 * 1000;
+const QUEST_OVERVIEW_STALE_TTL = 30 * 60 * 1000;
 
 function id(value) {
   return value == null ? '' : String(value);
@@ -101,12 +105,25 @@ export async function listPublicQuests({ uiLang = 'en', page = 1, limit = 20 } =
 }
 
 export async function listPublicQuestsOverview(options = {}) {
-  const result = await listPublicQuests(options);
-  const quests = await Promise.all(result.quests.map(async quest => ({
-    ...quest,
-    progress: await getQuestProgress({ questId: quest._id })
-  })));
-  return { ...result, quests };
+  const { uiLang = 'en', page = 1, limit = 20 } = options;
+  const pagination = requirePositivePagination(page, limit);
+
+  return await cache.get(
+    `public-quests-overview-${uiLang}-${pagination.page}-${pagination.limit}`,
+    async () => {
+      const result = await listPublicQuests({ uiLang, ...pagination });
+      const quests = await Promise.all(result.quests.map(async quest => ({
+        ...quest,
+        progress: await getQuestProgress({ questId: quest._id })
+      })));
+      return { ...result, quests };
+    },
+    [],
+    {
+      ttlMs: QUEST_OVERVIEW_TTL,
+      staleTtlMs: QUEST_OVERVIEW_STALE_TTL
+    }
+  );
 }
 
 export async function listQuestItems({
