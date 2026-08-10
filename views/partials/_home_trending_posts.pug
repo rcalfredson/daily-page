@@ -11,10 +11,11 @@ section.home-discovery__panel.home-discovery__panel--posts.is-active(
           +blockBanner(block, 'card', block.roomId)
           div.content
             .title-row(class=block.pinnedAt ? 'title-row--pinned' : null)
-              a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))= block.title
+              .home-title-copy
+                a.block-title(href=`/rooms/${block.roomId}/blocks/${block._id}` lang=(block.lang || 'en') dir=(textDirForLang ? textDirForLang(block.lang || 'en') : 'ltr'))= block.title
+                if showLanguageBadge
+                  span.home-language-badge= t(`layout.languages.${block.lang}`) || block.lang
               include _draft_badge
-              if showLanguageBadge
-                span.home-language-badge= t(`layout.languages.${block.lang}`) || block.lang
               if block.pinnedAt
                 span.home-pinned-badge(title=t('home.featured.blockRibbon') aria-label=t('home.featured.blockRibbon'))
                   i.fas.fa-thumbtack(aria-hidden='true')

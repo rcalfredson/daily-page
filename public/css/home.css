@@ -25,13 +25,23 @@
 
 .home-language-badge {
   display: inline-flex;
-  flex: 0 0 auto;
+  align-items: center;
+  margin-inline-start: 0.35rem;
   padding: 0.18rem 0.5rem;
   border: 1px solid var(--border-color);
   border-radius: 999px;
   color: var(--muted-text-color);
   font-size: 0.75rem;
   font-weight: 700;
+  line-height: 1;
+  vertical-align: 0.08em;
+  white-space: nowrap;
+}
+
+.home-title-copy {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .join-room {
@@ -563,7 +573,7 @@
   transform: rotate(-18deg);
 }
 
-.home-discovery .title-row--pinned .block-title {
+.home-discovery .title-row--pinned .home-title-copy {
   grid-column: 2;
   grid-row: 1;
   width: 100%;
