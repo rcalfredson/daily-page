@@ -1,6 +1,8 @@
 import {
   getHomeActivitySince,
   getHomeActivityVisibility,
+  getHomeTopBlocksOptions,
+  getHomeTrendingTagsOptions,
   HOME_ACTIVITY_MINIMUM,
   HOME_ACTIVITY_WINDOW_DAYS
 } from '../server/services/homepage.js';
@@ -25,6 +27,20 @@ describe('homepage activity visibility', () => {
     expect(getHomeActivityVisibility()).toEqual({
       showRecentComments: false,
       showRecentReactions: false
+    });
+  });
+
+  it('builds the shared locale-aware homepage cache request options', () => {
+    expect(getHomeTopBlocksOptions('ru', 6)).toEqual({
+      lockedOnly: false,
+      limit: 26,
+      preferredLang: 'ru',
+      includePinnedHome: true
+    });
+    expect(getHomeTrendingTagsOptions('ru')).toEqual({
+      limit: 10,
+      sortBy: 'totalBlocks',
+      preferredLang: 'ru'
     });
   });
 });

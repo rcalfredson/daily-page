@@ -272,6 +272,17 @@ export async function getAllTagsWithCounts(timeframe = 'all', preferredLang = 'e
         : [];
       const pipeline = [
         { $match: publiclyVisibleBlockMatch() },
+        {
+          $project: {
+            _id: 1,
+            groupId: 1,
+            lang: 1,
+            originalBlock: 1,
+            createdAt: 1,
+            tags: 1,
+            voteCount: 1
+          }
+        },
         ...localeFamilySelectionStages(preferredLang),
         ...familyDateMatch,
         { $unwind: '$tags' }
@@ -490,6 +501,42 @@ export async function getTopBlocksWithFallback(options = {}) {
     status = null
   } = options;
 
+  const cacheKey = [
+    'top-blocks-resolved',
+    lockedOnly,
+    limit,
+    preferredLang,
+    includePinnedHome,
+    pinnedLimit,
+    roomId || 'global',
+    status || 'any'
+  ].join('-');
+
+  return await cache.get(
+    cacheKey,
+    () => loadTopBlocksWithFallback({
+      lockedOnly,
+      limit,
+      preferredLang,
+      includePinnedHome,
+      pinnedLimit,
+      roomId,
+      status
+    }),
+    [],
+    { ttlMs: TTL.topBlocks, jitterMs: JITTER, staleTtlMs: HOME_STALE_TTL }
+  );
+}
+
+async function loadTopBlocksWithFallback({
+  lockedOnly,
+  limit,
+  preferredLang,
+  includePinnedHome,
+  pinnedLimit,
+  roomId,
+  status
+}) {
   const now = Date.now();
   const endNow = new Date();
 
@@ -808,6 +855,17 @@ export async function getTrendingTagsWithFallback(options = {}) {
     `trending-tags-family-bands-${preferredLang}`,
     async () => Block.aggregate([
       { $match: publiclyVisibleBlockMatch() },
+      {
+        $project: {
+          _id: 1,
+          groupId: 1,
+          lang: 1,
+          originalBlock: 1,
+          createdAt: 1,
+          tags: 1,
+          voteCount: 1
+        }
+      },
       ...localeFamilySelectionStages(preferredLang),
       { $match: { familyCreatedAt: { $lte: endNow } } },
       {

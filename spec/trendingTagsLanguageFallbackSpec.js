@@ -15,6 +15,7 @@ describe('trending tag language-family aggregation', () => {
 
     const pipeline = aggregateSpy.calls.argsFor(0)[0];
     const familyGroupIndex = pipeline.findIndex(stage => stage.$group?._id === '$groupId');
+    const familyProjectionIndex = pipeline.findIndex(stage => stage.$project?.groupId === 1);
     const familyDateIndex = pipeline.findIndex(stage => stage.$match?.familyCreatedAt);
     const familyBandIndex = pipeline.findIndex(stage => stage.$addFields?.familyAgeBand);
     const tagsUnwindIndex = pipeline.findIndex(stage => stage.$unwind === '$tags');
@@ -27,6 +28,8 @@ describe('trending tag language-family aggregation', () => {
       ]
     });
     expect(familyGroupIndex).toBeGreaterThan(0);
+    expect(familyProjectionIndex).toBeGreaterThan(0);
+    expect(familyProjectionIndex).toBeLessThan(familyGroupIndex);
     expect(familyDateIndex).toBeGreaterThan(familyGroupIndex);
     expect(familyBandIndex).toBeGreaterThan(familyDateIndex);
     expect(tagsUnwindIndex).toBeGreaterThan(familyBandIndex);

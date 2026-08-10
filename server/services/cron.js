@@ -1,4 +1,5 @@
 import { CronJob } from 'cron';
+import { config } from '../../config/config.js';
 import { cleanUpExpiredSessions } from '../db/sessionService.js';
 import { expireQuestClaims } from '../db/questSubmissionService.js';
 import { getFeaturedContent } from './featuredContent.js';
@@ -29,21 +30,30 @@ import {
   getRecentCommentActivity,
   getRecentReactionActivity
 } from '../db/homeActivityService.js';
+import {
+  getHomeActivitySince,
+  getHomeTopBlocksOptions,
+  getHomeTrendingTagsOptions
+} from './homepage.js';
 
 const HOME_LANGS = ['en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr', 'nl', 'sv', 'no', 'da', 'fi', 'pl', 'cs', 'el', 'he', 'th', 'vi'];
 
 async function warmHomeCache({ preferredLang }) {
+  const activitySince = getHomeActivitySince();
+
   // Settled so one failure doesn’t prevent other keys from warming
   await Promise.allSettled([
-    getFeaturedBlockWithFallback({ preferredLang }),
-    getTrendingTagsWithFallback({ limit: 10, sortBy: 'totalBlocks' }),
-    getFeaturedRoomWithFallback(),
+    config.homeShowFeaturedPost
+      ? getFeaturedBlockWithFallback({ preferredLang })
+      : null,
+    getTrendingTagsWithFallback(getHomeTrendingTagsOptions(preferredLang)),
+    config.homeShowFeaturedRoom ? getFeaturedRoomWithFallback() : null,
     getGlobalBlockStats(),
     getTotalTags(),
     getTotalRooms(),
-    getTopBlocksWithFallback({ lockedOnly: false, limit: 20, preferredLang, includePinnedHome: true }),
-    getRecentCommentActivity({ limit: 5, lang: preferredLang }),
-    getRecentReactionActivity({ limit: 5, lang: preferredLang }),
+    getTopBlocksWithFallback(getHomeTopBlocksOptions(preferredLang, config.homeSourceFallbackLimit)),
+    getRecentCommentActivity({ limit: 5, lang: preferredLang, since: activitySince }),
+    getRecentReactionActivity({ limit: 5, lang: preferredLang, since: activitySince }),
   ]);
 }
 
