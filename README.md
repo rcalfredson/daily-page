@@ -189,6 +189,14 @@ Then visit `/rooms/general/blocks/new` to create posts through the UI, or use th
 
 The optional services are not all gracefully mocked. For a polished public instance, provision them; for local development, avoid routes/features that depend on missing integrations. Google credentials are the main exception today: Drive-backed routes are instance-specific, but `google.init()` still runs during boot.
 
+### Homepage cache warming
+
+The web process warms `en` and `es` every two minutes and rotates three other
+languages through each cycle. Warming runs at most two cache operations at a
+time, waits for stale background refreshes between batches, pauses between
+languages, and skips a scheduled cycle if the previous one is still running.
+Startup uses the same bounded cycle instead of warming every language at once.
+
 ### Tag-page performance profiling
 
 Set `PERF_TAGS=1` to emit one JSON `request_stage_profile` log for each sampled
