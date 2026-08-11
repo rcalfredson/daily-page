@@ -779,6 +779,12 @@ html[dir="rtl"] .main-menu__header {
   color: var(--danger-color);
 }
 
+@media (max-width: 979px) {
+  .main-menu__item > .link::before {
+    content: none;
+  }
+}
+
 .search-quick {
   display: inline-flex;
   align-items: center;
@@ -1001,8 +1007,9 @@ article h2 {
     transform: scaleX(1);
   }
 
-  .main-menu a:hover,
-  .main-menu a:focus {
+  .main-menu__item > .link:hover,
+  .main-menu__item > .link:focus {
+    color: var(--link-color);
     background: none;
     /* Remove background from off-canvas styling */
     text-decoration: none;
