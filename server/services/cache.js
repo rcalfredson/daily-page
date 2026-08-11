@@ -138,3 +138,14 @@ export function del(key) {
 export function clear() {
   cache.clear();
 }
+
+/**
+ * Wait for the refreshes that are active at call time. Stale-while-revalidate
+ * callers normally return immediately; background maintenance can use this to
+ * apply backpressure before starting another batch of cache refreshes.
+ */
+export async function waitForInFlightRefreshes() {
+  const pending = [...inFlight.values()];
+  if (!pending.length) return;
+  await Promise.allSettled(pending);
+}

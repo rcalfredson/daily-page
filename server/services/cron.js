@@ -35,26 +35,76 @@ import {
   getHomeTopBlocksOptions,
   getHomeTrendingTagsOptions
 } from './homepage.js';
+import * as cache from './cache.js';
+import {
+  createHomeWarmCycleRunner,
+  runWarmTaskBatches
+} from './homeCacheWarmer.js';
 
-const HOME_LANGS = ['en', 'es', 'fr', 'ru', 'id', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr', 'nl', 'sv', 'no', 'da', 'fi', 'pl', 'cs', 'el', 'he', 'th', 'vi'];
+const HOME_WARM_QUERY_CONCURRENCY = 2;
+const HOME_WARM_LANGUAGE_DELAY_MS = 1_000;
 
 async function warmHomeCache({ preferredLang }) {
   const activitySince = getHomeActivitySince();
 
-  // Settled so one failure doesn’t prevent other keys from warming
-  await Promise.allSettled([
+  // Start at most two cache operations together. After each batch, wait for any
+  // stale-while-revalidate work they triggered before consuming more DB slots.
+  const results = await runWarmTaskBatches([
     config.homeShowFeaturedPost
-      ? getFeaturedBlockWithFallback({ preferredLang })
+      ? () => getFeaturedBlockWithFallback({ preferredLang })
       : null,
-    getTrendingTagsWithFallback(getHomeTrendingTagsOptions(preferredLang)),
-    config.homeShowFeaturedRoom ? getFeaturedRoomWithFallback() : null,
-    getGlobalBlockStats(),
-    getTotalTags(),
-    getTotalRooms(),
-    getTopBlocksWithFallback(getHomeTopBlocksOptions(preferredLang, config.homeSourceFallbackLimit)),
-    getRecentCommentActivity({ limit: 5, lang: preferredLang, since: activitySince }),
-    getRecentReactionActivity({ limit: 5, lang: preferredLang, since: activitySince }),
-  ]);
+    () => getTrendingTagsWithFallback(getHomeTrendingTagsOptions(preferredLang)),
+    config.homeShowFeaturedRoom ? () => getFeaturedRoomWithFallback() : null,
+    () => getGlobalBlockStats(),
+    () => getTotalTags(),
+    () => getTotalRooms(),
+    () => getTopBlocksWithFallback(
+      getHomeTopBlocksOptions(preferredLang, config.homeSourceFallbackLimit)
+    ),
+    () => getRecentCommentActivity({ limit: 5, lang: preferredLang, since: activitySince }),
+    () => getRecentReactionActivity({ limit: 5, lang: preferredLang, since: activitySince }),
+  ], {
+    concurrency: HOME_WARM_QUERY_CONCURRENCY,
+    waitForRefreshes: cache.waitForInFlightRefreshes,
+  });
+
+  const failures = results.filter(result => result.status === 'rejected');
+  if (failures.length) {
+    throw new AggregateError(
+      failures.map(result => result.reason),
+      `Failed ${failures.length} homepage cache warming tasks for ${preferredLang}`
+    );
+  }
+
+  return results;
+}
+
+const homeWarmCycle = createHomeWarmCycleRunner({
+  warmLanguage: preferredLang => warmHomeCache({ preferredLang }),
+  delayMs: HOME_WARM_LANGUAGE_DELAY_MS,
+  onStart: ({ languages }) => {
+    console.info('[home-cache-warm] started', { languages });
+  },
+});
+
+export async function runHomeCacheWarmCycle() {
+  const startedAt = Date.now();
+  const result = await homeWarmCycle.runCycle();
+
+  if (result.skipped) {
+    console.warn('[home-cache-warm] skipped overlapping cycle');
+    return result;
+  }
+
+  console.info('[home-cache-warm] completed', {
+    durationMs: Date.now() - startedAt,
+    languages: result.languages,
+    failures: result.failures.map(({ language, error }) => ({
+      language,
+      error: error?.name || 'Error'
+    })),
+  });
+  return result;
 }
 
 export async function cleanUpExpiredQuestClaims({
@@ -147,14 +197,10 @@ const jobs = [
     }
   }, null),
 
-  // Warm homepage caches every 2 minutes.
-  // Stagger language warms slightly to avoid a tiny spike.
+  // Warm primary languages plus a rotating secondary batch every 2 minutes.
+  // The guarded runner prevents overlap and applies real refresh backpressure.
   new CronJob('*/2 * * * *', async () => {
-    for (const lang of HOME_LANGS) {
-      await warmHomeCache({ preferredLang: lang });
-      // small stagger (250ms) between langs
-      await new Promise(r => setTimeout(r, 250));
-    }
+    await runHomeCacheWarmCycle();
   }, null),
 ];
 
@@ -162,31 +208,6 @@ export function startJobs() {
   jobs.forEach((job) => job.start());
   startBlockJobs();
 
-  // Warm soon after startup (hit both langs close to boot).
-  // Stagger a touch so they don't pile up with other startup work.
-  setTimeout(() => warmHomeCache({ preferredLang: 'en' }).catch(console.error), 1_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'es' }).catch(console.error), 1_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'fr' }).catch(console.error), 2_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'ru' }).catch(console.error), 2_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'id' }).catch(console.error), 3_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'de' }).catch(console.error), 3_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'it' }).catch(console.error), 4_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'pt' }).catch(console.error), 4_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'zh' }).catch(console.error), 5_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'ja' }).catch(console.error), 5_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'ko' }).catch(console.error), 6_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'ar' }).catch(console.error), 6_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'hi' }).catch(console.error), 7_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'tr' }).catch(console.error), 7_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'nl' }).catch(console.error), 8_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'sv' }).catch(console.error), 8_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'no' }).catch(console.error), 9_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'da' }).catch(console.error), 9_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'fi' }).catch(console.error), 10_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'pl' }).catch(console.error), 10_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'cs' }).catch(console.error), 11_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'el' }).catch(console.error), 11_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'he' }).catch(console.error), 12_000);
-  setTimeout(() => warmHomeCache({ preferredLang: 'th' }).catch(console.error), 12_500);
-  setTimeout(() => warmHomeCache({ preferredLang: 'vi' }).catch(console.error), 13_000);
+  // Startup uses the same bounded, non-overlapping rotation as scheduled work.
+  setTimeout(() => runHomeCacheWarmCycle().catch(console.error), 1_000);
 }

@@ -64,4 +64,31 @@ describe('cache service', () => {
     expect(cache.getNonBlocking('optional-key', refresh, [], { ttlMs: 50 })).toBe('ready');
     expect(calls).toBe(1);
   });
+
+  it('lets background maintenance wait for active stale refreshes', async () => {
+    let calls = 0;
+    const refresh = async () => {
+      calls += 1;
+      await delay(10);
+      return calls;
+    };
+
+    expect(await cache.get('maintenance-key', refresh, [], {
+      ttlMs: 5,
+      staleTtlMs: 200
+    })).toBe(1);
+
+    await delay(10);
+    expect(await cache.get('maintenance-key', refresh, [], {
+      ttlMs: 5,
+      staleTtlMs: 200
+    })).toBe(1);
+
+    await cache.waitForInFlightRefreshes();
+
+    expect(await cache.get('maintenance-key', refresh, [], {
+      ttlMs: 50,
+      staleTtlMs: 200
+    })).toBe(2);
+  });
 });
