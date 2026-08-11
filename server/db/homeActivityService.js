@@ -17,7 +17,7 @@ const REACTION_EMOJI_BY_TYPE = {
 };
 
 const ACTIVITY_TTL = 30 * 1000;
-const ACTIVITY_STALE_TTL = 10 * 60 * 1000;
+const ACTIVITY_STALE_TTL = 30 * 60 * 1000;
 
 function clampLimit(limit, fallback = 5, max = 8) {
   return Math.max(1, Math.min(Number(limit) || fallback, max));
