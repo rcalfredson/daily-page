@@ -24,6 +24,7 @@
     "block-language:backfill": "node scripts/migrations/backfillBlockLanguageMetadata.js",
     "quest:import": "node scripts/quests/importQuest.js",
     "account-deletion:fixture": "node scripts/dev/accountDeletionFixture.js",
+    "audit:tag-queries": "node scripts/audits/tagQueryProfile.js",
     "forest:placement-preview": "node scripts/dev/renderForestOwnerGrovePlacementPreview.js",
     "forest:environment-preview": "node scripts/dev/renderForestOwnerEnvironmentPreview.js"
   },

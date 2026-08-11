@@ -301,13 +301,13 @@ export async function getAllTagsWithCounts(timeframe = 'all', preferredLang = 'e
 }
 
 
-export async function getTagTrendData(tagName, timeframe = 30, opts = {}) {
+export function buildTagTrendPipeline(tagName, timeframe = 30, opts = {}) {
   const { dedupeGroups = true } = opts;
   const days = timeframe === 'all' ? null : Number(timeframe) || 30;
   const dateFilter = days
     ? { createdAt: { $gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000) } }
     : {};
-  const pipeline = dedupeGroups
+  return dedupeGroups
     ? [
       { $match: publiclyVisibleBlockMatch({ tags: tagName, ...dateFilter }) },
       {
@@ -327,7 +327,10 @@ export async function getTagTrendData(tagName, timeframe = 30, opts = {}) {
       { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'UTC' } }, count: { $sum: 1 } } },
       { $sort: { _id: 1 } },
     ];
-  return Block.aggregate(pipeline).exec();
+}
+
+export async function getTagTrendData(tagName, timeframe = 30, opts = {}) {
+  return Block.aggregate(buildTagTrendPipeline(tagName, timeframe, opts)).exec();
 }
 
 export async function getFeaturedBlockWithFallback(options = {}) {
@@ -1263,7 +1266,7 @@ async function findTopGlobalWithLangPref({ preferredLang, lockedOnly, limit, sta
   ]).exec();
 }
 
-export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy = "voteCount", skip = 0, limit = 20 }) {
+export function buildTagBlocksPipeline({ tag, preferredLang = "en", sortBy = "voteCount", skip = 0, limit = 20 }) {
   const sortStage = { [sortBy]: -1 };
   if (sortBy !== 'createdAt') {
     sortStage.createdAt = -1;
@@ -1271,7 +1274,7 @@ export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy 
   // Keep locale selection inside the tagged subset. Resolving the selected page
   // against every variant in each family adds a second, content-heavy query and
   // can replace a tagged result with a translation that does not carry the tag.
-  return Block.aggregate([
+  return [
     { $match: publiclyVisibleBlockMatch({ tags: tag }) },
     { $sort: sortStage },
     { $group: { _id: "$groupId", docs: { $push: "$$ROOT" } } },
@@ -1303,7 +1306,11 @@ export async function findByTagWithLangPref({ tag, preferredLang = "en", sortBy 
     { $sort: sortStage },
     { $skip: skip },
     { $limit: limit }
-  ]).exec();
+  ];
+}
+
+export async function findByTagWithLangPref(options) {
+  return Block.aggregate(buildTagBlocksPipeline(options)).exec();
 }
 
 // Get blocks by roomId
