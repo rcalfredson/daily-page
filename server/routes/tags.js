@@ -11,6 +11,10 @@ import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
 import { addI18n } from '../services/i18n.js';
 import { toBlockPreviewDTO } from '../utils/block.js';
 import { getUiLang, getPreferredContentLang } from '../services/localeContext.js';
+import {
+  createStageProfiler,
+  tagProfilingOptions
+} from '../services/stageProfiler.js';
 
 const router = express.Router();
 const tagTrendTimeframes = ['7d', '30d', 'all'];
@@ -84,16 +88,28 @@ router.get(
   });
 
 router.get('/tags/:tagName/trend', async (req, res) => {
+  const timeframe = normalizeTagTrendTimeframe(req.query.timeframe);
+  const profiler = createStageProfiler({
+    scope: 'tag_trend',
+    metadata: { tagName: req.params.tagName, timeframe },
+    ...tagProfilingOptions(),
+  });
+
   try {
-    const timeframe = normalizeTagTrendTimeframe(req.query.timeframe);
-    const trendData = await getTagTrendData(
-      req.params.tagName,
-      tagTrendDays(timeframe),
-      { dedupeGroups: true }
+    const trendData = await profiler.measure(
+      'trend_query',
+      () => getTagTrendData(
+        req.params.tagName,
+        tagTrendDays(timeframe),
+        { dedupeGroups: true }
+      ),
+      rows => ({ returned: rows.length })
     );
 
+    profiler.finish({ status: 'ok' });
     res.json({ timeframe, trendData });
   } catch (error) {
+    profiler.finish({ status: 'error', errorName: error?.name || 'Error' });
     console.error('Error loading tag trend:', error);
     res.status(500).json({ error: 'Unable to load tag activity' });
   }
@@ -110,48 +126,73 @@ router.get(
     canonicalPath: (req) => `/tags/${encodeURIComponent(req.params.tagName)}`
   }),
   async (req, res) => {
+    const { tagName } = req.params;
+    const trendTimeframe = normalizeTagTrendTimeframe(req.query.timeframe);
+    const profiler = createStageProfiler({
+      scope: 'tag_detail',
+      metadata: {
+        tagName,
+        page: parseInt(req.query.page, 10) || 1,
+        limit: parseInt(req.query.limit, 10) || 20,
+        timeframe: trendTimeframe,
+      },
+      ...tagProfilingOptions(),
+    });
+
     try {
       const { t } = res.locals;
       const uiLang = getUiLang(res);
       const preferredContentLang = getPreferredContentLang(res);
 
-      const { tagName } = req.params;
       const page = parseInt(req.query.page, 10) || 1;
       const limit = parseInt(req.query.limit, 10) || 20;
       const skip = (page - 1) * limit;
-      const trendTimeframe = normalizeTagTrendTimeframe(req.query.timeframe);
-
       const userId = req.user?.id || null;
 
       // Obtener bloques asociados con la etiqueta especificada
-      let taggedBlocks = await findByTagWithLangPref({
-        tag: tagName,
-        preferredLang: preferredContentLang,
-        sortBy: "voteCount",
-        skip,
-        limit,
-      });
-
-      taggedBlocks = taggedBlocks.map(b =>
-        toBlockPreviewDTO(b, { userId })
+      let taggedBlocks = await profiler.measure(
+        'tagged_blocks_query',
+        () => findByTagWithLangPref({
+          tag: tagName,
+          preferredLang: preferredContentLang,
+          sortBy: "voteCount",
+          skip,
+          limit,
+        }),
+        rows => ({ returned: rows.length })
       );
 
-      const totalBlocks = await Block
-        .distinct("groupId", publiclyVisibleBlockMatch({ tags: tagName }))
-        .then(arr => arr.length);
+      taggedBlocks = await profiler.measure(
+        'preview_render',
+        () => taggedBlocks.map(b => toBlockPreviewDTO(b, { userId })),
+        rows => ({ rendered: rows.length })
+      );
+
+      const totalBlocks = await profiler.measure(
+        'distinct_group_count_query',
+        () => Block
+          .distinct("groupId", publiclyVisibleBlockMatch({ tags: tagName }))
+          .then(arr => arr.length),
+        count => ({ count })
+      );
 
       const totalPages = Math.ceil(totalBlocks / limit);
 
-      const trendData = await getTagTrendData(
-        tagName,
-        tagTrendDays(trendTimeframe),
-        { dedupeGroups: true }
+      const trendData = await profiler.measure(
+        'trend_query',
+        () => getTagTrendData(
+          tagName,
+          tagTrendDays(trendTimeframe),
+          { dedupeGroups: true }
+        ),
+        rows => ({ returned: rows.length })
       );
 
       // Title bits come from i18n, tagName stays dynamic
       const titlePrefix = t('tags.detail.meta.titlePrefix') || '#';
       const titleSuffix = t('tags.detail.meta.titleSuffix') || ' | Daily Page';
 
+      profiler.finish({ status: 'ok', totalBlocks });
       res.render('tags/tag', {
         title: `${titlePrefix}${tagName}${titleSuffix}`,
         tagName,
@@ -166,6 +207,7 @@ router.get(
         preferredContentLang,
       });
     } catch (error) {
+      profiler.finish({ status: 'error', errorName: error?.name || 'Error' });
       const { t } = res.locals;
       console.error('Error loading tag page:', error);
       res

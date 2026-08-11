@@ -1,0 +1,161 @@
+Mongoose connected to mongodb+srv://daily-page-admin:***@dailypage-olyqk.gcp.mongodb.net/daily-page?retryWrites=true&w=majority
+{
+  "database": "daily-page",
+  "inputs": {
+    "tag": "origin story",
+    "preferredLang": "en",
+    "timeframe": "all",
+    "page": 1,
+    "limit": 20,
+    "maxTimeMs": 15000
+  },
+  "stages": [
+    {
+      "name": "tagged_blocks_query",
+      "applicationElapsedMs": 483,
+      "status": "ok",
+      "executionTimeMs": 1,
+      "nReturned": 4,
+      "docsExamined": 1,
+      "keysExamined": 1,
+      "docsPerResult": 0.3,
+      "keysPerResult": 0.3,
+      "indexes": [
+        "tags_1"
+      ],
+      "planStages": [
+        "$cursor",
+        "$group",
+        "$limit",
+        "$match",
+        "$project",
+        "$replaceRoot",
+        "$skip",
+        "$sort",
+        "FETCH",
+        "GROUP",
+        "IXSCAN",
+        "SORT"
+      ],
+      "stageDetails": [
+        {
+          "stage": "$cursor",
+          "nReturned": 1,
+          "executionTimeEstimateMs": 1,
+          "usedDisk": false,
+          "spills": 0
+        },
+        {
+          "stage": "$project",
+          "nReturned": 1,
+          "executionTimeEstimateMs": 1,
+          "usedDisk": false,
+          "spills": 0
+        },
+        {
+          "stage": "$replaceRoot",
+          "nReturned": 1,
+          "executionTimeEstimateMs": 1,
+          "usedDisk": false,
+          "spills": 0
+        },
+        {
+          "stage": "$sort",
+          "nReturned": 1,
+          "executionTimeEstimateMs": 1,
+          "usedDisk": false,
+          "spills": 0,
+          "sortedBytesEstimate": 7324
+        }
+      ],
+      "collectionScan": false,
+      "blockingSort": true,
+      "usedDisk": false,
+      "spills": 0
+    },
+    {
+      "name": "distinct_group_count_query",
+      "applicationElapsedMs": 95.2,
+      "status": "ok",
+      "executionTimeMs": 0,
+      "nReturned": 1,
+      "docsExamined": 1,
+      "keysExamined": 1,
+      "docsPerResult": 1,
+      "keysPerResult": 1,
+      "indexes": [
+        "tags_1"
+      ],
+      "planStages": [
+        "FETCH",
+        "IXSCAN"
+      ],
+      "stageDetails": [
+        {
+          "stage": "FETCH",
+          "nReturned": 1,
+          "executionTimeEstimateMs": 0,
+          "usedDisk": false,
+          "spills": 0
+        },
+        {
+          "stage": "IXSCAN",
+          "nReturned": 1,
+          "executionTimeEstimateMs": 0,
+          "usedDisk": false,
+          "spills": 0
+        }
+      ],
+      "collectionScan": false,
+      "blockingSort": false,
+      "usedDisk": false,
+      "spills": 0
+    },
+    {
+      "name": "trend_query",
+      "applicationElapsedMs": 163.9,
+      "status": "ok",
+      "executionTimeMs": 1,
+      "nReturned": 2,
+      "docsExamined": 1,
+      "keysExamined": 1,
+      "docsPerResult": 0.5,
+      "keysPerResult": 0.5,
+      "indexes": [
+        "tags_1"
+      ],
+      "planStages": [
+        "$cursor",
+        "$group",
+        "$match",
+        "$project",
+        "$sort",
+        "FETCH",
+        "GROUP",
+        "IXSCAN",
+        "PROJECTION_DEFAULT"
+      ],
+      "stageDetails": [
+        {
+          "stage": "$cursor",
+          "nReturned": 1,
+          "executionTimeEstimateMs": 1,
+          "usedDisk": false,
+          "spills": 0
+        },
+        {
+          "stage": "$sort",
+          "nReturned": 1,
+          "executionTimeEstimateMs": 1,
+          "usedDisk": false,
+          "spills": 0,
+          "sortedBytesEstimate": 253
+        }
+      ],
+      "collectionScan": false,
+      "blockingSort": true,
+      "usedDisk": false,
+      "spills": 0
+    }
+  ]
+}

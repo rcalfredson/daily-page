@@ -189,6 +189,43 @@ Then visit `/rooms/general/blocks/new` to create posts through the UI, or use th
 
 The optional services are not all gracefully mocked. For a polished public instance, provision them; for local development, avoid routes/features that depend on missing integrations. Google credentials are the main exception today: Drive-backed routes are instance-specific, but `google.init()` still runs during boot.
 
+### Tag-page performance profiling
+
+Set `PERF_TAGS=1` to emit one JSON `request_stage_profile` log for each sampled
+tag detail or trend request. Detail logs split time across the tagged-block
+aggregation, preview rendering, distinct group count, and trend aggregation.
+
+| Variable | Purpose |
+| --- | --- |
+| `PERF_TAGS` | Enables tag request stage profiling when set to `1`, `true`, `yes`, or `on`. |
+| `PERF_TAGS_SAMPLE_RATE` | Fraction of requests to profile, from `0` to `1`. Defaults to `1`. |
+| `PERF_TAGS_SLOW_MS` | Logs only profiles at or above this total duration. Errors are always logged. Defaults to `0`. |
+
+For example, profile 10% of requests that take at least one second:
+
+```sh
+PERF_TAGS=1 PERF_TAGS_SAMPLE_RATE=0.1 PERF_TAGS_SLOW_MS=1000 npm start
+```
+
+Use the read-only explain audit to see index selection, examined keys/documents,
+blocking sorts, collection scans, and disk spills for the same three query shapes:
+
+```sh
+npm run audit:tag-queries -- --tag performance --timeframe 30d
+```
+
+Production analysis requires an explicit guard and applies a 15-second maximum
+to each explain operation by default:
+
+```sh
+npm run audit:tag-queries -- \
+  --prod --authorized-production-read \
+  --tag performance --timeframe 30d
+```
+
+Use `--max-time-ms` to change that guard. Run the production audit for one
+representative tag at a time because `executionStats` executes the query.
+
 ## Cloud Resources for Your Own Instance
 
 A reasonably complete independent deployment needs:
@@ -209,6 +246,7 @@ npm run local              Build bundles, then start the server
 npm start                  Start app.js with trace deprecation output
 npm test                   Run Jasmine specs
 npm run lint               Run ESLint over app/server/lib/spec paths
+npm run audit:tag-queries  Explain the three tag-detail database query shapes
 npm run room-i18n:export   Export room i18n source data
 npm run room-i18n:migrate  Populate localized room metadata
 npm run visibility:migrate-unlisted -- --write
