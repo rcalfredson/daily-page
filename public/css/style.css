@@ -723,7 +723,7 @@ html[dir="rtl"] .main-menu__header {
   min-height: 46px;
   margin: 1px 0;
   padding: 0 13px;
-  border: 0;
+  border: 1px solid transparent;
   border-radius: 11px;
   color: var(--text-color);
   font-family: var(--font-ui-regular);
@@ -746,13 +746,9 @@ html[dir="rtl"] .main-menu__header {
 
 .main-menu__item > .link[aria-current="page"] {
   color: var(--link-color);
-  background: color-mix(in srgb, var(--highlight-color) 13%, var(--surface-raised-bg));
-  box-shadow: inset 3px 0 0 var(--highlight-color);
+  background: color-mix(in srgb, var(--highlight-color) 10%, var(--surface-raised-bg));
+  border-color: color-mix(in srgb, var(--highlight-color) 32%, var(--border-color));
   font-family: var(--font-ui-medium);
-}
-
-html[dir="rtl"] .main-menu__item > .link[aria-current="page"] {
-  box-shadow: inset -3px 0 0 var(--highlight-color);
 }
 
 .main-menu__divider {
