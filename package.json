@@ -25,7 +25,8 @@
     "quest:import": "node scripts/quests/importQuest.js",
     "account-deletion:fixture": "node scripts/dev/accountDeletionFixture.js",
     "forest:placement-preview": "node scripts/dev/renderForestOwnerGrovePlacementPreview.js",
-    "forest:environment-preview": "node scripts/dev/renderForestOwnerEnvironmentPreview.js"
+    "forest:environment-preview": "node scripts/dev/renderForestOwnerEnvironmentPreview.js",
+    "forest:authored-mutation-fixture": "node scripts/dev/forestAuthoredMutationFixture.js"
   },
   "repository": {
     "type": "git",
