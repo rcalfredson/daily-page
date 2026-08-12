@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import crypto from 'node:crypto';
 import mongoose from 'mongoose';
 import AccountDeletionRequest from '../../server/db/models/AccountDeletionRequest.js';
 import AuthSession from '../../server/db/models/AuthSession.js';
@@ -9,6 +10,9 @@ import BlockReaction from '../../server/db/models/BlockReaction.js';
 import CommentRateEvent from '../../server/db/models/CommentRateEvent.js';
 import CommentReport from '../../server/db/models/CommentReport.js';
 import Flag from '../../server/db/models/Flag.js';
+import ForestAuthoredObject from '../../server/db/models/ForestAuthoredObject.js';
+import ForestAuthoredRegionRevision from '../../server/db/models/ForestAuthoredRegionRevision.js';
+import ForestAuthoredResetOperation from '../../server/db/models/ForestAuthoredResetOperation.js';
 import ForestOwnerGroupReconciliationJob from '../../server/db/models/ForestOwnerGroupReconciliationJob.js';
 import ForestOwnerWorld from '../../server/db/models/ForestOwnerWorld.js';
 import ForestWritingTree from '../../server/db/models/ForestWritingTree.js';
@@ -136,6 +140,9 @@ async function connectFixtureDatabase() {
     CommentRateEvent,
     CommentReport,
     Flag,
+    ForestAuthoredObject,
+    ForestAuthoredRegionRevision,
+    ForestAuthoredResetOperation,
     ForestOwnerGroupReconciliationJob,
     ForestOwnerWorld,
     ForestWritingTree,
@@ -156,6 +163,9 @@ async function connectFixtureDatabase() {
   }
   await repairFixtureTtlIndex(UsernameReservation, 'expiresAt');
   await AccountDeletionRequest.createIndexes();
+  await ForestAuthoredObject.createIndexes();
+  await ForestAuthoredRegionRevision.createIndexes();
+  await ForestAuthoredResetOperation.createIndexes();
   await ForestOwnerGroupReconciliationJob.createIndexes();
   await ForestOwnerWorld.createIndexes();
   await ForestWritingTree.createIndexes();
@@ -169,6 +179,20 @@ async function withTransaction(work) {
   } finally {
     await session.endSession();
   }
+}
+
+async function requireFixtureDuplicateKey(Model, filter, label) {
+  const existing = await Model.findOne(filter).lean();
+  if (!existing) throw new Error(`${label} fixture record was not created.`);
+  const duplicate = { ...existing };
+  for (const field of ['_id', '__v', 'createdAt', 'updatedAt']) delete duplicate[field];
+  try {
+    await Model.create(duplicate);
+  } catch (error) {
+    if (Number(error?.code) === 11_000) return;
+    throw error;
+  }
+  throw new Error(`${label} unique index accepted a duplicate record.`);
 }
 
 function scenarioDefinition(scenario) {
@@ -332,6 +356,15 @@ async function resetFixtureScenario(scenario, { session = null } = {}) {
   );
 
   await AuthSession.deleteMany({ userId: { $in: userIds } }, { session });
+  await ForestAuthoredObject.deleteMany({ ownerUserId: { $in: userIds } }, { session });
+  await ForestAuthoredRegionRevision.deleteMany(
+    { ownerUserId: { $in: userIds } },
+    { session }
+  );
+  await ForestAuthoredResetOperation.deleteMany(
+    { ownerUserId: { $in: userIds } },
+    { session }
+  );
   await ForestWritingTree.deleteMany({ ownerUserId: { $in: userIds } }, { session });
   await ForestOwnerGroupReconciliationJob.deleteMany(
     { ownerUserId: { $in: userIds } },
@@ -380,7 +413,65 @@ async function seedFixtureScenario(scenario, { activeQuest = false } = {}) {
     await Quest.create([fixture.quest], { session });
     await ForestOwnerWorld.create([fixture.forestOwnerWorld], { session });
     await ForestWritingTree.insertMany(fixture.forestWritingTrees, { session });
+    const authoredObjectId = crypto.randomUUID();
+    const authoredResetId = crypto.randomUUID();
+    const authoredTimestamp = new Date('2026-08-11T12:00:00.000Z');
+    await ForestAuthoredObject.create([{
+      objectId: authoredObjectId,
+      forestId: fixture.forestOwnerWorld.forestId,
+      ownerUserId: fixture.users.owner._id,
+      kind: 'personal-marker',
+      state: 'active',
+      placement: { worldX: -1, worldY: -1 },
+      placementIndex: { version: 1, cellX: -1, cellY: -1 },
+      worldVersionEvidence: {
+        ownerWorldSchemaVersion: 1,
+        placementPolicyVersion: fixture.forestOwnerWorld.placementPolicyVersion,
+        environmentPolicyVersion: fixture.forestOwnerWorld.environmentPolicyVersion,
+        environmentSchemaVersion: fixture.forestOwnerWorld.environmentSchemaVersion,
+        worldGenerationVersion: fixture.forestOwnerWorld.worldGenerationVersion
+      },
+      appearance: { id: 'quiet-waymarker', version: 1 },
+      creationFingerprint: { version: 1, digest: 'A'.repeat(43) },
+      recordRevision: 1,
+      changedAt: authoredTimestamp
+    }], { session });
+    await ForestAuthoredRegionRevision.create([{
+      forestId: fixture.forestOwnerWorld.forestId,
+      ownerUserId: fixture.users.owner._id,
+      spatialIndexVersion: 1,
+      cellX: -1,
+      cellY: -1,
+      revision: 1
+    }], { session });
+    await ForestAuthoredResetOperation.create([{
+      resetId: authoredResetId,
+      forestId: fixture.forestOwnerWorld.forestId,
+      ownerUserId: fixture.users.owner._id,
+      status: 'completed',
+      affectedObjectCount: 0,
+      authoredObjectSchemaVersion: 1,
+      spatialIndexVersion: 1,
+      startedAt: authoredTimestamp,
+      completedAt: authoredTimestamp
+    }], { session });
   });
+
+  await requireFixtureDuplicateKey(
+    ForestAuthoredObject,
+    { ownerUserId: fixture.users.owner._id },
+    'Authored object'
+  );
+  await requireFixtureDuplicateKey(
+    ForestAuthoredRegionRevision,
+    { ownerUserId: fixture.users.owner._id },
+    'Authored region revision'
+  );
+  await requireFixtureDuplicateKey(
+    ForestAuthoredResetOperation,
+    { ownerUserId: fixture.users.owner._id },
+    'Authored reset operation'
+  );
 
   const baseUrl = String(process.env.BASE_URL || 'http://localhost:3000').replace(/\/+$/u, '');
   console.log('Seeded account-deletion fixture:', {
@@ -436,6 +527,9 @@ async function verifyBefore(scenario) {
     quest,
     forestOwnerWorld,
     forestWritingTreeCount,
+    forestAuthoredObjectCount,
+    forestAuthoredRegionRevisionCount,
+    forestAuthoredResetOperationCount,
     placementNeighborhood
   ] = await Promise.all([
     User.find({ _id: { $in: fixture.ids.userIds } }).lean(),
@@ -450,6 +544,9 @@ async function verifyBefore(scenario) {
     Quest.findById(fixture.ids.questId).lean(),
     ForestOwnerWorld.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
     ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredObject.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredRegionRevision.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredResetOperation.countDocuments({ ownerUserId: fixture.users.owner._id }),
     readForestOwnerPlacementNeighborhood({
       ownerUserId: fixture.users.owner._id,
       worldSeed: fixture.forestOwnerWorld.worldSeed,
@@ -473,6 +570,12 @@ async function verifyBefore(scenario) {
     forestWritingTreeCount === 3,
     forestWritingTreeCount
   );
+  check.expect('one authored marker exists', forestAuthoredObjectCount === 1,
+    forestAuthoredObjectCount);
+  check.expect('one authored cell revision exists', forestAuthoredRegionRevisionCount === 1,
+    forestAuthoredRegionRevisionCount);
+  check.expect('one authored reset operation exists', forestAuthoredResetOperationCount === 1,
+    forestAuthoredResetOperationCount);
   check.expect(
     'owner placement neighborhood is queryable',
     [9, 25].includes(placementNeighborhood.queriedCellCount)
@@ -508,6 +611,9 @@ async function createTreeDirect(scenario) {
   );
 
   await withTransaction(async (session) => {
+    await ForestAuthoredObject.deleteMany({ ownerUserId }, { session });
+    await ForestAuthoredRegionRevision.deleteMany({ ownerUserId }, { session });
+    await ForestAuthoredResetOperation.deleteMany({ ownerUserId }, { session });
     await ForestWritingTree.deleteMany({ ownerUserId }, { session });
     await ForestOwnerWorld.deleteMany({ ownerUserId }, { session });
     await User.updateOne(
@@ -1325,7 +1431,10 @@ async function verifyAfter(scenario) {
     staleUsernameReferences,
     quest,
     forestOwnerWorld,
-    forestWritingTreeCount
+    forestWritingTreeCount,
+    forestAuthoredObjectCount,
+    forestAuthoredRegionRevisionCount,
+    forestAuthoredResetOperationCount
   ] = await Promise.all([
     User.findById(fixture.users.owner._id).lean(),
     AccountDeletionRequest.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
@@ -1351,7 +1460,10 @@ async function verifyAfter(scenario) {
     }),
     Quest.findById(fixture.ids.questId).lean(),
     ForestOwnerWorld.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
-    ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id })
+    ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredObject.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredRegionRevision.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredResetOperation.countDocuments({ ownerUserId: fixture.users.owner._id })
   ]);
 
   const commentsById = new Map(comments.map((comment) => [String(comment._id), comment]));
@@ -1383,6 +1495,12 @@ async function verifyAfter(scenario) {
     forestWritingTreeCount === 0,
     forestWritingTreeCount
   );
+  check.expect('owner authored markers are deleted', forestAuthoredObjectCount === 0,
+    forestAuthoredObjectCount);
+  check.expect('owner authored cell revisions are deleted',
+    forestAuthoredRegionRevisionCount === 0, forestAuthoredRegionRevisionCount);
+  check.expect('owner authored reset operations are deleted',
+    forestAuthoredResetOperationCount === 0, forestAuthoredResetOperationCount);
   check.expect(
     'username is quarantined',
     reservation?.expiresAt > new Date(),
@@ -1553,15 +1671,28 @@ async function deleteDirect(scenario) {
     disposition: scenario
   });
 
-  const [deletingWorld, pendingRequest, treesBeforeCleanup] = await Promise.all([
+  const [
+    deletingWorld,
+    pendingRequest,
+    treesBeforeCleanup,
+    authoredObjectsBeforeCleanup,
+    authoredRegionRevisionsBeforeCleanup,
+    authoredResetOperationsBeforeCleanup
+  ] = await Promise.all([
     ForestOwnerWorld.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
     AccountDeletionRequest.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
-    ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id })
+    ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredObject.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredRegionRevision.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredResetOperation.countDocuments({ ownerUserId: fixture.users.owner._id })
   ]);
   if (deletingWorld?.status !== 'deleting'
     || pendingRequest?.forestCleanup?.status !== 'pending'
     || pendingRequest?.evidenceExpiresAt
-    || treesBeforeCleanup !== 3) {
+    || treesBeforeCleanup !== 3
+    || authoredObjectsBeforeCleanup !== 1
+    || authoredRegionRevisionsBeforeCleanup !== 1
+    || authoredResetOperationsBeforeCleanup !== 1) {
     throw new Error('Deletion transaction did not establish the pending forest-cleanup boundary.');
   }
 
@@ -1585,14 +1716,30 @@ async function deleteDirect(scenario) {
     treeBatchSize: 2,
     maxTreeBatchesPerRequest: 1
   });
-  const [requestAfterFirstCleanup, treesAfterFirstCleanup, worldAfterFirstCleanup] = await Promise.all([
+  const [
+    requestAfterFirstCleanup,
+    treesAfterFirstCleanup,
+    authoredObjectsAfterFirstCleanup,
+    authoredRegionRevisionsAfterFirstCleanup,
+    authoredResetOperationsAfterFirstCleanup,
+    worldAfterFirstCleanup
+  ] = await Promise.all([
     AccountDeletionRequest.findOne({ ownerUserId: fixture.users.owner._id }).lean(),
     ForestWritingTree.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredObject.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredRegionRevision.countDocuments({ ownerUserId: fixture.users.owner._id }),
+    ForestAuthoredResetOperation.countDocuments({ ownerUserId: fixture.users.owner._id }),
     ForestOwnerWorld.exists({ ownerUserId: fixture.users.owner._id })
   ]);
   if (firstCleanup.deletedTrees !== 2
+    || firstCleanup.deletedAuthoredObjects !== 1
+    || firstCleanup.deletedAuthoredRegionRevisions !== 1
+    || firstCleanup.deletedAuthoredResetOperations !== 1
     || firstCleanup.pending !== 1
     || treesAfterFirstCleanup !== 1
+    || authoredObjectsAfterFirstCleanup !== 0
+    || authoredRegionRevisionsAfterFirstCleanup !== 0
+    || authoredResetOperationsAfterFirstCleanup !== 0
     || !worldAfterFirstCleanup
     || requestAfterFirstCleanup?.forestCleanup?.status !== 'pending'
     || requestAfterFirstCleanup?.evidenceExpiresAt) {
@@ -1605,25 +1752,19 @@ async function deleteDirect(scenario) {
     treeBatchSize: 2,
     maxTreeBatchesPerRequest: 1
   });
-  if (secondCleanup.deletedTrees !== 1 || secondCleanup.pending !== 1) {
+  if (secondCleanup.deletedTrees !== 1
+    || secondCleanup.completed !== 1
+    || secondCleanup.deletedWorlds !== 1) {
     throw new Error('Forest cleanup did not resume its bounded tree drain.');
   }
 
-  const finalCleanup = await cleanUpAccountDeletionForests({
-    limit: 1,
-    ownerUserId: fixture.users.owner._id,
-    treeBatchSize: 2,
-    maxTreeBatchesPerRequest: 1
-  });
   const idempotentCleanup = await cleanUpAccountDeletionForests({
     limit: 1,
     ownerUserId: fixture.users.owner._id,
     treeBatchSize: 2,
     maxTreeBatchesPerRequest: 1
   });
-  if (finalCleanup.completed !== 1
-    || finalCleanup.deletedWorlds !== 1
-    || idempotentCleanup.requests !== 0) {
+  if (idempotentCleanup.requests !== 0) {
     throw new Error('Forest cleanup did not converge idempotently.');
   }
 
@@ -1633,7 +1774,6 @@ async function deleteDirect(scenario) {
     postDeletionFenceFailedClosed,
     firstCleanup,
     secondCleanup,
-    finalCleanup,
     idempotentCleanup
   });
   console.log(`Run: npm run account-deletion:fixture -- verify-after ${scenario}`);

@@ -1,4 +1,7 @@
 import AccountDeletionRequest from '../db/models/AccountDeletionRequest.js';
+import ForestAuthoredObject from '../db/models/ForestAuthoredObject.js';
+import ForestAuthoredRegionRevision from '../db/models/ForestAuthoredRegionRevision.js';
+import ForestAuthoredResetOperation from '../db/models/ForestAuthoredResetOperation.js';
 import ForestOwnerGroupReconciliationJob from '../db/models/ForestOwnerGroupReconciliationJob.js';
 import ForestOwnerWorld from '../db/models/ForestOwnerWorld.js';
 import ForestWritingTree from '../db/models/ForestWritingTree.js';
@@ -7,8 +10,8 @@ import {
 } from './accountDeletionEvidence.js';
 
 const MAX_REQUEST_LIMIT = 100;
-const MAX_TREE_BATCH_SIZE = 1_000;
-const MAX_TREE_BATCHES_PER_REQUEST = 100;
+const MAX_RECORD_BATCH_SIZE = 1_000;
+const MAX_RECORD_BATCHES_PER_REQUEST = 100;
 
 function boundedInteger(value, label, maximum) {
   if (!Number.isInteger(value) || value < 1 || value > maximum) {
@@ -17,11 +20,33 @@ function boundedInteger(value, label, maximum) {
   return value;
 }
 
-async function nextTreeIds(ForestWritingTreeModel, ownerUserId, treeBatchSize) {
-  return ForestWritingTreeModel.find(
+async function nextRecordIds(Model, ownerUserId, batchSize) {
+  const records = await Model.find(
     { ownerUserId },
     { _id: 1 }
-  ).sort({ _id: 1 }).limit(treeBatchSize).lean();
+  ).sort({ _id: 1 }).limit(batchSize).lean();
+  if (!Array.isArray(records) || records.length > batchSize) {
+    throw new Error('Forest cleanup model returned an unbounded record page.');
+  }
+  return records;
+}
+
+async function drainOwnerRecords({ Model, ownerUserId, batchSize, batchLimit }) {
+  let deletedCount = 0;
+  for (let batch = 0; batch < batchLimit; batch += 1) {
+    const records = await nextRecordIds(Model, ownerUserId, batchSize);
+    if (!records.length) return { complete: true, deletedCount };
+
+    const deleted = await Model.deleteMany({
+      _id: { $in: records.map(record => record._id) },
+      ownerUserId
+    });
+    const removed = Number(deleted?.deletedCount || 0);
+    deletedCount += removed;
+    if (removed !== records.length) return { complete: false, deletedCount };
+    if (records.length < batchSize) return { complete: true, deletedCount };
+  }
+  return { complete: false, deletedCount };
 }
 
 export async function cleanUpAccountDeletionForests({
@@ -30,6 +55,9 @@ export async function cleanUpAccountDeletionForests({
   maxTreeBatchesPerRequest = 10,
   ownerUserId = null,
   AccountDeletionRequestModel = AccountDeletionRequest,
+  ForestAuthoredObjectModel = ForestAuthoredObject,
+  ForestAuthoredRegionRevisionModel = ForestAuthoredRegionRevision,
+  ForestAuthoredResetOperationModel = ForestAuthoredResetOperation,
   ForestOwnerGroupReconciliationJobModel = ForestOwnerGroupReconciliationJob,
   ForestOwnerWorldModel = ForestOwnerWorld,
   ForestWritingTreeModel = ForestWritingTree,
@@ -41,12 +69,12 @@ export async function cleanUpAccountDeletionForests({
   const batchSize = boundedInteger(
     treeBatchSize,
     'treeBatchSize',
-    MAX_TREE_BATCH_SIZE
+    MAX_RECORD_BATCH_SIZE
   );
   const batchLimit = boundedInteger(
     maxTreeBatchesPerRequest,
     'maxTreeBatchesPerRequest',
-    MAX_TREE_BATCHES_PER_REQUEST
+    MAX_RECORD_BATCHES_PER_REQUEST
   );
   if (!(now instanceof Date) || Number.isNaN(now.getTime())) {
     throw new Error('now must be a valid Date.');
@@ -62,6 +90,9 @@ export async function cleanUpAccountDeletionForests({
     completed: 0,
     pending: 0,
     failed: 0,
+    deletedAuthoredObjects: 0,
+    deletedAuthoredRegionRevisions: 0,
+    deletedAuthoredResetOperations: 0,
     deletedTrees: 0,
     deletedReconciliationJobs: 0,
     deletedWorlds: 0
@@ -78,26 +109,27 @@ export async function cleanUpAccountDeletionForests({
         }
       );
 
-      let exhaustedBatchLimit = true;
-      for (let batch = 0; batch < batchLimit; batch += 1) {
-        const treeIds = await nextTreeIds(
-          ForestWritingTreeModel,
-          owner,
-          batchSize
-        );
-        if (!treeIds.length) {
-          exhaustedBatchLimit = false;
+      const boundedCollections = [
+        [ForestAuthoredObjectModel, 'deletedAuthoredObjects'],
+        [ForestAuthoredRegionRevisionModel, 'deletedAuthoredRegionRevisions'],
+        [ForestAuthoredResetOperationModel, 'deletedAuthoredResetOperations'],
+        [ForestWritingTreeModel, 'deletedTrees']
+      ];
+      let boundedCleanupComplete = true;
+      for (const [Model, totalField] of boundedCollections) {
+        const drained = await drainOwnerRecords({
+          Model,
+          ownerUserId: owner,
+          batchSize,
+          batchLimit
+        });
+        totals[totalField] += drained.deletedCount;
+        if (!drained.complete) {
+          boundedCleanupComplete = false;
           break;
         }
-
-        const deleted = await ForestWritingTreeModel.deleteMany({
-          _id: { $in: treeIds.map(tree => tree._id) },
-          ownerUserId: owner
-        });
-        totals.deletedTrees += Number(deleted?.deletedCount || 0);
       }
-
-      if (exhaustedBatchLimit) {
+      if (!boundedCleanupComplete) {
         totals.pending += 1;
         continue;
       }
@@ -112,12 +144,27 @@ export async function cleanUpAccountDeletionForests({
       });
       totals.deletedWorlds += Number(deletedWorlds?.deletedCount || 0);
 
-      const [remainingTree, remainingJob, remainingWorld] = await Promise.all([
+      const [
+        remainingAuthoredObject,
+        remainingAuthoredRegionRevision,
+        remainingAuthoredResetOperation,
+        remainingTree,
+        remainingJob,
+        remainingWorld
+      ] = await Promise.all([
+        ForestAuthoredObjectModel.exists({ ownerUserId: owner }),
+        ForestAuthoredRegionRevisionModel.exists({ ownerUserId: owner }),
+        ForestAuthoredResetOperationModel.exists({ ownerUserId: owner }),
         ForestWritingTreeModel.exists({ ownerUserId: owner }),
         ForestOwnerGroupReconciliationJobModel.exists({ ownerUserId: owner }),
         ForestOwnerWorldModel.exists({ ownerUserId: owner })
       ]);
-      if (remainingTree || remainingJob || remainingWorld) {
+      if (remainingAuthoredObject
+        || remainingAuthoredRegionRevision
+        || remainingAuthoredResetOperation
+        || remainingTree
+        || remainingJob
+        || remainingWorld) {
         totals.pending += 1;
         continue;
       }
