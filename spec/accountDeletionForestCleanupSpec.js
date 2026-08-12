@@ -56,7 +56,13 @@ function deletionRequest(overrides = {}) {
 }
 
 function cleanupHarness({
+  authoredObjectPages = [[]],
+  authoredRegionRevisionPages = [[]],
+  authoredResetOperationPages = [[]],
   treePages = [[]],
+  remainingAuthoredObject = null,
+  remainingAuthoredRegionRevision = null,
+  remainingAuthoredResetOperation = null,
   deletedJobs = 0,
   remainingTree = null,
   remainingJob = null,
@@ -69,6 +75,27 @@ function cleanupHarness({
     updateOne: jasmine.createSpy('AccountDeletionRequest.updateOne')
       .and.resolveTo({ modifiedCount: 1 })
   };
+  function boundedModel(name, pages, remaining) {
+    return {
+      find: jasmine.createSpy(`${name}.find`).and.callFake(() => treeQuery(pages)),
+      deleteMany: jasmine.createSpy(`${name}.deleteMany`)
+        .and.callFake(async filter => ({ deletedCount: filter._id.$in.length })),
+      exists: jasmine.createSpy(`${name}.exists`).and.resolveTo(remaining)
+    };
+  }
+  const ForestAuthoredObjectModel = boundedModel(
+    'ForestAuthoredObject', authoredObjectPages, remainingAuthoredObject
+  );
+  const ForestAuthoredRegionRevisionModel = boundedModel(
+    'ForestAuthoredRegionRevision',
+    authoredRegionRevisionPages,
+    remainingAuthoredRegionRevision
+  );
+  const ForestAuthoredResetOperationModel = boundedModel(
+    'ForestAuthoredResetOperation',
+    authoredResetOperationPages,
+    remainingAuthoredResetOperation
+  );
   const ForestWritingTreeModel = {
     find: jasmine.createSpy('ForestWritingTree.find')
       .and.callFake(() => treeQuery(treePages)),
@@ -93,6 +120,9 @@ function cleanupHarness({
 
   return {
     AccountDeletionRequestModel,
+    ForestAuthoredObjectModel,
+    ForestAuthoredRegionRevisionModel,
+    ForestAuthoredResetOperationModel,
     ForestOwnerGroupReconciliationJobModel,
     ForestWritingTreeModel,
     ForestOwnerWorldModel,
@@ -310,6 +340,9 @@ describe('account-deletion forest cleanup', () => {
       completed: 1,
       pending: 0,
       failed: 0,
+      deletedAuthoredObjects: 0,
+      deletedAuthoredRegionRevisions: 0,
+      deletedAuthoredResetOperations: 0,
       deletedTrees: 2,
       deletedReconciliationJobs: 1,
       deletedWorlds: 1
@@ -351,6 +384,96 @@ describe('account-deletion forest cleanup', () => {
     expect(result.deletedTrees).toBe(0);
     expect(harness.ForestWritingTreeModel.deleteMany).not.toHaveBeenCalled();
     expect(harness.scheduleEvidenceExpiry).toHaveBeenCalled();
+  });
+
+  it('drains every authored family before writing trees and verifies complete absence', async () => {
+    const harness = cleanupHarness({
+      authoredObjectPages: [[{ _id: 'object-1' }, { _id: 'object-2' }], []],
+      authoredRegionRevisionPages: [[{ _id: 'cell-1' }], []],
+      authoredResetOperationPages: [[{ _id: 'reset-1' }], []],
+      treePages: [[]]
+    });
+
+    const result = await cleanUpAccountDeletionForests({
+      ...harness,
+      treeBatchSize: 2,
+      maxTreeBatchesPerRequest: 3,
+      ownerUserId: OWNER_USER_ID,
+      now: NOW
+    });
+
+    expect(result).toEqual(jasmine.objectContaining({
+      completed: 1,
+      deletedAuthoredObjects: 2,
+      deletedAuthoredRegionRevisions: 1,
+      deletedAuthoredResetOperations: 1
+    }));
+    expect(harness.ForestAuthoredObjectModel.deleteMany).toHaveBeenCalledWith({
+      _id: { $in: ['object-1', 'object-2'] },
+      ownerUserId: OWNER_USER_ID
+    });
+    expect(harness.ForestAuthoredRegionRevisionModel.exists)
+      .toHaveBeenCalledOnceWith({ ownerUserId: OWNER_USER_ID });
+    expect(harness.ForestAuthoredResetOperationModel.exists)
+      .toHaveBeenCalledOnceWith({ ownerUserId: OWNER_USER_ID });
+  });
+
+  it('does not declare convergence while any authored family remains', async () => {
+    for (const remaining of [
+      { remainingAuthoredObject: { _id: 'object' } },
+      { remainingAuthoredRegionRevision: { _id: 'cell' } },
+      { remainingAuthoredResetOperation: { _id: 'reset' } }
+    ]) {
+      const harness = cleanupHarness(remaining);
+      const result = await cleanUpAccountDeletionForests({
+        ...harness,
+        ownerUserId: OWNER_USER_ID,
+        now: NOW
+      });
+
+      expect(result.pending).toBe(1);
+      expect(result.completed).toBe(0);
+      expect(harness.scheduleEvidenceExpiry).not.toHaveBeenCalled();
+    }
+  });
+
+  it('stops after the bounded authored-object allowance without deleting dependent ledgers', async () => {
+    const harness = cleanupHarness({
+      authoredObjectPages: [[{ _id: 'object-1' }], [{ _id: 'object-2' }]],
+      treePages: [[]]
+    });
+
+    const result = await cleanUpAccountDeletionForests({
+      ...harness,
+      treeBatchSize: 1,
+      maxTreeBatchesPerRequest: 2,
+      now: NOW
+    });
+
+    expect(result.pending).toBe(1);
+    expect(result.deletedAuthoredObjects).toBe(2);
+    expect(harness.ForestAuthoredRegionRevisionModel.find).not.toHaveBeenCalled();
+    expect(harness.ForestWritingTreeModel.find).not.toHaveBeenCalled();
+    expect(harness.ForestOwnerWorldModel.deleteMany).not.toHaveBeenCalled();
+  });
+
+  it('keeps cleanup pending when a bounded deletion does not remove every selected record', async () => {
+    const harness = cleanupHarness({
+      authoredObjectPages: [[{ _id: 'object-1' }]],
+      treePages: [[]]
+    });
+    harness.ForestAuthoredObjectModel.deleteMany.and.resolveTo({ deletedCount: 0 });
+
+    const result = await cleanUpAccountDeletionForests({
+      ...harness,
+      ownerUserId: OWNER_USER_ID,
+      now: NOW
+    });
+
+    expect(result.pending).toBe(1);
+    expect(result.deletedAuthoredObjects).toBe(0);
+    expect(harness.ForestWritingTreeModel.find).not.toHaveBeenCalled();
+    expect(harness.ForestOwnerWorldModel.deleteMany).not.toHaveBeenCalled();
   });
 
   it('does not declare deletion convergence while an owner queue row remains', async () => {
