@@ -1,10 +1,25 @@
 import {
+  buildForestAuthoredMutationRouteHandler,
+  buildForestAuthoredRegionRouteHandler,
   buildForestOwnerRegionAssetRouteHandler,
   buildForestOwnerRegionRouteHandler,
   buildForestOwnerTreeInclusionRouteHandler,
   buildForestOwnerTreeInspectionRouteHandler,
-  privateForestApiResponse
+  privateForestApiResponse,
+  requireForestAuthoredMutationOrigin
 } from '../server/api/v1/forest.js';
+import {
+  ForestAuthoredMutationError
+} from '../server/services/forestAuthoredObjectMutation.js';
+import {
+  ForestAuthoredMutationRateLimitError
+} from '../server/services/forestAuthoredMutationRateLimit.js';
+import {
+  ForestAuthoredPlacementError
+} from '../server/services/forestAuthoredPlacement.js';
+import {
+  ForestAuthoredRegionManifestError
+} from '../server/services/forestAuthoredRegionManifest.js';
 import {
   ForestOwnerRegionAssetDeliveryError
 } from '../server/services/forestOwnerRegionAssetDelivery.js';
@@ -492,5 +507,339 @@ describe('forest owner region asset API', () => {
     expect(res.body.code).toBe('FOREST_ASSET_DELIVERY_UNAVAILABLE');
     expect(JSON.stringify(console.error.calls.allArgs())).not.toContain(privateDetail);
     expect(JSON.stringify(res.body)).not.toContain(privateDetail);
+  });
+});
+
+describe('forest authored private API defenses', () => {
+  function originRequest({
+    origin = 'https://forest.example.test',
+    host = 'forest.example.test',
+    contentType = true
+  } = {}) {
+    return {
+      protocol: 'https',
+      get: jasmine.createSpy('get').and.callFake(name => ({
+        origin,
+        host
+      })[String(name).toLowerCase()]),
+      is: jasmine.createSpy('is').and.callFake(() => contentType)
+    };
+  }
+
+  it('requires exact same-origin JSON before authenticated mutation work', () => {
+    const accepted = originRequest();
+    const acceptedResponse = response();
+    const next = jasmine.createSpy('next');
+    requireForestAuthoredMutationOrigin(accepted, acceptedResponse, next);
+    expect(next).toHaveBeenCalledOnceWith();
+
+    for (const request of [
+      originRequest({ origin: null }),
+      originRequest({ origin: 'https://other.example.test' }),
+      originRequest({ origin: 'not-an-origin' })
+    ]) {
+      const res = response();
+      const rejectedNext = jasmine.createSpy('next');
+      requireForestAuthoredMutationOrigin(request, res, rejectedNext);
+      expect(res.statusCode).toBe(403);
+      expect(res.body.code).toBe('FOREST_AUTHORED_MUTATION_ORIGIN_REQUIRED');
+      expect(rejectedNext).not.toHaveBeenCalled();
+    }
+
+    const nonJson = response();
+    requireForestAuthoredMutationOrigin(
+      originRequest({ contentType: false }),
+      nonJson,
+      jasmine.createSpy('next')
+    );
+    expect(nonJson.statusCode).toBe(415);
+    expect(nonJson.body.code).toBe('FOREST_AUTHORED_MUTATION_JSON_REQUIRED');
+  });
+
+  it('derives authored-region ownership from the session and parses canonical cells', async () => {
+    const manifest = { manifestVersion: 1, status: 'ready', objects: [] };
+    const readManifest = jasmine.createSpy('readManifest').and.resolveTo(manifest);
+    const handler = buildForestAuthoredRegionRouteHandler({ readManifest });
+    const res = response();
+
+    await handler({
+      user: { id: OWNER_USER_ID },
+      query: { cells: '-1:1,0:-2', cursor: 'opaque', limit: '25' },
+      body: { ownerUserId: OTHER_OWNER_USER_ID }
+    }, res);
+
+    expect(readManifest).toHaveBeenCalledOnceWith({
+      ownerUserId: OWNER_USER_ID,
+      cells: [{ cellX: -1, cellY: 1 }, { cellX: 0, cellY: -2 }],
+      cursor: 'opaque',
+      limit: '25'
+    });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toBe(manifest);
+  });
+
+  it('rejects stale sessions and malformed authored-region queries before reads', async () => {
+    const readManifest = jasmine.createSpy('readManifest');
+    const handler = buildForestAuthoredRegionRouteHandler({ readManifest });
+    const stale = response();
+    await handler({ user: null, query: { cells: 'invalid' } }, stale);
+    expect(stale.statusCode).toBe(401);
+
+    for (const query of [
+      {},
+      { cells: '+1:0' },
+      { cells: '-0:0' },
+      { cells: ['0:0'] },
+      { cells: '0:0', cursor: ['one', 'two'] },
+      { cells: '0:0', ownerUserId: OTHER_OWNER_USER_ID }
+    ]) {
+      const res = response();
+      await handler({ user: { id: OWNER_USER_ID }, query }, res);
+      expect(res.statusCode).toBe(400);
+      expect(res.body.code).toBe('INVALID_FOREST_AUTHORED_REGION_REQUEST');
+    }
+    expect(readManifest).not.toHaveBeenCalled();
+  });
+
+  it('maps changed and unsupported authored regions without private details', async () => {
+    for (const testCase of [
+      ['AUTHORED_REGION_CHANGED', 409, 'FOREST_AUTHORED_REGION_CHANGED'],
+      ['AUTHORED_REGION_MIGRATION_REQUIRED', 409, 'FOREST_AUTHORED_MIGRATION_REQUIRED']
+    ]) {
+      const privateDetail = `${OTHER_OWNER_USER_ID}:private-marker`;
+      const handler = buildForestAuthoredRegionRouteHandler({
+        readManifest: jasmine.createSpy('readManifest').and.rejectWith(
+          new ForestAuthoredRegionManifestError(testCase[0], privateDetail)
+        )
+      });
+      const res = response();
+      await handler({ user: { id: OWNER_USER_ID }, query: { cells: '0:0' } }, res);
+      expect(res.statusCode).toBe(testCase[1]);
+      expect(res.body.code).toBe(testCase[2]);
+      expect(JSON.stringify(res.body)).not.toContain(privateDetail);
+    }
+  });
+
+  it('logs only a bounded authored-region code for unavailable failures', async () => {
+    const privateDetail = `${OWNER_USER_ID}:private-coordinate`;
+    const handler = buildForestAuthoredRegionRouteHandler({
+      readManifest: jasmine.createSpy('readManifest').and.rejectWith(
+        new ForestAuthoredRegionManifestError('AUTHORED_REGION_UNAVAILABLE', privateDetail)
+      )
+    });
+    const res = response();
+    spyOn(console, 'error');
+
+    await handler({ user: { id: OWNER_USER_ID }, query: { cells: '0:0' } }, res);
+
+    expect(res.statusCode).toBe(503);
+    expect(res.body.code).toBe('FOREST_AUTHORED_REGION_UNAVAILABLE');
+    expect(JSON.stringify(console.error.calls.allArgs())).not.toContain(privateDetail);
+    expect(JSON.stringify(console.error.calls.allArgs())).toContain('AUTHORED_REGION_UNAVAILABLE');
+  });
+});
+
+describe('forest authored mutation API', () => {
+  const OBJECT_ID = '22222222-2222-4222-8222-222222222222';
+  const AUTH_SESSION_ID = '507f1f77bcf86cd799439099';
+
+  function request({ body, objectId = OBJECT_ID } = {}) {
+    return {
+      user: { id: OWNER_USER_ID },
+      authSession: { _id: AUTH_SESSION_ID },
+      params: { objectId },
+      body
+    };
+  }
+
+  it('passes exact create, move, and removal shapes with only session-derived authority',
+    async () => {
+      const cases = [
+        {
+          operation: 'create',
+          body: { protocolVersion: 1, kind: 'personal-marker', worldX: -1, worldY: 2 },
+          expected: {
+            objectId: OBJECT_ID,
+            protocolVersion: 1,
+            kind: 'personal-marker',
+            worldX: -1,
+            worldY: 2
+          }
+        },
+        {
+          operation: 'move',
+          body: { protocolVersion: 1, expectedRevision: 2, worldX: 3, worldY: -4 },
+          expected: {
+            objectId: OBJECT_ID,
+            protocolVersion: 1,
+            expectedRevision: 2,
+            worldX: 3,
+            worldY: -4
+          }
+        },
+        {
+          operation: 'remove',
+          body: { protocolVersion: 1, expectedRevision: 3 },
+          expected: { objectId: OBJECT_ID, protocolVersion: 1, expectedRevision: 3 }
+        }
+      ];
+      for (const testCase of cases) {
+        const result = { protocolVersion: 1, outcome: 'accepted', object: null };
+        const mutate = jasmine.createSpy('mutate').and.resolveTo(result);
+        const enforceRateLimit = jasmine.createSpy('enforceRateLimit');
+        const handler = buildForestAuthoredMutationRouteHandler({
+          operation: testCase.operation,
+          mutate,
+          enforceRateLimit
+        });
+        const res = response();
+
+        await handler(request({
+          body: { ...testCase.body, ownerUserId: OTHER_OWNER_USER_ID }
+        }), res);
+        expect(res.statusCode).toBe(400);
+        expect(mutate).not.toHaveBeenCalled();
+        expect(enforceRateLimit).not.toHaveBeenCalled();
+
+        const accepted = response();
+        await handler(request({ body: testCase.body }), accepted);
+        expect(enforceRateLimit).toHaveBeenCalledOnceWith({
+          ownerUserId: OWNER_USER_ID,
+          authSessionId: AUTH_SESSION_ID
+        });
+        expect(mutate).toHaveBeenCalledOnceWith({
+          ownerUserId: OWNER_USER_ID,
+          ...testCase.expected
+        });
+        expect(accepted.statusCode).toBe(200);
+        expect(accepted.body).toBe(result);
+      }
+    });
+
+  it('rejects missing or stale auth and invalid public shape before rate or mutation work',
+    async () => {
+      const mutate = jasmine.createSpy('mutate');
+      const enforceRateLimit = jasmine.createSpy('enforceRateLimit');
+      const handler = buildForestAuthoredMutationRouteHandler({
+        operation: 'create', mutate, enforceRateLimit
+      });
+      for (const req of [
+        { user: null, authSession: null, params: {}, body: null },
+        {
+          user: { id: OWNER_USER_ID },
+          authSession: null,
+          params: { objectId: OBJECT_ID },
+          body: { protocolVersion: 1, kind: 'personal-marker', worldX: 0, worldY: 0 }
+        }
+      ]) {
+        const res = response();
+        await handler(req, res);
+        expect(res.statusCode).toBe(401);
+      }
+      for (const req of [
+        request({ body: { protocolVersion: 1, kind: 'personal-marker', worldX: 0 } }),
+        request({
+          body: { protocolVersion: 2, kind: 'personal-marker', worldX: 0, worldY: 0 }
+        }),
+        request({
+          objectId: 'invalid',
+          body: { protocolVersion: 1, kind: 'personal-marker', worldX: 0, worldY: 0 }
+        })
+      ]) {
+        const res = response();
+        await handler(req, res);
+        expect(res.statusCode).toBe(400);
+      }
+      expect(enforceRateLimit).not.toHaveBeenCalled();
+      expect(mutate).not.toHaveBeenCalled();
+    });
+
+  it('maps owner and session rate limits with Retry-After', async () => {
+    const handler = buildForestAuthoredMutationRouteHandler({
+      operation: 'remove',
+      mutate: jasmine.createSpy('mutate'),
+      enforceRateLimit: jasmine.createSpy('enforceRateLimit').and.throwError(
+        new ForestAuthoredMutationRateLimitError('AUTHORED_MUTATION_RATE_LIMITED', 17)
+      )
+    });
+    const res = response();
+
+    await handler(request({ body: { protocolVersion: 1, expectedRevision: 1 } }), res);
+
+    expect(res.statusCode).toBe(429);
+    expect(res.body.code).toBe('FOREST_AUTHORED_MUTATION_RATE_LIMITED');
+    expect(res.set).toHaveBeenCalledWith('Retry-After', '17');
+  });
+
+  it('maps conflicts, absence, collision, density, migration, and reset to bounded codes',
+    async () => {
+      const safeObject = { objectId: OBJECT_ID, recordRevision: 2 };
+      const cases = [
+        [
+          new ForestAuthoredMutationError(
+            'AUTHORED_OBJECT_CONFLICT', 'private', safeObject
+          ),
+          409,
+          'FOREST_AUTHORED_OBJECT_CONFLICT',
+          safeObject
+        ],
+        [
+          new ForestAuthoredMutationError('AUTHORED_OBJECT_NOT_FOUND', 'private'),
+          404,
+          'FOREST_AUTHORED_OBJECT_UNAVAILABLE'
+        ],
+        [
+          new ForestAuthoredPlacementError('AUTHORED_PLACEMENT_COLLISION', 'private'),
+          409,
+          'FOREST_AUTHORED_PLACEMENT_COLLISION'
+        ],
+        [
+          new ForestAuthoredPlacementError('AUTHORED_PLACEMENT_DENSITY', 'private'),
+          409,
+          'FOREST_AUTHORED_PLACEMENT_DENSITY'
+        ],
+        [
+          new ForestAuthoredMutationError('AUTHORED_MIGRATION_REQUIRED', 'private'),
+          409,
+          'FOREST_AUTHORED_MIGRATION_REQUIRED'
+        ],
+        [
+          new ForestAuthoredMutationError('AUTHORED_RESETTING', 'private'),
+          409,
+          'FOREST_AUTHORED_RESETTING'
+        ]
+      ];
+      for (const [error, status, code, currentObject] of cases) {
+        const handler = buildForestAuthoredMutationRouteHandler({
+          operation: 'move',
+          mutate: jasmine.createSpy('mutate').and.rejectWith(error),
+          enforceRateLimit: jasmine.createSpy('enforceRateLimit')
+        });
+        const res = response();
+        await handler(request({
+          body: { protocolVersion: 1, expectedRevision: 1, worldX: 0, worldY: 0 }
+        }), res);
+        expect(res.statusCode).toBe(status);
+        expect(res.body.code).toBe(code);
+        expect(res.body.object).toBe(currentObject);
+        expect(JSON.stringify(res.body)).not.toContain('private');
+      }
+    });
+
+  it('returns generic unavailable and logs no unexpected private detail', async () => {
+    const privateDetail = `${OWNER_USER_ID}:${OBJECT_ID}:private-coordinate`;
+    const handler = buildForestAuthoredMutationRouteHandler({
+      operation: 'remove',
+      mutate: jasmine.createSpy('mutate').and.rejectWith(new Error(privateDetail)),
+      enforceRateLimit: jasmine.createSpy('enforceRateLimit')
+    });
+    const res = response();
+    spyOn(console, 'error');
+
+    await handler(request({ body: { protocolVersion: 1, expectedRevision: 1 } }), res);
+
+    expect(res.statusCode).toBe(503);
+    expect(res.body.code).toBe('FOREST_AUTHORED_MUTATION_UNAVAILABLE');
+    expect(JSON.stringify(console.error.calls.allArgs())).not.toContain(privateDetail);
   });
 });

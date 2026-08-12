@@ -16,6 +16,9 @@ import {
   FOREST_AUTHORED_TOMBSTONE_RETENTION_MS
 } from '../../server/services/forestAuthoredObjectMutation.js';
 import {
+  readForestAuthoredRegionManifest
+} from '../../server/services/forestAuthoredRegionManifest.js';
+import {
   projectPostToForestTree
 } from '../../server/services/forestPostTreeProjection.js';
 
@@ -29,6 +32,10 @@ const ABORTED = 'a4100000-0000-4000-8000-000000000006';
 const TREE_COLLISION = 'a4100000-0000-4000-8000-000000000007';
 const SHARED_ID = 'a4100000-0000-4000-8000-000000000008';
 const CAS_OBJECT = 'a4100000-0000-4000-8000-000000000009';
+const REGION_A = 'a4100000-0000-4000-8000-000000000010';
+const REGION_B = 'a4100000-0000-4000-8000-000000000011';
+const UNSUPPORTED_REGION_OBJECT = 'a4100000-0000-4000-8000-000000000012';
+const OTHER_OWNER = '64b00000000000000000a049';
 const USERNAME = 'forest_authored_mutation_fixture';
 const NOW = new Date('2026-08-12T12:00:00.000Z');
 
@@ -404,19 +411,114 @@ async function runFixture() {
     'A clean retry did not recover after transaction abort.'
   );
 
+  await forestAuthoredObjectMutations.create(createInput(REGION_A, 1_500, 0));
+  await forestAuthoredObjectMutations.create(createInput(REGION_B, 1_530, 0));
+  const regionPage = await readForestAuthoredRegionManifest({
+    ownerUserId: OWNER,
+    cells: [{ cellX: 2, cellY: 0 }],
+    limit: 1
+  });
+  requireCondition(
+    regionPage.status === 'ready'
+      && regionPage.objects.length === 1
+      && regionPage.objects[0].objectId === REGION_A
+      && typeof regionPage.page.nextCursor === 'string',
+    'The real authored-region first page was not stable and bounded.'
+  );
+  const stableContinuation = await readForestAuthoredRegionManifest({
+    ownerUserId: OWNER,
+    cells: [{ cellX: 2, cellY: 0 }],
+    cursor: regionPage.page.nextCursor,
+    limit: 1
+  });
+  requireCondition(
+    stableContinuation.objects.length === 1
+      && stableContinuation.objects[0].objectId === REGION_B
+      && stableContinuation.page.nextCursor === null,
+    'An unchanged real authored-region continuation did not return the next stable object.'
+  );
+  await forestAuthoredObjectMutations.remove({
+    ownerUserId: OWNER,
+    objectId: REGION_B,
+    protocolVersion: 1,
+    expectedRevision: 1
+  });
+  await requireCode(readForestAuthoredRegionManifest({
+    ownerUserId: OWNER,
+    cells: [{ cellX: 2, cellY: 0 }],
+    cursor: regionPage.page.nextCursor,
+    limit: 1
+  }), 'AUTHORED_REGION_CHANGED');
+
+  const crossOwner = await readForestAuthoredRegionManifest({
+    ownerUserId: OTHER_OWNER,
+    cells: [{ cellX: 2, cellY: 0 }]
+  });
+  requireCondition(
+    crossOwner.status === 'not-established' && crossOwner.objects.length === 0,
+    'A cross-owner authored-region read exposed owner state.'
+  );
+
+  await ForestAuthoredRegionRevision.create({
+    forestId: FOREST,
+    ownerUserId: OWNER,
+    spatialIndexVersion: 1,
+    cellX: 3,
+    cellY: 0,
+    revision: 1
+  });
+  await ForestAuthoredObject.collection.insertOne({
+    schemaVersion: 2,
+    identityVersion: 1,
+    objectId: UNSUPPORTED_REGION_OBJECT,
+    forestId: FOREST,
+    ownerUserId: OWNER,
+    kind: 'personal-marker',
+    state: 'active',
+    placement: { worldX: 2_160, worldY: 0 },
+    placementIndex: { version: 1, cellX: 3, cellY: 0 },
+    worldVersionEvidence: {
+      ownerWorldSchemaVersion: 1,
+      placementPolicyVersion: 1,
+      environmentPolicyVersion: 1,
+      environmentSchemaVersion: 1,
+      worldGenerationVersion: 1
+    },
+    appearance: { id: 'quiet-waymarker', version: 1 },
+    creationFingerprint: { version: 1, digest: 'A'.repeat(43) },
+    recordRevision: 1,
+    changedAt: NOW,
+    removedAt: null,
+    purgeEligibleAt: null,
+    createdAt: NOW,
+    updatedAt: NOW
+  });
+  await requireCode(readForestAuthoredRegionManifest({
+    ownerUserId: OWNER,
+    cells: [{ cellX: 3, cellY: 0 }]
+  }), 'AUTHORED_REGION_MIGRATION_REQUIRED');
+  await ForestAuthoredObject.collection.deleteOne({ objectId: UNSUPPORTED_REGION_OBJECT });
+  await ForestAuthoredRegionRevision.deleteOne({
+    ownerUserId: OWNER,
+    forestId: FOREST,
+    spatialIndexVersion: 1,
+    cellX: 3,
+    cellY: 0
+  });
+
   const [activeCount, removedCount, revisions, owner] = await Promise.all([
     ForestAuthoredObject.countDocuments({ ownerUserId: OWNER, state: 'active' }),
     ForestAuthoredObject.countDocuments({ ownerUserId: OWNER, state: 'removed' }),
     ForestAuthoredRegionRevision.find({ ownerUserId: OWNER }).sort({ cellX: 1, cellY: 1 }).lean(),
     User.findById(OWNER).lean()
   ]);
-  requireCondition(activeCount + removedCount === 5, 'Unexpected final authored-object count.');
+  requireCondition(activeCount + removedCount === 7, 'Unexpected final authored-object count.');
   requireCondition(
-    (activeCount === 4 && removedCount === 1)
-      || (activeCount === 3 && removedCount === 2),
+    (activeCount === 5 && removedCount === 2)
+      || (activeCount === 4 && removedCount === 3),
     'Competing compare-and-set produced an incoherent final lifecycle count.'
   );
-  requireCondition(revisions.length === 4, 'Expected exactly four touched cell revisions.');
+  requireCondition(revisions.length === 5, 'Expected exactly five touched cell revisions.');
   requireCondition(owner.forestLedgerFence > 0, 'Owner ledger fence did not advance.');
 
   console.log(JSON.stringify({
@@ -439,6 +541,13 @@ async function runFixture() {
     removalRecovery: repeatedRemoval.outcome,
     createAfterRemoval: recoveredCreate.outcome,
     abortRecovery: recoveredAbort.outcome,
+    authoredRegion: {
+      firstPageCount: regionPage.page.returnedObjectCount,
+      stableContinuationCount: stableContinuation.page.returnedObjectCount,
+      changedContinuation: 'AUTHORED_REGION_CHANGED',
+      crossOwnerStatus: crossOwner.status,
+      unsupportedRecord: 'AUTHORED_REGION_MIGRATION_REQUIRED'
+    },
     activeCount,
     removedCount,
     cellRevisions: revisions.map(value => ({
