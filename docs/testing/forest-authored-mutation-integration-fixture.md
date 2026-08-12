@@ -1,9 +1,9 @@
 # Forest authored-mutation integration fixture
 
-The Pass 4 fixture exercises authored marker mutations against the local `daily-page-test` MongoDB
-replica set. It refuses production configuration and an unexpected database name. The fixture uses
-one reserved owner id, removes any prior records in that scope before starting, and removes them
-again after a successful or failed run.
+The Pass 4 and Pass 5 fixture exercises authored marker mutations and revision-bound regional reads
+against the local `daily-page-test` MongoDB replica set. It refuses production configuration and an
+unexpected database name. The fixture uses one reserved owner id, removes any prior records in that
+scope before starting, and removes them again after a successful or failed run.
 
 Run the complete fixture with:
 
@@ -22,7 +22,11 @@ The run proves that:
 - removal produces a 90-day tombstone and repeated removal and creation cannot resurrect it;
 - hidden and inactive writing-tree placement still blocks a marker;
 - an intentional transaction abort leaks neither object nor regional-revision writes; and
-- retry after that abort commits normally.
+- retry after that abort commits normally;
+- an unchanged authored-region cursor returns the next stable object;
+- removal between pages invalidates continuation instead of presenting incomplete state;
+- a different owner cannot read the fixture owner’s markers; and
+- an unsupported active record fails the whole region as migration-required.
 
 The fixture prints a bounded JSON summary without owner, object, coordinate, or fingerprint values.
 It cleans itself up automatically. A manual cleanup is also available:
