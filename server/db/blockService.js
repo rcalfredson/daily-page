@@ -676,7 +676,8 @@ export function replaceWithPreferredTranslationVariants(blocks, preferredTransla
 
 export async function resolvePostFamiliesForLocale(
   blocks,
-  preferredLang
+  preferredLang,
+  { lockedOnly = false, roomId = null, status = null } = {}
 ) {
   const groupIds = [...new Set(
     (blocks || [])
@@ -687,6 +688,9 @@ export async function resolvePostFamiliesForLocale(
   if (groupIds.length === 0) return blocks;
 
   const variantMatch = { groupId: { $in: groupIds } };
+  if (roomId) variantMatch.roomId = roomId;
+  if (status) variantMatch.status = status;
+  else if (lockedOnly) variantMatch.status = 'locked';
 
   const match = publiclyVisibleBlockMatch(variantMatch);
   const preferredTranslations = await Block.find(match).lean().exec();
@@ -782,7 +786,8 @@ export async function getBlocksByRoomWithFallback({
   roomId,
   status = null,
   limit = 20,
-  preferredLang = 'en'
+  preferredLang = 'en',
+  dedupeGroups = true
 }) {
   const intervals = [1, 7, 30, 'all'];
 
@@ -796,7 +801,8 @@ export async function getBlocksByRoomWithFallback({
         preferredLang,
         status,
         sortBy: 'voteCount',
-        limit
+        limit,
+        dedupeGroups
       });
     } else {
       const cutoff = new Date(Date.now() - win * 24 * 60 * 60 * 1000);
@@ -807,11 +813,13 @@ export async function getBlocksByRoomWithFallback({
         startDate: cutoff,
         endDate: new Date(),
         sortBy: 'voteCount',
-        limit
+        limit,
+        dedupeGroups
       })
     }
 
     if (blocks.length > 0) {
+      if (!dedupeGroups) return { blocks, period: win };
       const preferredBlocks = await resolvePostFamiliesForLocale(
         blocks,
         preferredLang,
@@ -967,7 +975,8 @@ export async function findByUserWithLangPref({
   skip = 0,
   limit = 20,
   publicOnly = true,
-  extraMatch = null
+  extraMatch = null,
+  dedupeGroups = true
 }) {
   const userMatch = {
     $or: [{ creator: username }, { collaborators: username }]
@@ -984,7 +993,18 @@ export async function findByUserWithLangPref({
 
   const pipeline = [
     { $match: matchStage },
-    { $sort: sortStage },
+    { $sort: sortStage }
+  ];
+
+  if (!dedupeGroups) {
+    pipeline.push(
+      { $skip: skip },
+      { $limit: limit }
+    );
+    return Block.aggregate(pipeline).exec();
+  }
+
+  pipeline.push(
     { $group: { _id: "$groupId", docs: { $push: "$$ROOT" } } },
     {
       $project: {
@@ -1014,7 +1034,7 @@ export async function findByUserWithLangPref({
     { $sort: sortStage },
     { $skip: skip },
     { $limit: limit }
-  ];
+  );
 
   const families = await Block.aggregate(pipeline).exec();
   return resolvePostFamiliesForLocale(families, preferredLang);
@@ -1034,6 +1054,7 @@ export async function findDraftsByUser({
     sortDir: -1,
     limit,
     publicOnly: false,
+    dedupeGroups: false,
     extraMatch: {
       creator: username,
       status: 'in-progress'
@@ -1117,7 +1138,8 @@ export async function findByRoomWithLangPref({
   sortBy = 'createdAt',
   sortDir = -1,
   skip = 0,
-  limit = 20
+  limit = 20,
+  dedupeGroups = true
 }) {
   const matchStage = publiclyVisibleBlockMatch({ roomId });
   const sortStage = { [sortBy]: sortDir };
@@ -1131,8 +1153,18 @@ export async function findByRoomWithLangPref({
 
   const pipeline = [
     { $match: matchStage },
-    { $sort: sortStage },
+    { $sort: sortStage }
+  ];
 
+  if (!dedupeGroups) {
+    pipeline.push(
+      { $skip: skip },
+      { $limit: limit }
+    );
+    return Block.aggregate(pipeline).exec();
+  }
+
+  pipeline.push(
     // Agrupamos por groupId y metemos todos los docs en un array
     {
       $group: {
@@ -1171,10 +1203,10 @@ export async function findByRoomWithLangPref({
     { $sort: sortStage },
     { $skip: skip },
     { $limit: limit }
-  ];
+  );
 
   const families = await Block.aggregate(pipeline).exec();
-  return resolvePostFamiliesForLocale(families, preferredLang);
+  return resolvePostFamiliesForLocale(families, preferredLang, { roomId, status });
 }
 
 export async function findByDateWithLangPref({

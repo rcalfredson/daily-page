@@ -47,7 +47,9 @@ describe('room dashboard language deduplication', () => {
     expect(findSpy).toHaveBeenCalledWith({
       $and: [
         {
-          groupId: { $in: ['translated-post'] }
+          groupId: { $in: ['translated-post'] },
+          roomId: 'general',
+          status: 'locked'
         },
         {
           $or: [
@@ -57,6 +59,34 @@ describe('room dashboard language deduplication', () => {
         }
       ]
     });
+  });
+
+  it('keeps an in-progress translation as its own room work item', async () => {
+    const russianDraft = {
+      _id: 'draft-ru',
+      groupId: 'translated-draft',
+      roomId: 'general',
+      status: 'in-progress',
+      visibility: 'public',
+      lang: 'ru',
+      updatedAt: new Date('2026-07-08T00:00:00.000Z')
+    };
+
+    const aggregateSpy = spyOn(Block, 'aggregate').and.returnValue({
+      exec: async () => [russianDraft]
+    });
+    const findSpy = spyOn(Block, 'find');
+
+    const result = await getBlocksByRoomWithFallback({
+      roomId: 'general',
+      status: 'in-progress',
+      preferredLang: 'en',
+      dedupeGroups: false
+    });
+
+    expect(result.blocks).toEqual([russianDraft]);
+    expect(findSpy).not.toHaveBeenCalled();
+    expect(aggregateSpy.calls.first().args[0].some(stage => stage.$group)).toBeFalse();
   });
 
   it('fills the locked-post target from progressively older room activity', async () => {
