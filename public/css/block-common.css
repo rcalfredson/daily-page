@@ -54,6 +54,11 @@ a.block-title {
   outline-offset: 3px;
 }
 
+.block-banner--hero.block-banner--image .block-banner__image:focus-visible {
+  outline: 3px solid rgba(0, 123, 255, 0.45);
+  outline-offset: -4px;
+}
+
 .block-image-lightbox {
   position: fixed;
   inset: 0;

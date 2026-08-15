@@ -1,7 +1,5 @@
-/* global document, window */
-
 (function () {
-  const imageSelector = '.block-content img, .content-preview img, .featured-content-preview img';
+  const imageSelector = '.block-content img, .content-preview img, .featured-content-preview img, .block-banner--hero.block-banner--image .block-banner__image';
   let lightbox;
   let lightboxImage;
   let closeButton;
