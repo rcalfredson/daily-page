@@ -22,6 +22,7 @@ include views/partials/_banner_image.pug
     });
 
     expect(html).toContain('class="block-banner block-banner--hero block-banner--image"');
+    expect(html).toContain('data-banner-image="data-banner-image"');
     expect(html).toContain('src="https://images.example.com/banner.jpg"');
     expect(html).toContain('alt="A descriptive caption"');
     expect(html).toContain('<figcaption class="block-banner__caption">A descriptive caption</figcaption>');

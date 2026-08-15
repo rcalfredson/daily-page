@@ -42,9 +42,22 @@
   border-radius: 18px;
 }
 
+.block-banner--hero.block-banner--image {
+  overflow: visible;
+  border: 0;
+  background: transparent;
+}
+
 .block-banner--hero .block-banner__image {
+  box-sizing: border-box;
+  width: auto;
+  height: auto;
   max-height: min(68vh, 46rem);
-  aspect-ratio: 16 / 9;
+  margin-inline: auto;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: inherit;
+  object-fit: contain;
+  cursor: zoom-in;
 }
 
 .block-banner--hero .block-banner__street-view {
@@ -65,7 +78,7 @@
 }
 
 .block-banner--card .block-banner__image {
-  aspect-ratio: 2.4 / 1;
+  aspect-ratio: var(--banner-aspect-ratio, 2.4 / 1);
 }
 
 .block-banner--card .block-banner__street-view {
@@ -78,7 +91,7 @@
 }
 
 .block-banner--featured .block-banner__image {
-  aspect-ratio: 2 / 1;
+  aspect-ratio: var(--banner-aspect-ratio, 2 / 1);
 }
 
 .block-banner--featured .block-banner__street-view {
@@ -96,8 +109,7 @@
     border-radius: 10px;
   }
 
-  .block-banner--hero .block-banner__image,
   .block-banner--card .block-banner__image {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: var(--banner-aspect-ratio, 16 / 9);
   }
 }
