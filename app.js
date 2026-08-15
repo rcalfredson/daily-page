@@ -569,7 +569,8 @@ async function getSupportFundingViewModel() {
               userId,
               status: 'in-progress',
               limit: 20,
-              preferredLang: preferredContentLang
+              preferredLang: preferredContentLang,
+              dedupeGroups: false
             }),
             getRoomEditorialClusters({
               roomId: room_id,
