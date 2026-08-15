@@ -20,6 +20,12 @@ import {
 import {
   FOREST_OWNER_REGION_DEFAULT_PAGE_SIZE
 } from './forestOwnerRegionManifest.js';
+import {
+  FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION
+} from './forestAuthoredObjectMutation.js';
+import {
+  FOREST_AUTHORED_REGION_DEFAULT_PAGE_SIZE
+} from './forestAuthoredRegionManifest.js';
 import { FOREST_ASSET_TRANSPORT_RASTER } from './forestSceneAssetTransport.js';
 
 export const FOREST_OWNER_SCENE_BOOTSTRAP_VERSION = 1;
@@ -77,8 +83,12 @@ function emptyBootstrap(status) {
       regionPath: '/api/v1/forest/regions',
       assetPath: '/api/v1/forest/assets',
       inspectionPath: '/api/v1/forest/trees',
+      authoredRegionPath: '/api/v1/forest/authored-regions',
+      authoredObjectPath: '/api/v1/forest/authored-objects',
       initialCells: initialCells(),
       placementPageSize: FOREST_OWNER_REGION_DEFAULT_PAGE_SIZE,
+      authoredPageSize: FOREST_AUTHORED_REGION_DEFAULT_PAGE_SIZE,
+      authoredMutationProtocolVersion: FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION,
       assetBatchSize: FOREST_OWNER_REGION_MAX_ASSET_REQUEST,
       transport: FOREST_ASSET_TRANSPORT_RASTER
     }

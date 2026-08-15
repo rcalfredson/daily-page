@@ -1,4 +1,20 @@
 export const OWNER_FOREST_COORDINATE_LIMIT = 1_000_000_000;
+export const OWNER_FOREST_MARKER_RADIUS = 9;
+export const OWNER_FOREST_MARKER_GAP = 8;
+export const OWNER_FOREST_MARKER_MINIMUM_SPACING = 26;
+export const OWNER_FOREST_MARKER_CELL_CAP = 128;
+export const OWNER_FOREST_MARKER_PREVIEW_DISTANCE = 40;
+
+export function createOwnerForestMarkerObjectId(cryptoApi = globalThis.crypto) {
+  if (typeof cryptoApi?.randomUUID === 'function') return cryptoApi.randomUUID().toLowerCase();
+  const bytes = new Uint8Array(16);
+  cryptoApi.getRandomValues(bytes);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = [...bytes].map(value => value.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${
+    hex.slice(16, 20)}-${hex.slice(20)}`;
+}
 
 export function ownerForestCellsAround(position, cellSize) {
   const centerX = Math.floor(position.worldX / cellSize);
@@ -142,4 +158,81 @@ export function ownerForestPlacementAtPoint({
       || right.placement.worldY - left.placement.worldY
       || left.placement.id.localeCompare(right.placement.id)
   ))[0]?.placement || null;
+}
+
+export function ownerForestMarkerPreview({
+  player,
+  facingRadians,
+  placements,
+  markers,
+  cellSize,
+  movingObjectId = null
+}) {
+  const direction = Number.isFinite(facingRadians) ? facingRadians : Math.PI / 2;
+  const worldX = Math.round(
+    player.worldX + (Math.cos(direction) * OWNER_FOREST_MARKER_PREVIEW_DISTANCE)
+  );
+  const worldY = Math.round(
+    player.worldY + (Math.sin(direction) * OWNER_FOREST_MARKER_PREVIEW_DISTANCE)
+  );
+  let reason = null;
+  if (Math.abs(worldX) > OWNER_FOREST_COORDINATE_LIMIT
+    || Math.abs(worldY) > OWNER_FOREST_COORDINATE_LIMIT) {
+    reason = 'world-bounds';
+  } else if (placements.some(placement => Math.hypot(
+    worldX - placement.worldX,
+    worldY - placement.worldY
+  ) < placement.collisionRadius + OWNER_FOREST_MARKER_RADIUS + OWNER_FOREST_MARKER_GAP)) {
+    reason = 'tree-collision';
+  } else if (markers.some(marker => marker.objectId !== movingObjectId && Math.hypot(
+    worldX - marker.worldX,
+    worldY - marker.worldY
+  ) < OWNER_FOREST_MARKER_MINIMUM_SPACING)) {
+    reason = 'marker-collision';
+  } else {
+    const cellX = Math.floor(worldX / cellSize);
+    const cellY = Math.floor(worldY / cellSize);
+    const count = markers.filter(marker => marker.objectId !== movingObjectId
+      && Math.floor(marker.worldX / cellSize) === cellX
+      && Math.floor(marker.worldY / cellSize) === cellY).length;
+    if (count >= OWNER_FOREST_MARKER_CELL_CAP) reason = 'density';
+  }
+  return { worldX, worldY, valid: reason === null, reason };
+}
+
+export function ownerForestFocusedMarker(player, markers, interactionRadius) {
+  return markers.map(marker => ({
+    marker,
+    distance: Math.hypot(player.worldX - marker.worldX, player.worldY - marker.worldY)
+  })).filter(({ distance }) => distance <= interactionRadius + OWNER_FOREST_MARKER_RADIUS)
+    .sort((left, right) => left.distance - right.distance
+      || left.marker.objectId.localeCompare(right.marker.objectId))[0]?.marker || null;
+}
+
+export function ownerForestMarkerAtPoint({ point, player, markers, interactionRadius }) {
+  return markers.map(marker => {
+    const ownerDistance = Math.hypot(
+      player.worldX - marker.worldX,
+      player.worldY - marker.worldY
+    );
+    if (ownerDistance > interactionRadius + OWNER_FOREST_MARKER_RADIUS
+      || point.worldX < marker.worldX - 10
+      || point.worldX > marker.worldX + 10
+      || point.worldY < marker.worldY - 29
+      || point.worldY > marker.worldY + 4) return null;
+    return {
+      marker,
+      pointDistance: Math.hypot(point.worldX - marker.worldX, point.worldY - marker.worldY)
+    };
+  }).filter(Boolean).sort((left, right) => left.pointDistance - right.pointDistance
+    || left.marker.objectId.localeCompare(right.marker.objectId))[0]?.marker || null;
+}
+
+export function replaceOwnerForestAuthoredRegion(markersById, requestedRegionIds, markers) {
+  const requested = new Set(requestedRegionIds);
+  for (const [objectId, marker] of markersById) {
+    if (requested.has(marker.regionId)) markersById.delete(objectId);
+  }
+  for (const marker of markers) markersById.set(marker.objectId, marker);
+  return markersById;
 }

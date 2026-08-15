@@ -2,6 +2,7 @@ import {
   buildForestOwnerSceneBootstrapService,
   ForestOwnerSceneBootstrapError
 } from '../server/services/forestOwnerSceneBootstrap.js';
+import pug from 'pug';
 import { buildForestRouteHandler } from '../server/routes/forest.js';
 import { isLocalizedPath } from '../server/services/localizedPaths.js';
 
@@ -95,7 +96,11 @@ describe('forest owner scene bootstrap', () => {
       regionPath: '/api/v1/forest/regions',
       assetPath: '/api/v1/forest/assets',
       inspectionPath: '/api/v1/forest/trees',
+      authoredRegionPath: '/api/v1/forest/authored-regions',
+      authoredObjectPath: '/api/v1/forest/authored-objects',
       placementPageSize: 100,
+      authoredPageSize: 100,
+      authoredMutationProtocolVersion: 1,
       assetBatchSize: 24,
       transport: 'lossless-raster'
     }));
@@ -117,6 +122,35 @@ describe('forest owner scene bootstrap', () => {
 });
 
 describe('forest production route', () => {
+  it('renders semantic placement, synchronization, and marker-management controls', () => {
+    const html = pug.renderFile('views/forest/index.pug', {
+      t: key => key,
+      uiPath: path => path,
+      uiPathFor: (_lang, path) => path,
+      forestStatus: 'ready',
+      bootstrap: { status: 'ready' },
+      user: { id: OWNER_USER_ID, username: 'forest-owner' },
+      title: 'Forest',
+      description: 'Forest',
+      uiLang: 'en',
+      uiDir: 'ltr',
+      unprefixedPath: '/forest'
+    });
+
+    for (const attribute of [
+      'data-owner-forest-place-marker',
+      'data-owner-forest-authored-status',
+      'data-owner-forest-placement',
+      'data-owner-forest-marker-inspection',
+      'data-owner-forest-marker-remove-confirm'
+    ]) expect(html).toContain(attribute);
+    expect(html).toContain('class="owner-forest__status-stack"');
+    expect(html).toContain('class="owner-forest__hud-actions"');
+    expect(html).toContain('forestScene.markers.place');
+    expect(html).toContain('aria-live="polite"');
+    expect(html).toContain('role="dialog"');
+  });
+
   it('participates in localized routing and derives owner only from the session', async () => {
     expect(isLocalizedPath('/forest')).toBeTrue();
     const bootstrap = { status: 'ready' };

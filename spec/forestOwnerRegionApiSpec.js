@@ -578,6 +578,46 @@ describe('forest authored private API defenses', () => {
     expect(res.body).toBe(manifest);
   });
 
+  it('returns the same committed marker to separate authenticated sessions for one owner',
+    async () => {
+      const manifest = {
+        manifestVersion: 1,
+        status: 'ready',
+        objects: [{
+          objectId: '22222222-2222-4222-8222-222222222222',
+          kind: 'personal-marker',
+          regionId: '0:0',
+          worldX: 40,
+          worldY: 0,
+          recordRevision: 1
+        }],
+        page: { returnedObjectCount: 1, nextCursor: null }
+      };
+      const readManifest = jasmine.createSpy('readManifest').and.resolveTo(manifest);
+      const handler = buildForestAuthoredRegionRouteHandler({ readManifest });
+      const first = response();
+      const second = response();
+
+      await handler({
+        user: { id: OWNER_USER_ID },
+        authSession: { _id: '507f1f77bcf86cd799439091' },
+        query: { cells: '0:0' }
+      }, first);
+      await handler({
+        user: { id: OWNER_USER_ID },
+        authSession: { _id: '507f1f77bcf86cd799439092' },
+        query: { cells: '0:0' }
+      }, second);
+
+      expect(first.body).toEqual(second.body);
+      expect(readManifest.calls.allArgs()).toEqual([
+        [{ ownerUserId: OWNER_USER_ID, cells: [{ cellX: 0, cellY: 0 }], cursor: null,
+          limit: undefined }],
+        [{ ownerUserId: OWNER_USER_ID, cells: [{ cellX: 0, cellY: 0 }], cursor: null,
+          limit: undefined }]
+      ]);
+    });
+
   it('rejects stale sessions and malformed authored-region queries before reads', async () => {
     const readManifest = jasmine.createSpy('readManifest');
     const handler = buildForestAuthoredRegionRouteHandler({ readManifest });
