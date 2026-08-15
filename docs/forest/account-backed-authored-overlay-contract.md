@@ -374,6 +374,51 @@ active state.
 The browser merges committed objects by `objectId`. A provisional placement preview is kept
 separate and is not inserted into the committed regional collection before success.
 
+## Accepted minimum production interaction
+
+The production forest exposes one explicit **Mark this place** action inside the forest HUD rather
+than in the page-level navigation. It enters a bounded placement mode whose preview remains 40
+world units in the player's current facing direction, within the
+existing 48-unit interaction neighborhood. Walking with keyboard, pointer drag, or touch joystick
+moves that preview with the transient player. Enter or the visible save action submits it; Escape
+or the visible cancel action abandons it without a write. A request freezes its submitted integer
+coordinates until it resolves.
+
+The browser creates the UUIDv4 only when it first submits a create. An unavailable response keeps
+that UUID and exact coordinate in memory for an explicit retry. Moving the preview after a failed
+create expresses a different intended creation and causes the next submit to use a fresh UUID.
+Reload does not replay pending work and the production forest does not persist a mutation queue in
+`localStorage`.
+
+Immediate preview validation uses only the complete nearby authored region and visible writing
+placements. Known bounds, visible-tree, visible-marker, and provisional-density failures disable
+save and use both wording and a crossed visual treatment. An otherwise clear preview says that it
+*looks* clear; only the server can account for hidden or inactive writing reservations and confirm
+placement. A server collision or density rejection leaves placement mode available for choosing a
+new position and never promotes the preview into committed state.
+
+A committed nearby marker participates in the same proximity, keyboard, pointer, and touch focus
+model as writing trees. Its marker-specific dialog offers move and removal. Move reuses placement
+mode while the old committed marker remains visible; only an accepted response replaces its
+position. Removal requires explicit confirmation, leaves the marker visible while saving, and
+removes it from the committed collection only after an accepted response. Failed mutations retain
+the last committed scene. A conflict reconciles the returned current safe marker state and says
+that the forest changed elsewhere without identifying a device or request.
+
+The `quiet-waymarker` version-1 browser form is the fixed small signpost established by this
+milestone: dark wooden post, muted ochre blank plaque, and no randomized or identity-derived
+variation. Committed markers are opaque. A provisional marker uses reduced opacity and a dashed
+ground ring; invalid state additionally uses a crossed ring, so color is not the only signal.
+Focus uses the existing pale-gold ground highlight. Saving may pulse opacity only when reduced
+motion is not requested.
+
+Authored loading has a semantic status independent from grove loading. Marker actions are enabled
+only after the player's current nine-cell authored neighborhood is complete. A changed paginated
+region is discarded and restarted at most three times. A later failure retains previously complete
+markers with an explicit potentially-stale warning and retry action; it never labels the layer
+complete. Migration-required state disables marker actions until compatibility is restored.
+Writing-tree movement, inspection, and semantic writing routes remain available throughout.
+
 ## Bounds and capacity
 
 There is no lifetime marker maximum per forest.

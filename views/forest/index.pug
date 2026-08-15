@@ -46,11 +46,33 @@ block content
           canvas.owner-forest__canvas(data-owner-forest-canvas)
           .owner-forest__joystick(data-owner-forest-joystick hidden aria-hidden='true')
             .owner-forest__joystick-stick(data-owner-forest-joystick-stick)
-          p.owner-forest__status(data-owner-forest-status role='status' aria-live='polite')
-            = t('forestScene.loading')
-          .owner-forest__nearby(data-owner-forest-nearby hidden)
-            span= t('forestScene.treeNearby')
-            button(type='button' data-owner-forest-inspect)= t('forestScene.inspect.action')
+          .owner-forest__status-stack
+            p.owner-forest__status(data-owner-forest-status role='status' aria-live='polite')
+              = t('forestScene.loading')
+            .owner-forest__authored-status(
+              data-owner-forest-authored-status
+              role='status'
+              aria-live='polite'
+            )
+              span(data-owner-forest-authored-status-copy)= t('forestScene.markers.loading')
+              button(type='button' data-owner-forest-authored-retry hidden)
+                = t('forestScene.markers.retrySync')
+          .owner-forest__placement(data-owner-forest-placement hidden)
+            p(data-owner-forest-placement-status role='status' aria-live='polite')
+            .owner-forest__placement-actions
+              button(type='button' data-owner-forest-placement-save)
+                = t('forestScene.markers.save')
+              button(type='button' data-owner-forest-placement-cancel)
+                = t('forestScene.markers.cancel')
+          .owner-forest__hud-actions
+            .owner-forest__nearby(data-owner-forest-nearby hidden)
+              span(data-owner-forest-nearby-copy)= t('forestScene.treeNearby')
+              button(type='button' data-owner-forest-inspect)= t('forestScene.inspect.action')
+            button.owner-forest__place-marker(
+              type='button'
+              data-owner-forest-place-marker
+              disabled
+            )= t('forestScene.markers.place')
           .owner-forest__inspection-backdrop(
             aria-hidden='true'
             data-owner-forest-inspection-backdrop
@@ -95,6 +117,39 @@ block content
                   ul(data-owner-forest-translations)
                   button(type='button' data-owner-forest-translations-more hidden)
                     = t('forestScene.inspect.moreTranslations')
+          aside.owner-forest__inspection.owner-forest__marker-inspection(
+            role='dialog'
+            aria-labelledby='owner-forest-marker-title'
+            data-owner-forest-marker-inspection
+            hidden
+          )
+            .owner-forest__inspection-header
+              p.owner-forest__eyebrow= t('forestScene.markers.eyebrow')
+              button.owner-forest__inspection-close(
+                type='button'
+                aria-label=t('forestScene.markers.close')
+                data-owner-forest-marker-close
+              ) ×
+            .owner-forest__inspection-scroll
+              h2#owner-forest-marker-title= t('forestScene.markers.heading')
+              p= t('forestScene.markers.description')
+              p.owner-forest__inspection-status(
+                data-owner-forest-marker-status
+                role='status'
+                aria-live='polite'
+              )
+              .owner-forest__marker-actions(data-owner-forest-marker-actions)
+                button(type='button' data-owner-forest-marker-move)
+                  = t('forestScene.markers.move')
+                button(type='button' data-owner-forest-marker-remove)
+                  = t('forestScene.markers.remove')
+              .owner-forest__marker-confirm(data-owner-forest-marker-confirm hidden)
+                p= t('forestScene.markers.removeConfirmation')
+                .owner-forest__marker-actions
+                  button(type='button' data-owner-forest-marker-remove-confirm)
+                    = t('forestScene.markers.confirmRemove')
+                  button(type='button' data-owner-forest-marker-remove-cancel)
+                    = t('forestScene.markers.cancel')
       noscript
         .owner-forest__notice
           p= t('forestScene.noScript')
@@ -109,6 +164,41 @@ block content
           inclusionConflict: t('forestScene.inspect.inclusionConflict'),
           inclusionUnavailable: t('forestScene.inspect.inclusionUnavailable'),
           treeHidden: t('forestScene.inspect.treeHidden'),
+          markers: {
+            loading: t('forestScene.markers.loading'),
+            ready: t('forestScene.markers.ready'),
+            unavailable: t('forestScene.markers.unavailable'),
+            stale: t('forestScene.markers.stale'),
+            migrationRequired: t('forestScene.markers.migrationRequired'),
+            resetting: t('forestScene.markers.resetting'),
+            treeNearby: t('forestScene.treeNearby'),
+            markerNearby: t('forestScene.markers.nearby'),
+            inspectTree: t('forestScene.inspect.action'),
+            inspectMarker: t('forestScene.markers.inspect'),
+            save: t('forestScene.markers.save'),
+            move: t('forestScene.markers.move'),
+            previewClear: t('forestScene.markers.previewClear'),
+            previewTreeCollision: t('forestScene.markers.previewTreeCollision'),
+            previewMarkerCollision: t('forestScene.markers.previewMarkerCollision'),
+            previewBounds: t('forestScene.markers.previewBounds'),
+            previewDensity: t('forestScene.markers.previewDensity'),
+            saving: t('forestScene.markers.saving'),
+            moving: t('forestScene.markers.moving'),
+            saved: t('forestScene.markers.saved'),
+            moved: t('forestScene.markers.moved'),
+            conflict: t('forestScene.markers.conflict'),
+            collision: t('forestScene.markers.collision'),
+            density: t('forestScene.markers.density'),
+            unavailableMutation: t('forestScene.markers.unavailableMutation'),
+            rateLimited: t('forestScene.markers.rateLimited'),
+            removedElsewhere: t('forestScene.markers.removedElsewhere'),
+            removeSaving: t('forestScene.markers.removeSaving'),
+            removed: t('forestScene.markers.removed'),
+            retrySave: t('forestScene.markers.retrySave'),
+            retryMove: t('forestScene.markers.retryMove'),
+            retryRemove: t('forestScene.markers.retryRemove'),
+            confirmRemove: t('forestScene.markers.confirmRemove')
+          },
           treeTypes: {
             'open-crown-deciduous': t('forestScene.treeTypes.deciduous'),
             'sunset-lanternwood': t('forestScene.treeTypes.lanternwood'),

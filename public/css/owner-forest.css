@@ -92,10 +92,9 @@
   box-shadow: 0 2px 8px rgba(10, 25, 21, 0.38);
 }
 .owner-forest__status,
+.owner-forest__authored-status,
+.owner-forest__placement,
 .owner-forest__nearby {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   max-width: calc(100% - 2rem);
   border: 1px solid rgba(255, 240, 174, 0.62);
   border-radius: 999px;
@@ -106,16 +105,84 @@
   font-size: 0.75rem;
   text-align: center;
 }
-.owner-forest__status { z-index: 2; pointer-events: none; }
-.owner-forest__status { top: 0.75rem; }
-.owner-forest__status[data-failed='true'] { border-color: #e7a294; color: #ffe4dc; }
-.owner-forest__nearby {
+.owner-forest__status-stack {
+  position: absolute;
   z-index: 2;
+  top: 0.75rem;
+  right: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+.owner-forest__status { pointer-events: none; }
+.owner-forest__status[data-failed='true'] { border-color: #e7a294; color: #ffe4dc; }
+.owner-forest__authored-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: auto;
+}
+.owner-forest__authored-status[data-state='ready'] { display: none; }
+.owner-forest__authored-status[data-failed='true'] {
+  border-color: #e7a294;
+  color: #ffe4dc;
+}
+.owner-forest__authored-status button,
+.owner-forest__placement button,
+.owner-forest__marker-actions button {
+  min-height: 30px;
+  float: none;
+  margin: 0;
+  padding: 0.25rem 0.6rem;
+  border-color: rgba(255, 240, 174, 0.62);
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  font: inherit;
+}
+.owner-forest__placement {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
   bottom: 0.75rem;
+  transform: translateX(-50%);
+  display: grid;
+  width: min(440px, calc(100% - 2rem));
+  border-radius: 14px;
+  text-align: left;
+}
+.owner-forest__placement p { margin: 0; line-height: 1.4; }
+.owner-forest__placement-actions,
+.owner-forest__marker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.owner-forest__placement-actions { margin-top: 0.45rem; }
+.owner-forest__placement button:disabled,
+.owner-forest__marker-actions button:disabled { cursor: wait; opacity: 0.62; }
+.owner-forest__hud-actions {
+  position: absolute;
+  z-index: 2;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  pointer-events: none;
+}
+.owner-forest__viewport[data-placing='true'] .owner-forest__hud-actions { display: none; }
+.owner-forest__nearby {
   display: flex;
   align-items: center;
   gap: 0.55rem;
   width: max-content;
+  pointer-events: auto;
 }
 .owner-forest__nearby button {
   min-height: 30px;
@@ -127,6 +194,20 @@
   color: inherit;
   font: inherit;
 }
+.owner-forest__place-marker {
+  min-height: 42px;
+  float: none;
+  margin: 0;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid rgba(255, 240, 174, 0.62);
+  border-radius: 999px;
+  background: rgba(18, 39, 32, 0.78);
+  color: #fff4ce;
+  font: inherit;
+  font-size: 0.78rem;
+  pointer-events: auto;
+}
+.owner-forest__place-marker:disabled { cursor: wait; opacity: 0.62; }
 .owner-forest__inspection {
   position: absolute;
   z-index: 5;
@@ -176,6 +257,17 @@
   touch-action: pan-y;
 }
 .owner-forest__inspection-status { color: var(--muted-text-color); line-height: 1.5; }
+.owner-forest__marker-actions { margin-top: 0.85rem; }
+.owner-forest__marker-actions button {
+  border-color: color-mix(in srgb, currentColor 24%, transparent);
+  background: transparent;
+  color: var(--text-color);
+}
+.owner-forest__marker-confirm {
+  margin-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 0.8rem;
+}
 .owner-forest__inspection-content h2 {
   margin: 0.4rem 0 0.65rem;
   overflow-wrap: anywhere;

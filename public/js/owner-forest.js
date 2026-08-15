@@ -19,15 +19,20 @@ import {
 } from './owner-forest-environment.js';
 import {
   decodeOwnerForestRaster,
+  createOwnerForestMarkerObjectId,
   moveOwnerForestPlayer,
   OWNER_FOREST_COORDINATE_LIMIT,
   ownerForestAssetBatches,
   ownerForestCamera,
   ownerForestCellId,
   ownerForestCellsAround,
+  ownerForestFocusedMarker,
   ownerForestJoystickOffset,
+  ownerForestMarkerAtPoint,
+  ownerForestMarkerPreview,
   ownerForestMovementDirection,
-  ownerForestPlacementAtPoint
+  ownerForestPlacementAtPoint,
+  replaceOwnerForestAuthoredRegion
 } from './owner-forest-scene.js';
 
 const payload = document.getElementById('owner-forest-bootstrap');
@@ -40,10 +45,12 @@ if (payload && copyPayload && viewport && canvas) {
   const copy = JSON.parse(copyPayload.textContent);
   const context = canvas.getContext('2d');
   const placementsById = new Map();
+  const markersById = new Map();
   const assetsByKey = new Map();
   const spritesByKey = new Map();
   const loadedCells = new Set();
   const pendingCells = new Set();
+  const loadedAuthoredCells = new Set();
   const groundSamples = new Map();
   const keys = { left: false, right: false, up: false, down: false };
   const pointer = {
@@ -59,16 +66,28 @@ if (payload && copyPayload && viewport && canvas) {
   let player = { ...bootstrap.spawn };
   let playerMotion = createForestHumanoidMotion('down');
   let focusedTree = null;
+  let focusedMarker = null;
   let frame = null;
   let lastTime = null;
   let loading = false;
   let loadFailure = false;
+  let authoredLoading = false;
+  let authoredState = 'loading';
   let inspectedTreeId = null;
+  let inspectedMarkerId = null;
   let inspectionRequest = 0;
   let inspectedTreeRevision = null;
   let translationCursor = null;
   let translationsLoading = false;
   const translationPaths = new Set();
+  const placement = {
+    active: false,
+    mode: null,
+    movingObjectId: null,
+    preview: null,
+    request: null,
+    saving: false
+  };
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const status = document.querySelector('[data-owner-forest-status]');
   const joystick = document.querySelector('[data-owner-forest-joystick]');
@@ -76,6 +95,14 @@ if (payload && copyPayload && viewport && canvas) {
   const nearby = document.querySelector('[data-owner-forest-nearby]');
   const inspectButton = document.querySelector('[data-owner-forest-inspect]');
   const reset = document.querySelector('[data-owner-forest-reset]');
+  const placeMarker = document.querySelector('[data-owner-forest-place-marker]');
+  const authoredStatus = document.querySelector('[data-owner-forest-authored-status]');
+  const authoredStatusCopy = document.querySelector('[data-owner-forest-authored-status-copy]');
+  const authoredRetry = document.querySelector('[data-owner-forest-authored-retry]');
+  const placementPanel = document.querySelector('[data-owner-forest-placement]');
+  const placementStatus = document.querySelector('[data-owner-forest-placement-status]');
+  const placementSave = document.querySelector('[data-owner-forest-placement-save]');
+  const placementCancel = document.querySelector('[data-owner-forest-placement-cancel]');
   const inspection = document.querySelector('[data-owner-forest-inspection]');
   const inspectionBackdrop = document.querySelector('[data-owner-forest-inspection-backdrop]');
   const inspectionClose = document.querySelector('[data-owner-forest-inspection-close]');
@@ -90,6 +117,16 @@ if (payload && copyPayload && viewport && canvas) {
   const translationsWrap = document.querySelector('[data-owner-forest-translations-wrap]');
   const translationsList = document.querySelector('[data-owner-forest-translations]');
   const translationsMore = document.querySelector('[data-owner-forest-translations-more]');
+  const nearbyCopy = document.querySelector('[data-owner-forest-nearby-copy]');
+  const markerInspection = document.querySelector('[data-owner-forest-marker-inspection]');
+  const markerClose = document.querySelector('[data-owner-forest-marker-close]');
+  const markerStatus = document.querySelector('[data-owner-forest-marker-status]');
+  const markerActions = document.querySelector('[data-owner-forest-marker-actions]');
+  const markerMove = document.querySelector('[data-owner-forest-marker-move]');
+  const markerRemove = document.querySelector('[data-owner-forest-marker-remove]');
+  const markerConfirm = document.querySelector('[data-owner-forest-marker-confirm]');
+  const markerRemoveConfirm = document.querySelector('[data-owner-forest-marker-remove-confirm]');
+  const markerRemoveCancel = document.querySelector('[data-owner-forest-marker-remove-cancel]');
 
   function cellQuery(cells) {
     return cells.map(ownerForestCellId).join(',');
@@ -98,6 +135,45 @@ if (payload && copyPayload && viewport && canvas) {
   function setStatus(message, failed = false) {
     status.textContent = message;
     status.dataset.failed = failed ? 'true' : 'false';
+  }
+
+  function currentAuthoredCellsReady() {
+    return ownerForestCellsAround(player, bootstrap.spatialIndex.cellSize)
+      .every(cell => loadedAuthoredCells.has(ownerForestCellId(cell)));
+  }
+
+  function setAuthoredStatus(message, {
+    state = 'notice', failed = false, retry = false
+  } = {}) {
+    authoredState = state;
+    authoredStatusCopy.textContent = message;
+    authoredStatus.dataset.state = state;
+    authoredStatus.dataset.failed = failed ? 'true' : 'false';
+    authoredRetry.hidden = !retry;
+    placeMarker.disabled = placement.active || !currentAuthoredCellsReady()
+      || !['ready', 'notice'].includes(authoredState);
+  }
+
+  function markerFromApi(object) {
+    if (!object) return null;
+    const worldX = object.worldX ?? object.placement?.worldX;
+    const worldY = object.worldY ?? object.placement?.worldY;
+    if (!Number.isSafeInteger(worldX) || !Number.isSafeInteger(worldY)
+      || typeof object.objectId !== 'string'
+      || !Number.isSafeInteger(object.recordRevision)) return null;
+    return {
+      objectId: object.objectId,
+      kind: object.kind,
+      worldX,
+      worldY,
+      appearance: object.appearance,
+      recordRevision: object.recordRevision,
+      changedAt: object.changedAt,
+      regionId: object.regionId || ownerForestCellId({
+        cellX: Math.floor(worldX / bootstrap.spatialIndex.cellSize),
+        cellY: Math.floor(worldY / bootstrap.spatialIndex.cellSize)
+      })
+    };
   }
 
   function clearPointer() {
@@ -153,12 +229,51 @@ if (payload && copyPayload && viewport && canvas) {
     translationsLoading = false;
     translationPaths.clear();
     inspection.hidden = true;
-    inspectionBackdrop.hidden = true;
+    inspectionBackdrop.hidden = !inspectedMarkerId;
     viewport.dataset.inspecting = 'false';
     updateFocus();
     resize();
     requestRender();
     if (restoreFocus) viewport.focus({ preventScroll: true });
+  }
+
+  function closeMarkerInspection({ restoreFocus = true, force = false } = {}) {
+    if (markerRemoveConfirm.disabled && !force) return;
+    inspectedMarkerId = null;
+    markerInspection.hidden = true;
+    markerConfirm.hidden = true;
+    markerActions.hidden = false;
+    markerStatus.textContent = '';
+    markerMove.disabled = false;
+    markerRemove.disabled = false;
+    markerRemoveConfirm.disabled = false;
+    markerRemoveCancel.disabled = false;
+    markerRemoveConfirm.textContent = copy.markers.confirmRemove;
+    inspectionBackdrop.hidden = !inspectedTreeId;
+    viewport.dataset.inspecting = inspectedTreeId ? 'true' : 'false';
+    updateFocus();
+    resize();
+    requestRender();
+    if (restoreFocus) viewport.focus({ preventScroll: true });
+  }
+
+  function openMarkerInspection(marker) {
+    if (!marker || placement.active) return;
+    Object.keys(keys).forEach((key) => { keys[key] = false; });
+    clearPointer();
+    inspectedMarkerId = marker.objectId;
+    markerStatus.textContent = '';
+    markerActions.hidden = false;
+    markerConfirm.hidden = true;
+    markerMove.disabled = false;
+    markerRemove.disabled = false;
+    markerInspection.hidden = false;
+    inspectionBackdrop.hidden = false;
+    viewport.dataset.inspecting = 'true';
+    nearby.hidden = true;
+    resize();
+    requestRender();
+    markerClose.focus({ preventScroll: true });
   }
 
   function resetTranslations() {
@@ -334,6 +449,93 @@ if (payload && copyPayload && viewport && canvas) {
     } while (cursor);
   }
 
+  function authoredReadError(code) {
+    return Object.assign(new Error('authored region request failed'), { code });
+  }
+
+  async function requestAuthoredCells(cells) {
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const objects = new Map();
+      let cursor = null;
+      try {
+        do {
+          const query = new URLSearchParams({
+            cells: cellQuery(cells),
+            limit: String(bootstrap.delivery.authoredPageSize)
+          });
+          if (cursor) query.set('cursor', cursor);
+          const response = await window.fetch(
+            `${bootstrap.delivery.authoredRegionPath}?${query}`,
+            { credentials: 'same-origin' }
+          );
+          const body = await response.json().catch(() => ({}));
+          if (!response.ok) throw authoredReadError(body.code || 'UNAVAILABLE');
+          if (body.status !== 'ready') {
+            throw authoredReadError(body.status === 'resetting'
+              ? 'FOREST_AUTHORED_RESETTING' : 'UNAVAILABLE');
+          }
+          for (const object of body.objects) {
+            const marker = markerFromApi(object);
+            if (!marker) throw authoredReadError('FOREST_AUTHORED_MIGRATION_REQUIRED');
+            objects.set(marker.objectId, marker);
+          }
+          cursor = body.page?.nextCursor || null;
+        } while (cursor);
+        return objects;
+      } catch (error) {
+        if (error.code === 'FOREST_AUTHORED_REGION_CHANGED' && attempt < 2) continue;
+        throw error;
+      }
+    }
+    throw authoredReadError('FOREST_AUTHORED_REGION_CHANGED');
+  }
+
+  async function loadNearbyAuthoredCells({ force = false } = {}) {
+    if (authoredLoading) return;
+    const cells = ownerForestCellsAround(player, bootstrap.spatialIndex.cellSize);
+    const requested = force ? cells : cells.filter(
+      cell => !loadedAuthoredCells.has(ownerForestCellId(cell))
+    );
+    if (!requested.length) {
+      setAuthoredStatus(copy.markers.ready, { state: 'ready' });
+      refreshPlacementAvailability();
+      return;
+    }
+    authoredLoading = true;
+    setAuthoredStatus(copy.markers.loading, { state: 'loading' });
+    refreshPlacementAvailability();
+    try {
+      const objects = await requestAuthoredCells(requested);
+      const requestedIds = new Set(requested.map(ownerForestCellId));
+      replaceOwnerForestAuthoredRegion(markersById, requestedIds, objects.values());
+      requestedIds.forEach(cellId => loadedAuthoredCells.add(cellId));
+      setAuthoredStatus(copy.markers.ready, { state: 'ready' });
+      updateFocus();
+      requestRender();
+    } catch (error) {
+      const migration = error.code === 'FOREST_AUTHORED_MIGRATION_REQUIRED';
+      const resetting = error.code === 'FOREST_AUTHORED_RESETTING';
+      const hasKnownMarkers = markersById.size > 0;
+      setAuthoredStatus(
+        migration ? copy.markers.migrationRequired
+          : resetting ? copy.markers.resetting
+            : hasKnownMarkers ? copy.markers.stale : copy.markers.unavailable,
+        {
+          state: migration ? 'unsupported' : resetting ? 'resetting' : 'unavailable',
+          failed: !resetting,
+          retry: !migration
+        }
+      );
+      console.error('Owner forest authored-region load failed:', error?.code || 'Error');
+    } finally {
+      authoredLoading = false;
+      refreshPlacementAvailability();
+      if (!currentAuthoredCellsReady() && authoredState === 'ready') {
+        loadNearbyAuthoredCells();
+      }
+    }
+  }
+
   async function loadNearbyCells() {
     if (loading) return;
     const cells = ownerForestCellsAround(player, bootstrap.spatialIndex.cellSize);
@@ -469,11 +671,66 @@ if (payload && copyPayload && viewport && canvas) {
     }
   }
 
+  function paintMarker(marker, { preview = false, invalid = false, time = 0 } = {}) {
+    const x = Math.round(marker.worldX - camera.x);
+    const y = Math.round(marker.worldY - camera.y);
+    const previousAlpha = context.globalAlpha;
+    context.globalAlpha = preview
+      ? (placement.saving && !reducedMotion.matches ? 0.48 + (Math.sin(time * 5) * 0.1) : 0.58)
+      : 1;
+    if (preview || focusedMarker?.objectId === marker.objectId) {
+      context.beginPath();
+      context.ellipse(x, y, 18, 8, 0, 0, Math.PI * 2);
+      context.fillStyle = invalid ? 'rgba(173, 78, 62, 0.32)' : 'rgba(255, 239, 164, 0.34)';
+      context.fill();
+      context.strokeStyle = invalid ? '#b95547' : '#fff0ae';
+      context.lineWidth = 2;
+      context.setLineDash(preview ? [4, 3] : []);
+      context.stroke();
+      context.setLineDash([]);
+      if (invalid) {
+        context.beginPath();
+        context.moveTo(x - 6, y - 5);
+        context.lineTo(x + 6, y + 5);
+        context.moveTo(x + 6, y - 5);
+        context.lineTo(x - 6, y + 5);
+        context.stroke();
+      }
+    }
+    context.fillStyle = 'rgba(22, 35, 31, 0.25)';
+    context.fillRect(x - 9, y - 3, 18, 5);
+    context.fillStyle = '#554638';
+    context.fillRect(x - 2, y - 23, 4, 22);
+    context.fillStyle = '#c8a852';
+    context.fillRect(x - 8, y - 28, 16, 9);
+    context.fillStyle = '#6f4d32';
+    context.fillRect(x - 5, y - 25, 10, 2);
+    context.globalAlpha = previousAlpha;
+  }
+
   function updateFocus() {
-    focusedTree = focusedForestPlacement(player, [...placementsById.values()].filter(
+    const tree = focusedForestPlacement(player, [...placementsById.values()].filter(
       placement => assetsByKey.has(placement.assetKey)
     ), bootstrap.spawn.interactionRadius);
-    nearby.hidden = !focusedTree || Boolean(inspectedTreeId);
+    const marker = ownerForestFocusedMarker(
+      player, [...markersById.values()], bootstrap.spawn.interactionRadius
+    );
+    const treeDistance = tree ? Math.hypot(player.worldX - tree.worldX, player.worldY - tree.worldY)
+      : Infinity;
+    const markerDistance = marker
+      ? Math.hypot(player.worldX - marker.worldX, player.worldY - marker.worldY) : Infinity;
+    focusedMarker = markerDistance < treeDistance ? marker : null;
+    focusedTree = focusedMarker ? null : tree;
+    const unavailable = !focusedTree && !focusedMarker;
+    nearby.hidden = unavailable || Boolean(inspectedTreeId) || Boolean(inspectedMarkerId)
+      || placement.active;
+    if (focusedMarker) {
+      nearbyCopy.textContent = copy.markers.markerNearby;
+      inspectButton.textContent = copy.markers.inspectMarker;
+    } else {
+      nearbyCopy.textContent = copy.markers.treeNearby;
+      inspectButton.textContent = copy.markers.inspectTree;
+    }
   }
 
   function render(time = window.performance.now()) {
@@ -482,8 +739,22 @@ if (payload && copyPayload && viewport && canvas) {
     paintGround();
     const placements = [...placementsById.values()];
     const visible = visibleForestPlacements(placements, assetsByKey, camera, 32);
-    const depth = [...visible.map(placement => ({ placement, worldY: placement.worldY })),
-      { player: true, worldY: player.worldY }].sort((a, b) => a.worldY - b.worldY);
+    const visibleMarkers = [...markersById.values()].filter(marker => (
+      marker.worldX >= camera.x - 32 && marker.worldX <= camera.x + camera.width + 32
+      && marker.worldY >= camera.y - 40 && marker.worldY <= camera.y + camera.height + 32
+    ));
+    const depth = [
+      ...visible.map(tree => ({ kind: 'tree', id: tree.id, placement: tree, worldY: tree.worldY })),
+      ...visibleMarkers.map(marker => ({
+        kind: 'marker', id: marker.objectId, marker, worldY: marker.worldY
+      })),
+      ...(placement.active && placement.preview ? [{
+        kind: 'preview', id: '~preview', marker: placement.preview,
+        worldY: placement.preview.worldY
+      }] : []),
+      { kind: 'player', id: '~player', player: true, worldY: player.worldY }
+    ].sort((a, b) => a.worldY - b.worldY || a.kind.localeCompare(b.kind)
+      || a.id.localeCompare(b.id));
     for (const item of depth) {
       if (item.player) {
         paintForestHumanoid(context, Math.round(player.worldX - camera.x),
@@ -492,6 +763,12 @@ if (payload && copyPayload && viewport && canvas) {
             motion: playerMotion,
             reducedMotion: reducedMotion.matches
           });
+      } else if (item.marker) {
+        paintMarker(item.marker, {
+          preview: item.kind === 'preview',
+          invalid: item.kind === 'preview' && !placement.preview.valid,
+          time: time / 1000
+        });
       } else paintTree(item.placement, time / 1000);
     }
   }
@@ -512,6 +789,263 @@ if (payload && copyPayload && viewport && canvas) {
     requestRender();
   }
 
+  function previewMessage(reason) {
+    return {
+      'tree-collision': copy.markers.previewTreeCollision,
+      'marker-collision': copy.markers.previewMarkerCollision,
+      'world-bounds': copy.markers.previewBounds,
+      density: copy.markers.previewDensity
+    }[reason] || copy.markers.previewClear;
+  }
+
+  function refreshPlacementAvailability() {
+    const regionReady = currentAuthoredCellsReady()
+      && ['ready', 'notice'].includes(authoredState);
+    placeMarker.disabled = placement.active || !regionReady;
+    if (!placement.active) return;
+    placementSave.disabled = placement.saving || !regionReady || !placement.preview?.valid;
+    placementCancel.disabled = placement.saving;
+  }
+
+  function updatePlacementPreview() {
+    if (!placement.active || placement.saving) return;
+    placement.preview = ownerForestMarkerPreview({
+      player,
+      facingRadians: playerMotion.targetFacingRadians,
+      placements: [...placementsById.values()],
+      markers: [...markersById.values()],
+      cellSize: bootstrap.spatialIndex.cellSize,
+      movingObjectId: placement.movingObjectId
+    });
+    placementStatus.textContent = previewMessage(placement.preview.reason);
+    if (placement.request
+      && (placement.request.worldX !== placement.preview.worldX
+        || placement.request.worldY !== placement.preview.worldY)) {
+      placement.request = null;
+      placementSave.textContent = placement.mode === 'move'
+        ? copy.markers.move : copy.markers.save;
+    }
+    refreshPlacementAvailability();
+    requestRender();
+  }
+
+  function stopPlacement({ restoreFocus = true, force = false } = {}) {
+    if (placement.saving && !force) return;
+    placement.active = false;
+    placement.mode = null;
+    placement.movingObjectId = null;
+    placement.preview = null;
+    placement.request = null;
+    placement.saving = false;
+    placementPanel.hidden = true;
+    viewport.dataset.placing = 'false';
+    updateFocus();
+    refreshPlacementAvailability();
+    requestRender();
+    if (restoreFocus) viewport.focus({ preventScroll: true });
+  }
+
+  function beginPlacement(mode, marker = null) {
+    if (!currentAuthoredCellsReady() || !['ready', 'notice'].includes(authoredState)) return;
+    if (inspectedMarkerId) closeMarkerInspection({ restoreFocus: false });
+    if (inspectedTreeId) closeInspection({ restoreFocus: false });
+    clearPointer();
+    Object.keys(keys).forEach(key => { keys[key] = false; });
+    placement.active = true;
+    placement.mode = mode;
+    placement.movingObjectId = marker?.objectId || null;
+    placement.preview = null;
+    placement.request = null;
+    placement.saving = false;
+    placementPanel.hidden = false;
+    viewport.dataset.placing = 'true';
+    placementSave.textContent = mode === 'move' ? copy.markers.move : copy.markers.save;
+    updatePlacementPreview();
+    updateFocus();
+    viewport.focus({ preventScroll: true });
+  }
+
+  async function authoredMutation(path, method, body) {
+    const response = await window.fetch(path, {
+      method,
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw Object.assign(new Error('authored mutation failed'), {
+      code: result.code || 'FOREST_AUTHORED_MUTATION_UNAVAILABLE',
+      object: result.object || null
+    });
+    return result;
+  }
+
+  function reconcileMutationObject(object) {
+    const marker = markerFromApi(object);
+    if (object?.state === 'removed' || !marker) {
+      if (object?.objectId) markersById.delete(object.objectId);
+      return null;
+    }
+    markersById.set(marker.objectId, marker);
+    return marker;
+  }
+
+  function mutationFailureMessage(code) {
+    if (code === 'FOREST_AUTHORED_PLACEMENT_COLLISION') return copy.markers.collision;
+    if (code === 'FOREST_AUTHORED_PLACEMENT_DENSITY') return copy.markers.density;
+    if (code === 'FOREST_AUTHORED_MUTATION_RATE_LIMITED') return copy.markers.rateLimited;
+    return copy.markers.unavailableMutation;
+  }
+
+  async function savePlacement() {
+    if (!placement.active || placement.saving || !placement.preview?.valid
+      || !currentAuthoredCellsReady()) return;
+    const { worldX, worldY } = placement.preview;
+    if (!placement.request) {
+      placement.request = placement.mode === 'create'
+        ? { objectId: createOwnerForestMarkerObjectId(window.crypto), worldX, worldY }
+        : {
+            objectId: placement.movingObjectId,
+            expectedRevision: markersById.get(placement.movingObjectId)?.recordRevision,
+            worldX,
+            worldY
+          };
+    }
+    const request = placement.request;
+    if (!request.objectId || (placement.mode === 'move'
+      && !Number.isSafeInteger(request.expectedRevision))) return;
+    placement.saving = true;
+    placementStatus.textContent = placement.mode === 'move'
+      ? copy.markers.moving : copy.markers.saving;
+    refreshPlacementAvailability();
+    requestRender();
+    try {
+      const path = `${bootstrap.delivery.authoredObjectPath}/${encodeURIComponent(
+        request.objectId
+      )}${placement.mode === 'move' ? '/placement' : ''}`;
+      const body = placement.mode === 'move' ? {
+        protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
+        expectedRevision: request.expectedRevision,
+        worldX: request.worldX,
+        worldY: request.worldY
+      } : {
+        protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
+        kind: 'personal-marker',
+        worldX: request.worldX,
+        worldY: request.worldY
+      };
+      const result = await authoredMutation(path, placement.mode === 'move' ? 'PATCH' : 'PUT', body);
+      const marker = reconcileMutationObject(result.object);
+      if (!marker) throw Object.assign(
+        new Error('accepted authored mutation returned no active marker'),
+        { code: 'FOREST_AUTHORED_OBJECT_UNAVAILABLE', object: result.object }
+      );
+      const message = placement.mode === 'move' ? copy.markers.moved : copy.markers.saved;
+      stopPlacement({ restoreFocus: false, force: true });
+      setAuthoredStatus(message, { state: 'notice' });
+      updateFocus();
+      viewport.focus({ preventScroll: true });
+    } catch (error) {
+      if (error.code === 'FOREST_AUTHORED_OBJECT_CONFLICT') {
+        reconcileMutationObject(error.object);
+        stopPlacement({ restoreFocus: false, force: true });
+        setAuthoredStatus(copy.markers.conflict, { state: 'notice', failed: true });
+        updateFocus();
+        viewport.focus({ preventScroll: true });
+        return;
+      }
+      if (error.code === 'FOREST_AUTHORED_OBJECT_UNAVAILABLE') {
+        if (error.object) reconcileMutationObject(error.object);
+        else if (placement.movingObjectId) markersById.delete(placement.movingObjectId);
+        stopPlacement({ restoreFocus: false, force: true });
+        setAuthoredStatus(copy.markers.removedElsewhere, { state: 'notice', failed: true });
+        updateFocus();
+        viewport.focus({ preventScroll: true });
+        return;
+      }
+      if (error.code === 'FOREST_AUTHORED_MIGRATION_REQUIRED') {
+        stopPlacement({ restoreFocus: false, force: true });
+        setAuthoredStatus(copy.markers.migrationRequired, {
+          state: 'unsupported', failed: true
+        });
+        viewport.focus({ preventScroll: true });
+        return;
+      }
+      if (error.code === 'FOREST_AUTHORED_RESETTING') {
+        stopPlacement({ restoreFocus: false, force: true });
+        setAuthoredStatus(copy.markers.resetting, { state: 'resetting', retry: true });
+        viewport.focus({ preventScroll: true });
+        return;
+      }
+      placement.saving = false;
+      placementStatus.textContent = mutationFailureMessage(error.code);
+      placementSave.textContent = placement.mode === 'move'
+        ? copy.markers.retryMove : copy.markers.retrySave;
+      refreshPlacementAvailability();
+      requestRender();
+    }
+  }
+
+  async function removeInspectedMarker() {
+    const marker = markersById.get(inspectedMarkerId);
+    if (!marker || markerRemoveConfirm.disabled) return;
+    markerRemoveConfirm.disabled = true;
+    markerRemoveCancel.disabled = true;
+    markerStatus.textContent = copy.markers.removeSaving;
+    try {
+      const result = await authoredMutation(
+        `${bootstrap.delivery.authoredObjectPath}/${encodeURIComponent(
+          marker.objectId
+        )}/removal`,
+        'POST',
+        {
+          protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
+          expectedRevision: marker.recordRevision
+        }
+      );
+      if (!['removed', 'already-removed'].includes(result.outcome)
+        || result.object?.state !== 'removed') {
+        throw new Error('accepted authored removal returned an invalid state');
+      }
+      markersById.delete(marker.objectId);
+      closeMarkerInspection({ restoreFocus: false, force: true });
+      setAuthoredStatus(copy.markers.removed, { state: 'notice' });
+      updateFocus();
+      viewport.focus({ preventScroll: true });
+    } catch (error) {
+      markerRemoveConfirm.disabled = false;
+      markerRemoveCancel.disabled = false;
+      if (error.code === 'FOREST_AUTHORED_OBJECT_CONFLICT') {
+        reconcileMutationObject(error.object);
+        markerConfirm.hidden = true;
+        markerActions.hidden = false;
+        markerStatus.textContent = copy.markers.conflict;
+        markerMove.focus({ preventScroll: true });
+      } else if (error.code === 'FOREST_AUTHORED_OBJECT_UNAVAILABLE') {
+        markersById.delete(marker.objectId);
+        closeMarkerInspection({ restoreFocus: false });
+        setAuthoredStatus(copy.markers.removedElsewhere, { state: 'notice', failed: true });
+        updateFocus();
+        viewport.focus({ preventScroll: true });
+      } else if (error.code === 'FOREST_AUTHORED_MIGRATION_REQUIRED') {
+        closeMarkerInspection({ restoreFocus: false });
+        setAuthoredStatus(copy.markers.migrationRequired, {
+          state: 'unsupported', failed: true
+        });
+        viewport.focus({ preventScroll: true });
+      } else if (error.code === 'FOREST_AUTHORED_RESETTING') {
+        closeMarkerInspection({ restoreFocus: false });
+        setAuthoredStatus(copy.markers.resetting, { state: 'resetting', retry: true });
+        viewport.focus({ preventScroll: true });
+      } else {
+        markerStatus.textContent = mutationFailureMessage(error.code);
+        markerRemoveConfirm.textContent = copy.markers.retryRemove;
+        markerRemoveConfirm.focus({ preventScroll: true });
+      }
+      requestRender();
+    }
+  }
+
   function tick(time) {
     const elapsed = lastTime === null ? 0 : Math.min(0.05, (time - lastTime) / 1000);
     lastTime = time;
@@ -521,7 +1055,7 @@ if (payload && copyPayload && viewport && canvas) {
       pointer.y - pointer.originY
     );
     const direction = ownerForestMovementDirection({
-      inspectionOpen: Boolean(inspectedTreeId),
+      inspectionOpen: Boolean(inspectedTreeId || inspectedMarkerId),
       keyboardDirection,
       pointerDirection
     });
@@ -535,6 +1069,8 @@ if (payload && copyPayload && viewport && canvas) {
       Object.assign(camera, ownerForestCamera(player, camera));
       updateFocus();
       loadNearbyCells();
+      loadNearbyAuthoredCells();
+      updatePlacementPreview();
     } else {
       playerMotion = advanceForestHumanoidMotion(playerMotion, {
         from: player, to: player, elapsedSeconds: elapsed,
@@ -550,13 +1086,19 @@ if (payload && copyPayload && viewport && canvas) {
     s: 'down', S: 'down' })[key];
   viewport.addEventListener('keydown', (event) => {
     if (event.target !== viewport) return;
-    if (['Enter', ' ', 'e', 'E'].includes(event.key) && focusedTree) {
-      requestInspection(focusedTree);
+    if (event.key === 'Escape' && placement.active) {
+      stopPlacement();
       event.preventDefault();
       return;
     }
-    if (event.key === 'Escape' && inspectedTreeId) {
-      closeInspection();
+    if (['Enter', ' '].includes(event.key) && placement.active) {
+      savePlacement();
+      event.preventDefault();
+      return;
+    }
+    if (['Enter', ' ', 'e', 'E'].includes(event.key) && (focusedTree || focusedMarker)) {
+      if (focusedMarker) openMarkerInspection(focusedMarker);
+      else requestInspection(focusedTree);
       event.preventDefault();
       return;
     }
@@ -574,6 +1116,7 @@ if (payload && copyPayload && viewport && canvas) {
   viewport.addEventListener('pointerdown', (event) => {
     if (pointer.id !== null
       || inspectedTreeId
+      || inspectedMarkerId
       || (event.target !== canvas && event.target !== viewport)) return;
     viewport.focus({ preventScroll: true });
     pointer.id = event.pointerId;
@@ -602,20 +1145,34 @@ if (payload && copyPayload && viewport && canvas) {
     updatePointer(event);
     const wasTap = forestTouchGestureIntent(pointer.maximumDistance) === 'tap';
     clearPointer();
-    if (wasTap) {
+    if (wasTap && !placement.active) {
       const bounds = viewport.getBoundingClientRect();
+      const point = {
+        worldX: event.clientX - bounds.left + camera.x,
+        worldY: event.clientY - bounds.top + camera.y
+      };
+      const selectedMarker = ownerForestMarkerAtPoint({
+        point,
+        player,
+        markers: [...markersById.values()],
+        interactionRadius: bootstrap.spawn.interactionRadius
+      });
       const selected = ownerForestPlacementAtPoint({
-        point: {
-          worldX: event.clientX - bounds.left + camera.x,
-          worldY: event.clientY - bounds.top + camera.y
-        },
+        point,
         player,
         placements: [...placementsById.values()],
         assetsByKey,
         interactionRadius: bootstrap.spawn.interactionRadius
       });
-      if (selected) {
+      if (selectedMarker) {
+        focusedMarker = selectedMarker;
+        focusedTree = null;
+        nearby.hidden = false;
+        openMarkerInspection(selectedMarker);
+        requestRender();
+      } else if (selected) {
         focusedTree = selected;
+        focusedMarker = null;
         nearby.hidden = false;
         requestInspection(selected);
         requestRender();
@@ -630,13 +1187,22 @@ if (payload && copyPayload && viewport && canvas) {
     event.preventDefault();
   });
   inspectButton.addEventListener('click', () => {
-    if (focusedTree) requestInspection(focusedTree);
+    if (focusedMarker) openMarkerInspection(focusedMarker);
+    else if (focusedTree) requestInspection(focusedTree);
   });
   inspectionClose.addEventListener('click', () => closeInspection());
-  inspectionBackdrop.addEventListener('click', () => closeInspection());
+  inspectionBackdrop.addEventListener('click', () => {
+    if (inspectedMarkerId) closeMarkerInspection();
+    else closeInspection();
+  });
   inspection.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
     closeInspection();
+    event.preventDefault();
+  });
+  markerInspection.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    closeMarkerInspection();
     event.preventDefault();
   });
   translationsMore.addEventListener('click', () => {
@@ -672,6 +1238,31 @@ if (payload && copyPayload && viewport && canvas) {
       hideTree.disabled = false;
     }
   });
+  placeMarker.addEventListener('click', () => beginPlacement('create'));
+  authoredRetry.addEventListener('click', () => loadNearbyAuthoredCells({ force: true }));
+  placementSave.addEventListener('click', savePlacement);
+  placementCancel.addEventListener('click', () => stopPlacement());
+  markerClose.addEventListener('click', () => closeMarkerInspection());
+  markerMove.addEventListener('click', () => {
+    const marker = markersById.get(inspectedMarkerId);
+    if (marker) beginPlacement('move', marker);
+  });
+  markerRemove.addEventListener('click', () => {
+    markerActions.hidden = true;
+    markerConfirm.hidden = false;
+    markerStatus.textContent = '';
+    markerRemoveConfirm.textContent = copy.markers.confirmRemove;
+    markerRemoveConfirm.disabled = false;
+    markerRemoveCancel.disabled = false;
+    markerRemoveConfirm.focus({ preventScroll: true });
+  });
+  markerRemoveCancel.addEventListener('click', () => {
+    markerConfirm.hidden = true;
+    markerActions.hidden = false;
+    markerStatus.textContent = '';
+    markerRemove.focus({ preventScroll: true });
+  });
+  markerRemoveConfirm.addEventListener('click', removeInspectedMarker);
   reset.addEventListener('click', () => {
     clearPointer();
     player = { ...bootstrap.spawn };
@@ -679,6 +1270,8 @@ if (payload && copyPayload && viewport && canvas) {
     Object.assign(camera, ownerForestCamera(player, camera));
     updateFocus();
     loadNearbyCells();
+    loadNearbyAuthoredCells();
+    updatePlacementPreview();
     viewport.focus();
   });
   window.addEventListener('resize', resize);
@@ -690,6 +1283,7 @@ if (payload && copyPayload && viewport && canvas) {
 
   resize();
   loadNearbyCells();
+  loadNearbyAuthoredCells();
   window.requestAnimationFrame(tick);
   if (loadFailure) setStatus('The forest could not be loaded.', true);
 }

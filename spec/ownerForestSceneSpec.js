@@ -4,6 +4,7 @@ import {
   sampleOwnerForestGroundPresentation
 } from '../public/js/owner-forest-environment.js';
 import {
+  createOwnerForestMarkerObjectId,
   decodeOwnerForestRaster,
   moveOwnerForestPlayer,
   ownerForestAssetBatches,
@@ -12,7 +13,11 @@ import {
   ownerForestCellsAround,
   ownerForestJoystickOffset,
   ownerForestMovementDirection,
-  ownerForestPlacementAtPoint
+  ownerForestFocusedMarker,
+  ownerForestMarkerAtPoint,
+  ownerForestMarkerPreview,
+  ownerForestPlacementAtPoint,
+  replaceOwnerForestAuthoredRegion
 } from '../public/js/owner-forest-scene.js';
 import {
   forestTouchGestureIntent,
@@ -21,6 +26,15 @@ import {
 import { resolveForestOwnerEnvironment } from '../server/services/forestOwnerEnvironmentResolver.js';
 
 describe('owner forest browser scene policy', () => {
+  it('creates canonical UUIDv4 marker identity with a bounded fallback', () => {
+    expect(createOwnerForestMarkerObjectId({
+      getRandomValues(bytes) {
+        bytes.fill(0xab);
+        return bytes;
+      }
+    })).toBe('abababab-abab-4bab-abab-abababababab');
+  });
+
   it('selects a canonical 3x3 signed-cell neighborhood around the player', () => {
     const cells = ownerForestCellsAround({ worldX: -1, worldY: 721 }, 720);
 
@@ -141,6 +155,84 @@ describe('owner forest browser scene policy', () => {
       assetsByKey,
       interactionRadius: 48,
     })).toBeNull();
+  });
+
+  it('keeps a marker preview forty units ahead and reports known local rejection reasons', () => {
+    const input = {
+      player: { worldX: 10, worldY: 20 },
+      facingRadians: 0,
+      placements: [],
+      markers: [],
+      cellSize: 720
+    };
+    expect(ownerForestMarkerPreview(input)).toEqual({
+      worldX: 50, worldY: 20, valid: true, reason: null
+    });
+    expect(ownerForestMarkerPreview({
+      ...input,
+      placements: [{ worldX: 50, worldY: 20, collisionRadius: 18 }]
+    }).reason).toBe('tree-collision');
+    expect(ownerForestMarkerPreview({
+      ...input,
+      markers: [{ objectId: 'other', worldX: 55, worldY: 20 }]
+    }).reason).toBe('marker-collision');
+  });
+
+  it('excludes the marker being moved from preview collision and density checks', () => {
+    const marker = { objectId: 'moving', worldX: 40, worldY: 0 };
+    const preview = ownerForestMarkerPreview({
+      player: { worldX: 0, worldY: 0 },
+      facingRadians: 0,
+      placements: [],
+      markers: [marker],
+      movingObjectId: marker.objectId,
+      cellSize: 720
+    });
+    expect(preview.valid).toBeTrue();
+  });
+
+  it('applies the provisional per-cell cap after 128 other active markers', () => {
+    const markers = Array.from({ length: 128 }, (_, index) => ({
+      objectId: `marker-${index}`,
+      worldX: 100 + ((index % 16) * 26),
+      worldY: 100 + (Math.floor(index / 16) * 26)
+    }));
+    expect(ownerForestMarkerPreview({
+      player: { worldX: 0, worldY: 0 },
+      facingRadians: 0,
+      placements: [],
+      markers,
+      cellSize: 720
+    }).reason).toBe('density');
+  });
+
+  it('focuses and directly selects only nearby marker artwork', () => {
+    const nearby = { objectId: 'nearby', worldX: 30, worldY: 20 };
+    const distant = { objectId: 'distant', worldX: 300, worldY: 20 };
+    const player = { worldX: 0, worldY: 0 };
+    expect(ownerForestFocusedMarker(player, [distant, nearby], 48)).toBe(nearby);
+    expect(ownerForestMarkerAtPoint({
+      point: { worldX: 30, worldY: 0 }, player, markers: [nearby], interactionRadius: 48
+    })).toBe(nearby);
+    expect(ownerForestMarkerAtPoint({
+      point: { worldX: 300, worldY: 0 }, player, markers: [distant], interactionRadius: 48
+    })).toBeNull();
+  });
+
+  it('replaces committed regions by UUID across refreshes and independent sessions', () => {
+    const initial = {
+      objectId: 'same-marker', regionId: '0:0', worldX: 10, worldY: 20, recordRevision: 1
+    };
+    const moved = { ...initial, worldX: 30, recordRevision: 2 };
+    const firstSession = replaceOwnerForestAuthoredRegion(new Map(), ['0:0'], [initial]);
+    const secondSession = replaceOwnerForestAuthoredRegion(new Map(), ['0:0'], [initial]);
+    expect([...firstSession.values()]).toEqual([...secondSession.values()]);
+
+    replaceOwnerForestAuthoredRegion(firstSession, ['0:0'], [moved]);
+    expect(firstSession.size).toBe(1);
+    expect(firstSession.get('same-marker')).toBe(moved);
+    replaceOwnerForestAuthoredRegion(firstSession, ['0:0'], []);
+    expect(firstSession.size).toBe(0);
   });
 
   it('keeps browser ground presentation exactly aligned with server environment policy', () => {
