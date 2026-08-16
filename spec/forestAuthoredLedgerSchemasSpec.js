@@ -259,6 +259,11 @@ describe('forest authored ledger schemas', () => {
     for (const overrides of [
       { status: 'processing', completedAt: PURGE },
       { status: 'completed', completedAt: null },
+      {
+        status: 'completed',
+        startedAt: PURGE,
+        completedAt: NOW
+      },
       { affectedObjectCount: -1 },
       { afterObjectId: 'not-a-uuid' }
     ]) {
@@ -288,6 +293,9 @@ describe('forest authored ledger schemas', () => {
     });
     expect(indexes.get('forest_authored_reset_worker')?.fields).toEqual({
       status: 1, updatedAt: 1, _id: 1
+    });
+    expect(indexes.get('forest_authored_reset_retention')?.fields).toEqual({
+      status: 1, completedAt: 1, _id: 1
     });
     expect(indexes.get('forest_authored_reset_deletion')?.fields).toEqual({
       ownerUserId: 1, _id: 1

@@ -567,10 +567,18 @@ semantics, and tests still exist and acquire the same owner ledger fence as indi
 A later route requires its own destructive-action UX and security review. Tombstones provide
 traceability but do not imply bulk undo.
 
-Completed reset-operation retention and tombstone purging must use bounded, retryable cleanup rather
-than an unbounded owner transaction. The exact completed-reset evidence duration is an operations
-retention setting to settle before the reset service is exposed; it does not alter marker identity
-or authorize schemas to retain operations forever.
+Completed reset-operation evidence is retained for 90 days after `completedAt`, aligned with the
+tombstone recovery window, and then becomes eligible for physical deletion. Completed-operation
+cleanup and tombstone purging use separate stable oldest-first queries and batches of at most 250;
+the default batch size is 100. Each deletion compares the exact supported version and lifecycle
+evidence read by the worker. Unsupported, malformed, concurrently changed, or individually failed
+records are counted as failures and retained rather than silently deleted. Processing reset
+operations are never selected by retention cleanup.
+
+Retention cleanup is an internal service with aggregate-only results. Milestone 3 adds no route,
+browser control, or production scheduler for it. Tombstone purge does not increment authored region
+revisions because removed records are already absent from rendered regional state. Account deletion
+continues to ignore both retention windows and performs its own bounded cleanup.
 
 ## Diagnostic and export boundary
 

@@ -38,12 +38,15 @@ import {
   inspectForestAuthoredPlacement
 } from './forestAuthoredPlacement.js';
 import {
+  FOREST_AUTHORED_TOMBSTONE_RETENTION_MS
+} from './forestAuthoredRetentionPolicy.js';
+import {
   deriveForestOwnerPlacementIndex,
   FOREST_OWNER_PLACEMENT_INDEX_VERSION
 } from './forestOwnerPlacementNeighborhood.js';
 
 export const FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION = 1;
-export const FOREST_AUTHORED_TOMBSTONE_RETENTION_MS = 90 * 24 * 60 * 60 * 1_000;
+export { FOREST_AUTHORED_TOMBSTONE_RETENTION_MS } from './forestAuthoredRetentionPolicy.js';
 
 const OBJECT_ID_PATTERN = /^[a-f0-9]{24}$/i;
 const UUID_V4_PATTERN = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;

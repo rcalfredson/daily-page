@@ -23,7 +23,7 @@ import {
 } from '../db/schemas/ForestAuthoredResetOperationSchema.js';
 import { FOREST_OWNER_WORLD_SCHEMA_VERSION } from '../db/schemas/ForestOwnerWorldSchema.js';
 import { acquireForestLedgerFence } from './forestLedgerFence.js';
-import { FOREST_AUTHORED_TOMBSTONE_RETENTION_MS } from './forestAuthoredObjectMutation.js';
+import { FOREST_AUTHORED_TOMBSTONE_RETENTION_MS } from './forestAuthoredRetentionPolicy.js';
 import {
   FOREST_OWNER_ENVIRONMENT_POLICY_VERSION,
   FOREST_OWNER_ENVIRONMENT_SCHEMA_VERSION,
