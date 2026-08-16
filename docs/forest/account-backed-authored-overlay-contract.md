@@ -552,9 +552,11 @@ Completion requires a final owner/forest query proving that no active markers re
 retry returns the same aggregate result. Account deletion supersedes reset and removes its
 operation evidence rather than finishing it first.
 
-The initial production UI may leave reset unexposed until confirmation wording and focus behavior
-are accepted. The service, fixture, support semantics, and tests must still exist. Tombstones
-provide traceability but do not imply bulk undo.
+Milestone 3 keeps reset unexposed until confirmation wording and focus behavior are accepted. It
+has no browser control or HTTP route. The internal service, bounded worker, fixture, support
+semantics, and tests still exist and acquire the same owner ledger fence as individual mutations.
+A later route requires its own destructive-action UX and security review. Tombstones provide
+traceability but do not imply bulk undo.
 
 Completed reset-operation retention and tombstone purging must use bounded, retryable cleanup rather
 than an unbounded owner transaction. The exact completed-reset evidence duration is an operations
