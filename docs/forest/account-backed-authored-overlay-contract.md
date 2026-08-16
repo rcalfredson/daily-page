@@ -318,6 +318,15 @@ production authored-object shape before version 1, so Milestone 3 will not manuf
 meaningless version-0 migration. The initial implementation must nevertheless include an exact
 versioned reader and an idempotent migration harness before version 2 is introduced.
 
+The [pre-version-2 harness](authored-migration-readiness-harness-contract.md) is internal, defaults
+to dry-run, and accepts only an explicit injected source-to-target plan; Milestone 3 registers no
+production transformation. It processes stable bounded batches, returns a
+plan/version/mode-bound opaque caller-held checkpoint, advances that checkpoint only past verified
+or already-current records, and stops at malformed, unsupported, conflicting, or unavailable
+evidence. A real production migration must add its durable operation record and deployment-specific
+integration before apply mode is enabled; the generic harness does not create speculative permanent
+bookkeeping.
+
 An accepted migration preserves object id, creation fingerprint, current/final coordinates,
 user-facing record revision, lifecycle state, and original timestamps. Operational migration
 metadata must not masquerade as a user edit or perform semantic reprojection.
