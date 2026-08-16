@@ -577,6 +577,13 @@ or authorize schemas to retain operations forever.
 The authenticated diagnostic/export is read-only, generated on demand, private, and paginated. It
 does not create a durable export snapshot record.
 
+Milestone 3 exposes this boundary only as owner-authenticated JSON at
+`GET /api/v1/forest/authored-diagnostics`; it has no browser UI or persisted download artifact.
+Every request must include exactly one explicit `includeRemoved=true` or
+`includeRemoved=false` query value. The choice is repeated and cursor-verified on continuation so
+active-only and lifecycle inventories cannot change meaning through an implicit default. `limit`
+defaults to 100 and is bounded at 250.
+
 Its exact versioned envelope contains opaque forest identity but no raw owner id. Each row contains
 only:
 
@@ -594,14 +601,20 @@ Rows are ordered by object id, with pages of at most 250. The cursor binds to th
 schema, tombstone-inclusion choice, and export start time. Objects created after the export begins
 are excluded using `createdAt <= exportStartedAt`.
 
+The bounded reader validates every scanned record before applying the tombstone-inclusion choice.
+An active-only page may therefore return fewer rows, including zero, with a continuation cursor
+when its bounded scan contained valid tombstones. This prevents active-only diagnostics from
+silently stepping over malformed lifecycle evidence.
+
 This boundary is a diagnostic inventory, not an atomic historical snapshot or backup. A move,
 removal, reset, tombstone purge, or account deletion during pagination may make a later row reflect
 newer state or disappear. An exact recovery snapshot would require a separate frozen-revision or
 operational-backup contract.
 
-Unknown or malformed records make the result explicitly incomplete or unavailable; they are not
-silently skipped. No writing body, title, route, Block/group identity, session evidence, request
-history, IP/device information, or nearby-object detail appears.
+Unknown versions fail the page as migration-required, and malformed current-version records fail
+the page as unavailable; neither is silently skipped or returned as a deceptively complete partial
+inventory. No writing body, title, route, Block/group identity, session evidence, request history,
+IP/device information, or nearby-object detail appears.
 
 Ordinary aggregate diagnostics expose counts and bounded reasons only. Identifiers, coordinates,
 fingerprints, and timestamps do not enter logs. Account deletion revokes diagnostic access
