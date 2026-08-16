@@ -26,7 +26,8 @@
     "account-deletion:fixture": "node scripts/dev/accountDeletionFixture.js",
     "forest:placement-preview": "node scripts/dev/renderForestOwnerGrovePlacementPreview.js",
     "forest:environment-preview": "node scripts/dev/renderForestOwnerEnvironmentPreview.js",
-    "forest:authored-mutation-fixture": "node scripts/dev/forestAuthoredMutationFixture.js"
+    "forest:authored-mutation-fixture": "node scripts/dev/forestAuthoredMutationFixture.js",
+    "forest:authored-lifecycle-fixture": "node scripts/dev/forestAuthoredLifecycleFixture.js"
   },
   "repository": {
     "type": "git",

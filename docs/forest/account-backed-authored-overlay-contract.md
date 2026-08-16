@@ -801,6 +801,10 @@ Passes 3 through 7 must establish at least the following evidence.
 - cleanup retry and expiry-scheduling failure remain observable and recoverable; and
 - reset never edits source writing, writing trees, inclusion, or generated identity.
 
+The guarded real-Mongo lifecycle fixture for reset, diagnostics, retention, and disposable
+migration recovery is documented in
+[`forest-authored-lifecycle-integration-fixture.md`](../testing/forest-authored-lifecycle-integration-fixture.md).
+
 ### Browser and continuity proof
 
 - preview remains provisional through delay and failure;
