@@ -106,6 +106,9 @@ forestAuthoredResetOperationSchema.pre('validate', function validateStatus() {
   if (this.status === 'completed' && !this.completedAt) {
     this.invalidate('completedAt', 'A completed authored reset requires a completion time.');
   }
+  if (this.startedAt && this.completedAt && this.completedAt < this.startedAt) {
+    this.invalidate('completedAt', 'An authored reset cannot complete before it starts.');
+  }
 });
 
 forestAuthoredResetOperationSchema.index(
@@ -123,6 +126,10 @@ forestAuthoredResetOperationSchema.index(
 forestAuthoredResetOperationSchema.index(
   { status: 1, updatedAt: 1, _id: 1 },
   { name: 'forest_authored_reset_worker' }
+);
+forestAuthoredResetOperationSchema.index(
+  { status: 1, completedAt: 1, _id: 1 },
+  { name: 'forest_authored_reset_retention' }
 );
 forestAuthoredResetOperationSchema.index(
   { ownerUserId: 1, _id: 1 },
