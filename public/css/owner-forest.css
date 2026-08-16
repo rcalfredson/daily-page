@@ -93,6 +93,7 @@
 }
 .owner-forest__status,
 .owner-forest__authored-status,
+.owner-forest__sync-status,
 .owner-forest__placement,
 .owner-forest__nearby {
   max-width: calc(100% - 2rem);
@@ -125,12 +126,24 @@
   gap: 0.5rem;
   pointer-events: auto;
 }
+.owner-forest__sync-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: auto;
+}
+.owner-forest__sync-status[data-failed='true'] {
+  border-color: #e7a294;
+  color: #ffe4dc;
+}
+.owner-forest__sync-actions { display: flex; gap: 0.35rem; }
 .owner-forest__authored-status[data-state='ready'] { display: none; }
 .owner-forest__authored-status[data-failed='true'] {
   border-color: #e7a294;
   color: #ffe4dc;
 }
 .owner-forest__authored-status button,
+.owner-forest__sync-status button,
 .owner-forest__placement button,
 .owner-forest__marker-actions button {
   min-height: 30px;

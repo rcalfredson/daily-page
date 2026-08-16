@@ -57,6 +57,18 @@ block content
               span(data-owner-forest-authored-status-copy)= t('forestScene.markers.loading')
               button(type='button' data-owner-forest-authored-retry hidden)
                 = t('forestScene.markers.retrySync')
+            .owner-forest__sync-status(
+              data-owner-forest-sync-status
+              role='status'
+              aria-live='polite'
+              hidden
+            )
+              span(data-owner-forest-sync-status-copy)
+              .owner-forest__sync-actions(data-owner-forest-sync-actions hidden)
+                button(type='button' data-owner-forest-sync-retry)
+                  = t('forestScene.markers.retryPending')
+                button(type='button' data-owner-forest-sync-revert)
+                  = t('forestScene.markers.revertPending')
           .owner-forest__placement(data-owner-forest-placement hidden)
             p(data-owner-forest-placement-status role='status' aria-live='polite')
             .owner-forest__placement-actions
@@ -197,6 +209,15 @@ block content
             retrySave: t('forestScene.markers.retrySave'),
             retryMove: t('forestScene.markers.retryMove'),
             retryRemove: t('forestScene.markers.retryRemove'),
+            syncingPending: t('forestScene.markers.syncingPending'),
+            syncingPendingMany: t('forestScene.markers.syncingPendingMany'),
+            unsyncedPending: t('forestScene.markers.unsyncedPending'),
+            unsyncedPendingMany: t('forestScene.markers.unsyncedPendingMany'),
+            pendingMarker: t('forestScene.markers.pendingMarker'),
+            pendingMarkerFailed: t('forestScene.markers.pendingMarkerFailed'),
+            retryPending: t('forestScene.markers.retryPending'),
+            revertPending: t('forestScene.markers.revertPending'),
+            revertedPending: t('forestScene.markers.revertedPending'),
             confirmRemove: t('forestScene.markers.confirmRemove')
           },
           treeTypes: {
