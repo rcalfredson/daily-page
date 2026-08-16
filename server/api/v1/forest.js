@@ -3,6 +3,10 @@ import { Router } from 'express';
 import optionalAuth from '../../middleware/optionalAuth.js';
 import { getPreferredContentLang } from '../../services/localeContext.js';
 import {
+  ForestAuthoredDiagnosticExportError,
+  readForestAuthoredDiagnosticExport
+} from '../../services/forestAuthoredDiagnosticExport.js';
+import {
   forestAuthoredObjectMutations,
   FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION,
   ForestAuthoredMutationError
@@ -44,6 +48,9 @@ const router = Router();
 
 const QUERY_FIELDS = Object.freeze(['cells', 'cursor', 'limit']);
 const AUTHORED_QUERY_FIELDS = Object.freeze(['cells', 'cursor', 'limit']);
+const AUTHORED_DIAGNOSTIC_QUERY_FIELDS = Object.freeze([
+  'includeRemoved', 'cursor', 'limit'
+]);
 const ASSET_QUERY_FIELDS = Object.freeze(['cells', 'cursor', 'assetKeys', 'transport']);
 const INSPECTION_QUERY_FIELDS = Object.freeze(['cursor', 'limit']);
 const CELL_ID_PATTERN = /^(-?(?:0|[1-9]\d*)):(-?(?:0|[1-9]\d*))$/;
@@ -103,6 +110,35 @@ function authoredManifestRequest(query) {
   }
   return {
     cells: parseCells(query.cells, invalidAuthoredRegionRequest),
+    cursor: query.cursor || null,
+    limit: query.limit
+  };
+}
+
+function invalidAuthoredDiagnosticRequest(message) {
+  throw new ForestAuthoredDiagnosticExportError(
+    'INVALID_AUTHORED_DIAGNOSTIC_INPUT', message
+  );
+}
+
+function authoredDiagnosticRequest(query) {
+  if (!query || typeof query !== 'object' || Array.isArray(query)) {
+    invalidAuthoredDiagnosticRequest('The authored diagnostic query is invalid.');
+  }
+  const extraFields = Object.keys(query).filter(
+    field => !AUTHORED_DIAGNOSTIC_QUERY_FIELDS.includes(field)
+  );
+  if (extraFields.length
+    || Array.isArray(query.includeRemoved)
+    || Array.isArray(query.cursor)
+    || Array.isArray(query.limit)
+    || !['true', 'false'].includes(query.includeRemoved)) {
+    invalidAuthoredDiagnosticRequest(
+      'The authored diagnostic query contains unsupported fields.'
+    );
+  }
+  return {
+    includeRemoved: query.includeRemoved === 'true',
     cursor: query.cursor || null,
     limit: query.limit
   };
@@ -330,6 +366,50 @@ export function buildForestAuthoredRegionRouteHandler({
       return res.status(503).json({
         error: 'FOREST_AUTHORED_REGION_UNAVAILABLE',
         code: 'FOREST_AUTHORED_REGION_UNAVAILABLE'
+      });
+    }
+  };
+}
+
+export function buildForestAuthoredDiagnosticRouteHandler({
+  readDiagnostic = readForestAuthoredDiagnosticExport
+} = {}) {
+  return async function forestAuthoredDiagnosticRoute(req, res) {
+    if (!req.user?.id) {
+      return res.status(401).json({
+        error: 'AUTHENTICATION_REQUIRED',
+        code: 'AUTHENTICATION_REQUIRED'
+      });
+    }
+    try {
+      const diagnostic = await readDiagnostic({
+        ownerUserId: req.user.id,
+        ...authoredDiagnosticRequest(req.query)
+      });
+      return res.status(200).json(diagnostic);
+    } catch (error) {
+      if (error instanceof ForestAuthoredDiagnosticExportError) {
+        if (error.code === 'INVALID_AUTHORED_DIAGNOSTIC_INPUT') {
+          return res.status(400).json({
+            error: 'INVALID_FOREST_AUTHORED_DIAGNOSTIC_REQUEST',
+            code: 'INVALID_FOREST_AUTHORED_DIAGNOSTIC_REQUEST'
+          });
+        }
+        if (error.code === 'AUTHORED_DIAGNOSTIC_MIGRATION_REQUIRED') {
+          return res.status(409).json({
+            error: 'FOREST_AUTHORED_MIGRATION_REQUIRED',
+            code: 'FOREST_AUTHORED_MIGRATION_REQUIRED'
+          });
+        }
+      }
+      console.error(
+        'Forest authored diagnostic request failed:',
+        error instanceof ForestAuthoredDiagnosticExportError
+          ? error.code : 'UNEXPECTED_FAILURE'
+      );
+      return res.status(503).json({
+        error: 'FOREST_AUTHORED_DIAGNOSTIC_UNAVAILABLE',
+        code: 'FOREST_AUTHORED_DIAGNOSTIC_UNAVAILABLE'
       });
     }
   };
@@ -614,6 +694,7 @@ export function buildForestOwnerTreeInclusionRouteHandler({
 
 const regionHandler = buildForestOwnerRegionRouteHandler();
 const authoredRegionHandler = buildForestAuthoredRegionRouteHandler();
+const authoredDiagnosticHandler = buildForestAuthoredDiagnosticRouteHandler();
 const assetHandler = buildForestOwnerRegionAssetRouteHandler();
 const inspectionHandler = buildForestOwnerTreeInspectionRouteHandler();
 const inclusionHandler = buildForestOwnerTreeInclusionRouteHandler();
@@ -628,6 +709,7 @@ const useForestAPI = (app) => {
   router.use(optionalAuth);
   router.get('/regions', regionHandler);
   router.get('/authored-regions', authoredRegionHandler);
+  router.get('/authored-diagnostics', authoredDiagnosticHandler);
   router.get('/assets', assetHandler);
   router.get('/trees/:writingTreeId/inspection', inspectionHandler);
   router.patch('/trees/:writingTreeId/inclusion', inclusionHandler);
