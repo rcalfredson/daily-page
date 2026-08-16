@@ -371,8 +371,9 @@ performing a bounded restart. It never treats a changed sequence as complete. Th
 insertion, movement, removal, or disappearance between pages from silently omitting accepted
 active state.
 
-The browser merges committed objects by `objectId`. A provisional placement preview is kept
-separate and is not inserted into the committed regional collection before success.
+The browser merges committed objects by `objectId` and keeps them separate from a transient
+per-object prediction map. Pending create, move, and removal projections are reapplied after every
+regional merge so an older regional response cannot visibly undo an in-flight player action.
 
 ## Accepted minimum production interaction
 
@@ -382,35 +383,43 @@ world units in the player's current facing direction, within the
 existing 48-unit interaction neighborhood. Walking with keyboard, pointer drag, or touch joystick
 moves that preview with the transient player. Enter or the visible save action submits it; Escape
 or the visible cancel action abandons it without a write. A request freezes its submitted integer
-coordinates until it resolves.
+coordinates and operation evidence while synchronization continues independently of movement and
+unrelated marker actions.
 
-The browser creates the UUIDv4 only when it first submits a create. An unavailable response keeps
-that UUID and exact coordinate in memory for an explicit retry. Moving the preview after a failed
-create expresses a different intended creation and causes the next submit to use a fresh UUID.
-Reload does not replay pending work and the production forest does not persist a mutation queue in
-`localStorage`.
+The browser creates the UUIDv4 only when it first submits a create. Submission immediately projects
+the intended marker state into the world, closes placement mode, and sends the frozen idempotent
+request in the background. An ambiguous transport or generic unavailable response receives two
+bounded automatic retries of that identical request. After those retries, the prediction remains
+visibly unsynchronized with explicit Retry and Revert controls. Revert discards the local
+prediction, restores the last confirmed snapshot, and requests current authoritative regional
+state; it is not represented as a server-side undo. Reload does not replay pending work and the
+production forest does not persist a mutation queue in `localStorage` or `sessionStorage`.
 
 Immediate preview validation uses only the complete nearby authored region and visible writing
 placements. Known bounds, visible-tree, visible-marker, and provisional-density failures disable
 save and use both wording and a crossed visual treatment. An otherwise clear preview says that it
 *looks* clear; only the server can account for hidden or inactive writing reservations and confirm
 placement. A server collision or density rejection leaves placement mode available for choosing a
-new position and never promotes the preview into committed state.
+new position and rolls back its prediction without promoting it into confirmed state.
 
 A committed nearby marker participates in the same proximity, keyboard, pointer, and touch focus
 model as writing trees. Its marker-specific dialog offers move and removal. Move reuses placement
-mode while the old committed marker remains visible; only an accepted response replaces its
-position. Removal requires explicit confirmation, leaves the marker visible while saving, and
-removes it from the committed collection only after an accepted response. Failed mutations retain
-the last committed scene. A conflict reconciles the returned current safe marker state and says
-that the forest changed elsewhere without identifying a device or request.
+mode. Submitting move projects the marker at its intended position; confirming removal projects its
+absence. The player can keep moving and can synchronize independent markers concurrently, while a
+particular marker remains non-interactive until its pending operation resolves. A definitive first
+rejection restores the last confirmed state and, when it will not displace another active dialog,
+restores create or move placement for correction. Once any attempt has an ambiguous outcome, a
+later response without canonical object evidence cannot cause a false rollback. Canonical evidence
+always resolves uncertainty: matching state confirms the prediction and differing state replaces
+it. A conflict says that the forest changed elsewhere without identifying a device or request.
 
 The `quiet-waymarker` version-1 browser form is the fixed small signpost established by this
 milestone: dark wooden post, muted ochre blank plaque, and no randomized or identity-derived
 variation. Committed markers are opaque. A provisional marker uses reduced opacity and a dashed
 ground ring; invalid state additionally uses a crossed ring, so color is not the only signal.
-Focus uses the existing pale-gold ground highlight. Saving may pulse opacity only when reduced
-motion is not requested.
+Focus uses the existing pale-gold ground highlight. A predicted marker otherwise uses its settled
+opaque form with a small synchronization indicator; the indicator may pulse only when reduced
+motion is not requested and changes to a distinct failure color after bounded retries.
 
 Authored loading has a semantic status independent from grove loading. Marker actions are enabled
 only after the player's current nine-cell authored neighborhood is complete. A changed paginated

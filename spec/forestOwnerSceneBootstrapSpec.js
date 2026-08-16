@@ -140,6 +140,9 @@ describe('forest production route', () => {
     for (const attribute of [
       'data-owner-forest-place-marker',
       'data-owner-forest-authored-status',
+      'data-owner-forest-sync-status',
+      'data-owner-forest-sync-retry',
+      'data-owner-forest-sync-revert',
       'data-owner-forest-placement',
       'data-owner-forest-marker-inspection',
       'data-owner-forest-marker-remove-confirm'

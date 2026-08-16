@@ -53,7 +53,16 @@
       "removed": "Marker removed from your forest.",
       "retrySave": "Retry save",
       "retryMove": "Retry move",
-      "retryRemove": "Retry removal"
+      "retryRemove": "Retry removal",
+      "syncingPending": "Saving a marker change in the background…",
+      "syncingPendingMany": "Saving several marker changes in the background…",
+      "unsyncedPending": "A marker change has not synchronized yet.",
+      "unsyncedPendingMany": "Several marker changes have not synchronized yet.",
+      "pendingMarker": "This marker is still synchronizing. You can keep exploring while it saves.",
+      "pendingMarkerFailed": "This marker has not synchronized yet. Use the recovery controls at the top of the forest.",
+      "retryPending": "Retry",
+      "revertPending": "Revert",
+      "revertedPending": "The unsynchronized marker change was reverted."
     },
     "inspect": {
       "action": "Inspect tree",

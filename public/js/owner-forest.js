@@ -14,6 +14,12 @@ import {
   paintForestHumanoid
 } from './forest-humanoid.js';
 import {
+  forestAuthoredFailureResolution,
+  projectForestAuthoredPendingMarker,
+  projectForestAuthoredPendingMarkers,
+  runForestAuthoredMutationWithRetry
+} from './owner-forest-authored-sync.js';
+import {
   FOREST_OWNER_GROUND_PRESENTATION_CONFIG,
   sampleOwnerForestGroundPresentation
 } from './owner-forest-environment.js';
@@ -46,6 +52,7 @@ if (payload && copyPayload && viewport && canvas) {
   const context = canvas.getContext('2d');
   const placementsById = new Map();
   const markersById = new Map();
+  const pendingMarkerMutations = new Map();
   const assetsByKey = new Map();
   const spritesByKey = new Map();
   const loadedCells = new Set();
@@ -99,6 +106,11 @@ if (payload && copyPayload && viewport && canvas) {
   const authoredStatus = document.querySelector('[data-owner-forest-authored-status]');
   const authoredStatusCopy = document.querySelector('[data-owner-forest-authored-status-copy]');
   const authoredRetry = document.querySelector('[data-owner-forest-authored-retry]');
+  const syncStatus = document.querySelector('[data-owner-forest-sync-status]');
+  const syncStatusCopy = document.querySelector('[data-owner-forest-sync-status-copy]');
+  const syncActions = document.querySelector('[data-owner-forest-sync-actions]');
+  const syncRetry = document.querySelector('[data-owner-forest-sync-retry]');
+  const syncRevert = document.querySelector('[data-owner-forest-sync-revert]');
   const placementPanel = document.querySelector('[data-owner-forest-placement]');
   const placementStatus = document.querySelector('[data-owner-forest-placement-status]');
   const placementSave = document.querySelector('[data-owner-forest-placement-save]');
@@ -152,6 +164,27 @@ if (payload && copyPayload && viewport && canvas) {
     authoredRetry.hidden = !retry;
     placeMarker.disabled = placement.active || !currentAuthoredCellsReady()
       || !['ready', 'notice'].includes(authoredState);
+  }
+
+  function failedPendingMutations() {
+    return [...pendingMarkerMutations.values()].filter(pending => pending.phase === 'failed');
+  }
+
+  function refreshSyncStatus() {
+    const failed = failedPendingMutations();
+    const count = pendingMarkerMutations.size;
+    syncStatus.hidden = count === 0;
+    syncStatus.dataset.failed = failed.length ? 'true' : 'false';
+    syncActions.hidden = failed.length === 0;
+    syncRetry.disabled = failed.length === 0;
+    syncRevert.disabled = failed.length === 0;
+    if (failed.length) {
+      syncStatusCopy.textContent = failed.length === 1
+        ? copy.markers.unsyncedPending : copy.markers.unsyncedPendingMany;
+    } else if (count) {
+      syncStatusCopy.textContent = count === 1
+        ? copy.markers.syncingPending : copy.markers.syncingPendingMany;
+    } else syncStatusCopy.textContent = '';
   }
 
   function markerFromApi(object) {
@@ -259,14 +292,18 @@ if (payload && copyPayload && viewport && canvas) {
 
   function openMarkerInspection(marker) {
     if (!marker || placement.active) return;
+    const pending = pendingMarkerMutations.get(marker.objectId);
     Object.keys(keys).forEach((key) => { keys[key] = false; });
     clearPointer();
     inspectedMarkerId = marker.objectId;
-    markerStatus.textContent = '';
+    markerStatus.textContent = pending
+      ? pending.phase === 'failed'
+        ? copy.markers.pendingMarkerFailed : copy.markers.pendingMarker
+      : '';
     markerActions.hidden = false;
     markerConfirm.hidden = true;
-    markerMove.disabled = false;
-    markerRemove.disabled = false;
+    markerMove.disabled = Boolean(pending);
+    markerRemove.disabled = Boolean(pending);
     markerInspection.hidden = false;
     inspectionBackdrop.hidden = false;
     viewport.dataset.inspecting = 'true';
@@ -508,6 +545,7 @@ if (payload && copyPayload && viewport && canvas) {
       const objects = await requestAuthoredCells(requested);
       const requestedIds = new Set(requested.map(ownerForestCellId));
       replaceOwnerForestAuthoredRegion(markersById, requestedIds, objects.values());
+      projectForestAuthoredPendingMarkers(markersById, pendingMarkerMutations);
       requestedIds.forEach(cellId => loadedAuthoredCells.add(cellId));
       setAuthoredStatus(copy.markers.ready, { state: 'ready' });
       updateFocus();
@@ -705,6 +743,14 @@ if (payload && copyPayload && viewport && canvas) {
     context.fillRect(x - 8, y - 28, 16, 9);
     context.fillStyle = '#6f4d32';
     context.fillRect(x - 5, y - 25, 10, 2);
+    if (!preview && marker.syncState) {
+      context.beginPath();
+      context.arc(x, y + 2, 4, 0, Math.PI * 2);
+      context.fillStyle = marker.syncState === 'failed' ? '#e7a294' : '#fff0ae';
+      context.globalAlpha = marker.syncState === 'failed' || reducedMotion.matches
+        ? 0.9 : 0.65 + (Math.sin(time * 5) * 0.2);
+      context.fill();
+    }
     context.globalAlpha = previousAlpha;
   }
 
@@ -897,7 +943,159 @@ if (payload && copyPayload && viewport && canvas) {
     return copy.markers.unavailableMutation;
   }
 
-  async function savePlacement() {
+  function predictedMarker({ objectId, worldX, worldY, confirmedMarker = null }) {
+    return {
+      ...(confirmedMarker || {}),
+      objectId,
+      kind: confirmedMarker?.kind || 'personal-marker',
+      worldX,
+      worldY,
+      regionId: ownerForestCellId({
+        cellX: Math.floor(worldX / bootstrap.spatialIndex.cellSize),
+        cellY: Math.floor(worldY / bootstrap.spatialIndex.cellSize)
+      })
+    };
+  }
+
+  function restorePendingSnapshot(pending, object = null) {
+    const canonical = markerFromApi(object);
+    if (canonical) markersById.set(pending.objectId, canonical);
+    else if (object?.state === 'removed' || !pending.confirmedMarker) {
+      markersById.delete(pending.objectId);
+    } else markersById.set(pending.objectId, pending.confirmedMarker);
+  }
+
+  function finishPendingMutation(pending, object) {
+    const canonical = reconcileMutationObject(object);
+    if (pending.operation !== 'remove' && !canonical) {
+      throw Object.assign(new Error('accepted mutation returned no active marker'), {
+        code: 'FOREST_AUTHORED_MUTATION_UNAVAILABLE',
+        syncOutcomeUncertain: true
+      });
+    }
+    if (pending.operation === 'remove' && object?.state !== 'removed') {
+      throw Object.assign(new Error('accepted removal returned no tombstone'), {
+        code: 'FOREST_AUTHORED_MUTATION_UNAVAILABLE',
+        syncOutcomeUncertain: true
+      });
+    }
+    pendingMarkerMutations.delete(pending.objectId);
+    refreshSyncStatus();
+    const message = pending.operation === 'create' ? copy.markers.saved
+      : pending.operation === 'move' ? copy.markers.moved : copy.markers.removed;
+    setAuthoredStatus(message, { state: 'notice' });
+    if (inspectedMarkerId === pending.objectId) closeMarkerInspection({ force: true });
+    updateFocus();
+    requestRender();
+  }
+
+  function restoreRejectedPlacement(pending, code) {
+    if (!['create', 'move'].includes(pending.operation)
+      || placement.active || inspectedTreeId || inspectedMarkerId
+      || ['FOREST_AUTHORED_OBJECT_CONFLICT', 'FOREST_AUTHORED_OBJECT_UNAVAILABLE',
+        'FOREST_AUTHORED_MIGRATION_REQUIRED', 'FOREST_AUTHORED_RESETTING'].includes(code)) return;
+    const marker = pending.operation === 'move' ? markersById.get(pending.objectId) : null;
+    if (pending.operation === 'move' && !marker) return;
+    beginPlacement(pending.operation, marker);
+    placement.preview = {
+      worldX: pending.request.worldX,
+      worldY: pending.request.worldY,
+      valid: !['FOREST_AUTHORED_PLACEMENT_COLLISION',
+        'FOREST_AUTHORED_PLACEMENT_DENSITY'].includes(code),
+      reason: code === 'FOREST_AUTHORED_PLACEMENT_DENSITY' ? 'density'
+        : code === 'FOREST_AUTHORED_PLACEMENT_COLLISION' ? 'marker-collision' : null
+    };
+    placement.request = placement.preview.valid ? { ...pending.request } : null;
+    placementStatus.textContent = mutationFailureMessage(code);
+    placementSave.textContent = pending.operation === 'move'
+      ? copy.markers.retryMove : copy.markers.retrySave;
+    refreshPlacementAvailability();
+    requestRender();
+  }
+
+  function settlePendingFailure(pending, error) {
+    if (pendingMarkerMutations.get(pending.objectId) !== pending) return;
+    const resolution = forestAuthoredFailureResolution({
+      operation: pending.operation,
+      error,
+      predictedMarker: pending.predictedMarker
+    });
+    if (resolution === 'confirmed') {
+      finishPendingMutation(pending, error.object);
+      return;
+    }
+    if (resolution === 'reconciled') {
+      pendingMarkerMutations.delete(pending.objectId);
+      restorePendingSnapshot(pending, error.object);
+      refreshSyncStatus();
+      setAuthoredStatus(copy.markers.conflict, { state: 'notice', failed: true });
+      if (inspectedMarkerId === pending.objectId) closeMarkerInspection({ force: true });
+      updateFocus();
+      requestRender();
+      return;
+    }
+    if (resolution === 'pending') {
+      pending.phase = 'failed';
+      pending.failureCode = error.code || 'FOREST_AUTHORED_MUTATION_UNAVAILABLE';
+      projectForestAuthoredPendingMarker(markersById, pending);
+      refreshSyncStatus();
+      if (inspectedMarkerId === pending.objectId) {
+        markerStatus.textContent = copy.markers.pendingMarkerFailed;
+      }
+      requestRender();
+      return;
+    }
+    pendingMarkerMutations.delete(pending.objectId);
+    if (error.code === 'FOREST_AUTHORED_OBJECT_UNAVAILABLE') {
+      markersById.delete(pending.objectId);
+    } else restorePendingSnapshot(pending);
+    refreshSyncStatus();
+    if (error.code === 'FOREST_AUTHORED_MIGRATION_REQUIRED') {
+      setAuthoredStatus(copy.markers.migrationRequired, {
+        state: 'unsupported', failed: true
+      });
+    } else if (error.code === 'FOREST_AUTHORED_RESETTING') {
+      setAuthoredStatus(copy.markers.resetting, { state: 'resetting', retry: true });
+    } else {
+      const message = error.code === 'FOREST_AUTHORED_OBJECT_CONFLICT'
+        ? copy.markers.conflict
+        : error.code === 'FOREST_AUTHORED_OBJECT_UNAVAILABLE'
+          ? copy.markers.removedElsewhere : mutationFailureMessage(error.code);
+      setAuthoredStatus(message, { state: 'notice', failed: true });
+      restoreRejectedPlacement(pending, error.code);
+    }
+    if (inspectedMarkerId === pending.objectId) closeMarkerInspection({ force: true });
+    updateFocus();
+    requestRender();
+  }
+
+  async function synchronizePendingMutation(pending) {
+    if (pendingMarkerMutations.get(pending.objectId) !== pending
+      || pending.phase === 'syncing') return;
+    pending.phase = 'syncing';
+    pending.failureCode = null;
+    projectForestAuthoredPendingMarker(markersById, pending);
+    refreshSyncStatus();
+    requestRender();
+    try {
+      const { result } = await runForestAuthoredMutationWithRetry(() => authoredMutation(
+        pending.path, pending.method, pending.body
+      ));
+      if (pendingMarkerMutations.get(pending.objectId) !== pending) return;
+      finishPendingMutation(pending, result.object);
+    } catch (error) {
+      settlePendingFailure(pending, error);
+    }
+  }
+
+  function queuePendingMutation(pending) {
+    pendingMarkerMutations.set(pending.objectId, pending);
+    projectForestAuthoredPendingMarker(markersById, pending);
+    refreshSyncStatus();
+    synchronizePendingMutation(pending);
+  }
+
+  function savePlacement() {
     if (!placement.active || placement.saving || !placement.preview?.valid
       || !currentAuthoredCellsReady()) return;
     const { worldX, worldY } = placement.preview;
@@ -914,136 +1112,91 @@ if (payload && copyPayload && viewport && canvas) {
     const request = placement.request;
     if (!request.objectId || (placement.mode === 'move'
       && !Number.isSafeInteger(request.expectedRevision))) return;
-    placement.saving = true;
-    placementStatus.textContent = placement.mode === 'move'
-      ? copy.markers.moving : copy.markers.saving;
-    refreshPlacementAvailability();
-    requestRender();
-    try {
-      const path = `${bootstrap.delivery.authoredObjectPath}/${encodeURIComponent(
-        request.objectId
-      )}${placement.mode === 'move' ? '/placement' : ''}`;
-      const body = placement.mode === 'move' ? {
-        protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
-        expectedRevision: request.expectedRevision,
+    const operation = placement.mode;
+    const confirmedMarker = operation === 'move' ? markersById.get(request.objectId) : null;
+    const path = `${bootstrap.delivery.authoredObjectPath}/${encodeURIComponent(
+      request.objectId
+    )}${operation === 'move' ? '/placement' : ''}`;
+    const body = operation === 'move' ? {
+      protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
+      expectedRevision: request.expectedRevision,
+      worldX: request.worldX,
+      worldY: request.worldY
+    } : {
+      protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
+      kind: 'personal-marker',
+      worldX: request.worldX,
+      worldY: request.worldY
+    };
+    const pending = {
+      objectId: request.objectId,
+      operation,
+      confirmedMarker: confirmedMarker ? { ...confirmedMarker, syncState: undefined } : null,
+      predictedMarker: predictedMarker({
+        objectId: request.objectId,
         worldX: request.worldX,
-        worldY: request.worldY
-      } : {
-        protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
-        kind: 'personal-marker',
-        worldX: request.worldX,
-        worldY: request.worldY
-      };
-      const result = await authoredMutation(path, placement.mode === 'move' ? 'PATCH' : 'PUT', body);
-      const marker = reconcileMutationObject(result.object);
-      if (!marker) throw Object.assign(
-        new Error('accepted authored mutation returned no active marker'),
-        { code: 'FOREST_AUTHORED_OBJECT_UNAVAILABLE', object: result.object }
-      );
-      const message = placement.mode === 'move' ? copy.markers.moved : copy.markers.saved;
-      stopPlacement({ restoreFocus: false, force: true });
-      setAuthoredStatus(message, { state: 'notice' });
-      updateFocus();
-      viewport.focus({ preventScroll: true });
-    } catch (error) {
-      if (error.code === 'FOREST_AUTHORED_OBJECT_CONFLICT') {
-        reconcileMutationObject(error.object);
-        stopPlacement({ restoreFocus: false, force: true });
-        setAuthoredStatus(copy.markers.conflict, { state: 'notice', failed: true });
-        updateFocus();
-        viewport.focus({ preventScroll: true });
-        return;
-      }
-      if (error.code === 'FOREST_AUTHORED_OBJECT_UNAVAILABLE') {
-        if (error.object) reconcileMutationObject(error.object);
-        else if (placement.movingObjectId) markersById.delete(placement.movingObjectId);
-        stopPlacement({ restoreFocus: false, force: true });
-        setAuthoredStatus(copy.markers.removedElsewhere, { state: 'notice', failed: true });
-        updateFocus();
-        viewport.focus({ preventScroll: true });
-        return;
-      }
-      if (error.code === 'FOREST_AUTHORED_MIGRATION_REQUIRED') {
-        stopPlacement({ restoreFocus: false, force: true });
-        setAuthoredStatus(copy.markers.migrationRequired, {
-          state: 'unsupported', failed: true
-        });
-        viewport.focus({ preventScroll: true });
-        return;
-      }
-      if (error.code === 'FOREST_AUTHORED_RESETTING') {
-        stopPlacement({ restoreFocus: false, force: true });
-        setAuthoredStatus(copy.markers.resetting, { state: 'resetting', retry: true });
-        viewport.focus({ preventScroll: true });
-        return;
-      }
-      placement.saving = false;
-      placementStatus.textContent = mutationFailureMessage(error.code);
-      placementSave.textContent = placement.mode === 'move'
-        ? copy.markers.retryMove : copy.markers.retrySave;
-      refreshPlacementAvailability();
-      requestRender();
-    }
+        worldY: request.worldY,
+        confirmedMarker
+      }),
+      request: { ...request },
+      path,
+      method: operation === 'move' ? 'PATCH' : 'PUT',
+      body,
+      phase: 'queued',
+      failureCode: null
+    };
+    stopPlacement({ restoreFocus: false, force: true });
+    queuePendingMutation(pending);
+    updateFocus();
+    viewport.focus({ preventScroll: true });
   }
 
-  async function removeInspectedMarker() {
+  function removeInspectedMarker() {
     const marker = markersById.get(inspectedMarkerId);
-    if (!marker || markerRemoveConfirm.disabled) return;
-    markerRemoveConfirm.disabled = true;
-    markerRemoveCancel.disabled = true;
-    markerStatus.textContent = copy.markers.removeSaving;
-    try {
-      const result = await authoredMutation(
-        `${bootstrap.delivery.authoredObjectPath}/${encodeURIComponent(
-          marker.objectId
-        )}/removal`,
-        'POST',
-        {
-          protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
-          expectedRevision: marker.recordRevision
-        }
-      );
-      if (!['removed', 'already-removed'].includes(result.outcome)
-        || result.object?.state !== 'removed') {
-        throw new Error('accepted authored removal returned an invalid state');
-      }
-      markersById.delete(marker.objectId);
-      closeMarkerInspection({ restoreFocus: false, force: true });
-      setAuthoredStatus(copy.markers.removed, { state: 'notice' });
-      updateFocus();
-      viewport.focus({ preventScroll: true });
-    } catch (error) {
-      markerRemoveConfirm.disabled = false;
-      markerRemoveCancel.disabled = false;
-      if (error.code === 'FOREST_AUTHORED_OBJECT_CONFLICT') {
-        reconcileMutationObject(error.object);
-        markerConfirm.hidden = true;
-        markerActions.hidden = false;
-        markerStatus.textContent = copy.markers.conflict;
-        markerMove.focus({ preventScroll: true });
-      } else if (error.code === 'FOREST_AUTHORED_OBJECT_UNAVAILABLE') {
-        markersById.delete(marker.objectId);
-        closeMarkerInspection({ restoreFocus: false });
-        setAuthoredStatus(copy.markers.removedElsewhere, { state: 'notice', failed: true });
-        updateFocus();
-        viewport.focus({ preventScroll: true });
-      } else if (error.code === 'FOREST_AUTHORED_MIGRATION_REQUIRED') {
-        closeMarkerInspection({ restoreFocus: false });
-        setAuthoredStatus(copy.markers.migrationRequired, {
-          state: 'unsupported', failed: true
-        });
-        viewport.focus({ preventScroll: true });
-      } else if (error.code === 'FOREST_AUTHORED_RESETTING') {
-        closeMarkerInspection({ restoreFocus: false });
-        setAuthoredStatus(copy.markers.resetting, { state: 'resetting', retry: true });
-        viewport.focus({ preventScroll: true });
-      } else {
-        markerStatus.textContent = mutationFailureMessage(error.code);
-        markerRemoveConfirm.textContent = copy.markers.retryRemove;
-        markerRemoveConfirm.focus({ preventScroll: true });
-      }
-      requestRender();
-    }
+    if (!marker || markerRemoveConfirm.disabled || pendingMarkerMutations.has(marker.objectId)) return;
+    const pending = {
+      objectId: marker.objectId,
+      operation: 'remove',
+      confirmedMarker: { ...marker, syncState: undefined },
+      predictedMarker: null,
+      request: { objectId: marker.objectId, expectedRevision: marker.recordRevision },
+      path: `${bootstrap.delivery.authoredObjectPath}/${encodeURIComponent(
+        marker.objectId
+      )}/removal`,
+      method: 'POST',
+      body: {
+        protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
+        expectedRevision: marker.recordRevision
+      },
+      phase: 'queued',
+      failureCode: null
+    };
+    closeMarkerInspection({ restoreFocus: false, force: true });
+    queuePendingMutation(pending);
+    updateFocus();
+    viewport.focus({ preventScroll: true });
+  }
+
+  function firstFailedPendingMutation() {
+    return failedPendingMutations()[0] || null;
+  }
+
+  function retryFailedPendingMutation() {
+    const pending = firstFailedPendingMutation();
+    if (pending) synchronizePendingMutation(pending);
+  }
+
+  function revertFailedPendingMutation() {
+    const pending = firstFailedPendingMutation();
+    if (!pending) return;
+    pendingMarkerMutations.delete(pending.objectId);
+    restorePendingSnapshot(pending);
+    refreshSyncStatus();
+    setAuthoredStatus(copy.markers.revertedPending, { state: 'notice' });
+    if (inspectedMarkerId === pending.objectId) closeMarkerInspection({ force: true });
+    updateFocus();
+    requestRender();
+    loadNearbyAuthoredCells({ force: true });
   }
 
   function tick(time) {
@@ -1240,14 +1393,17 @@ if (payload && copyPayload && viewport && canvas) {
   });
   placeMarker.addEventListener('click', () => beginPlacement('create'));
   authoredRetry.addEventListener('click', () => loadNearbyAuthoredCells({ force: true }));
+  syncRetry.addEventListener('click', retryFailedPendingMutation);
+  syncRevert.addEventListener('click', revertFailedPendingMutation);
   placementSave.addEventListener('click', savePlacement);
   placementCancel.addEventListener('click', () => stopPlacement());
   markerClose.addEventListener('click', () => closeMarkerInspection());
   markerMove.addEventListener('click', () => {
     const marker = markersById.get(inspectedMarkerId);
-    if (marker) beginPlacement('move', marker);
+    if (marker && !pendingMarkerMutations.has(marker.objectId)) beginPlacement('move', marker);
   });
   markerRemove.addEventListener('click', () => {
+    if (pendingMarkerMutations.has(inspectedMarkerId)) return;
     markerActions.hidden = true;
     markerConfirm.hidden = false;
     markerStatus.textContent = '';
