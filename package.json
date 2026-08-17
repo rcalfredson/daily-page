@@ -27,7 +27,8 @@
     "forest:placement-preview": "node scripts/dev/renderForestOwnerGrovePlacementPreview.js",
     "forest:environment-preview": "node scripts/dev/renderForestOwnerEnvironmentPreview.js",
     "forest:authored-mutation-fixture": "node scripts/dev/forestAuthoredMutationFixture.js",
-    "forest:authored-lifecycle-fixture": "node scripts/dev/forestAuthoredLifecycleFixture.js"
+    "forest:authored-lifecycle-fixture": "node scripts/dev/forestAuthoredLifecycleFixture.js",
+    "forest:authored-pressure-fixture": "node scripts/dev/forestAuthoredPressureFixture.js"
   },
   "repository": {
     "type": "git",
