@@ -832,6 +832,9 @@ migration recovery is documented in
 Synthetic development results remain diagnostic evidence rather than a production service level,
 final capacity, or monetization rule.
 
+The guarded real-Mongo pressure profiles and their fixed synthetic distributions are documented in
+[`forest-authored-pressure-integration-fixture.md`](../testing/forest-authored-pressure-integration-fixture.md).
+
 ## Proposed active Milestone 3 versions
 
 These identifiers are accepted contract targets; Pass 3 should name the runtime constants without
