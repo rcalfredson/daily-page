@@ -7,6 +7,10 @@ personal authored overlay. It is the Pass 2 contract that must govern schemas, i
 regional reads, private APIs, browser integration, migration, reset, diagnostics, and account
 deletion.
 
+The completed implementation, evidence, active versions, limitations, and Milestone 4 handoff are
+recorded in
+[`milestone-3-account-backed-authored-overlay-evaluation.md`](milestone-3-account-backed-authored-overlay-evaluation.md).
+
 The repository baseline audited for this contract was the clean
 `personal-world-initial-rollout` branch at `1c1f8b6` on August 11, 2026. Milestone 2's closeout
 commit `60b9392`, final implementation commit `9ba276b`, and 600-tree pressure fixture commit
@@ -55,11 +59,11 @@ whole-overlay blob, unsigned finite world, 32-object maximum, client collision a
 empty-on-invalid recovery, and `localStorage` adapter are explicitly rejected as production
 authority.
 
-Before their respective later passes can complete, the repository still needs authored migration
-and pressure harnesses, reset and tombstone-purge workers, diagnostic reads, mutation-specific
-same-origin/rate protection, and complete authored deletion convergence. These are implementation
-requirements under this contract, not reasons to add a competing world root or generalized
-persistence layer.
+At audit time, the repository still needed authored migration and pressure harnesses, reset and
+tombstone-purge workers, diagnostic reads, mutation-specific same-origin/rate protection, and
+complete authored deletion convergence. Passes 3 through 7 subsequently supplied and exercised
+those boundaries. Their completion evidence is recorded in the Milestone 3 evaluation; none
+required a competing world root or generalized persistence layer.
 
 ## Player promise
 
@@ -835,12 +839,12 @@ final capacity, or monetization rule.
 The guarded real-Mongo pressure profiles and their fixed synthetic distributions are documented in
 [`forest-authored-pressure-integration-fixture.md`](../testing/forest-authored-pressure-integration-fixture.md).
 
-## Proposed active Milestone 3 versions
+## Active Milestone 3 versions
 
-These identifiers are accepted contract targets; Pass 3 should name the runtime constants without
-changing their meanings silently.
+These accepted identifiers are implemented as runtime constants and must not change meaning
+silently.
 
-| Boundary | Initial version |
+| Boundary | Active version |
 | --- | ---: |
 | Authored-object schema | 1 |
 | Authored-object identity | 1 |
@@ -852,7 +856,8 @@ changing their meanings silently.
 | Authored-region manifest | 1 |
 | Authored-region cursor | 1 |
 | Authored reset operation | 1 |
-| Authored diagnostic/export | 1 |
+| Authored diagnostic/export / cursor | 1 / 1 |
+| Authored migration-readiness harness | 1 |
 | Tombstone retention policy | 1 (90 days) |
 
 These remain independent from owner-world schema 1, writing-tree schema/identity 1, owner-grove
@@ -874,9 +879,10 @@ manifest/cursor 1.
 - A final density/capacity or mutation-rate product limit.
 - Import or migration of Forest Lab `localStorage` data.
 
-## Pass 3 authorization gate
+## Implementation closeout
 
-Schemas, models, and indexes may begin only after review confirms that this document accurately
-records the accepted policy. Pass 3 must add only the authored object, per-cell revision, and reset
-operation record families needed here, together with complete account-deletion cleanup
-integration. It must not expose mutation routes or browser UI before their later passes.
+The Pass 3 authorization gate was satisfied before schemas were introduced. The completed
+implementation contains only the authored object, per-cell revision, and reset operation record
+families authorized here, together with complete account-deletion cleanup integration. Mutation
+routes and browser interaction were added in their later planned passes. The closeout judgment and
+environment-specific evidence are maintained in the Milestone 3 evaluation linked above.
