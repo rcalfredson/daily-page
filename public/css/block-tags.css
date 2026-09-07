@@ -29,6 +29,8 @@
 .tag-pill a {
   color: #007bff;
   text-decoration: none;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .tag-pill a:hover {

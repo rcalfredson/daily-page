@@ -509,6 +509,11 @@
   transition: background-color 0.2s;
 }
 
+.trending-tags .tag-chip {
+  flex-wrap: wrap;
+  row-gap: 0.25rem;
+}
+
 .tag-chip:hover {
   background-color: #e9e9e9;
 }
@@ -524,7 +529,8 @@
   text-decoration: none;
   font-weight: bold;
   margin-right: 0.5rem;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .tag-chip a:hover {
@@ -1048,14 +1054,38 @@ html[data-theme='dark'] .home-discovery .trending-tags-widget {
 }
 
 .home-discovery .tag-chip {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.4rem;
+  row-gap: 0.15rem;
+  align-items: baseline;
   width: 100%;
   box-sizing: border-box;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
 }
 
-.home-discovery .tag-badge {
-  margin-left: auto;
-  text-align: right;
+.home-discovery .tag-icon {
+  grid-column: 1;
+  grid-row: 1;
+  margin-right: 0;
+}
+
+.home-discovery .tag-chip a {
+  grid-column: 2;
+  grid-row: 1;
+  margin-right: 0;
+}
+
+.home-discovery .tag-badge,
+html[data-theme="dark"] .home-discovery .tag-badge {
+  grid-column: 2;
+  grid-row: 2;
+  margin-left: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--muted-text-color, #657087);
+  text-align: left;
 }
 
 .home-quests-heading {
