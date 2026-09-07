@@ -164,8 +164,6 @@ async function getSupportFundingViewModel() {
 }
 
 (async () => {
-  const dateParam = ':date([0-9]{4}-[0-9]{2}-[0-9]{2})';
-
   try {
     await initMongooseConnection();
     await warmRoomDirectoryCache('en').catch(error => {
@@ -206,7 +204,7 @@ async function getSupportFundingViewModel() {
       res.locals.blockAuthorDisplayName = (block) => blockAuthorDisplayName(block, authorLabels);
       next();
     });
-    app.options('*', cors(corsOptionsDelegate));
+    app.options('/{*splat}', cors(corsOptionsDelegate));
 
     app.use(express.static('public'));
     app.use(express.urlencoded({ extended: true }));
@@ -302,7 +300,7 @@ async function getSupportFundingViewModel() {
       res.send(await google.docText(req.params.pageId));
     });
 
-    app.get('/iPod/:gen?', async (req, res) => {
+    app.get('/iPod{/:gen}', async (req, res) => {
       res.render('iPod', {
         backendURL: audioHost,
         version: req.params.gen || '1g',
@@ -387,7 +385,7 @@ async function getSupportFundingViewModel() {
       res.redirect(`/artist/${artist}/album/${album}/${encodeHelper.htmlString(albumTracks.tracks[0].name)}`);
     });
 
-    app.get('/audio/:fileID/:albumID*?.wav', async (req, res) => {
+    app.get(/^\/audio\/(?<fileID>[^/]+?)(?:\/(?<albumID>[^/]+?)(?:\/.+?)?)?\.wav\/?$/i, async (req, res) => {
       let readStream;
       if (req.headers.range) {
         const { range } = req.headers;
@@ -441,7 +439,7 @@ async function getSupportFundingViewModel() {
       res.redirect(`/rooms/overview/${DateHelper.currentDate()}`);
     });
 
-    app.get('/:year([0-9]{4})/:month(1[0-2]|(0?[1-9]))', addI18n(['archive']), async (req, res) => {
+    app.get(/^\/(?<year>[0-9]{4})\/(?<month>1[0-2]|0?[1-9])\/?$/i, addI18n(['archive']), async (req, res) => {
       const { year, month } = req.params;
       const formattedTime = new Intl.DateTimeFormat(res.locals.uiLang || 'en', {
         month: 'long',
@@ -457,7 +455,7 @@ async function getSupportFundingViewModel() {
       });
     });
 
-    app.get(`/rooms/overview/${dateParam}`, async (req, res) => {
+    app.get(/^\/rooms\/overview\/(?<date>[0-9]{4}-[0-9]{2}-[0-9]{2})\/?$/i, async (req, res) => {
       const requestedDate = new Date(req.params.date);
 
       try {
@@ -504,7 +502,7 @@ async function getSupportFundingViewModel() {
       }
     });
 
-    app.get(`/rooms/:room([a-zA-Z0-9-]+)/${dateParam}`, async (req, res) => {
+    app.get(/^\/rooms\/(?<room>[a-zA-Z0-9-]+)\/(?<date>[0-9]{4}-[0-9]{2}-[0-9]{2})\/?$/i, async (req, res) => {
       const roomReq = req.params.room;
       let roomMetdata = await getRoomMetadata(roomReq);
       const dateAndRoom = `${DateHelper.formatDate(req.params.date, 'long')} - ${roomMetdata.name} Room`;
@@ -806,7 +804,7 @@ async function getSupportFundingViewModel() {
         }
       });
 
-    app.get('*', (req, res) => {
+    app.get('/{*splat}', (req, res) => {
       const { t } = res.locals;
       res.status(404).render('404', {
         title: t('errors.notFound.metaTitle'),
