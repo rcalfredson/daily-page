@@ -5,18 +5,18 @@
       "description": "Wat Daily Page is, hoe het werkt en waarom het is gebouwd als een langzamere, vriendelijkere hoek van het internet."
     },
     "title": "Over Daily Page",
-    "tagline": "Voed je geest, niet je feed.",
+    "tagline": "Een beetje ruimte om te denken en te schrijven.",
     "mission": {
       "h2": "Missie",
       "p1": "Een indie-schrijflab – begonnen in mijn woonkamer, aangewakkerd door de nieuwsgierigheid van lezers.",
-      "p2": "Het is niet gebouwd om je hersenen te rotten, maar om het te voeden: een plek waar je langzaam kunt schrijven, anoniem als je wilt, en je nooit zorgen hoeft te maken dat je indruk op iemand maakt."
+      "p2": "Een plek om de tijd te nemen voor woorden, uw gedachten te delen en anoniem te schrijven als u dat wilt."
     },
     "how": {
       "h2": "Hoe het werkt",
       "features": {
         "rooms": {
           "label": "Kamers",
-          "text": "zijn topic-silo’s (denk aan “subreddit, maar vriendelijker”)."
+          "text": "zijn gedeelde ruimtes om over een bepaald onderwerp te schrijven en te lezen."
         },
         "blocks": {
           "label": "Berichten",
@@ -40,7 +40,7 @@
         },
         "streaks": {
           "label": "Schrijfreeksen",
-          "text": "houd uw dagelijkse schrijfreeks levend - uw beste stimulans om elke dag te verschijnen."
+          "text": "helpen u om regelmatig schrijven tot een gewoonte te maken."
         }
       }
     },

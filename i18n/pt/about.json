@@ -5,18 +5,18 @@
       "description": "O que é o Daily Page, como funciona e por que foi criado como um canto mais lento e gentil da web."
     },
     "title": "Sobre o Daily Page",
-    "tagline": "Alimente sua mente, não o seu feed.",
+    "tagline": "Um pequeno espaço para pensar e escrever.",
     "mission": {
       "h2": "Missão",
       "p1": "Um laboratório independente de escrita, iniciado na minha sala de estar e movido pela curiosidade dos leitores.",
-      "p2": "Ele foi criado não para apodrecer seu cérebro, mas para nutri-lo: um lugar onde você pode escrever devagar, anonimamente se quiser, e nunca se preocupar em impressionar ninguém."
+      "p2": "Um lugar para escolher as palavras com calma, compartilhar o que você pensa e escrever de forma anônima, se preferir."
     },
     "how": {
       "h2": "Como Funciona",
       "features": {
         "rooms": {
           "label": "Salas",
-          "text": "são silos de tópicos (pense em “subreddit, mas mais amigável”)."
+          "text": "são espaços compartilhados para escrever e ler sobre um tema específico."
         },
         "blocks": {
           "label": "Posts",
@@ -40,7 +40,7 @@
         },
         "streaks": {
           "label": "Sequências",
-          "text": "Mantenha viva sua sequência diária de escrita: seu melhor incentivo para aparecer todos os dias."
+          "text": "ajudam você a criar um hábito de escrita regular."
         }
       }
     },
