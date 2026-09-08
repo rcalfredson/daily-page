@@ -5,18 +5,18 @@
       "description": "Vad Daily Page är, hur den fungerar och varför den byggdes som ett långsammare, snällare hörn av webben."
     },
     "title": "Om Daily Page",
-    "tagline": "Mata ditt sinne, inte ditt flöde.",
+    "tagline": "Lite utrymme att tänka och skriva.",
     "mission": {
       "h2": "Uppdrag",
       "p1": "Ett indieskrivlabb – startade i mitt vardagsrum, underblåst av läsarnas nyfikenhet.",
-      "p2": "Den är byggd för att inte ruttna din hjärna, utan för att ge den näring: en plats där du kan skriva långsamt, anonymt om du vill, och aldrig oroa dig för att imponera på någon."
+      "p2": "En plats där du kan ta dig tid med orden, dela dina tankar och skriva anonymt om du föredrar det."
     },
     "how": {
       "h2": "Hur det fungerar",
       "features": {
         "rooms": {
           "label": "Rum",
-          "text": "är ämnessilor (tänk \"subreddit, men vänligare\")."
+          "text": "är gemensamma utrymmen för att skriva och läsa om ett visst ämne."
         },
         "blocks": {
           "label": "Inlägg",
@@ -40,7 +40,7 @@
         },
         "streaks": {
           "label": "Skrivsviter",
-          "text": "håll din dagliga skrivserie vid liv – ditt bästa incitament att dyka upp varje dag."
+          "text": "hjälper dig att skapa en regelbunden skrivvana."
         }
       }
     },

@@ -5,18 +5,18 @@
       "description": "Hvad Daily Page er, hvordan det virker, og hvorfor det blev bygget som et langsommere, venligere hjørne af nettet."
     },
     "title": "Om Daily Page",
-    "tagline": "Giv dit sind mad, ikke dit foder.",
+    "tagline": "Lidt plads til at tænke og skrive.",
     "mission": {
       "h2": "Mission",
       "p1": "Et indie-skrivelaboratorium – startede i min stue, drevet af læserens nysgerrighed.",
-      "p2": "Det er bygget til ikke at rådne din hjerne, men for at nære den: et sted, hvor du kan skrive langsomt, anonymt, hvis du vil, og aldrig bekymre dig om at imponere nogen."
+      "p2": "Et sted, hvor du kan tage dig tid til ordene, dele dine tanker og skrive anonymt, hvis du foretrækker det."
     },
     "how": {
       "h2": "Hvordan det virker",
       "features": {
         "rooms": {
           "label": "Rum",
-          "text": "er emne-siloer (tænk \"subreddit, men venligere\")."
+          "text": "er fælles rum til at skrive og læse om et bestemt emne."
         },
         "blocks": {
           "label": "Indlæg",
@@ -39,8 +39,8 @@
           "text": "lad dig tagge dit opslag, spore tag-tendenser og opdage topindhold (7 d / 30 d / alle tider)."
         },
         "streaks": {
-          "label": "Striber",
-          "text": "hold din daglige skriverække i live – dit bedste incitament til at dukke op hver dag."
+          "label": "Skriverækker",
+          "text": "hjælper dig med at gøre skrivning til en fast vane."
         }
       }
     },

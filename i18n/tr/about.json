@@ -5,18 +5,18 @@
       "description": "Daily Page nedir, nasıl çalışır ve neden webin daha yavaş, daha nazik bir köşesi olarak oluşturuldu."
     },
     "title": "Daily Page Hakkında",
-    "tagline": "Yemeğinizi değil zihninizi besleyin.",
+    "tagline": "Düşünmek ve yazmak için küçük bir alan.",
     "mission": {
       "h2": "Misyon",
       "p1": "Okuyucu merakıyla körüklenen bağımsız bir yazı laboratuvarı oturma odamda başladı.",
-      "p2": "Beyninizi çürütmek için değil, beslemek için inşa edildi: Yavaşça, isterseniz isimsiz olarak yazabileceğiniz ve kimseyi etkileme konusunda asla endişelenmeyeceğiniz bir yer."
+      "p2": "Kelimelere zaman ayırabileceğiniz, aklınızdakileri paylaşabileceğiniz ve isterseniz anonim olarak yazabileceğiniz bir yer."
     },
     "how": {
       "h2": "Nasıl Çalışır?",
       "features": {
         "rooms": {
           "label": "Odalar",
-          "text": "konu silolarıdır (\"alt reddit, ancak daha dostça\" düşünün)."
+          "text": "belirli bir konuda yazmak ve okumak için ortak alanlardır."
         },
         "blocks": {
           "label": "Gönderiler",
@@ -40,7 +40,7 @@
         },
         "streaks": {
           "label": "Yazma Serileri",
-          "text": "Günlük yazma serinizi canlı tutun; her gün ortaya çıkmanız için en iyi teşvikiniz."
+          "text": "düzenli yazma alışkanlığı kazanmanıza yardımcı olur."
         }
       }
     },

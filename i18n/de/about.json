@@ -5,18 +5,18 @@
       "description": "Was Daily Page ist, wie es funktioniert und warum es als langsamere, freundlichere Ecke des Webs entstanden ist."
     },
     "title": "Uber Daily Page",
-    "tagline": "Nahre deinen Geist, nicht deinen Feed.",
+    "tagline": "Ein wenig Raum zum Denken und Schreiben.",
     "mission": {
       "h2": "Auftrag",
       "p1": "Ein unabhangiges Schreiblabor - begonnen in meinem Wohnzimmer, angetrieben von der Neugier der Leser.",
-      "p2": "Es ist nicht gebaut, um dein Gehirn zu vernebeln, sondern um es zu nahren: ein Ort, an dem du langsam schreiben kannst, anonym, wenn du magst, und ohne Sorge, jemanden beeindrucken zu mussen."
+      "p2": "Ein Ort, an dem du dir Zeit für Worte nehmen, deine Gedanken teilen und auf Wunsch anonym schreiben kannst."
     },
     "how": {
       "h2": "So funktioniert es",
       "features": {
         "rooms": {
-          "label": "Raume",
-          "text": "sind Themenbereiche (denk an \"Subreddit, aber freundlicher\")."
+          "label": "Räume",
+          "text": "sind gemeinsame Bereiche zum Schreiben und Lesen über ein bestimmtes Thema."
         },
         "blocks": {
           "label": "Beitrage",
@@ -40,7 +40,7 @@
         },
         "streaks": {
           "label": "Serien",
-          "text": "Halte deine tagliche Schreibserie am Leben - dein bester Anreiz, jeden Tag aufzutauchen."
+          "text": "helfen dir, regelmäßig zu schreiben."
         }
       }
     },

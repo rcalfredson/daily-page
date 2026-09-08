@@ -5,18 +5,18 @@
       "description": "Daily Page là gì, nó hoạt động như thế nào và tại sao nó được xây dựng như một góc chậm hơn, tử tế hơn trên web."
     },
     "title": "Giới thiệu về Daily Page",
-    "tagline": "Hãy nuôi dưỡng tâm trí của bạn, không phải thức ăn của bạn.",
+    "tagline": "Một chút không gian để suy nghĩ và viết.",
     "mission": {
       "h2": "Nhiệm vụ",
       "p1": "Một phòng thí nghiệm viết lách độc lập—bắt đầu từ phòng khách của tôi, được thúc đẩy bởi sự tò mò của độc giả.",
-      "p2": "Nó được xây dựng không phải để làm bộ não bạn mục nát mà để nuôi dưỡng nó: một nơi mà bạn có thể viết chậm rãi, ẩn danh nếu muốn và không bao giờ lo lắng về việc gây ấn tượng với bất kỳ ai."
+      "p2": "Một nơi để bạn thong thả tìm câu chữ, chia sẻ suy nghĩ và viết ẩn danh nếu muốn."
     },
     "how": {
       "h2": "Nó hoạt động như thế nào",
       "features": {
         "rooms": {
           "label": "Phòng",
-          "text": "là các chủ đề riêng biệt (hãy nghĩ “subreddit, nhưng thân thiện hơn”)."
+          "text": "là không gian chung để viết và đọc về một chủ đề cụ thể."
         },
         "blocks": {
           "label": "bài viết",
@@ -39,8 +39,8 @@
           "text": "cho phép bạn gắn thẻ bài đăng của mình, theo dõi xu hướng thẻ và khám phá nội dung hàng đầu (7 ngày / 30 ngày / mọi lúc)."
         },
         "streaks": {
-          "label": "Vệt",
-          "text": "duy trì chuỗi bài viết hàng ngày của bạn—động lực tốt nhất để bạn xuất hiện mỗi ngày."
+          "label": "Chuỗi ngày viết",
+          "text": "giúp bạn xây dựng thói quen viết đều đặn."
         }
       }
     },

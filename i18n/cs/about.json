@@ -5,18 +5,18 @@
       "description": "Co je Daily Page, jak funguje a proč vznikl jako pomalejší a laskavější kout internetu."
     },
     "title": "O Daily Page",
-    "tagline": "Nakrmte svou mysl, ne svůj kanál.",
+    "tagline": "Trocha prostoru pro přemýšlení a psaní.",
     "mission": {
       "h2": "Poslání",
       "p1": "Nezávislá laboratoř psaní — začala v mém obýváku a pohání ji zvědavost čtenářů.",
-      "p2": "Nevznikla proto, aby vám kazila mozek, ale aby ho živila: je to místo, kde můžete psát pomalu, chcete-li anonymně, a nemusíte si dělat starosti s tím, zda na někoho zapůsobíte."
+      "p2": "Místo, kde si můžete dát s psaním načas, sdílet své myšlenky a psát anonymně, pokud chcete."
     },
     "how": {
       "h2": "Jak to funguje",
       "features": {
         "rooms": {
           "label": "Místnosti",
-          "text": "jsou tematické prostory (představte si „přívětivější subreddit“)."
+          "text": "jsou společné prostory pro psaní a čtení o určitém tématu."
         },
         "blocks": {
           "label": "Příspěvky",
@@ -40,7 +40,7 @@
         },
         "streaks": {
           "label": "Série",
-          "text": "udržují vaši každodenní sérii psaní — nejlepší motivaci přijít každý den."
+          "text": "pomáhají vytvořit si pravidelný návyk psaní."
         }
       }
     },

@@ -5,18 +5,18 @@
       "description": "Czym jest Daily Page, jak działa i dlaczego powstało jako wolniejszy, życzliwszy zakątek internetu."
     },
     "title": "O Daily Page",
-    "tagline": "Karm swój umysł, nie swój feed.",
+    "tagline": "Trochę miejsca na myślenie i pisanie.",
     "mission": {
       "h2": "Misja",
       "p1": "Niezależne laboratorium pisania, które zaczęło się w moim salonie i żyje dzięki ciekawości czytelników.",
-      "p2": "Powstało nie po to, by męczyć umysł, ale by go karmić: to miejsce, gdzie możesz pisać powoli, anonimowo, jeśli chcesz, i nie martwić się robieniem na kimkolwiek wrażenia."
+      "p2": "Miejsce, w którym możesz spokojnie dobierać słowa, dzielić się myślami i pisać anonimowo, jeśli wolisz."
     },
     "how": {
       "h2": "Jak to działa",
       "features": {
         "rooms": {
           "label": "Pokoje",
-          "text": "to tematyczne przestrzenie (pomyśl: „subreddit, ale bardziej przyjazny”)."
+          "text": "to wspólne przestrzenie do pisania i czytania na określony temat."
         },
         "blocks": {
           "label": "Posty",
@@ -40,7 +40,7 @@
         },
         "streaks": {
           "label": "Serie",
-          "text": "pomagają utrzymać codzienną serię pisania — najlepszą zachętę, by wracać każdego dnia."
+          "text": "pomagają wyrobić nawyk regularnego pisania."
         }
       }
     },

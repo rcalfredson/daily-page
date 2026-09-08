@@ -5,18 +5,18 @@
       "description": "What Daily Page is, how it works, and why it was built as a slower, kinder corner of the web."
     },
     "title": "About Daily Page",
-    "tagline": "Feed your mind, not your feed.",
+    "tagline": "A little room to think and write.",
     "mission": {
       "h2": "Mission",
       "p1": "An indie writing lab—started in my living room, fueled by reader curiosity.",
-      "p2": "It’s built not to rot your brain, but to nourish it: a place where you can write slowly, anonymously if you like, and never worry about impressing anyone."
+      "p2": "A place to take your time with words, share what’s on your mind, and write anonymously if you prefer."
     },
     "how": {
       "h2": "How it Works",
       "features": {
         "rooms": {
           "label": "Rooms",
-          "text": "are topic-silos (think “subreddit, but friendlier”)."
+          "text": "are shared spaces for writing and reading about a particular topic."
         },
         "blocks": {
           "label": "Posts",
@@ -40,7 +40,7 @@
         },
         "streaks": {
           "label": "Streaks",
-          "text": "keep your daily writing streak alive—your best incentive to show up each day."
+          "text": "help you build a regular writing habit."
         }
       }
     },

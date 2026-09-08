@@ -5,18 +5,18 @@
       "description": "Apa itu Daily Page, cara kerjanya, dan mengapa dibuat sebagai sudut web yang lebih pelan dan ramah."
     },
     "title": "Tentang Daily Page",
-    "tagline": "Isi pikiranmu, bukan feed-mu.",
+    "tagline": "Sedikit ruang untuk berpikir dan menulis.",
     "mission": {
       "h2": "Misi",
       "p1": "Laboratorium menulis indie—dimulai dari ruang tamu saya, digerakkan oleh rasa ingin tahu pembaca.",
-      "p2": "Ini dibangun bukan untuk merusak otakmu, tetapi untuk menyehatkannya: tempat kamu bisa menulis perlahan, anonim jika mau, dan tidak perlu khawatir membuat siapa pun terkesan."
+      "p2": "Tempat untuk merangkai kata tanpa terburu-buru, berbagi isi pikiran, dan menulis secara anonim jika kamu mau."
     },
     "how": {
       "h2": "Cara Kerjanya",
       "features": {
         "rooms": {
           "label": "Ruang",
-          "text": "adalah silo topik (bayangkan “subreddit, tetapi lebih ramah”)."
+          "text": "adalah tempat bersama untuk menulis dan membaca tentang topik tertentu."
         },
         "blocks": {
           "label": "Postingan",
@@ -40,7 +40,7 @@
         },
         "streaks": {
           "label": "Runtunan",
-          "text": "Jaga runtunan menulis harianmu tetap hidup—insentif terbaikmu untuk hadir setiap hari."
+          "text": "membantumu membangun kebiasaan menulis secara teratur."
         }
       }
     },

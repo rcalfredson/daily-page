@@ -5,18 +5,18 @@
       "description": "Mikä Daily Page on, miten se toimii ja miksi se rakennettiin verkon hitaammaksi ja lempeämmäksi nurkaksi."
     },
     "title": "Tietoja Daily Pagesta",
-    "tagline": "Ruoki mieltäsi, älä syötettäsi.",
+    "tagline": "Hieman tilaa ajatella ja kirjoittaa.",
     "mission": {
       "h2": "Tehtävä",
       "p1": "Indie-kirjoituslaboratorio, joka alkoi olohuoneessani ja saa voimansa lukijoiden uteliaisuudesta.",
-      "p2": "Sitä ei rakennettu mädättämään aivojasi vaan ravitsemaan niitä: paikka, jossa voit kirjoittaa hitaasti, halutessasi nimettömästi, eikä sinun tarvitse huolehtia vaikutuksen tekemisestä."
+      "p2": "Paikka, jossa voit käyttää aikaa sanojen pohtimiseen, jakaa ajatuksiasi ja kirjoittaa halutessasi nimettömänä."
     },
     "how": {
       "h2": "Miten se toimii",
       "features": {
         "rooms": {
           "label": "Huoneet",
-          "text": "ovat aihekohtaisia tiloja (ajattele “subreddit, mutta ystävällisempi”)."
+          "text": "ovat yhteisiä tiloja tietystä aiheesta kirjoittamiseen ja lukemiseen."
         },
         "blocks": {
           "label": "Julkaisut",
@@ -40,7 +40,7 @@
         },
         "streaks": {
           "label": "Putket",
-          "text": "pitävät päivittäisen kirjoitusputkesi elossa, paras kannustin palata joka päivä."
+          "text": "auttavat sinua luomaan säännöllisen kirjoitustavan."
         }
       }
     },
