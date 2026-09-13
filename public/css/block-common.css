@@ -23,6 +23,16 @@ a.block-title {
   margin: 1em 0;
 }
 
+.post-external-link::after {
+  content: "↗";
+  display: inline-block;
+  margin-inline-start: 0.18em;
+  font-size: 0.78em;
+  line-height: 1;
+  text-decoration: none;
+  vertical-align: 0.12em;
+}
+
 .block-content img,
 .content-preview img,
 .featured-content-preview img {
