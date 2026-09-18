@@ -18,6 +18,13 @@
       "tags": "Tunnisteet",
       "collabsToday": "Yhteistöitä tänään"
     },
+    "discovery": {
+      "eyebrow": "Tutki hyllyjä",
+      "title": "Anna sattuman johdattaa",
+      "description": "Kuusi ovea Daily Pageen, jokainen eri suuntaan. Valitse niistä odottamattomin.",
+      "browseRooms": "Tutustu kaikkiin huoneisiin",
+      "readPost": "Avaa tämä ovi"
+    },
     "quests": {
       "eyebrow": "Luodaan yhdessä",
       "title": "Osallistu yhteisötehtävään",

@@ -18,6 +18,13 @@
       "tags": "Taggar",
       "collabsToday": "Samarbeten idag"
     },
+    "discovery": {
+      "eyebrow": "Utforska hyllorna",
+      "title": "Låt dig överraskas",
+      "description": "Sex dörrar in till Daily Page, utvalda för att leda åt olika håll. Välj den du minst väntade dig.",
+      "browseRooms": "Utforska alla rum",
+      "readPost": "Öppna den här dörren"
+    },
     "quests": {
       "eyebrow": "Skapa tillsammans",
       "title": "Delta i ett gemenskapsuppdrag",
