@@ -3,6 +3,13 @@
     "meta": { "title": "Daily Page – Oblíbené příspěvky za posledních 24 hodin", "description": "Daily Page je nezávislá komunita pro psaní a sdílení nápadů, vzpomínek a tvůrčích experimentů. Prozkoumejte tematické místnosti, čtěte tvorbu ostatních a pište vlastním tempem." },
     "hero": { "eyebrow": "Klidné místo pro psaní, čtení a návraty", "title": "Vítejte na Daily Page!", "subtitle": "Prozkoumejte nejoblíbenější příspěvky za posledních 24 hodin.", "ctaPrefix": "Máte inspiraci?", "cta": "Připojte se k místnosti", "ctaSuffix": "a vytvořte vlastní příspěvek!" },
     "stats": { "blocks": "Příspěvky", "rooms": "Místnosti", "tags": "Štítky", "collabsToday": "Dnešní spolupráce" },
+    "discovery": {
+      "eyebrow": "Procházejte police",
+      "title": "Nechte se překvapit",
+      "description": "Šest dveří do Daily Page, vybraných tak, aby vedly různými směry. Otevřete ty, které byste čekali nejméně.",
+      "browseRooms": "Prozkoumat všechny místnosti",
+      "readPost": "Otevřít tyto dveře"
+    },
     "quests": { "eyebrow": "Tvořme společně", "title": "Zapojte se do komunitní výpravy", "description": "Vyberte společný cíl, rezervujte si příspěvek a pomozte komunitě dokončit něco ambiciózního.", "cta": "Prozkoumat výpravy" },
     "activity": {
       "title": "Živě na Daily Page", "subtitle": "Nové konverzace a reakce na jednom místě.", "fallbackActor": "Někdo", "inRoom": "v",

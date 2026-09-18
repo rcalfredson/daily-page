@@ -18,6 +18,13 @@
       "tags": "Tagi",
       "collabsToday": "Dzisiejsze współprace"
     },
+    "discovery": {
+      "eyebrow": "Przeglądaj półki",
+      "title": "Daj się zaskoczyć",
+      "description": "Sześć drzwi do Daily Page, wybranych tak, by prowadziły w różnych kierunkach. Otwórz te, których najmniej się spodziewasz.",
+      "browseRooms": "Przeglądaj wszystkie pokoje",
+      "readPost": "Otwórz te drzwi"
+    },
     "quests": {"eyebrow": "Twórzmy razem", "title": "Weź udział w misji społeczności", "description": "Wybierz wspólny cel, zarezerwuj swój wkład i pomóż społeczności ukończyć ambitne przedsięwzięcie.", "cta": "Odkryj misje"},
     "activity": {
       "title": "Na żywo w Daily Page",

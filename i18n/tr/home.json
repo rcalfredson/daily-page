@@ -18,6 +18,13 @@
       "tags": "Etiketler",
       "collabsToday": "Bugünkü İşbirlikleri"
     },
+    "discovery": {
+      "eyebrow": "Rafları keşfedin",
+      "title": "Kendinizi sürprizlere bırakın",
+      "description": "Daily Page'e açılan, farklı yönlere götürmesi için seçilmiş altı kapı. En az beklediğinizi açın.",
+      "browseRooms": "Tüm odaları keşfedin",
+      "readPost": "Bu kapıyı açın"
+    },
     "quests": {"eyebrow": "Birlikte üret", "title": "Bir topluluk görevine katıl", "description": "Ortak bir hedef seçin, bir katkıyı üstlenin ve topluluğun iddialı bir şeyi tamamlamasına yardımcı olun.", "cta": "Görevleri keşfet"},
     "activity": {
       "title": "Daily Page'de canlı",
