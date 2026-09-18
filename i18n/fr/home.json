@@ -18,6 +18,13 @@
       "tags": "Tags",
       "collabsToday": "Collaborations aujourd'hui"
     },
+    "discovery": {
+      "eyebrow": "Parcourez les rayons",
+      "title": "Laissez-vous surprendre",
+      "description": "Six portes vers Daily Page, choisies pour vous emmener dans des directions différentes. Ouvrez celle à laquelle vous vous attendiez le moins.",
+      "browseRooms": "Explorer tous les salons",
+      "readPost": "Ouvrir cette porte"
+    },
     "quests": {
       "eyebrow": "Créer ensemble",
       "title": "Participez à une quête communautaire",
