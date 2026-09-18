@@ -18,6 +18,13 @@
       "tags": "Tags",
       "collabsToday": "Samenwerkingen vandaag"
     },
+    "discovery": {
+      "eyebrow": "Snuffel door de schappen",
+      "title": "Laat je verrassen",
+      "description": "Zes deuren naar Daily Page, gekozen om je verschillende kanten op te sturen. Kies de deur die je het minst verwachtte.",
+      "browseRooms": "Bekijk alle kamers",
+      "readPost": "Open deze deur"
+    },
     "quests": {
       "eyebrow": "Samen creëren",
       "title": "Doe mee aan een communitymissie",
