@@ -18,6 +18,13 @@
       "tags": "タグ",
       "collabsToday": "今日の共同編集"
     },
+    "discovery": {
+      "eyebrow": "書棚をめぐる",
+      "title": "思いがけない場所へ",
+      "description": "Daily Pageへ続く6つの扉。それぞれが違う方向へ案内します。いちばん意外に感じた扉を開けてみてください。",
+      "browseRooms": "すべてのルームを見る",
+      "readPost": "この扉を開く"
+    },
     "quests": {
       "eyebrow": "一緒につくる",
       "title": "コミュニティクエストに参加しよう",

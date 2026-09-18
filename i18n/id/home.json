@@ -18,6 +18,13 @@
       "tags": "Tag",
       "collabsToday": "Kolaborasi Hari Ini"
     },
+    "discovery": {
+      "eyebrow": "Jelajahi rak-rak",
+      "title": "Temukan sesuatu yang tak terduga",
+      "description": "Enam pintu menuju Daily Page, dipilih untuk membawamu ke arah yang berbeda. Buka pintu yang paling tidak kamu duga.",
+      "browseRooms": "Jelajahi semua ruang",
+      "readPost": "Buka pintu ini"
+    },
     "quests": {
       "eyebrow": "Berkarya bersama",
       "title": "Ikuti misi komunitas",

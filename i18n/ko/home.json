@@ -18,6 +18,13 @@
       "tags": "태그",
       "collabsToday": "오늘의 협업"
     },
+    "discovery": {
+      "eyebrow": "책장을 둘러보세요",
+      "title": "뜻밖의 곳으로 떠나보세요",
+      "description": "서로 다른 방향으로 이어지는 Daily Page의 여섯 개 문입니다. 가장 뜻밖의 문을 열어 보세요.",
+      "browseRooms": "모든 방 둘러보기",
+      "readPost": "이 문 열기"
+    },
     "quests": {
       "eyebrow": "함께 만들기",
       "title": "커뮤니티 퀘스트에 참여하세요",
