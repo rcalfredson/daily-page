@@ -1047,6 +1047,14 @@ html[data-theme="dark"] .home-support-widget__fill {
   text-decoration: underline;
 }
 
+.home-wander__arrow {
+  display: inline-block;
+}
+
+html[dir='rtl'] .home-wander__arrow {
+  transform: scaleX(-1);
+}
+
 .home-wander__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -7,7 +7,7 @@ if homeDiscoveryPosts && homeDiscoveryPosts.length
         p.home-wander__description= t('home.discovery.description')
       a.home-wander__browse(href=uiPath('/rooms'))
         span= t('home.discovery.browseRooms')
-        span(aria-hidden='true') →
+        span.home-wander__arrow(aria-hidden='true') →
     ul.home-wander__grid
       each post in homeDiscoveryPosts
         li.home-wander-card
@@ -34,4 +34,4 @@ if homeDiscoveryPosts && homeDiscoveryPosts.length
                 p.home-wander-card__summary(lang=post.lang dir=(textDirForLang ? textDirForLang(post.lang) : 'ltr'))= post.description
               span.home-wander-card__cta
                 = t('home.discovery.readPost')
-                span(aria-hidden='true') →
+                span.home-wander__arrow(aria-hidden='true') →

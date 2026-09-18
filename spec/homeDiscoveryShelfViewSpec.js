@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import pug from 'pug';
 
 import { getTranslatorRuntime } from '../server/services/i18n.js';
+import { SUPPORTED_UI_LANGS } from '../server/services/localeContext.js';
 
 const partialPath = 'views/partials/_home_discovery_shelf.pug';
 const homeTemplate = fs.readFileSync('views/home.pug', 'utf8');
@@ -35,6 +36,7 @@ describe('homepage discovery shelf view', () => {
     expect(html).toContain('loading="lazy"');
     expect(html).toContain('lang="ar" dir="rtl"');
     expect(html).toContain('layout.languages.ar');
+    expect(html).toContain('class="home-wander__arrow"');
   });
 
   it('renders nothing when the shelf is empty', () => {
@@ -67,5 +69,26 @@ describe('homepage discovery shelf view', () => {
     const t = await getTranslatorRuntime('zz', ['home']);
     expect(t('home.discovery.title')).toBe('Wander somewhere');
     expect(t('home.discovery.browseRooms')).toBe('Browse all rooms');
+  });
+
+  it('provides complete discovery copy for every supported locale', () => {
+    const keys = ['eyebrow', 'title', 'description', 'browseRooms', 'readPost'];
+
+    for (const lang of SUPPORTED_UI_LANGS) {
+      const bundle = JSON.parse(fs.readFileSync(`i18n/${lang}/home.json`, 'utf8'));
+      for (const key of keys) {
+        expect(bundle.home?.discovery?.[key])
+          .withContext(`${lang} is missing home.discovery.${key}`)
+          .toEqual(jasmine.any(String));
+        expect(bundle.home.discovery[key].trim().length)
+          .withContext(`${lang} has empty home.discovery.${key}`)
+          .toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it('mirrors discovery arrows in right-to-left interfaces', () => {
+    expect(homeStyles).toContain("html[dir='rtl'] .home-wander__arrow");
+    expect(homeStyles).toContain('transform: scaleX(-1)');
   });
 });
