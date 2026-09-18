@@ -52,8 +52,10 @@ import {
   getHomeActivityVisibility,
   getHomeTopBlocksOptions,
   getHomeTrendingTagsOptions,
-  partitionHomePostsByLocale
+  partitionHomePostsByLocale,
+  toHomeDiscoveryCards
 } from './server/services/homepage.js';
+import { getHomeDiscoveryShelf } from './server/services/homeDiscovery.js';
 import { getRecurringSupportMonthlyTotalUsd } from './server/db/supportFundingService.js';
 import { listPublicQuestsOverview } from './server/db/questService.js';
 
@@ -81,7 +83,7 @@ import {
   getPage
 } from './server/db/pageService.js';
 import {
-  getAllRooms, getRoomMetadata,
+  getAllRooms, getRoomMetadata, getRoomMetadataByIds,
   getTotalRooms, warmRoomDirectoryCache
 
 } from './server/db/roomService.js'
@@ -670,12 +672,20 @@ async function getSupportFundingViewModel() {
 
           const PERF = process.env.PERF_HOME === '1';
 
-          let fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding, questsRes;
+          let fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding, questsRes, discoveryRes;
           const activitySince = getHomeActivitySince();
+          const loadHomeDiscovery = async () => {
+            try {
+              return await getHomeDiscoveryShelf({ preferredLang: preferredContentLang });
+            } catch (error) {
+              console.error('Failed to load homepage discovery shelf:', error);
+              return [];
+            }
+          };
 
           // Dispara todo en paralelo (con perf opcional por cada llamada)
           if (!PERF) {
-            [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding, questsRes] = await Promise.all([
+            [fbRes, frRes, topRes, tagsRes, statsRes, roomsRes, totalTagsRes, recentComments, recentReactions, supportFunding, questsRes, discoveryRes] = await Promise.all([
               config.homeShowFeaturedPost ? getFeaturedBlockWithFallback({ preferredLang: preferredContentLang }) : null,
               config.homeShowFeaturedRoom ? getFeaturedRoomWithFallback() : null,
               getTopBlocksWithFallback(getHomeTopBlocksOptions(preferredContentLang, config.homeSourceFallbackLimit)),
@@ -687,6 +697,7 @@ async function getSupportFundingViewModel() {
               getRecentReactionActivity({ limit: 5, lang: uiLang, since: activitySince }),
               config.homeShowSupport ? getSupportFundingViewModel() : null,
               listPublicQuestsOverview({ uiLang, page: 1, limit: 3 }),
+              loadHomeDiscovery(),
             ]);
           } else {
             const perfResults = await Promise.all([
@@ -701,6 +712,7 @@ async function getSupportFundingViewModel() {
               timeIt('recentReactions', () => getRecentReactionActivity({ limit: 5, lang: uiLang, since: activitySince })),
               timeIt('supportFunding', () => config.homeShowSupport ? getSupportFundingViewModel() : null),
               timeIt('quests', () => listPublicQuestsOverview({ uiLang, page: 1, limit: 3 })),
+              timeIt('homeDiscovery', loadHomeDiscovery),
             ]);
 
             perfResults
@@ -723,6 +735,7 @@ async function getSupportFundingViewModel() {
             recentReactions = perfResults.find(r => r.label === 'recentReactions')?.value || [];
             supportFunding = perfResults.find(r => r.label === 'supportFunding')?.value;
             questsRes = perfResults.find(r => r.label === 'quests')?.value;
+            discoveryRes = perfResults.find(r => r.label === 'homeDiscovery')?.value || [];
           }
 
           // Post-procesamiento mínimo (sin I/O extra)
@@ -742,9 +755,18 @@ async function getSupportFundingViewModel() {
           const featuredRoomPeriod = frRes?.period || null;
 
 
-          const featuredRoom = (featuredRoomData?._id)
-            ? await getRoomMetadata(featuredRoomData._id, uiLang)
-            : null;
+          const [featuredRoom, discoveryRooms] = await Promise.all([
+            featuredRoomData?._id
+              ? getRoomMetadata(featuredRoomData._id, uiLang)
+              : null,
+            getRoomMetadataByIds(
+              (discoveryRes || []).map(post => post.roomId),
+              uiLang
+            ).catch(error => {
+              console.error('Failed to localize homepage discovery rooms:', error);
+              return {};
+            })
+          ]);
 
           // Mapear top blocks a DTO con userId
           const blocksPeriod = topRes?.period || null;
@@ -771,6 +793,7 @@ async function getSupportFundingViewModel() {
             reactions: recentReactions
           });
           const homeQuests = (questsRes?.quests || []).filter(quest => quest.status === 'active');
+          const homeDiscoveryPosts = toHomeDiscoveryCards(discoveryRes, discoveryRooms);
 
           res.render('home', {
             title: t('home.meta.title'),
@@ -792,6 +815,7 @@ async function getSupportFundingViewModel() {
             showRecentComments,
             showRecentReactions,
             homeQuests,
+            homeDiscoveryPosts,
             supportFunding,
 
             user: req.user || null,

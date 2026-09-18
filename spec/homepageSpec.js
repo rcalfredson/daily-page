@@ -4,7 +4,8 @@ import {
   getHomeTopBlocksOptions,
   getHomeTrendingTagsOptions,
   HOME_ACTIVITY_MINIMUM,
-  HOME_ACTIVITY_WINDOW_DAYS
+  HOME_ACTIVITY_WINDOW_DAYS,
+  toHomeDiscoveryCards
 } from '../server/services/homepage.js';
 
 describe('homepage activity visibility', () => {
@@ -42,5 +43,38 @@ describe('homepage activity visibility', () => {
       sortBy: 'totalBlocks',
       preferredLang: 'ru'
     });
+  });
+
+  it('builds compact localized discovery cards without embedding Street View', () => {
+    const description = '**A discovery description** with   irregular spacing. '.repeat(8);
+    const cards = toHomeDiscoveryCards([
+      {
+        _id: 'post-1',
+        groupId: 'group-1',
+        roomId: 'physics',
+        lang: 'es',
+        title: 'Conos de luz',
+        description,
+        bannerImage: { kind: 'streetview', url: 'https://example.com/embed' }
+      },
+      {
+        _id: 'post-2',
+        roomId: 'computing',
+        title: 'A computing post',
+        bannerImage: { kind: 'image', url: 'https://example.com/banner.jpg' }
+      }
+    ], {
+      physics: { displayName: 'Física' }
+    });
+
+    expect(cards[0].roomName).toBe('Física');
+    expect(cards[0].description.length).toBeLessThanOrEqual(221);
+    expect(cards[0].description.endsWith('…')).toBeTrue();
+    expect(cards[0].description).not.toContain('  ');
+    expect(cards[0].description).not.toContain('**');
+    expect(cards[0].bannerImage).toBeNull();
+    expect(cards[1].roomName).toBe('computing');
+    expect(cards[1].lang).toBe('en');
+    expect(cards[1].bannerImage.url).toBe('https://example.com/banner.jpg');
   });
 });

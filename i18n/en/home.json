@@ -18,6 +18,13 @@
       "tags": "Tags",
       "collabsToday": "Collaborations Today"
     },
+    "discovery": {
+      "eyebrow": "Explore the shelves",
+      "title": "Wander somewhere",
+      "description": "Six doors into Daily Page, chosen to lead in different directions. Pick the one you least expected.",
+      "browseRooms": "Browse all rooms",
+      "readPost": "Open this door"
+    },
     "quests": {
       "eyebrow": "Create together",
       "title": "Take part in a community quest",

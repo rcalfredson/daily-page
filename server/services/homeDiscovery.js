@@ -9,6 +9,7 @@ const DISCOVERY_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 const DISCOVERY_CACHE_STALE_TTL_MS = 24 * 60 * 60 * 1000;
 const MIN_DISCOVERY_CONTENT_LENGTH = 200;
 const MIN_DISCOVERY_DESCRIPTION_LENGTH = 40;
+const DISCOVERY_ROTATION_JITTER = 5;
 
 function normalizedText(value) {
   return String(value || '').replace(/\s+/g, ' ').trim();
@@ -40,7 +41,8 @@ function stableHash(value) {
 }
 
 function deterministicJitter(seed, candidate) {
-  return (stableHash(`${seed}:${candidateGroup(candidate)}`) / 0xffffffff) * 3;
+  return (stableHash(`${seed}:${candidateGroup(candidate)}`) / 0xffffffff)
+    * DISCOVERY_ROTATION_JITTER;
 }
 
 function ageScore(createdAt, now) {

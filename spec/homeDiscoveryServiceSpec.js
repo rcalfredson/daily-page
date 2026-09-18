@@ -121,4 +121,16 @@ describe('homepage discovery shelf', () => {
     expect(selectHomeDiscoveryPosts(candidates, { now: morning }).map(item => item._id))
       .toEqual(selectHomeDiscoveryPosts(candidates, { now: evening }).map(item => item._id));
   });
+
+  it('rotates an otherwise equal shelf across UTC dates', () => {
+    const candidates = Array.from({ length: 20 }, (_, index) => candidate(String(index)));
+    const firstDay = selectHomeDiscoveryPosts(candidates, {
+      now: new Date('2026-09-15T12:00:00.000Z')
+    }).map(item => item._id);
+    const laterDay = selectHomeDiscoveryPosts(candidates, {
+      now: new Date('2026-09-23T12:00:00.000Z')
+    }).map(item => item._id);
+
+    expect(laterDay).not.toEqual(firstDay);
+  });
 });
