@@ -35,6 +35,7 @@ import {
   getHomeTopBlocksOptions,
   getHomeTrendingTagsOptions
 } from './homepage.js';
+import { getHomeDiscoveryShelf } from './homeDiscovery.js';
 import * as cache from './cache.js';
 import {
   createHomeWarmCycleRunner,
@@ -61,6 +62,7 @@ async function warmHomeCache({ preferredLang }) {
     () => getTopBlocksWithFallback(
       getHomeTopBlocksOptions(preferredLang, config.homeSourceFallbackLimit)
     ),
+    () => getHomeDiscoveryShelf({ preferredLang }),
     () => getRecentCommentActivity({ limit: 5, lang: preferredLang, since: activitySince }),
     () => getRecentReactionActivity({ limit: 5, lang: preferredLang, since: activitySince }),
   ], {

@@ -1,0 +1,37 @@
+if homeDiscoveryPosts && homeDiscoveryPosts.length
+  section.home-wander(aria-labelledby='home-wander-title')
+    header.home-wander__header
+      .home-wander__heading
+        p.home-wander__eyebrow= t('home.discovery.eyebrow')
+        h2#home-wander-title= t('home.discovery.title')
+        p.home-wander__description= t('home.discovery.description')
+      a.home-wander__browse(href=uiPath('/rooms'))
+        span= t('home.discovery.browseRooms')
+        span(aria-hidden='true') →
+    ul.home-wander__grid
+      each post in homeDiscoveryPosts
+        li.home-wander-card
+          a.home-wander-card__link(href=uiPath(`/rooms/${post.roomId}/blocks/${post.id}`))
+            .home-wander-card__media
+              if post.bannerImage
+                img.home-wander-card__image(
+                  src=post.bannerImage.url
+                  alt=''
+                  loading='lazy'
+                  decoding='async'
+                  referrerpolicy='no-referrer'
+                )
+              else
+                .home-wander-card__placeholder(aria-hidden='true')
+                  i.fas.fa-compass
+            .home-wander-card__body
+              .home-wander-card__context
+                span.home-wander-card__room= post.roomName
+                if post.lang !== preferredContentLang
+                  span.home-language-badge= t(`layout.languages.${post.lang}`) || post.lang
+              h3.home-wander-card__title(lang=post.lang dir=(textDirForLang ? textDirForLang(post.lang) : 'ltr'))= post.title
+              if post.description
+                p.home-wander-card__summary(lang=post.lang dir=(textDirForLang ? textDirForLang(post.lang) : 'ltr'))= post.description
+              span.home-wander-card__cta
+                = t('home.discovery.readPost')
+                span(aria-hidden='true') →

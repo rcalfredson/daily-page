@@ -60,6 +60,8 @@ block content
         span.stat-number= globalStats.collaborationsToday
         span.stat-label= t('home.stats.collabsToday')
 
+  include partials/_home_discovery_shelf
+
   if supportFunding
     aside.home-support-widget
       .home-support-widget__copy

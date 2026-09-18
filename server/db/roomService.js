@@ -94,6 +94,27 @@ export async function getRoomMetadata(roomId, lang = null) {
 }
 
 /**
+ * Gets localized metadata for a small set of rooms in one query.
+ */
+export async function getRoomMetadataByIds(roomIds, lang = null) {
+  const ids = [...new Set((roomIds || []).map(String).filter(Boolean))].sort();
+  if (!ids.length) return {};
+
+  return cache.get(
+    `room-metadata-batch-${lang || 'raw'}-${ids.join(',')}`,
+    async () => {
+      const rooms = await Room.find({ _id: { $in: ids } }).lean();
+      return Object.fromEntries(rooms.map(room => {
+        const resolved = lang ? toRoomI18nDTO(room, lang) : room;
+        return [String(room._id), resolved];
+      }));
+    },
+    [],
+    { ttlMs: 10 * 60 * 1000, staleTtlMs: ROOM_STALE_TTL }
+  );
+}
+
+/**
  * Gets *all* rooms
  */
 export async function getAllRooms(lang = null) {
