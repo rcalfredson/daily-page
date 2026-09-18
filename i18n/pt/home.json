@@ -18,6 +18,13 @@
       "tags": "Tags",
       "collabsToday": "Colaborações Hoje"
     },
+    "discovery": {
+      "eyebrow": "Explore as prateleiras",
+      "title": "Deixe-se levar",
+      "description": "Seis portas para o Daily Page, escolhidas para seguir em direções diferentes. Abra a que menos esperava.",
+      "browseRooms": "Explorar todas as salas",
+      "readPost": "Abrir esta porta"
+    },
     "quests": {
       "eyebrow": "Criar em conjunto",
       "title": "Participe numa missão da comunidade",

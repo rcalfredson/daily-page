@@ -64,7 +64,7 @@ describe('homepage discovery shelf view', () => {
   });
 
   it('falls back to the English discovery copy for untranslated locales', async () => {
-    const t = await getTranslatorRuntime('es', ['home']);
+    const t = await getTranslatorRuntime('zz', ['home']);
     expect(t('home.discovery.title')).toBe('Wander somewhere');
     expect(t('home.discovery.browseRooms')).toBe('Browse all rooms');
   });

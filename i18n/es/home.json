@@ -18,6 +18,13 @@
       "tags": "Etiquetas",
       "collabsToday": "Colaboraciones de hoy"
     },
+    "discovery": {
+      "eyebrow": "Explora las estanterías",
+      "title": "Déjate llevar",
+      "description": "Seis puertas a Daily Page, elegidas para llevarte por caminos distintos. Elige la que menos esperabas.",
+      "browseRooms": "Explorar todas las salas",
+      "readPost": "Abre esta puerta"
+    },
     "quests": {
       "eyebrow": "Crear juntos",
       "title": "Participa en una misión comunitaria",

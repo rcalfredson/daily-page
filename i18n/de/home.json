@@ -18,6 +18,13 @@
       "tags": "Tags",
       "collabsToday": "Zusammenarbeiten heute"
     },
+    "discovery": {
+      "eyebrow": "In den Regalen stöbern",
+      "title": "Lass dich treiben",
+      "description": "Sechs Türen zu Daily Page, die in ganz unterschiedliche Richtungen führen. Öffne die, mit der du am wenigsten gerechnet hast.",
+      "browseRooms": "Alle Räume entdecken",
+      "readPost": "Diese Tür öffnen"
+    },
     "quests": {
       "eyebrow": "Gemeinsam gestalten",
       "title": "Mach bei einer Community-Quest mit",

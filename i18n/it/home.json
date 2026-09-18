@@ -18,6 +18,13 @@
       "tags": "Tag",
       "collabsToday": "Collaborazioni oggi"
     },
+    "discovery": {
+      "eyebrow": "Esplora gli scaffali",
+      "title": "Lasciati portare altrove",
+      "description": "Sei porte su Daily Page, scelte per condurti in direzioni diverse. Apri quella che meno ti aspettavi.",
+      "browseRooms": "Esplora tutte le stanze",
+      "readPost": "Apri questa porta"
+    },
     "quests": {
       "eyebrow": "Creare insieme",
       "title": "Partecipa a una missione della community",
