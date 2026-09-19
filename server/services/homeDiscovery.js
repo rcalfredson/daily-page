@@ -154,11 +154,11 @@ export async function getHomeDiscoveryCandidates({
 
 export function selectHomeDiscoveryPosts(candidates, {
   limit = HOME_DISCOVERY_SHELF_LIMIT,
-  now = new Date()
+  now = new Date(),
+  seed = homeDiscoveryDateKey(now)
 } = {}) {
   if (!Number.isInteger(limit) || limit <= 0) return [];
 
-  const seed = homeDiscoveryDateKey(now);
   const eligible = [];
   const seenGroups = new Set();
 
@@ -200,6 +200,23 @@ export function selectHomeDiscoveryPosts(candidates, {
   return selected;
 }
 
+export function selectSurpriseDiscoveryPost(candidates, {
+  excludeGroups = [],
+  now = new Date(),
+  seed
+} = {}) {
+  const excluded = new Set(excludeGroups.map(String));
+  const available = (candidates || []).filter(candidate => (
+    !excluded.has(candidateGroup(candidate))
+  ));
+
+  return selectHomeDiscoveryPosts(available, {
+    limit: 1,
+    now,
+    seed: seed || `${homeDiscoveryDateKey(now)}:surprise`
+  })[0] || null;
+}
+
 export async function getHomeDiscoveryShelf({
   preferredLang = 'en',
   limit = HOME_DISCOVERY_SHELF_LIMIT,
@@ -211,4 +228,26 @@ export async function getHomeDiscoveryShelf({
     limit: candidateLimit
   });
   return selectHomeDiscoveryPosts(candidates, { limit, now });
+}
+
+export async function getSurpriseDiscoveryPost({
+  preferredLang = 'en',
+  candidateLimit = HOME_DISCOVERY_POOL_LIMIT,
+  now = new Date(),
+  seed
+} = {}) {
+  const candidates = await getHomeDiscoveryCandidates({
+    preferredLang,
+    limit: candidateLimit
+  });
+  const currentShelf = selectHomeDiscoveryPosts(candidates, {
+    limit: HOME_DISCOVERY_SHELF_LIMIT,
+    now
+  });
+
+  return selectSurpriseDiscoveryPost(candidates, {
+    excludeGroups: currentShelf.map(candidateGroup),
+    now,
+    seed
+  });
 }

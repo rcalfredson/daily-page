@@ -1032,6 +1032,41 @@ html[data-theme="dark"] .home-support-widget__fill {
   line-height: 1.5;
 }
 
+.home-wander__actions {
+  display: flex;
+  max-width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem 1rem;
+}
+
+.home-wander__surprise {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 40px;
+  box-sizing: border-box;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  color: var(--highlight-contrast);
+  background: var(--highlight-color);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.home-wander__surprise:hover,
+.home-wander__surprise:focus-visible {
+  color: var(--highlight-contrast);
+  background: var(--highlight-hover);
+  text-decoration: none;
+}
+
+.home-wander__surprise:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--highlight-color) 45%, transparent);
+  outline-offset: 2px;
+}
+
 .home-wander__browse {
   display: inline-flex;
   align-items: center;
@@ -1517,6 +1552,11 @@ html[data-theme='dark'] .home-quests-heading h2 {
 
   .home-wander {
     padding: 1rem;
+  }
+
+  .home-wander__actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .home-wander__grid {
