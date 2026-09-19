@@ -3,10 +3,13 @@ import {
   getHomeActivityVisibility,
   getHomeTopBlocksOptions,
   getHomeTrendingTagsOptions,
+  HOME_FEED_PREVIEW_CHARS,
   HOME_ACTIVITY_MINIMUM,
   HOME_ACTIVITY_WINDOW_DAYS,
-  toHomeDiscoveryCards
+  toHomeDiscoveryCards,
+  toHomeFeedPreviewDTO
 } from '../server/services/homepage.js';
+import { toBlockPreviewDTO } from '../server/utils/block.js';
 
 describe('homepage activity visibility', () => {
   it('uses a seven-day activity window', () => {
@@ -43,6 +46,29 @@ describe('homepage activity visibility', () => {
       sortBy: 'totalBlocks',
       preferredLang: 'ru'
     });
+  });
+
+  it('builds shorter homepage-only feed previews', () => {
+    const paragraph = 'A detailed sentence about a worthwhile subject. '.repeat(4).trim();
+    const block = {
+      _id: 'post-1',
+      title: 'A substantial post',
+      content: [paragraph, paragraph, paragraph, paragraph].join('\n\n'),
+      creator: 'writer',
+      createdAt: new Date('2026-09-01T12:00:00.000Z'),
+      roomId: 'general',
+      lang: 'en',
+      status: 'locked',
+      votes: []
+    };
+
+    const preview = toHomeFeedPreviewDTO(block, { userId: 'reader-1' });
+
+    expect(HOME_FEED_PREVIEW_CHARS).toBe(450);
+    expect(preview.truncated).toBeTrue();
+    expect(preview.contentHTML).toContain('A detailed sentence');
+    expect(preview.contentHTML.match(/<p>/g)).toHaveSize(3);
+    expect(toBlockPreviewDTO(block).truncated).toBeFalse();
   });
 
   it('builds compact localized discovery cards without embedding Street View', () => {

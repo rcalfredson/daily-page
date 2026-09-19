@@ -54,7 +54,8 @@ import {
   getHomeTopBlocksOptions,
   getHomeTrendingTagsOptions,
   partitionHomePostsByLocale,
-  toHomeDiscoveryCards
+  toHomeDiscoveryCards,
+  toHomeFeedPreviewDTO
 } from './server/services/homepage.js';
 import { getHomeDiscoveryShelf } from './server/services/homeDiscovery.js';
 import { getRecurringSupportMonthlyTotalUsd } from './server/db/supportFundingService.js';
@@ -772,7 +773,9 @@ async function getSupportFundingViewModel() {
 
           // Mapear top blocks a DTO con userId
           const blocksPeriod = topRes?.period || null;
-          const resolvedTopBlocks = (topRes?.blocks || []).map(b => toBlockPreviewDTO(b, { userId }));
+          const resolvedTopBlocks = (topRes?.blocks || []).map(
+            b => toHomeFeedPreviewDTO(b, { userId })
+          );
           const partitionedTopBlocks = partitionHomePostsByLocale(resolvedTopBlocks, {
             exactLimit: 20,
             fallbackLimit: config.homeSourceFallbackLimit

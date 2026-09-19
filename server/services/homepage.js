@@ -1,8 +1,17 @@
 import { markdownToPlainText } from '../utils/markdownHelper.js';
+import { toBlockPreviewDTO } from '../utils/block.js';
 
 export const HOME_ACTIVITY_WINDOW_DAYS = 7;
 export const HOME_ACTIVITY_MINIMUM = 4;
 export const HOME_EXACT_POST_LIMIT = 20;
+export const HOME_FEED_PREVIEW_CHARS = 450;
+
+export function toHomeFeedPreviewDTO(block, { userId = null } = {}) {
+  return toBlockPreviewDTO(block, {
+    userId,
+    previewChars: HOME_FEED_PREVIEW_CHARS
+  });
+}
 
 export function getHomeTopBlocksOptions(preferredLang, fallbackLimit = 0) {
   return {
