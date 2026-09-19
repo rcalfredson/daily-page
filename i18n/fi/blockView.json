@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "Löydä aiheeseen liittyvää",
-      "heading": "Jatka lukemista",
+      "heading": "Aiheeseen liittyvää luettavaa",
       "description": "Julkaisuja yhdistävät aihe, kieli ja yhteisön signaalit.",
+      "elsewhereEyebrow": "Vaihda suuntaa",
+      "elsewhereHeading": "Muualla Daily Pagessa",
+      "elsewhereDescription": "Palkitseva poikkeama toiseen huoneeseen ja aiheeseen.",
       "roomLabel": "Huoneessa {room}",
       "byAuthor": "Kirjoittanut {author}"
     },

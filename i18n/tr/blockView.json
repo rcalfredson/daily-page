@@ -45,8 +45,11 @@
     },
     "recommendations": {
       "eyebrow": "İlgili bir şey keşfedin",
-      "heading": "Okumaya devam edin",
+      "heading": "İlgili okumalar",
       "description": "Konu, dil ve topluluk sinyalleriyle bağlantılı gönderiler.",
+      "elsewhereEyebrow": "Yön değiştirin",
+      "elsewhereHeading": "Daily Page'in başka yerlerinde",
+      "elsewhereDescription": "Farklı bir oda ve konuya doğru keyifli bir dönüş.",
       "roomLabel": "{room} içinde",
       "byAuthor": "Yazan: {author}"
     },

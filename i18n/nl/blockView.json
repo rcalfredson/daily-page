@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "Ontdek iets verwants",
-      "heading": "Lees verder",
+      "heading": "Verwante lectuur",
       "description": "Berichten die verbonden zijn door onderwerp, taal en signalen uit de community.",
+      "elsewhereEyebrow": "Kies een andere richting",
+      "elsewhereHeading": "Elders op Daily Page",
+      "elsewhereDescription": "Een verrassende afslag naar een andere kamer en een ander onderwerp.",
       "roomLabel": "In {room}",
       "byAuthor": "Door {author}"
     },

@@ -281,6 +281,16 @@ hr {
   margin-bottom: 1rem;
 }
 
+.block-recommendations__lane + .block-recommendations__lane {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #dfe6f1;
+}
+
+.block-recommendations__lane--elsewhere .block-recommendations__eyebrow {
+  color: #76588f;
+}
+
 .block-recommendations--loading {
   overflow: hidden;
 }
@@ -1044,6 +1054,14 @@ html[data-theme="dark"] .block-recommendations__description,
 html[data-theme="dark"] .block-recommendation__summary,
 html[data-theme="dark"] .block-recommendation__meta {
   color: var(--muted-text-color);
+}
+
+html[data-theme="dark"] .block-recommendations__lane + .block-recommendations__lane {
+  border-top-color: var(--border-color);
+}
+
+html[data-theme="dark"] .block-recommendations__lane--elsewhere .block-recommendations__eyebrow {
+  color: color-mix(in srgb, var(--highlight-color) 64%, var(--muted-text-color));
 }
 
 html[data-theme="dark"] .meta-item time,

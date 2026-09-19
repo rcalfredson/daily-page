@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "גילוי תוכן קשור",
-      "heading": "המשך קריאה",
+      "heading": "קריאה קשורה",
       "description": "פוסטים המקושרים לפי נושא, שפה ואותות מהקהילה.",
+      "elsewhereEyebrow": "שנו כיוון",
+      "elsewhereHeading": "במקומות אחרים ב-Daily Page",
+      "elsewhereDescription": "פנייה מסקרנת לחדר ולנושא אחרים.",
       "roomLabel": "ב־{room}",
       "byAuthor": "מאת {author}"
     },

@@ -45,8 +45,11 @@
     },
     "recommendations": {
       "eyebrow": "Odkryj coś powiązanego",
-      "heading": "Czytaj dalej",
+      "heading": "Powiązane teksty",
       "description": "Posty połączone na podstawie tematu, języka i sygnałów społeczności.",
+      "elsewhereEyebrow": "Zmień kierunek",
+      "elsewhereHeading": "W innych miejscach Daily Page",
+      "elsewhereDescription": "Ciekawy zwrot ku innemu pokojowi i tematowi.",
       "roomLabel": "W pokoju {room}",
       "byAuthor": "Autor: {author}"
     },

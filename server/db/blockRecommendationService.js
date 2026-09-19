@@ -1,7 +1,11 @@
 import Block from './models/Block.js';
-import { publiclyVisibleBlockMatch } from './blockService.js';
 import * as cache from '../services/cache.js';
-import { extractSearchTerms, rankBlockRecommendations } from '../recommendations/contentRanker.js';
+import { getHomeDiscoveryCandidates } from '../services/homeDiscovery.js';
+import {
+  extractSearchTerms,
+  rankBlockRecommendations,
+  rankElsewhereRecommendations
+} from '../recommendations/contentRanker.js';
 
 const CANDIDATE_FIELDS = [
   '_id',
@@ -21,26 +25,54 @@ const CANDIDATE_FIELDS = [
 const CANDIDATE_LIMIT = 80;
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const CACHE_STALE_TTL_MS = 60 * 60 * 1000;
+const RELATED_LIMIT = 3;
+const ELSEWHERE_LIMIT = 2;
 
-function recommendationCacheKey(block, limit) {
-  return `block-recommendations-${block._id}-${new Date(block.updatedAt || 0).getTime()}-${limit}`;
+function emptyRecommendationLanes() {
+  return { related: [], elsewhere: [] };
 }
 
-async function calculateBlockRecommendations(block, limit) {
-  const candidates = await fetchCandidates(block);
-  return rankBlockRecommendations(block, candidates, { limit }).map(toViewModel);
+function recommendationCacheKey(block, relatedLimit, elsewhereLimit) {
+  return [
+    'block-recommendation-lanes-v2',
+    block._id,
+    new Date(block.updatedAt || 0).getTime(),
+    relatedLimit,
+    elsewhereLimit
+  ].join('-');
+}
+
+async function calculateBlockRecommendationLanes(block, relatedLimit, elsewhereLimit) {
+  const [relatedCandidates, discoveryCandidates] = await Promise.all([
+    fetchRelatedCandidates(block),
+    getHomeDiscoveryCandidates({ preferredLang: block.lang || 'en' })
+  ]);
+  const related = rankBlockRecommendations(block, relatedCandidates, {
+    limit: relatedLimit
+  });
+  const elsewhere = rankElsewhereRecommendations(block, discoveryCandidates, {
+    limit: elsewhereLimit,
+    excludeGroups: related.map(candidate => candidate.groupId || candidate._id)
+  });
+
+  return {
+    related: related.map(toViewModel),
+    elsewhere: elsewhere.map(toViewModel)
+  };
 }
 
 function cacheOptions() {
   return { ttlMs: CACHE_TTL_MS, jitterMs: 60 * 1000, staleTtlMs: CACHE_STALE_TTL_MS };
 }
 
-function recommendationMatch(block) {
-  return publiclyVisibleBlockMatch({
+export function buildRelatedRecommendationMatch(block) {
+  return {
     _id: { $ne: block._id },
     groupId: { $ne: block.groupId },
-    lang: block.lang || 'en'
-  });
+    lang: block.lang || 'en',
+    visibility: 'public',
+    status: 'locked'
+  };
 }
 
 function mergeCandidates(...groups) {
@@ -51,8 +83,8 @@ function mergeCandidates(...groups) {
   return Array.from(byId.values());
 }
 
-async function fetchCandidates(block) {
-  const baseMatch = recommendationMatch(block);
+async function fetchRelatedCandidates(block) {
+  const baseMatch = buildRelatedRecommendationMatch(block);
   const searchTerms = extractSearchTerms(block);
   const affinity = [];
 
@@ -103,15 +135,16 @@ function toViewModel(block) {
   };
 }
 
-export async function getBlockRecommendations(block, options = {}) {
-  if (!block?._id) return [];
-  const limit = options.limit || 5;
-  const cacheKey = recommendationCacheKey(block, limit);
+export async function getBlockRecommendationLanes(block, options = {}) {
+  if (!block?._id) return emptyRecommendationLanes();
+  const relatedLimit = options.relatedLimit || RELATED_LIMIT;
+  const elsewhereLimit = options.elsewhereLimit || ELSEWHERE_LIMIT;
+  const cacheKey = recommendationCacheKey(block, relatedLimit, elsewhereLimit);
 
   return cache.get(
     cacheKey,
-    calculateBlockRecommendations,
-    [block, limit],
+    calculateBlockRecommendationLanes,
+    [block, relatedLimit, elsewhereLimit],
     cacheOptions()
   );
 }
@@ -119,15 +152,16 @@ export async function getBlockRecommendations(block, options = {}) {
 // Optional recommendations must never hold up the main post response. A cache
 // miss starts the same deduplicated calculation used by the hydration endpoint
 // and reports null so the view can render a loading shell.
-export function getBlockRecommendationsNonBlocking(block, options = {}) {
-  if (!block?._id) return [];
-  const limit = options.limit || 5;
-  const cacheKey = recommendationCacheKey(block, limit);
+export function getBlockRecommendationLanesNonBlocking(block, options = {}) {
+  if (!block?._id) return emptyRecommendationLanes();
+  const relatedLimit = options.relatedLimit || RELATED_LIMIT;
+  const elsewhereLimit = options.elsewhereLimit || ELSEWHERE_LIMIT;
+  const cacheKey = recommendationCacheKey(block, relatedLimit, elsewhereLimit);
 
   const recommendations = cache.getNonBlocking(
     cacheKey,
-    calculateBlockRecommendations,
-    [block, limit],
+    calculateBlockRecommendationLanes,
+    [block, relatedLimit, elsewhereLimit],
     cacheOptions()
   );
 

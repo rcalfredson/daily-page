@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "Discover something related",
-      "heading": "Keep reading",
+      "heading": "Related reading",
       "description": "Posts connected by topic, language, and community signals.",
+      "elsewhereEyebrow": "Change direction",
+      "elsewhereHeading": "Elsewhere on Daily Page",
+      "elsewhereDescription": "A rewarding turn toward a different room and subject.",
       "roomLabel": "In {room}",
       "byAuthor": "By {author}"
     },

@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "関連する投稿を見つける",
-      "heading": "続きを読む",
+      "heading": "関連する読みもの",
       "description": "トピック、言語、コミュニティの反応に基づいて関連付けられた投稿です。",
+      "elsewhereEyebrow": "方向を変えてみる",
+      "elsewhereHeading": "Daily Page の別の場所へ",
+      "elsewhereDescription": "別のルームとテーマへ、思いがけない寄り道を。",
       "roomLabel": "{room} の投稿",
       "byAuthor": "{author} による投稿"
     },

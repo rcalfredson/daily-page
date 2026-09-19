@@ -8,8 +8,8 @@ import {
 } from '../db/blockService.js';
 import { getBlockEditorialContext } from '../db/blockEditorialContextService.js';
 import {
-  getBlockRecommendations,
-  getBlockRecommendationsNonBlocking
+  getBlockRecommendationLanes,
+  getBlockRecommendationLanesNonBlocking
 } from '../db/blockRecommendationService.js';
 import {
   getCommentsForBlockView,
@@ -81,8 +81,13 @@ function normalizeCommentId(commentId) {
 router.get('/posts/:group_id', createPostGroupResolver());
 
 async function addRecommendationRoomNames(recommendations, currentRoomId, roomMetadata, uiLang) {
+  const lanes = recommendations || { related: [], elsewhere: [] };
+  const allRecommendations = [
+    ...(lanes.related || []),
+    ...(lanes.elsewhere || [])
+  ];
   const roomIds = Array.from(new Set(
-    recommendations.map((recommendation) => recommendation.roomId)
+    allRecommendations.map((recommendation) => recommendation.roomId)
   ));
   const roomNames = new Map(await Promise.all(
     roomIds.map(async (roomId) => {
@@ -97,10 +102,21 @@ async function addRecommendationRoomNames(recommendations, currentRoomId, roomMe
     })
   ));
 
-  return recommendations.map((recommendation) => ({
+  const addRoomName = (recommendation) => ({
     ...recommendation,
     roomName: roomNames.get(recommendation.roomId) || recommendation.roomId
-  }));
+  });
+
+  return {
+    related: (lanes.related || []).map(addRoomName),
+    elsewhere: (lanes.elsewhere || []).map(addRoomName)
+  };
+}
+
+function hasRecommendationItems(recommendations) {
+  return Boolean(
+    recommendations?.related?.length || recommendations?.elsewhere?.length
+  );
 }
 
 router.get(
@@ -114,8 +130,8 @@ router.get(
       if (!block || block.roomId !== room_id) return res.sendStatus(404);
 
       const uiLang = res.locals.uiLang || res.locals.lang || 'en';
-      const recommendations = await getBlockRecommendations(block, { limit: 5 });
-      if (!recommendations.length) return res.status(204).end();
+      const recommendations = await getBlockRecommendationLanes(block);
+      if (!hasRecommendationItems(recommendations)) return res.status(204).end();
 
       const roomMetadata = await getRoomMetadata(room_id, uiLang);
       const recommendationItems = await addRecommendationRoomNames(
@@ -185,7 +201,7 @@ router.get(
       });
       const translations = await getPublicTranslations(block.groupId);
 
-      const recommendations = getBlockRecommendationsNonBlocking(block, { limit: 5 });
+      const recommendations = getBlockRecommendationLanesNonBlocking(block);
 
       const [
         reactionCounts,

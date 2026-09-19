@@ -17,8 +17,11 @@
     },
     "recommendations": {
       "eyebrow": "Objevte něco souvisejícího",
-      "heading": "Čtěte dál",
+      "heading": "Související čtení",
       "description": "Příspěvky propojené tématem, jazykem a signály komunity.",
+      "elsewhereEyebrow": "Změňte směr",
+      "elsewhereHeading": "Jinde na Daily Page",
+      "elsewhereDescription": "Příjemná odbočka k jiné místnosti a jinému tématu.",
       "roomLabel": "V místnosti {room}",
       "byAuthor": "Autor: {author}"
     },

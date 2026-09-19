@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "اكتشف شيئًا ذا صلة",
-      "heading": "تابع القراءة",
+      "heading": "قراءات ذات صلة",
       "description": "منشورات مترابطة حسب الموضوع واللغة وإشارات المجتمع.",
+      "elsewhereEyebrow": "غيّر الاتجاه",
+      "elsewhereHeading": "في أماكن أخرى من Daily Page",
+      "elsewhereDescription": "انعطافة ممتعة نحو غرفة وموضوع مختلفين.",
       "roomLabel": "في {room}",
       "byAuthor": "بقلم {author}"
     },
