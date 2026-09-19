@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Populaire berichten van de afgelopen 24 uur",
+      "title": "Daily Page - Ontdek ideeën, verhalen en creatief werk",
       "description": "Daily Page is een onafhankelijke schrijfgemeenschap om ideeën, herinneringen en creatieve experimenten te delen. Verken themakamers, lees het werk van anderen en schrijf in uw eigen tempo."
     },
     "hero": {
       "eyebrow": "Een rustige plek om te schrijven, lezen en terugkeren",
       "title": "Welkom bij Daily Page!",
-      "subtitle": "Ontdek de populairste berichten van de afgelopen 24 uur.",
+      "subtitle": "Ontdek een groeiende verzameling ideeën, verhalen en creatieve experimenten.",
       "ctaPrefix": "Voel je je geïnspireerd?",
       "cta": "Sluit je aan bij een kamer",
       "ctaSuffix": "en maak je eigen bericht!"
@@ -75,7 +75,7 @@
       "empty": "Nog geen trending-tags. Wees de eerste die iets leuks tagt!"
     },
     "trendingBlocks": {
-      "title": "Populaire berichten",
+      "title": "Recente bijdragen",
       "suffixDays": "(laatste {days} dagen)",
       "createdBy": "Gemaakt door:",
       "in": "in",

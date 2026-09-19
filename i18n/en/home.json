@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Popular Posts from the Last 24 Hours",
+      "title": "Daily Page - Explore Ideas, Stories, and Creative Work",
       "description": "Daily Page is an independent writing community for sharing ideas, memories, and creative experiments. Explore topic rooms, read others’ work, and write at your own pace."
     },
     "hero": {
       "eyebrow": "A quiet place for writing, reading, and returning",
       "title": "Welcome to Daily Page!",
-      "subtitle": "Explore the most popular posts from the last 24 hours.",
+      "subtitle": "Explore a growing collection of ideas, stories, and creative experiments.",
       "ctaPrefix": "Feeling inspired?",
       "cta": "Join a room",
       "ctaSuffix": "and create your own post!"
@@ -75,7 +75,7 @@
       "empty": "No trending tags yet. Be the first to tag something cool!"
     },
     "trendingBlocks": {
-      "title": "Trending Posts",
+      "title": "Recent Writing",
       "suffixDays": "(last {days} days)",
       "createdBy": "Created by:",
       "in": "in",

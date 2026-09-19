@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Beliebte Beitrage der letzten 24 Stunden",
+      "title": "Daily Page - Ideen, Geschichten und kreative Werke entdecken",
       "description": "Daily Page ist eine unabhängige Schreibgemeinschaft zum Teilen von Ideen, Erinnerungen und kreativen Experimenten. Entdecke Themenräume, lies die Texte anderer und schreibe in deinem eigenen Tempo."
     },
     "hero": {
       "eyebrow": "Ein ruhiger Ort zum Schreiben, Lesen und Wiederkommen",
       "title": "Willkommen bei Daily Page!",
-      "subtitle": "Entdecke die beliebtesten Beitrage der letzten 24 Stunden.",
+      "subtitle": "Entdecke eine wachsende Sammlung von Ideen, Geschichten und kreativen Experimenten.",
       "ctaPrefix": "Inspiriert?",
       "cta": "Einem Raum beitreten",
       "ctaSuffix": "und erstelle deinen eigenen Beitrag!"
@@ -75,7 +75,7 @@
       "empty": "Noch keine Trend-Tags. Sei die erste Person, die etwas Cooles taggt!"
     },
     "trendingBlocks": {
-      "title": "Trend-Beitrage",
+      "title": "Neue Texte",
       "suffixDays": "(letzte {days} Tage)",
       "createdBy": "Erstellt von:",
       "in": "in",

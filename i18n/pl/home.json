@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Popularne posty z ostatnich 24 godzin",
+      "title": "Daily Page - Odkrywaj idee, historie i twórczość",
       "description": "Daily Page to niezależna społeczność piszących, w której można dzielić się pomysłami, wspomnieniami i twórczymi eksperymentami. Odkrywaj pokoje tematyczne, czytaj teksty innych i pisz we własnym tempie."
     },
     "hero": {
       "eyebrow": "Ciche miejsce do pisania, czytania i powracania",
       "title": "Witaj w Daily Page!",
-      "subtitle": "Odkryj najpopularniejsze posty z ostatnich 24 godzin.",
+      "subtitle": "Odkrywaj rosnącą kolekcję idei, historii i twórczych eksperymentów.",
       "ctaPrefix": "Masz inspirację?",
       "cta": "Dołącz do pokoju",
       "ctaSuffix": "i utwórz własny post!"
@@ -70,7 +70,7 @@
       "empty": "Nie ma jeszcze popularnych tagów. Otaguj coś ciekawego jako pierwszy!"
     },
     "trendingBlocks": {
-      "title": "Popularne posty",
+      "title": "Najnowsze teksty",
       "suffixDays": "(ostatnie {days} dni)",
       "createdBy": "Utworzone przez:",
       "in": "w",

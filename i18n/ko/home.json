@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - 최근 24시간 인기 게시물",
+      "title": "Daily Page - 아이디어, 이야기와 창작물 탐색",
       "description": "Daily Page는 아이디어, 추억, 창작 실험을 나누는 독립적인 글쓰기 커뮤니티입니다. 주제별 방을 둘러보고, 다른 사람의 글을 읽고, 자신의 속도에 맞춰 써 보세요."
     },
     "hero": {
       "eyebrow": "쓰고, 읽고, 다시 돌아오기 좋은 조용한 공간",
       "title": "Daily Page에 오신 것을 환영합니다!",
-      "subtitle": "최근 24시간 동안 가장 인기 있는 게시물을 둘러보세요.",
+      "subtitle": "계속 늘어나는 아이디어, 이야기와 창작 실험을 둘러보세요.",
       "ctaPrefix": "영감이 떠오르나요?",
       "cta": "방에 참여하고",
       "ctaSuffix": "나만의 게시물을 만들어 보세요!"
@@ -75,7 +75,7 @@
       "empty": "아직 인기 태그가 없습니다. 멋진 것에 첫 태그를 달아 보세요!"
     },
     "trendingBlocks": {
-      "title": "인기 게시물",
+      "title": "최근 글",
       "suffixDays": "(최근 {days}일)",
       "createdBy": "작성자:",
       "in": "방:",

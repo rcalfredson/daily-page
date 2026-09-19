@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Bài viết phổ biến trong 24 giờ qua",
+      "title": "Daily Page - Khám phá ý tưởng, câu chuyện và tác phẩm sáng tạo",
       "description": "Daily Page là cộng đồng viết độc lập để chia sẻ ý tưởng, kỷ niệm và những thử nghiệm sáng tạo. Khám phá các phòng theo chủ đề, đọc tác phẩm của người khác và viết theo nhịp độ của riêng bạn."
     },
     "hero": {
       "eyebrow": "Một nơi yên tĩnh để viết, đọc và trở về",
       "title": "Chào mừng đến với Daily Page!",
-      "subtitle": "Khám phá các bài đăng phổ biến nhất trong 24 giờ qua.",
+      "subtitle": "Khám phá bộ sưu tập ngày càng phong phú gồm các ý tưởng, câu chuyện và thử nghiệm sáng tạo.",
       "ctaPrefix": "Cảm thấy được truyền cảm hứng?",
       "cta": "Tham gia một phòng",
       "ctaSuffix": "và tạo bài đăng của riêng bạn!"
@@ -75,7 +75,7 @@
       "empty": "Chưa có thẻ xu hướng nào. Hãy là người đầu tiên gắn thẻ thứ gì đó thú vị!"
     },
     "trendingBlocks": {
-      "title": "Bài viết thịnh hành",
+      "title": "Bài viết gần đây",
       "suffixDays": "({days} ngày qua)",
       "createdBy": "Được tạo bởi:",
       "in": "trong",

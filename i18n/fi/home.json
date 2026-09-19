@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Suositut julkaisut viimeiseltä 24 tunnilta",
+      "title": "Daily Page - Tutustu ideoihin, tarinoihin ja luovaan työhön",
       "description": "Daily Page on riippumaton kirjoitusyhteisö ajatusten, muistojen ja luovien kokeilujen jakamiseen. Tutustu aihekohtaisiin huoneisiin, lue muiden tekstejä ja kirjoita omaan tahtiisi."
     },
     "hero": {
       "eyebrow": "Hiljainen paikka kirjoittamiseen, lukemiseen ja palaamiseen",
       "title": "Tervetuloa Daily Pageen!",
-      "subtitle": "Tutustu viimeisen 24 tunnin suosituimpiin julkaisuihin.",
+      "subtitle": "Tutustu jatkuvasti kasvavaan kokoelmaan ideoita, tarinoita ja luovia kokeiluja.",
       "ctaPrefix": "Inspiroiko?",
       "cta": "Liity huoneeseen",
       "ctaSuffix": "ja luo oma julkaisusi!"
@@ -75,7 +75,7 @@
       "empty": "Ei vielä nousevia tunnisteita. Ole ensimmäinen, joka lisää tunnisteen johonkin hienoon!"
     },
     "trendingBlocks": {
-      "title": "Nousussa olevat julkaisut",
+      "title": "Uusimmat kirjoitukset",
       "suffixDays": "(viimeiset {days} päivää)",
       "createdBy": "Luonut:",
       "in": "huoneessa",

@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Postingan populer dalam 24 jam terakhir",
+      "title": "Daily Page - Jelajahi Ide, Cerita, dan Karya Kreatif",
       "description": "Daily Page adalah komunitas menulis independen untuk berbagi ide, kenangan, dan eksperimen kreatif. Jelajahi ruang bertema, baca karya orang lain, dan menulislah sesuai ritmemu sendiri."
     },
     "hero": {
       "eyebrow": "Tempat tenang untuk menulis, membaca, dan kembali",
       "title": "Selamat datang di Daily Page!",
-      "subtitle": "Jelajahi postingan paling populer dari 24 jam terakhir.",
+      "subtitle": "Jelajahi koleksi ide, cerita, dan eksperimen kreatif yang terus berkembang.",
       "ctaPrefix": "Merasa terinspirasi?",
       "cta": "Bergabung dengan ruang",
       "ctaSuffix": "dan buat postinganmu sendiri!"
@@ -75,7 +75,7 @@
       "empty": "Belum ada tag tren. Jadilah yang pertama menandai sesuatu yang keren!"
     },
     "trendingBlocks": {
-      "title": "Postingan Tren",
+      "title": "Tulisan terbaru",
       "suffixDays": "({days} hari terakhir)",
       "createdBy": "Dibuat oleh:",
       "in": "di",
