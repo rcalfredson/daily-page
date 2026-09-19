@@ -5,7 +5,8 @@ import {
   getHomeDiscoveryCandidates,
   getHomeDiscoveryShelf,
   homeDiscoveryDateKey,
-  selectHomeDiscoveryPosts
+  selectHomeDiscoveryPosts,
+  selectSurpriseDiscoveryPost
 } from '../server/services/homeDiscovery.js';
 
 describe('homepage discovery shelf', () => {
@@ -132,5 +133,30 @@ describe('homepage discovery shelf', () => {
     }).map(item => item._id);
 
     expect(laterDay).not.toEqual(firstDay);
+  });
+
+  it('chooses a stable surprise outside the translation families on the current shelf', () => {
+    const candidates = Array.from({ length: 12 }, (_, index) => candidate(String(index)));
+    const excludedGroups = candidates.slice(0, 6).map(item => item.groupId);
+    const options = {
+      excludeGroups: excludedGroups,
+      now: new Date('2026-09-15T12:00:00.000Z'),
+      seed: 'request-seed'
+    };
+
+    const first = selectSurpriseDiscoveryPost(candidates, options);
+    const repeated = selectSurpriseDiscoveryPost(candidates, options);
+
+    expect(excludedGroups).not.toContain(first.groupId);
+    expect(repeated._id).toBe(first._id);
+  });
+
+  it('returns no surprise when the shelf covers every eligible family', () => {
+    const candidates = [candidate('a'), candidate('b')];
+
+    expect(selectSurpriseDiscoveryPost(candidates, {
+      excludeGroups: candidates.map(item => item.groupId),
+      seed: 'request-seed'
+    })).toBeNull();
   });
 });

@@ -23,6 +23,7 @@ export function isLocalizedPath(path) {
     path === '/forgot-password' ||
     path === '/reset-password' ||
     path === '/search' ||
+    path === '/discover/surprise' ||
 
     // user profiles
     /^\/users\/[^/]+$/.test(path) ||

@@ -38,6 +38,7 @@ import questsRoute from './server/routes/quests.js';
 import devViewsRoute from './server/routes/devViews.js';
 import forestRoute from './server/routes/forest.js';
 import forestWritingRoute from './server/routes/forestWriting.js';
+import discoveryRoute from './server/routes/discovery.js';
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
@@ -238,6 +239,7 @@ async function getSupportFundingViewModel() {
     app.use('/', blockViewRoute);
     app.use('/', forestRoute);
     app.use('/', forestWritingRoute);
+    app.use('/', discoveryRoute);
     if (process.env.NODE_ENV !== 'production') {
       app.use('/', devViewsRoute);
     }

@@ -32,6 +32,8 @@ describe('homepage discovery shelf view', () => {
 
     expect(html).toContain('<section class="home-wander"');
     expect(html).toContain('<ul class="home-wander__grid">');
+    expect(html).toContain('href="/en/discover/surprise"');
+    expect(html).toContain('home.discovery.surpriseMe');
     expect(html).toContain('href="/en/rooms/physics/blocks/post-1"');
     expect(html).toContain('loading="lazy"');
     expect(html).toContain('lang="ar" dir="rtl"');
@@ -61,6 +63,8 @@ describe('homepage discovery shelf view', () => {
     expect(tabletRules).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))');
     expect(mobileRules).toContain('.home-wander__grid');
     expect(mobileRules).toContain('grid-template-columns: minmax(0, 1fr)');
+    expect(mobileRules).toContain('.home-wander__actions');
+    expect(mobileRules).toContain('width: 100%');
     expect(homeStyles).toContain('.home-wander-card {\n  min-width: 0');
     expect(homeStyles).toContain('overflow-wrap: anywhere');
   });
@@ -72,7 +76,7 @@ describe('homepage discovery shelf view', () => {
   });
 
   it('provides complete discovery copy for every supported locale', () => {
-    const keys = ['eyebrow', 'title', 'description', 'browseRooms', 'readPost'];
+    const keys = ['eyebrow', 'title', 'description', 'surpriseMe', 'browseRooms', 'readPost'];
 
     for (const lang of SUPPORTED_UI_LANGS) {
       const bundle = JSON.parse(fs.readFileSync(`i18n/${lang}/home.json`, 'utf8'));

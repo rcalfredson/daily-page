@@ -5,9 +5,13 @@ if homeDiscoveryPosts && homeDiscoveryPosts.length
         p.home-wander__eyebrow= t('home.discovery.eyebrow')
         h2#home-wander-title= t('home.discovery.title')
         p.home-wander__description= t('home.discovery.description')
-      a.home-wander__browse(href=uiPath('/rooms'))
-        span= t('home.discovery.browseRooms')
-        span.home-wander__arrow(aria-hidden='true') →
+      .home-wander__actions
+        a.home-wander__surprise(href=uiPath('/discover/surprise'))
+          i.fas.fa-random(aria-hidden='true')
+          span= t('home.discovery.surpriseMe')
+        a.home-wander__browse(href=uiPath('/rooms'))
+          span= t('home.discovery.browseRooms')
+          span.home-wander__arrow(aria-hidden='true') →
     ul.home-wander__grid
       each post in homeDiscoveryPosts
         li.home-wander-card
