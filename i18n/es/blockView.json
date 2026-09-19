@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "Descubre algo relacionado",
-      "heading": "Sigue leyendo",
+      "heading": "Lecturas relacionadas",
       "description": "Publicaciones conectadas por tema, idioma y señales de la comunidad.",
+      "elsewhereEyebrow": "Un cambio de rumbo",
+      "elsewhereHeading": "En otros rincones de Daily Page",
+      "elsewhereDescription": "Un giro estimulante hacia otra sala y otro tema.",
       "roomLabel": "En {room}",
       "byAuthor": "Por {author}"
     },

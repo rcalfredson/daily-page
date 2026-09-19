@@ -52,6 +52,9 @@ block content
   - const editorialClusterNearby = editorialCluster && editorialCluster.nearby ? editorialCluster.nearby : [];
   - const hasEditorialGuideContent = Boolean(editorialPrimaryPillar || editorialRelated.length || editorialClusterNearby.length);
   - const editorialPreviewCount = 4;
+  - const relatedRecommendations = recommendations && Array.isArray(recommendations.related) ? recommendations.related : [];
+  - const elsewhereRecommendations = recommendations && Array.isArray(recommendations.elsewhere) ? recommendations.elsewhere : [];
+  - const hasRecommendations = Boolean(relatedRecommendations.length || elsewhereRecommendations.length);
   - const getEditorialPreviewItems = (items, previewCount = editorialPreviewCount) => Array.isArray(items) ? items.slice(0, previewCount) : [];
   - const getEditorialOverflowItems = (items, previewCount = editorialPreviewCount) => Array.isArray(items) ? items.slice(previewCount) : [];
   mixin editorialLink(item)
@@ -172,7 +175,7 @@ block content
               else
                 a.block-quest-card__action(href=uiPath(questPath))= t('blockView.quest.viewQuest')
 
-    .block-view-layout(class=recommendations === null || recommendations.length ? 'block-view-layout--with-recommendations' : '')
+    .block-view-layout(class=recommendations === null || hasRecommendations ? 'block-view-layout--with-recommendations' : '')
       .block-view-primary
         +blockBanner(block, 'hero')
 
@@ -219,7 +222,7 @@ block content
 
       if recommendations === null
         aside.block-recommendations.block-recommendations--loading(
-          aria-label=t('blockView.recommendations.heading')
+          aria-label=`${t('blockView.recommendations.heading')}. ${t('blockView.recommendations.elsewhereHeading')}`
           aria-busy='true'
           data-recommendations-loading
           data-endpoint=uiPath(`/rooms/${room_id}/blocks/${block._id}/recommendations`)
@@ -228,7 +231,7 @@ block content
           .block-recommendations__skeleton
           .block-recommendations__skeleton
           .block-recommendations__skeleton
-      else if recommendations.length
+      else if hasRecommendations
         include ../partials/_block_recommendations
 
       .block-view-conversation

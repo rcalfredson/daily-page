@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "ค้นพบเนื้อหาที่เกี่ยวข้อง",
-      "heading": "อ่านต่อ",
+      "heading": "บทอ่านที่เกี่ยวข้อง",
       "description": "โพสต์ที่เชื่อมโยงกันตามหัวข้อ ภาษา และสัญญาณจากชุมชน",
+      "elsewhereEyebrow": "เปลี่ยนทิศทาง",
+      "elsewhereHeading": "ที่อื่นบน Daily Page",
+      "elsewhereDescription": "เลี้ยวไปสำรวจอีกห้องและอีกหัวข้อที่น่าสนใจ",
       "roomLabel": "ใน {room}",
       "byAuthor": "โดย {author}"
     },

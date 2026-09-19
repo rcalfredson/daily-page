@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "Scopri qualcosa di correlato",
-      "heading": "Continua a leggere",
+      "heading": "Letture correlate",
       "description": "Post collegati per argomento, lingua e segnali della community.",
+      "elsewhereEyebrow": "Cambia direzione",
+      "elsewhereHeading": "Altrove su Daily Page",
+      "elsewhereDescription": "Una svolta interessante verso un'altra stanza e un altro argomento.",
       "roomLabel": "In {room}",
       "byAuthor": "Di {author}"
     },

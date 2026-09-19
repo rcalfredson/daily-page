@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "发现相关内容",
-      "heading": "继续阅读",
+      "heading": "相关阅读",
       "description": "根据主题、语言和社区反馈关联的帖子。",
+      "elsewhereEyebrow": "换个方向",
+      "elsewhereHeading": "Daily Page 的其他角落",
+      "elsewhereDescription": "转向另一个房间和主题，发现新的精彩。",
       "roomLabel": "位于 {room}",
       "byAuthor": "作者：{author}"
     },

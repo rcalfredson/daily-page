@@ -45,8 +45,11 @@
     },
     "recommendations": {
       "eyebrow": "Найдите что-нибудь по теме",
-      "heading": "Читайте дальше",
+      "heading": "Чтение по теме",
       "description": "Публикации, связанные темой, языком и сигналами сообщества.",
+      "elsewhereEyebrow": "Смените направление",
+      "elsewhereHeading": "В других разделах Daily Page",
+      "elsewhereDescription": "Увлекательный поворот к другой комнате и теме.",
       "roomLabel": "В комнате {room}",
       "byAuthor": "Автор: {author}"
     },

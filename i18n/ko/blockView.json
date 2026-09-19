@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "관련 글 둘러보기",
-      "heading": "계속 읽기",
+      "heading": "관련 글",
       "description": "주제, 언어 및 커뮤니티 신호를 바탕으로 연결된 게시물입니다.",
+      "elsewhereEyebrow": "다른 방향으로",
+      "elsewhereHeading": "Daily Page의 다른 곳",
+      "elsewhereDescription": "새로운 방과 주제로 즐거운 방향 전환을 해 보세요.",
       "roomLabel": "{room}에서",
       "byAuthor": "{author} 작성"
     },

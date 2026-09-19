@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "कुछ संबंधित खोजें",
-      "heading": "पढ़ना जारी रखें",
+      "heading": "संबंधित पठन",
       "description": "विषय, भाषा और समुदाय के संकेतों से जुड़ी पोस्ट।",
+      "elsewhereEyebrow": "दिशा बदलें",
+      "elsewhereHeading": "Daily Page पर कहीं और",
+      "elsewhereDescription": "एक अलग कमरे और विषय की ओर एक दिलचस्प मोड़।",
       "roomLabel": "{room} में",
       "byAuthor": "{author} द्वारा"
     },

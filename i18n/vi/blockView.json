@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "Khám phá nội dung liên quan",
-      "heading": "Đọc tiếp",
+      "heading": "Bài đọc liên quan",
       "description": "Các bài viết được kết nối theo chủ đề, ngôn ngữ và tín hiệu từ cộng đồng.",
+      "elsewhereEyebrow": "Đổi hướng",
+      "elsewhereHeading": "Những nơi khác trên Daily Page",
+      "elsewhereDescription": "Một ngã rẽ thú vị sang căn phòng và chủ đề khác.",
       "roomLabel": "Trong {room}",
       "byAuthor": "Bởi {author}"
     },

@@ -103,6 +103,36 @@ function qualityScore(voteCount) {
   return 1 / (1 + Math.exp(-votes / 5));
 }
 
+function stableHash(value) {
+  let hash = 2166136261;
+  for (const character of String(value)) {
+    hash ^= character.codePointAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function deterministicJitter(seed, block) {
+  return stableHash(`${seed}:${groupOf(block)}`) / 0xffffffff;
+}
+
+function discoveryQuality(block, now) {
+  const descriptionLength = String(block?.description || '').trim().length;
+  const contentLength = Math.max(0, Number(block?.contentLength) || 0);
+  const tagCount = Array.isArray(block?.tags) ? block.tags.length : 0;
+  const role = block?.editorial?.role;
+
+  return (
+    (descriptionLength >= 40 ? 0.2 : descriptionLength ? 0.08 : 0)
+    + (contentLength >= 1000 ? 0.2 : contentLength >= 200 ? 0.1 : 0)
+    + (block?.bannerImage?.url ? 0.08 : 0)
+    + Math.min(0.12, tagCount * 0.04)
+    + (role === 'pillar' ? 0.16 : role === 'companion' ? 0.1 : role === 'texture' ? 0.05 : 0)
+    + (qualityScore(block?.familyVoteCount ?? block?.voteCount) * 0.14)
+    + (freshnessScore(block?.familyCreatedAt || block?.createdAt, now) * 0.1)
+  );
+}
+
 function idOf(block) {
   return block?._id ? String(block._id) : null;
 }
@@ -161,4 +191,83 @@ export function rankBlockRecommendations(source, candidates, options = {}) {
       ...candidate,
       recommendationScore: score
     }));
+}
+
+export function rankElsewhereRecommendations(source, candidates, options = {}) {
+  const limit = options.limit || 2;
+  const now = options.now || new Date();
+  const seed = options.seed || `${idOf(source) || groupOf(source) || 'post'}:${now.toISOString().slice(0, 10)}`;
+  const excludedGroups = new Set((options.excludeGroups || []).map(String));
+  const sourceId = idOf(source);
+  const sourceGroup = groupOf(source);
+  const seenGroups = new Set();
+  const eligible = [];
+
+  if (sourceGroup) excludedGroups.add(sourceGroup);
+
+  for (const candidate of candidates || []) {
+    const candidateId = idOf(candidate);
+    const candidateGroup = groupOf(candidate);
+    if (
+      !candidateId
+      || candidateId === sourceId
+      || !candidateGroup
+      || excludedGroups.has(candidateGroup)
+      || seenGroups.has(candidateGroup)
+      || !candidate?.roomId
+      || candidate.roomId === source?.roomId
+    ) {
+      continue;
+    }
+    seenGroups.add(candidateGroup);
+    eligible.push(candidate);
+  }
+
+  if (!eligible.length || !Number.isInteger(limit) || limit <= 0) return [];
+
+  const termMaps = [source, ...eligible].map(weightedTermFrequency);
+  const frequencies = documentFrequencies(termMaps);
+  const vectors = termMaps.map((terms) => vectorize(terms, frequencies, termMaps.length));
+  const sourceVector = vectors[0];
+  const scored = eligible.map((candidate, index) => {
+    const semantic = cosineSimilarity(sourceVector, vectors[index + 1]);
+    const tags = tagSimilarity(source, candidate);
+    const contrast = 1 - Math.min(1, (semantic * 0.75) + (tags * 0.25));
+    const score = (discoveryQuality(candidate, now) * 0.72)
+      + (contrast * 0.2)
+      + (deterministicJitter(seed, candidate) * 0.08);
+    return { candidate, score };
+  });
+
+  const selected = [];
+  const selectedRooms = new Set();
+
+  while (selected.length < limit) {
+    const unusedRooms = scored.filter(({ candidate }) => (
+      !selected.some(item => item.candidate === candidate)
+      && !selectedRooms.has(String(candidate.roomId))
+    ));
+    const remaining = scored.filter(({ candidate }) => (
+      !selected.some(item => item.candidate === candidate)
+    ));
+    const pool = unusedRooms.length ? unusedRooms : remaining;
+    if (!pool.length) break;
+
+    const next = pool
+      .map(({ candidate, score }) => ({
+        candidate,
+        score: score - (tagSimilarity(candidate, {
+          tags: selected.flatMap(item => item.candidate.tags || [])
+        }) * 0.12)
+      }))
+      .sort((a, b) => b.score - a.score || idOf(a.candidate).localeCompare(idOf(b.candidate)))[0];
+
+    selected.push(next);
+    selectedRooms.add(String(next.candidate.roomId));
+  }
+
+  return selected.map(({ candidate, score }) => ({
+    ...candidate,
+    recommendationScore: score
+  }));
 }

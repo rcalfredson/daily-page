@@ -33,8 +33,11 @@
     },
     "recommendations": {
       "eyebrow": "Ανακαλύψτε κάτι σχετικό",
-      "heading": "Συνεχίστε την ανάγνωση",
+      "heading": "Σχετικά αναγνώσματα",
       "description": "Αναρτήσεις που συνδέονται βάσει θέματος, γλώσσας και σημάτων της κοινότητας.",
+      "elsewhereEyebrow": "Άλλαξε κατεύθυνση",
+      "elsewhereHeading": "Αλλού στο Daily Page",
+      "elsewhereDescription": "Μια ενδιαφέρουσα στροφή προς ένα διαφορετικό δωμάτιο και θέμα.",
       "roomLabel": "Στο {room}",
       "byAuthor": "Από {author}"
     },

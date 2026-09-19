@@ -1,10 +1,6 @@
-aside.block-recommendations(aria-labelledby='recommendations-heading' lang=(uiLang || 'en'))
-  .block-recommendations__header
-    p.block-recommendations__eyebrow= t('blockView.recommendations.eyebrow')
-    h2#recommendations-heading.block-recommendations__heading= t('blockView.recommendations.heading')
-    p.block-recommendations__description= t('blockView.recommendations.description')
-  ol.block-recommendations__list
-    each recommendation in recommendations
+mixin recommendationList(items, lane)
+  ol.block-recommendations__list(class=`block-recommendations__list--${lane}`)
+    each recommendation in items
       - const recommendationDate = recommendation.createdAt ? new Date(recommendation.createdAt) : null;
       li.block-recommendation
         a.block-recommendation__link(href=uiPath(`/rooms/${recommendation.roomId}/blocks/${recommendation.id}`))
@@ -21,3 +17,22 @@ aside.block-recommendations(aria-labelledby='recommendations-heading' lang=(uiLa
             span.block-recommendation__tags(lang=(recommendation.lang || 'en') dir=(textDirForLang ? textDirForLang(recommendation.lang || 'en') : 'ltr'))
               each tag in recommendation.tags
                 span.block-recommendation__tag= tag
+
+- const relatedItems = recommendations && Array.isArray(recommendations.related) ? recommendations.related : [];
+- const elsewhereItems = recommendations && Array.isArray(recommendations.elsewhere) ? recommendations.elsewhere : [];
+- const recommendationLabels = [relatedItems.length ? t('blockView.recommendations.heading') : null, elsewhereItems.length ? t('blockView.recommendations.elsewhereHeading') : null].filter(Boolean).join('. ');
+aside.block-recommendations(aria-label=recommendationLabels lang=(uiLang || 'en'))
+  if relatedItems.length
+    section.block-recommendations__lane(aria-labelledby='related-recommendations-heading')
+      .block-recommendations__header
+        p.block-recommendations__eyebrow= t('blockView.recommendations.eyebrow')
+        h2#related-recommendations-heading.block-recommendations__heading= t('blockView.recommendations.heading')
+        p.block-recommendations__description= t('blockView.recommendations.description')
+      +recommendationList(relatedItems, 'related')
+  if elsewhereItems.length
+    section.block-recommendations__lane.block-recommendations__lane--elsewhere(aria-labelledby='elsewhere-recommendations-heading')
+      .block-recommendations__header
+        p.block-recommendations__eyebrow= t('blockView.recommendations.elsewhereEyebrow')
+        h2#elsewhere-recommendations-heading.block-recommendations__heading= t('blockView.recommendations.elsewhereHeading')
+        p.block-recommendations__description= t('blockView.recommendations.elsewhereDescription')
+      +recommendationList(elsewhereItems, 'elsewhere')

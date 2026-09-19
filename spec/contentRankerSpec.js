@@ -1,6 +1,7 @@
 import {
   extractSearchTerms,
-  rankBlockRecommendations
+  rankBlockRecommendations,
+  rankElsewhereRecommendations
 } from '../server/recommendations/contentRanker.js';
 
 describe('content recommendation ranker', () => {
@@ -81,5 +82,53 @@ describe('content recommendation ranker', () => {
     }]);
 
     expect(ranked).toEqual([]);
+  });
+
+  it('builds a stable elsewhere lane from strong posts in different rooms', () => {
+    const candidates = [
+      {
+        _id: 'same-room', groupId: 'same-room-group', roomId: 'gardening',
+        title: 'A different garden topic', description: 'A substantial description about garden tools.',
+        contentLength: 1800, tags: ['tools'], voteCount: 8
+      },
+      {
+        _id: 'already-related', groupId: 'related-group', roomId: 'food',
+        title: 'Cooking tomatoes', description: 'A substantial description about tomato recipes.',
+        contentLength: 1800, tags: ['tomatoes'], voteCount: 8
+      },
+      {
+        _id: 'music', groupId: 'music-group', roomId: 'music',
+        title: 'The architecture of a jazz trio',
+        description: 'An inviting look at musical conversation and improvisation.',
+        contentLength: 2200, tags: ['jazz', 'music'], voteCount: 6,
+        bannerImage: { url: 'https://example.com/jazz.jpg' }
+      },
+      {
+        _id: 'history', groupId: 'history-group', roomId: 'computing',
+        title: 'How mainframes learned to share time',
+        description: 'A journey through terminals, operating systems, and computing history.',
+        contentLength: 2400, tags: ['computing', 'history'], voteCount: 5,
+        editorial: { role: 'companion' }
+      },
+      {
+        _id: 'history-translation', groupId: 'history-group', roomId: 'computing',
+        title: 'A translated computing history post',
+        description: 'Another variant from the same translation family.',
+        contentLength: 2400, tags: ['computing', 'history'], voteCount: 5
+      }
+    ];
+    const options = {
+      limit: 2,
+      excludeGroups: ['related-group'],
+      seed: 'stable-request',
+      now: new Date('2026-09-19T12:00:00.000Z')
+    };
+
+    const first = rankElsewhereRecommendations(source, candidates, options);
+    const repeated = rankElsewhereRecommendations(source, candidates, options);
+
+    expect(first.map(item => item._id).sort()).toEqual(['history', 'music']);
+    expect(new Set(first.map(item => item.roomId)).size).toBe(2);
+    expect(repeated.map(item => item._id)).toEqual(first.map(item => item._id));
   });
 });

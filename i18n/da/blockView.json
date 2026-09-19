@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "Find noget relateret",
-      "heading": "Læs videre",
+      "heading": "Relateret læsning",
       "description": "Indlæg forbundet via emne, sprog og signaler fra fællesskabet.",
+      "elsewhereEyebrow": "Skift retning",
+      "elsewhereHeading": "Andre steder på Daily Page",
+      "elsewhereDescription": "En givende afstikker til et andet rum og emne.",
       "roomLabel": "I {room}",
       "byAuthor": "Af {author}"
     },

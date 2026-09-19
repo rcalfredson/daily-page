@@ -52,8 +52,11 @@
     },
     "recommendations": {
       "eyebrow": "Temukan hal terkait",
-      "heading": "Lanjut membaca",
+      "heading": "Bacaan terkait",
       "description": "Postingan yang terhubung berdasarkan topik, bahasa, dan sinyal komunitas.",
+      "elsewhereEyebrow": "Ganti arah",
+      "elsewhereHeading": "Di tempat lain di Daily Page",
+      "elsewhereDescription": "Belokan menarik menuju ruang dan topik yang berbeda.",
       "roomLabel": "Di {room}",
       "byAuthor": "Oleh {author}"
     },
