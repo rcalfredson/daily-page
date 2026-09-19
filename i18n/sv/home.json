@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Populära inlägg från de senaste 24 timmarna",
+      "title": "Daily Page - Utforska idéer, berättelser och kreativt skapande",
       "description": "Daily Page är en oberoende skrivgemenskap för att dela idéer, minnen och kreativa experiment. Utforska temarum, läs andras texter och skriv i din egen takt."
     },
     "hero": {
       "eyebrow": "En lugn plats för att skriva, läsa och återvända",
       "title": "Välkommen till Daily Page!",
-      "subtitle": "Utforska de mest populära inläggen från de senaste 24 timmarna.",
+      "subtitle": "Utforska en växande samling idéer, berättelser och kreativa experiment.",
       "ctaPrefix": "Känner du dig inspirerad?",
       "cta": "Gå med i ett rum",
       "ctaSuffix": "och skapa ditt eget inlägg!"
@@ -75,7 +75,7 @@
       "empty": "Inga trendiga taggar ännu. Bli först med att tagga något coolt!"
     },
     "trendingBlocks": {
-      "title": "Populära inlägg",
+      "title": "Nya texter",
       "suffixDays": "(senaste {days} dagarna)",
       "createdBy": "Skapad av:",
       "in": "i",

@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Son 24 Saatteki Popüler Gönderiler",
+      "title": "Daily Page - Fikirleri, Hikâyeleri ve Yaratıcı Çalışmaları Keşfedin",
       "description": "Daily Page; fikirleri, anıları ve yaratıcı denemeleri paylaşmak için bağımsız bir yazı topluluğudur. Konu odalarını keşfedin, başkalarının yazılarını okuyun ve kendi hızınızda yazın."
     },
     "hero": {
       "eyebrow": "Yazmak, okumak ve geri dönmek için sessiz bir yer",
       "title": "Daily Page'ye hoş geldiniz!",
-      "subtitle": "Son 24 saatin en popüler gönderilerini keşfedin.",
+      "subtitle": "Büyüyen fikir, hikâye ve yaratıcı deney koleksiyonunu keşfedin.",
       "ctaPrefix": "İlham mı hissediyorsunuz?",
       "cta": "Bir odaya katıl",
       "ctaSuffix": "ve kendi gönderinizi oluşturun!"
@@ -70,7 +70,7 @@
       "empty": "Henüz trend etiketi yok. Harika bir şeyi etiketleyen ilk kişi olun!"
     },
     "trendingBlocks": {
-      "title": "Trend Olan Gönderiler",
+      "title": "Yeni Yazılar",
       "suffixDays": "(son {days} gün)",
       "createdBy": "Oluşturan:",
       "in": "içinde",

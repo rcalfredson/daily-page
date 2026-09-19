@@ -1,0 +1,19 @@
+- const showCollaborations = Number(globalStats.collaborationsToday) > 0
+.global-stats(class=showCollaborations ? 'global-stats--four' : 'global-stats--three')
+  a.stat-item(href=uiPath('/archive'))
+    i.fas.fa-layer-group(aria-hidden='true')
+    span.stat-number= globalStats.totalBlocks
+    span.stat-label= t('home.stats.blocks')
+  a.stat-item(href=uiPath('/rooms'))
+    i.fas.fa-door-open(aria-hidden='true')
+    span.stat-number= globalStats.totalRooms
+    span.stat-label= t('home.stats.rooms')
+  a.stat-item(href=uiPath('/tags'))
+    i.fas.fa-hashtag(aria-hidden='true')
+    span.stat-number= globalStats.totalTags
+    span.stat-label= t('home.stats.tags')
+  if showCollaborations
+    .stat-item
+      i.fas.fa-users(aria-hidden='true')
+      span.stat-number= globalStats.collaborationsToday
+      span.stat-label= t('home.stats.collabsToday')

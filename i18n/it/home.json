@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - Post popolari nelle ultime 24 ore",
+      "title": "Daily Page - Esplora idee, storie e opere creative",
       "description": "Daily Page è una comunità di scrittura indipendente per condividere idee, ricordi ed esperimenti creativi. Esplora le stanze tematiche, leggi i testi degli altri e scrivi al tuo ritmo."
     },
     "hero": {
       "eyebrow": "Un posto tranquillo per scrivere, leggere e tornare",
       "title": "Benvenuto su Daily Page!",
-      "subtitle": "Esplora i post piu popolari delle ultime 24 ore.",
+      "subtitle": "Esplora una raccolta crescente di idee, storie ed esperimenti creativi.",
       "ctaPrefix": "Ti senti ispirato?",
       "cta": "Entra in una stanza",
       "ctaSuffix": "e crea il tuo blocco!"
@@ -75,7 +75,7 @@
       "empty": "Ancora nessun tag di tendenza. Sii il primo a taggare qualcosa di interessante!"
     },
     "trendingBlocks": {
-      "title": "Post di tendenza",
+      "title": "Scritti recenti",
       "suffixDays": "(ultimi {days} giorni)",
       "createdBy": "Creato da:",
       "in": "in",

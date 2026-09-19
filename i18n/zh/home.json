@@ -1,13 +1,13 @@
 {
   "home": {
     "meta": {
-      "title": "Daily Page - 最近 24 小时热门帖子",
+      "title": "Daily Page - 探索思想、故事与创意作品",
       "description": "Daily Page 是一个独立的写作社区，供大家分享想法、回忆和创作尝试。探索主题房间，阅读他人的作品，按自己的节奏写作。"
     },
     "hero": {
       "eyebrow": "一个适合写作、阅读和回来的安静地方",
       "title": "欢迎来到 Daily Page！",
-      "subtitle": "探索最近 24 小时最受欢迎的帖子。",
+      "subtitle": "探索不断丰富的思想、故事与创意实验。",
       "ctaPrefix": "有灵感了吗？",
       "cta": "加入房间",
       "ctaSuffix": "并创建你自己的帖子！"
@@ -75,7 +75,7 @@
       "empty": "还没有趋势标签。成为第一个标记酷东西的人吧！"
     },
     "trendingBlocks": {
-      "title": "趋势帖子",
+      "title": "近期创作",
       "suffixDays": "（最近 {days} 天）",
       "createdBy": "创建者：",
       "in": "在",
