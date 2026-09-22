@@ -50,6 +50,19 @@
         "texture": "Background"
       }
     },
+    "trail": {
+      "eyebrow": "Reading Trail",
+      "continueEyebrow": "Continue the trail",
+      "position": "Reading {current} of {total}",
+      "previous": "Previous reading",
+      "next": "Next reading",
+      "backToTrail": "Back to trail",
+      "end": "End of trail",
+      "topNavigationLabel": "Current reading trail",
+      "bottomNavigationLabel": "Continue through this reading trail",
+      "topActionsLabel": "Reading trail navigation",
+      "bottomActionsLabel": "Reading trail navigation after this post"
+    },
     "recommendations": {
       "eyebrow": "Discover something related",
       "heading": "Related reading",
