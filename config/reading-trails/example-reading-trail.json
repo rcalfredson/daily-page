@@ -1,0 +1,32 @@
+{
+  "slug": "example-reading-trail",
+  "status": "draft",
+  "sourceLanguage": "en",
+  "publishedLocales": [],
+  "title_i18n": {
+    "en": "Example Reading Trail"
+  },
+  "description_i18n": {
+    "en": "Replace this copy with a concise invitation to follow the trail."
+  },
+  "coverImage": {
+    "url": "https://images.example.com/reading-trail-cover.jpg",
+    "caption_i18n": {
+      "en": "Replace this optional cover caption or remove caption_i18n."
+    }
+  },
+  "items": [
+    {
+      "groupId": "replace-with-first-post-group-id",
+      "note_i18n": {
+        "en": "Explain briefly why this is a useful place to begin."
+      }
+    },
+    {
+      "groupId": "replace-with-second-post-group-id",
+      "note_i18n": {
+        "en": "Explain how this reading advances or changes the trail."
+      }
+    }
+  ]
+}
