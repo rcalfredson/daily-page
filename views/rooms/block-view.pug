@@ -20,6 +20,7 @@ block append head
   link(rel='stylesheet' href='/css/reactions.css')
   link(rel='stylesheet' href='/css/comments.css')
   link(rel='stylesheet' href='/css/banner-images.css')
+  link(rel='stylesheet' href='/css/block-trail-navigation.css')
 
 block append scripts
   include ../envImport
@@ -91,6 +92,35 @@ block content
         span.block-editorial-card__cluster
           span.meta-label= t('blockView.editorial.clusterLabel')
           span.block-editorial-card__cluster-name= editorialCluster.label
+  mixin trailNavigation(context, placement)
+    aside.block-trail-navigation(
+      class=`block-trail-navigation--${placement}`
+      aria-label=t(`blockView.trail.${placement}NavigationLabel`)
+    )
+      .block-trail-navigation__context
+        span.block-trail-navigation__eyebrow= placement === 'top' ? t('blockView.trail.eyebrow') : t('blockView.trail.continueEyebrow')
+        a.block-trail-navigation__title(href=uiPath(context.overviewPath))= context.title
+        span.block-trail-navigation__progress= t('blockView.trail.position', { current: context.position, total: context.total })
+      nav.block-trail-navigation__actions(aria-label=t(`blockView.trail.${placement}ActionsLabel`))
+        if context.previous
+          a.block-trail-navigation__step.block-trail-navigation__step--previous(href=uiPath(context.previous.path))
+            span.block-trail-navigation__direction
+              span.block-trail-navigation__arrow(aria-hidden='true') ←
+              = t('blockView.trail.previous')
+            strong= context.previous.title
+        else
+          span.block-trail-navigation__step.block-trail-navigation__step--placeholder(aria-hidden='true')
+        a.block-trail-navigation__overview(href=uiPath(context.overviewPath))= t('blockView.trail.backToTrail')
+        if context.next
+          a.block-trail-navigation__step.block-trail-navigation__step--next(href=uiPath(context.next.path))
+            span.block-trail-navigation__direction
+              = t('blockView.trail.next')
+              span.block-trail-navigation__arrow(aria-hidden='true') →
+            strong= context.next.title
+        else
+          a.block-trail-navigation__step.block-trail-navigation__step--end(href=uiPath(context.overviewPath))
+            span.block-trail-navigation__direction= t('blockView.trail.end')
+            strong= context.title
   include ../partials/_tag_section
   #block-page
     .block-header
@@ -175,6 +205,9 @@ block content
               else
                 a.block-quest-card__action(href=uiPath(questPath))= t('blockView.quest.viewQuest')
 
+    if trailContext
+      +trailNavigation(trailContext, 'top')
+
     .block-view-layout(class=recommendations === null || hasRecommendations ? 'block-view-layout--with-recommendations' : '')
       .block-view-primary
         +blockBanner(block, 'hero')
@@ -191,7 +224,7 @@ block content
                 data-collapse-label=t('blockView.description.collapse')
               )= t('blockView.description.expand')
 
-        if editorialContext
+        if editorialContext && !trailContext
           aside.block-editorial-card(lang=(uiLang || 'en'))
             if hasEditorialGuideContent
               details.block-editorial-details
@@ -216,6 +249,8 @@ block content
         if block.contentHTML
           .block-content(lang=lang dir=blockDir)
             != block.contentHTML
+        if trailContext
+          +trailNavigation(trailContext, 'bottom')
         include ../partials/_reaction_bar
         hr
         +tagSection(block.tags, false)

@@ -1,0 +1,188 @@
+.block-trail-navigation {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: 1rem 1.5rem;
+  align-items: center;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--highlight-color) 36%, var(--border-color));
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--highlight-color) 6%, var(--surface-raised-bg));
+  box-shadow: var(--box-shadow);
+}
+
+.block-trail-navigation--bottom {
+  margin: 2rem 0 1.25rem;
+}
+
+.block-trail-navigation__context {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+}
+
+.block-trail-navigation__eyebrow {
+  color: var(--highlight-color);
+  font-family: var(--font-ui-medium);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.block-trail-navigation__title {
+  max-width: 100%;
+  color: var(--text-color);
+  font-family: var(--font-ui-medium);
+  font-size: 1.08rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.block-trail-navigation__title:hover,
+.block-trail-navigation__title:focus-visible {
+  color: var(--highlight-color);
+}
+
+.block-trail-navigation__progress {
+  color: var(--muted-text-color);
+  font-size: 0.84rem;
+}
+
+.block-trail-navigation__actions {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: stretch;
+}
+
+.block-trail-navigation__step,
+.block-trail-navigation__overview {
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  text-decoration: none;
+}
+
+.block-trail-navigation__step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.65rem 0.75rem;
+  color: var(--text-color);
+  background: var(--surface-raised-bg);
+}
+
+.block-trail-navigation__step--next,
+.block-trail-navigation__step--end {
+  text-align: end;
+}
+
+.block-trail-navigation__step strong {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.block-trail-navigation__direction {
+  display: inline-flex;
+  gap: 0.3rem;
+  align-items: center;
+  color: var(--link-color);
+  font-size: 0.74rem;
+}
+
+.block-trail-navigation__step--next .block-trail-navigation__direction,
+.block-trail-navigation__step--end .block-trail-navigation__direction {
+  justify-content: flex-end;
+}
+
+.block-trail-navigation__overview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.8rem;
+  color: var(--link-color);
+  font-family: var(--font-ui-medium);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.block-trail-navigation__step:not(.block-trail-navigation__step--placeholder):hover,
+.block-trail-navigation__step:not(.block-trail-navigation__step--placeholder):focus-visible,
+.block-trail-navigation__overview:hover,
+.block-trail-navigation__overview:focus-visible {
+  border-color: color-mix(in srgb, var(--highlight-color) 58%, var(--border-color));
+  background: color-mix(in srgb, var(--highlight-color) 8%, var(--surface-raised-bg));
+}
+
+.block-trail-navigation__step--placeholder {
+  visibility: hidden;
+}
+
+html[dir='rtl'] .block-trail-navigation__arrow {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+@media (max-width: 900px) {
+  .block-trail-navigation {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .block-trail-navigation {
+    padding: 0.85rem;
+  }
+
+  .block-trail-navigation__actions {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .block-trail-navigation__overview {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .block-trail-navigation__step--placeholder {
+    display: block;
+  }
+}
+
+@media (max-width: 380px) {
+  .block-trail-navigation__actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .block-trail-navigation__overview,
+  .block-trail-navigation__step {
+    grid-column: 1;
+    text-align: start;
+  }
+
+  .block-trail-navigation__step--next .block-trail-navigation__direction,
+  .block-trail-navigation__step--end .block-trail-navigation__direction {
+    justify-content: flex-start;
+  }
+
+  .block-trail-navigation__overview {
+    grid-row: auto;
+  }
+
+  .block-trail-navigation__step--placeholder {
+    display: none;
+  }
+}

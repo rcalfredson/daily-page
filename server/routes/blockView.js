@@ -20,6 +20,7 @@ import { getRoomMetadata } from '../db/roomService.js';
 import { findUserById, findUserByUsername } from '../db/userService.js';
 import { getQuestMutationPolicyForBlock } from '../db/questBlockMutationService.js';
 import { listQuestSubmissionsForBlock } from '../db/questSubmissionReadService.js';
+import { getReadingTrailPostContext } from '../db/readingTrailService.js';
 import { QUEST_BLOCK_OPERATIONS } from '../db/questSubmissionPolicy.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
@@ -76,6 +77,14 @@ function normalizeCommentsSortDir(sortDir) {
 function normalizeCommentId(commentId) {
   const value = String(commentId || '').trim();
   return value || null;
+}
+
+export function normalizeReadingTrailSlug(value) {
+  if (typeof value !== 'string') return null;
+  const slug = value.trim().toLowerCase();
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) && slug.length <= 100
+    ? slug
+    : null;
 }
 
 router.get('/posts/:group_id', createPostGroupResolver());
@@ -193,6 +202,7 @@ router.get(
       }
 
       const uiLang = res.locals.uiLang || res.locals.lang || 'en';
+      const requestedTrailSlug = normalizeReadingTrailSlug(req.query.trail);
 
       block.contentHTML = renderMarkdownContent(block.content, { emptyHtml: '' });
       const descriptionHTML = renderMarkdownContent(block.description, {
@@ -212,7 +222,8 @@ router.get(
         editorialContext,
         roomMetadata,
         questMutationPolicy,
-        questSubmissions
+        questSubmissions,
+        trailContext
       ] = await Promise.all([
         getReactionCounts(block_id),
         getCommentsForBlockView({
@@ -245,7 +256,17 @@ router.get(
           blockId: block_id,
           operation: QUEST_BLOCK_OPERATIONS.CONTENT
         }),
-        listQuestSubmissionsForBlock({ blockId: block_id, uiLang })
+        listQuestSubmissionsForBlock({ blockId: block_id, uiLang }),
+        requestedTrailSlug
+          ? getReadingTrailPostContext({
+              slug: requestedTrailSlug,
+              locale: uiLang,
+              block
+            }).catch((error) => {
+              console.error(`Unable to activate reading trail ${requestedTrailSlug}:`, error);
+              return null;
+            })
+          : Promise.resolve(null)
       ]);
 
       let userReactions = [];
@@ -298,7 +319,8 @@ router.get(
         authorProfile,
         block,
         recommendations: recommendationItems,
-        editorialContext,
+        editorialContext: trailContext ? null : editorialContext,
+        trailContext,
         descriptionHTML,
         ...seo,
         header: block.title,
