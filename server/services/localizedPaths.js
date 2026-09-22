@@ -4,6 +4,7 @@ export function isLocalizedPath(path) {
     path === '/privacy' ||
     path === '/rooms' ||
     path === '/quests' ||
+    path === '/trails' ||
     path === '/tags' ||
     path === '/archive' ||
     path === '/about' ||
@@ -33,6 +34,9 @@ export function isLocalizedPath(path) {
     // quest directory, details, and leaderboards
     /^\/quests\/[^/]+\/?$/.test(path) ||
     /^\/quests\/[^/]+\/leaderboard\/?$/.test(path) ||
+
+    // reading trail directory and details
+    /^\/trails\/[^/]+\/?$/.test(path) ||
 
     // room archive, index, create-block
     /^\/rooms\/[^/]+\/archive$/.test(path) ||

@@ -35,6 +35,7 @@ import blocksRoute from './server/routes/blocks.js';
 import archiveRoutes from './server/routes/archive.js';
 import blockViewRoute from './server/routes/blockView.js';
 import questsRoute from './server/routes/quests.js';
+import readingTrailsRoute from './server/routes/readingTrails.js';
 import devViewsRoute from './server/routes/devViews.js';
 import forestRoute from './server/routes/forest.js';
 import forestWritingRoute from './server/routes/forestWriting.js';
@@ -236,6 +237,7 @@ async function getSupportFundingViewModel() {
     app.use('/', loginRoute);
     app.use('/', blocksRoute);
     app.use('/', questsRoute);
+    app.use('/', readingTrailsRoute);
     app.use('/', archiveRoutes);
     app.use('/', blockViewRoute);
     app.use('/', forestRoute);

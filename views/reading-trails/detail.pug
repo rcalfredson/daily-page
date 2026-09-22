@@ -1,0 +1,73 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/reading-trails.css')
+
+block content
+  main.reading-trails-page.reading-trail-detail
+    nav.reading-trail-breadcrumb(aria-label=t('readingTrails.detail.breadcrumbLabel'))
+      a(href=uiPath('/trails'))= t('readingTrails.detail.allTrails')
+      span(aria-hidden='true') /
+      span= trail.title
+
+    header.reading-trail-detail__hero(class=(!trail.coverPost.bannerImage || trail.coverPost.bannerImage.kind === 'streetview') ? 'reading-trail-detail__hero--without-cover' : null)
+      .reading-trail-detail__copy
+        p.reading-trails-eyebrow= t('readingTrails.detail.eyebrow')
+        h1= trail.title
+        p.reading-trail-detail__description= trail.description
+        p.reading-trail-detail__meta= t('readingTrails.counts.summary', { readings: trail.readingCount, rooms: trail.roomCount })
+        a.reading-trail-button(
+          href=uiPath(`/rooms/${trail.items[0].post.roomId}/blocks/${trail.items[0].post.id}?trail=${encodeURIComponent(trail.slug)}`)
+        )
+          = t('readingTrails.detail.begin')
+          span.reading-trail-arrow(aria-hidden='true') →
+      if trail.coverPost.bannerImage && trail.coverPost.bannerImage.kind !== 'streetview'
+        figure.reading-trail-detail__cover
+          img(
+            src=trail.coverPost.bannerImage.url
+            alt=trail.coverPost.bannerImage.caption || trail.coverPost.title
+            loading='eager'
+            fetchpriority='high'
+            decoding='async'
+            referrerpolicy='no-referrer'
+          )
+          if trail.coverPost.bannerImage.caption
+            figcaption= trail.coverPost.bannerImage.caption
+
+    section.reading-trail-stops(aria-labelledby='reading-trail-stops-heading')
+      .reading-trail-section-heading
+        p.reading-trails-eyebrow= t('readingTrails.detail.routeEyebrow')
+        h2#reading-trail-stops-heading= t('readingTrails.detail.routeHeading')
+      ol.reading-trail-stop-list
+        each item in trail.items
+          li.reading-trail-stop
+            .reading-trail-stop__marker(aria-hidden='true')= item.position
+            article.reading-trail-stop__card
+              if item.post.bannerImage && item.post.bannerImage.kind !== 'streetview'
+                a.reading-trail-stop__media(
+                  href=uiPath(`/rooms/${item.post.roomId}/blocks/${item.post.id}?trail=${encodeURIComponent(trail.slug)}`)
+                  tabindex='-1'
+                  aria-hidden='true'
+                )
+                  img(
+                    src=item.post.bannerImage.url
+                    alt=''
+                    loading='lazy'
+                    decoding='async'
+                    referrerpolicy='no-referrer'
+                  )
+              .reading-trail-stop__body
+                p.reading-trail-stop__position= t('readingTrails.detail.position', { current: item.position, total: trail.readingCount })
+                h3
+                  a(href=uiPath(`/rooms/${item.post.roomId}/blocks/${item.post.id}?trail=${encodeURIComponent(trail.slug)}`))= item.post.title
+                p.reading-trail-stop__room= item.post.roomName
+                if item.note
+                  .reading-trail-stop__note
+                    strong= t('readingTrails.detail.whyItBelongs')
+                    p= item.note
+                a.reading-trail-stop__cta(href=uiPath(`/rooms/${item.post.roomId}/blocks/${item.post.id}?trail=${encodeURIComponent(trail.slug)}`))
+                  = t('readingTrails.detail.openReading')
+                  span.reading-trail-arrow(aria-hidden='true') →
