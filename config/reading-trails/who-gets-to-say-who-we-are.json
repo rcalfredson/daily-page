@@ -1,0 +1,51 @@
+{
+  "slug": "who-gets-to-say-who-we-are",
+  "status": "published",
+  "sourceLanguage": "en",
+  "publishedLocales": ["en"],
+  "title_i18n": {
+    "en": "Who Gets to Say Who We Are?"
+  },
+  "description_i18n": {
+    "en": "Cross borders, histories, and imagined worlds to explore how identity is assigned, defended, inherited, and reclaimed."
+  },
+  "coverGroupId": "62f9d2ec-91dd-4e70-93ca-408482b2b168",
+  "items": [
+    {
+      "groupId": "62f9d2ec-91dd-4e70-93ca-408482b2b168",
+      "note_i18n": {
+        "en": "Begin with identity held in landscape, memory, and belonging."
+      }
+    },
+    {
+      "groupId": "3cc690aa-eafb-4c4a-bf5f-e692f5df2f6c",
+      "note_i18n": {
+        "en": "Move to a border community where language complicates the map."
+      }
+    },
+    {
+      "groupId": "4a6434cd-5799-4c16-811d-a6b475d1643f",
+      "note_i18n": {
+        "en": "Examine the boxes imposed by a racial system built to divide."
+      }
+    },
+    {
+      "groupId": "6a9de76ac385db98dffe0828",
+      "note_i18n": {
+        "en": "Ask what happens when nationality speaks before the individual can."
+      }
+    },
+    {
+      "groupId": "6a949731b035be91e013d07b",
+      "note_i18n": {
+        "en": "Consider what can be preserved when a larger story claims ownership."
+      }
+    },
+    {
+      "groupId": "cf24e0b6-b3a8-4481-88f2-6abdd04b6499",
+      "note_i18n": {
+        "en": "End in an imagined world where identity and power are negotiated anew."
+      }
+    }
+  ]
+}
