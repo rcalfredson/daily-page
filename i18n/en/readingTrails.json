@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Reading Trails | Daily Page",
+        "description": "Follow curated paths through writing across Daily Page."
+      },
+      "eyebrow": "Curated paths",
+      "heading": "Reading Trails",
+      "intro": "Follow an idea, a story, or a question through a sequence of readings chosen to speak to one another.",
+      "viewTrail": "Explore this trail",
+      "empty": {
+        "title": "No trails in this language yet",
+        "body": "A reading trail appears here once every stop is available in your language."
+      }
+    },
+    "card": {
+      "eyebrow": "Reading Trail"
+    },
+    "counts": {
+      "summary": "{readings} readings across {rooms} rooms"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Reading Trails"
+      },
+      "breadcrumbLabel": "Reading trail navigation",
+      "allTrails": "All reading trails",
+      "eyebrow": "Reading Trail",
+      "begin": "Begin the trail",
+      "routeEyebrow": "The route",
+      "routeHeading": "Along this trail",
+      "position": "Reading {current} of {total}",
+      "whyItBelongs": "Why it belongs",
+      "openReading": "Open this reading"
+    },
+    "errors": {
+      "notFoundTitle": "Reading trail not found",
+      "notFound": "That reading trail is not available in this language.",
+      "loadFailed": "The reading trails could not be loaded right now."
+    }
+  }
+}

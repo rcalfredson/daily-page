@@ -1,0 +1,44 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet' href='/css/reading-trails.css')
+
+block content
+  main.reading-trails-page
+    header.reading-trails-hero
+      p.reading-trails-eyebrow= t('readingTrails.overview.eyebrow')
+      h1= t('readingTrails.overview.heading')
+      p.reading-trails-lede= t('readingTrails.overview.intro')
+
+    if trails.length
+      ul.reading-trail-grid
+        each trail in trails
+          li.reading-trail-card
+            a.reading-trail-card__link(href=uiPath(`/trails/${trail.slug}`))
+              .reading-trail-card__media
+                if trail.coverPost.bannerImage && trail.coverPost.bannerImage.kind !== 'streetview'
+                  img(
+                    src=trail.coverPost.bannerImage.url
+                    alt=''
+                    loading='lazy'
+                    decoding='async'
+                    referrerpolicy='no-referrer'
+                  )
+                else
+                  .reading-trail-card__placeholder(aria-hidden='true')
+                    i.fa.fa-map-o
+              .reading-trail-card__body
+                p.reading-trails-eyebrow= t('readingTrails.card.eyebrow')
+                h2= trail.title
+                p.reading-trail-card__description= trail.description
+                p.reading-trail-card__meta= t('readingTrails.counts.summary', { readings: trail.readingCount, rooms: trail.roomCount })
+                span.reading-trail-card__cta
+                  = t('readingTrails.overview.viewTrail')
+                  span.reading-trail-arrow(aria-hidden='true') →
+    else
+      .reading-trail-empty
+        h2= t('readingTrails.overview.empty.title')
+        p= t('readingTrails.overview.empty.body')

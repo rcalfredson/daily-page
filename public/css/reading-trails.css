@@ -1,0 +1,418 @@
+.reading-trails-page {
+  width: min(1120px, 100%);
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+}
+
+.reading-trails-hero {
+  max-width: 760px;
+  margin-bottom: 2rem;
+}
+
+.reading-trails-hero h1,
+.reading-trail-detail__hero h1,
+.reading-trail-section-heading h2 {
+  margin: 0;
+}
+
+.reading-trails-eyebrow {
+  margin: 0 0 0.45rem;
+  color: var(--highlight-color);
+  font-family: var(--font-ui-medium);
+  font-size: 0.78rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.reading-trails-lede,
+.reading-trail-detail__description {
+  color: var(--muted-text-color);
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+.reading-trail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reading-trail-card,
+.reading-trail-stop__card,
+.reading-trail-empty {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  background: var(--surface-raised-bg);
+  box-shadow: var(--box-shadow);
+}
+
+.reading-trail-card__link {
+  display: flex;
+  height: 100%;
+  min-width: 0;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+}
+
+.reading-trail-card__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 8.5;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--highlight-color) 18%, var(--surface-bg)), var(--secondary-bg));
+}
+
+.reading-trail-card__media img,
+.reading-trail-stop__media img,
+.reading-trail-detail__cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.reading-trail-card__placeholder {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  color: var(--highlight-color);
+  font-size: 2.5rem;
+}
+
+.reading-trail-card__body {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.35rem;
+}
+
+.reading-trail-card h2 {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.reading-trail-card__description {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0.75rem 0 0;
+  color: var(--muted-text-color);
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.reading-trail-card__meta,
+.reading-trail-detail__meta {
+  color: var(--muted-text-color);
+  font-size: 0.9rem;
+}
+
+.reading-trail-card__cta,
+.reading-trail-stop__cta {
+  margin-top: auto;
+  padding-top: 0.85rem;
+  color: var(--link-color);
+  font-family: var(--font-ui-medium);
+}
+
+.reading-trail-stop__cta {
+  text-decoration: none;
+}
+
+.reading-trail-card__link:hover h2,
+.reading-trail-card__link:focus-visible h2,
+.reading-trail-stop h3 a:hover,
+.reading-trail-stop h3 a:focus-visible {
+  color: var(--highlight-color);
+}
+
+.reading-trail-empty {
+  padding: 1.5rem;
+}
+
+.reading-trail-empty h2,
+.reading-trail-empty p {
+  margin-top: 0;
+}
+
+.reading-trail-empty p {
+  margin-bottom: 0;
+  color: var(--muted-text-color);
+}
+
+.reading-trail-breadcrumb {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 1.5rem;
+  color: var(--muted-text-color);
+  font-size: 0.9rem;
+}
+
+.reading-trail-breadcrumb span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reading-trail-detail__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.reading-trail-detail__copy {
+  min-width: 0;
+}
+
+.reading-trail-detail__hero--without-cover {
+  grid-template-columns: minmax(0, 760px);
+}
+
+.reading-trail-detail__copy h1 {
+  overflow-wrap: anywhere;
+}
+
+.reading-trail-detail__cover {
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background: var(--secondary-bg);
+  box-shadow: var(--box-shadow);
+}
+
+.reading-trail-detail__cover img {
+  aspect-ratio: 16 / 10;
+}
+
+.reading-trail-detail__cover figcaption {
+  padding: 0.6rem 0.8rem;
+  color: var(--muted-text-color);
+  font-size: 0.78rem;
+}
+
+.reading-trail-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-radius: 999px;
+  padding: 0.75rem 1.05rem;
+  background: var(--highlight-color);
+  color: var(--highlight-contrast);
+  font-family: var(--font-ui-medium);
+  text-decoration: none;
+}
+
+.reading-trail-button:hover,
+.reading-trail-button:focus-visible {
+  background: var(--highlight-hover);
+  color: var(--highlight-contrast);
+}
+
+.reading-trail-stops {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.reading-trail-section-heading {
+  margin-bottom: 1.25rem;
+}
+
+.reading-trail-stop-list {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reading-trail-stop-list::before {
+  position: absolute;
+  top: 1.4rem;
+  bottom: 1.4rem;
+  left: 1.25rem;
+  width: 2px;
+  background: color-mix(in srgb, var(--highlight-color) 34%, var(--border-color));
+  content: '';
+}
+
+.reading-trail-stop {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.reading-trail-stop__marker {
+  z-index: 1;
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  box-sizing: border-box;
+  border: 2px solid var(--highlight-color);
+  border-radius: 50%;
+  place-items: center;
+  background: var(--surface-bg);
+  color: var(--highlight-color);
+  font-family: var(--font-ui-medium);
+}
+
+.reading-trail-stop__card {
+  display: grid;
+  width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  grid-template-columns: minmax(180px, 0.36fr) minmax(0, 1fr);
+  padding: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.reading-trail-stop__media {
+  display: block;
+  min-width: 0;
+  min-height: 220px;
+  overflow: hidden;
+}
+
+.reading-trail-stop__body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.3rem;
+  overflow-wrap: anywhere;
+}
+
+.reading-trail-stop__position,
+.reading-trail-stop__room {
+  margin: 0;
+  color: var(--muted-text-color);
+  font-size: 0.82rem;
+}
+
+.reading-trail-stop h3 {
+  margin: 0.35rem 0;
+  overflow-wrap: anywhere;
+}
+
+.reading-trail-stop h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.reading-trail-stop__note {
+  margin-top: 1rem;
+  border-inline-start: 3px solid var(--highlight-color);
+  padding-inline-start: 0.85rem;
+}
+
+.reading-trail-stop__note strong {
+  font-size: 0.84rem;
+}
+
+.reading-trail-stop__note p {
+  margin: 0.2rem 0 0;
+  color: var(--muted-text-color);
+  line-height: 1.5;
+}
+
+html[dir='rtl'] .reading-trail-arrow {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+html[dir='rtl'] .reading-trail-stop-list::before {
+  right: 1.25rem;
+  left: auto;
+}
+
+@media (max-width: 760px) {
+  .reading-trail-grid,
+  .reading-trail-detail__hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .reading-trail-detail__cover {
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 560px) {
+  .reading-trails-page {
+    padding-top: 1.25rem;
+  }
+
+  .reading-trail-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .reading-trail-detail__hero {
+    gap: 1.25rem;
+  }
+
+  .reading-trail-stop {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  .reading-trail-stop-list::before {
+    left: 0.95rem;
+  }
+
+  html[dir='rtl'] .reading-trail-stop-list::before {
+    right: 0.95rem;
+    left: auto;
+  }
+
+  .reading-trail-stop__marker {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.82rem;
+  }
+
+  .reading-trail-stop__card {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .reading-trail-stop__media {
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .reading-trail-stop__body,
+  .reading-trail-card__body {
+    padding: 1rem;
+  }
+
+  .reading-trail-button {
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
