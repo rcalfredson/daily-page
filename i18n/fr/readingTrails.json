@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Parcours de lecture | Daily Page",
+        "description": "Suivez des parcours choisis parmi les textes de Daily Page."
+      },
+      "eyebrow": "Parcours choisis",
+      "heading": "Parcours de lecture",
+      "intro": "Suivez une idée, une histoire ou une question à travers une suite de lectures choisies pour se répondre.",
+      "viewTrail": "Explorer ce parcours",
+      "empty": {
+        "title": "Aucun parcours dans cette langue pour le moment",
+        "body": "Un parcours de lecture apparaîtra ici dès que toutes ses étapes seront disponibles dans votre langue."
+      }
+    },
+    "card": {
+      "eyebrow": "Parcours de lecture"
+    },
+    "counts": {
+      "summary": "Lectures : {readings} · Salons : {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Parcours de lecture"
+      },
+      "breadcrumbLabel": "Navigation du parcours de lecture",
+      "allTrails": "Tous les parcours de lecture",
+      "eyebrow": "Parcours de lecture",
+      "begin": "Commencer le parcours",
+      "routeEyebrow": "L’itinéraire",
+      "routeHeading": "Au fil de ce parcours",
+      "position": "Lecture {current} sur {total}",
+      "whyItBelongs": "Pourquoi cette lecture en fait partie",
+      "openReading": "Ouvrir cette lecture"
+    },
+    "errors": {
+      "notFoundTitle": "Parcours de lecture introuvable",
+      "notFound": "Ce parcours de lecture n’est pas disponible dans cette langue.",
+      "loadFailed": "Impossible de charger les parcours de lecture pour le moment."
+    }
+  }
+}

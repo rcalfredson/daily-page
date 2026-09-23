@@ -26,8 +26,8 @@ describe('post reading trail mode', () => {
     expect(template).not.toContain('if req.query.trail');
   });
 
-  it('provides English UI fallback for trail mode in untranslated interfaces', async () => {
-    const t = await getTranslatorRuntime('es', ['blockView']);
+  it('provides English UI fallback when a locale namespace is absent', async () => {
+    const t = await getTranslatorRuntime('xx', ['blockView']);
     expect(t('blockView.trail.position', { current: 2, total: 5 })).toBe('Reading 2 of 5');
     expect(t('blockView.trail.backToTrail')).toBe('Back to trail');
     expect(t('blockView.trail.end')).toBe('End of trail');

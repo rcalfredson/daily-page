@@ -50,6 +50,19 @@
         "texture": "Hintergrund"
       }
     },
+    "trail": {
+      "eyebrow": "Lesepfad",
+      "continueEyebrow": "Dem Lesepfad weiter folgen",
+      "position": "Lektüre {current} von {total}",
+      "previous": "Vorherige Lektüre",
+      "next": "Nächste Lektüre",
+      "backToTrail": "Zurück zum Lesepfad",
+      "end": "Ende des Lesepfads",
+      "topNavigationLabel": "Aktueller Lesepfad",
+      "bottomNavigationLabel": "Diesem Lesepfad weiter folgen",
+      "topActionsLabel": "Navigation im Lesepfad",
+      "bottomActionsLabel": "Navigation im Lesepfad nach diesem Beitrag"
+    },
     "recommendations": {
       "eyebrow": "Entdecke etwas Ähnliches",
       "heading": "Verwandte Lektüre",
