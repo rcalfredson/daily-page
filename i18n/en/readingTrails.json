@@ -18,7 +18,7 @@
       "eyebrow": "Reading Trail"
     },
     "counts": {
-      "summary": "{readings} readings across {rooms} rooms"
+      "summary": "Readings: {readings} · Rooms: {rooms}"
     },
     "detail": {
       "meta": {
