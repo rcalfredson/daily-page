@@ -24,6 +24,7 @@
     "block-language:backfill": "node scripts/migrations/backfillBlockLanguageMetadata.js",
     "quest:import": "node scripts/quests/importQuest.js",
     "trail:import": "node scripts/reading-trails/importReadingTrail.js",
+    "trail:audit": "node scripts/reading-trails/auditReadingTrails.js",
     "account-deletion:fixture": "node scripts/dev/accountDeletionFixture.js",
     "audit:tag-queries": "node scripts/audits/tagQueryProfile.js",
     "audit:home-discovery": "node scripts/audits/homeDiscovery.js",

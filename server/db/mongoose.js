@@ -26,7 +26,7 @@ export async function initMongooseConnection(options = {}) {
       socketTimeoutMS: process.env.MONGODB_SOCKET_TIMEOUT || 30000,
     });
     const safeConnStr = fullConnectionString.replace(/\/\/([^:]+):([^@]+)@/, '//$1:***@');
-    console.log('Mongoose connected to', safeConnStr);
+    if (!options.quiet) console.log('Mongoose connected to', safeConnStr);
   } catch (err) {
     console.error('Error connecting to Mongoose:', err.message);
     throw err;

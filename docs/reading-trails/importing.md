@@ -149,3 +149,26 @@ metadata and `publishedLocales` intact makes later republication straightforward
 
 There is intentionally no destructive delete option in the importer. A draft
 preserves the trail for repair or later reuse while removing it from public view.
+
+## Auditing stored trails
+
+The health audit re-evaluates every trail stored in MongoDB against the current
+post records. It reports draft readiness as information and checks that every
+published locale still has exact-language, public, locked stops. It also checks
+that a post-derived cover still resolves to a public, locked post with a banner.
+
+Run it against the test database with:
+
+```sh
+npm run trail:audit
+```
+
+Production reads require an explicit acknowledgement:
+
+```sh
+npm run trail:audit -- --prod --authorized-production-read
+```
+
+Pass `--json` for machine-readable output. The command exits with status 1 when
+any published trail is unhealthy, so it can also be used in monitoring or a
+deployment check. It never writes to the database.

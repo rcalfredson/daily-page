@@ -106,4 +106,27 @@ describe('reading trail locale readiness', () => {
     expect(spanish.ready).toBeFalse();
     expect(spanish.problems.filter(({ code }) => code === 'missing-item-note')).toHaveSize(2);
   });
+
+  it('requires an existing cover caption in every evaluated locale', () => {
+    const subject = trail({
+      publishedLocales: [],
+      title_i18n: { en: 'A short trail', es: 'Un sendero corto' },
+      description_i18n: { en: 'Two readings.', es: 'Dos lecturas.' },
+      coverImage: {
+        url: 'https://images.example.com/trail.jpg',
+        caption_i18n: { en: 'A path through the readings.' }
+      },
+      items: [{ groupId: 'group-1' }, { groupId: 'group-2' }]
+    });
+    const reports = inspectReadingTrailLocales(subject, [
+      post('group-1', 'en'), post('group-2', 'en'),
+      post('group-1', 'es'), post('group-2', 'es')
+    ]);
+    const spanish = reports.find(report => report.locale === 'es');
+
+    expect(spanish.ready).toBeFalse();
+    expect(spanish.problems).toContain(jasmine.objectContaining({
+      code: 'missing-cover-caption', locale: 'es'
+    }));
+  });
 });
