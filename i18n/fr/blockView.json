@@ -50,6 +50,19 @@
         "texture": "Contexte"
       }
     },
+    "trail": {
+      "eyebrow": "Parcours de lecture",
+      "continueEyebrow": "Poursuivre le parcours",
+      "position": "Lecture {current} sur {total}",
+      "previous": "Lecture précédente",
+      "next": "Lecture suivante",
+      "backToTrail": "Retour au parcours",
+      "end": "Fin du parcours",
+      "topNavigationLabel": "Parcours de lecture actuel",
+      "bottomNavigationLabel": "Poursuivre ce parcours de lecture",
+      "topActionsLabel": "Navigation du parcours de lecture",
+      "bottomActionsLabel": "Navigation du parcours de lecture après cette publication"
+    },
     "recommendations": {
       "eyebrow": "Découvrez un contenu similaire",
       "heading": "Lectures associées",

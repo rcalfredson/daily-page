@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Lesepfade | Daily Page",
+        "description": "Folge ausgewählten Pfaden durch die Texte auf Daily Page."
+      },
+      "eyebrow": "Ausgewählte Pfade",
+      "heading": "Lesepfade",
+      "intro": "Folge einer Idee, einer Geschichte oder einer Frage durch eine Folge von Texten, die aufeinander Bezug nehmen.",
+      "viewTrail": "Diesen Pfad erkunden",
+      "empty": {
+        "title": "Noch keine Pfade in dieser Sprache",
+        "body": "Hier erscheint ein Lesepfad, sobald alle Stationen in deiner Sprache verfügbar sind."
+      }
+    },
+    "card": {
+      "eyebrow": "Lesepfad"
+    },
+    "counts": {
+      "summary": "Lektüren: {readings} · Räume: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Lesepfade"
+      },
+      "breadcrumbLabel": "Navigation im Lesepfad",
+      "allTrails": "Alle Lesepfade",
+      "eyebrow": "Lesepfad",
+      "begin": "Lesepfad beginnen",
+      "routeEyebrow": "Die Route",
+      "routeHeading": "Entlang dieses Lesepfads",
+      "position": "Lektüre {current} von {total}",
+      "whyItBelongs": "Warum dieser Text dazugehört",
+      "openReading": "Diese Lektüre öffnen"
+    },
+    "errors": {
+      "notFoundTitle": "Lesepfad nicht gefunden",
+      "notFound": "Dieser Lesepfad ist in dieser Sprache nicht verfügbar.",
+      "loadFailed": "Die Lesepfade können derzeit nicht geladen werden."
+    }
+  }
+}

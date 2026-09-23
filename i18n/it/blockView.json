@@ -50,6 +50,19 @@
         "texture": "Contesto"
       }
     },
+    "trail": {
+      "eyebrow": "Percorso di lettura",
+      "continueEyebrow": "Continua il percorso",
+      "position": "Lettura {current} di {total}",
+      "previous": "Lettura precedente",
+      "next": "Lettura successiva",
+      "backToTrail": "Torna al percorso",
+      "end": "Fine del percorso",
+      "topNavigationLabel": "Percorso di lettura attuale",
+      "bottomNavigationLabel": "Continua questo percorso di lettura",
+      "topActionsLabel": "Navigazione del percorso di lettura",
+      "bottomActionsLabel": "Navigazione del percorso di lettura dopo questo post"
+    },
     "recommendations": {
       "eyebrow": "Scopri qualcosa di correlato",
       "heading": "Letture correlate",

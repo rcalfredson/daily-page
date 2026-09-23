@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Trilhas de leitura | Daily Page",
+        "description": "Siga trilhas selecionadas pelos textos do Daily Page."
+      },
+      "eyebrow": "Trilhas selecionadas",
+      "heading": "Trilhas de leitura",
+      "intro": "Siga uma ideia, uma história ou uma pergunta por uma sequência de leituras escolhidas para dialogar entre si.",
+      "viewTrail": "Explorar esta trilha",
+      "empty": {
+        "title": "Ainda não há trilhas neste idioma",
+        "body": "Uma trilha de leitura aparecerá aqui quando todas as etapas estiverem disponíveis no seu idioma."
+      }
+    },
+    "card": {
+      "eyebrow": "Trilha de leitura"
+    },
+    "counts": {
+      "summary": "Leituras: {readings} · Salas: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Trilhas de leitura"
+      },
+      "breadcrumbLabel": "Navegação da trilha de leitura",
+      "allTrails": "Todas as trilhas de leitura",
+      "eyebrow": "Trilha de leitura",
+      "begin": "Começar a trilha",
+      "routeEyebrow": "O percurso",
+      "routeHeading": "Ao longo desta trilha",
+      "position": "Leitura {current} de {total}",
+      "whyItBelongs": "Por que esta leitura faz parte",
+      "openReading": "Abrir esta leitura"
+    },
+    "errors": {
+      "notFoundTitle": "Trilha de leitura não encontrada",
+      "notFound": "Esta trilha de leitura não está disponível neste idioma.",
+      "loadFailed": "Não foi possível carregar as trilhas de leitura agora."
+    }
+  }
+}

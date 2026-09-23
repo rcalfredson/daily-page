@@ -116,8 +116,8 @@ describe('reading trail pages', () => {
     expect(html).toContain('loading="lazy"');
   });
 
-  it('falls back to English interface copy while trail content remains locale-gated', async () => {
-    const t = await getTranslatorRuntime('es', ['readingTrails']);
+  it('falls back to English interface copy when a locale namespace is absent', async () => {
+    const t = await getTranslatorRuntime('xx', ['readingTrails']);
     expect(t('readingTrails.overview.heading')).toBe('Reading Trails');
     expect(t('readingTrails.detail.begin')).toBe('Begin the trail');
   });

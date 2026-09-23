@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Rutas de lectura | Daily Page",
+        "description": "Sigue rutas seleccionadas a través de los textos de Daily Page."
+      },
+      "eyebrow": "Rutas seleccionadas",
+      "heading": "Rutas de lectura",
+      "intro": "Sigue una idea, una historia o una pregunta a través de una secuencia de lecturas elegidas para dialogar entre sí.",
+      "viewTrail": "Explorar esta ruta",
+      "empty": {
+        "title": "Aún no hay rutas en este idioma",
+        "body": "Aquí aparecerá una ruta de lectura cuando todas sus paradas estén disponibles en tu idioma."
+      }
+    },
+    "card": {
+      "eyebrow": "Ruta de lectura"
+    },
+    "counts": {
+      "summary": "Lecturas: {readings} · Salas: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Rutas de lectura"
+      },
+      "breadcrumbLabel": "Navegación de la ruta de lectura",
+      "allTrails": "Todas las rutas de lectura",
+      "eyebrow": "Ruta de lectura",
+      "begin": "Comenzar la ruta",
+      "routeEyebrow": "El recorrido",
+      "routeHeading": "A lo largo de esta ruta",
+      "position": "Lectura {current} de {total}",
+      "whyItBelongs": "Por qué forma parte",
+      "openReading": "Abrir esta lectura"
+    },
+    "errors": {
+      "notFoundTitle": "Ruta de lectura no encontrada",
+      "notFound": "Esta ruta de lectura no está disponible en este idioma.",
+      "loadFailed": "No se pueden cargar las rutas de lectura en este momento."
+    }
+  }
+}
