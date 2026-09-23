@@ -40,11 +40,14 @@ export function inspectReadingTrailLocales(trail, posts = []) {
     .flatMap(field => entriesOf(trail?.[field]).map(([locale]) => locale));
   const noteLocales = (trail?.items || [])
     .flatMap(item => entriesOf(item.note_i18n).map(([locale]) => locale));
+  const coverCaptionEntries = entriesOf(trail?.coverImage?.caption_i18n);
+  const coverCaptionLocales = coverCaptionEntries.map(([locale]) => locale);
   const locales = [...new Set([
     trail?.sourceLanguage,
     ...(trail?.publishedLocales || []),
     ...metadataLocales,
-    ...noteLocales
+    ...noteLocales,
+    ...coverCaptionLocales
   ].filter(Boolean))].sort();
 
   return locales.map((locale) => {
@@ -68,6 +71,12 @@ export function inspectReadingTrailLocales(trail, posts = []) {
           postsByGroup.get(item.groupId) || []
         ));
       }
+    }
+    if (
+      coverCaptionEntries.length
+      && !localizedTrailValue(trail.coverImage, 'caption', locale).trim()
+    ) {
+      problems.push({ code: 'missing-cover-caption', locale });
     }
     return {
       locale,
