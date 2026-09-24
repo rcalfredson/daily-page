@@ -50,6 +50,19 @@
         "texture": "Achtergrond"
       }
     },
+    "trail": {
+      "eyebrow": "Leesroute",
+      "continueEyebrow": "Ga verder op de route",
+      "position": "Tekst {current} van {total}",
+      "previous": "Vorige tekst",
+      "next": "Volgende tekst",
+      "backToTrail": "Terug naar de route",
+      "end": "Einde van de route",
+      "topNavigationLabel": "Huidige leesroute",
+      "bottomNavigationLabel": "Ga verder op deze leesroute",
+      "topActionsLabel": "Navigatie van de leesroute",
+      "bottomActionsLabel": "Navigatie van de leesroute na dit bericht"
+    },
     "recommendations": {
       "eyebrow": "Ontdek iets verwants",
       "heading": "Verwante lectuur",

@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Lesestier | Daily Page",
+        "description": "Følg utvalgte stier gjennom tekstene på Daily Page."
+      },
+      "eyebrow": "Utvalgte stier",
+      "heading": "Lesestier",
+      "intro": "Følg en idé, en historie eller et spørsmål gjennom en rekke tekster som er valgt for å spille sammen.",
+      "viewTrail": "Utforsk denne stien",
+      "empty": {
+        "title": "Ingen stier på dette språket ennå",
+        "body": "En lesesti vises her når alle stoppene er tilgjengelige på språket ditt."
+      }
+    },
+    "card": {
+      "eyebrow": "Lesesti"
+    },
+    "counts": {
+      "summary": "Tekster: {readings} · Rom: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Lesestier"
+      },
+      "breadcrumbLabel": "Navigasjon i lesestien",
+      "allTrails": "Alle lesestier",
+      "eyebrow": "Lesesti",
+      "begin": "Start lesestien",
+      "routeEyebrow": "Ruten",
+      "routeHeading": "Langs denne lesestien",
+      "position": "Tekst {current} av {total}",
+      "whyItBelongs": "Hvorfor den hører hjemme her",
+      "openReading": "Åpne denne teksten"
+    },
+    "errors": {
+      "notFoundTitle": "Fant ikke lesestien",
+      "notFound": "Denne lesestien er ikke tilgjengelig på dette språket.",
+      "loadFailed": "Lesestiene kunne ikke lastes inn akkurat nå."
+    }
+  }
+}

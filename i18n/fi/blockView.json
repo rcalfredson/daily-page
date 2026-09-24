@@ -50,6 +50,19 @@
         "texture": "Tausta"
       }
     },
+    "trail": {
+      "eyebrow": "Lukupolku",
+      "continueEyebrow": "Jatka polkua",
+      "position": "Teksti {current}/{total}",
+      "previous": "Edellinen teksti",
+      "next": "Seuraava teksti",
+      "backToTrail": "Takaisin lukupolulle",
+      "end": "Lukupolun loppu",
+      "topNavigationLabel": "Nykyinen lukupolku",
+      "bottomNavigationLabel": "Jatka tällä lukupolulla",
+      "topActionsLabel": "Lukupolun navigointi",
+      "bottomActionsLabel": "Lukupolun navigointi tämän julkaisun jälkeen"
+    },
     "recommendations": {
       "eyebrow": "Löydä aiheeseen liittyvää",
       "heading": "Aiheeseen liittyvää luettavaa",

@@ -50,6 +50,19 @@
         "texture": "Bakgrunn"
       }
     },
+    "trail": {
+      "eyebrow": "Lesesti",
+      "continueEyebrow": "Fortsett langs stien",
+      "position": "Tekst {current} av {total}",
+      "previous": "Forrige tekst",
+      "next": "Neste tekst",
+      "backToTrail": "Tilbake til lesestien",
+      "end": "Slutten på lesestien",
+      "topNavigationLabel": "Gjeldende lesesti",
+      "bottomNavigationLabel": "Fortsett langs denne lesestien",
+      "topActionsLabel": "Navigasjon i lesestien",
+      "bottomActionsLabel": "Navigasjon i lesestien etter dette innlegget"
+    },
     "recommendations": {
       "eyebrow": "Finn noe relatert",
       "heading": "Relatert lesning",

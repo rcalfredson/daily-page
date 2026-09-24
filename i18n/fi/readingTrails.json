@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Lukupolut | Daily Page",
+        "description": "Seuraa valikoituja polkuja Daily Pagen tekstien halki."
+      },
+      "eyebrow": "Valikoidut polut",
+      "heading": "Lukupolut",
+      "intro": "Seuraa ideaa, tarinaa tai kysymystä toisiaan täydentävien tekstien muodostaman sarjan läpi.",
+      "viewTrail": "Tutustu tähän polkuun",
+      "empty": {
+        "title": "Tällä kielellä ei ole vielä polkuja",
+        "body": "Lukupolku ilmestyy tänne, kun sen kaikki pysähdykset ovat saatavilla omalla kielelläsi."
+      }
+    },
+    "card": {
+      "eyebrow": "Lukupolku"
+    },
+    "counts": {
+      "summary": "Tekstejä: {readings} · Huoneita: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Lukupolut"
+      },
+      "breadcrumbLabel": "Lukupolun navigointi",
+      "allTrails": "Kaikki lukupolut",
+      "eyebrow": "Lukupolku",
+      "begin": "Aloita lukupolku",
+      "routeEyebrow": "Reitti",
+      "routeHeading": "Tällä lukupolulla",
+      "position": "Teksti {current}/{total}",
+      "whyItBelongs": "Miksi tämä kuuluu polkuun",
+      "openReading": "Avaa tämä teksti"
+    },
+    "errors": {
+      "notFoundTitle": "Lukupolkua ei löytynyt",
+      "notFound": "Tämä lukupolku ei ole saatavilla tällä kielellä.",
+      "loadFailed": "Lukupolkuja ei voitu ladata juuri nyt."
+    }
+  }
+}

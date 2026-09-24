@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Lässtigar | Daily Page",
+        "description": "Följ utvalda stigar genom texterna på Daily Page."
+      },
+      "eyebrow": "Utvalda stigar",
+      "heading": "Lässtigar",
+      "intro": "Följ en idé, en berättelse eller en fråga genom en följd av läsningar som valts för att samspela med varandra.",
+      "viewTrail": "Utforska den här stigen",
+      "empty": {
+        "title": "Inga stigar på det här språket än",
+        "body": "En lässtig visas här när alla stopp finns tillgängliga på ditt språk."
+      }
+    },
+    "card": {
+      "eyebrow": "Lässtig"
+    },
+    "counts": {
+      "summary": "Läsningar: {readings} · Rum: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Lässtigar"
+      },
+      "breadcrumbLabel": "Navigering i lässtigen",
+      "allTrails": "Alla lässtigar",
+      "eyebrow": "Lässtig",
+      "begin": "Börja följa stigen",
+      "routeEyebrow": "Rutten",
+      "routeHeading": "Längs den här lässtigen",
+      "position": "Läsning {current} av {total}",
+      "whyItBelongs": "Varför den hör hemma här",
+      "openReading": "Öppna den här läsningen"
+    },
+    "errors": {
+      "notFoundTitle": "Lässtigen hittades inte",
+      "notFound": "Den här lässtigen är inte tillgänglig på detta språk.",
+      "loadFailed": "Lässtigarna kunde inte laddas just nu."
+    }
+  }
+}
