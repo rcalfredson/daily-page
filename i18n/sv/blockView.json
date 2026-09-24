@@ -50,6 +50,19 @@
         "texture": "Bakgrund"
       }
     },
+    "trail": {
+      "eyebrow": "Lässtig",
+      "continueEyebrow": "Fortsätt längs stigen",
+      "position": "Läsning {current} av {total}",
+      "previous": "Föregående läsning",
+      "next": "Nästa läsning",
+      "backToTrail": "Tillbaka till lässtigen",
+      "end": "Slutet på lässtigen",
+      "topNavigationLabel": "Aktuell lässtig",
+      "bottomNavigationLabel": "Fortsätt längs den här lässtigen",
+      "topActionsLabel": "Navigering i lässtigen",
+      "bottomActionsLabel": "Navigering i lässtigen efter det här inlägget"
+    },
     "recommendations": {
       "eyebrow": "Upptäck något relaterat",
       "heading": "Relaterad läsning",

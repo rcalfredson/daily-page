@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Leesroutes | Daily Page",
+        "description": "Volg samengestelde routes door de teksten op Daily Page."
+      },
+      "eyebrow": "Samengestelde routes",
+      "heading": "Leesroutes",
+      "intro": "Volg een idee, een verhaal of een vraag via een reeks teksten die zijn gekozen om met elkaar in gesprek te gaan.",
+      "viewTrail": "Deze route verkennen",
+      "empty": {
+        "title": "Nog geen routes in deze taal",
+        "body": "Hier verschijnt een leesroute zodra elke halte in jouw taal beschikbaar is."
+      }
+    },
+    "card": {
+      "eyebrow": "Leesroute"
+    },
+    "counts": {
+      "summary": "Teksten: {readings} · Kamers: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Leesroutes"
+      },
+      "breadcrumbLabel": "Navigatie van de leesroute",
+      "allTrails": "Alle leesroutes",
+      "eyebrow": "Leesroute",
+      "begin": "Begin de route",
+      "routeEyebrow": "De route",
+      "routeHeading": "Langs deze leesroute",
+      "position": "Tekst {current} van {total}",
+      "whyItBelongs": "Waarom dit erbij hoort",
+      "openReading": "Deze tekst openen"
+    },
+    "errors": {
+      "notFoundTitle": "Leesroute niet gevonden",
+      "notFound": "Deze leesroute is niet beschikbaar in deze taal.",
+      "loadFailed": "De leesroutes kunnen momenteel niet worden geladen."
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Læsestier | Daily Page",
+        "description": "Følg udvalgte stier gennem teksterne på Daily Page."
+      },
+      "eyebrow": "Udvalgte stier",
+      "heading": "Læsestier",
+      "intro": "Følg en idé, en historie eller et spørgsmål gennem en række tekster, der er valgt til at spille sammen.",
+      "viewTrail": "Udforsk denne sti",
+      "empty": {
+        "title": "Ingen stier på dette sprog endnu",
+        "body": "En læsesti vises her, når alle stop er tilgængelige på dit sprog."
+      }
+    },
+    "card": {
+      "eyebrow": "Læsesti"
+    },
+    "counts": {
+      "summary": "Tekster: {readings} · Rum: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Læsestier"
+      },
+      "breadcrumbLabel": "Navigation på læsestien",
+      "allTrails": "Alle læsestier",
+      "eyebrow": "Læsesti",
+      "begin": "Start læsestien",
+      "routeEyebrow": "Ruten",
+      "routeHeading": "Langs denne læsesti",
+      "position": "Tekst {current} af {total}",
+      "whyItBelongs": "Hvorfor den hører til her",
+      "openReading": "Åbn denne tekst"
+    },
+    "errors": {
+      "notFoundTitle": "Læsestien blev ikke fundet",
+      "notFound": "Denne læsesti er ikke tilgængelig på dette sprog.",
+      "loadFailed": "Læsestierne kunne ikke indlæses lige nu."
+    }
+  }
+}
