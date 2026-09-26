@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Jalur Bacaan | Daily Page",
+        "description": "Ikuti jalur pilihan melalui berbagai tulisan di Daily Page."
+      },
+      "eyebrow": "Jalur pilihan",
+      "heading": "Jalur Bacaan",
+      "intro": "Ikuti sebuah gagasan, cerita, atau pertanyaan melalui rangkaian bacaan yang dipilih agar saling berdialog.",
+      "viewTrail": "Jelajahi jalur ini",
+      "empty": {
+        "title": "Belum ada jalur dalam bahasa ini",
+        "body": "Jalur bacaan akan muncul di sini setelah setiap perhentiannya tersedia dalam bahasa Anda."
+      }
+    },
+    "card": {
+      "eyebrow": "Jalur bacaan"
+    },
+    "counts": {
+      "summary": "Bacaan: {readings} · Ruang: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Jalur Bacaan"
+      },
+      "breadcrumbLabel": "Navigasi jalur bacaan",
+      "allTrails": "Semua jalur bacaan",
+      "eyebrow": "Jalur bacaan",
+      "begin": "Mulai jalur",
+      "routeEyebrow": "Rute",
+      "routeHeading": "Sepanjang jalur ini",
+      "position": "Bacaan {current} dari {total}",
+      "whyItBelongs": "Mengapa bacaan ini termasuk",
+      "openReading": "Buka bacaan ini"
+    },
+    "errors": {
+      "notFoundTitle": "Jalur bacaan tidak ditemukan",
+      "notFound": "Jalur bacaan ini tidak tersedia dalam bahasa ini.",
+      "loadFailed": "Jalur bacaan tidak dapat dimuat saat ini."
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "読書の道 | Daily Page",
+        "description": "Daily Page の文章をめぐる、選りすぐりの道をたどりましょう。"
+      },
+      "eyebrow": "選りすぐりの道",
+      "heading": "読書の道",
+      "intro": "互いに響き合うよう選ばれた読みものを通して、ひとつの発想、物語、問いをたどります。",
+      "viewTrail": "この道をたどる",
+      "empty": {
+        "title": "この言語の道はまだありません",
+        "body": "すべての立ち寄り先があなたの言語で読めるようになると、ここに読書の道が表示されます。"
+      }
+    },
+    "card": {
+      "eyebrow": "読書の道"
+    },
+    "counts": {
+      "summary": "読みもの: {readings} · ルーム: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | 読書の道"
+      },
+      "breadcrumbLabel": "読書の道のナビゲーション",
+      "allTrails": "すべての読書の道",
+      "eyebrow": "読書の道",
+      "begin": "この道を読み始める",
+      "routeEyebrow": "道のり",
+      "routeHeading": "この読書の道に沿って",
+      "position": "{total} 件中 {current} 件目",
+      "whyItBelongs": "この道に含まれる理由",
+      "openReading": "この読みものを開く"
+    },
+    "errors": {
+      "notFoundTitle": "読書の道が見つかりません",
+      "notFound": "この読書の道は、この言語では利用できません。",
+      "loadFailed": "現在、読書の道を読み込めません。"
+    }
+  }
+}

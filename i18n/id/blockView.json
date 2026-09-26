@@ -50,6 +50,19 @@
         "texture": "Latar belakang"
       }
     },
+    "trail": {
+      "eyebrow": "Jalur bacaan",
+      "continueEyebrow": "Lanjutkan jalur",
+      "position": "Bacaan {current} dari {total}",
+      "previous": "Bacaan sebelumnya",
+      "next": "Bacaan berikutnya",
+      "backToTrail": "Kembali ke jalur",
+      "end": "Akhir jalur",
+      "topNavigationLabel": "Jalur bacaan saat ini",
+      "bottomNavigationLabel": "Lanjutkan jalur bacaan ini",
+      "topActionsLabel": "Navigasi jalur bacaan",
+      "bottomActionsLabel": "Navigasi jalur bacaan setelah postingan ini"
+    },
     "recommendations": {
       "eyebrow": "Temukan hal terkait",
       "heading": "Bacaan terkait",

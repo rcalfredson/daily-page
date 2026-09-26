@@ -50,6 +50,19 @@
         "texture": "พื้นหลัง"
       }
     },
+    "trail": {
+      "eyebrow": "เส้นทางการอ่าน",
+      "continueEyebrow": "อ่านต่อไปตามเส้นทาง",
+      "position": "บทอ่าน {current} จาก {total}",
+      "previous": "บทอ่านก่อนหน้า",
+      "next": "บทอ่านถัดไป",
+      "backToTrail": "กลับไปยังเส้นทาง",
+      "end": "สิ้นสุดเส้นทาง",
+      "topNavigationLabel": "เส้นทางการอ่านปัจจุบัน",
+      "bottomNavigationLabel": "อ่านต่อไปตามเส้นทางนี้",
+      "topActionsLabel": "การนำทางเส้นทางการอ่าน",
+      "bottomActionsLabel": "การนำทางเส้นทางการอ่านหลังโพสต์นี้"
+    },
     "recommendations": {
       "eyebrow": "ค้นพบเนื้อหาที่เกี่ยวข้อง",
       "heading": "บทอ่านที่เกี่ยวข้อง",

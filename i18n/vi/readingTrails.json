@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Lộ trình đọc | Daily Page",
+        "description": "Theo những lộ trình được tuyển chọn qua các bài viết trên Daily Page."
+      },
+      "eyebrow": "Lộ trình tuyển chọn",
+      "heading": "Lộ trình đọc",
+      "intro": "Theo một ý tưởng, câu chuyện hoặc câu hỏi qua chuỗi bài đọc được chọn để đối thoại với nhau.",
+      "viewTrail": "Khám phá lộ trình này",
+      "empty": {
+        "title": "Chưa có lộ trình bằng ngôn ngữ này",
+        "body": "Lộ trình đọc sẽ xuất hiện ở đây khi tất cả điểm dừng đều có sẵn bằng ngôn ngữ của bạn."
+      }
+    },
+    "card": {
+      "eyebrow": "Lộ trình đọc"
+    },
+    "counts": {
+      "summary": "Bài đọc: {readings} · Phòng: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Lộ trình đọc"
+      },
+      "breadcrumbLabel": "Điều hướng lộ trình đọc",
+      "allTrails": "Tất cả lộ trình đọc",
+      "eyebrow": "Lộ trình đọc",
+      "begin": "Bắt đầu lộ trình",
+      "routeEyebrow": "Tuyến đường",
+      "routeHeading": "Dọc theo lộ trình này",
+      "position": "Bài đọc {current}/{total}",
+      "whyItBelongs": "Vì sao bài này thuộc lộ trình",
+      "openReading": "Mở bài đọc này"
+    },
+    "errors": {
+      "notFoundTitle": "Không tìm thấy lộ trình đọc",
+      "notFound": "Lộ trình đọc này không có sẵn bằng ngôn ngữ này.",
+      "loadFailed": "Hiện không thể tải các lộ trình đọc."
+    }
+  }
+}
