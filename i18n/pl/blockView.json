@@ -43,6 +43,19 @@
         "texture": "Tło"
       }
     },
+    "trail": {
+      "eyebrow": "Ścieżka czytelnicza",
+      "continueEyebrow": "Kontynuuj ścieżkę",
+      "position": "Tekst {current} z {total}",
+      "previous": "Poprzedni tekst",
+      "next": "Następny tekst",
+      "backToTrail": "Wróć do ścieżki",
+      "end": "Koniec ścieżki",
+      "topNavigationLabel": "Bieżąca ścieżka czytelnicza",
+      "bottomNavigationLabel": "Kontynuuj tę ścieżkę czytelniczą",
+      "topActionsLabel": "Nawigacja po ścieżce czytelniczej",
+      "bottomActionsLabel": "Nawigacja po ścieżce czytelniczej po tym poście"
+    },
     "recommendations": {
       "eyebrow": "Odkryj coś powiązanego",
       "heading": "Powiązane teksty",

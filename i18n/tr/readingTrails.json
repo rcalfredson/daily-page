@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Okuma Rotaları | Daily Page",
+        "description": "Daily Page yazıları arasında seçilmiş rotaları takip edin."
+      },
+      "eyebrow": "Seçilmiş rotalar",
+      "heading": "Okuma Rotaları",
+      "intro": "Bir fikri, hikâyeyi veya soruyu, birbiriyle konuşacak şekilde seçilmiş okumalar dizisi boyunca takip edin.",
+      "viewTrail": "Bu rotayı keşfet",
+      "empty": {
+        "title": "Bu dilde henüz rota yok",
+        "body": "Tüm durakları dilinizde kullanıma sunulduğunda burada bir okuma rotası görünecek."
+      }
+    },
+    "card": {
+      "eyebrow": "Okuma rotası"
+    },
+    "counts": {
+      "summary": "Okumalar: {readings} · Odalar: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Okuma Rotaları"
+      },
+      "breadcrumbLabel": "Okuma rotası gezinmesi",
+      "allTrails": "Tüm okuma rotaları",
+      "eyebrow": "Okuma rotası",
+      "begin": "Rotaya başla",
+      "routeEyebrow": "Güzergâh",
+      "routeHeading": "Bu rota boyunca",
+      "position": "Okuma {current}/{total}",
+      "whyItBelongs": "Neden bu rotada yer alıyor",
+      "openReading": "Bu okumayı aç"
+    },
+    "errors": {
+      "notFoundTitle": "Okuma rotası bulunamadı",
+      "notFound": "Bu okuma rotası bu dilde kullanılamıyor.",
+      "loadFailed": "Okuma rotaları şu anda yüklenemedi."
+    }
+  }
+}

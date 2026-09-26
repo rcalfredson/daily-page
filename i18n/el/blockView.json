@@ -31,6 +31,19 @@
       "collapseSection": "Εμφάνιση λιγότερων",
       "roleNames": { "pillar": "Βασικός οδηγός", "companion": "Εμβάθυνση", "texture": "Υπόβαθρο" }
     },
+    "trail": {
+      "eyebrow": "Διαδρομή ανάγνωσης",
+      "continueEyebrow": "Συνέχισε τη διαδρομή",
+      "position": "Ανάγνωσμα {current} από {total}",
+      "previous": "Προηγούμενο ανάγνωσμα",
+      "next": "Επόμενο ανάγνωσμα",
+      "backToTrail": "Επιστροφή στη διαδρομή",
+      "end": "Τέλος διαδρομής",
+      "topNavigationLabel": "Τρέχουσα διαδρομή ανάγνωσης",
+      "bottomNavigationLabel": "Συνέχισε αυτή τη διαδρομή ανάγνωσης",
+      "topActionsLabel": "Πλοήγηση στη διαδρομή ανάγνωσης",
+      "bottomActionsLabel": "Πλοήγηση στη διαδρομή ανάγνωσης μετά από αυτή την ανάρτηση"
+    },
     "recommendations": {
       "eyebrow": "Ανακαλύψτε κάτι σχετικό",
       "heading": "Σχετικά αναγνώσματα",

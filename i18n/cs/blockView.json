@@ -15,6 +15,19 @@
       "expandSection": "Zobrazit dalších {count}", "collapseSection": "Zobrazit méně",
       "roleNames": { "pillar": "Hlavní průvodce", "companion": "Podrobný rozbor", "texture": "Souvislosti" }
     },
+    "trail": {
+      "eyebrow": "Čtenářská stezka",
+      "continueEyebrow": "Pokračujte po stezce",
+      "position": "Text {current} z {total}",
+      "previous": "Předchozí text",
+      "next": "Další text",
+      "backToTrail": "Zpět na stezku",
+      "end": "Konec stezky",
+      "topNavigationLabel": "Aktuální čtenářská stezka",
+      "bottomNavigationLabel": "Pokračovat po této čtenářské stezce",
+      "topActionsLabel": "Navigace na čtenářské stezce",
+      "bottomActionsLabel": "Navigace na čtenářské stezce po tomto příspěvku"
+    },
     "recommendations": {
       "eyebrow": "Objevte něco souvisejícího",
       "heading": "Související čtení",
