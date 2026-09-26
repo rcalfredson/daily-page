@@ -50,6 +50,19 @@
         "texture": "背景"
       }
     },
+    "trail": {
+      "eyebrow": "読書の道",
+      "continueEyebrow": "この道を読み進める",
+      "position": "{total} 件中 {current} 件目",
+      "previous": "前の読みもの",
+      "next": "次の読みもの",
+      "backToTrail": "読書の道に戻る",
+      "end": "読書の道の終点",
+      "topNavigationLabel": "現在の読書の道",
+      "bottomNavigationLabel": "この読書の道を続ける",
+      "topActionsLabel": "読書の道のナビゲーション",
+      "bottomActionsLabel": "この投稿を読んだ後の読書の道のナビゲーション"
+    },
     "recommendations": {
       "eyebrow": "関連する投稿を見つける",
       "heading": "関連する読みもの",

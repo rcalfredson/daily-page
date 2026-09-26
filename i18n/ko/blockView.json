@@ -50,6 +50,19 @@
         "texture": "배경"
       }
     },
+    "trail": {
+      "eyebrow": "독서 경로",
+      "continueEyebrow": "경로 계속하기",
+      "position": "전체 {total}개 중 {current}번째",
+      "previous": "이전 글",
+      "next": "다음 글",
+      "backToTrail": "독서 경로로 돌아가기",
+      "end": "독서 경로의 끝",
+      "topNavigationLabel": "현재 독서 경로",
+      "bottomNavigationLabel": "이 독서 경로 계속하기",
+      "topActionsLabel": "독서 경로 탐색",
+      "bottomActionsLabel": "이 게시물 이후의 독서 경로 탐색"
+    },
     "recommendations": {
       "eyebrow": "관련 글 둘러보기",
       "heading": "관련 글",

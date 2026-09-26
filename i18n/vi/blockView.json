@@ -50,6 +50,19 @@
         "texture": "Bối cảnh"
       }
     },
+    "trail": {
+      "eyebrow": "Lộ trình đọc",
+      "continueEyebrow": "Tiếp tục lộ trình",
+      "position": "Bài đọc {current}/{total}",
+      "previous": "Bài đọc trước",
+      "next": "Bài đọc tiếp theo",
+      "backToTrail": "Quay lại lộ trình",
+      "end": "Kết thúc lộ trình",
+      "topNavigationLabel": "Lộ trình đọc hiện tại",
+      "bottomNavigationLabel": "Tiếp tục lộ trình đọc này",
+      "topActionsLabel": "Điều hướng lộ trình đọc",
+      "bottomActionsLabel": "Điều hướng lộ trình đọc sau bài viết này"
+    },
     "recommendations": {
       "eyebrow": "Khám phá nội dung liên quan",
       "heading": "Bài đọc liên quan",
