@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "阅读路径 | Daily Page",
+        "description": "沿着精选路径，探索 Daily Page 上的文字。"
+      },
+      "eyebrow": "精选路径",
+      "heading": "阅读路径",
+      "intro": "循着一个想法、一个故事或一个问题，依次阅读精心挑选、彼此呼应的文章。",
+      "viewTrail": "探索这条路径",
+      "empty": {
+        "title": "此语言暂时没有阅读路径",
+        "body": "当每一站都有你的语言版本时，阅读路径就会显示在这里。"
+      }
+    },
+    "card": {
+      "eyebrow": "阅读路径"
+    },
+    "counts": {
+      "summary": "文章：{readings} · 房间：{rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | 阅读路径"
+      },
+      "breadcrumbLabel": "阅读路径导航",
+      "allTrails": "所有阅读路径",
+      "eyebrow": "阅读路径",
+      "begin": "开始阅读",
+      "routeEyebrow": "路线",
+      "routeHeading": "沿着这条阅读路径",
+      "position": "第 {current} 篇，共 {total} 篇",
+      "whyItBelongs": "收录理由",
+      "openReading": "打开这篇文章"
+    },
+    "errors": {
+      "notFoundTitle": "未找到阅读路径",
+      "notFound": "此阅读路径不提供当前语言版本。",
+      "loadFailed": "目前无法加载阅读路径。"
+    }
+  }
+}

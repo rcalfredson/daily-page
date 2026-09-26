@@ -50,6 +50,19 @@
         "texture": "רקע"
       }
     },
+    "trail": {
+      "eyebrow": "מסלול קריאה",
+      "continueEyebrow": "המשך במסלול",
+      "position": "קטע {current} מתוך {total}",
+      "previous": "הקטע הקודם",
+      "next": "הקטע הבא",
+      "backToTrail": "חזרה למסלול",
+      "end": "סוף המסלול",
+      "topNavigationLabel": "מסלול הקריאה הנוכחי",
+      "bottomNavigationLabel": "המשך במסלול הקריאה הזה",
+      "topActionsLabel": "ניווט במסלול הקריאה",
+      "bottomActionsLabel": "ניווט במסלול הקריאה אחרי הפוסט הזה"
+    },
     "recommendations": {
       "eyebrow": "גילוי תוכן קשור",
       "heading": "קריאה קשורה",

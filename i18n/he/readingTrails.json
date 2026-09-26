@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "מסלולי קריאה | Daily Page",
+        "description": "עקבו אחר מסלולים נבחרים בין הטקסטים של Daily Page."
+      },
+      "eyebrow": "מסלולים נבחרים",
+      "heading": "מסלולי קריאה",
+      "intro": "עקבו אחר רעיון, סיפור או שאלה דרך סדרת קטעי קריאה שנבחרו כדי לשוחח זה עם זה.",
+      "viewTrail": "גלו את המסלול הזה",
+      "empty": {
+        "title": "עדיין אין מסלולים בשפה הזאת",
+        "body": "מסלול קריאה יופיע כאן כשכל התחנות שלו יהיו זמינות בשפה שלך."
+      }
+    },
+    "card": {
+      "eyebrow": "מסלול קריאה"
+    },
+    "counts": {
+      "summary": "קטעי קריאה: {readings} · חדרים: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | מסלולי קריאה"
+      },
+      "breadcrumbLabel": "ניווט במסלול הקריאה",
+      "allTrails": "כל מסלולי הקריאה",
+      "eyebrow": "מסלול קריאה",
+      "begin": "התחלת המסלול",
+      "routeEyebrow": "הדרך",
+      "routeHeading": "לאורך המסלול הזה",
+      "position": "קטע {current} מתוך {total}",
+      "whyItBelongs": "למה הוא שייך לכאן",
+      "openReading": "פתיחת הקטע הזה"
+    },
+    "errors": {
+      "notFoundTitle": "מסלול הקריאה לא נמצא",
+      "notFound": "מסלול הקריאה הזה אינו זמין בשפה הזאת.",
+      "loadFailed": "לא ניתן לטעון את מסלולי הקריאה כרגע."
+    }
+  }
+}

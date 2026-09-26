@@ -50,6 +50,19 @@
         "texture": "पृष्ठभूमि"
       }
     },
+    "trail": {
+      "eyebrow": "पठन पथ",
+      "continueEyebrow": "पथ पर आगे बढ़ें",
+      "position": "पाठ {current}/{total}",
+      "previous": "पिछला पाठ",
+      "next": "अगला पाठ",
+      "backToTrail": "पठन पथ पर वापस जाएँ",
+      "end": "पथ का अंत",
+      "topNavigationLabel": "वर्तमान पठन पथ",
+      "bottomNavigationLabel": "इस पठन पथ पर आगे बढ़ें",
+      "topActionsLabel": "पठन पथ नेविगेशन",
+      "bottomActionsLabel": "इस पोस्ट के बाद पठन पथ नेविगेशन"
+    },
     "recommendations": {
       "eyebrow": "कुछ संबंधित खोजें",
       "heading": "संबंधित पठन",
