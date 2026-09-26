@@ -50,6 +50,19 @@
         "texture": "خلفية"
       }
     },
+    "trail": {
+      "eyebrow": "مسار قراءة",
+      "continueEyebrow": "تابع المسار",
+      "position": "القراءة {current} من {total}",
+      "previous": "القراءة السابقة",
+      "next": "القراءة التالية",
+      "backToTrail": "العودة إلى المسار",
+      "end": "نهاية المسار",
+      "topNavigationLabel": "مسار القراءة الحالي",
+      "bottomNavigationLabel": "متابعة مسار القراءة هذا",
+      "topActionsLabel": "التنقل في مسار القراءة",
+      "bottomActionsLabel": "التنقل في مسار القراءة بعد هذا المنشور"
+    },
     "recommendations": {
       "eyebrow": "اكتشف شيئًا ذا صلة",
       "heading": "قراءات ذات صلة",

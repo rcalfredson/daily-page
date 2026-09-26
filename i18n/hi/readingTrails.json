@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "पठन पथ | Daily Page",
+        "description": "Daily Page की रचनाओं के बीच चुने हुए पथों पर चलें।"
+      },
+      "eyebrow": "चुने हुए पथ",
+      "heading": "पठन पथ",
+      "intro": "एक विचार, कहानी या प्रश्न को ऐसे चुने गए पाठों की शृंखला में आगे बढ़ते हुए देखें जो आपस में संवाद करते हैं।",
+      "viewTrail": "इस पथ को देखें",
+      "empty": {
+        "title": "इस भाषा में अभी कोई पथ नहीं है",
+        "body": "जब इसकी हर कड़ी आपकी भाषा में उपलब्ध होगी, तो पठन पथ यहाँ दिखाई देगा।"
+      }
+    },
+    "card": {
+      "eyebrow": "पठन पथ"
+    },
+    "counts": {
+      "summary": "पाठ: {readings} · कमरे: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | पठन पथ"
+      },
+      "breadcrumbLabel": "पठन पथ नेविगेशन",
+      "allTrails": "सभी पठन पथ",
+      "eyebrow": "पठन पथ",
+      "begin": "पथ शुरू करें",
+      "routeEyebrow": "मार्ग",
+      "routeHeading": "इस पठन पथ पर",
+      "position": "पाठ {current}/{total}",
+      "whyItBelongs": "यह यहाँ क्यों है",
+      "openReading": "यह पाठ खोलें"
+    },
+    "errors": {
+      "notFoundTitle": "पठन पथ नहीं मिला",
+      "notFound": "यह पठन पथ इस भाषा में उपलब्ध नहीं है।",
+      "loadFailed": "पठन पथ अभी लोड नहीं किए जा सके।"
+    }
+  }
+}

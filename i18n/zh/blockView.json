@@ -50,6 +50,19 @@
         "texture": "背景"
       }
     },
+    "trail": {
+      "eyebrow": "阅读路径",
+      "continueEyebrow": "沿路径继续阅读",
+      "position": "第 {current} 篇，共 {total} 篇",
+      "previous": "上一篇",
+      "next": "下一篇",
+      "backToTrail": "返回阅读路径",
+      "end": "路径终点",
+      "topNavigationLabel": "当前阅读路径",
+      "bottomNavigationLabel": "继续当前阅读路径",
+      "topActionsLabel": "阅读路径导航",
+      "bottomActionsLabel": "阅读此帖后的路径导航"
+    },
     "recommendations": {
       "eyebrow": "发现相关内容",
       "heading": "相关阅读",

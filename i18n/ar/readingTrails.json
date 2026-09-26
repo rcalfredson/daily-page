@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "مسارات القراءة | Daily Page",
+        "description": "اتبع مسارات مختارة بين كتابات Daily Page."
+      },
+      "eyebrow": "مسارات مختارة",
+      "heading": "مسارات القراءة",
+      "intro": "تتبّع فكرة أو قصة أو سؤالًا عبر سلسلة من القراءات المختارة لتتحاور فيما بينها.",
+      "viewTrail": "استكشف هذا المسار",
+      "empty": {
+        "title": "لا توجد مسارات بهذه اللغة بعد",
+        "body": "سيظهر مسار قراءة هنا عندما تتوفر جميع محطاته بلغتك."
+      }
+    },
+    "card": {
+      "eyebrow": "مسار قراءة"
+    },
+    "counts": {
+      "summary": "القراءات: {readings} · الغرف: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | مسارات القراءة"
+      },
+      "breadcrumbLabel": "التنقل في مسار القراءة",
+      "allTrails": "جميع مسارات القراءة",
+      "eyebrow": "مسار قراءة",
+      "begin": "ابدأ المسار",
+      "routeEyebrow": "الطريق",
+      "routeHeading": "على امتداد هذا المسار",
+      "position": "القراءة {current} من {total}",
+      "whyItBelongs": "سبب وجودها في المسار",
+      "openReading": "افتح هذه القراءة"
+    },
+    "errors": {
+      "notFoundTitle": "لم يتم العثور على مسار القراءة",
+      "notFound": "مسار القراءة هذا غير متاح بهذه اللغة.",
+      "loadFailed": "تعذر تحميل مسارات القراءة الآن."
+    }
+  }
+}
