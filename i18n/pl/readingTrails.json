@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Ścieżki czytelnicze | Daily Page",
+        "description": "Podążaj wybranymi ścieżkami przez teksty w Daily Page."
+      },
+      "eyebrow": "Wybrane ścieżki",
+      "heading": "Ścieżki czytelnicze",
+      "intro": "Podążaj za ideą, opowieścią lub pytaniem poprzez sekwencję tekstów dobranych tak, aby ze sobą rozmawiały.",
+      "viewTrail": "Odkryj tę ścieżkę",
+      "empty": {
+        "title": "Nie ma jeszcze ścieżek w tym języku",
+        "body": "Ścieżka czytelnicza pojawi się tutaj, gdy wszystkie jej przystanki będą dostępne w Twoim języku."
+      }
+    },
+    "card": {
+      "eyebrow": "Ścieżka czytelnicza"
+    },
+    "counts": {
+      "summary": "Teksty: {readings} · Pokoje: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Ścieżki czytelnicze"
+      },
+      "breadcrumbLabel": "Nawigacja po ścieżce czytelniczej",
+      "allTrails": "Wszystkie ścieżki czytelnicze",
+      "eyebrow": "Ścieżka czytelnicza",
+      "begin": "Rozpocznij ścieżkę",
+      "routeEyebrow": "Trasa",
+      "routeHeading": "Na tej ścieżce",
+      "position": "Tekst {current} z {total}",
+      "whyItBelongs": "Dlaczego ten tekst tu pasuje",
+      "openReading": "Otwórz ten tekst"
+    },
+    "errors": {
+      "notFoundTitle": "Nie znaleziono ścieżki czytelniczej",
+      "notFound": "Ta ścieżka czytelnicza nie jest dostępna w tym języku.",
+      "loadFailed": "Nie można teraz wczytać ścieżek czytelniczych."
+    }
+  }
+}

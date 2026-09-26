@@ -1,0 +1,43 @@
+{
+  "readingTrails": {
+    "overview": {
+      "meta": {
+        "title": "Čtenářské stezky | Daily Page",
+        "description": "Vydejte se po vybraných stezkách napříč texty na Daily Page."
+      },
+      "eyebrow": "Vybrané stezky",
+      "heading": "Čtenářské stezky",
+      "intro": "Sledujte myšlenku, příběh nebo otázku v řadě textů vybraných tak, aby spolu navzájem rozmlouvaly.",
+      "viewTrail": "Prozkoumat tuto stezku",
+      "empty": {
+        "title": "V tomto jazyce zatím nejsou žádné stezky",
+        "body": "Čtenářská stezka se zde objeví, jakmile budou všechny její zastávky dostupné ve vašem jazyce."
+      }
+    },
+    "card": {
+      "eyebrow": "Čtenářská stezka"
+    },
+    "counts": {
+      "summary": "Texty: {readings} · Místnosti: {rooms}"
+    },
+    "detail": {
+      "meta": {
+        "title": "{trailName} | Čtenářské stezky"
+      },
+      "breadcrumbLabel": "Navigace na čtenářské stezce",
+      "allTrails": "Všechny čtenářské stezky",
+      "eyebrow": "Čtenářská stezka",
+      "begin": "Začít stezku",
+      "routeEyebrow": "Trasa",
+      "routeHeading": "Po této čtenářské stezce",
+      "position": "Text {current} z {total}",
+      "whyItBelongs": "Proč sem patří",
+      "openReading": "Otevřít tento text"
+    },
+    "errors": {
+      "notFoundTitle": "Čtenářská stezka nebyla nalezena",
+      "notFound": "Tato čtenářská stezka není v tomto jazyce dostupná.",
+      "loadFailed": "Čtenářské stezky nyní nelze načíst."
+    }
+  }
+}

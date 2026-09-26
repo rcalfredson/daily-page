@@ -43,6 +43,19 @@
         "texture": "Arka plan"
       }
     },
+    "trail": {
+      "eyebrow": "Okuma rotası",
+      "continueEyebrow": "Rotaya devam et",
+      "position": "Okuma {current}/{total}",
+      "previous": "Önceki okuma",
+      "next": "Sonraki okuma",
+      "backToTrail": "Rotaya dön",
+      "end": "Rotanın sonu",
+      "topNavigationLabel": "Geçerli okuma rotası",
+      "bottomNavigationLabel": "Bu okuma rotasına devam et",
+      "topActionsLabel": "Okuma rotasında gezinme",
+      "bottomActionsLabel": "Bu gönderiden sonraki okuma rotası gezinmesi"
+    },
     "recommendations": {
       "eyebrow": "İlgili bir şey keşfedin",
       "heading": "İlgili okumalar",

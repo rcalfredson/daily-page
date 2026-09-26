@@ -43,6 +43,19 @@
         "texture": "Фон"
       }
     },
+    "trail": {
+      "eyebrow": "Маршрут чтения",
+      "continueEyebrow": "Продолжить маршрут",
+      "position": "Материал {current} из {total}",
+      "previous": "Предыдущий материал",
+      "next": "Следующий материал",
+      "backToTrail": "Вернуться к маршруту",
+      "end": "Конец маршрута",
+      "topNavigationLabel": "Текущий маршрут чтения",
+      "bottomNavigationLabel": "Продолжить этот маршрут чтения",
+      "topActionsLabel": "Навигация по маршруту чтения",
+      "bottomActionsLabel": "Навигация по маршруту чтения после этой публикации"
+    },
     "recommendations": {
       "eyebrow": "Найдите что-нибудь по теме",
       "heading": "Чтение по теме",
