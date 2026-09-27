@@ -41,6 +41,29 @@ describe('homepage discovery shelf view', () => {
     expect(html).toContain('class="home-wander__arrow"');
   });
 
+  it('renders a lazy, non-interactive Street View preview', () => {
+    const html = render([{
+      id: 'street-view-post',
+      roomId: 'travel',
+      roomName: 'Travel',
+      lang: 'en',
+      title: 'A panorama',
+      description: 'A panoramic discovery post.',
+      bannerImage: {
+        kind: 'streetview',
+        url: 'https://www.google.com/maps/embed?pb=!4v123!6m8'
+      }
+    }]);
+
+    expect(html).toContain('class="home-wander-card__street-view"');
+    expect(html).toContain('src="https://www.google.com/maps/embed?pb=!4v123!6m8"');
+    expect(html).toContain('loading="lazy"');
+    expect(html).toContain('tabindex="-1"');
+    expect(html).toContain('aria-hidden="true"');
+    expect(homeStyles).toContain('.home-wander-card__street-view');
+    expect(homeStyles).toContain('pointer-events: none');
+  });
+
   it('renders nothing when the shelf is empty', () => {
     expect(render([])).toBe('');
   });

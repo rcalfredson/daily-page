@@ -18,13 +18,23 @@ if homeDiscoveryPosts && homeDiscoveryPosts.length
           a.home-wander-card__link(href=uiPath(`/rooms/${post.roomId}/blocks/${post.id}`))
             .home-wander-card__media
               if post.bannerImage
-                img.home-wander-card__image(
-                  src=post.bannerImage.url
-                  alt=''
-                  loading='lazy'
-                  decoding='async'
-                  referrerpolicy='no-referrer'
-                )
+                if post.bannerImage.kind === 'streetview'
+                  iframe.home-wander-card__street-view(
+                    src=post.bannerImage.url
+                    title=''
+                    loading='lazy'
+                    referrerpolicy='strict-origin-when-cross-origin'
+                    tabindex='-1'
+                    aria-hidden='true'
+                  )
+                else
+                  img.home-wander-card__image(
+                    src=post.bannerImage.url
+                    alt=''
+                    loading='lazy'
+                    decoding='async'
+                    referrerpolicy='no-referrer'
+                  )
               else
                 .home-wander-card__placeholder(aria-hidden='true')
                   i.fas.fa-compass

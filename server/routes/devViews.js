@@ -44,6 +44,66 @@ import { FOREST_TRANSIENT_LIFE_VERSION } from '../../public/js/forest-transient-
 
 const router = express.Router();
 
+const STREET_VIEW_PREVIEW_URL = 'https://www.google.com/maps/embed?pb=!4v1683897147828!6m8!1m7!1sCAoSLEFGMVFpcE56SmlsSHZ1QjdlbzN6OGxrV1gzSkI1UUlDVHVWZkhYZnFy!2m2!1d40.75889684702064!2d-73.98514688680693!3f0!4f0!5f0.7820865974627469';
+
+export function homeDiscoveryPreviewPosts() {
+  return [
+    {
+      id: 'street-view-primary',
+      roomId: 'travel',
+      roomName: 'Travel',
+      lang: 'en',
+      title: 'A street corner worth wandering into',
+      description: 'The primary test case: a lazy Street View banner displayed as a card preview.',
+      bannerImage: { kind: 'streetview', url: STREET_VIEW_PREVIEW_URL }
+    },
+    {
+      id: 'image-banner',
+      roomId: 'visual-arts',
+      roomName: 'Visual Arts',
+      lang: 'en',
+      title: 'The familiar image-banner baseline',
+      description: 'A regular image banner makes it easy to compare cropping and card height.',
+      bannerImage: { kind: 'image', url: '/assets/img/logo.svg' }
+    },
+    {
+      id: 'without-banner',
+      roomId: 'daily-life',
+      roomName: 'Daily Life',
+      lang: 'en',
+      title: 'A post without banner media',
+      description: 'This card retains the compass placeholder for comparison.'
+    },
+    {
+      id: 'street-view-secondary',
+      roomId: 'architecture',
+      roomName: 'Architecture',
+      lang: 'en',
+      title: 'Street View beside mixed card content',
+      description: 'A second panorama checks repeated embeds and the second row of the shelf.',
+      bannerImage: { kind: 'streetview', url: STREET_VIEW_PREVIEW_URL }
+    },
+    {
+      id: 'long-copy',
+      roomId: 'field-notes',
+      roomName: 'Field Notes With A Deliberately Long Room Name',
+      lang: 'en',
+      title: 'A deliberately long title that tests wrapping across several lines in a discovery card',
+      description: 'Longer descriptive copy checks that neighboring cards remain balanced and that the call to action stays anchored near the bottom of the card.',
+      bannerImage: { kind: 'image', url: '/assets/img/logo.svg' }
+    },
+    {
+      id: 'rtl-copy',
+      roomId: 'places',
+      roomName: 'Places',
+      lang: 'ar',
+      title: 'منظر من مكان بعيد',
+      description: 'بطاقة تجريبية لاختبار اتجاه النص وشارة اللغة مع المعاينة البانورامية.',
+      bannerImage: { kind: 'streetview', url: STREET_VIEW_PREVIEW_URL }
+    }
+  ];
+}
+
 export function projectForestLabFixture(post, context) {
   try {
     const projection = projectPostToForestTree({
@@ -305,6 +365,21 @@ router.get(
       user: req.user || null,
       uiLang: res.locals.uiLang,
       preferredContentLang: 'en',
+    });
+  }
+);
+
+router.get(
+  '/__dev/views/home-discovery',
+  optionalAuth,
+  addI18n(['home']),
+  (req, res) => {
+    res.render('dev/home-discovery', {
+      title: 'Home discovery shelf preview',
+      user: req.user || null,
+      uiLang: res.locals.uiLang,
+      preferredContentLang: 'en',
+      homeDiscoveryPosts: homeDiscoveryPreviewPosts()
     });
   }
 );

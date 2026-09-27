@@ -281,6 +281,7 @@ For frontend work, run `npm run build` after changes to files in `lib/`, or use 
 Rare UI states can be previewed without manufacturing matching database or collaboration conditions. While the app is running outside production, open:
 
 - `/en/__dev/views/tag-detail` to preview the tag-detail trend chart with representative fixture data.
+- `/en/__dev/views/home-discovery` to preview the Wander Somewhere shelf with fixed Street View, image, placeholder, long-copy, and right-to-left card fixtures.
 - `/en/__dev/views/full-post-capacity` to preview the message shown when a post editor has reached its collaborator limit.
 - `/en/__dev/views/toasts` to trigger neutral, success, error, long-message, and stacked toast states.
 - `/en/__dev/views/inactive-warning` to preview the editor inactivity warning in light and dark modes.
