@@ -70,9 +70,7 @@ function compactDiscoveryDescription(value, limit = 220) {
 export function toHomeDiscoveryCards(posts, roomsById = {}) {
   return (posts || []).map(post => {
     const room = roomsById[String(post.roomId)] || {};
-    const bannerImage = post.bannerImage?.url && post.bannerImage?.kind !== 'streetview'
-      ? post.bannerImage
-      : null;
+    const bannerImage = post.bannerImage?.url ? post.bannerImage : null;
 
     return {
       id: String(post._id),

@@ -1,0 +1,16 @@
+extends ../layout
+
+block nav
+  include ../navLinks
+
+block append head
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css')
+  link(rel='stylesheet' href='/css/home.css')
+
+block content
+  main
+    header
+      h1 Home discovery shelf preview
+      p Fixed fixture data for evaluating Street View, image, placeholder, long-copy, and right-to-left card states. Resize the viewport and use the navigation theme control to compare responsive and dark-mode layouts.
+
+    include ../partials/_home_discovery_shelf

@@ -71,7 +71,7 @@ describe('homepage activity visibility', () => {
     expect(toBlockPreviewDTO(block).truncated).toBeFalse();
   });
 
-  it('builds compact localized discovery cards without embedding Street View', () => {
+  it('builds compact localized discovery cards with their banner media', () => {
     const description = '**A discovery description** with   irregular spacing. '.repeat(8);
     const cards = toHomeDiscoveryCards([
       {
@@ -98,7 +98,10 @@ describe('homepage activity visibility', () => {
     expect(cards[0].description.endsWith('…')).toBeTrue();
     expect(cards[0].description).not.toContain('  ');
     expect(cards[0].description).not.toContain('**');
-    expect(cards[0].bannerImage).toBeNull();
+    expect(cards[0].bannerImage).toEqual({
+      kind: 'streetview',
+      url: 'https://example.com/embed'
+    });
     expect(cards[1].roomName).toBe('computing');
     expect(cards[1].lang).toBe('en');
     expect(cards[1].bannerImage.url).toBe('https://example.com/banner.jpg');
