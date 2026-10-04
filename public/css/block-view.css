@@ -243,8 +243,18 @@ hr {
   color: #0056b3;
 }
 
-.block-content p, .block-content ul *, .block-content ol * {
-  white-space: unset;
+/* Break long URLs/tokens only when needed, including their intrinsic width. */
+.block-content {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Preserve code formatting, including inside lists, and scroll wide lines locally. */
+.block-content pre {
+  overflow-x: auto;
+  white-space: pre;
+  overflow-wrap: normal;
 }
 
 .block-view-layout {
