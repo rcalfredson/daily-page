@@ -91,6 +91,7 @@ router.get(
         topAll: topAllDTO
       });
 
+      if (!roomMetadata) return res.sendStatus(404);
       const roomName = roomMetadata.displayName || roomMetadata.name;
 
       const title = t('bestOf.meta.titleRoom', { roomName });
@@ -323,6 +324,7 @@ router.get(
     const sortDir = dirStr === 'asc' ? 1 : -1;
 
     const roomMetadata = await getRoomMetadata(roomId, uiLang);
+    if (!roomMetadata) return res.sendStatus(404);
     const roomDisplayName = roomMetadata.displayName || roomMetadata.name;
 
     const blocks = await findByRoomWithLangPref({
@@ -374,6 +376,7 @@ router.get(
       const yearMonthCombos = await getAllBlockYearMonthCombos(roomId);
       const roomMetadata = await getRoomMetadata(roomId, uiLang);
 
+      if (!roomMetadata) return res.sendStatus(404);
       const roomName = roomMetadata.displayName || roomMetadata.name;
       const description = t('archive.meta.descriptionRoom', { roomName });
 
@@ -412,6 +415,7 @@ router.get(
       const datesWithContent = await getBlockDatesByYearMonth(year, month, roomId);
       const roomMetadata = await getRoomMetadata(roomId, uiLang);
 
+      if (!roomMetadata) return res.sendStatus(404);
       const roomName = roomMetadata.displayName || roomMetadata.name;
       const monthStr = DateHelper.monthName(Number(month), uiLang);
 
@@ -465,6 +469,7 @@ router.get(
       const { roomId, year, month, day } = req.params;
       const roomMetadata = await getRoomMetadata(roomId, uiLang);
 
+      if (!roomMetadata) return res.sendStatus(404);
       const roomName =
         roomMetadata.displayName ||
         roomMetadata.name_i18n?.[uiLang] ||

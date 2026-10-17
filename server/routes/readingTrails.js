@@ -1,3 +1,4 @@
+import { resolveSeo } from '../services/seoPolicy.js';
 import express from 'express';
 import optionalAuth from '../middleware/optionalAuth.js';
 import { stripLegacyLang } from '../middleware/stripLegacyLang.js';
@@ -7,30 +8,13 @@ import { getUiLang } from '../services/localeContext.js';
 
 const router = express.Router();
 
-function detailHreflang(res, trail) {
-  const path = `/trails/${encodeURIComponent(trail.slug)}`;
-  const alternates = trail.availableLocales.map(lang => ({
-    lang,
-    href: `${res.locals.baseUrl}/${lang}${path}`
-  }));
-  const defaultLang = trail.availableLocales.includes(trail.sourceLanguage)
-    ? trail.sourceLanguage
-    : trail.availableLocales[0];
-  if (defaultLang) {
-    alternates.push({
-      lang: 'x-default',
-      href: `${res.locals.baseUrl}/${defaultLang}${path}`
-    });
-  }
-  return alternates;
-}
-
 export function buildReadingTrailIndexHandler({ listTrails = listPublicReadingTrails } = {}) {
   return async function readingTrailIndex(req, res) {
     const { t } = res.locals;
     const uiLang = getUiLang(res);
     try {
       const trails = await listTrails({ locale: uiLang });
+      res.locals.seoResource = { directoryHasContent: trails.length > 0 };
       return res.render('reading-trails/index', {
         title: t('readingTrails.overview.meta.title'),
         description: t('readingTrails.overview.meta.description'),
@@ -60,7 +44,10 @@ export function buildReadingTrailDetailHandler({ getTrail = getPublicReadingTrai
         });
       }
 
-      res.locals.hreflang = detailHreflang(res, trail);
+      res.locals.hreflang = resolveSeo({
+        path: `/trails/${encodeURIComponent(trail.slug)}`, locale: uiLang,
+        baseUrl: res.locals.baseUrl, trail
+      }).hreflang;
       return res.render('reading-trails/detail', {
         title: t('readingTrails.detail.meta.title', { trailName: trail.title }),
         description: trail.description,

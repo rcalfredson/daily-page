@@ -40,6 +40,7 @@ router.get(
 
       const uiLang = getUiLang(res);
       const roomMetadata = await getRoomMetadata(room_id, uiLang);
+      if (!roomMetadata) return res.sendStatus(404);
       let questContribution = null;
       if (req.query.questId) {
         if (!req.user) return res.redirect('/login');

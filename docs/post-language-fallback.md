@@ -43,8 +43,10 @@ and emit structured diagnostics rather than depending on MongoDB result order.
 
 Concrete article URLs remain canonical and article `hreflang` contains only
 real public variants. The language-independent `/posts/:groupId` URL remains
-the `x-default` resolver. This repository has no sitemap generator; therefore
-there was no localized sitemap path to change.
+the `x-default` resolver. The shared [search indexing policy](search-indexing-policy.md)
+now also governs HTML robots/canonicals, eligible translation alternates, and
+the XML sitemap. Sitemap article entries use concrete eligible records, never
+UI-prefix or untranslated fallback variants.
 
 ## Editor follow-up
 

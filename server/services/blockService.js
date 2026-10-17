@@ -27,7 +27,7 @@ const lockInactiveBlocksJob = new CronJob(
     }
   },
   null,
-  true,
+  false, // Importing this module must not start background work.
   'UTC'
 );
 

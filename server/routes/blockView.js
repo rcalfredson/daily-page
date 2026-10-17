@@ -33,6 +33,7 @@ import {
 } from '../utils/block.js';
 import { canonicalBlockPath } from '../utils/canonical.js';
 import { buildPostSeo } from '../utils/postSeo.js';
+import { resolveSeo } from '../services/seoPolicy.js';
 import { getPreferredContentLang } from '../services/localeContext.js';
 import { resolvePostTranslation } from '../services/postTranslationResolver.js';
 
@@ -292,6 +293,12 @@ router.get(
         }
         : null;
 
+      const articlePolicy = resolveSeo({
+        path: res.locals.unprefixedPath || req.path,
+        locale: uiLang, baseUrl: res.locals.baseUrl, block, translations,
+        roomExists: Boolean(roomMetadata)
+      });
+      res.locals.seoResource = { roomExists: Boolean(roomMetadata) };
       const seo = buildPostSeo(block, {
         author: authorProfile
           ? {
@@ -303,7 +310,7 @@ router.get(
           : null,
         siteName: t('layout.siteName'),
         baseUrl: res.locals.baseUrl,
-        canonicalUrl: res.locals.canonicalUrl,
+        canonicalUrl: articlePolicy.canonicalUrl,
         includeArticleJsonLd: isPubliclyVisibleBlock(block),
         roomName
       });

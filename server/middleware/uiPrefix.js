@@ -47,6 +47,7 @@ export function uiPrefixAndLangContext(req, res, next) {
 
     // Rewrite req.url (includes querystring). This is the trick that avoids route duplication.
     req.url = req.url.replace(new RegExp(`^\\/${uiLang}(?=\\/|$)`), '') || '/';
+    if (req.url.startsWith('?')) req.url = '/' + req.url;
   }
 
   // If no prefix, fall back to your existing policy

@@ -1,3 +1,4 @@
+import { resolveSeo } from '../server/services/seoPolicy.js';
 import pug from 'pug';
 import { createPostGroupResolver } from '../server/routes/blockView.js';
 import {
@@ -125,15 +126,15 @@ describe('post translation group resolver', () => {
 
 describe('block hreflang metadata', () => {
   it('uses concrete translation rooms and one language-independent group URL', () => {
-    const html = pug.renderFile('views/partials/_block_hreflang.pug', {
+    const html = pug.renderFile('views/partials/_seo_meta.pug', resolveSeo({
+      path: '/rooms/source-room/blocks/english-id',
       baseUrl: 'https://dailypage.org',
-      room_id: 'source-room',
-      block: { groupId: 'group/id' },
+      block: { _id: 'english-id', roomId: 'source-room', groupId: 'group/id', visibility: 'public', lang: 'en' },
       translations: [
         { _id: 'english-id', roomId: 'source-room', lang: 'en' },
         { _id: 'japanese-id', roomId: 'translated-room', lang: 'ja' }
       ]
-    });
+    }));
 
     expect(html).toContain(
       'hreflang="en" href="https://dailypage.org/rooms/source-room/blocks/english-id"'
