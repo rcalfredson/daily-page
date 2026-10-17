@@ -25,31 +25,10 @@ const JITTER = 10 * 1000; // up to 10s extra
 const HOME_STALE_TTL = 30 * 60 * 1000;
 export const HOME_PINNED_BLOCK_LIMIT = 3;
 
-export const PUBLIC_BLOCK_VISIBILITY_MATCH = Object.freeze({
-  $or: [
-    { visibility: 'public' },
-    { visibility: 'unlisted', status: 'locked' }
-  ]
-});
-
-export function publiclyVisibleBlockMatch(match = {}) {
-  if (!match || Object.keys(match).length === 0) {
-    return { ...PUBLIC_BLOCK_VISIBILITY_MATCH };
-  }
-
-  return {
-    $and: [
-      match,
-      PUBLIC_BLOCK_VISIBILITY_MATCH
-    ]
-  };
-}
-
-export function isPubliclyVisibleBlock(block) {
-  return block?.visibility === 'public' || (
-    block?.visibility === 'unlisted' && block?.status === 'locked'
-  );
-}
+import { publiclyVisibleBlockMatch } from '../services/blockVisibility.js';
+export {
+  PUBLIC_BLOCK_VISIBILITY_MATCH, publiclyVisibleBlockMatch, isPubliclyVisibleBlock
+} from '../services/blockVisibility.js';
 
 export function localeFamilySelectionStages(preferredLang) {
   return [

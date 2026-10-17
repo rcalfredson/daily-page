@@ -10,12 +10,8 @@ html(lang=htmlLang dir=(uiDir || 'ltr'))
       meta(property='og:site_name' content=t('layout.siteName'))
       if description
         meta(name="description" content=description)
-      if canonicalUrl
-        link(rel="canonical" href=canonicalUrl)
+      include partials/_seo_meta
       include partials/_social_meta
-      if hreflang
-        each alt in hreflang
-          link(rel="alternate" hreflang=alt.lang href=alt.href)
       meta(name="viewport" content="width=device-width, initial-scale=1.0")
       link(rel="preload" href="/assets/fonts/BeVietnamPro-Medium.ttf" as="font" type="font/ttf" crossorigin)
       link(rel="preload" href="/assets/fonts/BeVietnamPro-Light.ttf" as="font" type="font/ttf" crossorigin)

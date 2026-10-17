@@ -40,6 +40,8 @@ import devViewsRoute from './server/routes/devViews.js';
 import forestRoute from './server/routes/forest.js';
 import forestWritingRoute from './server/routes/forestWriting.js';
 import discoveryRoute from './server/routes/discovery.js';
+import seoRoute from './server/routes/seo.js';
+import { getRoomDiscoveryStats, roomSeoFacts } from './server/db/roomSeoService.js';
 
 import { handleRoomRequest } from './server/services/roomRequests.js';
 import * as cache from './server/services/cache.js';
@@ -83,17 +85,18 @@ import {
 import {
   pagesByDate,
   getPageDatesByYearAndMonth,
-  getPage
+  getPage,
+  pageByDateAndRoom
 } from './server/db/pageService.js';
 import {
   getAllRooms, getRoomMetadata, getRoomMetadataByIds,
   getTotalRooms, warmRoomDirectoryCache
 
 } from './server/db/roomService.js'
-import { addHreflangLocals } from './server/middleware/hreflang.js';
 import optionalAuth from './server/middleware/optionalAuth.js';
 import { makePrefixRedirectMiddleware } from './server/middleware/prefixRedirect.js'
 import { addSeoLocals } from './server/middleware/seo.js';
+import { normalizeHtmlUrl, validateSeoUrl, validArchiveDate } from './server/middleware/seoUrlNormalization.js';
 import { stripLegacyLang } from './server/middleware/stripLegacyLang.js';
 import { uiLangFallbackNotice } from './server/middleware/uiLangFallbackNotice.js';
 import { uiPrefixAndLangContext } from './server/middleware/uiPrefix.js';
@@ -197,9 +200,10 @@ async function getSupportFundingViewModel() {
     app.use(cors(corsOptionsDelegate));
     app.use(uiPrefixAndLangContext);
     app.use(uiLangFallbackNotice);
+    app.use(normalizeHtmlUrl);
+    app.use(validateSeoUrl);
     app.use(makePrefixRedirectMiddleware({ isLocalizedPath }))
     app.use(addSeoLocals);
-    app.use(addHreflangLocals);
     app.use(initI18n(['layout', 'nav', 'modals', 'notifications', 'errors']));
     app.use((req, res, next) => {
       const authorLabels = {
@@ -211,6 +215,7 @@ async function getSupportFundingViewModel() {
     });
     app.options('/{*splat}', cors(corsOptionsDelegate));
 
+    app.use('/', seoRoute);
     app.use(express.static('public'));
     app.use(express.urlencoded({ extended: true }));
     useStripeAPI(app);
@@ -448,6 +453,7 @@ async function getSupportFundingViewModel() {
 
     app.get(/^\/(?<year>[0-9]{4})\/(?<month>1[0-2]|0?[1-9])\/?$/i, addI18n(['archive']), async (req, res) => {
       const { year, month } = req.params;
+      if (!validArchiveDate(year, month)) return res.sendStatus(404);
       const formattedTime = new Intl.DateTimeFormat(res.locals.uiLang || 'en', {
         month: 'long',
         timeZone: 'UTC',
@@ -470,6 +476,8 @@ async function getSupportFundingViewModel() {
           // Legacy Concatenated View
           const pageData = await cache.get(req.params.date, getPage, [req.params.date]);
           const [errorMessage, text] = viewHelper.archiveContent(pageData);
+          if (!pageData) return res.sendStatus(404);
+          res.locals.seoResource = { legacyHasWriting: Boolean(text) };
 
           return res.render('archivedPage', {
             title: `Daily Page for ${DateHelper.formatDate(req.params.date, 'long')}`,
@@ -480,6 +488,7 @@ async function getSupportFundingViewModel() {
         } else {
           // Room-Based View
           const pages = await pagesByDate(req.params.date); // Fetch all pages for the date
+          if (!pages.length) return res.sendStatus(404);
           const rooms = await getAllRooms(); // Fetch all room metadata
 
           const roomContents = rooms.map((room) => {
@@ -492,6 +501,7 @@ async function getSupportFundingViewModel() {
             };
           });
 
+          res.locals.seoResource = { legacyHasWriting: roomContents.some(room => Boolean(room.content)) };
           res.render('archivedPage', {
             title: `Daily Page for ${DateHelper.formatDate(req.params.date, 'long')}`,
             header: DateHelper.formatDate(req.params.date, 'long'),
@@ -501,7 +511,7 @@ async function getSupportFundingViewModel() {
         }
       } catch (error) {
         console.error('Error fetching archive content:', error.message);
-        res.render('archivedPage', {
+        res.status(500).render('archivedPage', {
           title: 'Error',
           header: 'An Error Occurred',
           errorMessage: 'An error occurred while loading the archive. Please try again later.',
@@ -511,12 +521,15 @@ async function getSupportFundingViewModel() {
 
     app.get(/^\/rooms\/(?<room>[a-zA-Z0-9-]+)\/(?<date>[0-9]{4}-[0-9]{2}-[0-9]{2})\/?$/i, async (req, res) => {
       const roomReq = req.params.room;
-      let roomMetdata = await getRoomMetadata(roomReq);
+      const roomMetdata = await getRoomMetadata(roomReq);
+      if (!roomMetdata) return res.sendStatus(404);
       const dateAndRoom = `${DateHelper.formatDate(req.params.date, 'long')} - ${roomMetdata.name} Room`;
-      const pageData = await cache.get(req.params.date, getPage,
-        [req.params.date, roomReq, req.query]);
+      const pageData = await cache.get(`legacy:${roomReq}:${req.params.date}`, pageByDateAndRoom,
+        [req.params.date, roomReq]);
+      if (!pageData) return res.sendStatus(404);
 
       const [errorMessage, text] = viewHelper.archiveContent(pageData);
+      res.locals.seoResource = { legacyHasWriting: Boolean(text) };
 
       res.render('archivedPage', {
         title: `Daily Page for ${dateAndRoom}`,
@@ -555,13 +568,15 @@ async function getSupportFundingViewModel() {
           const preferredContentLang = getPreferredContentLang(res);
           const userId = req.user?.id || null;
 
+          const roomMetadataRaw = await getRoomMetadata(room_id, uiLang);
+          if (!roomMetadataRaw) return res.sendStatus(404);
+
           const [
-            roomMetadataRaw,
             { blocks: lockedBlocks, period: lockedPeriod },
             { blocks: inProgressBlocks, period: inProgressPeriod },
-            roomEditorialClusters
+            roomEditorialClusters,
+            roomDiscoveryStats
           ] = await Promise.all([
-            getRoomMetadata(room_id, uiLang),
             getTopBlocksWithFallback({
               roomId: room_id,
               status: 'locked',
@@ -580,8 +595,11 @@ async function getSupportFundingViewModel() {
             getRoomEditorialClusters({
               roomId: room_id,
               preferredLang: preferredContentLang
-            })
+            }),
+            getRoomDiscoveryStats()
           ]);
+
+          res.locals.seoResource = { room: roomMetadataRaw, roomStats: roomSeoFacts(roomMetadataRaw, roomDiscoveryStats) };
 
           const roomMetadata = roomMetadataRaw ? {
             ...roomMetadataRaw,
