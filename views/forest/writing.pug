@@ -60,7 +60,7 @@ block content
                 i.fa.fa-tree
               .forest-writing__card-body
                 h2(lang=tree.writing.lang dir=(textDirForLang ? textDirForLang(tree.writing.lang) : 'ltr'))
-                  a(href=tree.writing.path)= tree.writing.title
+                  a(href=uiPath(tree.writing.forestPath))= tree.writing.title
                 p.forest-writing__source
                   time(
                     datetime=tree.writing.createdAt
@@ -77,7 +77,7 @@ block content
                   span(aria-hidden='true') ·
                   span= tree.seasonLabel
                 .forest-writing__card-actions
-                  a.forest-writing__open(href=tree.writing.path)
+                  a.forest-writing__open(href=uiPath(tree.writing.forestPath))
                     = t('forestWriting.openPost')
                     span(aria-hidden='true')  →
                   button.forest-writing__inclusion(

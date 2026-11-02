@@ -92,6 +92,26 @@ function collides(position, placements) {
   ) < position.radius + placement.collisionRadius);
 }
 
+// Try a fixed ring of nearby positions; crowded or unsupported destinations use the entrance.
+// Markers are non-solid. Terrain in the production owner scene is traversable presentation.
+export function ownerForestReturnSpawn(player, target, placements) {
+  if (!target || !Number.isSafeInteger(target.worldX) || !Number.isSafeInteger(target.worldY)
+    || !Number.isFinite(target.collisionRadius) || target.collisionRadius <= 0) return null;
+  const distance = target.collisionRadius + player.radius + 8;
+  for (let index = 0; index < 16; index += 1) {
+    const angle = Math.PI / 2 + index * Math.PI / 8;
+    const candidate = {
+      ...player,
+      worldX: Math.round(target.worldX + Math.cos(angle) * distance),
+      worldY: Math.round(target.worldY + Math.sin(angle) * distance)
+    };
+    if (Math.abs(candidate.worldX) <= OWNER_FOREST_COORDINATE_LIMIT
+      && Math.abs(candidate.worldY) <= OWNER_FOREST_COORDINATE_LIMIT
+      && !collides(candidate, placements)) return candidate;
+  }
+  return null;
+}
+
 export function moveOwnerForestPlayer(player, direction, elapsedSeconds, placements) {
   const distance = player.movementSpeed * Math.max(0, elapsedSeconds);
   const next = { ...player };

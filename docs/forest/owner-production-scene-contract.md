@@ -1,18 +1,20 @@
 # Owner production forest scene contract
 
-## First production view
+## Production view
 
 `GET /forest` is the authenticated, localized, private visual Activity Forest route. It derives the
 owner only from the current session, sets `Cache-Control: private, no-store`, varies on `Cookie`, and
 never accepts an owner id or username parameter as authority.
 
-The first view is intentionally read-oriented, with reversible owner-tree inclusion as its only
-durable mutation. It supports signed-world exploration, restrained owner-environment ground,
+The view supports reversible owner-tree inclusion and account-backed private marker placement,
+movement, and removal. The marker protocol and evidence are recorded in
+[`account-backed-authored-overlay-contract.md`](account-backed-authored-overlay-contract.md) and
+[`milestone-3-account-backed-authored-overlay-evaluation.md`](milestone-3-account-backed-authored-overlay-evaluation.md).
+It supports signed-world exploration, restrained owner-environment ground,
 regional writing-tree loading, reusable procedural assets, tree proximity focus, reauthorized
 writing inspection, keyboard movement, touch-drag movement, reduced motion, and a direct semantic
-fallback to `/forest/writing`. It does not include development profiles,
-diagnostics, streams, bridges, visitors, discoveries, trails, gathering, construction, clearing
-mutation, or `localStorage` authority.
+fallback to `/forest/writing`. It does not include development profiles, a diagnostic UI, streams,
+bridges, visitors, discoveries, trails, gathering, construction, or `localStorage` authority.
 
 The owner may hide a currently inspected tree through the durable inclusion endpoint. Success
 removes that placement from the page-lifetime scene immediately; restoration remains available in
@@ -23,6 +25,10 @@ Regional manifests and assets contain no writing metadata. A nearby tree can ope
 inspection boundary documented in `owner-tree-inspection-contract.md`; that boundary rechecks the
 owner, tree lifecycle, current owner writing, and dynamically discoverable translations before
 returning bounded recognition context and a canonical post link.
+
+The browser adds a fixed presentation token to post and translation links so the post can offer
+an explicit localized return to the forest. The semantic writing list uses the same convention;
+see [`forest-writing-return-contract.md`](forest-writing-return-contract.md).
 
 ## Private bootstrap
 
@@ -46,16 +52,21 @@ owner-environment grammar/version and opaque private seed
 regional placement, asset, and inspection API paths
 placement page, asset batch, and transport bounds
 the initial 3×3 signed cells
+optional authorized return destination (tree locator and nearby spawn), in bootstrap version 2
 ```
 
-It contains no owner id, forest id, tree id, Block/group id, writing metadata, reconciliation
+Normal entry contains no tree id; a targeted return includes only its reauthorized opaque tree id.
+The bootstrap contains no owner id, forest id, Block/group id, writing metadata, reconciliation
 cursor, lease evidence, or diagnostic timing. The environment seed is private generated-base
 identity needed to reproduce the same stable patchwork in the browser; it is embedded only in the
 private no-store HTML response and never placed in an asset cache key or log.
 
 ## Signed world and camera
 
-The player begins at stable presentation origin `(0, 0)`. Camera coordinates and player position
+The player normally begins at stable presentation origin `(0, 0)`. A valid writing-return locator
+instead starts near its reauthorized source tree with bounded collision checks, as defined in the
+[return contract](forest-writing-return-contract.md). The entrance control still uses `(0, 0)`.
+Camera coordinates and player position
 are page-lifetime presentation state and are not persisted. Production-specific movement and camera
 helpers allow negative coordinates and do not reinterpret durable tree placement as a finite
 nonnegative Forest Lab rectangle.
@@ -137,10 +148,12 @@ narrow-width layout, touch and keyboard movement, inspection focus, reduced moti
 travel, and the restrained version-2 ground treatment. These measurements support bounded behavior
 but are not production-network, universal-mobile, or final-capacity guarantees.
 
-The next production boundary is Milestone 3's account-backed authored overlay and mutation
-protocol. Richer biome topology, interactive environmental objects, gathering, inventory, trails,
-and construction remain outside this read-oriented production scene until their durable authority,
-idempotency, concurrency, migration, recovery, and deletion behavior is accepted.
+Milestone 3's account-backed authored overlay is complete in its recorded marker-only scope.
+The active boundary is Part III Milestone 4's connection between authored places and real writing;
+see [`milestone-4-kickoff-plan.md`](milestone-4-kickoff-plan.md). Richer biome topology, additional
+interactive environmental objects, gathering, inventory, trails, and construction remain outside
+the production scene until their durable authority, idempotency, concurrency, migration, recovery,
+and deletion behavior is accepted.
 
 The consolidated Milestone 2 evidence and completion judgment are recorded in
 [`milestone-2-owner-writing-grove-evaluation.md`](milestone-2-owner-writing-grove-evaluation.md).

@@ -1,5 +1,6 @@
 {
   "blockView": {
+    "forestReturn": "जंगल में वापस जाएँ",
     "meta": {
       "title": "{blockTitle} | Daily Page",
       "titleFallback": "अवरोध पैदा करना"

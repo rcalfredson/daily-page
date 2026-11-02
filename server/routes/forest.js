@@ -2,6 +2,8 @@ import express from 'express';
 
 import { isAuthenticated } from '../middleware/auth.js';
 import { addI18n } from '../services/i18n.js';
+import { getPreferredContentLang } from '../services/localeContext.js';
+import { forestReturnTreeId } from '../../public/js/forest-writing-navigation.js';
 import {
   ForestOwnerSceneBootstrapError,
   readForestOwnerSceneBootstrap
@@ -16,7 +18,11 @@ export function buildForestRouteHandler({
   return async function forestRoute(req, res) {
     const { t } = res.locals;
     try {
-      const bootstrap = await readBootstrap({ ownerUserId: req.user.id });
+      const returnTreeId = forestReturnTreeId(req.query?.returnTree);
+      const bootstrap = await readBootstrap({
+        ownerUserId: req.user.id,
+        ...(returnTreeId ? { returnTreeId, preferredContentLang: getPreferredContentLang(res) } : {})
+      });
       return res.status(200).render('forest/index', {
         title: t('forestScene.meta.title'),
         description: t('forestScene.meta.description'),

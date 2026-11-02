@@ -1,4 +1,5 @@
 import express from 'express';
+import { forestWritingPostPath } from '../../public/js/forest-writing-navigation.js';
 
 import { getRoomMetadata } from '../db/roomService.js';
 import { isAuthenticated } from '../middleware/auth.js';
@@ -109,6 +110,7 @@ export function buildForestWritingRouteHandler({
           seasonLabel: seasonLabel(tree.projection.creationSeason, t),
           writing: {
             ...tree.writing,
+            forestPath: forestWritingPostPath(tree.writing.path, tree.writingTreeId),
             roomName: roomNames.get(tree.writing.roomId) || tree.writing.roomId,
             languageName: languageName(tree.writing.lang, uiLang),
             showLanguage: writingBaseLang !== uiBaseLang,

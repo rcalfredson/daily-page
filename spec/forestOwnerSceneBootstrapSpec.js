@@ -57,6 +57,37 @@ function response() {
 }
 
 describe('forest owner scene bootstrap', () => {
+  it('centers initial cells on an authorized destination while keeping the ordinary entrance', async () => {
+    const target = {
+      treeId: '22222222-2222-4222-8222-222222222222',
+      spawn: { worldX: -1500, worldY: 1500, radius: 11, movementSpeed: 108, interactionRadius: 48 }
+    };
+    const resolveReturnDestination = jasmine.createSpy('resolveReturnDestination').and.resolveTo(target);
+    const read = buildForestOwnerSceneBootstrapService({
+      ForestOwnerWorldModel: { findOne: () => chain(world()) }, resolveReturnDestination
+    });
+    const result = await read({ ownerUserId: OWNER_USER_ID, returnTreeId: target.treeId, preferredContentLang: 'es' });
+    expect(result.bootstrapVersion).toBe(2);
+    expect(result.returnDestination).toEqual(target);
+    expect(result.spawn.worldX).toBe(0);
+    expect(result.spawn.worldY).toBe(0);
+    expect(result.delivery.initialCells).toContain({ cellX: -3, cellY: 2 });
+    expect(resolveReturnDestination).toHaveBeenCalledOnceWith({
+      ownerUserId: OWNER_USER_ID, forestId: FOREST_ID, writingTreeId: target.treeId,
+      preferredContentLang: 'es', spawn: result.spawn, cellSize: 720
+    });
+  });
+
+  it('does no return lookup for an unestablished or reconciling world', async () => {
+    for (const ownerWorld of [null, world({ reconciliation: { state: 'running' } })]) {
+      const resolveReturnDestination = jasmine.createSpy('resolveReturnDestination');
+      const read = buildForestOwnerSceneBootstrapService({
+        ForestOwnerWorldModel: { findOne: () => chain(ownerWorld) }, resolveReturnDestination
+      });
+      expect((await read({ ownerUserId: OWNER_USER_ID, returnTreeId: FOREST_ID })).returnDestination).toBeUndefined();
+      expect(resolveReturnDestination).not.toHaveBeenCalled();
+    }
+  });
   it('returns an honest bounded empty bootstrap before a world exists', async () => {
     const test = harness(null);
     const result = await test.read({ ownerUserId: OWNER_USER_ID });
@@ -122,6 +153,28 @@ describe('forest owner scene bootstrap', () => {
 });
 
 describe('forest production route', () => {
+  it('passes only a canonical return locator and current session language to bootstrap', async () => {
+    const readBootstrap = jasmine.createSpy('readBootstrap').and.resolveTo({ status: 'ready' });
+    const res = response();
+    res.locals.uiLang = 'es';
+    await buildForestRouteHandler({ readBootstrap })({
+      user: { id: OWNER_USER_ID },
+      query: { returnTree: FOREST_ID, ownerUserId: OTHER_OWNER_USER_ID, worldX: '999' }
+    }, res);
+    expect(readBootstrap).toHaveBeenCalledOnceWith({
+      ownerUserId: OWNER_USER_ID, returnTreeId: FOREST_ID, preferredContentLang: 'es'
+    });
+  });
+
+  it('ignores malformed return locators rather than breaking ordinary forest entry', async () => {
+    for (const returnTree of ['bad', [FOREST_ID, FOREST_ID], {}]) {
+      const readBootstrap = jasmine.createSpy('readBootstrap').and.resolveTo({ status: 'ready' });
+      await buildForestRouteHandler({ readBootstrap })({
+        user: { id: OWNER_USER_ID }, query: { returnTree }
+      }, response());
+      expect(readBootstrap).toHaveBeenCalledOnceWith({ ownerUserId: OWNER_USER_ID });
+    }
+  });
   it('renders semantic placement, synchronization, and marker-management controls', () => {
     const html = pug.renderFile('views/forest/index.pug', {
       t: key => key,

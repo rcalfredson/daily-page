@@ -1,3 +1,4 @@
+import { forestWritingPostPath } from './forest-writing-navigation.js';
 import {
   focusedForestPlacement,
   forestTouchGestureIntent,
@@ -38,6 +39,7 @@ import {
   ownerForestMarkerPreview,
   ownerForestMovementDirection,
   ownerForestPlacementAtPoint,
+  ownerForestReturnSpawn,
   replaceOwnerForestAuthoredRegion
 } from './owner-forest-scene.js';
 
@@ -70,7 +72,9 @@ if (payload && copyPayload && viewport && canvas) {
     maximumDistance: 0
   };
   const camera = { x: 0, y: 0, width: 0, height: 0 };
-  let player = { ...bootstrap.spawn };
+  let player = { ...(bootstrap.returnDestination?.spawn || bootstrap.spawn) };
+  let returnedTreeId = bootstrap.returnDestination?.treeId || null;
+  let returnArrivalPending = Boolean(returnedTreeId);
   let playerMotion = createForestHumanoidMotion('down');
   let focusedTree = null;
   let focusedMarker = null;
@@ -162,7 +166,7 @@ if (payload && copyPayload && viewport && canvas) {
     authoredStatus.dataset.state = state;
     authoredStatus.dataset.failed = failed ? 'true' : 'false';
     authoredRetry.hidden = !retry;
-    placeMarker.disabled = placement.active || !currentAuthoredCellsReady()
+    placeMarker.disabled = returnArrivalPending || placement.active || !currentAuthoredCellsReady()
       || !['ready', 'notice'].includes(authoredState);
   }
 
@@ -326,7 +330,7 @@ if (payload && copyPayload && viewport && canvas) {
       translationPaths.add(item.path);
       const entry = document.createElement('li');
       const link = document.createElement('a');
-      link.href = localizedPath(item.path);
+      link.href = localizedPath(forestWritingPostPath(item.path, inspectedTreeId));
       link.textContent = `${languageName(item.lang)} — ${item.title}`;
       entry.append(link);
       translationsList.append(entry);
@@ -383,7 +387,7 @@ if (payload && copyPayload && viewport && canvas) {
           document.documentElement.lang || 'en', { dateStyle: 'medium' }
         ).format(new Date(result.writing.createdAt));
         inspectionLanguage.textContent = languageName(result.writing.lang);
-        inspectionLink.href = localizedPath(result.writing.path);
+        inspectionLink.href = localizedPath(forestWritingPostPath(result.writing.path, treeId));
         inspectedTreeRevision = result.tree.recordRevision;
         hideTree.disabled = false;
         inspectionContent.hidden = false;
@@ -581,22 +585,45 @@ if (payload && copyPayload && viewport && canvas) {
       && !pendingCells.has(ownerForestCellId(cell)));
     if (!missing.length) return;
     loading = true;
+    let returnFellBack = false;
     missing.forEach(cell => pendingCells.add(ownerForestCellId(cell)));
     setStatus('Growing the nearby grove…');
     try {
       await requestCells(missing);
       missing.forEach(cell => loadedCells.add(ownerForestCellId(cell)));
+      if (returnArrivalPending) {
+        const arrival = ownerForestReturnSpawn(
+          bootstrap.spawn, placementsById.get(returnedTreeId), [...placementsById.values()]
+        );
+        player = { ...(arrival || bootstrap.spawn) };
+        returnArrivalPending = false;
+        if (!arrival) { returnedTreeId = null; returnFellBack = true; }
+        Object.assign(camera, ownerForestCamera(player, camera));
+      }
       loadFailure = false;
       setStatus(`${placementsById.size} writing trees discovered nearby.`);
       updateFocus();
       requestRender();
     } catch (error) {
+      if (returnArrivalPending) {
+        returnArrivalPending = false;
+        returnedTreeId = null;
+        player = { ...bootstrap.spawn };
+        Object.assign(camera, ownerForestCamera(player, camera));
+        returnFellBack = true;
+      }
       loadFailure = true;
       console.error('Owner forest nearby load failed:', error?.name || 'Error');
       setStatus('The nearby grove could not be loaded. Move or reload to try again.', true);
     } finally {
       missing.forEach(cell => pendingCells.delete(ownerForestCellId(cell)));
       loading = false;
+      if (returnFellBack || (!loadFailure && ownerForestCellsAround(player, bootstrap.spatialIndex.cellSize)
+        .some(cell => !loadedCells.has(ownerForestCellId(cell))))) {
+        loadNearbyCells();
+        loadNearbyAuthoredCells();
+        requestRender();
+      }
     }
   }
 
@@ -685,7 +712,7 @@ if (payload && copyPayload && viewport && canvas) {
     if (!asset || !sprites) return;
     const x = Math.round(placement.worldX - camera.x - (asset.anchor.x * placement.scale));
     const y = Math.round(placement.worldY - camera.y - (asset.anchor.y * placement.scale));
-    if (focusedTree?.id === placement.id) {
+    if (focusedTree?.id === placement.id || returnedTreeId === placement.id) {
       context.fillStyle = 'rgba(255, 239, 164, 0.38)';
       context.beginPath();
       context.ellipse(placement.worldX - camera.x, placement.worldY - camera.y,
@@ -755,9 +782,12 @@ if (payload && copyPayload && viewport && canvas) {
   }
 
   function updateFocus() {
-    const tree = focusedForestPlacement(player, [...placementsById.values()].filter(
+    if (returnArrivalPending) { nearby.hidden = true; return; }
+    const availableTrees = [...placementsById.values()].filter(
       placement => assetsByKey.has(placement.assetKey)
-    ), bootstrap.spawn.interactionRadius);
+    );
+    const tree = availableTrees.find(placement => placement.id === returnedTreeId)
+      || focusedForestPlacement(player, availableTrees, bootstrap.spawn.interactionRadius);
     const marker = ownerForestFocusedMarker(
       player, [...markersById.values()], bootstrap.spawn.interactionRadius
     );
@@ -765,7 +795,7 @@ if (payload && copyPayload && viewport && canvas) {
       : Infinity;
     const markerDistance = marker
       ? Math.hypot(player.worldX - marker.worldX, player.worldY - marker.worldY) : Infinity;
-    focusedMarker = markerDistance < treeDistance ? marker : null;
+    focusedMarker = returnedTreeId === tree?.id ? null : markerDistance < treeDistance ? marker : null;
     focusedTree = focusedMarker ? null : tree;
     const unavailable = !focusedTree && !focusedMarker;
     nearby.hidden = unavailable || Boolean(inspectedTreeId) || Boolean(inspectedMarkerId)
@@ -798,7 +828,8 @@ if (payload && copyPayload && viewport && canvas) {
         kind: 'preview', id: '~preview', marker: placement.preview,
         worldY: placement.preview.worldY
       }] : []),
-      { kind: 'player', id: '~player', player: true, worldY: player.worldY }
+      ...(!returnArrivalPending
+        ? [{ kind: 'player', id: '~player', player: true, worldY: player.worldY }] : [])
     ].sort((a, b) => a.worldY - b.worldY || a.kind.localeCompare(b.kind)
       || a.id.localeCompare(b.id));
     for (const item of depth) {
@@ -847,7 +878,7 @@ if (payload && copyPayload && viewport && canvas) {
   function refreshPlacementAvailability() {
     const regionReady = currentAuthoredCellsReady()
       && ['ready', 'notice'].includes(authoredState);
-    placeMarker.disabled = placement.active || !regionReady;
+    placeMarker.disabled = returnArrivalPending || placement.active || !regionReady;
     if (!placement.active) return;
     placementSave.disabled = placement.saving || !regionReady || !placement.preview?.valid;
     placementCancel.disabled = placement.saving;
@@ -892,7 +923,7 @@ if (payload && copyPayload && viewport && canvas) {
   }
 
   function beginPlacement(mode, marker = null) {
-    if (!currentAuthoredCellsReady() || !['ready', 'notice'].includes(authoredState)) return;
+    if (returnArrivalPending || !currentAuthoredCellsReady() || !['ready', 'notice'].includes(authoredState)) return;
     if (inspectedMarkerId) closeMarkerInspection({ restoreFocus: false });
     if (inspectedTreeId) closeInspection({ restoreFocus: false });
     clearPointer();
@@ -1208,11 +1239,12 @@ if (payload && copyPayload && viewport && canvas) {
       pointer.y - pointer.originY
     );
     const direction = ownerForestMovementDirection({
-      inspectionOpen: Boolean(inspectedTreeId || inspectedMarkerId),
+      inspectionOpen: returnArrivalPending || Boolean(inspectedTreeId || inspectedMarkerId),
       keyboardDirection,
       pointerDirection
     });
     if (direction.x || direction.y) {
+      returnedTreeId = null;
       const before = player;
       player = moveOwnerForestPlayer(player, direction, elapsed, [...placementsById.values()]);
       playerMotion = advanceForestHumanoidMotion(playerMotion, {
@@ -1421,6 +1453,8 @@ if (payload && copyPayload && viewport && canvas) {
   markerRemoveConfirm.addEventListener('click', removeInspectedMarker);
   reset.addEventListener('click', () => {
     clearPointer();
+    returnedTreeId = null;
+    returnArrivalPending = false;
     player = { ...bootstrap.spawn };
     playerMotion = createForestHumanoidMotion('down');
     Object.assign(camera, ownerForestCamera(player, camera));

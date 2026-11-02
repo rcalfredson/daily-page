@@ -27,8 +27,10 @@ import {
   FOREST_AUTHORED_REGION_DEFAULT_PAGE_SIZE
 } from './forestAuthoredRegionManifest.js';
 import { FOREST_ASSET_TRANSPORT_RASTER } from './forestSceneAssetTransport.js';
+import { ownerForestCellsAround } from '../../public/js/owner-forest-scene.js';
+import { resolveForestOwnerReturnDestination } from './forestOwnerReturnDestination.js';
 
-export const FOREST_OWNER_SCENE_BOOTSTRAP_VERSION = 1;
+export const FOREST_OWNER_SCENE_BOOTSTRAP_VERSION = 2;
 export const FOREST_OWNER_SCENE_SPAWN = Object.freeze({
   worldX: 0,
   worldY: 0,
@@ -119,9 +121,12 @@ async function lean(query) {
 }
 
 export function buildForestOwnerSceneBootstrapService({
-  ForestOwnerWorldModel = ForestOwnerWorld
+  ForestOwnerWorldModel = ForestOwnerWorld,
+  resolveReturnDestination = resolveForestOwnerReturnDestination
 } = {}) {
-  return async function readForestOwnerSceneBootstrap({ ownerUserId: ownerValue }) {
+  return async function readForestOwnerSceneBootstrap({
+    ownerUserId: ownerValue, returnTreeId = null, preferredContentLang = 'en'
+  }) {
     const ownerUserId = canonicalOwner(ownerValue);
     const world = await lean(ForestOwnerWorldModel.findOne({
       ownerUserId,
@@ -143,7 +148,7 @@ export function buildForestOwnerSceneBootstrapService({
     if (!world) return emptyBootstrap('not-established');
     validateWorld(world, ownerUserId);
     if (world.reconciliation.state === 'running') return emptyBootstrap('reconciling');
-    return {
+    const bootstrap = {
       ...emptyBootstrap('ready'),
       environment: {
         policyVersion: FOREST_OWNER_ENVIRONMENT_POLICY_VERSION,
@@ -154,6 +159,19 @@ export function buildForestOwnerSceneBootstrapService({
         seed: world.worldSeed
       }
     };
+    if (returnTreeId) {
+      const destination = await resolveReturnDestination({
+        ownerUserId, forestId: world.forestId, writingTreeId: returnTreeId,
+        preferredContentLang, spawn: bootstrap.spawn, cellSize: bootstrap.spatialIndex.cellSize
+      });
+      if (destination) {
+        bootstrap.returnDestination = destination;
+        bootstrap.delivery.initialCells = ownerForestCellsAround(
+          destination.spawn, bootstrap.spatialIndex.cellSize
+        );
+      }
+    }
+    return bootstrap;
   };
 }
 

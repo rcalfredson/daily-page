@@ -512,14 +512,20 @@ Before adding a system, ask:
 
 ## Product delivery horizons and validation gates
 
-The Part II roadmap remains the near-term experimental spine. Its milestones should answer one
-bounded product question at a time; the horizons below describe how those experiments could become
+The Part III roadmap is the current production delivery spine, building on the completed Part II
+First Clearing prototype. Its milestones should answer one bounded product question at a time;
+the horizons below describe how those experiments could become
 a coherent product. A horizon is complete when its evidence exists, not when a feature checklist is
 large enough or a calendar date arrives.
 
-At the time of this revision, the generated-world, personal-overlay, trail, discovery, inventory,
-and first clearing-object contracts from Milestones 1–4 are established in the development Forest
-Lab. Connecting those choices back to writing remains the next narrow product question.
+As of the November 1, 2026 reboot, Part III Milestones 1–3 are complete in their recorded scopes:
+real owner-writing trees, semantic access, and durable private markers are implemented. Part III
+Milestone 4 is active; its first increment restores an explicit writing-to-forest return path,
+with writing-linked markers next. Prototype trails, discoveries, inventory, and clearing objects
+remain reference implementations rather than account-backed production features. See the
+[kickoff plan and progress](milestone-4-kickoff-plan.md) and later milestone evaluations for current
+completion evidence. The horizons below describe scope and gates, not a claim that every feature
+within an earlier horizon has entered production.
 
 ### Horizon 1: First Clearing proof
 
@@ -683,5 +689,5 @@ should live in a separate revisable delivery note and record:
 - A confidence level and the conditions that would trigger re-estimation.
 
 The long-term vision should guide architecture and sequencing, but it should not convert the next
-milestone into the whole game at once. The immediate task remains to finish and evaluate the First
-Clearing loop before selecting the next large system.
+milestone into the whole game at once. The immediate task is to implement and evaluate the smallest
+production writing-and-place loop before selecting the next large system.

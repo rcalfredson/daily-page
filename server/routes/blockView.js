@@ -24,6 +24,7 @@ import { getReadingTrailPostContext } from '../db/readingTrailService.js';
 import { QUEST_BLOCK_OPERATIONS } from '../db/questSubmissionPolicy.js';
 import { renderMarkdownContent } from '../utils/markdownHelper.js';
 import optionalAuth from '../middleware/optionalAuth.js';
+import { forestWritingReturn } from '../middleware/forestWritingReturn.js';
 import { resolveBlockLangParam } from '../middleware/resolveBlockLangParam.js';
 import { addI18n } from '../services/i18n.js';
 import {
@@ -185,6 +186,7 @@ router.get(
     getCandidates: getPublicTranslationResolverCandidates,
     canonicalPathForBlock: canonicalBlockPath,
   }),
+  forestWritingReturn,
   async (req, res) => {
     const t = res.locals.t || ((key) => key);
 

@@ -1191,3 +1191,20 @@ html[data-theme="dark"] #flag-block-btn {
 html[data-theme="dark"] #flag-block-btn:hover {
   background: transparent;
 }
+
+.block-forest-return {
+  margin-block: 0.75rem;
+}
+
+.block-forest-return a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+html[dir='rtl'] .block-forest-return a span {
+  transform: scaleX(-1);
+}
