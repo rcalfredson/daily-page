@@ -1,5 +1,6 @@
 {
   "blockView": {
+    "forestReturn": "숲으로 돌아가기",
     "meta": {
       "title": "{blockTitle} | Daily Page",
       "titleFallback": "게시물"

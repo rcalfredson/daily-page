@@ -1,5 +1,6 @@
 {
   "blockView": {
+    "forestReturn": "Wróć do lasu",
     "meta": {
       "title": "{blockTitle} | Daily Page",
       "titleFallback": "Post"

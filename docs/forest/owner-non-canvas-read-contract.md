@@ -24,6 +24,9 @@ second temporary renderer. Full tree visuals must later reuse the production for
   projection fingerprints, or specimen seeds.
 - Current canonical post paths are created only after the selected Block passes the current owner,
   lifecycle, room, language, and date checks.
+- The HTML title and read actions add a fixed forest-return token and the current UI language
+  prefix. Service paths stay canonical. The post's localized return action and its session/cache
+  boundaries are defined in [`forest-writing-return-contract.md`](forest-writing-return-contract.md).
 
 ## Bounded read behavior
 

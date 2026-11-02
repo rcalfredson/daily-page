@@ -1,5 +1,6 @@
 {
   "blockView": {
+    "forestReturn": "Palaa metsään",
     "meta": {
       "title": "{blockTitle} | Daily Page",
       "titleFallback": "Julkaisu"

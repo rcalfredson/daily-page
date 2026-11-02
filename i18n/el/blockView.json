@@ -1,5 +1,6 @@
 {
   "blockView": {
+    "forestReturn": "Επιστροφή στο δάσος",
     "meta": { "title": "{blockTitle} | Daily Page", "titleFallback": "Ανάρτηση" },
     "labels": {
       "room": "Δωμάτιο",

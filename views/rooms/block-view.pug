@@ -122,6 +122,7 @@ block content
             strong= context.title
   include ../partials/_tag_section
   #block-page
+    include ../partials/_forest_writing_return
     .block-header
       .header-top
         include ../partials/_block_lang_switcher
@@ -250,6 +251,7 @@ block content
             != block.contentHTML
         if trailContext
           +trailNavigation(trailContext, 'bottom')
+        include ../partials/_forest_writing_return
         include ../partials/_reaction_bar
         hr
         +tagSection(block.tags, false)

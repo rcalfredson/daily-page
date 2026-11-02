@@ -1,5 +1,6 @@
 {
   "blockView": {
+    "forestReturn": "Ormana dön",
     "meta": {
       "title": "{blockTitle} | Daily Page",
       "titleFallback": "Gönderi"

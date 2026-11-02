@@ -1,5 +1,6 @@
 {
   "blockView": {
+    "forestReturn": "العودة إلى الغابة",
     "meta": {
       "title": "{blockTitle} | Daily Page",
       "titleFallback": "منشور"

@@ -1,5 +1,6 @@
 {
   "blockView": {
+    "forestReturn": "Terug naar het bos",
     "meta": {
       "title": "{blockTitle} | Daily Page",
       "titleFallback": "Bericht"

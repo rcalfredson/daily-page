@@ -57,6 +57,10 @@ and whether the current live owner authored that variant.
 The canonical post route remains responsible for its own current authorization. A previously
 returned inspection link is not permanent access.
 
+The browser decorates selected-post and translation links with the fixed forest-return context;
+the API retains canonical paths. The localized post return action and its session/cache boundaries
+are defined in [`forest-writing-return-contract.md`](forest-writing-return-contract.md).
+
 ## Scene interaction
 
 The owner scene highlights the nearest tree within the existing interaction radius. The owner may

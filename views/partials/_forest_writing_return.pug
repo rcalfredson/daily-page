@@ -1,0 +1,5 @@
+if typeof forestReturnPath !== 'undefined' && forestReturnPath
+  nav.block-forest-return(aria-label=t('blockView.forestReturn'))
+    a(href=uiPath(forestReturnPath))
+      span(aria-hidden='true') ←
+      = t('blockView.forestReturn')

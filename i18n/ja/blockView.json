@@ -1,5 +1,6 @@
 {
   "blockView": {
+    "forestReturn": "森に戻る",
     "meta": {
       "title": "{blockTitle} | Daily Page",
       "titleFallback": "投稿"
