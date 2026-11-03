@@ -66,6 +66,9 @@ tree, blocked arrival or failed target-region load returns to the entrance and l
 Movement and placement are unavailable until arrival is settled. The entrance control always uses
 the ordinary spawn, even after arriving by a source-tree link.
 
+The viewport receives keyboard focus once on page initialization, without scrolling or waiting
+for async arrival work. Later load completion leaves the player's chosen focus alone.
+
 Edits preserve the tree reference and resolve current writing. Hide, removal, loss of eligible
 owner writing, or a different account cause entrance fallback. Restoration under the same identity
 permits tree return again. Translation links retain the original owner-tree destination; they do

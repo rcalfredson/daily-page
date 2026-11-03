@@ -112,23 +112,22 @@ block content
               .owner-forest__inspection-content(data-owner-forest-inspection-content hidden)
                 h2#owner-forest-inspection-title(data-owner-forest-inspection-title)
                 p.owner-forest__inspection-meta
-                  span(data-owner-forest-inspection-species)
-                  span(aria-hidden='true') ·
                   time(data-owner-forest-inspection-date)
                   span(aria-hidden='true') ·
                   span(data-owner-forest-inspection-language)
+                p.owner-forest__inspection-botanical(data-owner-forest-inspection-species)
                 a.button.owner-forest__read-post(data-owner-forest-inspection-link)
                   = t('forestScene.inspect.readPost')
-                .owner-forest__inclusion-actions
-                  button.owner-forest__hide-tree(type='button' data-owner-forest-hide-tree)
-                    = t('forestScene.inspect.hide')
-                  a.owner-forest__manage-hidden(href=uiPath('/forest/writing?view=hidden'))
-                    = t('forestScene.inspect.manageHidden')
                 .owner-forest__translations(data-owner-forest-translations-wrap hidden)
                   h3= t('forestScene.inspect.translations')
                   ul(data-owner-forest-translations)
                   button(type='button' data-owner-forest-translations-more hidden)
                     = t('forestScene.inspect.moreTranslations')
+                .owner-forest__inclusion-actions
+                  button.owner-forest__hide-tree(type='button' data-owner-forest-hide-tree)
+                    = t('forestScene.inspect.hide')
+                  a.owner-forest__manage-hidden(href=uiPath('/forest/writing?view=hidden'))
+                    = t('forestScene.inspect.manageHidden')
           aside.owner-forest__inspection.owner-forest__marker-inspection(
             role='dialog'
             aria-labelledby='owner-forest-marker-title'
