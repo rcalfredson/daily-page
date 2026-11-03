@@ -70,13 +70,26 @@ loaded visual bounds and the same nearby radius; it is interaction presentation,
 authority.
 
 The accessible details panel remains inside the forest frame rather than changing page layout. On
-wide viewports it overlays the right edge; on narrow viewports it becomes a bottom sheet occupying
+wide viewports it overlays the right edge and fits its content within the frame rather than
+stretching to the frame's full height; on narrow viewports it becomes a bottom sheet occupying
 at most 55% of the frame and scrolls internally. A restrained scrim keeps the selected-tree context
 visible behind it without competing with the writing.
 
 The panel header remains outside that internal scroll area so the Writing tree label and close
 action are always reachable. Writing metadata, the canonical post action, and translation pages
 scroll beneath the fixed header.
+
+The reading hierarchy is title, a short date/language line, a quieter separate botanical line,
+then the primary Read post action. Actual alternate posts follow; the selected post itself is
+excluded from the browser translation list. A continuation remains available even when its first
+page contains only the selected post, so filtering does not lose later translations. Hide and
+hidden-tree management follow below a divider as secondary controls. The close button and main
+actions keep 44px minimum targets. Empty status copy consumes no layout space.
+
+On initial entry the movement viewport receives keyboard focus once, without scrolling the page
+or waiting for network work. This includes a return through writing. A subsequent regional load
+does not reclaim focus from a control the player selected in the meantime. The viewport is not a
+text input, so focusing it does not request a mobile text keyboard.
 
 Opening inspection clears active movement input, including the transient touch joystick, and pauses
 keyboard and pointer movement. Panel controls do not bubble into Canvas movement handling. Escape,

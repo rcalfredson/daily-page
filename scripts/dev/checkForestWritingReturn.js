@@ -4,6 +4,7 @@
 /* global WebSocket */
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
+import fs from 'node:fs';
 import express from 'express';
 import pug from 'pug';
 import { buildForestOwnerSceneBootstrapService } from '../../server/services/forestOwnerSceneBootstrap.js';
@@ -22,7 +23,7 @@ const manifest = { status: 'ready', placements: [target], page: { nextCursor: nu
 const inspection = {
   status: 'ready', tree: { id: TREE, recordRevision: 1, phenotypeId: 'open-crown-deciduous', creationSeason: 'spring' },
   writing: { title: 'Remembered writing', path: POST, lang: 'en', createdAt: '2026-04-10T10:00:00Z' },
-  translations: [], page: { nextCursor: null }
+  translations: [{ title: 'Remembered writing', path: POST, lang: 'en' }], page: { nextCursor: null }
 };
 const resolveReturnDestination = buildForestOwnerReturnDestinationService({
   ForestWritingTreeModel: { findOne: () => ({ lean: async () => ({ placement: target }) }) },
@@ -59,7 +60,8 @@ app.get('/forest', (req, res, next) => {
   };
   next();
 }, buildForestRouteHandler({ readBootstrap }));
-app.get('/api/v1/forest/regions', (req, res) => {
+app.get('/api/v1/forest/regions', async (req, res) => {
+  if (scenario === 'delayed') await new Promise(resolve => setTimeout(resolve, 700));
   const cells = String(req.query.cells).split(',');
   requests.push(cells);
   const atTarget = cells.includes('-3:2');
@@ -74,7 +76,16 @@ app.get('/api/v1/forest/assets', (req, res) => res.json({ status: 'ready', asset
   })) }]
 }] }));
 app.get('/api/v1/forest/authored-regions', (req, res) => res.json({ status: 'ready', objects: [], page: { nextCursor: null } }));
-app.get('/api/v1/forest/trees/:tree/inspection', (req, res) => res.json(inspection));
+app.get('/api/v1/forest/trees/:tree/inspection', (req, res) => res.json(
+  scenario === 'translations' ? {
+    ...inspection,
+    translations: req.query.cursor ? [
+      ...inspection.translations,
+      { title: 'Un recuerdo', path: '/rooms/general/blocks/507f1f77bcf86cd799439014', lang: 'es' }
+    ] : inspection.translations,
+    page: { nextCursor: req.query.cursor ? null : 'next-page' }
+  } : inspection
+));
 app.get('/rooms/:room/blocks/:post', forestWritingReturn, (req, res) => {
   res.send(`<h1>Remembered writing</h1>${pug.renderFile('views/partials/_forest_writing_return.pug', res.locals)}`);
 });
@@ -125,11 +136,22 @@ try {
     await navigate(`${base}/en/forest?returnTree=${TREE}`);
     await waitFor(`!document.querySelector('[data-owner-forest-nearby]').hidden`);
     assert.ok(requests.some(cells => cells.includes('-3:2')), 'Loads the target neighborhood');
-    await evaluate(`document.querySelector('[data-owner-forest-viewport]').focus()`);
+    assert.equal(await evaluate(`document.activeElement.matches('[data-owner-forest-viewport]')`), true,
+      'Movement surface receives focus automatically on entry');
     await send('input.performActions', { context, actions: [{ type: 'key', id: 'keyboard', actions: [
       { type: 'keyDown', value: 'e' }, { type: 'keyUp', value: 'e' }
     ] }] });
     await waitFor(`!document.querySelector('[data-owner-forest-inspection-content]').hidden`);
+    assert.equal(await evaluate(`document.querySelector('[data-owner-forest-translations-wrap]').hidden`), true,
+      'The selected post is not repeated as its own translation');
+    assert.equal(await evaluate(`document.activeElement.matches('[data-owner-forest-inspection-close]')`), true);
+    if (process.env.FOREST_RETURN_SCREENSHOT_DIR) {
+      await evaluate(`document.documentElement.dataset.theme = 'dark'`);
+      await evaluate(`document.querySelector('[data-owner-forest-viewport]').scrollIntoView({ block: 'center' })`);
+      const screenshot = await send('browsingContext.captureScreenshot', { context });
+      fs.mkdirSync(process.env.FOREST_RETURN_SCREENSHOT_DIR, { recursive: true });
+      fs.writeFileSync(`${process.env.FOREST_RETURN_SCREENSHOT_DIR}/forest-inspection-${width}.png`, Buffer.from(screenshot.data, 'base64'));
+    }
     const link = await evaluate(`document.querySelector('[data-owner-forest-inspection-link]').getAttribute('href')`);
     assert.equal(link, `/en${POST}?from=forest&returnTree=${TREE}`);
     await navigate(base + link);
@@ -137,12 +159,30 @@ try {
     assert.equal(back, `/en/forest?returnTree=${TREE}`);
     await navigate(base + back);
     await waitFor(`!document.querySelector('[data-owner-forest-nearby]').hidden`);
+    assert.equal(await evaluate(`document.activeElement.matches('[data-owner-forest-viewport]')`), true,
+      'Returning from writing focuses the movement surface');
     await evaluate(`document.querySelector('[data-owner-forest-reset]').click()`);
     // Reset must request entrance cells, even though a return destination remains in bootstrap.
     await waitFor(`document.querySelector('[data-owner-forest-nearby]').hidden`);
     assert.ok(requests.some(cells => cells.includes('0:0')), 'Reset loads the ordinary entrance');
     console.log(`PASS ${width}px keyboard inspection, post link, tree return, entrance reset`);
   }
+  await navigate(`${base}/en/forest?returnTree=${TREE}&fixture=translations`);
+  await waitFor(`!document.querySelector('[data-owner-forest-nearby]').hidden`);
+  await evaluate(`document.querySelector('[data-owner-forest-inspect]').click()`);
+  await waitFor(`!document.querySelector('[data-owner-forest-inspection-content]').hidden`);
+  assert.equal(await evaluate(`document.querySelector('[data-owner-forest-translations-wrap]').hidden`), false);
+  await evaluate(`document.querySelector('[data-owner-forest-translations-more]').click()`);
+  await waitFor(`document.querySelectorAll('[data-owner-forest-translations] a').length === 1`);
+  assert.ok((await evaluate(`document.querySelector('[data-owner-forest-translations]').textContent`)).includes('Un recuerdo'));
+  await evaluate(`document.querySelector('[data-owner-forest-inspection-close]').click()`);
+  assert.equal(await evaluate(`document.activeElement.matches('[data-owner-forest-viewport]')`), true);
+  console.log('PASS translation pagination excludes the current post and closing restores game focus');
+  await navigate(`${base}/en/forest?returnTree=${TREE}&fixture=delayed`);
+  await evaluate(`document.querySelector('[data-owner-forest-reset]').focus()`);
+  await waitFor(`!document.querySelector('[data-owner-forest-nearby]').hidden`);
+  assert.equal(await evaluate(`document.activeElement.matches('[data-owner-forest-reset]')`), true);
+  console.log('PASS delayed regional load does not steal focus from another control');
   for (const fixture of ['missing', 'failed-load']) {
     await navigate(`${base}/en/forest?returnTree=${TREE}&fixture=${fixture}`);
     await waitFor(`document.querySelector('[data-owner-forest-status]').textContent === '0 writing trees discovered nearby.'`);

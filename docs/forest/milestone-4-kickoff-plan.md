@@ -219,3 +219,21 @@ immutable writing-tree association through creation, dynamic marker inspection, 
 semantic finding/focus path, cross-session relationship review, external pilot, material loop, and
 commercial evidence remain open. This increment does not complete the writing-linked marker slice
 or Milestone 4.
+
+### November 2 follow-up — arrival focus and calmer tree inspection
+
+- The user reported that the live-account read/return loop placed their avatar beside the correct
+  tree. Browser/device details were not supplied; this is focused human-reported continuity
+  evidence, not physical-mobile certification or external attachment evidence.
+- The viewport now receives keyboard focus once on entry, including return through writing.
+  Async regional completion does not steal focus from a control selected during loading.
+- Tree inspection now fits its content on desktop, separates date/language from botanical detail,
+  gives reading the primary action, and moves tree management below a divider. The current post
+  no longer appears as its own translation; bounded continuation still exposes later translations.
+  The narrow bottom sheet keeps its internal scroll and pinned close control.
+- Firefox fixture review covers automatic entry/return focus at 1280px and 390px, keyboard
+  inspection, translation filtering across pagination, close-focus restoration, and keeping focus
+  on another control through a delayed load. Fixture screenshots were inspected for the panel's
+  visual hierarchy. Physical-device and live-account review of these follow-up changes remain open.
+- Verification: **1,348 specs, zero failures**; repository and browser-fixture lint, module syntax,
+  and whitespace checks pass.

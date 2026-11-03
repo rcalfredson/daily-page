@@ -91,6 +91,7 @@ if (payload && copyPayload && viewport && canvas) {
   let translationCursor = null;
   let translationsLoading = false;
   const translationPaths = new Set();
+  let inspectedWritingPath = null;
   const placement = {
     active: false,
     mode: null,
@@ -318,6 +319,7 @@ if (payload && copyPayload && viewport && canvas) {
   }
 
   function resetTranslations() {
+    inspectedWritingPath = null;
     translationPaths.clear();
     translationsList.replaceChildren();
     translationsWrap.hidden = true;
@@ -326,7 +328,7 @@ if (payload && copyPayload && viewport && canvas) {
 
   function appendTranslations(translations) {
     for (const item of translations) {
-      if (translationPaths.has(item.path)) continue;
+      if (item.path === inspectedWritingPath || translationPaths.has(item.path)) continue;
       translationPaths.add(item.path);
       const entry = document.createElement('li');
       const link = document.createElement('a');
@@ -378,6 +380,7 @@ if (payload && copyPayload && viewport && canvas) {
         throw new Error('inspection unavailable');
       }
       if (!append) {
+        inspectedWritingPath = result.writing.path;
         inspectionTitle.textContent = result.writing.title;
         const treeType = copy.treeTypes[result.tree.phenotypeId] || copy.unknownTreeType;
         const season = copy.seasons[result.tree.creationSeason] || copy.seasons.unknown;
@@ -1472,6 +1475,9 @@ if (payload && copyPayload && viewport && canvas) {
   reducedMotion.addEventListener?.('change', requestRender);
 
   resize();
+  // Focus once on entry, before asynchronous loads, so arriving players can use movement keys.
+  // Do not steal focus back from controls they select while those loads are in progress.
+  viewport.focus({ preventScroll: true });
   loadNearbyCells();
   loadNearbyAuthoredCells();
   window.requestAnimationFrame(tick);
