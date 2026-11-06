@@ -62,6 +62,9 @@ describe('forest authored diagnostic API', () => {
       for (const query of [
         {},
         { includeRemoved: true },
+        { includeRemoved: 'true', version: ['1', '2'] },
+        { includeRemoved: 'true', version: '3' },
+        { includeRemoved: 'true', version: {} },
         { includeRemoved: 'yes' },
         { includeRemoved: ['true', 'false'] },
         { includeRemoved: 'false', cursor: ['one', 'two'] },
@@ -114,4 +117,22 @@ describe('forest authored diagnostic API', () => {
     expect(unavailableResponse.body.code).toBe('FOREST_AUTHORED_DIAGNOSTIC_UNAVAILABLE');
     expect(JSON.stringify(console.error.calls.allArgs())).not.toContain(privateDetail);
   });
+  it('passes explicit read versions and returns bounded upgrade responses', async () => {
+    const readDiagnostic = jasmine.createSpy('readDiagnostic').and.resolveTo({ exportVersion: 2 });
+    const handler = buildForestAuthoredDiagnosticRouteHandler({ readDiagnostic });
+    const res = response();
+    await handler({ user: { id: OWNER }, query: { includeRemoved: 'false', version: '2' } }, res);
+    expect(readDiagnostic).toHaveBeenCalledOnceWith({ ownerUserId: OWNER,
+      includeRemoved: false, version: '2', cursor: null, limit: undefined });
+    expect(res.statusCode).toBe(200);
+    readDiagnostic.and.rejectWith(new ForestAuthoredDiagnosticExportError(
+      'AUTHORED_UPGRADE_REQUIRED', 'private-tree-id'
+    ));
+    const upgrade = response();
+    await handler({ user: { id: OWNER }, query: { includeRemoved: 'false' } }, upgrade);
+    expect(upgrade.statusCode).toBe(409);
+    expect(upgrade.body).toEqual({ code: 'FOREST_AUTHORED_UPGRADE_REQUIRED',
+      error: 'FOREST_AUTHORED_UPGRADE_REQUIRED' });
+  });
+
 });

@@ -11,6 +11,15 @@ The completed implementation, evidence, active versions, limitations, and Milest
 recorded in
 [`milestone-3-account-backed-authored-overlay-evaluation.md`](milestone-3-account-backed-authored-overlay-evaluation.md).
 
+The accepted Milestone 4 extension design is specified in
+[`writing-linked-marker-design.md`](writing-linked-marker-design.md). It defines mixed-version
+compatibility and an immutable writing relationship without changing this historical version-1
+contract. Mixed-version readers, reset compatibility, marker inspection/list/return and client
+read integration are implemented. Ordinary mutations remain protocol 1; movement/removal can
+explicitly use protocol 2. Linked creation, its UI and guarded database evidence are complete behind
+the default-off `FOREST_WRITING_LINKS_ENABLED` gate. The user reported the local functional and
+visual walkthrough passing on November 5; deployment requirements remain in the extension design.
+
 The repository baseline audited for this contract was the clean
 `personal-world-initial-rollout` branch at `1c1f8b6` on August 11, 2026. Milestone 2's closeout
 commit `60b9392`, final implementation commit `9ba276b`, and 600-tree pressure fixture commit

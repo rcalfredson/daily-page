@@ -1,3 +1,5 @@
+import { canonicalForestWritingLink } from '../../services/forestAuthoredObjectFormat.js';
+import { forestAuthoredObjectRead, ForestAuthoredObjectReadError } from '../../services/forestAuthoredObjectRead.js';
 import { Router } from 'express';
 
 import optionalAuth from '../../middleware/optionalAuth.js';
@@ -47,9 +49,9 @@ import {
 const router = Router();
 
 const QUERY_FIELDS = Object.freeze(['cells', 'cursor', 'limit']);
-const AUTHORED_QUERY_FIELDS = Object.freeze(['cells', 'cursor', 'limit']);
+const AUTHORED_QUERY_FIELDS = Object.freeze(['cells', 'cursor', 'limit', 'version']);
 const AUTHORED_DIAGNOSTIC_QUERY_FIELDS = Object.freeze([
-  'includeRemoved', 'cursor', 'limit'
+  'includeRemoved', 'cursor', 'limit', 'version'
 ]);
 const ASSET_QUERY_FIELDS = Object.freeze(['cells', 'cursor', 'assetKeys', 'transport']);
 const INSPECTION_QUERY_FIELDS = Object.freeze(['cursor', 'limit']);
@@ -105,10 +107,12 @@ function authoredManifestRequest(query) {
   const extraFields = Object.keys(query).filter(
     field => !AUTHORED_QUERY_FIELDS.includes(field)
   );
-  if (extraFields.length || Array.isArray(query.cursor) || Array.isArray(query.limit)) {
+  if (extraFields.length || Array.isArray(query.cursor) || Array.isArray(query.limit)
+    || query.version !== undefined && !['1', '2'].includes(query.version)) {
     invalidAuthoredRegionRequest('The authored region query contains unsupported fields.');
   }
   return {
+    ...(query.version === undefined ? {} : { version: query.version }),
     cells: parseCells(query.cells, invalidAuthoredRegionRequest),
     cursor: query.cursor || null,
     limit: query.limit
@@ -132,12 +136,14 @@ function authoredDiagnosticRequest(query) {
     || Array.isArray(query.includeRemoved)
     || Array.isArray(query.cursor)
     || Array.isArray(query.limit)
+    || query.version !== undefined && !['1', '2'].includes(query.version)
     || !['true', 'false'].includes(query.includeRemoved)) {
     invalidAuthoredDiagnosticRequest(
       'The authored diagnostic query contains unsupported fields.'
     );
   }
   return {
+    ...(query.version === undefined ? {} : { version: query.version }),
     includeRemoved: query.includeRemoved === 'true',
     cursor: query.cursor || null,
     limit: query.limit
@@ -225,8 +231,8 @@ function authoredObjectId(value) {
   return objectId;
 }
 
-function mutationProtocol(value) {
-  if (value !== FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION) {
+function mutationProtocol(value, allowLinked = false) {
+  if (value !== FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION && !(allowLinked && value === 2)) {
     invalidAuthoredMutation('The authored mutation protocol is unsupported.');
   }
   return value;
@@ -248,13 +254,21 @@ function mutationRevision(value) {
 }
 
 function createMutationRequest(req) {
-  const body = exactMutationBody(req.body, ['protocolVersion', 'kind', 'worldX', 'worldY']);
+  const body = exactMutationBody(req.body, ['protocolVersion', 'kind', 'worldX', 'worldY',
+    ...(req.body?.protocolVersion === 2 ? ['writingLink'] : [])]);
+  const protocolVersion = mutationProtocol(body.protocolVersion, true);
+  let writingLink;
+  if (protocolVersion === 2) {
+    try { writingLink = canonicalForestWritingLink(body.writingLink); }
+    catch { invalidAuthoredMutation('The writing relationship is invalid.'); }
+  }
   if (body.kind !== 'personal-marker') {
     invalidAuthoredMutation('The authored object kind is unsupported.');
   }
   return {
     objectId: authoredObjectId(req.params.objectId),
-    protocolVersion: mutationProtocol(body.protocolVersion),
+    protocolVersion,
+    ...(writingLink ? { writingLink } : {}),
     kind: body.kind,
     worldX: mutationCoordinate(body.worldX),
     worldY: mutationCoordinate(body.worldY)
@@ -268,7 +282,7 @@ function moveMutationRequest(req) {
   );
   return {
     objectId: authoredObjectId(req.params.objectId),
-    protocolVersion: mutationProtocol(body.protocolVersion),
+    protocolVersion: mutationProtocol(body.protocolVersion, true),
     expectedRevision: mutationRevision(body.expectedRevision),
     worldX: mutationCoordinate(body.worldX),
     worldY: mutationCoordinate(body.worldY)
@@ -279,7 +293,7 @@ function removalMutationRequest(req) {
   const body = exactMutationBody(req.body, ['protocolVersion', 'expectedRevision']);
   return {
     objectId: authoredObjectId(req.params.objectId),
-    protocolVersion: mutationProtocol(body.protocolVersion),
+    protocolVersion: mutationProtocol(body.protocolVersion, true),
     expectedRevision: mutationRevision(body.expectedRevision)
   };
 }
@@ -298,6 +312,9 @@ export function privateForestApiResponse(req, res, next) {
 }
 
 export function requireForestAuthoredMutationOrigin(req, res, next) {
+  // The authored prefix also serves private inspection reads. Browsers do not attach
+  // mutation Origin/JSON headers to these requests; authentication still runs afterward.
+  if (req.method === 'GET' || req.method === 'HEAD') return next();
   const suppliedOrigin = req.get?.('origin');
   const expectedOrigin = requestOrigin(req);
   let normalizedOrigin = null;
@@ -339,6 +356,12 @@ export function buildForestAuthoredRegionRouteHandler({
       return res.status(200).json(manifest);
     } catch (error) {
       if (error instanceof ForestAuthoredRegionManifestError) {
+        if (error.code === 'AUTHORED_UPGRADE_REQUIRED') {
+          return res.status(409).json({
+            error: 'FOREST_AUTHORED_UPGRADE_REQUIRED',
+            code: 'FOREST_AUTHORED_UPGRADE_REQUIRED'
+          });
+        }
         if (error.code === 'INVALID_AUTHORED_REGION_INPUT') {
           return res.status(400).json({
             error: 'INVALID_FOREST_AUTHORED_REGION_REQUEST',
@@ -389,6 +412,12 @@ export function buildForestAuthoredDiagnosticRouteHandler({
       return res.status(200).json(diagnostic);
     } catch (error) {
       if (error instanceof ForestAuthoredDiagnosticExportError) {
+        if (error.code === 'AUTHORED_UPGRADE_REQUIRED') {
+          return res.status(409).json({
+            error: 'FOREST_AUTHORED_UPGRADE_REQUIRED',
+            code: 'FOREST_AUTHORED_UPGRADE_REQUIRED'
+          });
+        }
         if (error.code === 'INVALID_AUTHORED_DIAGNOSTIC_INPUT') {
           return res.status(400).json({
             error: 'INVALID_FOREST_AUTHORED_DIAGNOSTIC_REQUEST',
@@ -470,6 +499,14 @@ function mutationErrorResponse(error, res) {
         code: 'FOREST_AUTHORED_OBJECT_UNAVAILABLE',
         ...(error.object ? { object: error.object } : {})
       });
+    }
+    if (['AUTHORED_WRITING_LINKS_DISABLED', 'AUTHORED_WRITING_UNAVAILABLE', 'AUTHORED_WRITING_DISTANCE'].includes(error.code)) {
+      const code = `FOREST_${error.code}`;
+      return res.status(409).json({ error: code, code });
+    }
+    if (error.code === 'AUTHORED_PROTOCOL_UPGRADE_REQUIRED') {
+      return res.status(409).json({ error: 'FOREST_AUTHORED_UPGRADE_REQUIRED',
+        code: 'FOREST_AUTHORED_UPGRADE_REQUIRED' });
     }
     if (error.code === 'AUTHORED_MIGRATION_REQUIRED') {
       return res.status(409).json({
@@ -605,6 +642,29 @@ export function buildForestOwnerRegionAssetRouteHandler({
   };
 }
 
+
+export function buildForestAuthoredInspectionRouteHandler({ inspect = forestAuthoredObjectRead.inspect } = {}) {
+  return async function forestAuthoredInspectionRoute(req, res) {
+    if (!req.user?.id) return res.status(401).json({
+      error: 'AUTHENTICATION_REQUIRED', code: 'AUTHENTICATION_REQUIRED'
+    });
+    try {
+      if (!req.query || Object.keys(req.query).length) {
+        throw new ForestAuthoredObjectReadError('INVALID_AUTHORED_READ_INPUT');
+      }
+      return res.status(200).json(await inspect({ ownerUserId: req.user.id,
+        objectId: req.params.objectId, preferredContentLang: getPreferredContentLang(res) }));
+    } catch (error) {
+      const code = error instanceof ForestAuthoredObjectReadError ? error.code : null;
+      const status = code === 'INVALID_AUTHORED_READ_INPUT' ? 400
+        : code === 'AUTHORED_READ_NOT_FOUND' ? 404 : 503;
+      const publicCode = status === 400 ? 'INVALID_FOREST_MARKER_INSPECTION_REQUEST'
+        : status === 404 ? 'FOREST_MARKER_UNAVAILABLE' : 'FOREST_MARKER_INSPECTION_UNAVAILABLE';
+      return res.status(status).json({ error: publicCode, code: publicCode });
+    }
+  };
+}
+
 export function buildForestOwnerTreeInspectionRouteHandler({
   inspectTree = inspectForestOwnerTree
 } = {}) {
@@ -710,6 +770,7 @@ const useForestAPI = (app) => {
   router.get('/regions', regionHandler);
   router.get('/authored-regions', authoredRegionHandler);
   router.get('/authored-diagnostics', authoredDiagnosticHandler);
+  router.get('/authored-objects/:objectId/inspection', buildForestAuthoredInspectionRouteHandler());
   router.get('/assets', assetHandler);
   router.get('/trees/:writingTreeId/inspection', inspectionHandler);
   router.patch('/trees/:writingTreeId/inclusion', inclusionHandler);

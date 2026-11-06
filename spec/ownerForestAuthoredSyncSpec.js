@@ -1,3 +1,4 @@
+import { forestAuthoredClientHasSupportedFormat } from '../public/js/owner-forest-authored-sync.js';
 import {
   forestAuthoredCanonicalMatchesPrediction,
   forestAuthoredFailureResolution,
@@ -12,6 +13,21 @@ function failure(code) {
 }
 
 describe('owner forest authored client synchronization', () => {
+  it('never confirms a conflicting writing relationship merely because identity and coordinates match', () => {
+    const writingLink = { version: 1, writingTreeId: '33333333-3333-4333-8333-333333333333' };
+    const predicted = { objectId: 'marker', schemaVersion: 2, worldX: 10, worldY: -20, writingLink };
+    const canonical = { ...predicted, schemaVersion: 2, state: 'active' };
+    expect(forestAuthoredCanonicalMatchesPrediction('create', canonical, predicted)).toBeTrue();
+    expect(forestAuthoredCanonicalMatchesPrediction('create', {
+      ...canonical, writingLink: { ...writingLink, writingTreeId: '44444444-4444-4444-8444-444444444444' }
+    }, predicted)).toBeFalse();
+    expect(forestAuthoredFailureResolution({
+      operation: 'create', error: { object: { ...canonical, writingLink: null } }, predictedMarker: predicted
+    })).toBe('reconciled');
+    expect(forestAuthoredCanonicalMatchesPrediction('move', { ...canonical, writingLink: null }, predicted)).toBeFalse();
+    expect(forestAuthoredCanonicalMatchesPrediction('create', canonical, { ...predicted, writingLink: null })).toBeFalse();
+    expect(forestAuthoredCanonicalMatchesPrediction('create', { ...canonical, schemaVersion: 3 }, predicted)).toBeFalse();
+  });
   it('retries only ambiguous failures with the identical operation callback', async () => {
     const execute = jasmine.createSpy('execute');
     execute.and.rejectWith(failure('FOREST_AUTHORED_MUTATION_UNAVAILABLE'));
@@ -143,4 +159,15 @@ describe('owner forest authored client synchronization', () => {
       operation: 'move', predictedMarker, error: { syncOutcomeUncertain: false }
     })).toBe('rejected');
   });
+  it('accepts only supported client formats without silently dropping linked intent', () => {
+    const link = { version: 1, writingTreeId: '44444444-4444-4444-8444-444444444444' };
+    for (const object of [{}, { schemaVersion: 1 }, { schemaVersion: 1, writingLink: null },
+      { schemaVersion: 2, writingLink: link }]) expect(forestAuthoredClientHasSupportedFormat(object)).toBeTrue();
+    for (const object of [[], null, { schemaVersion: null }, { schemaVersion: 3 }, { schemaVersion: 2 }, { writingLink: link },
+      { schemaVersion: 1, writingLink: link }, { schemaVersion: 2, writingLink: { ...link, version: 2 } },
+      { schemaVersion: 2, writingLink: { ...link, title: 'copied metadata' } }]) {
+      expect(forestAuthoredClientHasSupportedFormat(object)).toBeFalse();
+    }
+  });
+
 });

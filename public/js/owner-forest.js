@@ -1,4 +1,4 @@
-import { forestWritingPostPath } from './forest-writing-navigation.js';
+import { forestWritingPostPath, forestMarkerWritingPostPath } from './forest-writing-navigation.js';
 import {
   focusedForestPlacement,
   forestTouchGestureIntent,
@@ -16,6 +16,7 @@ import {
 } from './forest-humanoid.js';
 import {
   forestAuthoredFailureResolution,
+  forestAuthoredClientHasSupportedFormat,
   projectForestAuthoredPendingMarker,
   projectForestAuthoredPendingMarkers,
   runForestAuthoredMutationWithRetry
@@ -73,6 +74,8 @@ if (payload && copyPayload && viewport && canvas) {
   };
   const camera = { x: 0, y: 0, width: 0, height: 0 };
   let player = { ...(bootstrap.returnDestination?.spawn || bootstrap.spawn) };
+  let returnedMarkerId = bootstrap.returnDestination?.markerId || null;
+  let markerInspectionRequest = 0;
   let returnedTreeId = bootstrap.returnDestination?.treeId || null;
   let returnArrivalPending = Boolean(returnedTreeId);
   let playerMotion = createForestHumanoidMotion('down');
@@ -96,6 +99,7 @@ if (payload && copyPayload && viewport && canvas) {
     active: false,
     mode: null,
     movingObjectId: null,
+    writingContext: null,
     preview: null,
     request: null,
     saving: false
@@ -108,6 +112,10 @@ if (payload && copyPayload && viewport && canvas) {
   const inspectButton = document.querySelector('[data-owner-forest-inspect]');
   const reset = document.querySelector('[data-owner-forest-reset]');
   const placeMarker = document.querySelector('[data-owner-forest-place-marker]');
+  const markWriting = document.querySelector('[data-owner-forest-mark-writing]');
+  const placementWriting = document.querySelector('[data-owner-forest-placement-writing]');
+  const placementWritingTitle = document.querySelector('[data-owner-forest-placement-writing-title]');
+  const placementWritingHelp = document.querySelector('[data-owner-forest-placement-writing-help]');
   const authoredStatus = document.querySelector('[data-owner-forest-authored-status]');
   const authoredStatusCopy = document.querySelector('[data-owner-forest-authored-status-copy]');
   const authoredRetry = document.querySelector('[data-owner-forest-authored-retry]');
@@ -138,6 +146,12 @@ if (payload && copyPayload && viewport && canvas) {
   const markerInspection = document.querySelector('[data-owner-forest-marker-inspection]');
   const markerClose = document.querySelector('[data-owner-forest-marker-close]');
   const markerStatus = document.querySelector('[data-owner-forest-marker-status]');
+  const markerWriting = document.querySelector('[data-owner-forest-marker-writing]');
+  const markerDescription = document.querySelector('[data-owner-forest-marker-description]');
+  const markerList = document.querySelector('[data-owner-forest-marker-list]');
+  const markerWritingTitle = document.querySelector('[data-owner-forest-marker-writing-title]');
+  const markerWritingLink = document.querySelector('[data-owner-forest-marker-writing-link]');
+  const markerWritingStatus = document.querySelector('[data-owner-forest-marker-writing-status]');
   const markerActions = document.querySelector('[data-owner-forest-marker-actions]');
   const markerMove = document.querySelector('[data-owner-forest-marker-move]');
   const markerRemove = document.querySelector('[data-owner-forest-marker-remove]');
@@ -193,7 +207,7 @@ if (payload && copyPayload && viewport && canvas) {
   }
 
   function markerFromApi(object) {
-    if (!object) return null;
+    if (!forestAuthoredClientHasSupportedFormat(object)) return null;
     const worldX = object.worldX ?? object.placement?.worldX;
     const worldY = object.worldY ?? object.placement?.worldY;
     if (!Number.isSafeInteger(worldX) || !Number.isSafeInteger(worldY)
@@ -202,6 +216,8 @@ if (payload && copyPayload && viewport && canvas) {
     return {
       objectId: object.objectId,
       kind: object.kind,
+      schemaVersion: object.schemaVersion || 1,
+      writingLink: object.writingLink || null,
       worldX,
       worldY,
       appearance: object.appearance,
@@ -278,6 +294,7 @@ if (payload && copyPayload && viewport && canvas) {
   function closeMarkerInspection({ restoreFocus = true, force = false } = {}) {
     if (markerRemoveConfirm.disabled && !force) return;
     inspectedMarkerId = null;
+    markerInspectionRequest += 1;
     markerInspection.hidden = true;
     markerConfirm.hidden = true;
     markerActions.hidden = false;
@@ -301,6 +318,16 @@ if (payload && copyPayload && viewport && canvas) {
     Object.keys(keys).forEach((key) => { keys[key] = false; });
     clearPointer();
     inspectedMarkerId = marker.objectId;
+    const requestId = ++markerInspectionRequest;
+    const linked = Boolean(marker.writingLink);
+    markerWritingTitle.textContent = linked ? copy.markers.writingHeading : copy.markers.heading;
+    markerWritingTitle.removeAttribute('lang');
+    markerWritingTitle.dir = 'auto';
+    markerDescription.textContent = linked ? copy.markers.writingDescription : copy.markers.description;
+    markerList.hidden = !linked;
+    markerWriting.hidden = true;
+    markerWritingLink.removeAttribute('href');
+    markerWritingStatus.textContent = '';
     markerStatus.textContent = pending
       ? pending.phase === 'failed'
         ? copy.markers.pendingMarkerFailed : copy.markers.pendingMarker
@@ -316,6 +343,31 @@ if (payload && copyPayload && viewport && canvas) {
     resize();
     requestRender();
     markerClose.focus({ preventScroll: true });
+    if (!pending && marker.schemaVersion === 2) loadMarkerWriting(marker, requestId);
+  }
+
+  async function loadMarkerWriting(marker, requestId) {
+    markerWritingStatus.textContent = copy.inspectionLoading;
+    try {
+      const response = await window.fetch(`${bootstrap.delivery.authoredObjectPath}/${encodeURIComponent(marker.objectId)}/inspection`,
+        { credentials: 'same-origin' });
+      const result = await response.json();
+      if (requestId !== markerInspectionRequest || inspectedMarkerId !== marker.objectId) return;
+      if (!response.ok || result.status !== 'ready'
+        || result.object?.recordRevision !== marker.recordRevision) throw new Error('inspection unavailable');
+      if (result.writingState === 'ready') {
+        markerWritingTitle.textContent = result.writing.title;
+        markerWritingTitle.lang = result.writing.lang;
+        markerWritingTitle.dir = 'auto';
+        markerWritingLink.href = localizedPath(forestMarkerWritingPostPath(result.writing.path, marker.objectId));
+        markerWriting.hidden = false;
+        markerWritingStatus.textContent = '';
+      } else markerWritingStatus.textContent = copy.markers.writingUnavailable;
+    } catch {
+      if (requestId === markerInspectionRequest && inspectedMarkerId === marker.objectId) {
+        markerWritingStatus.textContent = copy.markers.inspectionUnavailable;
+      }
+    }
   }
 
   function resetTranslations() {
@@ -324,6 +376,7 @@ if (payload && copyPayload && viewport && canvas) {
     translationsList.replaceChildren();
     translationsWrap.hidden = true;
     translationsMore.hidden = true;
+    refreshPlacementAvailability();
   }
 
   function appendTranslations(translations) {
@@ -409,6 +462,7 @@ if (payload && copyPayload && viewport && canvas) {
       if (requestId === inspectionRequest) {
         translationsLoading = false;
         translationsMore.disabled = false;
+        refreshPlacementAvailability();
       }
     }
   }
@@ -505,6 +559,7 @@ if (payload && copyPayload && viewport && canvas) {
         do {
           const query = new URLSearchParams({
             cells: cellQuery(cells),
+            version: String(bootstrap.delivery.authoredRegionManifestVersion || 1),
             limit: String(bootstrap.delivery.authoredPageSize)
           });
           if (cursor) query.set('cursor', cursor);
@@ -746,7 +801,7 @@ if (payload && copyPayload && viewport && canvas) {
     context.globalAlpha = preview
       ? (placement.saving && !reducedMotion.matches ? 0.48 + (Math.sin(time * 5) * 0.1) : 0.58)
       : 1;
-    if (preview || focusedMarker?.objectId === marker.objectId) {
+    if (preview || focusedMarker?.objectId === marker.objectId || returnedMarkerId === marker.objectId) {
       context.beginPath();
       context.ellipse(x, y, 18, 8, 0, 0, Math.PI * 2);
       context.fillStyle = invalid ? 'rgba(173, 78, 62, 0.32)' : 'rgba(255, 239, 164, 0.34)';
@@ -772,7 +827,13 @@ if (payload && copyPayload && viewport && canvas) {
     context.fillStyle = '#c8a852';
     context.fillRect(x - 8, y - 28, 16, 9);
     context.fillStyle = '#6f4d32';
-    context.fillRect(x - 5, y - 25, 10, 2);
+    if (marker.writingLink || (preview && placement.writingContext)) {
+      // One marker family: a small open-book detail identifies remembered writing.
+      context.fillRect(x - 5, y - 26, 10, 5);
+      context.fillStyle = '#f5e7ba';
+      context.fillRect(x - 4, y - 26, 3, 4);
+      context.fillRect(x + 1, y - 26, 3, 4);
+    } else context.fillRect(x - 5, y - 25, 10, 2);
     if (!preview && marker.syncState) {
       context.beginPath();
       context.arc(x, y + 2, 4, 0, Math.PI * 2);
@@ -791,20 +852,21 @@ if (payload && copyPayload && viewport && canvas) {
     );
     const tree = availableTrees.find(placement => placement.id === returnedTreeId)
       || focusedForestPlacement(player, availableTrees, bootstrap.spawn.interactionRadius);
-    const marker = ownerForestFocusedMarker(
+    const marker = markersById.get(returnedMarkerId) || ownerForestFocusedMarker(
       player, [...markersById.values()], bootstrap.spawn.interactionRadius
     );
     const treeDistance = tree ? Math.hypot(player.worldX - tree.worldX, player.worldY - tree.worldY)
       : Infinity;
     const markerDistance = marker
       ? Math.hypot(player.worldX - marker.worldX, player.worldY - marker.worldY) : Infinity;
-    focusedMarker = returnedTreeId === tree?.id ? null : markerDistance < treeDistance ? marker : null;
+    focusedMarker = returnedTreeId === tree?.id ? null
+      : marker?.objectId === returnedMarkerId || markerDistance < treeDistance ? marker : null;
     focusedTree = focusedMarker ? null : tree;
     const unavailable = !focusedTree && !focusedMarker;
     nearby.hidden = unavailable || Boolean(inspectedTreeId) || Boolean(inspectedMarkerId)
       || placement.active;
     if (focusedMarker) {
-      nearbyCopy.textContent = copy.markers.markerNearby;
+      nearbyCopy.textContent = focusedMarker.writingLink ? copy.markers.writingNearby : copy.markers.markerNearby;
       inspectButton.textContent = copy.markers.inspectMarker;
     } else {
       nearbyCopy.textContent = copy.markers.treeNearby;
@@ -871,6 +933,7 @@ if (payload && copyPayload && viewport && canvas) {
 
   function previewMessage(reason) {
     return {
+      'writing-distance': copy.markers.previewWritingDistance,
       'tree-collision': copy.markers.previewTreeCollision,
       'marker-collision': copy.markers.previewMarkerCollision,
       'world-bounds': copy.markers.previewBounds,
@@ -882,6 +945,8 @@ if (payload && copyPayload && viewport && canvas) {
     const regionReady = currentAuthoredCellsReady()
       && ['ready', 'notice'].includes(authoredState);
     placeMarker.disabled = returnArrivalPending || placement.active || !regionReady;
+    markWriting.disabled = !bootstrap.delivery.writingLinkCreationEnabled || !inspectedWritingPath
+      || !inspectedTreeId || placement.active || !regionReady;
     if (!placement.active) return;
     placementSave.disabled = placement.saving || !regionReady || !placement.preview?.valid;
     placementCancel.disabled = placement.saving;
@@ -895,7 +960,8 @@ if (payload && copyPayload && viewport && canvas) {
       placements: [...placementsById.values()],
       markers: [...markersById.values()],
       cellSize: bootstrap.spatialIndex.cellSize,
-      movingObjectId: placement.movingObjectId
+      movingObjectId: placement.movingObjectId,
+      writingOrigin: placement.mode === 'create' ? placement.writingContext?.origin : null
     });
     placementStatus.textContent = previewMessage(placement.preview.reason);
     if (placement.request
@@ -914,6 +980,8 @@ if (payload && copyPayload && viewport && canvas) {
     placement.active = false;
     placement.mode = null;
     placement.movingObjectId = null;
+    placement.writingContext = null;
+    placementWriting.hidden = true;
     placement.preview = null;
     placement.request = null;
     placement.saving = false;
@@ -925,7 +993,8 @@ if (payload && copyPayload && viewport && canvas) {
     if (restoreFocus) viewport.focus({ preventScroll: true });
   }
 
-  function beginPlacement(mode, marker = null) {
+  function beginPlacement(mode, marker = null, writingContext = null) {
+    if (mode === 'create' && writingContext && !bootstrap.delivery.writingLinkCreationEnabled) return;
     if (returnArrivalPending || !currentAuthoredCellsReady() || !['ready', 'notice'].includes(authoredState)) return;
     if (inspectedMarkerId) closeMarkerInspection({ restoreFocus: false });
     if (inspectedTreeId) closeInspection({ restoreFocus: false });
@@ -934,6 +1003,11 @@ if (payload && copyPayload && viewport && canvas) {
     placement.active = true;
     placement.mode = mode;
     placement.movingObjectId = marker?.objectId || null;
+    placement.writingContext = writingContext;
+    const linked = Boolean(writingContext || marker?.writingLink);
+    placementWriting.hidden = !linked;
+    placementWritingTitle.textContent = writingContext?.title || copy.markers.linkedWriting;
+    placementWritingHelp.textContent = mode === 'move' ? copy.markers.linkedMove : copy.markers.linkedPlacement;
     placement.preview = null;
     placement.request = null;
     placement.saving = false;
@@ -971,6 +1045,9 @@ if (payload && copyPayload && viewport && canvas) {
   }
 
   function mutationFailureMessage(code) {
+    if (code === 'FOREST_AUTHORED_WRITING_LINKS_DISABLED') return copy.markers.linksDisabled;
+    if (code === 'FOREST_AUTHORED_WRITING_UNAVAILABLE') return copy.markers.writingUnavailable;
+    if (code === 'FOREST_AUTHORED_WRITING_DISTANCE') return copy.markers.previewWritingDistance;
     if (code === 'FOREST_AUTHORED_PLACEMENT_COLLISION') return copy.markers.collision;
     if (code === 'FOREST_AUTHORED_PLACEMENT_DENSITY') return copy.markers.density;
     if (code === 'FOREST_AUTHORED_MUTATION_RATE_LIMITED') return copy.markers.rateLimited;
@@ -992,6 +1069,7 @@ if (payload && copyPayload && viewport && canvas) {
   }
 
   function restorePendingSnapshot(pending, object = null) {
+    if (object?.state === 'removed') { markersById.delete(pending.objectId); return; }
     const canonical = markerFromApi(object);
     if (canonical) markersById.set(pending.objectId, canonical);
     else if (object?.state === 'removed' || !pending.confirmedMarker) {
@@ -1001,7 +1079,8 @@ if (payload && copyPayload && viewport && canvas) {
 
   function finishPendingMutation(pending, object) {
     const canonical = reconcileMutationObject(object);
-    if (pending.operation !== 'remove' && !canonical) {
+    const removedElsewhere = pending.operation !== 'remove' && object?.state === 'removed';
+    if (pending.operation !== 'remove' && !canonical && !removedElsewhere) {
       throw Object.assign(new Error('accepted mutation returned no active marker'), {
         code: 'FOREST_AUTHORED_MUTATION_UNAVAILABLE',
         syncOutcomeUncertain: true
@@ -1015,7 +1094,8 @@ if (payload && copyPayload && viewport && canvas) {
     }
     pendingMarkerMutations.delete(pending.objectId);
     refreshSyncStatus();
-    const message = pending.operation === 'create' ? copy.markers.saved
+    const message = removedElsewhere ? copy.markers.removedElsewhere
+      : pending.operation === 'create' ? copy.markers.saved
       : pending.operation === 'move' ? copy.markers.moved : copy.markers.removed;
     setAuthoredStatus(message, { state: 'notice' });
     if (inspectedMarkerId === pending.objectId) closeMarkerInspection({ force: true });
@@ -1030,7 +1110,7 @@ if (payload && copyPayload && viewport && canvas) {
         'FOREST_AUTHORED_MIGRATION_REQUIRED', 'FOREST_AUTHORED_RESETTING'].includes(code)) return;
     const marker = pending.operation === 'move' ? markersById.get(pending.objectId) : null;
     if (pending.operation === 'move' && !marker) return;
-    beginPlacement(pending.operation, marker);
+    beginPlacement(pending.operation, marker, pending.writingContext || null);
     placement.preview = {
       worldX: pending.request.worldX,
       worldY: pending.request.worldY,
@@ -1135,7 +1215,8 @@ if (payload && copyPayload && viewport && canvas) {
     const { worldX, worldY } = placement.preview;
     if (!placement.request) {
       placement.request = placement.mode === 'create'
-        ? { objectId: createOwnerForestMarkerObjectId(window.crypto), worldX, worldY }
+        ? { objectId: createOwnerForestMarkerObjectId(window.crypto), worldX, worldY,
+            ...(placement.writingContext ? { writingLink: { ...placement.writingContext.link } } : {}) }
         : {
             objectId: placement.movingObjectId,
             expectedRevision: markersById.get(placement.movingObjectId)?.recordRevision,
@@ -1152,12 +1233,15 @@ if (payload && copyPayload && viewport && canvas) {
       request.objectId
     )}${operation === 'move' ? '/placement' : ''}`;
     const body = operation === 'move' ? {
-      protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
+      protocolVersion: confirmedMarker?.schemaVersion === 2
+        ? bootstrap.delivery.authoredLinkedMutationProtocolVersion : bootstrap.delivery.authoredMutationProtocolVersion,
       expectedRevision: request.expectedRevision,
       worldX: request.worldX,
       worldY: request.worldY
     } : {
-      protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
+      protocolVersion: request.writingLink ? bootstrap.delivery.authoredLinkedMutationProtocolVersion
+        : bootstrap.delivery.authoredMutationProtocolVersion,
+      ...(request.writingLink ? { writingLink: { ...request.writingLink } } : {}),
       kind: 'personal-marker',
       worldX: request.worldX,
       worldY: request.worldY
@@ -1165,12 +1249,13 @@ if (payload && copyPayload && viewport && canvas) {
     const pending = {
       objectId: request.objectId,
       operation,
+      writingContext: placement.writingContext,
       confirmedMarker: confirmedMarker ? { ...confirmedMarker, syncState: undefined } : null,
       predictedMarker: predictedMarker({
         objectId: request.objectId,
         worldX: request.worldX,
         worldY: request.worldY,
-        confirmedMarker
+        confirmedMarker: request.writingLink ? { schemaVersion: 2, writingLink: { ...request.writingLink } } : confirmedMarker
       }),
       request: { ...request },
       path,
@@ -1199,7 +1284,8 @@ if (payload && copyPayload && viewport && canvas) {
       )}/removal`,
       method: 'POST',
       body: {
-        protocolVersion: bootstrap.delivery.authoredMutationProtocolVersion,
+        protocolVersion: marker.schemaVersion === 2
+          ? bootstrap.delivery.authoredLinkedMutationProtocolVersion : bootstrap.delivery.authoredMutationProtocolVersion,
         expectedRevision: marker.recordRevision
       },
       phase: 'queued',
@@ -1248,6 +1334,7 @@ if (payload && copyPayload && viewport && canvas) {
     });
     if (direction.x || direction.y) {
       returnedTreeId = null;
+      returnedMarkerId = null;
       const before = player;
       player = moveOwnerForestPlayer(player, direction, elapsed, [...placementsById.values()]);
       playerMotion = advanceForestHumanoidMotion(playerMotion, {
@@ -1427,6 +1514,14 @@ if (payload && copyPayload && viewport && canvas) {
     }
   });
   placeMarker.addEventListener('click', () => beginPlacement('create'));
+  markWriting.addEventListener('click', () => {
+    const tree = placementsById.get(inspectedTreeId);
+    if (!tree || markWriting.disabled || !inspectedWritingPath) return;
+    beginPlacement('create', null, {
+      link: { version: 1, writingTreeId: tree.id }, title: inspectionTitle.textContent,
+      origin: { worldX: tree.worldX, worldY: tree.worldY }
+    });
+  });
   authoredRetry.addEventListener('click', () => loadNearbyAuthoredCells({ force: true }));
   syncRetry.addEventListener('click', retryFailedPendingMutation);
   syncRevert.addEventListener('click', revertFailedPendingMutation);
@@ -1457,6 +1552,7 @@ if (payload && copyPayload && viewport && canvas) {
   reset.addEventListener('click', () => {
     clearPointer();
     returnedTreeId = null;
+    returnedMarkerId = null;
     returnArrivalPending = false;
     player = { ...bootstrap.spawn };
     playerMotion = createForestHumanoidMotion('down');

@@ -1,3 +1,4 @@
+import { forestAuthoredObjectHasSupportedFormat } from './forestAuthoredObjectFormat.js';
 import crypto from 'node:crypto';
 
 import ForestAuthoredObject from '../db/models/ForestAuthoredObject.js';
@@ -6,9 +7,7 @@ import {
   FOREST_AUTHORED_COORDINATE_LIMIT,
   FOREST_AUTHORED_MARKER_APPEARANCE_ID,
   FOREST_AUTHORED_MARKER_APPEARANCE_VERSION,
-  FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION,
-  FOREST_AUTHORED_OBJECT_IDENTITY_VERSION,
-  FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
+  FOREST_AUTHORED_OBJECT_IDENTITY_VERSION
 } from '../db/schemas/ForestAuthoredObjectSchema.js';
 import { FOREST_OWNER_WORLD_SCHEMA_VERSION } from '../db/schemas/ForestOwnerWorldSchema.js';
 import {
@@ -34,6 +33,7 @@ const COMPACT_FINGERPRINT_PATTERN = /^[A-Za-z0-9_-]{22}$/;
 const CURSOR_MAX_LENGTH = 512;
 const OBJECT_PROJECTION = Object.freeze({
   _id: 0,
+  writingLink: 1,
   schemaVersion: 1,
   identityVersion: 1,
   objectId: 1,
@@ -111,18 +111,23 @@ function compactFingerprint(value) {
   return crypto.createHash('sha256').update(value).digest('base64url').slice(0, 22);
 }
 
-function encodeCursor({ forestId, includeRemoved, exportStartedAt, afterObjectId }) {
+function exportFingerprint(ownerUserId, forestId, version) {
+  return compactFingerprint(version === 1 ? forestId
+    : JSON.stringify([ownerUserId, forestId, version, [1, 2], 1]));
+}
+
+function encodeCursor({ ownerUserId, forestId, version, includeRemoved, exportStartedAt, afterObjectId }) {
   return Buffer.from(JSON.stringify({
-    version: FOREST_AUTHORED_DIAGNOSTIC_CURSOR_VERSION,
-    exportVersion: FOREST_AUTHORED_DIAGNOSTIC_EXPORT_VERSION,
-    forestFingerprint: compactFingerprint(forestId),
+    version,
+    exportVersion: version,
+    forestFingerprint: exportFingerprint(ownerUserId, forestId, version),
     includeRemoved,
     exportStartedAt: exportStartedAt.toISOString(),
     afterObjectId
   })).toString('base64url');
 }
 
-function decodeCursor(value, { includeRemoved, currentDate }) {
+function decodeCursor(value, { includeRemoved, currentDate, version }) {
   if (value === undefined || value === null || value === '') return null;
   if (typeof value !== 'string' || value.length > CURSOR_MAX_LENGTH) {
     fail('INVALID_AUTHORED_DIAGNOSTIC_INPUT', 'cursor must be a bounded opaque string.');
@@ -139,8 +144,8 @@ function decodeCursor(value, { includeRemoved, currentDate }) {
       || !fields.includes('includeRemoved')
       || !fields.includes('exportStartedAt')
       || !fields.includes('afterObjectId')
-      || decoded.version !== FOREST_AUTHORED_DIAGNOSTIC_CURSOR_VERSION
-      || decoded.exportVersion !== FOREST_AUTHORED_DIAGNOSTIC_EXPORT_VERSION
+      || decoded.version !== version
+      || decoded.exportVersion !== version
       || decoded.includeRemoved !== includeRemoved
       || !COMPACT_FINGERPRINT_PATTERN.test(decoded.forestFingerprint || '')
       || !validDate(exportStartedAt)
@@ -180,7 +185,7 @@ function validateWorld(world, ownerUserId) {
 }
 
 function validateSupportedVersions(object) {
-  if (object?.schemaVersion !== FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
+  if (!forestAuthoredObjectHasSupportedFormat(object)
     || object?.identityVersion !== FOREST_AUTHORED_OBJECT_IDENTITY_VERSION
     || object?.kind !== 'personal-marker'
     || !['active', 'removed'].includes(object?.state)
@@ -196,8 +201,7 @@ function validateSupportedVersions(object) {
     || object?.worldVersionEvidence?.worldGenerationVersion
       !== FOREST_OWNER_WORLD_GENERATION_VERSION
     || object?.appearance?.id !== FOREST_AUTHORED_MARKER_APPEARANCE_ID
-    || object?.appearance?.version !== FOREST_AUTHORED_MARKER_APPEARANCE_VERSION
-    || object?.creationFingerprint?.version !== FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION) {
+    || object?.appearance?.version !== FOREST_AUTHORED_MARKER_APPEARANCE_VERSION) {
     fail(
       'AUTHORED_DIAGNOSTIC_MIGRATION_REQUIRED',
       'The diagnostic inventory contains unsupported authored-object versions.'
@@ -217,9 +221,9 @@ function validateObject(object, { ownerUserId, forestId, exportStartedAt }) {
     fail('AUTHORED_DIAGNOSTIC_UNAVAILABLE', 'The diagnostic inventory is malformed.');
   }
   const active = object.state === 'active';
+  // Mutation time and insertion time are independent; retain their recorded values.
   const timestampsValid = validDate(object.createdAt)
     && validDate(object.changedAt)
-    && object.createdAt <= object.changedAt
     && object.createdAt <= exportStartedAt
     && (active
       ? object.removedAt === null && object.purgeEligibleAt === null
@@ -244,8 +248,9 @@ function validateObject(object, { ownerUserId, forestId, exportStartedAt }) {
   }
 }
 
-function diagnosticObject(object) {
+function diagnosticObject(object, version) {
   return {
+    ...(version === 2 ? { schemaVersion: object.schemaVersion } : {}),
     objectId: object.objectId,
     kind: object.kind,
     state: object.state,
@@ -269,9 +274,9 @@ function diagnosticObject(object) {
   };
 }
 
-function emptyExport(includeRemoved, exportStartedAt) {
+function emptyExport(includeRemoved, exportStartedAt, version) {
   return {
-    exportVersion: FOREST_AUTHORED_DIAGNOSTIC_EXPORT_VERSION,
+    exportVersion: version,
     status: 'not-established',
     forestId: null,
     includeRemoved,
@@ -290,22 +295,27 @@ export function buildForestAuthoredDiagnosticExportService({
     ownerUserId: ownerValue,
     includeRemoved: includeRemovedValue,
     cursor = null,
-    limit
+    limit,
+    version: versionValue = 1
   }) {
+    const version = versionValue === '1' ? 1 : versionValue === '2' ? 2 : versionValue;
+    if (version !== 1 && version !== 2) {
+      fail('INVALID_AUTHORED_DIAGNOSTIC_INPUT', 'version must be 1 or 2.');
+    }
     const ownerUserId = canonicalOwner(ownerValue);
     const includeRemoved = exactIncludeRemoved(includeRemovedValue);
     const pageSize = resolveLimit(limit);
     const currentDate = currentTime(now);
-    const decodedCursor = decodeCursor(cursor, { includeRemoved, currentDate });
+    const decodedCursor = decodeCursor(cursor, { includeRemoved, currentDate, version });
     const world = await lean(ForestOwnerWorldModel.findOne({
       ownerUserId,
       worldRole: 'primary'
     }));
     const exportStartedAt = decodedCursor?.exportStartedAt || currentDate;
-    if (!world) return emptyExport(includeRemoved, exportStartedAt);
+    if (!world) return emptyExport(includeRemoved, exportStartedAt, version);
     validateWorld(world, ownerUserId);
     if (decodedCursor?.forestFingerprint
-      && decodedCursor.forestFingerprint !== compactFingerprint(world.forestId)) {
+      && decodedCursor.forestFingerprint !== exportFingerprint(ownerUserId, world.forestId, version)) {
       fail('INVALID_AUTHORED_DIAGNOSTIC_INPUT', 'cursor is invalid for this owner forest.');
     }
     const query = ForestAuthoredObjectModel.find({
@@ -320,6 +330,9 @@ export function buildForestAuthoredDiagnosticExportService({
     }
     const pageRows = rows.slice(0, pageSize);
     for (const object of pageRows) {
+      if (version === 1 && object.schemaVersion === 2) {
+        fail('AUTHORED_UPGRADE_REQUIRED', 'This inventory requires diagnostic export version 2.');
+      }
       validateObject(object, {
         ownerUserId,
         forestId: world.forestId,
@@ -327,9 +340,9 @@ export function buildForestAuthoredDiagnosticExportService({
       });
     }
     const objects = pageRows.filter(object => includeRemoved || object.state === 'active')
-      .map(diagnosticObject);
+      .map(object => diagnosticObject(object, version));
     return {
-      exportVersion: FOREST_AUTHORED_DIAGNOSTIC_EXPORT_VERSION,
+      exportVersion: version,
       status: 'ready',
       forestId: world.forestId,
       includeRemoved,
@@ -340,6 +353,8 @@ export function buildForestAuthoredDiagnosticExportService({
         returnedObjectCount: objects.length,
         nextCursor: rows.length > pageSize && pageRows.length
           ? encodeCursor({
+            ownerUserId,
+            version,
             forestId: world.forestId,
             includeRemoved,
             exportStartedAt,

@@ -140,6 +140,21 @@ async function rejectedError(promise) {
 }
 
 describe('forest authored placement authority', () => {
+  it('treats valid linked markers as ordinary collision reservations without resolving writing', async () => {
+    const linked = marker(1, { schemaVersion: 2,
+      writingLink: { version: 1, writingTreeId: OBJECT },
+      creationFingerprint: { version: 2, digest: 'A'.repeat(43) }
+    });
+    const test = harness({ markers: [linked] });
+    await expectAsync(test.inspect()).toBeResolved();
+    const error = await rejectedError(test.inspect({ worldX: linked.placement.worldX, worldY: linked.placement.worldY }));
+    expect(error.code).toBe('AUTHORED_PLACEMENT_COLLISION');
+  });
+
+  it('fails closed on an invalid relationship in a collision neighbor', async () => {
+    const test = harness({ markers: [marker(1, { writingLink: null })] });
+    expect((await rejectedError(test.inspect())).code).toBe('AUTHORED_PLACEMENT_UNAVAILABLE');
+  });
   it('resolves signed environment and reads bounded neighboring cells in the transaction', async () => {
     const test = harness();
 

@@ -1,10 +1,20 @@
 import { Schema } from 'mongoose';
+import {
+  FOREST_AUTHORED_OBJECT_SCHEMA_VERSION,
+  FOREST_AUTHORED_OBJECT_SCHEMA_VERSIONS,
+  readForestAuthoredObjectFormat
+} from '../../services/forestAuthoredObjectFormat.js';
 
-export const FOREST_AUTHORED_OBJECT_SCHEMA_VERSION = 1;
+export {
+  FOREST_AUTHORED_OBJECT_SCHEMA_VERSION,
+  FOREST_AUTHORED_LINKED_OBJECT_SCHEMA_VERSION,
+  FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION,
+  FOREST_AUTHORED_LINKED_FINGERPRINT_VERSION,
+  FOREST_AUTHORED_WRITING_LINK_VERSION
+} from '../../services/forestAuthoredObjectFormat.js';
 export const FOREST_AUTHORED_OBJECT_IDENTITY_VERSION = 1;
 export const FOREST_AUTHORED_OBJECT_KINDS = Object.freeze(['personal-marker']);
 export const FOREST_AUTHORED_OBJECT_STATES = Object.freeze(['active', 'removed']);
-export const FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION = 1;
 export const FOREST_AUTHORED_MARKER_APPEARANCE_ID = 'quiet-waymarker';
 export const FOREST_AUTHORED_MARKER_APPEARANCE_VERSION = 1;
 export const FOREST_AUTHORED_COORDINATE_LIMIT = 1_000_000_000;
@@ -82,7 +92,7 @@ const creationFingerprintSchema = new Schema({
   version: {
     type: Number,
     required: true,
-    enum: [FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION],
+    enum: [1, 2],
     immutable: true
   },
   digest: {
@@ -99,9 +109,16 @@ const forestAuthoredObjectSchema = new Schema({
   schemaVersion: {
     type: Number,
     required: true,
-    enum: [FOREST_AUTHORED_OBJECT_SCHEMA_VERSION],
+    enum: FOREST_AUTHORED_OBJECT_SCHEMA_VERSIONS,
     default: FOREST_AUTHORED_OBJECT_SCHEMA_VERSION,
-    immutable: true
+    immutable: true,
+    validate: {
+      validator() {
+        try { readForestAuthoredObjectFormat(this); return true; }
+        catch { return false; }
+      },
+      message: 'The marker schema, fingerprint and writing relationship must agree.'
+    }
   },
   identityVersion: {
     type: Number,
@@ -141,6 +158,16 @@ const forestAuthoredObjectSchema = new Schema({
     type: String,
     required: true,
     enum: FOREST_AUTHORED_OBJECT_KINDS,
+    immutable: true
+  },
+  writingLink: {
+    type: new Schema({
+      version: { type: Number, required: true, enum: [1], immutable: true },
+      writingTreeId: {
+        type: String, required: true, match: UUID_V4_PATTERN, lowercase: true, immutable: true
+      }
+    }, { _id: false, strict: 'throw' }),
+    default: undefined,
     immutable: true
   },
   state: {
@@ -227,6 +254,13 @@ forestAuthoredObjectSchema.index(
 forestAuthoredObjectSchema.index(
   { ownerUserId: 1, forestId: 1, objectId: 1, createdAt: 1 },
   { name: 'forest_authored_object_diagnostic_export' }
+);
+forestAuthoredObjectSchema.index(
+  { ownerUserId: 1, forestId: 1, objectId: 1 },
+  {
+    partialFilterExpression: { schemaVersion: 2, state: 'active' },
+    name: 'forest_authored_linked_marker_list'
+  }
 );
 forestAuthoredObjectSchema.index(
   { ownerUserId: 1, _id: 1 },

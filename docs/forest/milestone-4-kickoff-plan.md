@@ -1,7 +1,10 @@
 # Milestone 4 kickoff: a place to revisit writing
 
 Prepared and accepted November 1, 2026. Status: implementation in progress; the first navigation
-increment is implemented, with human acceptance still open. This responds to the request to plan from the
+increments have passed the user's reported loop and inspection review. The writing-linked marker
+creation/read/return loop is implemented behind an off-by-default gate and has passed automated
+browser and guarded database checks. The user reported the full local marker walkthrough and
+polished UI passing on November 5; physical-device details and wider acceptance remain unrecorded. This responds to the request to plan from the
 [reboot starter prompt](activity-forest-reboot-starter-prompt.md).
 
 ## Baseline and gap
@@ -237,3 +240,244 @@ or Milestone 4.
   visual hierarchy. Physical-device and live-account review of these follow-up changes remain open.
 - Verification: **1,348 specs, zero failures**; repository and browser-fixture lint, module syntax,
   and whitespace checks pass.
+
+### Writing-link design checkpoint
+
+The [concrete record/protocol design](writing-linked-marker-design.md) proposes preserving all
+ordinary markers as schema 1 and creating schema-2 markers only for an immutable, versioned
+writing-tree link. It fixes both fingerprint encodings, mixed-client/read behavior, source
+validation and retry ordering, marked-writing finding/return, mixed reset/retention/diagnostic
+handling, and a compatible-reader-first rollout. No existing-record migration or new collection
+is required. Runtime/schema implementation and its evidence remain outstanding; no new automated
+test result is claimed for this documentation-only checkpoint.
+
+The user subsequently reported the complete return/focus/inspection loop working well after
+review and committed `edc985d`. This closes the reported functional review for those changes;
+device/browser details and physical-mobile certification remain unrecorded.
+
+### Increment 3 — marker format and transaction core
+
+The user approved the concrete writing-link design. The first internal code increment now contains
+strict schema-2 relationship validation alongside unchanged schema-1 defaults, fixed old/new
+fingerprint encodings, transaction/session-bound source eligibility and 160-unit placement checks,
+and protocol-2 service creation/movement/removal with idempotency, revision and tombstone behavior.
+Equal retries recover committed results before checking new-creation availability or source access.
+Collision and tombstone-retention code supports both record shapes; client reconciliation checks
+relationship intent as well as coordinates. The
+[design checkpoint](writing-linked-marker-design.md) records exact implementation boundaries.
+
+Public API creation and regional negotiation, bootstrap and UI remain on version 1. The internal
+linked-create dependency defaults to false and is enabled only in unit harnesses. Remaining work
+before enabling anything is mixed-version regional/diagnostic/reset compatibility, the marked
+writing read/return UI, isolated database evidence, and end-to-end browser/device review. This is
+an implementation foundation, not the completed linked-marker slice or Milestone 4. Existing
+markers need no migration; no real database operations or new indexes were introduced.
+
+Verification: **1,374 Jasmine specs, zero failures** (26 added), repository lint, browser-module
+syntax and whitespace checks pass. Fixed digest vectors verify the legacy byte encoding and new
+relationship encoding. Tests cover strict schemas and preserved legacy data, transaction-bound
+source validation, disabled-create recovery, differing-link conflicts, movement/removal continuity,
+mixed collisions and retention, and relationship-aware client reconciliation. Database transaction/
+index fixtures and complete browser/device evidence remain required before feature enablement.
+
+### Increment 4 — mixed regional reads, diagnostics and reset compatibility
+
+Regional and diagnostic endpoints now accept explicit scalar `version=2` reads. Omission preserves
+version-1 response and cursor encodings. Before returning any legacy regional page, a bounded
+owner/forest/cell-scoped existence query detects active linked markers and returns HTTP 409
+`FOREST_AUTHORED_UPGRADE_REQUIRED`; version 2 returns both formats with their stored schema and
+relationship. Version-2 continuations bind owner/world, requested version, supported object/link
+formats and the existing region/revision vector. Diagnostic exports validate mixed rows and report
+stored schema/fingerprint versions while omitting relationships and writing identities/metadata;
+legacy exports require an upgrade when encountering linked records, including filtered tombstones.
+
+New internal reset requests explicitly create schema-2/operation-2 records with immutable `[1, 2]`
+scope, independently of linked creation. Shared validation preserves old operation-1 scalar scope,
+rejects ambiguous/unknown scopes, and recognizes either processing format in regional readers.
+Mixed bounded reset batches retain relationships and fingerprints, advance regional revisions and
+compare against each stored schema. Retention dispatches completed-reset deletion by stored format.
+The compatible-reader-first rollout still requires pausing new resets during deployment and
+finishing old processing resets before enabling linked creation.
+
+Verification: **1,390 Jasmine specs, zero failures** (16 added in this increment), repository lint
+and whitespace checks pass. The full suite required execution outside the sandbox because three
+existing startup tests spawn local Node subprocesses; that rerun passed. Fixed legacy regional and
+diagnostic cursor fixtures also pass. No database operations, index changes, UI enablement or commit
+were performed. The public mutation parser/bootstrap/client remain version 1 with new linked
+creation disabled. Inspection/list/return UI, isolated database fixtures, browser and device review
+remain before completing the marker slice.
+
+### Increment 5 — linked-marker inspection, finding and return UI
+
+Private marker inspection now reuses complete durable-record/world validation and current tree
+inspection authorization, with exact unlinked/ready/unavailable-source variants. Unsupported data
+and infrastructure failures do not masquerade as source deletion. The new marked-writing view
+(`/forest/writing?view=marked`) lists active schema-2 markers with UUID ordering, bounded raw pages,
+owner/world/filter/format-bound cursors and deduplicated source reads. Unavailable sources retain
+rows with Visit place and confirmed revision-protected removal. Available rows also offer Read post.
+Removal restores keyboard focus to another row or forest entry. The approved partial list index is
+declared but not yet verified against an isolated database.
+
+Marker-origin post/translation return context now uses `returnMarker`. The owner bootstrap resolves
+current marker placement without requiring the source to remain readable, completes bounded tree
+collision reads, rechecks marker revision and chooses a nearby clear spawn. Conflicting locators and
+unavailable/foreign/removed/unsupported or concurrently moved markers fall back to the entrance.
+Bootstrap 3 negotiates regional version 2 and linked movement/removal protocol 2 while preserving
+ordinary mutation protocol 1. The canvas retains validated relationship intent, prioritizes and
+highlights a returned marker and asynchronously displays current writing in its inspection panel.
+
+Verification: **1,408 Jasmine specs, zero failures** (18 added in this increment), repository lint,
+browser-module syntax and whitespace checks pass. The expanded database-free Firefox fixture
+passes tree and linked-marker inspection→post→return at 1280px and 390px, keyboard entry/close
+focus, unavailable-writing management, translation pagination, delayed-focus and tree-load fallbacks.
+Rendered-page tests cover marked rows, unavailable sources, localized links, language redirects,
+pagination and revision-protected removal/focus. Narrow-viewport desktop Firefox is not physical
+mobile/touch certification.
+
+No real database operations or commit were performed. Linked creation remains disabled; the
+runtime environment gate and tree-selection/create control are the next implementation step.
+Isolated database transaction/index/lifecycle fixtures and the complete creation walkthrough remain
+required before enabling the feature or preparing the final linked-marker commit.
+
+
+### Increment 6 — selected-writing creation and full-loop verification (November 4)
+
+The shared `FOREST_WRITING_LINKS_ENABLED` gate defaults off; only the literal value `true` enables
+new linked creation and its tree-inspection action. Bootstrap and the mutation service use the same
+reader. Protocol-2 creation accepts an exact version-1 writing link, preserves the session-derived
+owner and rejects copied metadata or links on protocol 1. Disabled creation, unavailable writing
+and excessive source distance have explicit bounded error responses. Equal committed retries still
+recover before checking the gate or current source.
+
+With creation enabled, inspect a tree and select **Mark this writing**. The existing placement
+controls retain the chosen writing title and immutable tree identity, preview the initial 160-unit
+range and retain the same request through a lost-response retry. Cancel clears the writing context;
+ordinary placement remains protocol 1. Moving a linked marker keeps its original link and does not
+apply the initial range limit. A retry that observes a tombstone now settles on removal instead of
+leaving a predicted marker in the scene; conflicting removed snapshots are likewise never redrawn.
+
+Verification: **1,411 Jasmine specs, zero failures** (three added in this increment), repository lint,
+explicit lint of the browser modules and both fixture scripts, module syntax and whitespace checks
+pass. Firefox passes selected-writing creation→inspection→post→marker-return at 1280px and 390px,
+including a committed write with lost response followed by a gate-off retry, concurrent removal,
+initial-range rejection, and ordinary creation while linked creation is off. Earlier inspection,
+translation, focus and tree-return fallback scenarios still pass. This is headless desktop Firefox
+at two viewport sizes, not physical-mobile certification.
+
+The new guarded command
+`npm run forest:writing-linked-marker-fixture -- run --write`
+passed against `daily-page-test`, twice (the second run adds rollback/collision/unknown-format
+checks). It refuses production configuration, scopes fixture records to reserved owner
+`64b00000000000000000a061`, and cleans those records after each run. Evidence covers:
+
+- linked insertion and owner-fence rollback on a regional-write failure;
+- concurrent equal creation, differing-link conflict, unchanged legacy bytes and mixed collisions;
+- gate-off/source-loss/moved/removed retries and marker-place access without a readable source;
+- inclusive range, unavailable-source list rows, the actual named partial-index scan, mixed regional
+  pagination/invalidation, and diagnostic privacy;
+- mixed reset with the creation gate off, legacy reset scope and mixed tombstone/reset retention;
+- preservation of unknown formats during retention and bounded account-deletion cleanup of all
+  owned formats.
+
+The test-database index was created/verified; fixture owner records were removed. No production
+database operation, environment-file edit or commit was performed. No migration or backfill is
+needed. The planned linked-marker implementation is now ready for the user's local walkthrough.
+
+For that walkthrough, restart the normal development server with
+`FOREST_WRITING_LINKS_ENABLED=true` (for example,
+`FOREST_WRITING_LINKS_ENABLED=true npm run local`). Inspect a writing tree, choose **Mark this
+writing**, place and save it, then inspect the marker and read/return from the post. Also visit
+`/forest/writing?view=marked`, move a marker away from its tree, and verify that unavailable writing
+leaves the marker manageable. Existing ordinary markers should remain ordinary. Review on a
+physical mobile device remains open. Keep the feature uncommitted until that review; deployment
+still follows the compatible-reader-first rollout and old-reset completion requirements in the
+[approved design](writing-linked-marker-design.md).
+
+
+### Local walkthrough correction — marked-list timestamps (November 4)
+
+The first user marker walkthrough found that **Marked writing** returned an unavailable page with
+`ForestAuthoredMutationError`. The list reused a validator that incorrectly required insertion
+`createdAt` to precede mutation `changedAt`; the normal writer captures mutation time first and
+Mongoose timestamps insertion later. Diagnostics had the same ordering assumption. Synthetic
+regressions and the guarded real-clock database fixture reproduced the failure before the fix.
+
+Both readers now accept these independently valid timestamps, preserving removal-lifecycle,
+authorization, schema, revision and export bounds. The writer and all existing marker records are
+unchanged. The database fixture now uses real time for creation and only advances time for retention,
+so ordinary creation/concurrent retry and marked-list reads exercise actual insertion timing.
+The corrected guarded fixture passes and its reserved records were cleaned. No production records
+were read or changed. The user should restart the dev server and retry the existing page; no marker
+recreation or migration is needed. User acceptance remains open.
+
+Timestamp-fix verification: **1,413 Jasmine specs, zero failures**, repository lint, fixture lint
+and whitespace checks pass. The real-clock guarded database fixture also passes.
+
+
+### Local walkthrough correction — marker inspection middleware (November 4)
+
+The next reported issue was a writing-unavailable message for every placed linked marker. Normal
+inspection GETs were intercepted by the authored-prefix Origin/JSON guard, which had been written
+for mutations. The request failed before source inspection, so the post body was unrelated. The
+old browser fixture mounted handlers directly and did not exercise that prefix middleware.
+
+GET/HEAD now pass through to the existing authenticated private inspection path. Write methods
+retain same-origin JSON enforcement before authentication/mutation work. Three mounted-prefix
+regressions reproduce the former 403 and check successful authenticated reads, anonymous 401,
+private cache headers and continued rejection of untrusted/non-JSON writes. The browser fixture
+now includes the real prefix guard for both reads and writes, plus an infrastructure-error scenario
+that verifies marker-specific retry copy instead of claiming the tree source is unavailable.
+Existing marker/post data and writing eligibility rules are unchanged. The user should restart the
+dev server and retry marker inspection; no data repair is needed. User acceptance remains open.
+
+Inspection-routing verification: **1,416 Jasmine specs, zero failures**, repository/fixture/browser
+module lint and whitespace checks pass. Firefox passes the full creation/read/return fixture at
+1280px and 390px with the production guard mounted, including the marker-loading error message.
+
+
+### Local walkthrough polish — one marker family and consistent controls (November 5)
+
+The user found technical marker copy ("private account state"), confusingly similar place/writing
+panels and inconsistent bottom controls. The UI now presents one forest-marker family with two
+uses: remembering a place or returning to writing. Plain markers retain the familiar sign; writing
+markers add a small book detail, including in placement previews. No durable record, relationship,
+source policy or existing-marker behavior changed.
+
+Both panels share **Forest marker** identity and the same Move/Remove actions. A plain marker
+explains the remembered place and omits the unrelated marked-writing link. A writing marker leads
+with its authorized post title and the same primary Read post treatment used by tree inspection;
+management and Browse marked writing sit below a divider. Loading/unavailable writing retain the
+clear writing-specific heading. Player copy removes technical/prototype wording from the marker
+description, confirmation and related placement messages.
+
+The nearby label and matching View/Place buttons now share one bottom action bar, with 44px targets
+and a compact two-button layout on narrow screens. Inspection and placement hide that bar, avoiding
+redundant background creation actions. Close restores game focus and the relevant nearby controls.
+
+Verification: **35 focused scene/bootstrap/wiring specs pass**; explicit browser-module/fixture lint,
+syntax and whitespace checks pass. The full database-free Firefox walkthrough passes at 1280px and
+390px, including both marker panels, equal-sized touch targets, toolbar containment/hiding, close
+focus and the established creation/read/return/retry scenarios. Screenshots of the writing and
+place panels and narrow toolbar were visually reviewed. No new database operation or commit was
+performed. Physical-device review and the user's visual acceptance remain open.
+
+
+### Local acceptance and commit review (November 5)
+
+The user reported that everything passed their tests after the marker UI polish and supplied fresh
+screenshots of nearby writing-marker controls, the plain place-marker panel, the linked-writing
+panel with Read post, and the restored nearby action bar. Visual review confirms consistent panel
+hierarchy, matching bottom controls, recognizable plain/book sign details and hidden background
+actions while inspecting. This records the user's successful local functional and visual acceptance;
+no new UI changes were needed during the final review. Browser/device specifics beyond the supplied
+desktop screenshots were not reported, so this does not add physical-mobile certification.
+
+The coherent linked-marker feature is ready for a commit alongside its schemas/services, protocol
+compatibility, inspection/list/return UI, regression fixes, fixtures and documentation. The user will
+make the commit; no commit, deployment, gate enablement or new database operation was performed in
+this review. The feature remains off by default and the documented compatible-reader-first rollout
+still applies when deploying/enabling it.
+
+Final commit-review verification: **1,416 Jasmine specs, zero failures**, repository lint, explicit
+browser-module/fixture lint and whitespace checks pass. No blocking issue was found in the final
+review. The changes remain uncommitted for the user.

@@ -173,7 +173,7 @@ function validateWorld(world, ownerUserId) {
   return 'ready';
 }
 
-function validateTree(tree, world, ownerUserId, writingTreeId) {
+export function validateForestOwnerInspectionTree(tree, world, ownerUserId, writingTreeId) {
   const phenotype = resolveForestPhenotype(tree?.projection?.phenotypeId);
   const season = tree?.projection?.creationSeason;
   const paletteId = tree?.projection?.foliagePaletteId;
@@ -318,7 +318,7 @@ export function buildForestOwnerTreeInspectionService({
       sourceState: 'active',
       hiddenFromForest: false,
     }, TREE_PROJECTION));
-    const phenotype = validateTree(tree, world, ownerUserId, writingTreeId);
+    const phenotype = validateForestOwnerInspectionTree(tree, world, ownerUserId, writingTreeId);
     const ownerMatch = ownerBlockMatch(ownerUserId, tree.translationGroupId);
     const preferredQuery = BlockModel.find({
       ...ownerMatch,

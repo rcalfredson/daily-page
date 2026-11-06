@@ -67,7 +67,7 @@ describe('forest owner scene bootstrap', () => {
       ForestOwnerWorldModel: { findOne: () => chain(world()) }, resolveReturnDestination
     });
     const result = await read({ ownerUserId: OWNER_USER_ID, returnTreeId: target.treeId, preferredContentLang: 'es' });
-    expect(result.bootstrapVersion).toBe(2);
+    expect(result.bootstrapVersion).toBe(3);
     expect(result.returnDestination).toEqual(target);
     expect(result.spawn.worldX).toBe(0);
     expect(result.spawn.worldY).toBe(0);
@@ -241,4 +241,41 @@ describe('forest production route', () => {
     expect(res.model.bootstrap).toBeNull();
     expect(JSON.stringify(console.error.calls.allArgs())).not.toContain(privateDetail);
   });
+  it('resolves marker destinations and uses the entrance for conflicting destination types', async () => {
+    const markerId = '33333333-3333-4333-8333-333333333333';
+    const resolveMarkerReturnDestination = jasmine.createSpy('resolveMarkerReturnDestination')
+      .and.resolveTo({ markerId, spawn: { worldX: -1440, worldY: 1440 } });
+    const resolveReturnDestination = jasmine.createSpy('resolveReturnDestination');
+    const read = buildForestOwnerSceneBootstrapService({ ForestOwnerWorldModel: { findOne: () => chain(world()) },
+      resolveMarkerReturnDestination, resolveReturnDestination });
+    const result = await read({ ownerUserId: OWNER_USER_ID, returnMarkerId: markerId });
+    expect(result.returnDestination.markerId).toBe(markerId);
+    expect(result.delivery.initialCells).toContain({ cellX: -2, cellY: 2 });
+    expect(result.delivery.authoredRegionManifestVersion).toBe(2);
+    expect(result.delivery.authoredMutationProtocolVersion).toBe(1);
+    expect(result.delivery.authoredLinkedMutationProtocolVersion).toBe(2);
+    expect(result.delivery.writingLinkCreationEnabled).toBeFalse();
+    expect(resolveReturnDestination).not.toHaveBeenCalled();
+    resolveMarkerReturnDestination.calls.reset();
+    const conflict = await read({ ownerUserId: OWNER_USER_ID, returnMarkerId: markerId, returnTreeId: FOREST_ID });
+    expect(conflict.returnDestination).toBeUndefined();
+    expect(resolveMarkerReturnDestination).not.toHaveBeenCalled();
+    const readBootstrap = jasmine.createSpy('readBootstrap').and.resolveTo({ status: 'ready' });
+    const handler = buildForestRouteHandler({ readBootstrap });
+    await handler({ user: { id: OWNER_USER_ID }, query: { returnMarker: markerId, returnTree: FOREST_ID } }, response());
+    expect(readBootstrap).toHaveBeenCalledOnceWith({ ownerUserId: OWNER_USER_ID });
+  });
+
+  it('advertises the injected creation gate independently of compatible reading protocols', async () => {
+    for (const enabled of [false, true]) {
+      const read = buildForestOwnerSceneBootstrapService({ ForestOwnerWorldModel: { findOne: () => chain(world()) },
+        linkedCreationEnabled: () => enabled });
+      const result = await read({ ownerUserId: OWNER_USER_ID });
+      expect(result.delivery.writingLinkCreationEnabled).toBe(enabled);
+      expect(result.delivery.authoredRegionManifestVersion).toBe(2);
+      expect(result.delivery.authoredMutationProtocolVersion).toBe(1);
+      expect(result.delivery.authoredLinkedMutationProtocolVersion).toBe(2);
+    }
+  });
+
 });

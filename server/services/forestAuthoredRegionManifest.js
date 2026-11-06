@@ -1,3 +1,5 @@
+import { forestAuthoredResetScope } from './forestAuthoredResetFormat.js';
+import { forestAuthoredObjectHasSupportedFormat } from './forestAuthoredObjectFormat.js';
 import crypto from 'node:crypto';
 
 import ForestAuthoredObject from '../db/models/ForestAuthoredObject.js';
@@ -8,17 +10,11 @@ import {
   FOREST_AUTHORED_COORDINATE_LIMIT,
   FOREST_AUTHORED_MARKER_APPEARANCE_ID,
   FOREST_AUTHORED_MARKER_APPEARANCE_VERSION,
-  FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION,
-  FOREST_AUTHORED_OBJECT_IDENTITY_VERSION,
-  FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
+  FOREST_AUTHORED_OBJECT_IDENTITY_VERSION
 } from '../db/schemas/ForestAuthoredObjectSchema.js';
 import {
   FOREST_AUTHORED_REGION_REVISION_SCHEMA_VERSION
 } from '../db/schemas/ForestAuthoredRegionRevisionSchema.js';
-import {
-  FOREST_AUTHORED_RESET_OPERATION_SCHEMA_VERSION,
-  FOREST_AUTHORED_RESET_OPERATION_VERSION
-} from '../db/schemas/ForestAuthoredResetOperationSchema.js';
 import {
   FOREST_OWNER_WORLD_SCHEMA_VERSION
 } from '../db/schemas/ForestOwnerWorldSchema.js';
@@ -52,6 +48,7 @@ const MAXIMUM_CELL_MAGNITUDE = Math.ceil(
 );
 const OBJECT_PROJECTION = Object.freeze({
   _id: 0,
+  writingLink: 1,
   schemaVersion: 1,
   identityVersion: 1,
   objectId: 1,
@@ -174,30 +171,33 @@ function revisionFingerprint(vector) {
   )).join(','));
 }
 
-function encodeCursor(objectId, regionFingerprint, vectorFingerprint) {
+function encodeCursor(objectId, regionFingerprint, vectorFingerprint, version, contextFingerprint) {
   return Buffer.from(JSON.stringify({
-    version: FOREST_AUTHORED_REGION_CURSOR_VERSION,
+    version,
+    ...(version === 2 ? { contextFingerprint } : {}),
     regionFingerprint,
     revisionFingerprint: vectorFingerprint,
     afterObjectId: objectId
   })).toString('base64url');
 }
 
-function decodeCursor(value, expectedRegionFingerprint) {
+function decodeCursor(value, expectedRegionFingerprint, version) {
   if (value === undefined || value === null || value === '') return null;
-  if (typeof value !== 'string' || value.length > CURSOR_MAX_LENGTH) {
+  if (typeof value !== 'string' || value.length > (version === 1 ? CURSOR_MAX_LENGTH : 384)) {
     fail('INVALID_AUTHORED_REGION_INPUT', 'cursor must be a bounded opaque string.');
   }
   try {
     const decoded = JSON.parse(Buffer.from(value, 'base64url').toString('utf8'));
     const fields = decoded && typeof decoded === 'object' && !Array.isArray(decoded)
       ? Object.keys(decoded) : [];
-    if (fields.length !== 4
+    if (fields.length !== (version === 1 ? 4 : 5)
       || !fields.includes('version')
       || !fields.includes('regionFingerprint')
       || !fields.includes('revisionFingerprint')
       || !fields.includes('afterObjectId')
-      || decoded.version !== FOREST_AUTHORED_REGION_CURSOR_VERSION
+      || decoded.version !== version
+      || version === 2 && (!fields.includes('contextFingerprint')
+        || !COMPACT_FINGERPRINT_PATTERN.test(decoded.contextFingerprint || ''))
       || decoded.regionFingerprint !== expectedRegionFingerprint
       || !COMPACT_FINGERPRINT_PATTERN.test(decoded.revisionFingerprint || '')
       || !UUID_V4_PATTERN.test(decoded.afterObjectId || '')) {
@@ -236,9 +236,9 @@ function validateWorld(world, ownerUserId) {
   }
 }
 
-function emptyManifest(status, cells) {
+function emptyManifest(status, cells, version) {
   return {
-    manifestVersion: FOREST_AUTHORED_REGION_MANIFEST_VERSION,
+    manifestVersion: version,
     status,
     spatialIndex: {
       version: FOREST_OWNER_PLACEMENT_INDEX_VERSION,
@@ -310,7 +310,7 @@ function validateObject(object, world, ownerUserId, requestedKeys) {
     fail('AUTHORED_REGION_MIGRATION_REQUIRED', 'The authored region has invalid coordinates.');
   }
   const key = `${expectedIndex.cellX}:${expectedIndex.cellY}`;
-  if (object?.schemaVersion !== FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
+  if (!forestAuthoredObjectHasSupportedFormat(object)
     || object?.identityVersion !== FOREST_AUTHORED_OBJECT_IDENTITY_VERSION
     || !UUID_V4_PATTERN.test(object?.objectId || '')
     || object?.forestId !== world.forestId
@@ -335,7 +335,6 @@ function validateObject(object, world, ownerUserId, requestedKeys) {
       !== FOREST_OWNER_WORLD_GENERATION_VERSION
     || object?.appearance?.id !== FOREST_AUTHORED_MARKER_APPEARANCE_ID
     || object?.appearance?.version !== FOREST_AUTHORED_MARKER_APPEARANCE_VERSION
-    || object?.creationFingerprint?.version !== FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION
     || !SHA256_BASE64URL_PATTERN.test(object?.creationFingerprint?.digest || '')
     || !Number.isSafeInteger(object?.recordRevision)
     || object.recordRevision < 1
@@ -353,8 +352,12 @@ function validateObject(object, world, ownerUserId, requestedKeys) {
   return expectedIndex;
 }
 
-function manifestObject(object, placementIndex) {
+function manifestObject(object, placementIndex, version) {
   return {
+    ...(version === 2 ? {
+      schemaVersion: object.schemaVersion,
+      writingLink: object.schemaVersion === 2 ? { ...object.writingLink } : null
+    } : {}),
     objectId: object.objectId,
     kind: object.kind,
     regionId: `${placementIndex.cellX}:${placementIndex.cellY}`,
@@ -382,15 +385,14 @@ async function resetState({ ownerUserId, forestId, ForestAuthoredResetOperationM
     forestId: 1,
     status: 1,
     authoredObjectSchemaVersion: 1,
+    authoredObjectSchemaVersions: 1,
     spatialIndexVersion: 1
   }));
   if (!operation) return false;
-  if (operation.schemaVersion !== FOREST_AUTHORED_RESET_OPERATION_SCHEMA_VERSION
-    || operation.operationVersion !== FOREST_AUTHORED_RESET_OPERATION_VERSION
+  if (!forestAuthoredResetScope(operation)
     || operation.ownerUserId !== ownerUserId
     || operation.forestId !== forestId
     || operation.status !== 'processing'
-    || operation.authoredObjectSchemaVersion !== FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
     || operation.spatialIndexVersion !== FOREST_OWNER_PLACEMENT_INDEX_VERSION) {
     fail(
       'AUTHORED_REGION_MIGRATION_REQUIRED',
@@ -410,27 +412,39 @@ export function buildForestAuthoredRegionManifestService({
     ownerUserId: ownerValue,
     cells: cellValue,
     cursor = null,
-    limit
+    limit,
+    version: versionValue = 1
   }) {
+    const version = versionValue === '1' ? 1 : versionValue === '2' ? 2 : versionValue;
+    if (version !== 1 && version !== 2) {
+      fail('INVALID_AUTHORED_REGION_INPUT', 'version must be 1 or 2.');
+    }
     const ownerUserId = canonicalOwner(ownerValue);
     const cells = canonicalCells(cellValue);
     const pageSize = resolveLimit(limit);
     const requestedFingerprint = cellFingerprint(cells);
-    const decodedCursor = decodeCursor(cursor, requestedFingerprint);
+    const decodedCursor = decodeCursor(cursor, requestedFingerprint, version);
     const world = await lean(ForestOwnerWorldModel.findOne({
       ownerUserId,
       worldRole: 'primary'
     }));
-    if (!world) return emptyManifest('not-established', cells);
+    if (!world) return emptyManifest('not-established', cells, version);
     validateWorld(world, ownerUserId);
+    const contextFingerprint = fingerprint(JSON.stringify([
+      ownerUserId, world.forestId, version, [1, 2], 1
+    ]));
+    if (version === 2 && decodedCursor
+      && decodedCursor.contextFingerprint !== contextFingerprint) {
+      fail('INVALID_AUTHORED_REGION_INPUT', 'cursor is invalid for this owner forest.');
+    }
     if (world.reconciliation.state === 'running') {
-      return emptyManifest('reconciling', cells);
+      return emptyManifest('reconciling', cells, version);
     }
     if (await resetState({
       ownerUserId,
       forestId: world.forestId,
       ForestAuthoredResetOperationModel
-    })) return emptyManifest('resetting', cells);
+    })) return emptyManifest('resetting', cells, version);
 
     const initialVector = await readRevisionVector({
       ownerUserId,
@@ -448,6 +462,18 @@ export function buildForestAuthoredRegionManifestService({
       'placementIndex.cellX': cell.cellX,
       'placementIndex.cellY': cell.cellY
     }));
+    if (version === 1) {
+      const linkedObject = await lean(ForestAuthoredObjectModel.findOne({
+        ownerUserId,
+        forestId: world.forestId,
+        state: 'active',
+        schemaVersion: 2,
+        $or: objectCellFilter
+      }, { _id: 1 }));
+      if (linkedObject) {
+        fail('AUTHORED_UPGRADE_REQUIRED', 'This region requires authored manifest version 2.');
+      }
+    }
     const unsupportedSpatialObject = await lean(ForestAuthoredObjectModel.findOne({
       ownerUserId,
       forestId: world.forestId,
@@ -485,7 +511,10 @@ export function buildForestAuthoredRegionManifestService({
           'An active authored object is missing regional revision evidence.'
         );
       }
-      return manifestObject(object, placementIndex);
+      if (version === 1 && object.schemaVersion === 2) {
+        fail('AUTHORED_UPGRADE_REQUIRED', 'This region requires authored manifest version 2.');
+      }
+      return manifestObject(object, placementIndex, version);
     });
     const finalVector = await readRevisionVector({
       ownerUserId,
@@ -500,10 +529,10 @@ export function buildForestAuthoredRegionManifestService({
       ownerUserId,
       forestId: world.forestId,
       ForestAuthoredResetOperationModel
-    })) return emptyManifest('resetting', cells);
+    })) return emptyManifest('resetting', cells, version);
 
     return {
-      manifestVersion: FOREST_AUTHORED_REGION_MANIFEST_VERSION,
+      manifestVersion: version,
       status: 'ready',
       spatialIndex: {
         version: FOREST_OWNER_PLACEMENT_INDEX_VERSION,
@@ -520,7 +549,9 @@ export function buildForestAuthoredRegionManifestService({
           ? encodeCursor(
             pageRows.at(-1).objectId,
             requestedFingerprint,
-            initialFingerprint
+            initialFingerprint,
+            version,
+            contextFingerprint
           ) : null
       }
     };

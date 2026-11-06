@@ -64,6 +64,56 @@ function indexesByName(model) {
 }
 
 describe('forest authored ledger schemas', () => {
+  it('accepts an exact immutable linked marker without changing ordinary marker defaults', async () => {
+    const link = { version: 1, writingTreeId: RESET };
+    const linked = new ForestAuthoredObject(validObject({
+      schemaVersion: 2, writingLink: link, creationFingerprint: { version: 2, digest: DIGEST }
+    }));
+    await expectAsync(linked.validate()).toBeResolved();
+    expect(linked.toObject().writingLink).toEqual(link);
+    expect(linked.schema.path('writingLink').options.immutable).toBeTrue();
+    const ordinary = new ForestAuthoredObject(validObject());
+    await expectAsync(ordinary.validate()).toBeResolved();
+    expect(Object.hasOwn(ordinary.toObject(), 'writingLink')).toBeFalse();
+    expect(ordinary.schemaVersion).toBe(1);
+  });
+
+  it('rejects every inconsistent schema, relationship and fingerprint combination', async () => {
+    const link = { version: 1, writingTreeId: RESET };
+    for (const overrides of [
+      { writingLink: null }, { writingLink: link },
+      { creationFingerprint: { version: 2, digest: DIGEST } },
+      { schemaVersion: 2, creationFingerprint: { version: 2, digest: DIGEST } },
+      { schemaVersion: 2, writingLink: link },
+      { schemaVersion: 2, writingLink: { ...link, version: 2 }, creationFingerprint: { version: 2, digest: DIGEST } },
+      { schemaVersion: 3, writingLink: link, creationFingerprint: { version: 2, digest: DIGEST } }
+    ]) {
+      const invalid = new ForestAuthoredObject(validObject(overrides));
+      await expectAsync(invalid.validate()).toBeRejectedWithError(/validation failed/i);
+    }
+    const arbitrary = new ForestAuthoredObject(validObject({
+      schemaVersion: 2, creationFingerprint: { version: 2, digest: DIGEST },
+      writingLink: { ...link, title: 'Must never be persisted' }
+    }));
+    await expectAsync(arbitrary.validate()).toBeRejectedWithError(/validation failed/i);
+  });
+
+  it('hydrates legacy active and removed records without adding a relationship or rewriting identity', async () => {
+    for (const state of ['active', 'removed']) {
+      const original = validObject({ schemaVersion: 1, identityVersion: 1, createdAt: NOW,
+        ...(state === 'removed' ? { state, removedAt: NOW, purgeEligibleAt: PURGE, recordRevision: 2 } : {})
+      });
+      const hydrated = ForestAuthoredObject.hydrate(original, null, { defaults: false });
+      await expectAsync(hydrated.validate()).toBeResolved();
+      const restored = hydrated.toObject();
+      expect(Object.hasOwn(restored, 'writingLink')).toBeFalse();
+      for (const field of ['objectId', 'schemaVersion', 'creationFingerprint', 'placement',
+        'recordRevision', 'createdAt', 'changedAt', 'removedAt', 'purgeEligibleAt']) {
+        expect(restored[field]).toEqual(original[field]);
+      }
+      expect(hydrated.modifiedPaths()).toEqual([]);
+    }
+  });
   it('accepts one exact active marker with signed placement and immutable identity evidence', async () => {
     const object = new ForestAuthoredObject(validObject());
 
@@ -170,6 +220,10 @@ describe('forest authored ledger schemas', () => {
     });
     expect(indexes.get('forest_authored_object_diagnostic_export')?.fields).toEqual({
       ownerUserId: 1, forestId: 1, objectId: 1, createdAt: 1
+    });
+    expect(indexes.get('forest_authored_linked_marker_list')).toEqual({
+      fields: { ownerUserId: 1, forestId: 1, objectId: 1 },
+      options: jasmine.objectContaining({ partialFilterExpression: { schemaVersion: 2, state: 'active' } })
     });
     expect(indexes.get('forest_authored_object_deletion')?.fields).toEqual({
       ownerUserId: 1, _id: 1
@@ -301,4 +355,29 @@ describe('forest authored ledger schemas', () => {
       ownerUserId: 1, _id: 1
     });
   });
+
+  it('accepts only the exact mixed reset scope without changing legacy defaults', async () => {
+    const base = { resetId: RESET, forestId: FOREST, ownerUserId: OWNER,
+      spatialIndexVersion: 1, startedAt: NOW };
+    const mixed = new ForestAuthoredResetOperation({ ...base, schemaVersion: 2,
+      operationVersion: 2, authoredObjectSchemaVersions: [1, 2] });
+    await expectAsync(mixed.validate()).toBeResolved();
+    expect(Object.hasOwn(mixed.toObject(), 'authoredObjectSchemaVersion')).toBeFalse();
+    for (const overrides of [
+      { authoredObjectSchemaVersions: [2, 1] },
+      { authoredObjectSchemaVersions: [1, 2, 3] },
+      { authoredObjectSchemaVersions: [1] },
+      { authoredObjectSchemaVersion: 1 },
+      { operationVersion: 1 },
+      { authoredObjectSchemaVersions: undefined }
+    ]) {
+      const invalid = new ForestAuthoredResetOperation({ ...base, schemaVersion: 2,
+        operationVersion: 2, authoredObjectSchemaVersions: [1, 2], ...overrides });
+      await expectAsync(invalid.validate()).toBeRejected();
+    }
+    const legacy = new ForestAuthoredResetOperation({ ...base, authoredObjectSchemaVersion: 1 });
+    await expectAsync(legacy.validate()).toBeResolved();
+    expect(Object.hasOwn(legacy.toObject(), 'authoredObjectSchemaVersions')).toBeFalse();
+  });
+
 });

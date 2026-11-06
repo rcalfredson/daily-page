@@ -96,6 +96,15 @@ function harness({ objects = [], operations = [], clock = () => NOW } = {}) {
 }
 
 describe('forest authored retention cleanup service', () => {
+  it('purges a mixed batch with each exact stored schema version and no source lookup', async () => {
+    const test = harness({ objects: [tombstone(), tombstone({
+      _id: 'linked-record', schemaVersion: 2,
+      writingLink: { version: 1, writingTreeId: OBJECT },
+      creationFingerprint: { version: 2, digest: 'A'.repeat(43) }
+    })] });
+    expect(await test.service.purgeTombstones()).toEqual({ selected: 2, deleted: 2, failed: 0 });
+    expect(test.models.ForestAuthoredObject.deleteOne.calls.allArgs().map(([filter]) => filter.schemaVersion)).toEqual([1, 2]);
+  });
   it('purges an eligible tombstone with an exact lifecycle compare-and-set', async () => {
     const object = tombstone();
     const test = harness({ objects: [object] });
@@ -179,4 +188,18 @@ describe('forest authored retention cleanup service', () => {
     expect(oversized.models.ForestAuthoredObject.find).not.toHaveBeenCalled();
     expect(invalidClock.models.ForestAuthoredResetOperation.find).not.toHaveBeenCalled();
   });
+
+  it('purges each known reset format using its stored versions while preserving unknown scope', async () => {
+    const mixed = completedReset({ schemaVersion: 2, operationVersion: 2,
+      authoredObjectSchemaVersions: [1, 2] });
+    delete mixed.authoredObjectSchemaVersion;
+    const test = harness({ operations: [completedReset(), mixed,
+      { ...mixed, authoredObjectSchemaVersions: [1, 2, 3] }] });
+    expect(await test.service.purgeCompletedResetOperations()).toEqual({
+      selected: 3, deleted: 2, failed: 1
+    });
+    expect(test.models.ForestAuthoredResetOperation.deleteOne.calls.allArgs()
+      .map(([filter]) => [filter.schemaVersion, filter.operationVersion])).toEqual([[1, 1], [2, 2]]);
+  });
+
 });
