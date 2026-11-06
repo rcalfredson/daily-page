@@ -82,6 +82,8 @@ function harness({
   reset = null,
   transactionRunner = work => work('transaction-session'),
   inspectPlacement = jasmine.createSpy('inspectPlacement').and.resolveTo({}),
+  inspectWritingLink = jasmine.createSpy('inspectWritingLink').and.resolveTo({}),
+  linkedCreationEnabled = () => false,
   clock = () => NOW
 } = {}) {
   let stored = current;
@@ -155,6 +157,8 @@ function harness({
     transactionRunner,
     acquireFence,
     inspectPlacement,
+    inspectWritingLink,
+    linkedCreationEnabled,
     clock
   });
   return {
@@ -162,6 +166,7 @@ function harness({
     models,
     acquireFence,
     inspectPlacement,
+    inspectWritingLink,
     objectWrites,
     regionWrites,
     stored: () => stored
@@ -212,6 +217,113 @@ async function rejectedError(promise) {
 }
 
 describe('forest authored-object transactional mutation', () => {
+  const link = { version: 1, writingTreeId: '33333333-3333-4333-8333-333333333333' };
+  const linkedInput = (overrides = {}) => createInput({ protocolVersion: 2, writingLink: link, ...overrides });
+
+  it('creates a schema-2 relationship inside the fenced transaction when explicitly enabled', async () => {
+    const test = harness({ linkedCreationEnabled: () => true });
+    const response = await test.service.create(linkedInput());
+    expect(response.protocolVersion).toBe(2);
+    expect(response.object.schemaVersion).toBe(2);
+    expect(response.object.writingLink).toEqual(link);
+    expect(test.inspectWritingLink).toHaveBeenCalledOnceWith(jasmine.objectContaining({
+      ownerUserId: OWNER, writingLink: link, worldX: 10, worldY: 20, session: 'transaction-session'
+    }));
+    expect(test.acquireFence).toHaveBeenCalledBefore(test.inspectWritingLink);
+    expect(test.inspectWritingLink).toHaveBeenCalledBefore(test.models.ForestAuthoredObject.create);
+    expect(test.stored().creationFingerprint.version).toBe(2);
+    expect(test.regionWrites.length).toBe(1);
+  });
+
+  it('defaults linked creation off while ordinary creation remains usable', async () => {
+    const test = harness();
+    expect((await rejectedError(test.service.create(linkedInput()))).code).toBe('AUTHORED_WRITING_LINKS_DISABLED');
+    expect(test.inspectWritingLink).not.toHaveBeenCalled();
+    expect(test.objectWrites).toEqual([]);
+    expect((await test.service.create(createInput())).outcome).toBe('created');
+  });
+
+  it('recovers a lost linked create response after source failure and disabling new creation', async () => {
+    let enabled = true;
+    const test = harness({ linkedCreationEnabled: () => enabled });
+    await test.service.create(linkedInput());
+    enabled = false;
+    test.inspectWritingLink.and.rejectWith(new Error('source no longer available'));
+    const retry = await test.service.create(linkedInput());
+    expect(retry.outcome).toBe('existing-active');
+    expect(retry.object.writingLink).toEqual(link);
+    expect(test.inspectWritingLink).toHaveBeenCalledTimes(1);
+    expect(test.objectWrites.length).toBe(1);
+  });
+
+  it('conflicts when the same identity is retried for another tree or as an unlinked marker', async () => {
+    const test = harness({ linkedCreationEnabled: () => true });
+    await test.service.create(linkedInput());
+    const mismatch = await rejectedError(test.service.create(linkedInput({
+      writingLink: { ...link, writingTreeId: '44444444-4444-4444-8444-444444444444' }
+    })));
+    expect(mismatch.code).toBe('AUTHORED_CREATE_IDEMPOTENCY_CONFLICT');
+    expect(mismatch.object.writingLink).toEqual(link);
+    const oldRequest = await rejectedError(test.service.create(createInput()));
+    expect(oldRequest.code).toBe('AUTHORED_CREATE_IDEMPOTENCY_CONFLICT');
+    expect(oldRequest.object).toBeNull();
+    expect(test.objectWrites.length).toBe(1);
+  });
+
+  it('keeps the original link and fingerprint through movement, removal and old creation retries', async () => {
+    const test = harness({ linkedCreationEnabled: () => true });
+    await test.service.create(linkedInput());
+    const fingerprint = test.stored().creationFingerprint;
+    await test.service.move(moveInput({ protocolVersion: 2, worldX: 750 }));
+    expect(test.stored().writingLink).toEqual(link);
+    expect(test.stored().creationFingerprint).toEqual(fingerprint);
+    const retry = await test.service.create(linkedInput());
+    expect(retry.object.placement.worldX).toBe(750);
+    await test.service.remove(removeInput({ protocolVersion: 2, expectedRevision: 2 }));
+    const removedRetry = await test.service.create(linkedInput());
+    expect(removedRetry.outcome).toBe('existing-removed');
+    expect(removedRetry.object.writingLink).toEqual(link);
+    expect(test.inspectWritingLink).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects protocol-1 mutations of linked markers before performing a write', async () => {
+    const test = harness({ linkedCreationEnabled: () => true });
+    await test.service.create(linkedInput());
+    expect((await rejectedError(test.service.move(moveInput()))).code).toBe('AUTHORED_PROTOCOL_UPGRADE_REQUIRED');
+    expect((await rejectedError(test.service.remove(removeInput()))).code).toBe('AUTHORED_PROTOCOL_UPGRADE_REQUIRED');
+    expect(test.objectWrites.length).toBe(1);
+  });
+
+  it('returns a typed unlinked representation for protocol-2 movement of an existing ordinary marker', async () => {
+    const test = harness({ current: authoredObject() });
+    const result = await test.service.move(moveInput({ protocolVersion: 2 }));
+    expect(result.object.schemaVersion).toBe(1);
+    expect(result.object.writingLink).toBeNull();
+    expect(test.stored().writingLink).toBeUndefined();
+    expect(test.stored().schemaVersion).toBe(1);
+  });
+
+  it('rejects unavailable or distant source validation without a marker or cell revision write', async () => {
+    for (const code of ['AUTHORED_WRITING_UNAVAILABLE', 'AUTHORED_WRITING_DISTANCE']) {
+      const test = harness({ linkedCreationEnabled: () => true });
+      test.inspectWritingLink.and.rejectWith(Object.assign(new Error('private source details'), { code }));
+      const error = await rejectedError(test.service.create(linkedInput()));
+      expect(error.code).toBe(code);
+      expect(error.message).not.toContain('private');
+      expect(test.objectWrites).toEqual([]);
+      expect(test.regionWrites).toEqual([]);
+    }
+  });
+
+  it('requires an exact relationship only in protocol 2, before private queries', async () => {
+    for (const input of [linkedInput({ writingLink: null }), linkedInput({ writingLink: { ...link, title: 'private' } }),
+      createInput({ writingLink: link })]) {
+      const test = harness({ linkedCreationEnabled: () => true });
+      expect((await rejectedError(test.service.create(input))).code).toBe('INVALID_AUTHORED_MUTATION_INPUT');
+      expect(test.acquireFence).not.toHaveBeenCalled();
+    }
+  });
+
   it('computes a deterministic fixed-length creation fingerprint over original intent', () => {
     const first = createForestAuthoredCreationFingerprint({
       objectId: OBJECT,

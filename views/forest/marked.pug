@@ -1,0 +1,64 @@
+extends ../layout
+
+block append head
+  link(rel='stylesheet' href='/css/forest-writing.css')
+  script(type='module' src='/js/forest-marked-writing.js')
+
+block nav
+  include ../navLinks
+
+block content
+  main.forest-writing(aria-labelledby='forest-marked-title')
+    header.forest-writing__header
+      p.forest-writing__eyebrow= t('forestWriting.eyebrow')
+      h1#forest-marked-title= t('forestWriting.marked.heading')
+      p= t('forestWriting.marked.introduction')
+      a.forest-writing__enter(href=uiPath('/forest'))= t('forestWriting.enterForest')
+    nav.forest-writing__views(aria-label=t('forestWriting.views.label'))
+      a(href=uiPath('/forest/writing'))= t('forestWriting.views.visible')
+      a(href=uiPath('/forest/writing?view=hidden'))= t('forestWriting.views.hidden')
+      a(href=uiPath('/forest/writing?view=marked') aria-current='page')= t('forestWriting.views.marked')
+    p(data-forest-marker-removal-status role='status' aria-live='polite' hidden)
+    if forestStatus === 'reconciling'
+      .forest-writing__notice(role='status')
+        h2= t('forestWriting.reconciling.heading')
+        p= t('forestWriting.reconciling.body')
+    else if forestStatus === 'not-established'
+      p.forest-writing__notice= t('forestWriting.empty.notEstablished')
+    else if markers.length
+      ol.forest-writing__list
+        each marker in markers
+          li.forest-writing__tree
+            article.forest-writing__card
+              .forest-writing__tree-mark(aria-hidden='true')
+                i.fa.fa-map-marker
+              .forest-writing__card-body
+                if marker.writingState === 'ready'
+                  h2(lang=marker.writing.lang dir=(textDirForLang ? textDirForLang(marker.writing.lang) : 'ltr'))
+                    a(href=uiPath(marker.writing.forestPath))= marker.writing.title
+                  p.forest-writing__source
+                    time(datetime=marker.writing.createdAt data-local-date-time data-date-style='medium')= marker.writing.formattedCreatedAt
+                else
+                  h2= t('forestWriting.marked.unavailable')
+                  p= t('forestWriting.marked.unavailableBody')
+                .forest-writing__card-actions
+                  a.forest-writing__open(href=uiPath(marker.visitPath))= t('forestWriting.marked.visit')
+                  if marker.writingState === 'ready'
+                    a.forest-writing__open(href=uiPath(marker.writing.forestPath))= t('forestWriting.openPost')
+                  button.forest-writing__inclusion(type='button' data-forest-marker-removal
+                    data-object-id=marker.object.objectId data-record-revision=marker.object.recordRevision)= t('forestWriting.marked.remove')
+    else
+      p.forest-writing__notice= t('forestWriting.marked.empty')
+    if nextUrl
+      nav.forest-writing__pagination(aria-label=t('forestWriting.pagination.label'))
+        a.forest-writing__next(href=uiPath(nextUrl))= t('forestWriting.pagination.next')
+
+    -
+      const markerCopy = {
+        confirm: t('forestWriting.marked.confirm'),
+        removing: t('forestWriting.marked.removing'),
+        removed: t('forestWriting.marked.removed'),
+        conflict: t('forestWriting.marked.conflict'),
+        error: t('forestWriting.marked.error')
+      };
+    script#forest-marker-removal-copy(type='application/json')!= JSON.stringify(markerCopy).replace(/</g, '\u003c')

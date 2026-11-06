@@ -1,4 +1,5 @@
 import { Schema } from 'mongoose';
+import { forestAuthoredResetScope } from '../../services/forestAuthoredResetFormat.js';
 
 export const FOREST_AUTHORED_RESET_OPERATION_SCHEMA_VERSION = 1;
 export const FOREST_AUTHORED_RESET_OPERATION_VERSION = 1;
@@ -21,14 +22,18 @@ const forestAuthoredResetOperationSchema = new Schema({
   schemaVersion: {
     type: Number,
     required: true,
-    enum: [FOREST_AUTHORED_RESET_OPERATION_SCHEMA_VERSION],
+    enum: [1, 2],
+    validate: {
+      validator: function () { return Boolean(forestAuthoredResetScope(this)); },
+      message: 'The authored reset format and immutable scope must agree.'
+    },
     default: FOREST_AUTHORED_RESET_OPERATION_SCHEMA_VERSION,
     immutable: true
   },
   operationVersion: {
     type: Number,
     required: true,
-    enum: [FOREST_AUTHORED_RESET_OPERATION_VERSION],
+    enum: [1, 2],
     default: FOREST_AUTHORED_RESET_OPERATION_VERSION,
     immutable: true
   },
@@ -80,9 +85,14 @@ const forestAuthoredResetOperationSchema = new Schema({
   },
   authoredObjectSchemaVersion: {
     type: Number,
-    required: true,
+    required: function () { return this.schemaVersion === 1; },
     immutable: true,
     validate: safeInteger(1)
+  },
+  authoredObjectSchemaVersions: {
+    type: [Number],
+    default: undefined,
+    immutable: true
   },
   spatialIndexVersion: {
     type: Number,

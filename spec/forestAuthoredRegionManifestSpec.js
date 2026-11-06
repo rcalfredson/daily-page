@@ -115,6 +115,7 @@ function harness({
   resetOperation = null,
   revisions = [[revision()], [revision()]],
   unsupportedObject = null,
+  linkedObject = null,
   objects = [object()]
 } = {}) {
   const worldQuery = chain(ownerWorld);
@@ -145,7 +146,7 @@ function harness({
   };
   const ForestAuthoredObjectModel = {
     findOne: jasmine.createSpy('ForestAuthoredObject.findOne')
-      .and.returnValue(chain(unsupportedObject)),
+      .and.callFake(filter => chain(filter.schemaVersion === 2 ? linkedObject : unsupportedObject)),
     find: jasmine.createSpy('ForestAuthoredObject.find').and.returnValue(objectQuery)
   };
   return {
@@ -273,7 +274,10 @@ describe('forest authored-region manifest', () => {
     });
     const firstPage = await first.read({ ownerUserId: OWNER, cells: CELLS, limit: 1 });
     expect(firstPage.objects.map(value => value.objectId)).toEqual([OBJECT]);
-    expect(firstPage.page.nextCursor).toEqual(jasmine.any(String));
+    // Fixed legacy wire fixture: adding a new reader must not change old continuations.
+    expect(firstPage.page.nextCursor).toBe(
+      'eyJ2ZXJzaW9uIjoxLCJyZWdpb25GaW5nZXJwcmludCI6InZpdW9pTTVJYXVUMXVfM3FZRVVEbzMiLCJyZXZpc2lvbkZpbmdlcnByaW50Ijoiay1NN3FsMVpocTR2SHotZ3RRc1pOViIsImFmdGVyT2JqZWN0SWQiOiIyMjIyMjIyMi0yMjIyLTQyMjItODIyMi0yMjIyMjIyMjIyMjIifQ'
+    );
 
     const next = harness();
     await next.read({
@@ -377,4 +381,82 @@ describe('forest authored-region manifest', () => {
       ownerUserId: OWNER, cells: CELLS, limit: 1
     }))).code).toBe('AUTHORED_REGION_UNAVAILABLE');
   });
+
+  it('reads mixed marker formats with explicit version 2 and no writing metadata', async () => {
+    const linked = object({ objectId: LATER_OBJECT, schemaVersion: 2,
+      writingLink: { version: 1, writingTreeId: OBJECT },
+      creationFingerprint: { version: 2 } });
+    const result = await harness({ objects: [object(), linked] }).read({
+      ownerUserId: OWNER, cells: CELLS, version: '2'
+    });
+    expect(result.manifestVersion).toBe(2);
+    expect(result.objects.map(row => row.schemaVersion)).toEqual([1, 2]);
+    expect(result.objects[0].writingLink).toBeNull();
+    expect(result.objects[1].writingLink).toEqual(linked.writingLink);
+    expect(Object.keys(result.objects[1]).sort()).toEqual([
+      'appearance', 'changedAt', 'kind', 'objectId', 'recordRevision', 'regionId',
+      'schemaVersion', 'worldX', 'worldY', 'writingLink'
+    ]);
+  });
+
+  it('requires an upgrade before any legacy page even when the linked marker sorts later', async () => {
+    const test = harness({ linkedObject: { _id: 'linked-outside-page' } });
+    await expectAsync(test.read({ ownerUserId: OWNER, cells: CELLS, limit: 1 }))
+      .toBeRejectedWith(jasmine.objectContaining({ code: 'AUTHORED_UPGRADE_REQUIRED' }));
+    expect(test.ForestAuthoredObjectModel.find).not.toHaveBeenCalled();
+    expect(test.ForestAuthoredObjectModel.findOne).toHaveBeenCalledWith({
+      ownerUserId: OWNER, forestId: FOREST, state: 'active', schemaVersion: 2,
+      $or: [{ 'placementIndex.cellX': -1, 'placementIndex.cellY': 1 }]
+    }, { _id: 1 });
+  });
+
+  it('binds version-2 continuations to owner, forest, version, cells and revisions', async () => {
+    const first = await harness({ objects: [object(), object({ objectId: LATER_OBJECT })] })
+      .read({ ownerUserId: OWNER, cells: CELLS, version: 2, limit: 1 });
+    const cursor = first.page.nextCursor;
+    expect(cursor.length).toBeLessThanOrEqual(384);
+    const next = await harness({ objects: [object({ objectId: LATER_OBJECT })] })
+      .read({ ownerUserId: OWNER, cells: CELLS, version: 2, cursor, limit: 1 });
+    expect(next.objects[0].objectId).toBe(LATER_OBJECT);
+    for (const [test, input] of [
+      [harness(), { version: 1 }],
+      [harness({ ownerWorld: world({ ownerUserId: OTHER_OWNER }) }), { ownerUserId: OTHER_OWNER }],
+      [harness({ ownerWorld: world({ forestId: LATER_OBJECT }) }), {}],
+      [harness(), { cells: [{ cellX: 0, cellY: 1 }] }]
+    ]) {
+      await expectAsync(test.read({ ownerUserId: OWNER, cells: CELLS, version: 2,
+        cursor, ...input })).toBeRejectedWith(jasmine.objectContaining({
+        code: 'INVALID_AUTHORED_REGION_INPUT'
+      }));
+    }
+    await expectAsync(harness({ revisions: [[revision({ revision: 5 })]] }).read({
+      ownerUserId: OWNER, cells: CELLS, version: 2, cursor
+    })).toBeRejectedWith(jasmine.objectContaining({ code: 'AUTHORED_REGION_CHANGED' }));
+  });
+
+  it('recognizes a mixed reset while preserving versioned empty manifests', async () => {
+    const mixed = reset({ schemaVersion: 2, operationVersion: 2,
+      authoredObjectSchemaVersions: [1, 2] });
+    delete mixed.authoredObjectSchemaVersion;
+    for (const version of [1, 2]) {
+      const test = harness({ resetOperation: mixed });
+      const result = await test.read({ ownerUserId: OWNER, cells: CELLS, version });
+      expect(result.status).toBe('resetting');
+      expect(result.manifestVersion).toBe(version);
+      expect(test.ForestAuthoredObjectModel.find).not.toHaveBeenCalled();
+    }
+  });
+
+  it('rejects malformed linked formats and unsupported requested versions', async () => {
+    await expectAsync(harness({ objects: [object({ schemaVersion: 2 })] }).read({
+      ownerUserId: OWNER, cells: CELLS, version: 2
+    })).toBeRejectedWith(jasmine.objectContaining({ code: 'AUTHORED_REGION_MIGRATION_REQUIRED' }));
+    for (const version of [null, 0, 3, '02', [], {}]) {
+      const test = harness();
+      await expectAsync(test.read({ ownerUserId: OWNER, cells: CELLS, version }))
+        .toBeRejectedWith(jasmine.objectContaining({ code: 'INVALID_AUTHORED_REGION_INPUT' }));
+      expect(test.ForestOwnerWorldModel.findOne).not.toHaveBeenCalled();
+    }
+  });
+
 });

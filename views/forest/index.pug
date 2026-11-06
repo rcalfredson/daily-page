@@ -70,6 +70,9 @@ block content
                 button(type='button' data-owner-forest-sync-revert)
                   = t('forestScene.markers.revertPending')
           .owner-forest__placement(data-owner-forest-placement hidden)
+            section(data-owner-forest-placement-writing hidden)
+              h3(data-owner-forest-placement-writing-title)
+              p(data-owner-forest-placement-writing-help)
             p(data-owner-forest-placement-status role='status' aria-live='polite')
             .owner-forest__placement-actions
               button(type='button' data-owner-forest-placement-save)
@@ -79,7 +82,7 @@ block content
           .owner-forest__hud-actions
             .owner-forest__nearby(data-owner-forest-nearby hidden)
               span(data-owner-forest-nearby-copy)= t('forestScene.treeNearby')
-              button(type='button' data-owner-forest-inspect)= t('forestScene.inspect.action')
+            button.owner-forest__hud-inspect(type='button' data-owner-forest-inspect)= t('forestScene.inspect.action')
             button.owner-forest__place-marker(
               type='button'
               data-owner-forest-place-marker
@@ -118,6 +121,8 @@ block content
                 p.owner-forest__inspection-botanical(data-owner-forest-inspection-species)
                 a.button.owner-forest__read-post(data-owner-forest-inspection-link)
                   = t('forestScene.inspect.readPost')
+                button.owner-forest__mark-writing(type='button' data-owner-forest-mark-writing
+                  hidden=!(bootstrap.delivery && bootstrap.delivery.writingLinkCreationEnabled) disabled)= t('forestScene.markers.markWriting')
                 .owner-forest__translations(data-owner-forest-translations-wrap hidden)
                   h3= t('forestScene.inspect.translations')
                   ul(data-owner-forest-translations)
@@ -142,18 +147,23 @@ block content
                 data-owner-forest-marker-close
               ) ×
             .owner-forest__inspection-scroll
-              h2#owner-forest-marker-title= t('forestScene.markers.heading')
-              p= t('forestScene.markers.description')
+              h2#owner-forest-marker-title(data-owner-forest-marker-writing-title)= t('forestScene.markers.heading')
+              p.owner-forest__marker-description(data-owner-forest-marker-description)= t('forestScene.markers.description')
+              p.owner-forest__inspection-status(data-owner-forest-marker-writing-status role='status' aria-live='polite')
+              section(data-owner-forest-marker-writing hidden)
+                a.button.owner-forest__read-post(data-owner-forest-marker-writing-link)= t('forestScene.inspect.readPost')
               p.owner-forest__inspection-status(
                 data-owner-forest-marker-status
                 role='status'
                 aria-live='polite'
               )
-              .owner-forest__marker-actions(data-owner-forest-marker-actions)
-                button(type='button' data-owner-forest-marker-move)
-                  = t('forestScene.markers.move')
-                button(type='button' data-owner-forest-marker-remove)
-                  = t('forestScene.markers.remove')
+              .owner-forest__marker-management(data-owner-forest-marker-actions)
+                .owner-forest__marker-actions
+                  button(type='button' data-owner-forest-marker-move)
+                    = t('forestScene.markers.move')
+                  button(type='button' data-owner-forest-marker-remove)
+                    = t('forestScene.markers.remove')
+                a.owner-forest__manage-hidden(href=uiPath('/forest/writing?view=marked') data-owner-forest-marker-list hidden)= t('forestScene.markers.markedWriting')
               .owner-forest__marker-confirm(data-owner-forest-marker-confirm hidden)
                 p= t('forestScene.markers.removeConfirmation')
                 .owner-forest__marker-actions
@@ -176,6 +186,18 @@ block content
           inclusionUnavailable: t('forestScene.inspect.inclusionUnavailable'),
           treeHidden: t('forestScene.inspect.treeHidden'),
           markers: {
+            heading: t('forestScene.markers.heading'),
+            description: t('forestScene.markers.description'),
+            writingHeading: t('forestScene.markers.writingHeading'),
+            writingDescription: t('forestScene.markers.writingDescription'),
+            writingNearby: t('forestScene.markers.writingNearby'),
+            inspectionUnavailable: t('forestScene.markers.inspectionUnavailable'),
+            writingUnavailable: t('forestScene.markers.writingUnavailable'),
+            previewWritingDistance: t('forestScene.markers.previewWritingDistance'),
+            linkedWriting: t('forestScene.markers.linkedWriting'),
+            linkedMove: t('forestScene.markers.linkedMove'),
+            linkedPlacement: t('forestScene.markers.linkedPlacement'),
+            linksDisabled: t('forestScene.markers.linksDisabled'),
             loading: t('forestScene.markers.loading'),
             ready: t('forestScene.markers.ready'),
             unavailable: t('forestScene.markers.unavailable'),

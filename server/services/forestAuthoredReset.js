@@ -1,3 +1,9 @@
+import {
+  forestAuthoredResetScope,
+  FOREST_AUTHORED_MIXED_RESET_SCHEMA_VERSION,
+  FOREST_AUTHORED_MIXED_RESET_OPERATION_VERSION
+} from './forestAuthoredResetFormat.js';
+import { forestAuthoredObjectHasSupportedFormat } from './forestAuthoredObjectFormat.js';
 import mongoose from 'mongoose';
 
 import AccountDeletionRequest from '../db/models/AccountDeletionRequest.js';
@@ -10,17 +16,11 @@ import {
   FOREST_AUTHORED_COORDINATE_LIMIT,
   FOREST_AUTHORED_MARKER_APPEARANCE_ID,
   FOREST_AUTHORED_MARKER_APPEARANCE_VERSION,
-  FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION,
-  FOREST_AUTHORED_OBJECT_IDENTITY_VERSION,
-  FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
+  FOREST_AUTHORED_OBJECT_IDENTITY_VERSION
 } from '../db/schemas/ForestAuthoredObjectSchema.js';
 import {
   FOREST_AUTHORED_REGION_REVISION_SCHEMA_VERSION
 } from '../db/schemas/ForestAuthoredRegionRevisionSchema.js';
-import {
-  FOREST_AUTHORED_RESET_OPERATION_SCHEMA_VERSION,
-  FOREST_AUTHORED_RESET_OPERATION_VERSION
-} from '../db/schemas/ForestAuthoredResetOperationSchema.js';
 import { FOREST_OWNER_WORLD_SCHEMA_VERSION } from '../db/schemas/ForestOwnerWorldSchema.js';
 import { acquireForestLedgerFence } from './forestLedgerFence.js';
 import { FOREST_AUTHORED_TOMBSTONE_RETENTION_MS } from './forestAuthoredRetentionPolicy.js';
@@ -122,12 +122,10 @@ function validateOperation(operation, { ownerUserId, forestId, resetId }) {
     && operation.completedAt instanceof Date
     && !Number.isNaN(operation.completedAt.getTime());
   if (!operation
-    || operation.schemaVersion !== FOREST_AUTHORED_RESET_OPERATION_SCHEMA_VERSION
-    || operation.operationVersion !== FOREST_AUTHORED_RESET_OPERATION_VERSION
+    || !forestAuthoredResetScope(operation)
     || operation.ownerUserId !== ownerUserId
     || operation.forestId !== forestId
     || operation.resetId !== resetId
-    || operation.authoredObjectSchemaVersion !== FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
     || operation.spatialIndexVersion !== FOREST_OWNER_PLACEMENT_INDEX_VERSION
     || ![null, undefined].includes(operation.afterObjectId)
       && !UUID_V4_PATTERN.test(operation.afterObjectId)
@@ -141,7 +139,7 @@ function validateOperation(operation, { ownerUserId, forestId, resetId }) {
   return operation;
 }
 
-function validateObject(object, { ownerUserId, forestId }) {
+function validateObject(object, { ownerUserId, forestId, supportedVersions }) {
   let expectedIndex;
   try {
     expectedIndex = deriveForestOwnerPlacementIndex({
@@ -151,7 +149,8 @@ function validateObject(object, { ownerUserId, forestId }) {
   } catch {
     fail('AUTHORED_RESET_MIGRATION_REQUIRED', 'An authored object cannot be reset safely.');
   }
-  if (object?.schemaVersion !== FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
+  if (!supportedVersions.includes(object?.schemaVersion)
+    || !forestAuthoredObjectHasSupportedFormat(object)
     || object?.identityVersion !== FOREST_AUTHORED_OBJECT_IDENTITY_VERSION
     || !object?._id
     || object?.ownerUserId !== ownerUserId
@@ -178,7 +177,6 @@ function validateObject(object, { ownerUserId, forestId }) {
       !== FOREST_OWNER_WORLD_GENERATION_VERSION
     || object?.appearance?.id !== FOREST_AUTHORED_MARKER_APPEARANCE_ID
     || object?.appearance?.version !== FOREST_AUTHORED_MARKER_APPEARANCE_VERSION
-    || object?.creationFingerprint?.version !== FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION
     || !SHA256_BASE64URL_PATTERN.test(object?.creationFingerprint?.digest || '')
     || !Number.isSafeInteger(object?.recordRevision)
     || object.recordRevision < 1
@@ -196,7 +194,7 @@ function validateObject(object, { ownerUserId, forestId }) {
 
 function safeOperation(operation, outcome) {
   return Object.freeze({
-    operationVersion: FOREST_AUTHORED_RESET_OPERATION_VERSION,
+    operationVersion: operation.operationVersion,
     outcome,
     resetId: operation.resetId,
     status: operation.status,
@@ -310,13 +308,15 @@ export function buildForestAuthoredResetService({
         fail('AUTHORED_RESET_IN_PROGRESS', 'Another authored reset is already processing.');
       }
       const [created] = await db.ForestAuthoredResetOperation.create([{
+        schemaVersion: FOREST_AUTHORED_MIXED_RESET_SCHEMA_VERSION,
+        operationVersion: FOREST_AUTHORED_MIXED_RESET_OPERATION_VERSION,
         resetId,
         forestId: world.forestId,
         ownerUserId,
         status: 'processing',
         afterObjectId: null,
         affectedObjectCount: 0,
-        authoredObjectSchemaVersion: FOREST_AUTHORED_OBJECT_SCHEMA_VERSION,
+        authoredObjectSchemaVersions: [1, 2],
         spatialIndexVersion: FOREST_OWNER_PLACEMENT_INDEX_VERSION,
         startedAt,
         completedAt: null
@@ -364,7 +364,8 @@ export function buildForestAuthoredResetService({
         fail('AUTHORED_RESET_UNAVAILABLE', 'The authored reset batch was not bounded.');
       }
       const batch = rows.slice(0, batchSize).map(object => validateObject(object, {
-        ownerUserId, forestId: world.forestId
+        ownerUserId, forestId: world.forestId,
+        supportedVersions: forestAuthoredResetScope(operation)
       }));
       if (operation.affectedObjectCount > Number.MAX_SAFE_INTEGER - batch.length) {
         fail('AUTHORED_RESET_UNAVAILABLE', 'The authored reset count cannot advance.');
@@ -375,6 +376,7 @@ export function buildForestAuthoredResetService({
           updateOne: {
             filter: {
               _id: object._id,
+              schemaVersion: object.schemaVersion,
               ownerUserId,
               forestId: world.forestId,
               objectId: object.objectId,
@@ -425,6 +427,8 @@ export function buildForestAuthoredResetService({
       }
       const updated = await db.ForestAuthoredResetOperation.findOneAndUpdate({
         _id: operation._id,
+        schemaVersion: operation.schemaVersion,
+        operationVersion: operation.operationVersion,
         ownerUserId,
         forestId: world.forestId,
         resetId,

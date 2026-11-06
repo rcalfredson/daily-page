@@ -25,6 +25,8 @@ block content
         aria-current=(inclusion === 'hidden' ? 'page' : null)
       )= t('forestWriting.views.hidden')
 
+      a(href=uiPath('/forest/writing?view=marked'))= t('forestWriting.views.marked')
+
     p.forest-writing__mutation-status(
       data-forest-inclusion-status
       role='status'

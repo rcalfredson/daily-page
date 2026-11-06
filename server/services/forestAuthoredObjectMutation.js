@@ -1,6 +1,9 @@
-import crypto from 'node:crypto';
-
+import { forestWritingLinksEnabled } from './forestWritingLinkAvailability.js';
+import { canonicalForestWritingLink, readForestAuthoredObjectFormat } from './forestAuthoredObjectFormat.js';
+import { inspectForestAuthoredWritingLink } from './forestAuthoredWritingLink.js';
 import mongoose from 'mongoose';
+import { createForestAuthoredCreationFingerprint } from './forestAuthoredCreationFingerprint.js';
+export { createForestAuthoredCreationFingerprint } from './forestAuthoredCreationFingerprint.js';
 
 import AccountDeletionRequest from '../db/models/AccountDeletionRequest.js';
 import ForestAuthoredObject from '../db/models/ForestAuthoredObject.js';
@@ -13,9 +16,7 @@ import {
   FOREST_AUTHORED_COORDINATE_LIMIT,
   FOREST_AUTHORED_MARKER_APPEARANCE_ID,
   FOREST_AUTHORED_MARKER_APPEARANCE_VERSION,
-  FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION,
   FOREST_AUTHORED_OBJECT_IDENTITY_VERSION,
-  FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
 } from '../db/schemas/ForestAuthoredObjectSchema.js';
 import {
   FOREST_AUTHORED_REGION_REVISION_SCHEMA_VERSION
@@ -100,7 +101,7 @@ function canonicalObjectId(value) {
 }
 
 function protocolVersion(value) {
-  if (value !== FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION) {
+  if (![1, 2].includes(value)) {
     fail(
       'UNSUPPORTED_AUTHORED_MUTATION_PROTOCOL',
       'The authored mutation protocol version is unsupported.'
@@ -149,10 +150,17 @@ function leanObject(value) {
   return value;
 }
 
-function safeObject(value) {
+function safeObject(value, version = 1) {
   const object = leanObject(value);
   if (!object) return null;
+  if (version === 1 && object.schemaVersion === 2) {
+    fail('AUTHORED_PROTOCOL_UPGRADE_REQUIRED', 'The marker requires a newer mutation protocol.');
+  }
   return Object.freeze({
+    ...(version === 2 ? {
+      schemaVersion: object.schemaVersion,
+      writingLink: object.schemaVersion === 2 ? Object.freeze({ ...object.writingLink }) : null
+    } : {}),
     objectId: object.objectId,
     kind: object.kind,
     state: object.state,
@@ -178,36 +186,15 @@ function safeObject(value) {
   });
 }
 
-function result(outcome, object) {
+function result(outcome, object, version = 1) {
   return Object.freeze({
-    protocolVersion: FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION,
+    protocolVersion: version,
     outcome,
-    object: safeObject(object)
+    object: safeObject(object, version)
   });
 }
 
-export function createForestAuthoredCreationFingerprint({
-  objectId,
-  kind,
-  worldX,
-  worldY
-}) {
-  const canonical = JSON.stringify([
-    FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION,
-    objectId,
-    kind,
-    worldX,
-    worldY,
-    FOREST_AUTHORED_MARKER_APPEARANCE_ID,
-    FOREST_AUTHORED_MARKER_APPEARANCE_VERSION
-  ]);
-  return Object.freeze({
-    version: FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION,
-    digest: crypto.createHash('sha256').update(canonical).digest('base64url')
-  });
-}
-
-function validateWorld(world, ownerUserId) {
+function validateWorld(world, ownerUserId, { allowReconciling = false } = {}) {
   if (!world) {
     fail('AUTHORED_OWNER_UNAVAILABLE', 'The owner forest is unavailable.');
   }
@@ -228,7 +215,8 @@ function validateWorld(world, ownerUserId) {
   }
   if (
     world.status !== 'active'
-    || world.reconciliation?.state !== 'idle'
+    || (world.reconciliation?.state !== 'idle'
+      && !(allowReconciling && world.reconciliation?.state === 'running'))
   ) {
     fail('AUTHORED_OWNER_UNAVAILABLE', 'The owner forest is unavailable.');
   }
@@ -259,7 +247,7 @@ function supportedVersionEvidence(object) {
 function validateStoredObject(object, { ownerUserId, forestId, objectId }) {
   if (!object) return null;
   if (
-    object.schemaVersion !== FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
+    ![1, 2].includes(object.schemaVersion)
     || object.identityVersion !== FOREST_AUTHORED_OBJECT_IDENTITY_VERSION
     || !supportedVersionEvidence(object)
     || object.placementIndex?.version !== FOREST_OWNER_PLACEMENT_INDEX_VERSION
@@ -273,13 +261,19 @@ function validateStoredObject(object, { ownerUserId, forestId, objectId }) {
   }
   let expectedIndex;
   try {
+    readForestAuthoredObjectFormat(object);
     expectedIndex = deriveForestOwnerPlacementIndex({
       worldX: object?.placement?.worldX,
       worldY: object?.placement?.worldY
     });
-  } catch {
+  } catch (error) {
+    if (error.code?.startsWith('UNSUPPORTED_AUTHORED_')) {
+      fail('AUTHORED_MIGRATION_REQUIRED', 'The authored object uses unsupported versions.');
+    }
     fail('AUTHORED_OBJECT_UNAVAILABLE', 'The authored object is malformed.');
   }
+  // createdAt records insertion time. changedAt is captured before the transaction, so a
+  // newly created marker can legitimately have changedAt earlier than createdAt.
   const activeLifecycle = object.state === 'active'
     && object.removedAt === null
     && object.purgeEligibleAt === null;
@@ -297,16 +291,19 @@ function validateStoredObject(object, { ownerUserId, forestId, objectId }) {
     || object.objectId !== objectId
     || object.kind !== 'personal-marker'
     || !['active', 'removed'].includes(object.state)
+    || Math.abs(object.placement.worldX) > FOREST_AUTHORED_COORDINATE_LIMIT
+    || Math.abs(object.placement.worldY) > FOREST_AUTHORED_COORDINATE_LIMIT
     || object.placementIndex.cellX !== expectedIndex.cellX
     || object.placementIndex.cellY !== expectedIndex.cellY
     || !Number.isSafeInteger(object.recordRevision)
     || object.recordRevision < 1
     || object.recordRevision > Number.MAX_SAFE_INTEGER
-    || object.creationFingerprint?.version
-      !== FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION
+    || object.creationFingerprint?.version !== object.schemaVersion
     || !SHA256_BASE64URL_PATTERN.test(object.creationFingerprint?.digest || '')
     || !(object.createdAt instanceof Date)
     || !(object.changedAt instanceof Date)
+    || Number.isNaN(object.createdAt.getTime())
+    || Number.isNaN(object.changedAt.getTime())
     || (!activeLifecycle && !removedLifecycle)
   ) {
     fail('AUTHORED_OBJECT_UNAVAILABLE', 'The authored object is malformed.');
@@ -436,6 +433,8 @@ export function buildForestAuthoredObjectMutationService({
   transactionRunner = runInTransaction,
   acquireFence = acquireForestLedgerFence,
   inspectPlacement = inspectForestAuthoredPlacement,
+  inspectWritingLink = inspectForestAuthoredWritingLink,
+  linkedCreationEnabled = forestWritingLinksEnabled,
   clock = () => new Date()
 } = {}) {
   const db = {
@@ -452,6 +451,8 @@ export function buildForestAuthoredObjectMutationService({
     transactionRunner,
     acquireFence,
     inspectPlacement,
+    inspectWritingLink,
+    linkedCreationEnabled,
     clock
   })) {
     if (typeof dependency !== 'function') {
@@ -493,21 +494,28 @@ export function buildForestAuthoredObjectMutationService({
   }
 
   async function create(input) {
-    exactInput(input, ['ownerUserId', 'objectId', 'protocolVersion', 'kind', 'worldX', 'worldY']);
+    exactInput(input, ['ownerUserId', 'objectId', 'protocolVersion', 'kind', 'worldX', 'worldY',
+      ...(input?.protocolVersion === 2 ? ['writingLink'] : [])]);
     const ownerUserId = canonicalOwner(input.ownerUserId);
     const objectId = canonicalObjectId(input.objectId);
-    protocolVersion(input.protocolVersion);
+    const version = protocolVersion(input.protocolVersion);
     if (input.kind !== 'personal-marker') {
       fail('UNSUPPORTED_AUTHORED_OBJECT_KIND', 'The authored object kind is unsupported.');
     }
     const worldX = coordinate(input.worldX, 'worldX');
     const worldY = coordinate(input.worldY, 'worldY');
+    let writingLink;
+    if (version === 2) {
+      try { writingLink = canonicalForestWritingLink(input.writingLink); }
+      catch { fail('INVALID_AUTHORED_MUTATION_INPUT', 'The writing relationship is invalid.'); }
+    }
     const changedAt = timestamp(clock);
     const fingerprint = createForestAuthoredCreationFingerprint({
       objectId,
       kind: input.kind,
       worldX,
-      worldY
+      worldY,
+      ...(writingLink ? { writingLink } : {})
     });
 
     const attempt = () => transactionRunner(async (session) => {
@@ -519,17 +527,34 @@ export function buildForestAuthoredObjectMutationService({
         session
       }), { ownerUserId, forestId: world.forestId, objectId });
       if (existing) {
-        if (existing.creationFingerprint.digest !== fingerprint.digest) {
+        if (existing.creationFingerprint.version !== fingerprint.version
+          || existing.creationFingerprint.digest !== fingerprint.digest) {
           fail(
             'AUTHORED_CREATE_IDEMPOTENCY_CONFLICT',
             'The authored object id was used for a different creation.',
-            safeObject(existing)
+            version === 1 && existing.schemaVersion === 2 ? null : safeObject(existing, version)
           );
         }
         return result(
           existing.state === 'active' ? 'existing-active' : 'existing-removed',
-          existing
+          existing, version
         );
+      }
+      if (writingLink) {
+        if (linkedCreationEnabled() !== true) {
+          fail('AUTHORED_WRITING_LINKS_DISABLED', 'New writing-linked markers are unavailable.');
+        }
+        try {
+          await inspectWritingLink({
+            ownerUserId, world, writingLink, worldX, worldY, session,
+            ForestWritingTreeModel: db.ForestWritingTree
+          });
+        } catch (error) {
+          if (['AUTHORED_WRITING_UNAVAILABLE', 'AUTHORED_WRITING_DISTANCE'].includes(error.code)) {
+            fail(error.code, 'The writing cannot be marked here.');
+          }
+          throw error;
+        }
       }
       const placementIndex = deriveForestOwnerPlacementIndex({ worldX, worldY });
       await inspect({
@@ -547,6 +572,7 @@ export function buildForestAuthoredObjectMutationService({
         forestId: world.forestId,
         ownerUserId,
         kind: input.kind,
+        ...(writingLink ? { schemaVersion: 2, writingLink } : {}),
         state: 'active',
         placement: { worldX, worldY },
         placementIndex,
@@ -567,7 +593,7 @@ export function buildForestAuthoredObjectMutationService({
         placementIndex,
         session
       });
-      return result('created', created);
+      return result('created', created, version);
     });
 
     try {
@@ -584,7 +610,7 @@ export function buildForestAuthoredObjectMutationService({
     ]);
     const ownerUserId = canonicalOwner(input.ownerUserId);
     const objectId = canonicalObjectId(input.objectId);
-    protocolVersion(input.protocolVersion);
+    const version = protocolVersion(input.protocolVersion);
     const expectedRevision = revision(input.expectedRevision);
     const worldX = coordinate(input.worldX, 'worldX');
     const worldY = coordinate(input.worldY, 'worldY');
@@ -601,22 +627,25 @@ export function buildForestAuthoredObjectMutationService({
       if (!current) {
         fail('AUTHORED_OBJECT_NOT_FOUND', 'The authored object was not found.');
       }
+      if (version === 1 && current.schemaVersion === 2) {
+        fail('AUTHORED_PROTOCOL_UPGRADE_REQUIRED', 'The marker requires a newer mutation protocol.');
+      }
       if (current.state === 'removed') {
         fail(
           'AUTHORED_OBJECT_REMOVED',
           'The authored object has been removed.',
-          safeObject(current)
+          safeObject(current, version)
         );
       }
       if (
         current.placement.worldX === worldX
         && current.placement.worldY === worldY
-      ) return result('unchanged', current);
+      ) return result('unchanged', current, version);
       if (current.recordRevision !== expectedRevision) {
         fail(
           'AUTHORED_OBJECT_CONFLICT',
           'The authored object changed elsewhere.',
-          safeObject(current)
+          safeObject(current, version)
         );
       }
       if (current.recordRevision === Number.MAX_SAFE_INTEGER) {
@@ -673,7 +702,7 @@ export function buildForestAuthoredObjectMutationService({
           session
         });
       }
-      return result('moved', updated);
+      return result('moved', updated, version);
     });
   }
 
@@ -681,7 +710,7 @@ export function buildForestAuthoredObjectMutationService({
     exactInput(input, ['ownerUserId', 'objectId', 'protocolVersion', 'expectedRevision']);
     const ownerUserId = canonicalOwner(input.ownerUserId);
     const objectId = canonicalObjectId(input.objectId);
-    protocolVersion(input.protocolVersion);
+    const version = protocolVersion(input.protocolVersion);
     const expectedRevision = revision(input.expectedRevision);
     const removedAt = timestamp(clock);
     const purgeEligibleAt = new Date(
@@ -699,12 +728,15 @@ export function buildForestAuthoredObjectMutationService({
       if (!current) {
         fail('AUTHORED_OBJECT_NOT_FOUND', 'The authored object was not found.');
       }
-      if (current.state === 'removed') return result('already-removed', current);
+      if (version === 1 && current.schemaVersion === 2) {
+        fail('AUTHORED_PROTOCOL_UPGRADE_REQUIRED', 'The marker requires a newer mutation protocol.');
+      }
+      if (current.state === 'removed') return result('already-removed', current, version);
       if (current.recordRevision !== expectedRevision) {
         fail(
           'AUTHORED_OBJECT_CONFLICT',
           'The authored object changed elsewhere.',
-          safeObject(current)
+          safeObject(current, version)
         );
       }
       if (current.recordRevision === Number.MAX_SAFE_INTEGER) {
@@ -740,7 +772,7 @@ export function buildForestAuthoredObjectMutationService({
         placementIndex: current.placementIndex,
         session
       });
-      return result('removed', updated);
+      return result('removed', updated, version);
     });
   }
 
@@ -748,3 +780,9 @@ export function buildForestAuthoredObjectMutationService({
 }
 
 export const forestAuthoredObjectMutations = buildForestAuthoredObjectMutationService();
+
+// Read boundaries share the full durable-record and world checks used by mutations.
+export {
+  validateStoredObject as validateForestAuthoredStoredObject,
+  validateWorld as validateForestAuthoredOwnerWorld
+};

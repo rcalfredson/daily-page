@@ -332,4 +332,53 @@ describe('forest authored reset service', () => {
     expect(result).toEqual({ requested: 1, progressed: 0, completed: 1, failed: 0 });
     expect(Object.keys(result)).not.toContain('resetId');
   });
+
+  it('starts mixed resets and preserves immutable link and fingerprints across bounded batches', async () => {
+    const link = { version: 1, writingTreeId: FOREST };
+    const fingerprint = { version: 2, digest: 'B'.repeat(43) };
+    const test = harness({ initialObjects: [marker(1), marker(2, {
+      schemaVersion: 2, writingLink: link, creationFingerprint: fingerprint
+    })] });
+    const started = await test.service.request({ ownerUserId: OWNER, resetId: RESET });
+    expect(started.operationVersion).toBe(2);
+    expect(test.operation().authoredObjectSchemaVersions).toEqual([1, 2]);
+    expect(Object.hasOwn(test.operation(), 'authoredObjectSchemaVersion')).toBeFalse();
+    const first = await test.service.processBatch({ ownerUserId: OWNER, resetId: RESET, batchSize: 1 });
+    const second = await test.service.processBatch({ ownerUserId: OWNER, resetId: RESET, batchSize: 1 });
+    expect(first.outcome).toBe('progressed');
+    expect(second).toEqual(jasmine.objectContaining({ operationVersion: 2,
+      outcome: 'completed', affectedObjectCount: 2 }));
+    expect(test.objects[1].state).toBe('removed');
+    expect(test.objects[1].writingLink).toEqual(link);
+    expect(test.objects[1].creationFingerprint).toEqual(fingerprint);
+    expect(test.models.ForestAuthoredObject.bulkWrite.calls.allArgs()
+      .map(([writes]) => writes[0].updateOne.filter.schemaVersion)).toEqual([1, 2]);
+  });
+
+  it('recovers legacy resets without expanding their scope or accepting linked state', async () => {
+    const linked = marker(1, { schemaVersion: 2,
+      writingLink: { version: 1, writingTreeId: FOREST },
+      creationFingerprint: { version: 2, digest: 'B'.repeat(43) } });
+    const test = harness({ initialOperation: operation(), initialObjects: [linked] });
+    const retry = await test.service.request({ ownerUserId: OWNER, resetId: RESET });
+    expect(retry.operationVersion).toBe(1);
+    expect(test.operation().authoredObjectSchemaVersion).toBe(1);
+    await expectAsync(test.service.processBatch({ ownerUserId: OWNER, resetId: RESET }))
+      .toBeRejectedWith(jasmine.objectContaining({ code: 'AUTHORED_RESET_MIGRATION_REQUIRED' }));
+    expect(test.models.ForestAuthoredObject.bulkWrite).not.toHaveBeenCalled();
+  });
+
+  it('rejects mixed reset records with ambiguous or unknown immutable scope before writes', async () => {
+    for (const overrides of [
+      { schemaVersion: 2, operationVersion: 2, authoredObjectSchemaVersions: [1, 2] },
+      { authoredObjectSchemaVersions: [1] },
+      { operationVersion: 2 }
+    ]) {
+      const test = harness({ initialOperation: operation(overrides), initialObjects: [marker(1)] });
+      await expectAsync(test.service.processBatch({ ownerUserId: OWNER, resetId: RESET }))
+        .toBeRejectedWith(jasmine.objectContaining({ code: 'AUTHORED_RESET_MIGRATION_REQUIRED' }));
+      expect(test.models.ForestAuthoredObject.bulkWrite).not.toHaveBeenCalled();
+    }
+  });
+
 });

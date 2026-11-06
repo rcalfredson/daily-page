@@ -1,3 +1,4 @@
+export const OWNER_FOREST_WRITING_LINK_MAX_DISTANCE = 160;
 export const OWNER_FOREST_COORDINATE_LIMIT = 1_000_000_000;
 export const OWNER_FOREST_MARKER_RADIUS = 9;
 export const OWNER_FOREST_MARKER_GAP = 8;
@@ -186,7 +187,8 @@ export function ownerForestMarkerPreview({
   placements,
   markers,
   cellSize,
-  movingObjectId = null
+  movingObjectId = null,
+  writingOrigin = null
 }) {
   const direction = Number.isFinite(facingRadians) ? facingRadians : Math.PI / 2;
   const worldX = Math.round(
@@ -199,6 +201,9 @@ export function ownerForestMarkerPreview({
   if (Math.abs(worldX) > OWNER_FOREST_COORDINATE_LIMIT
     || Math.abs(worldY) > OWNER_FOREST_COORDINATE_LIMIT) {
     reason = 'world-bounds';
+  } else if (writingOrigin && Math.hypot(worldX - writingOrigin.worldX, worldY - writingOrigin.worldY)
+    > OWNER_FOREST_WRITING_LINK_MAX_DISTANCE) {
+    reason = 'writing-distance';
   } else if (placements.some(placement => Math.hypot(
     worldX - placement.worldX,
     worldY - placement.worldY

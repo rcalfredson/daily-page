@@ -222,7 +222,10 @@ describe('forest authored diagnostic export', () => {
       includeRemoved: true,
       limit: 1
     });
-    expect(firstPage.page.nextCursor).toEqual(jasmine.any(String));
+    // Fixed legacy wire fixture: adding a new reader must not change old continuations.
+    expect(firstPage.page.nextCursor).toBe(
+      'eyJ2ZXJzaW9uIjoxLCJleHBvcnRWZXJzaW9uIjoxLCJmb3Jlc3RGaW5nZXJwcmludCI6InZYWmlwZTYwRmhUbklOUjNxX3l5SnkiLCJpbmNsdWRlUmVtb3ZlZCI6dHJ1ZSwiZXhwb3J0U3RhcnRlZEF0IjoiMjAyNi0wOC0xNlQxMjowMDowMC4wMDBaIiwiYWZ0ZXJPYmplY3RJZCI6IjIyMjIyMjIyLTIyMjItNDIyMi04MjIyLTIyMjIyMjIyMjIyMiJ9'
+    );
 
     const next = harness({ objects: [removedObject()] });
     const nextPage = await next.read({
@@ -279,7 +282,7 @@ describe('forest authored diagnostic export', () => {
   it('distinguishes unsupported versions from malformed current records', async () => {
     const unsupportedCases = [
       harness({ ownerWorld: world({ worldGenerationVersion: 2 }) }),
-      harness({ objects: [object({ schemaVersion: 2 })] }),
+      harness({ objects: [object({ schemaVersion: 3 })] }),
       harness({ objects: [object({ appearance: { version: 2 } })] }),
       harness({ objects: [object({ state: 'future-state' })] })
     ];
@@ -317,4 +320,73 @@ describe('forest authored diagnostic export', () => {
 
     expect(error.code).toBe('AUTHORED_DIAGNOSTIC_UNAVAILABLE');
   });
+
+  it('exports mixed schema and fingerprint versions while excluding writing relationships', async () => {
+    const linked = object({ schemaVersion: 2,
+      writingLink: { version: 1, writingTreeId: LATER_OBJECT },
+      creationFingerprint: { version: 2 } });
+    const result = await harness({ objects: [object(), linked] }).read({
+      ownerUserId: OWNER, includeRemoved: true, version: '2'
+    });
+    expect(result.exportVersion).toBe(2);
+    expect(result.objects.map(row => row.schemaVersion)).toEqual([1, 2]);
+    expect(result.objects.map(row => row.creationFingerprint.version)).toEqual([1, 2]);
+    const json = JSON.stringify(result);
+    for (const forbidden of ['writingLink', 'writingTreeId', LATER_OBJECT, 'title', 'groupId', 'blockId']) {
+      expect(json).not.toContain(forbidden);
+    }
+  });
+
+  it('requires an upgrade for linked rows even when removed rows are excluded', async () => {
+    const linked = removedObject({ schemaVersion: 2,
+      writingLink: { version: 1, writingTreeId: LATER_OBJECT },
+      creationFingerprint: { version: 2 } });
+    await expectAsync(harness({ objects: [linked] }).read({
+      ownerUserId: OWNER, includeRemoved: false
+    })).toBeRejectedWith(jasmine.objectContaining({ code: 'AUTHORED_UPGRADE_REQUIRED' }));
+  });
+
+  it('keeps version-2 continuation bound to owner and requested version', async () => {
+    const first = await harness({ objects: [object(), object({ objectId: LATER_OBJECT })] })
+      .read({ ownerUserId: OWNER, includeRemoved: true, version: 2, limit: 1 });
+    const cursor = first.page.nextCursor;
+    const result = await harness({ objects: [] }).read({
+      ownerUserId: OWNER, includeRemoved: true, version: 2, cursor
+    });
+    expect(result.exportVersion).toBe(2);
+    for (const [test, input] of [
+      [harness(), { version: 1 }],
+      [harness({ ownerWorld: world({ ownerUserId: OTHER_OWNER }) }), { ownerUserId: OTHER_OWNER }]
+    ]) {
+      await expectAsync(test.read({ ownerUserId: OWNER, includeRemoved: true, version: 2,
+        cursor, ...input })).toBeRejectedWith(jasmine.objectContaining({
+        code: 'INVALID_AUTHORED_DIAGNOSTIC_INPUT'
+      }));
+    }
+  });
+
+  it('fails closed on malformed linked records and invalid read versions', async () => {
+    await expectAsync(harness({ objects: [object({ schemaVersion: 2 })] }).read({
+      ownerUserId: OWNER, includeRemoved: true, version: 2
+    })).toBeRejectedWith(jasmine.objectContaining({ code: 'AUTHORED_DIAGNOSTIC_MIGRATION_REQUIRED' }));
+    for (const version of [null, 3, '02', ['2'], {}]) {
+      const test = harness();
+      await expectAsync(test.read({ ownerUserId: OWNER, includeRemoved: true, version }))
+        .toBeRejectedWith(jasmine.objectContaining({ code: 'INVALID_AUTHORED_DIAGNOSTIC_INPUT' }));
+      expect(test.ForestOwnerWorldModel.findOne).not.toHaveBeenCalled();
+    }
+  });
+
+  it('exports both formats when insertion follows the initial mutation timestamp', async () => {
+    const timestamp = new Date(CREATED.getTime() - 75);
+    const ordinary = object({ changedAt: timestamp });
+    const linked = object({ objectId: LATER_OBJECT, schemaVersion: 2, changedAt: timestamp,
+      creationFingerprint: { version: 2 }, writingLink: { version: 1, writingTreeId: FOREST } });
+    const result = await harness({ objects: [ordinary, linked] }).read({
+      ownerUserId: OWNER, includeRemoved: true, version: 2
+    });
+    expect(result.objects.map(row => row.schemaVersion)).toEqual([1, 2]);
+    expect(result.objects.every(row => row.changedAt === timestamp && row.createdAt === CREATED)).toBeTrue();
+  });
+
 });

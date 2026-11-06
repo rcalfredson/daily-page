@@ -1,3 +1,5 @@
+import { forestWritingLinksEnabled } from './forestWritingLinkAvailability.js';
+import { resolveForestAuthoredReturnDestination } from './forestAuthoredReturnDestination.js';
 import ForestOwnerWorld from '../db/models/ForestOwnerWorld.js';
 import { FOREST_OWNER_WORLD_SCHEMA_VERSION } from '../db/schemas/ForestOwnerWorldSchema.js';
 import {
@@ -30,7 +32,7 @@ import { FOREST_ASSET_TRANSPORT_RASTER } from './forestSceneAssetTransport.js';
 import { ownerForestCellsAround } from '../../public/js/owner-forest-scene.js';
 import { resolveForestOwnerReturnDestination } from './forestOwnerReturnDestination.js';
 
-export const FOREST_OWNER_SCENE_BOOTSTRAP_VERSION = 2;
+export const FOREST_OWNER_SCENE_BOOTSTRAP_VERSION = 3;
 export const FOREST_OWNER_SCENE_SPAWN = Object.freeze({
   worldX: 0,
   worldY: 0,
@@ -71,7 +73,7 @@ function initialCells() {
   return cells;
 }
 
-function emptyBootstrap(status) {
+function emptyBootstrap(status, writingLinkCreationEnabled) {
   return {
     bootstrapVersion: FOREST_OWNER_SCENE_BOOTSTRAP_VERSION,
     status,
@@ -91,6 +93,9 @@ function emptyBootstrap(status) {
       placementPageSize: FOREST_OWNER_REGION_DEFAULT_PAGE_SIZE,
       authoredPageSize: FOREST_AUTHORED_REGION_DEFAULT_PAGE_SIZE,
       authoredMutationProtocolVersion: FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION,
+      authoredLinkedMutationProtocolVersion: 2,
+      authoredRegionManifestVersion: 2,
+      writingLinkCreationEnabled,
       assetBatchSize: FOREST_OWNER_REGION_MAX_ASSET_REQUEST,
       transport: FOREST_ASSET_TRANSPORT_RASTER
     }
@@ -122,12 +127,15 @@ async function lean(query) {
 
 export function buildForestOwnerSceneBootstrapService({
   ForestOwnerWorldModel = ForestOwnerWorld,
-  resolveReturnDestination = resolveForestOwnerReturnDestination
+  resolveReturnDestination = resolveForestOwnerReturnDestination,
+  resolveMarkerReturnDestination = resolveForestAuthoredReturnDestination,
+  linkedCreationEnabled = forestWritingLinksEnabled
 } = {}) {
   return async function readForestOwnerSceneBootstrap({
-    ownerUserId: ownerValue, returnTreeId = null, preferredContentLang = 'en'
+    ownerUserId: ownerValue, returnTreeId = null, returnMarkerId = null, preferredContentLang = 'en'
   }) {
     const ownerUserId = canonicalOwner(ownerValue);
+    const creationEnabled = linkedCreationEnabled() === true;
     const world = await lean(ForestOwnerWorldModel.findOne({
       ownerUserId,
       worldRole: 'primary'
@@ -145,11 +153,11 @@ export function buildForestOwnerSceneBootstrapService({
       worldGenerationVersion: 1,
       reconciliation: 1
     }));
-    if (!world) return emptyBootstrap('not-established');
+    if (!world) return emptyBootstrap('not-established', creationEnabled);
     validateWorld(world, ownerUserId);
-    if (world.reconciliation.state === 'running') return emptyBootstrap('reconciling');
+    if (world.reconciliation.state === 'running') return emptyBootstrap('reconciling', creationEnabled);
     const bootstrap = {
-      ...emptyBootstrap('ready'),
+      ...emptyBootstrap('ready', creationEnabled),
       environment: {
         policyVersion: FOREST_OWNER_ENVIRONMENT_POLICY_VERSION,
         schemaVersion: FOREST_OWNER_ENVIRONMENT_SCHEMA_VERSION,
@@ -159,8 +167,12 @@ export function buildForestOwnerSceneBootstrapService({
         seed: world.worldSeed
       }
     };
-    if (returnTreeId) {
-      const destination = await resolveReturnDestination({
+    if (returnTreeId && returnMarkerId) return bootstrap;
+    if (returnTreeId || returnMarkerId) {
+      const destination = returnMarkerId ? await resolveMarkerReturnDestination({
+        ownerUserId, forestId: world.forestId, objectId: returnMarkerId,
+        spawn: bootstrap.spawn, cellSize: bootstrap.spatialIndex.cellSize
+      }) : await resolveReturnDestination({
         ownerUserId, forestId: world.forestId, writingTreeId: returnTreeId,
         preferredContentLang, spawn: bootstrap.spawn, cellSize: bootstrap.spatialIndex.cellSize
       });

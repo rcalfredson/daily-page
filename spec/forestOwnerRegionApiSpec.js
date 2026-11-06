@@ -631,6 +631,9 @@ describe('forest authored private API defenses', () => {
       { cells: '-0:0' },
       { cells: ['0:0'] },
       { cells: '0:0', cursor: ['one', 'two'] },
+      { cells: '0:0', version: ['1', '2'] },
+      { cells: '0:0', version: '3' },
+      { cells: '0:0', version: {} },
       { cells: '0:0', ownerUserId: OTHER_OWNER_USER_ID }
     ]) {
       const res = response();
@@ -643,6 +646,7 @@ describe('forest authored private API defenses', () => {
 
   it('maps changed and unsupported authored regions without private details', async () => {
     for (const testCase of [
+      ['AUTHORED_UPGRADE_REQUIRED', 409, 'FOREST_AUTHORED_UPGRADE_REQUIRED'],
       ['AUTHORED_REGION_CHANGED', 409, 'FOREST_AUTHORED_REGION_CHANGED'],
       ['AUTHORED_REGION_MIGRATION_REQUIRED', 409, 'FOREST_AUTHORED_MIGRATION_REQUIRED']
     ]) {
@@ -723,6 +727,14 @@ describe('forest authored mutation API', () => {
           expected: { objectId: OBJECT_ID, protocolVersion: 1, expectedRevision: 3 }
         }
       ];
+      cases.push({ operation: 'create', body: { protocolVersion: 2, kind: 'personal-marker', worldX: 10, worldY: 20,
+        writingLink: { version: 1, writingTreeId: 'AAAAAAAA-AAAA-4AAA-8AAA-AAAAAAAAAAAA' } },
+        expected: { objectId: OBJECT_ID, protocolVersion: 2, kind: 'personal-marker', worldX: 10, worldY: 20,
+          writingLink: { version: 1, writingTreeId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa' } } });
+      cases.push(...cases.filter(testCase => testCase.operation !== 'create').map(testCase => ({
+        ...testCase, body: { ...testCase.body, protocolVersion: 2 },
+        expected: { ...testCase.expected, protocolVersion: 2 }
+      })));
       for (const testCase of cases) {
         const result = { protocolVersion: 1, outcome: 'accepted', object: null };
         const mutate = jasmine.createSpy('mutate').and.resolveTo(result);
@@ -777,6 +789,12 @@ describe('forest authored mutation API', () => {
         expect(res.statusCode).toBe(401);
       }
       for (const req of [
+        ...[
+          { protocolVersion: 1, writingLink: null },
+          { protocolVersion: 2, writingLink: null },
+          { protocolVersion: 2, writingLink: { version: 2, writingTreeId: OBJECT_ID } },
+          { protocolVersion: 2, writingLink: { version: 1, writingTreeId: OBJECT_ID, title: 'injected' } }
+        ].map(fields => request({ body: { kind: 'personal-marker', worldX: 0, worldY: 0, ...fields } })),
         request({ body: { protocolVersion: 1, kind: 'personal-marker', worldX: 0 } }),
         request({
           body: { protocolVersion: 2, kind: 'personal-marker', worldX: 0, worldY: 0 }
@@ -882,4 +900,15 @@ describe('forest authored mutation API', () => {
     expect(res.body.code).toBe('FOREST_AUTHORED_MUTATION_UNAVAILABLE');
     expect(JSON.stringify(console.error.calls.allArgs())).not.toContain(privateDetail);
   });
+  it('passes an explicitly requested mixed authored manifest version', async () => {
+    const readManifest = jasmine.createSpy('readManifest').and.resolveTo({ manifestVersion: 2 });
+    const res = response();
+    await buildForestAuthoredRegionRouteHandler({ readManifest })({
+      user: { id: OWNER_USER_ID }, query: { cells: '0:0', version: '2' }
+    }, res);
+    expect(res.statusCode).toBe(200);
+    expect(readManifest).toHaveBeenCalledOnceWith({ ownerUserId: OWNER_USER_ID,
+      cells: [{ cellX: 0, cellY: 0 }], version: '2', cursor: null, limit: undefined });
+  });
+
 });

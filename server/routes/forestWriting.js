@@ -1,3 +1,5 @@
+import { forestAuthoredObjectRead, ForestAuthoredObjectReadError } from '../services/forestAuthoredObjectRead.js';
+import { forestMarkerWritingPostPath } from '../../public/js/forest-writing-navigation.js';
 import express from 'express';
 import { forestWritingPostPath } from '../../public/js/forest-writing-navigation.js';
 
@@ -21,7 +23,7 @@ export function privateForestResponse(req, res, next) {
 
 function forestWritingUrl(cursor, inclusion) {
   const query = new URLSearchParams();
-  if (inclusion === 'hidden') query.set('view', 'hidden');
+  if (['hidden', 'marked'].includes(inclusion)) query.set('view', inclusion);
   if (cursor) query.set('cursor', cursor);
   const suffix = query.size ? `?${query}` : '';
   return `/forest/writing${suffix}`;
@@ -69,6 +71,7 @@ function languageName(lang, uiLang) {
 
 export function buildForestWritingRouteHandler({
   listWritingTrees = listForestOwnerWritingTrees,
+  listMarked = forestAuthoredObjectRead.listMarked,
   loadRoomMetadata = getRoomMetadata
 } = {}) {
   return async function forestWritingRoute(req, res) {
@@ -83,6 +86,23 @@ export function buildForestWritingRouteHandler({
         throw new ForestOwnerNonCanvasReadError(
           'INVALID_FOREST_READ_INPUT', 'The forest writing query is invalid.'
         );
+      }
+      if (inclusion === 'marked') {
+        const result = await listMarked({ ownerUserId: req.user.id,
+          preferredContentLang: getPreferredContentLang(res), cursor: req.query.cursor || null });
+        return res.status(200).render('forest/marked', {
+          title: t('forestWriting.marked.heading'), description: t('forestWriting.meta.description'),
+          user: req.user, uiLang, forestStatus: result.status, inclusion,
+          markers: result.markers.map(marker => ({ ...marker,
+            visitPath: `/forest?returnMarker=${marker.object.objectId}`,
+            writing: marker.writing ? { ...marker.writing,
+              forestPath: forestMarkerWritingPostPath(marker.writing.path, marker.object.objectId),
+              formattedCreatedAt: new Intl.DateTimeFormat(uiLang, { dateStyle: 'medium' })
+                .format(new Date(marker.writing.createdAt))
+            } : null
+          })),
+          nextUrl: result.page.nextCursor ? forestWritingUrl(result.page.nextCursor, inclusion) : null
+        });
       }
       const result = await listWritingTrees({
         ownerUserId: req.user.id,
@@ -138,8 +158,8 @@ export function buildForestWritingRouteHandler({
           : null
       });
     } catch (error) {
-      if (error instanceof ForestOwnerNonCanvasReadError
-        && error.code === 'INVALID_FOREST_READ_INPUT') {
+      if ((error instanceof ForestOwnerNonCanvasReadError && error.code === 'INVALID_FOREST_READ_INPUT')
+        || (error instanceof ForestAuthoredObjectReadError && error.code === 'INVALID_AUTHORED_READ_INPUT')) {
         return res.status(400).render('forest/writing', {
           title: t('forestWriting.meta.title'),
           description: t('forestWriting.meta.description'),

@@ -1,10 +1,10 @@
 import ForestAuthoredObject from '../db/models/ForestAuthoredObject.js';
 import ForestWritingTree from '../db/models/ForestWritingTree.js';
+import { forestAuthoredObjectHasSupportedFormat } from './forestAuthoredObjectFormat.js';
 import {
   FOREST_AUTHORED_MARKER_APPEARANCE_ID,
   FOREST_AUTHORED_MARKER_APPEARANCE_VERSION,
-  FOREST_AUTHORED_OBJECT_IDENTITY_VERSION,
-  FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
+  FOREST_AUTHORED_OBJECT_IDENTITY_VERSION
 } from '../db/schemas/ForestAuthoredObjectSchema.js';
 import {
   FOREST_WRITING_TREE_IDENTITY_VERSION,
@@ -67,6 +67,7 @@ const TREE_PROJECTION = Object.freeze({
 const MARKER_PROJECTION = Object.freeze({
   _id: 0,
   schemaVersion: 1,
+  writingLink: 1,
   identityVersion: 1,
   objectId: 1,
   forestId: 1,
@@ -188,7 +189,7 @@ function validateTree(tree, { ownerUserId, forestId }) {
 function validateMarker(marker, { ownerUserId, forestId }) {
   const expectedIndex = storedPlacementIndex(marker, 'authored-object');
   if (
-    marker?.schemaVersion !== FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
+    !forestAuthoredObjectHasSupportedFormat(marker)
     || marker?.identityVersion !== FOREST_AUTHORED_OBJECT_IDENTITY_VERSION
     || !UUID_V4_PATTERN.test(marker?.objectId || '')
     || marker?.ownerUserId !== ownerUserId
@@ -210,7 +211,6 @@ function validateMarker(marker, { ownerUserId, forestId }) {
       !== FOREST_OWNER_WORLD_GENERATION_VERSION
     || marker?.appearance?.id !== FOREST_AUTHORED_MARKER_APPEARANCE_ID
     || marker?.appearance?.version !== FOREST_AUTHORED_MARKER_APPEARANCE_VERSION
-    || marker?.creationFingerprint?.version !== 1
     || !SHA256_BASE64URL_PATTERN.test(marker?.creationFingerprint?.digest || '')
     || !Number.isSafeInteger(marker?.recordRevision)
     || marker.recordRevision < 1

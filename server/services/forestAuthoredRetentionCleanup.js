@@ -1,17 +1,13 @@
+import { forestAuthoredResetScope } from './forestAuthoredResetFormat.js';
+import { forestAuthoredObjectHasSupportedFormat } from './forestAuthoredObjectFormat.js';
 import ForestAuthoredObject from '../db/models/ForestAuthoredObject.js';
 import ForestAuthoredResetOperation from '../db/models/ForestAuthoredResetOperation.js';
 import {
   FOREST_AUTHORED_COORDINATE_LIMIT,
   FOREST_AUTHORED_MARKER_APPEARANCE_ID,
   FOREST_AUTHORED_MARKER_APPEARANCE_VERSION,
-  FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION,
-  FOREST_AUTHORED_OBJECT_IDENTITY_VERSION,
-  FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
+  FOREST_AUTHORED_OBJECT_IDENTITY_VERSION
 } from '../db/schemas/ForestAuthoredObjectSchema.js';
-import {
-  FOREST_AUTHORED_RESET_OPERATION_SCHEMA_VERSION,
-  FOREST_AUTHORED_RESET_OPERATION_VERSION
-} from '../db/schemas/ForestAuthoredResetOperationSchema.js';
 import { FOREST_OWNER_WORLD_SCHEMA_VERSION } from '../db/schemas/ForestOwnerWorldSchema.js';
 import {
   FOREST_OWNER_ENVIRONMENT_POLICY_VERSION,
@@ -82,7 +78,7 @@ function validTombstone(object, now) {
   } catch {
     return false;
   }
-  return object?.schemaVersion === FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
+  return forestAuthoredObjectHasSupportedFormat(object)
     && object?.identityVersion === FOREST_AUTHORED_OBJECT_IDENTITY_VERSION
     && Boolean(object?._id)
     && OBJECT_ID_PATTERN.test(object?.ownerUserId || '')
@@ -108,7 +104,6 @@ function validTombstone(object, now) {
       === FOREST_OWNER_WORLD_GENERATION_VERSION
     && object?.appearance?.id === FOREST_AUTHORED_MARKER_APPEARANCE_ID
     && object?.appearance?.version === FOREST_AUTHORED_MARKER_APPEARANCE_VERSION
-    && object?.creationFingerprint?.version === FOREST_AUTHORED_OBJECT_FINGERPRINT_VERSION
     && SHA256_BASE64URL_PATTERN.test(object?.creationFingerprint?.digest || '')
     && Number.isSafeInteger(object?.recordRevision)
     && object.recordRevision >= 2
@@ -122,8 +117,7 @@ function validTombstone(object, now) {
 }
 
 function validCompletedReset(operation, cutoff) {
-  return operation?.schemaVersion === FOREST_AUTHORED_RESET_OPERATION_SCHEMA_VERSION
-    && operation?.operationVersion === FOREST_AUTHORED_RESET_OPERATION_VERSION
+  return Boolean(forestAuthoredResetScope(operation))
     && Boolean(operation?._id)
     && OBJECT_ID_PATTERN.test(operation?.ownerUserId || '')
     && UUID_V4_PATTERN.test(operation?.forestId || '')
@@ -133,7 +127,6 @@ function validCompletedReset(operation, cutoff) {
       || UUID_V4_PATTERN.test(operation.afterObjectId))
     && Number.isSafeInteger(operation?.affectedObjectCount)
     && operation.affectedObjectCount >= 0
-    && operation?.authoredObjectSchemaVersion === FOREST_AUTHORED_OBJECT_SCHEMA_VERSION
     && operation?.spatialIndexVersion === FOREST_OWNER_PLACEMENT_INDEX_VERSION
     && validDate(operation?.startedAt)
     && validDate(operation?.completedAt)
@@ -171,7 +164,7 @@ export function buildForestAuthoredRetentionCleanupService({
       try {
         const result = await db.ForestAuthoredObject.deleteOne({
           _id: object._id,
-          schemaVersion: FOREST_AUTHORED_OBJECT_SCHEMA_VERSION,
+          schemaVersion: object.schemaVersion,
           identityVersion: FOREST_AUTHORED_OBJECT_IDENTITY_VERSION,
           state: 'removed',
           removedAt: object.removedAt,
@@ -208,8 +201,8 @@ export function buildForestAuthoredRetentionCleanupService({
       try {
         const result = await db.ForestAuthoredResetOperation.deleteOne({
           _id: operation._id,
-          schemaVersion: FOREST_AUTHORED_RESET_OPERATION_SCHEMA_VERSION,
-          operationVersion: FOREST_AUTHORED_RESET_OPERATION_VERSION,
+          schemaVersion: operation.schemaVersion,
+          operationVersion: operation.operationVersion,
           status: 'completed',
           completedAt: operation.completedAt
         });
