@@ -140,6 +140,29 @@ async function rejectedError(promise) {
 }
 
 describe('forest authored placement authority', () => {
+  it('blocks new placement while terrain protection is preparing, before reading live neighborhoods', async () => {
+    const test = harness();
+    await expectAsync(test.inspect({ world: { ...world(), terrain: {
+      schemaVersion: 1, generationVersion: 3,
+      activationId: '55555555-5555-4555-8555-555555555555', revision: 1,
+      state: 'preparing', phase: 'trees', cursor: null
+    } } })).toBeRejectedWithError('FOREST_TERRAIN_PREPARING');
+    expect(test.ForestWritingTreeModel.find).not.toHaveBeenCalled();
+  });
+
+  it('rejects an otherwise clear marker destination when activated terrain excludes it', async () => {
+    const test = harness();
+    const inspectTerrain = jasmine.createSpy('inspectTerrain').and.resolveTo(false);
+    await expectAsync(test.inspect({ inspectTerrain, world: { ...world(), terrain: {
+      schemaVersion: 1, generationVersion: 3,
+      activationId: '55555555-5555-4555-8555-555555555555', revision: 1,
+      state: 'active', phase: 'ready', cursor: null
+    } } })).toBeRejectedWithError('The requested placement does not clear forest terrain.');
+    expect(inspectTerrain).toHaveBeenCalledWith(jasmine.objectContaining({
+      ownerUserId: OWNER, worldX: 0, worldY: 0, session: 'transaction-session'
+    }));
+  });
+
   it('treats valid linked markers as ordinary collision reservations without resolving writing', async () => {
     const linked = marker(1, { schemaVersion: 2,
       writingLink: { version: 1, writingTreeId: OBJECT },

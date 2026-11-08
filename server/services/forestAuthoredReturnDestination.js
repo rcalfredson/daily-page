@@ -1,3 +1,4 @@
+import { forestTerrainReturnPredicate } from './forestOwnerTerrain.js';
 import ForestAuthoredObject from '../db/models/ForestAuthoredObject.js';
 import { forestReturnTreeId } from '../../public/js/forest-writing-navigation.js';
 import { ownerForestCellsAround, ownerForestReturnSpawn,
@@ -13,10 +14,11 @@ async function lean(query) {
 
 export function buildForestAuthoredReturnDestinationService({
   ForestAuthoredObjectModel = ForestAuthoredObject,
-  readManifest = readForestOwnerRegionManifest
+  readManifest = readForestOwnerRegionManifest,
+  terrainPredicate = forestTerrainReturnPredicate
 } = {}) {
   return async function resolveForestAuthoredReturnDestination({ ownerUserId, forestId,
-    objectId: objectValue, spawn, cellSize }) {
+    objectId: objectValue, spawn, cellSize, world = null }) {
     const objectId = forestReturnTreeId(objectValue);
     if (!objectId) return null;
     try {
@@ -37,7 +39,9 @@ export function buildForestAuthoredReturnDestinationService({
         if (!cursor) break;
       }
       if (cursor) return null;
-      const destination = ownerForestReturnSpawn(spawn, target, placements);
+      const isWalkable = await terrainPredicate({ ownerUserId, world,
+        position: { worldX: target.worldX, worldY: target.worldY } });
+      const destination = ownerForestReturnSpawn(spawn, target, placements, isWalkable);
       if (!destination) return null;
       // The marker may have moved or been removed while collision pages were loading.
       const unchanged = await lean(ForestAuthoredObjectModel.findOne({ ...filter,

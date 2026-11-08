@@ -13,8 +13,11 @@ movement, and removal. The marker protocol and evidence are recorded in
 It supports signed-world exploration, restrained owner-environment ground,
 regional writing-tree loading, reusable procedural assets, tree proximity focus, reauthorized
 writing inspection, keyboard movement, touch-drag movement, reduced motion, and a direct semantic
-fallback to `/forest/writing`. It does not include development profiles, a diagnostic UI, streams,
-bridges, visitors, discoveries, trails, gathering, construction, or `localStorage` authority.
+fallback to `/forest/writing`. Explicitly activated owner worlds also include generation-3 streams/ponds
+or generation-4 regional rivers/lakes, boulders, and generated timber bridges through a separately
+versioned terrain layer. It does not include development
+profiles, a diagnostic UI, visitors, discoveries, trails, gathering, player construction, or
+`localStorage` authority.
 
 The owner may hide a currently inspected tree through the durable inclusion endpoint. Success
 removes that placement from the page-lifetime scene immediately; restoration remains available in
@@ -157,3 +160,25 @@ and deletion behavior is accepted.
 
 The consolidated Milestone 2 evidence and completion judgment are recorded in
 [`milestone-2-owner-writing-grove-evaluation.md`](milestone-2-owner-writing-grove-evaluation.md).
+
+
+## Optional activated terrain
+
+Terrain-free worlds keep bootstrap version 3 and their established flat compatibility surface.
+Activated worlds use version 4 with a bounded terrain descriptor and private regional delivery.
+Supported terrain generations are 3 (district-local streams/ponds) and 4 (regional rivers/lakes).
+Generation 4 deduplicates complete features across small loading cells. An explicit replacement
+activation keeps the old descriptor readable while fencing spatial writes, captures current
+reserved places, verifies access, and atomically publishes a new generation/token. Retired
+protections are cleaned separately; cancellation never rolls back a published generation.
+The browser blocks walking/placement on unloaded terrain and shares water/rock/crossing geometry
+with authoritative server placement and safe return selection. Existing tree ecology and durable
+coordinates stay unchanged; frozen local protections preserve established places.
+
+See [the live terrain design](live-terrain-increment-1-design.md) and
+[development walkthrough](../testing/forest-live-terrain-walkthrough.md) for versioned delivery,
+owner-fenced capture/verification/publication, stale-client placement protocol 3, rollout, and the
+remaining human/physical-device acceptance. Activation is explicit and defaults off. Turning off
+new activation does not remove already authoritative terrain.
+The [river/lake slice](live-river-lake-slice.md) records the current geometry, transport, access,
+upgrade, and review boundaries.

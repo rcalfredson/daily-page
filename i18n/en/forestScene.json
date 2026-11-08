@@ -12,6 +12,8 @@
     "help": "Move with the arrow keys or WASD, or touch and drag in the forest. Press Enter or E near a tree or marker, or select it directly, to inspect it. In marker placement mode, press Enter to save or Escape to cancel.",
     "viewportLabel": "Explore your private Activity Forest",
     "loading": "Growing the nearby grove…",
+    "terrainUnavailable": "The nearby landscape could not be loaded. Reload the forest to try again.",
+    "terrainReload": "The landscape has changed. Reload the forest before placing or moving markers.",
     "treeNearby": "A writing tree is nearby.",
     "markers": {
       "place": "Place a marker",
@@ -35,6 +37,7 @@
       "cancel": "Cancel",
       "save": "Save marker",
       "previewClear": "Choose this place, or keep exploring for another.",
+      "previewTerrainCollision": "Choose dry ground away from rocks and bridge approaches.",
       "previewTreeCollision": "Move farther from the writing tree.",
       "previewMarkerCollision": "Leave more room between markers.",
       "previewBounds": "Choose a place farther inside the forest.",

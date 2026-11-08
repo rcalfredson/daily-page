@@ -216,6 +216,32 @@ function harness({
 }
 
 describe('forest writing-tree transactional creation', () => {
+  it('pauses allocation during a replacement while the existing terrain remains published', async () => {
+    const test = harness({ world: ownerWorld({ terrain: {
+      schemaVersion: 1, generationVersion: 3,
+      activationId: '55555555-5555-4555-8555-555555555555', revision: 1,
+      state: 'active', phase: 'ready', cursor: null,
+      replacement: { schemaVersion: 1, generationVersion: 4,
+        activationId: '66666666-6666-4666-8666-666666666666', revision: 1,
+        state: 'preparing', phase: 'trees', cursor: null }
+    } }) });
+    await expectAsync(test.service({ ownerUserId: OWNER_USER_ID,
+      translationGroupId: GROUP_ID, now: NOW })).toBeRejectedWithError('FOREST_TERRAIN_PREPARING');
+    expect(test.createdTrees).toEqual([]);
+    expect(test.readNeighborhood).not.toHaveBeenCalled();
+  });
+  it('pauses new allocation while terrain protections are being captured', async () => {
+    const test = harness({ world: ownerWorld({ terrain: {
+      schemaVersion: 1, generationVersion: 3,
+      activationId: '55555555-5555-4555-8555-555555555555', revision: 1,
+      state: 'preparing', phase: 'trees', cursor: null
+    } }) });
+    await expectAsync(test.service({ ownerUserId: OWNER_USER_ID,
+      translationGroupId: GROUP_ID, now: NOW })).toBeRejectedWithError('FOREST_TERRAIN_PREPARING');
+    expect(test.createdTrees).toEqual([]);
+    expect(test.readNeighborhood).not.toHaveBeenCalled();
+  });
+
   it('captures one complete tree and advances the owner world atomically', async () => {
     const test = harness();
 

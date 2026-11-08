@@ -1,3 +1,4 @@
+import { forestTerrainDescriptor } from './forestOwnerTerrainRegion.js';
 import { forestWritingLinksEnabled } from './forestWritingLinkAvailability.js';
 import { resolveForestAuthoredReturnDestination } from './forestAuthoredReturnDestination.js';
 import ForestOwnerWorld from '../db/models/ForestOwnerWorld.js';
@@ -151,7 +152,8 @@ export function buildForestOwnerSceneBootstrapService({
       environmentPolicyVersion: 1,
       environmentSchemaVersion: 1,
       worldGenerationVersion: 1,
-      reconciliation: 1
+      reconciliation: 1,
+      terrain: 1
     }));
     if (!world) return emptyBootstrap('not-established', creationEnabled);
     validateWorld(world, ownerUserId);
@@ -167,14 +169,21 @@ export function buildForestOwnerSceneBootstrapService({
         seed: world.worldSeed
       }
     };
+    const terrain = forestTerrainDescriptor(world);
+    if (terrain) {
+      bootstrap.bootstrapVersion = 4;
+      bootstrap.terrain = terrain;
+    }
     if (returnTreeId && returnMarkerId) return bootstrap;
     if (returnTreeId || returnMarkerId) {
       const destination = returnMarkerId ? await resolveMarkerReturnDestination({
         ownerUserId, forestId: world.forestId, objectId: returnMarkerId,
-        spawn: bootstrap.spawn, cellSize: bootstrap.spatialIndex.cellSize
+        spawn: bootstrap.spawn, cellSize: bootstrap.spatialIndex.cellSize,
+        ...(terrain ? { world } : {})
       }) : await resolveReturnDestination({
         ownerUserId, forestId: world.forestId, writingTreeId: returnTreeId,
-        preferredContentLang, spawn: bootstrap.spawn, cellSize: bootstrap.spatialIndex.cellSize
+        preferredContentLang, spawn: bootstrap.spawn, cellSize: bootstrap.spatialIndex.cellSize,
+        ...(terrain ? { world } : {})
       });
       if (destination) {
         bootstrap.returnDestination = destination;

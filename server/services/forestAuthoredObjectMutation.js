@@ -1,3 +1,4 @@
+import { forestTerrainDescriptor } from './forestOwnerTerrainRegion.js';
 import { forestWritingLinksEnabled } from './forestWritingLinkAvailability.js';
 import { canonicalForestWritingLink, readForestAuthoredObjectFormat } from './forestAuthoredObjectFormat.js';
 import { inspectForestAuthoredWritingLink } from './forestAuthoredWritingLink.js';
@@ -101,7 +102,7 @@ function canonicalObjectId(value) {
 }
 
 function protocolVersion(value) {
-  if (![1, 2].includes(value)) {
+  if (![1, 2, 3].includes(value)) {
     fail(
       'UNSUPPORTED_AUTHORED_MUTATION_PROTOCOL',
       'The authored mutation protocol version is unsupported.'
@@ -157,7 +158,7 @@ function safeObject(value, version = 1) {
     fail('AUTHORED_PROTOCOL_UPGRADE_REQUIRED', 'The marker requires a newer mutation protocol.');
   }
   return Object.freeze({
-    ...(version === 2 ? {
+    ...(version >= 2 ? {
       schemaVersion: object.schemaVersion,
       writingLink: object.schemaVersion === 2 ? Object.freeze({ ...object.writingLink }) : null
     } : {}),
@@ -493,9 +494,19 @@ export function buildForestAuthoredObjectMutationService({
     });
   }
 
+  function requireCurrentTerrain(input, world) {
+    const descriptor = forestTerrainDescriptor(world);
+    if (descriptor && (input.protocolVersion !== 3 || input.terrainToken !== descriptor.token)
+      || input.protocolVersion === 3 && (!descriptor || typeof input.terrainToken !== 'string'
+        || input.terrainToken !== descriptor.token)) {
+      fail('AUTHORED_PROTOCOL_UPGRADE_REQUIRED', 'Reload the forest before placing a marker.');
+    }
+  }
+
   async function create(input) {
     exactInput(input, ['ownerUserId', 'objectId', 'protocolVersion', 'kind', 'worldX', 'worldY',
-      ...(input?.protocolVersion === 2 ? ['writingLink'] : [])]);
+      ...(input?.protocolVersion === 2 || input?.protocolVersion === 3 && Object.hasOwn(input, 'writingLink') ? ['writingLink'] : []),
+      ...(input?.protocolVersion === 3 ? ['terrainToken'] : [])]);
     const ownerUserId = canonicalOwner(input.ownerUserId);
     const objectId = canonicalObjectId(input.objectId);
     const version = protocolVersion(input.protocolVersion);
@@ -505,7 +516,7 @@ export function buildForestAuthoredObjectMutationService({
     const worldX = coordinate(input.worldX, 'worldX');
     const worldY = coordinate(input.worldY, 'worldY');
     let writingLink;
-    if (version === 2) {
+    if (version === 2 || version === 3 && Object.hasOwn(input, 'writingLink')) {
       try { writingLink = canonicalForestWritingLink(input.writingLink); }
       catch { fail('INVALID_AUTHORED_MUTATION_INPUT', 'The writing relationship is invalid.'); }
     }
@@ -540,6 +551,7 @@ export function buildForestAuthoredObjectMutationService({
           existing, version
         );
       }
+      requireCurrentTerrain(input, world);
       if (writingLink) {
         if (linkedCreationEnabled() !== true) {
           fail('AUTHORED_WRITING_LINKS_DISABLED', 'New writing-linked markers are unavailable.');
@@ -606,7 +618,8 @@ export function buildForestAuthoredObjectMutationService({
 
   async function move(input) {
     exactInput(input, [
-      'ownerUserId', 'objectId', 'protocolVersion', 'expectedRevision', 'worldX', 'worldY'
+      'ownerUserId', 'objectId', 'protocolVersion', 'expectedRevision', 'worldX', 'worldY',
+      ...(input?.protocolVersion === 3 ? ['terrainToken'] : [])
     ]);
     const ownerUserId = canonicalOwner(input.ownerUserId);
     const objectId = canonicalObjectId(input.objectId);
@@ -651,6 +664,7 @@ export function buildForestAuthoredObjectMutationService({
       if (current.recordRevision === Number.MAX_SAFE_INTEGER) {
         fail('AUTHORED_OBJECT_UNAVAILABLE', 'The authored object revision cannot advance.');
       }
+      requireCurrentTerrain(input, world);
       const destinationIndex = deriveForestOwnerPlacementIndex({ worldX, worldY });
       const sameCell = current.placementIndex.cellX === destinationIndex.cellX
         && current.placementIndex.cellY === destinationIndex.cellY;

@@ -94,8 +94,8 @@ function collides(position, placements) {
 }
 
 // Try a fixed ring of nearby positions; crowded or unsupported destinations use the entrance.
-// Markers are non-solid. Terrain in the production owner scene is traversable presentation.
-export function ownerForestReturnSpawn(player, target, placements) {
+// Markers are non-solid; terrain suitability is supplied by the current terrain authority.
+export function ownerForestReturnSpawn(player, target, placements, isWalkable = () => true) {
   if (!target || !Number.isSafeInteger(target.worldX) || !Number.isSafeInteger(target.worldY)
     || !Number.isFinite(target.collisionRadius) || target.collisionRadius <= 0) return null;
   const distance = target.collisionRadius + player.radius + 8;
@@ -108,12 +108,12 @@ export function ownerForestReturnSpawn(player, target, placements) {
     };
     if (Math.abs(candidate.worldX) <= OWNER_FOREST_COORDINATE_LIMIT
       && Math.abs(candidate.worldY) <= OWNER_FOREST_COORDINATE_LIMIT
-      && !collides(candidate, placements)) return candidate;
+      && !collides(candidate, placements) && isWalkable(candidate)) return candidate;
   }
   return null;
 }
 
-export function moveOwnerForestPlayer(player, direction, elapsedSeconds, placements) {
+export function moveOwnerForestPlayer(player, direction, elapsedSeconds, placements, canMove = () => true) {
   const distance = player.movementSpeed * Math.max(0, elapsedSeconds);
   const next = { ...player };
   const candidateX = {
@@ -122,14 +122,14 @@ export function moveOwnerForestPlayer(player, direction, elapsedSeconds, placeme
       OWNER_FOREST_COORDINATE_LIMIT, next.worldX + (direction.x * distance)
     ))
   };
-  if (!collides(candidateX, placements)) next.worldX = candidateX.worldX;
+  if (!collides(candidateX, placements) && canMove(next, candidateX)) next.worldX = candidateX.worldX;
   const candidateY = {
     ...next,
     worldY: Math.max(-OWNER_FOREST_COORDINATE_LIMIT, Math.min(
       OWNER_FOREST_COORDINATE_LIMIT, next.worldY + (direction.y * distance)
     ))
   };
-  if (!collides(candidateY, placements)) next.worldY = candidateY.worldY;
+  if (!collides(candidateY, placements) && canMove(next, candidateY)) next.worldY = candidateY.worldY;
   return next;
 }
 

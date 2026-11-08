@@ -1,3 +1,4 @@
+import { createOwnerForestTerrainScene } from './owner-forest-terrain-scene.js';
 import { forestWritingPostPath, forestMarkerWritingPostPath } from './forest-writing-navigation.js';
 import {
   focusedForestPlacement,
@@ -53,6 +54,8 @@ if (payload && copyPayload && viewport && canvas) {
   const bootstrap = JSON.parse(payload.textContent);
   const copy = JSON.parse(copyPayload.textContent);
   const context = canvas.getContext('2d');
+  const terrain = createOwnerForestTerrainScene({ descriptor: bootstrap.terrain });
+  let terrainRetryAfter = 0;
   const placementsById = new Map();
   const markersById = new Map();
   const pendingMarkerMutations = new Map();
@@ -647,11 +650,13 @@ if (payload && copyPayload && viewport && canvas) {
     missing.forEach(cell => pendingCells.add(ownerForestCellId(cell)));
     setStatus('Growing the nearby grove…');
     try {
+      if (bootstrap.terrain) await terrain.ensure(player);
       await requestCells(missing);
       missing.forEach(cell => loadedCells.add(ownerForestCellId(cell)));
       if (returnArrivalPending) {
         const arrival = ownerForestReturnSpawn(
-          bootstrap.spawn, placementsById.get(returnedTreeId), [...placementsById.values()]
+          bootstrap.spawn, placementsById.get(returnedTreeId), [...placementsById.values()],
+          candidate => terrain.sample(candidate).walkable
         );
         player = { ...(arrival || bootstrap.spawn) };
         returnArrivalPending = false;
@@ -672,7 +677,8 @@ if (payload && copyPayload && viewport && canvas) {
       }
       loadFailure = true;
       console.error('Owner forest nearby load failed:', error?.name || 'Error');
-      setStatus('The nearby grove could not be loaded. Move or reload to try again.', true);
+      setStatus(bootstrap.terrain ? copy.terrainUnavailable
+        : 'The nearby grove could not be loaded. Move or reload to try again.', true);
     } finally {
       missing.forEach(cell => pendingCells.delete(ownerForestCellId(cell)));
       loading = false;
@@ -878,6 +884,7 @@ if (payload && copyPayload && viewport && canvas) {
     frame = null;
     context.imageSmoothingEnabled = false;
     paintGround();
+    terrain.paintGround(context, camera, time, reducedMotion.matches);
     const placements = [...placementsById.values()];
     const visible = visibleForestPlacements(placements, assetsByKey, camera, 32);
     const visibleMarkers = [...markersById.values()].filter(marker => (
@@ -885,6 +892,7 @@ if (payload && copyPayload && viewport && canvas) {
       && marker.worldY >= camera.y - 40 && marker.worldY <= camera.y + camera.height + 32
     ));
     const depth = [
+      ...terrain.depthItems(camera),
       ...visible.map(tree => ({ kind: 'tree', id: tree.id, placement: tree, worldY: tree.worldY })),
       ...visibleMarkers.map(marker => ({
         kind: 'marker', id: marker.objectId, marker, worldY: marker.worldY
@@ -894,13 +902,15 @@ if (payload && copyPayload && viewport && canvas) {
         worldY: placement.preview.worldY
       }] : []),
       ...(!returnArrivalPending
-        ? [{ kind: 'player', id: '~player', player: true, worldY: player.worldY }] : [])
+        ? [{ kind: 'player', id: '~player', player: true, worldY: player.worldY + terrain.elevation(player) }] : [])
     ].sort((a, b) => a.worldY - b.worldY || a.kind.localeCompare(b.kind)
       || a.id.localeCompare(b.id));
     for (const item of depth) {
-      if (item.player) {
+      if (item.kind.startsWith('terrain-')) {
+        terrain.paintDepth(context, item, camera);
+      } else if (item.player) {
         paintForestHumanoid(context, Math.round(player.worldX - camera.x),
-          Math.round(player.worldY - camera.y), {
+          Math.round(player.worldY - camera.y - terrain.elevation(player)), {
             profile: FOREST_HUMANOID_PROFILES.player,
             motion: playerMotion,
             reducedMotion: reducedMotion.matches
@@ -935,6 +945,7 @@ if (payload && copyPayload && viewport && canvas) {
     return {
       'writing-distance': copy.markers.previewWritingDistance,
       'tree-collision': copy.markers.previewTreeCollision,
+      'terrain-collision': copy.markers.previewTerrainCollision,
       'marker-collision': copy.markers.previewMarkerCollision,
       'world-bounds': copy.markers.previewBounds,
       density: copy.markers.previewDensity
@@ -963,6 +974,9 @@ if (payload && copyPayload && viewport && canvas) {
       movingObjectId: placement.movingObjectId,
       writingOrigin: placement.mode === 'create' ? placement.writingContext?.origin : null
     });
+    if (placement.preview.valid && !terrain.sample({ ...placement.preview, radius: 17 }).placeable) {
+      placement.preview = { ...placement.preview, valid: false, reason: 'terrain-collision' };
+    }
     placementStatus.textContent = previewMessage(placement.preview.reason);
     if (placement.request
       && (placement.request.worldX !== placement.preview.worldX
@@ -1164,7 +1178,10 @@ if (payload && copyPayload && viewport && canvas) {
       markersById.delete(pending.objectId);
     } else restorePendingSnapshot(pending);
     refreshSyncStatus();
-    if (error.code === 'FOREST_AUTHORED_MIGRATION_REQUIRED') {
+    if (error.code === 'FOREST_AUTHORED_UPGRADE_REQUIRED') {
+      stopPlacement({ force: true, restoreFocus: false });
+      setAuthoredStatus(copy.terrainReload, { state: 'unsupported', failed: true });
+    } else if (error.code === 'FOREST_AUTHORED_MIGRATION_REQUIRED') {
       setAuthoredStatus(copy.markers.migrationRequired, {
         state: 'unsupported', failed: true
       });
@@ -1246,6 +1263,10 @@ if (payload && copyPayload && viewport && canvas) {
       worldX: request.worldX,
       worldY: request.worldY
     };
+    if (bootstrap.terrain) {
+      body.protocolVersion = 3;
+      body.terrainToken = bootstrap.terrain.token;
+    }
     const pending = {
       objectId: request.objectId,
       operation,
@@ -1336,7 +1357,13 @@ if (payload && copyPayload && viewport && canvas) {
       returnedTreeId = null;
       returnedMarkerId = null;
       const before = player;
-      player = moveOwnerForestPlayer(player, direction, elapsed, [...placementsById.values()]);
+      if (!terrain.ready(player) && time >= terrainRetryAfter) {
+        terrainRetryAfter = time + 2000;
+        terrain.ensure(player).then(() => { updatePlacementPreview(); requestRender(); }).catch(() => {
+          setStatus(copy.terrainUnavailable, true);
+        });
+      }
+      player = moveOwnerForestPlayer(player, direction, elapsed, [...placementsById.values()], terrain.canMove);
       playerMotion = advanceForestHumanoidMotion(playerMotion, {
         from: before, to: player, direction, elapsedSeconds: elapsed,
         reducedMotion: reducedMotion.matches

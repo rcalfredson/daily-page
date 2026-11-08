@@ -73,3 +73,15 @@ cell-revision behavior. The guarded real-Mongo fixture covers concurrent equal a
 creates, competing collision, competing move/removal, lost-response recovery, cross-cell changes,
 tombstones, hidden inactive tree reservations, transaction abort, and clean retry. See
 [`forest-authored-mutation-integration-fixture.md`](../testing/forest-authored-mutation-integration-fixture.md).
+
+
+## Activated terrain placement context
+
+Activated terrain adds create/move wire protocol 3. It carries the current `terrainToken`; create
+may include a writing link. The token is checked after equal committed-request recovery and is not
+part of the immutable creation fingerprint. Ordinary records stay schema/fingerprint 1; linked
+records stay schema/fingerprint 2. Protocol 3 responses include explicit schema/link fields like
+protocol 2. Protocols 1/2 retain their exact shapes. New placement from a terrain-unaware or stale
+client fails with upgrade/reload required; removal and equal retries preserve existing semantics.
+Terrain preparation pauses coordinate-changing writes under the owner fence. See the
+[live terrain design](live-terrain-increment-1-design.md) for the shared geometry and activation flow.
