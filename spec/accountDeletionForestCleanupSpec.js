@@ -60,6 +60,8 @@ function cleanupHarness({
   authoredRegionRevisionPages = [[]],
   authoredResetOperationPages = [[]],
   treePages = [[]],
+  terrainProtectionPages = [[]],
+  remainingTerrainProtection = null,
   remainingAuthoredObject = null,
   remainingAuthoredRegionRevision = null,
   remainingAuthoredResetOperation = null,
@@ -96,6 +98,9 @@ function cleanupHarness({
     authoredResetOperationPages,
     remainingAuthoredResetOperation
   );
+  const ForestTerrainProtectionModel = boundedModel(
+    'ForestTerrainProtection', terrainProtectionPages, remainingTerrainProtection
+  );
   const ForestWritingTreeModel = {
     find: jasmine.createSpy('ForestWritingTree.find')
       .and.callFake(() => treeQuery(treePages)),
@@ -125,6 +130,7 @@ function cleanupHarness({
     ForestAuthoredResetOperationModel,
     ForestOwnerGroupReconciliationJobModel,
     ForestWritingTreeModel,
+    ForestTerrainProtectionModel,
     ForestOwnerWorldModel,
     scheduleEvidenceExpiry,
     logger
@@ -132,6 +138,16 @@ function cleanupHarness({
 }
 
 describe('account-deletion forest cleanup', () => {
+  it('drains frozen terrain protections before removing the world and completing cleanup', async () => {
+    const harness = cleanupHarness({ terrainProtectionPages: [[{ _id: 'protection-1' }]] });
+    const result = await cleanUpAccountDeletionForests({ ...harness, now: NOW });
+    expect(result.deletedTerrainProtections).toBe(1);
+    expect(result.completed).toBe(1);
+    expect(harness.ForestTerrainProtectionModel.deleteMany).toHaveBeenCalledWith({
+      _id: { $in: ['protection-1'] }, ownerUserId: OWNER_USER_ID
+    });
+  });
+
   it('adds a safe User fence and backward-compatible cleanup state', async () => {
     const user = new User({
       username: 'forest-writer',
@@ -344,6 +360,7 @@ describe('account-deletion forest cleanup', () => {
       deletedAuthoredRegionRevisions: 0,
       deletedAuthoredResetOperations: 0,
       deletedTrees: 2,
+      deletedTerrainProtections: 0,
       deletedReconciliationJobs: 1,
       deletedWorlds: 1
     });

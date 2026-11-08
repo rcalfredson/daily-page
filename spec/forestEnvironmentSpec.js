@@ -727,7 +727,8 @@ describe('first Activity Forest environment grammar', () => {
     expect(painter).toContain('paintStreamEdgeTexture()');
     expect(painter).toContain('paintStreamBank(-1)');
     expect(painter).toContain('paintStreamBank(1)');
-    expect(painter).toContain("terrainRole === 'bank-boulder'");
+    const terrainPaint = fs.readFileSync('public/js/forest-terrain-paint.js', 'utf8');
+    expect(terrainPaint).toContain("terrainRole === 'bank-boulder'");
     expect(painter).toContain('ambientMotionActive ? Math.floor(elapsedSeconds * 6) : 0');
     expect(painter).toContain('const flowIdentity = markIndex - flowCycle');
     expect(painter).toContain('forestStreamCenterY(scene.environment, streamQueryX)');

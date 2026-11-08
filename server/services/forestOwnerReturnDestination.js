@@ -1,3 +1,4 @@
+import { forestTerrainReturnPredicate } from './forestOwnerTerrain.js';
 import ForestWritingTree from '../db/models/ForestWritingTree.js';
 import { forestReturnTreeId } from '../../public/js/forest-writing-navigation.js';
 import {
@@ -13,10 +14,11 @@ export const FOREST_RETURN_PAGE_SIZE = 250;
 export function buildForestOwnerReturnDestinationService({
   ForestWritingTreeModel = ForestWritingTree,
   inspectTree = inspectForestOwnerTree,
-  readManifest = readForestOwnerRegionManifest
+  readManifest = readForestOwnerRegionManifest,
+  terrainPredicate = forestTerrainReturnPredicate
 } = {}) {
   return async function resolveForestOwnerReturnDestination({
-    ownerUserId, forestId, writingTreeId, preferredContentLang = 'en', spawn, cellSize
+    ownerUserId, forestId, writingTreeId, preferredContentLang = 'en', spawn, cellSize, world = null
   }) {
     const treeId = forestReturnTreeId(writingTreeId);
     if (!treeId) return null;
@@ -51,7 +53,9 @@ export function buildForestOwnerReturnDestinationService({
       if (cursor) return null; // Never choose a spawn against incomplete collision evidence.
       const target = placements.find(item => item.id === treeId);
       if (!target || target.worldX !== position.worldX || target.worldY !== position.worldY) return null;
-      const destination = ownerForestReturnSpawn(spawn, target, placements);
+      const isWalkable = await terrainPredicate({ ownerUserId, world,
+        position: { worldX: target.worldX, worldY: target.worldY } });
+      const destination = ownerForestReturnSpawn(spawn, target, placements, isWalkable);
       if (!destination) return null;
       return { treeId, spawn: destination };
     } catch {

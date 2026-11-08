@@ -1,3 +1,4 @@
+import ForestTerrainProtection from '../db/models/ForestTerrainProtection.js';
 import AccountDeletionRequest from '../db/models/AccountDeletionRequest.js';
 import ForestAuthoredObject from '../db/models/ForestAuthoredObject.js';
 import ForestAuthoredRegionRevision from '../db/models/ForestAuthoredRegionRevision.js';
@@ -61,6 +62,7 @@ export async function cleanUpAccountDeletionForests({
   ForestOwnerGroupReconciliationJobModel = ForestOwnerGroupReconciliationJob,
   ForestOwnerWorldModel = ForestOwnerWorld,
   ForestWritingTreeModel = ForestWritingTree,
+  ForestTerrainProtectionModel = ForestTerrainProtection,
   scheduleEvidenceExpiry = scheduleAccountDeletionEvidenceExpiry,
   logger = console,
   now = new Date()
@@ -94,6 +96,7 @@ export async function cleanUpAccountDeletionForests({
     deletedAuthoredRegionRevisions: 0,
     deletedAuthoredResetOperations: 0,
     deletedTrees: 0,
+    deletedTerrainProtections: 0,
     deletedReconciliationJobs: 0,
     deletedWorlds: 0
   };
@@ -113,7 +116,8 @@ export async function cleanUpAccountDeletionForests({
         [ForestAuthoredObjectModel, 'deletedAuthoredObjects'],
         [ForestAuthoredRegionRevisionModel, 'deletedAuthoredRegionRevisions'],
         [ForestAuthoredResetOperationModel, 'deletedAuthoredResetOperations'],
-        [ForestWritingTreeModel, 'deletedTrees']
+        [ForestWritingTreeModel, 'deletedTrees'],
+        [ForestTerrainProtectionModel, 'deletedTerrainProtections']
       ];
       let boundedCleanupComplete = true;
       for (const [Model, totalField] of boundedCollections) {
@@ -150,21 +154,24 @@ export async function cleanUpAccountDeletionForests({
         remainingAuthoredResetOperation,
         remainingTree,
         remainingJob,
-        remainingWorld
+        remainingWorld,
+        remainingTerrainProtection
       ] = await Promise.all([
         ForestAuthoredObjectModel.exists({ ownerUserId: owner }),
         ForestAuthoredRegionRevisionModel.exists({ ownerUserId: owner }),
         ForestAuthoredResetOperationModel.exists({ ownerUserId: owner }),
         ForestWritingTreeModel.exists({ ownerUserId: owner }),
         ForestOwnerGroupReconciliationJobModel.exists({ ownerUserId: owner }),
-        ForestOwnerWorldModel.exists({ ownerUserId: owner })
+        ForestOwnerWorldModel.exists({ ownerUserId: owner }),
+        ForestTerrainProtectionModel.exists({ ownerUserId: owner })
       ]);
       if (remainingAuthoredObject
         || remainingAuthoredRegionRevision
         || remainingAuthoredResetOperation
         || remainingTree
         || remainingJob
-        || remainingWorld) {
+        || remainingWorld
+        || remainingTerrainProtection) {
         totals.pending += 1;
         continue;
       }

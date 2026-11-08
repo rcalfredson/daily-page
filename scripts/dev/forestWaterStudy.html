@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>River and lake · landscape study</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#20382e;color:#eee9da;font:15px system-ui;height:100dvh;display:flex;flex-direction:column}header{padding:12px 18px;background:#182a24;flex:none}h1{font-size:18px;margin:0 0 6px}p{margin:5px 0}nav{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}button,select{font:inherit;padding:7px 10px;background:#f0e9d7;color:#243a30;border:0;border-radius:3px}button:focus-visible,select:focus-visible,canvas:focus-visible{outline:3px solid #edb974;outline-offset:2px}main{position:relative;flex:1;min-height:240px}canvas{position:absolute;inset:0;display:block;width:100%;height:100%;image-rendering:pixelated;touch-action:none}output{display:block;padding:8px 18px;font-variant-numeric:tabular-nums;flex:none}small{color:#c7cebd}label{align-self:center}
+</style>
+<header><h1>River → lake · playable landscape study</h1>
+<p>Preview only. Walk with arrows/WASD or hold a point on the landscape. One world unit = one CSS pixel; live speed 108 units/s.</p>
+<nav aria-label="Study controls">
+<label>Seed <select id="seed"><option>alder</option><option>granite</option><option>snowmelt</option></select></label>
+<button data-stop="upstream">Upstream</button><button data-stop="confluence">Confluence</button><button data-stop="bridge">Crossing</button><button data-stop="inlet">Inlet</button><button data-stop="lake">Lake shore</button>
+<button id="walk">Timed bank walk</button><button id="map">Overview</button><label><input id="materials" type="checkbox" checked> Shared bank materials</label><label><input id="motion" type="checkbox"> Freeze water</label>
+</nav><p><small>The overview changes scale for orientation. Return to walking to judge avatar and water scale. No account, writing, placement, or activation is connected.</small></p></header>
+<main><canvas tabindex="0" aria-label="Water study. Use arrows or WASD to walk; water and rocks block movement."></canvas></main>
+<output id="status" aria-live="off"></output>
+<script type="module" src="/study/forestWaterStudyView.js"></script>
+</html>

@@ -98,6 +98,21 @@ reconciliationSchema.pre('validate', function validateReconciliationState() {
   }
 });
 
+const terrainFields = () => ({
+  schemaVersion: { type: Number, required: true, enum: [1] },
+  generationVersion: { type: Number, required: true, enum: [3, 4] },
+  activationId: { type: String, required: true, match: UUID_V4_PATTERN },
+  revision: { type: Number, required: true, enum: [1] },
+  state: { type: String, required: true, enum: ['preparing', 'active', 'cancelling'] },
+  phase: { type: String, required: true, enum: ['trees', 'markers', 'verify', 'ready'] },
+  cursor: { type: String, default: null, match: OBJECT_ID_PATTERN }
+});
+const terrainOperationSchema = new Schema(terrainFields(), { _id: false, strict: 'throw' });
+const terrainSchema = new Schema({ ...terrainFields(),
+  replacement: { type: terrainOperationSchema, default: undefined },
+  retiredActivationId: { type: String, match: UUID_V4_PATTERN, default: undefined }
+}, { _id: false, strict: 'throw' });
+
 const forestOwnerWorldSchema = new Schema({
   schemaVersion: {
     type: Number,
@@ -181,6 +196,7 @@ const forestOwnerWorldSchema = new Schema({
     immutable: true,
     validate: safeInteger(1)
   },
+  terrain: { type: terrainSchema, default: undefined },
   reconciliation: {
     type: reconciliationSchema,
     required: true,

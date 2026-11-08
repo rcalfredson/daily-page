@@ -1,3 +1,4 @@
+import { readForestOwnerTerrainRegion } from '../../services/forestOwnerTerrainRegion.js';
 import { canonicalForestWritingLink } from '../../services/forestAuthoredObjectFormat.js';
 import { forestAuthoredObjectRead, ForestAuthoredObjectReadError } from '../../services/forestAuthoredObjectRead.js';
 import { Router } from 'express';
@@ -232,8 +233,15 @@ function authoredObjectId(value) {
 }
 
 function mutationProtocol(value, allowLinked = false) {
-  if (value !== FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION && !(allowLinked && value === 2)) {
+  if (value !== FOREST_AUTHORED_MUTATION_PROTOCOL_VERSION && !(allowLinked && [2, 3].includes(value))) {
     invalidAuthoredMutation('The authored mutation protocol is unsupported.');
+  }
+  return value;
+}
+
+function mutationTerrainToken(value) {
+  if (typeof value !== 'string' || !/^[a-f0-9-]{36}:1$/.test(value)) {
+    invalidAuthoredMutation('The terrain token is invalid.');
   }
   return value;
 }
@@ -255,10 +263,11 @@ function mutationRevision(value) {
 
 function createMutationRequest(req) {
   const body = exactMutationBody(req.body, ['protocolVersion', 'kind', 'worldX', 'worldY',
-    ...(req.body?.protocolVersion === 2 ? ['writingLink'] : [])]);
+    ...(req.body?.protocolVersion === 2 || req.body?.protocolVersion === 3 && Object.hasOwn(req.body, 'writingLink') ? ['writingLink'] : []),
+    ...(req.body?.protocolVersion === 3 ? ['terrainToken'] : [])]);
   const protocolVersion = mutationProtocol(body.protocolVersion, true);
   let writingLink;
-  if (protocolVersion === 2) {
+  if (protocolVersion === 2 || protocolVersion === 3 && Object.hasOwn(body, 'writingLink')) {
     try { writingLink = canonicalForestWritingLink(body.writingLink); }
     catch { invalidAuthoredMutation('The writing relationship is invalid.'); }
   }
@@ -269,6 +278,7 @@ function createMutationRequest(req) {
     objectId: authoredObjectId(req.params.objectId),
     protocolVersion,
     ...(writingLink ? { writingLink } : {}),
+    ...(protocolVersion === 3 ? { terrainToken: mutationTerrainToken(body.terrainToken) } : {}),
     kind: body.kind,
     worldX: mutationCoordinate(body.worldX),
     worldY: mutationCoordinate(body.worldY)
@@ -278,11 +288,13 @@ function createMutationRequest(req) {
 function moveMutationRequest(req) {
   const body = exactMutationBody(
     req.body,
-    ['protocolVersion', 'expectedRevision', 'worldX', 'worldY']
+    ['protocolVersion', 'expectedRevision', 'worldX', 'worldY',
+      ...(req.body?.protocolVersion === 3 ? ['terrainToken'] : [])]
   );
   return {
     objectId: authoredObjectId(req.params.objectId),
     protocolVersion: mutationProtocol(body.protocolVersion, true),
+    ...(body.protocolVersion === 3 ? { terrainToken: mutationTerrainToken(body.terrainToken) } : {}),
     expectedRevision: mutationRevision(body.expectedRevision),
     worldX: mutationCoordinate(body.worldX),
     worldY: mutationCoordinate(body.worldY)
@@ -752,6 +764,27 @@ export function buildForestOwnerTreeInclusionRouteHandler({
   };
 }
 
+export function buildForestOwnerTerrainRegionRouteHandler({ readRegion = readForestOwnerTerrainRegion } = {}) {
+  return async function terrainRegion(req, res) {
+    if (!req.user?.id) return res.status(401).json({ code: 'AUTHENTICATION_REQUIRED' });
+    try {
+      if (!req.query || Object.keys(req.query).length !== 2
+        || !Object.hasOwn(req.query, 'districts') || typeof req.query.token !== 'string') {
+        return res.status(400).json({ code: 'FOREST_TERRAIN_INVALID_INPUT' });
+      }
+      const districts = parseCells(req.query.districts);
+      return res.status(200).json(await readRegion({ ownerUserId: req.user.id,
+        districts, token: req.query.token }));
+    } catch (error) {
+      const code = error.code;
+      const status = ['FOREST_TERRAIN_INVALID_INPUT', 'INVALID_OWNER_REGION_INPUT'].includes(code)
+        ? 400 : code === 'FOREST_TERRAIN_CHANGED' ? 409 : 503;
+      return res.status(status).json({ code: status === 400 ? 'FOREST_TERRAIN_INVALID_INPUT'
+        : status === 409 ? 'FOREST_TERRAIN_CHANGED' : 'FOREST_TERRAIN_UNAVAILABLE' });
+    }
+  };
+}
+
 const regionHandler = buildForestOwnerRegionRouteHandler();
 const authoredRegionHandler = buildForestAuthoredRegionRouteHandler();
 const authoredDiagnosticHandler = buildForestAuthoredDiagnosticRouteHandler();
@@ -768,6 +801,7 @@ const useForestAPI = (app) => {
   router.use('/authored-objects', requireForestAuthoredMutationOrigin);
   router.use(optionalAuth);
   router.get('/regions', regionHandler);
+  router.get('/terrain-regions', buildForestOwnerTerrainRegionRouteHandler());
   router.get('/authored-regions', authoredRegionHandler);
   router.get('/authored-diagnostics', authoredDiagnosticHandler);
   router.get('/authored-objects/:objectId/inspection', buildForestAuthoredInspectionRouteHandler());

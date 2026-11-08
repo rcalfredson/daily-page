@@ -178,6 +178,8 @@ block content
       script#owner-forest-bootstrap(type='application/json')!= JSON.stringify(bootstrap).replace(/</g, '\u003c')
       -
         const forestCopy = {
+          terrainUnavailable: t('forestScene.terrainUnavailable'),
+          terrainReload: t('forestScene.terrainReload'),
           inspectionLoading: t('forestScene.inspect.loading'),
           inspectionUnavailable: t('forestScene.inspect.unavailable'),
           inspectionReconciling: t('forestScene.inspect.reconciling'),
@@ -211,6 +213,7 @@ block content
             save: t('forestScene.markers.save'),
             move: t('forestScene.markers.move'),
             previewClear: t('forestScene.markers.previewClear'),
+            previewTerrainCollision: t('forestScene.markers.previewTerrainCollision'),
             previewTreeCollision: t('forestScene.markers.previewTreeCollision'),
             previewMarkerCollision: t('forestScene.markers.previewMarkerCollision'),
             previewBounds: t('forestScene.markers.previewBounds'),

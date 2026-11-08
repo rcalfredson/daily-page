@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Forest terrain style comparison</title>
+<style>
+body { margin:24px; background:#171e1b; color:#e2e5cc; font:16px system-ui; }
+h1 { font-size:24px; margin-bottom:8px; } p { color:#b1bca8; }
+main { display:flex; gap:24px; } h2 { font-size:18px; }
+canvas { background:#608050; border:1px solid #879378; image-rendering:pixelated; }
+</style>
+<h1>Experimental map treatments → live forest</h1>
+<p>The original bank model and pixel painters, adapted to the live shoreline. Geometry stays unchanged.</p>
+<main data-owner-forest-viewport>
+<section><h2>Reference: experimental bank model</h2><canvas id="reference" width="580" height="510"></canvas></section>
+<section><h2>Live: arbitrary-channel / pond adapter</h2><canvas id="live" width="580" height="510"></canvas></section>
+</main>
+<p>Both use the same bank-detail, flow-mark, and boulder painters. Water flow: 6 frames/s; reduced motion freezes it.</p>
+<script type="module">
+import { createForestEnvironmentManifest, forestStreamCenterY } from '/js/forest-environment.js';
+import { buildForestStreamBankModel3d } from '/js/forest-stream-banks.js';
+import { projectForestPoint3d } from '/js/forest-projection.js';
+import { paintForestTerrainPolygon, paintForestStreamBankDetail, paintForestStreamBankMark,
+  paintForestBoulder, paintForestStreamFlowMark } from '/js/forest-terrain-paint.js';
+import { queryTerrainProof } from '/js/owner-forest-terrain.js';
+import { buildOwnerTerrainWaterPresentation, paintOwnerTerrainWater,
+  ownerForestBoulderPresentation } from '/js/owner-forest-terrain-presentation.js';
+const reference = document.getElementById('reference').getContext('2d');
+const live = document.getElementById('live').getContext('2d');
+const manifest = createForestEnvironmentManifest({ seed:'terrain-style-reference', world:{ width:3000, height:1800 } });
+const bank = buildForestStreamBankModel3d(manifest, { firstX:800,lastX:1380 }, x => forestStreamCenterY(manifest,x));
+const camera = { x:800, y:forestStreamCenterY(manifest,1090)-240, width:580,height:510 };
+const stream = queryTerrainProof({ seed:'terrain-proof-a',bounds:{ minX:0,maxX:1919,minY:0,maxY:1919 } }).districts.find(d=>d.stream).stream;
+const model = buildOwnerTerrainWaterPresentation(stream);
+const liveCamera = { x:stream.outlet.x-290, y:stream.outlet.y-260,width:580,height:510 };
+function paintBank(side) {
+  for (const s of bank.surfaces.filter(s=>s.side===side)) paintForestTerrainPolygon(reference,s.points.map(p=>projectForestPoint3d(p,camera)),s.fill);
+  bank.details.filter(d=>d.side===side).forEach(d=>paintForestStreamBankDetail(reference,d,camera));
+  bank.marks.filter(m=>m.side===side).forEach(m=>paintForestStreamBankMark(reference,m,camera));
+}
+function rocks(context, camera) {
+  [18,24,29].forEach((radius,i)=>paintForestBoulder(context,ownerForestBoulderPresentation({
+    id:'style-rock-'+i,x:camera.x+100+i*180,y:camera.y+465,radius
+  }),camera));
+}
+function draw(time) {
+  reference.imageSmoothingEnabled=false;live.imageSmoothingEnabled=false;
+  reference.fillStyle='#608050';reference.fillRect(0,0,580,510);
+  live.fillStyle='#608050';live.fillRect(0,0,580,510);
+  paintBank(-1);
+  const far=bank.surfaces.filter(s=>s.side===-1&&s.stratum===3);
+  const near=bank.surfaces.filter(s=>s.side===1&&s.stratum===3);
+  const points=[far[0].points[1],...far.map(s=>s.points[2]),...near.toReversed().flatMap(s=>[s.points[2],s.points[1]])];
+  paintForestTerrainPolygon(reference,points.map(p=>projectForestPoint3d(p,camera)),'#247486');
+  const frame=matchMedia('(prefers-reduced-motion: reduce)').matches?0:Math.floor(time/1000*6);
+  for(let x=800+(frame*5)%76;x<1380;x+=76) {
+    for(const lane of [-27,-9,11,28]) {
+      const p=projectForestPoint3d({x,y:forestStreamCenterY(manifest,x)+lane,z:-9},camera);
+      paintForestStreamFlowMark(reference,{x:Math.round(p.x),y:Math.round(p.y),width:22,stepDirection:1,
+        pale:lane===-9||lane===28,leading:true,trailing:true,highlight:lane===11});
+    }
+  }
+  paintBank(1);
+  paintOwnerTerrainWater(live,model,liveCamera,time,matchMedia('(prefers-reduced-motion: reduce)').matches);
+  rocks(reference,camera);rocks(live,liveCamera);
+  document.body.dataset.ready='true';
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script></html>

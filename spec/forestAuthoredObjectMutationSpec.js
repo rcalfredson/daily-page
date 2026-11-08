@@ -217,6 +217,20 @@ async function rejectedError(promise) {
 }
 
 describe('forest authored-object transactional mutation', () => {
+  it('requires terrain protocol/token for fresh writes while recovering existing creates before that check', async () => {
+    const terrain = { schemaVersion: 1, generationVersion: 3,
+      activationId: '55555555-5555-4555-8555-555555555555', revision: 1,
+      state: 'active', phase: 'ready', cursor: null };
+    const test = harness({ ownerWorld: world({ terrain }) });
+    await expectAsync(test.service.create(createInput())).toBeRejectedWithError('Reload the forest before placing a marker.');
+    const request = createInput({ protocolVersion: 3, terrainToken: `${terrain.activationId}:1` });
+    expect((await test.service.create(request)).protocolVersion).toBe(3);
+    expect((await test.service.create(createInput())).outcome).toBe('existing-active');
+    await expectAsync(test.service.move(moveInput())).toBeRejectedWithError('Reload the forest before placing a marker.');
+    expect((await test.service.move(moveInput({ protocolVersion: 3,
+      terrainToken: `${terrain.activationId}:1` }))).outcome).toBe('moved');
+  });
+
   const link = { version: 1, writingTreeId: '33333333-3333-4333-8333-333333333333' };
   const linkedInput = (overrides = {}) => createInput({ protocolVersion: 2, writingLink: link, ...overrides });
 

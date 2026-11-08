@@ -1,3 +1,4 @@
+import { assertForestTerrainPlacementReady, inspectForestTerrainPlacement } from './forestOwnerTerrain.js';
 import crypto from 'node:crypto';
 
 import mongoose from 'mongoose';
@@ -258,9 +259,11 @@ async function reservePlacement({
   ForestWritingTreeModel,
   inspectCandidate,
   resolveEnvironment,
+  inspectTerrain,
   readNeighborhood,
   allocatePlacements,
 }) {
+  const terrainCache = new Map();
   const startingCandidateSlot = world.nextCandidateSlot;
   let candidateSlot = startingCandidateSlot;
   const diagnostics = {
@@ -300,6 +303,11 @@ async function reservePlacement({
       );
     }
     if (!environment.suitability.treeAllowed) {
+      diagnostics.environmentRejectionCount += 1;
+      continue;
+    }
+    if (world.terrain && !await inspectTerrain({ ownerUserId, world,
+      worldX: candidate.worldX, worldY: candidate.worldY, radius: 24, session, cache: terrainCache })) {
       diagnostics.environmentRejectionCount += 1;
       continue;
     }
@@ -368,6 +376,7 @@ export function buildForestWritingTreeCreationService({
   acquireFence = acquireForestLedgerFence,
   inspectCandidate = inspectForestOwnerGrovePlacementCandidate,
   resolveEnvironment = resolveForestOwnerEnvironment,
+  inspectTerrain = inspectForestTerrainPlacement,
   readNeighborhood = readForestOwnerPlacementNeighborhood,
   allocatePlacements = allocateForestOwnerGrovePlacements,
   projectTree = projectPostToForestTree,
@@ -392,6 +401,7 @@ export function buildForestWritingTreeCreationService({
     acquireFence,
     inspectCandidate,
     resolveEnvironment,
+    inspectTerrain,
     readNeighborhood,
     allocatePlacements,
     projectTree,
@@ -442,6 +452,7 @@ export function buildForestWritingTreeCreationService({
           generateUuid,
           generateWorldSeed,
         });
+        assertForestTerrainPlacementReady(world);
         const evidence = await resolveGroupEvidence({
           ownerUserId: owner,
           translationGroupId: group,
@@ -472,6 +483,7 @@ export function buildForestWritingTreeCreationService({
           ForestWritingTreeModel: db.ForestWritingTree,
           inspectCandidate,
           resolveEnvironment,
+          inspectTerrain,
           readNeighborhood,
           allocatePlacements,
         });
