@@ -33,6 +33,7 @@
     "forest:placement-preview": "node scripts/dev/renderForestOwnerGrovePlacementPreview.js",
     "forest:terrain-fixture": "node scripts/dev/forestOwnerTerrainFixture.js",
     "forest:terrain-activate": "node scripts/dev/activateForestOwnerTerrain.js",
+    "forest:terrain-activate-production": "node scripts/forest/activateProductionTerrain.js",
     "forest:terrain-preview": "node scripts/dev/renderForestOwnerTerrainPreview.js",
     "forest:water-study": "node scripts/dev/serveForestWaterStudy.js",
     "forest:terrain-live-review": "FOREST_TERRAIN_SERVE_ONLY=true FOREST_TERRAIN_GENERATION=4 node scripts/dev/checkForestWritingReturn.js",
