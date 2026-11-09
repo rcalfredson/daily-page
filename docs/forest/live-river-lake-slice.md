@@ -1,8 +1,9 @@
 # First live river/lake slice
 
-November 8, 2026 · `feat/forest-live-terrain` · explicit development activation only.
+November 8, 2026 · `feat/forest-live-terrain` · explicit, owner-scoped activation.
 This implements the accepted [landscape study](river-lake-landscape-study.md) in the owner scene.
-No ordinary account was activated or upgraded, and nothing was committed or deployed.
+Deployment alone does not activate or upgrade any account. Development and production helpers
+are separate; the production helper defaults to a read-only account preflight.
 
 ## Landscape and presentation
 
@@ -96,6 +97,46 @@ For a forest without activated terrain, replace `--upgrade` with `--generation=4
 The helper refuses production configuration and requires `daily-page-test`. It never resets a seed
 or changes placements. Large operations pause after bounded work; rerun the same command to resume.
 Reload `/forest` after publication. Do not reactivate or reset an already active world.
+
+### Single-account production activation
+
+After confirming the generation-4 code has deployed, use the separate production helper.
+Run from a checkout containing this helper with the normal MongoDB credentials available
+(local development mode loads `.env`; a production shell must supply its credentials).
+This command explicitly selects `daily-page`, regardless of the development database setting.
+It does not start the application or scheduled jobs.
+
+```bash
+source /home/robert/.nvm/nvm.sh
+nvm use 24.15.0
+npm run forest:terrain-activate-production -- roberto.c.alfredo --authorized-production-read
+```
+
+The default preflight reads only the selected account and its world, with automatic collection
+and index creation disabled. It prints the owner ID, current terrain, and proposed operation.
+It does not certify access; full access verification runs during the explicit write operation.
+If no active world exists, visit the production forest first. If reconciliation is running,
+let it complete before trying again.
+
+Copy the printed `ownerUserId` into the confirmation argument:
+
+```bash
+FOREST_LIVE_TERRAIN_ENABLED=true npm run forest:terrain-activate-production -- roberto.c.alfredo --authorized-production-read --write --confirm-owner=OWNER_ID_FROM_PREFLIGHT
+```
+
+The write path checks that the username still resolves to that exact ID, creates the required
+protection indexes, and invokes the existing transactional activation service for that owner.
+It starts generation 4 for an unactivated world, upgrades published generation 3, resumes existing
+generation-4 preparation, or finishes retired-protection cleanup. Already active generation 4
+with no cleanup pending is a no-op. It never resets world seeds or relocates existing places.
+The activation flag is needed only for the command, not permanently on the web process.
+
+Each invocation permits at most 500 service transactions and reports progress. A paused operation
+exits with code 2; repeat the same command to resume. New spatial placements pause during
+preparation. On failure, inspect the read-only preflight and resume, or append `--cancel` to the
+write command to drain unfinished preparation. Cancellation does not require the activation flag
+and retains any previously published terrain. Published terrain cannot be rolled back by this
+command. Reload the production forest after successful publication.
 
 Cancel unfinished capture/verification with
 `npm run forest:terrain-activate -- YOUR_USERNAME --write --cancel`.
