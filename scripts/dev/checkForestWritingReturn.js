@@ -299,9 +299,9 @@ try {
   };
   const assertToolbar = async () => {
     assert.equal(await evaluate(`(() => {
-      const hud = document.querySelector('.owner-forest__hud-actions');
+      const hud = document.querySelector('[data-owner-forest-dock]');
       const inspect = document.querySelector('[data-owner-forest-inspect]').getBoundingClientRect();
-      const place = document.querySelector('[data-owner-forest-place-marker]').getBoundingClientRect();
+      const place = document.querySelector('[data-owner-forest-more]').getBoundingClientRect();
       const bounds = hud.getBoundingClientRect();
       const viewport = document.querySelector('[data-owner-forest-viewport]').getBoundingClientRect();
       return getComputedStyle(hud).display !== 'none' && inspect.height >= 44 && place.height >= 44
@@ -523,6 +523,8 @@ try {
   await navigate(`${base}/en/forest`);
   await waitFor(`!document.querySelector('[data-owner-forest-place-marker]').disabled`);
   assert.equal(await evaluate(`document.querySelector('[data-owner-forest-mark-writing]').hidden`), true);
+  await evaluate(`document.querySelector('[data-owner-forest-more]').click()`);
+  assert.equal(await evaluate(`document.querySelector('[data-owner-forest-more-panel]').hidden`), false);
   await evaluate(`document.querySelector('[data-owner-forest-place-marker]').click()`);
   await waitFor(`!document.querySelector('[data-owner-forest-placement-save]').disabled`);
   await evaluate(`document.querySelector('[data-owner-forest-placement-save]').click()`);

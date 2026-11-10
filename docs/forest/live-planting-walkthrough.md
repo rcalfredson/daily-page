@@ -50,9 +50,23 @@ Garden GET also serves as the bounded owner diagnostic inventory. Marker diagnos
 **clear authored geography** continue to describe markers only. Garden state has no tombstones or
 TTL: lifting returns its cutting, and account deletion drains and verifies the entire garden.
 
+The forest uses one bottom dock for nearby interactions and everyday actions. **Plant cutting**
+appears beside **Satchel** when stock is available; **More** contains **Place a marker** and
+collapsed **Help & forest info**, including the nearby writing-tree count. Touch devices get
+touch instructions without keyboard hints. Planting and marker previews replace the ordinary
+actions, and opening the satchel or an inspection hides the dock. Successful garden feedback
+disappears after 4.5 seconds; errors retain their explanation in the satchel and remain visible
+until another action or refresh resolves them. The collected wild shrub no longer shows an
+already-taken interaction card.
+
+**My lanternbells → guide me** closes the satchel and shows a compact direction arrow and
+remaining steps in the dock. The bearing and distance update while walking. The guide pauses
+behind menus and placement controls, clears on reaching the plant's interaction range, and can
+be dismissed with its **×** button. It is a directional aid, not an obstacle-aware route.
+
 ## Verification
 
-- Full Jasmine suite: **1,510 specs, 0 failures**, Node 24.15.0. The sandbox's existing subprocess
+- Full Jasmine suite: **1,514 specs, 0 failures**, Node 24.15.0. The sandbox's existing subprocess
   startup tests required running the suite with execution access outside the sandbox.
 - Repository lint passed; new development scripts were linted separately. Native browser modules
   were syntax checked and exercised through Firefox.
@@ -65,8 +79,14 @@ TTL: lifting returns its cutting, and account deletion drains and verifies the e
   appearances, proximity entry/exit, collection with E and direct plant taps, a depicted cutting,
   an in-viewport satchel, mature preview, harvest and immediate replanting, reload and separate-context
   persistence, cancellation, lifting confirmation, lost-response recovery, reduced-motion rendering,
-  emulated touch drag, and overflow checks. Screenshots were inspected
-  at normal scale; the narrow preview panel was moved above the avatar after visual review.
+  emulated touch drag, and overflow checks. Screenshots were inspected at normal scale.
+- Interface cleanup: Firefox checks at 320px, 390px and 1280px covered the shared dock,
+  collection feedback expiry, More/Escape, marker placement, planting/cancellation, satchel,
+  nearby immature plants, expanded Help, and guide selection, live bearing/distance and arrival.
+  Garden writes were intercepted in this layout
+  review to preserve the saved fixture account. The writing/marker regression below was rerun.
+  With the fixture server and Firefox BiDi on port 9225 running, reproduce this review with
+  `node scripts/dev/checkForestInterface.js`. Screenshots are written to `/tmp/forest-garden-review`.
 - The established owner-template browser suite also passed writing inspection/post return,
   linked and ordinary markers, retry after concurrent removal, private terrain geometry,
   translation pagination, failure fallback and focus behavior at both widths.

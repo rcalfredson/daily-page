@@ -162,6 +162,33 @@ if (payload && copyPayload && viewport && canvas) {
   const markerConfirm = document.querySelector('[data-owner-forest-marker-confirm]');
   const markerRemoveConfirm = document.querySelector('[data-owner-forest-marker-remove-confirm]');
   const markerRemoveCancel = document.querySelector('[data-owner-forest-marker-remove-cancel]');
+  const more = document.querySelector('[data-owner-forest-more]');
+  const morePanel = document.querySelector('[data-owner-forest-more-panel]');
+  function closeMore() {
+    if (!morePanel) return;
+    morePanel.hidden = true;
+    more.setAttribute('aria-expanded', 'false');
+    viewport.dataset.moreOpen = 'false';
+  }
+  more?.addEventListener('click', () => {
+    const opening = morePanel.hidden;
+    closeMore();
+    morePanel.hidden = !opening;
+    more.setAttribute('aria-expanded', String(opening));
+    viewport.dataset.moreOpen = String(opening);
+  });
+  viewport.addEventListener('pointerdown', event => {
+    if (morePanel && !morePanel.hidden && !morePanel.contains(event.target) && event.target !== more) closeMore();
+  });
+  document.querySelector('[data-owner-forest-dock]')?.addEventListener('click', event => {
+    if (event.target.closest('button') && !event.target.closest('[data-owner-forest-more]')) closeMore();
+  });
+  viewport.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && morePanel && !morePanel.hidden) {
+      closeMore(); more.focus({ preventScroll: true });
+      event.preventDefault(); event.stopImmediatePropagation();
+    }
+  }, true);
 
   const garden = createOwnerForestGarden({
     terrainToken: bootstrap.terrain?.token || null,
@@ -176,9 +203,12 @@ if (payload && copyPayload && viewport && canvas) {
     return cells.map(ownerForestCellId).join(',');
   }
 
-  function setStatus(message, failed = false) {
+  function setStatus(message, failed = false, quiet = false) {
     status.textContent = message;
     status.dataset.failed = failed ? 'true' : 'false';
+    status.hidden = quiet;
+    const info = document.querySelector('[data-owner-forest-info]');
+    if (info) info.textContent = message;
   }
 
   function currentAuthoredCellsReady() {
@@ -674,7 +704,7 @@ if (payload && copyPayload && viewport && canvas) {
         Object.assign(camera, ownerForestCamera(player, camera));
       }
       loadFailure = false;
-      setStatus(`${placementsById.size} writing trees discovered nearby.`);
+      setStatus(`${placementsById.size} writing trees discovered nearby.`, false, true);
       updateFocus();
       requestRender();
     } catch (error) {
