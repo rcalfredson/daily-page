@@ -45,6 +45,7 @@ function harness({ realGeometry = false } = {}) {
     }
   };
   const service = buildForestOwnerTerrainActivationService({
+    readGarden: async () => null,
     WorldModel: { findOne: () => query(() => global.structuredClone(state.world)),
       updateOne: async (filter, update) => {
         if (state.failSave) throw new Error('world write failed');

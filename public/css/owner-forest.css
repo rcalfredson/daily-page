@@ -4,6 +4,33 @@
   margin: 0 auto;
   padding: 2rem 0 4rem;
 }
+/* Low-specificity defaults let each forest component own its appearance and spacing. */
+:where(.owner-forest) :is(button, label) {
+  box-sizing: border-box;
+  float: none;
+  margin: 0;
+  font: inherit;
+  line-height: 1.35;
+}
+:where(.owner-forest) button {
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--forest-control-border, var(--border-color));
+  border-radius: 0.45rem;
+  background: var(--forest-control-bg, var(--surface-raised-bg));
+  color: var(--forest-control-text, var(--text-color));
+  cursor: pointer;
+}
+:where(.owner-forest) button:disabled { cursor: default; opacity: 0.55; }
+:where(.owner-forest) button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+:where(.owner-forest) label {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  cursor: default;
+}
 .owner-forest [hidden] { display: none !important; }
 .owner-forest__header {
   display: flex;
@@ -416,3 +443,108 @@
 
 .owner-forest__placement h3 { margin: 0 0 0.35rem; font-size: 1rem; overflow-wrap: anywhere; }
 .owner-forest__mark-writing { display: block; margin-top: 0.75rem; }
+
+.owner-forest__garden {
+  margin-top: 1rem; padding: 1rem 1.2rem;
+  border: 1px solid var(--border-color); border-radius: 12px;
+  background: var(--background-color); max-width: 100%;
+}
+.owner-forest__garden summary { cursor: pointer; font-weight: 600; min-height: 32px; }
+.owner-forest__garden p { line-height: 1.55; max-width: 70ch; }
+.owner-forest__garden-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.owner-forest__garden button {
+  min-height: 44px; padding: 0.55rem 0.85rem; border-radius: 8px; white-space: normal;
+}
+.owner-forest__garden button:disabled { opacity: 0.55; cursor: default; }
+.owner-forest__garden li { margin-block: 0.5rem; }
+.owner-forest__garden [data-garden-status] { color: inherit; font-weight: 500; }
+.owner-forest__garden [hidden] { display: none; }
+@media (max-width: 480px) {
+  .owner-forest__garden { padding: 0.8rem; }
+  .owner-forest__garden-actions button { flex: 1 1 140px; }
+  .owner-forest__garden ol { padding-left: 1.2rem; }
+}
+.owner-forest__garden-open {
+  position: absolute; right: 12px; top: 52px; min-height: 44px;
+  border: 1px solid #819b82; border-radius: 8px; padding: 0.5rem 0.8rem;
+  background: #243b30; color: #f0dbac; cursor: pointer;
+}
+.owner-forest__garden-preview {
+  position: absolute; left: 12px; top: 62px; width: min(340px, calc(100% - 24px));
+  border: 1px solid #819b82; border-radius: 10px; padding: 0.75rem;
+  background: #243b30; color: #f6efdb; box-sizing: border-box;
+}
+.owner-forest__garden-preview p { margin: 0 0 0.7rem; font-size: 0.85rem; }
+.owner-forest__garden-preview button {
+  min-height: 44px; padding: 0.5rem 1rem; border-radius: 6px;
+  width: auto; flex: 1 1 0; min-width: 0;
+}
+.owner-forest__garden-preview[hidden] { display: none; }
+.owner-forest__garden-open[hidden] { display: none; }
+.owner-forest__garden-preview .owner-forest__garden-actions { flex-wrap: nowrap; }
+.owner-forest__garden-notice {
+  position: absolute; left: 12px; top: 54px; max-width: min(340px, calc(100% - 120px)); box-sizing: border-box;
+  padding: 0.55rem 0.7rem; margin: 0; border-radius: 8px; background: #243b30;
+  color: #f6efdb; font-size: 0.8rem; line-height: 1.4; pointer-events: none;
+}
+.owner-forest__garden-notice[hidden] { display: none; }
+
+/* Gardening stays inside the forest; only the compact satchel scrolls internally. */
+.owner-forest__garden {
+  position: absolute; z-index: 5; top: 60px; right: 12px; margin: 0;
+  width: min(320px, calc(100% - 24px)); box-sizing: border-box;
+  max-height: calc(100% - 145px); overflow-y: auto;
+  background: #243b30; color: #f6efdb; padding: 0.85rem;
+}
+.owner-forest__garden-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.owner-forest__garden-header h2 { margin: 0; font-size: 1rem; }
+.owner-forest__garden-header button { min-width: 44px; }
+.owner-forest__garden-holding { display: flex; align-items: center; gap: 0.6rem; margin: 0.7rem 0; }
+.owner-forest__garden-holding p { margin: 0.25rem 0; font-size: 0.8rem; }
+.owner-forest__garden-holding canvas { width: 40px; height: 40px; image-rendering: pixelated; flex-shrink: 0; }
+.owner-forest__garden-holding canvas[data-empty='true'] { opacity: 0.25; }
+.owner-forest__garden details { margin-top: 0.8rem; }
+.owner-forest__garden details p { font-size: 0.8rem; }
+.owner-forest__garden-near {
+  position: absolute; bottom: 82px; left: 50%; transform: translateX(-50%);
+  width: min(360px, calc(100% - 24px)); box-sizing: border-box;
+  background: #243b30; color: #f6efdb; padding: 0.65rem; border: 1px solid #819b82; border-radius: 10px;
+}
+.owner-forest__garden-near p { margin: 0 0 0.5rem; font-size: 0.85rem; line-height: 1.4; }
+.owner-forest__garden-near button { min-height: 44px; flex: 1 1 auto; width: auto; padding: 0.5rem 0.65rem; border-radius: 6px; }
+.owner-forest__garden-near[hidden], .owner-forest__garden[hidden], .owner-forest__garden-near [hidden] { display: none; }
+.owner-forest__garden-near .owner-forest__garden-actions { flex-wrap: nowrap; }
+.owner-forest__garden .owner-forest__garden-actions { flex-wrap: nowrap; }
+.owner-forest__garden .owner-forest__garden-actions button {
+  width: auto; min-width: 0; margin: 0; flex: 1 1 0;
+}
+.owner-forest__garden-header button { margin: 0; width: 44px; padding: 0.4rem; flex-shrink: 0; }
+
+:where(.owner-forest__garden, .owner-forest__garden-near, .owner-forest__garden-preview) {
+  --forest-control-bg: #31513f;
+  --forest-control-text: #f6efdb;
+  --forest-control-border: #819b82;
+}
+.owner-forest__garden button,
+.owner-forest__garden-near button,
+.owner-forest__garden-preview button,
+.owner-forest__garden-open {
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.owner-forest__garden-plant {
+  position: absolute; top: 106px; right: 12px;
+  min-height: 44px; border: 1px solid #819b82; border-radius: 8px;
+  background: #31513f; color: #f6efdb; font-size: 0.85rem;
+}
+
+.owner-forest__garden-near .owner-forest__garden-action-help {
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+}
+
+.owner-forest__garden .owner-forest__garden-header [data-garden-close] {
+  font-size: 1.75rem;
+  line-height: 1;
+}

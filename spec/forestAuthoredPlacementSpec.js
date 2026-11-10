@@ -111,6 +111,7 @@ function harness({ trees = [], markers = [], resolvedEnvironment = environment()
 
   return {
     inspect: overrides => inspectForestAuthoredPlacement({
+      inspectGarden: async () => true,
       ownerUserId: OWNER,
       world: world(),
       objectId: OBJECT,
@@ -304,5 +305,13 @@ describe('forest authored placement authority', () => {
 
     expect(error.code).toBe('INVALID_AUTHORED_PLACEMENT_DEPENDENCY');
     expect(test.ForestWritingTreeModel.find).not.toHaveBeenCalled();
+  });
+});
+
+describe('marker placement beside a live garden', () => {
+  it('rejects a reserved mature planting before reading marker or writing neighborhoods', async () => {
+    const h = harness();
+    await expectAsync(h.inspect({ inspectGarden: async () => false }))
+      .toBeRejectedWithError('The requested placement does not clear a planting.');
   });
 });

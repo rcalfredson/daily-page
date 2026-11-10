@@ -2,6 +2,8 @@ extends ../layout
 
 block append head
   link(rel='stylesheet' href='/css/owner-forest.css')
+  if forestStatus === 'not-established'
+    script(type='module' src='/js/owner-forest-garden-start.js')
   if forestStatus === 'ready'
     script(type='module' src='/js/owner-forest.js')
 
@@ -24,6 +26,9 @@ block content
       .owner-forest__notice(role='status')
         h2= t('forestScene.empty.heading')
         p= t('forestScene.empty.body')
+        p A wild lanternbell awaits near the entrance.
+        button(type='button' data-garden-establish) Enter my forest
+        p(data-garden-establish-status role='status' aria-live='polite')
     else if forestStatus === 'reconciling'
       .owner-forest__notice(role='status')
         h2= t('forestScene.reconciling.heading')
@@ -88,6 +93,47 @@ block content
               data-owner-forest-place-marker
               disabled
             )= t('forestScene.markers.place')
+          p.owner-forest__garden-notice(data-garden-notice role='status' aria-live='polite' hidden)
+          button.owner-forest__garden-open(type='button' data-garden-open aria-controls='forest-garden-panel' aria-expanded='false') Satchel
+          button.owner-forest__garden-plant(type='button' data-garden-plant aria-keyshortcuts='P' hidden disabled) Plant cutting · P
+          .owner-forest__garden-preview(data-garden-toolbar hidden)
+            p(data-garden-preview role='status' aria-live='polite')
+            .owner-forest__garden-actions
+              button(type='button' data-garden-save) Save here
+              button(type='button' data-garden-cancel) Cancel
+          section.owner-forest__garden-near(data-garden-near hidden aria-label='Nearby lanternbell')
+            p(data-garden-near-copy role='status' aria-live='polite')
+            .owner-forest__garden-actions(data-garden-near-actions)
+              button(type='button' data-garden-acquire disabled) Take a cutting · E
+              button(type='button' data-garden-harvest) Take a cutting · E
+              button(type='button' data-garden-move aria-describedby='garden-action-help') Move
+              button(type='button' data-garden-lift aria-describedby='garden-action-help') Pack up
+            p#garden-action-help.owner-forest__garden-action-help(data-garden-action-help hidden) Move keeps growth. Pack up returns a cutting.
+            section(data-garden-confirm hidden)
+              p(data-garden-lift-copy) Pack this plant as one cutting? Planting it again starts growth over.
+              .owner-forest__garden-actions
+                button(type='button' data-garden-confirm-lift) Pack up plant
+                button(type='button' data-garden-keep) Keep growing
+          section#forest-garden-panel.owner-forest__garden(data-forest-garden hidden aria-labelledby='garden-title')
+            .owner-forest__garden-header
+              h2#garden-title Satchel & garden
+              button(type='button' data-garden-close aria-label='Close satchel') ×
+            .owner-forest__garden-holding
+              canvas(width='40' height='40' data-garden-cutting role='img' aria-label='Lanternbell cutting: a leafy stem with an amber bud')
+              div
+                strong Lanternbell cuttings
+                p(data-garden-count) Loading…
+            .owner-forest__garden-actions
+              button(type='button' data-garden-start disabled) Plant a cutting
+              button(type='button' data-garden-refresh) Refresh
+            p(data-garden-guide)
+            p(data-garden-status role='status' aria-live='polite') Loading…
+            details
+              summary My lanternbells
+              ol(data-garden-plants)
+            details
+              summary Growing tips
+              p Sprout in 2 minutes. Flowers in 20. Later cuttings take 4 hours. No watering needed.
           .owner-forest__inspection-backdrop(
             aria-hidden='true'
             data-owner-forest-inspection-backdrop

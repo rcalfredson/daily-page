@@ -148,6 +148,7 @@ function harness({
     }],
   }),
   projectTree = () => projectedTree(),
+  inspectGarden = async () => true,
   readGroupEvidence = jasmine.createSpy('readGroupEvidence')
     .and.callFake(async () => groupEvidence(foundingBlock)),
 } = {}) {
@@ -191,6 +192,7 @@ function harness({
     occupiedPlacements: [],
   });
   const service = buildForestWritingTreeCreationService({
+    inspectGarden,
     models,
     transactionRunner,
     acquireFence,
@@ -216,6 +218,17 @@ function harness({
 }
 
 describe('forest writing-tree transactional creation', () => {
+  it('skips a future writing candidate reserved by mature garden space', async () => {
+    const inspectGarden = jasmine.createSpy('garden').and.returnValues(false, true);
+    const test = harness({ inspectGarden });
+    await test.service({ ownerUserId: OWNER_USER_ID, translationGroupId: GROUP_ID, now: NOW });
+    expect(inspectGarden).toHaveBeenCalledTimes(2);
+    expect(inspectGarden.calls.first().args[0]).toEqual(jasmine.objectContaining({
+      ownerUserId: OWNER_USER_ID, radius: 48, session: 'transaction-session'
+    }));
+    expect(test.createdTrees[0].placement.slot).toBe(1);
+  });
+
   it('pauses allocation during a replacement while the existing terrain remains published', async () => {
     const test = harness({ world: ownerWorld({ terrain: {
       schemaVersion: 1, generationVersion: 3,
@@ -476,6 +489,7 @@ describe('forest writing-tree transactional creation', () => {
       },
     };
     const service = buildForestWritingTreeCreationService({
+    inspectGarden: async () => true,
       models,
       transactionRunner: jasmine.createSpy('transactionRunner')
         .and.rejectWith(duplicate),
@@ -497,9 +511,11 @@ describe('forest writing-tree transactional creation', () => {
       translationGroupId: GROUP_ID,
     })).toBeRejectedWithError(/canonical ObjectId/);
     expect(() => buildForestWritingTreeCreationService({
+    inspectGarden: async () => true,
       maximumCandidateChecks: 0,
     })).toThrowError(/placement-policy bound/);
     expect(() => buildForestWritingTreeCreationService({
+    inspectGarden: async () => true,
       projectTree: null,
     })).toThrowError(/projectTree must be a function/);
   });

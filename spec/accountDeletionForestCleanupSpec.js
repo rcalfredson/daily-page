@@ -56,6 +56,8 @@ function deletionRequest(overrides = {}) {
 }
 
 function cleanupHarness({
+  gardenPages = [[]],
+  remainingGarden = null,
   authoredObjectPages = [[]],
   authoredRegionRevisionPages = [[]],
   authoredResetOperationPages = [[]],
@@ -126,6 +128,7 @@ function cleanupHarness({
   return {
     AccountDeletionRequestModel,
     ForestAuthoredObjectModel,
+    ForestGardenModel: boundedModel('ForestGarden', gardenPages, remainingGarden),
     ForestAuthoredRegionRevisionModel,
     ForestAuthoredResetOperationModel,
     ForestOwnerGroupReconciliationJobModel,
@@ -138,6 +141,17 @@ function cleanupHarness({
 }
 
 describe('account-deletion forest cleanup', () => {
+  it('drains garden holdings and plants and verifies their absence before converging', async () => {
+    const h = cleanupHarness({ gardenPages: [[{ _id: 'garden' }]] });
+    const result = await cleanUpAccountDeletionForests({ ...h, now: NOW });
+    expect(result.deletedGardens).toBe(1); expect(result.completed).toBe(1);
+    expect(h.ForestGardenModel.exists).toHaveBeenCalledWith({ ownerUserId: OWNER_USER_ID });
+    const pending = await cleanUpAccountDeletionForests({
+      ...cleanupHarness({ remainingGarden: { _id: 'still-there' } }), now: NOW
+    });
+    expect(pending.completed).toBe(0); expect(pending.pending).toBe(1);
+  });
+
   it('drains frozen terrain protections before removing the world and completing cleanup', async () => {
     const harness = cleanupHarness({ terrainProtectionPages: [[{ _id: 'protection-1' }]] });
     const result = await cleanUpAccountDeletionForests({ ...harness, now: NOW });
@@ -360,6 +374,7 @@ describe('account-deletion forest cleanup', () => {
       deletedAuthoredRegionRevisions: 0,
       deletedAuthoredResetOperations: 0,
       deletedTrees: 2,
+      deletedGardens: 0,
       deletedTerrainProtections: 0,
       deletedReconciliationJobs: 1,
       deletedWorlds: 1

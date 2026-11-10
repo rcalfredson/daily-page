@@ -1,3 +1,4 @@
+import { readForestGardenStore } from './forestGardenStore.js';
 import { validateOwnerTerrainAccess, ownerTerrainAccessBounds } from '../../public/js/owner-forest-terrain-access.js';
 import { readForestOwnerTerrain } from './forestOwnerTerrain.js';
 import crypto from 'node:crypto';
@@ -56,7 +57,8 @@ export function buildForestOwnerTerrainActivationService({
   DeletionModel = AccountDeletionRequest, UserModel = User,
   transactionRunner = transact, acquireFence = acquireForestLedgerFence,
   activationEnabled = forestLiveTerrainActivationEnabled, generateId = () => crypto.randomUUID(),
-  readTerrain = readForestOwnerTerrain, validateAccess = validateOwnerTerrainAccess
+  readTerrain = readForestOwnerTerrain, validateAccess = validateOwnerTerrainAccess,
+  readGarden = readForestGardenStore
 } = {}) {
   return async function advanceTerrainActivation({ ownerUserId, action = 'step', batchSize = 100,
     generationVersion = 3 }) {
@@ -206,6 +208,11 @@ export function buildForestOwnerTerrainActivationService({
       }
       await put(records.map(record => protection(record, terrain.phase, scope)), terrain.activationId);
       const complete = records.length < batchSize;
+      if (complete && terrain.phase === 'markers') {
+        const garden = await readGarden({ ...scope, session });
+        await put((garden?.plants || []).map(p => ({ id: `plant:${p.plantId}`,
+          x: p.worldX, y: p.worldY, radius: 45 })), terrain.activationId);
+      }
       const next = { ...terrain, cursor: complete ? null : String(records.at(-1)._id),
         phase: complete ? (terrain.phase === 'trees' ? 'markers' : 'verify') : terrain.phase };
       validateForestOwnerTerrain(next);
