@@ -41,12 +41,21 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
   let carrying = false;
   let nearby = null, collected = null, guideId = null, lastUpdate = 0, lastRead = 0, pending = null;
   const notice = find('notice');
+  const navigation = find('navigation'), navigationCopy = find('navigation-copy');
+  const navigationArrow = find('navigation-arrow');
+  find('navigation-stop')?.addEventListener('click', () => {
+    guideId = null; update(performance.now(), true); focusViewport();
+  });
+  let noticeUntil = 0;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const cuttingCanvas = find('cutting');
   paintLanternbellCutting(cuttingCanvas.getContext('2d'), 20, 32, 2);
   const say = (message, showNotice = true) => {
     status.textContent = message;
-    if (showNotice) { notice.textContent = message; notice.hidden = false; }
+    if (showNotice) {
+      notice.textContent = message; notice.hidden = false;
+      noticeUntil = stale ? Infinity : performance.now() + 4500;
+    }
   };
   const distance = (a, b) => Math.hypot(a.worldX - b.worldX, a.worldY - b.worldY);
   function direction(target, player) {
@@ -79,6 +88,7 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
       const result = await response.json();
       if (!response.ok || result.version !== 1) throw new Error(result.code);
       data = result; stale = false; pending = null;
+      notice.textContent = ''; noticeUntil = 0;
       if (!data.cuttings) carrying = false;
       rebuild();
       say(data.acquired ? 'Garden saved.' : 'Find a cutting on the wild lanternbell.', false);
@@ -100,8 +110,8 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
       carrying = ['acquire', 'harvest'].includes(action);
       collected = source && ['acquire', 'harvest', 'lift'].includes(action)
         ? { source: { ...source }, destination: action === 'lift' ? 'satchel' : 'hand', startedAt: performance.now() } : null;
-      rebuild(); say(action === 'acquire' ? 'Cutting taken from the wild lanternbell · +1'
-        : action === 'harvest' ? 'Cutting taken from this lanternbell. Ready to plant.'
+      rebuild(); say(action === 'acquire' ? 'Cutting collected · +1'
+        : action === 'harvest' ? 'Cutting collected · +1'
           : action === 'lift' ? 'Plant packed up · one cutting in your satchel.'
             : action === 'move' ? 'Plant moved · growth preserved.'
               : 'Cutting planted · flowers in 20 minutes.');
@@ -116,7 +126,7 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
     mode = plant ? 'move' : 'plant'; selected = plant; confirm.hidden = true;
     carrying = !plant; collected = null;
     panel(false);
-    say(plant ? 'Choose a spot for this lanternbell.' : 'Choose a home for your cutting.'); focusViewport(); update(performance.now(), true); requestRender();
+    say(plant ? 'Choose a spot for this lanternbell.' : 'Choose a home for your cutting.', false); focusViewport(); update(performance.now(), true); requestRender();
   }
   function stop() { mode = null; preview = null; carrying = false; say('Placement cancelled.'); focusViewport(); requestRender(); update(performance.now(), true); }
   acquire.addEventListener('click', () => command('acquire'));
@@ -205,7 +215,7 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
     const plantId = nearby?.plantId || '';
     const plantChanged = near.dataset.plantId !== plantId;
     near.dataset.plantId = plantId;
-    near.hidden = !nearby || Boolean(mode) || !root.hidden || !available;
+    near.hidden = !nearby || Boolean(nearby.wild && data?.acquired) || Boolean(mode) || !root.hidden || !available;
     if (nearby) {
       const minutes = Math.max(1, Math.ceil((new Date(nearby.readyAt) - new Date(data?.serverNow)) / 60000));
       const nearbyText = nearby.wild
@@ -214,12 +224,27 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
       if (find('near-copy').textContent !== nearbyText) find('near-copy').textContent = nearbyText;
     }
     acquire.hidden = !nearby?.wild || Boolean(data?.acquired);
-    harvest.hidden = move.hidden = lift.hidden = Boolean(nearby?.wild);
+    harvest.hidden = Boolean(nearby?.wild) || !nearby?.ready;
+    move.hidden = lift.hidden = Boolean(nearby?.wild);
     if (plantChanged) confirm.hidden = true;
     find('near-actions').hidden = !confirm.hidden;
     find('action-help').hidden = !nearby || Boolean(nearby.wild) || !confirm.hidden;
     const target = guideId ? data?.plants.find(p => p.plantId === guideId) : !data?.acquired ? WILD_LANTERNBELL : null;
     guide.textContent = target ? `${guideId ? 'Your lanternbell' : 'Wild lanternbell'}: ${direction(target, player)}.` : '';
+    if (navigation) {
+      const guiding = guideId && target;
+      const label = guiding ? `Lanternbell ${data.plants.findIndex(p => p.plantId === guideId) + 1}` : '';
+      const arrived = guiding && nearby?.plantId === guideId && !near.hidden;
+      if (arrived) say(`${label} reached.`);
+      if (guideId && (!target || arrived)) guideId = null;
+      navigation.hidden = !guideId || Boolean(mode) || !root.hidden || !available;
+      if (guideId) {
+        const text = `${label} · ${direction(target, player)}`;
+        if (navigationCopy.textContent !== text) navigationCopy.textContent = text;
+        const degrees = Math.atan2(target.worldY - player.worldY, target.worldX - player.worldX) * 180 / Math.PI + 90;
+        navigationArrow.style.transform = `rotate(${degrees}deg)`;
+      }
+    }
     const blocked = busy || stale || !available;
     acquire.disabled = blocked || distance(player, WILD_LANTERNBELL) > 72;
     start.disabled = blocked || !data?.cuttings || data?.plants.length >= 24 || Boolean(mode);
@@ -227,7 +252,10 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
     quickPlant.disabled = start.disabled;
     toolbar.hidden = !mode;
     open.hidden = Boolean(mode) || !root.hidden;
-    notice.hidden = Boolean(mode) || !root.hidden || !notice.textContent;
+    viewport.dataset.hudGardenPlacing = String(Boolean(mode));
+    viewport.dataset.hudGardenOpen = String(!root.hidden);
+    viewport.dataset.hudGardenNearby = String(!near.hidden);
+    notice.hidden = Boolean(mode) || !root.hidden || !available || !notice.textContent || time >= noticeUntil;
     save.disabled = blocked || !preview?.valid;
     cancel.disabled = busy;
     harvest.disabled = blocked || !nearby?.ready || data?.cuttings >= 8;

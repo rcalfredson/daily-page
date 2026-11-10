@@ -64,7 +64,7 @@ try {
     { type: 'keyDown', value: 'e' }, { type: 'keyUp', value: 'e' }
   ] }] });
   await wait(`!document.querySelector('[data-garden-start]').disabled`);
-  await wait(`document.querySelector('[data-garden-notice]').textContent.includes('wild lanternbell')`);
+  await wait(`document.querySelector('[data-garden-notice]').textContent.includes('Cutting collected')`);
   await capture('desktop-collected-cutting');
   await click('[data-garden-open]');
   assert.equal(await evaluate(`document.querySelector('[data-forest-garden]').getBoundingClientRect().bottom <= document.querySelector('[data-owner-forest-viewport]').getBoundingClientRect().bottom`), true);

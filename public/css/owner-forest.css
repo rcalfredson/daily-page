@@ -202,27 +202,6 @@
 .owner-forest__placement-actions { margin-top: 0.45rem; }
 .owner-forest__placement button:disabled,
 .owner-forest__marker-actions button:disabled { cursor: wait; opacity: 0.62; }
-.owner-forest__hud-actions {
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  bottom: 0.75rem;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  width: max-content;
-  max-width: calc(100% - 1.5rem);
-  box-sizing: border-box;
-  padding: 0.5rem;
-  border: 1px solid var(--border-color);
-  border-radius: 14px;
-  background: var(--surface-raised-bg);
-  color: var(--text-color);
-  box-shadow: 0 4px 18px rgba(14, 31, 27, 0.18);
-}
-.owner-forest__viewport[data-placing='true'] .owner-forest__hud-actions,
-.owner-forest__viewport[data-inspecting='true'] .owner-forest__hud-actions { display: none; }
 .owner-forest__nearby {
   padding: 0 0.35rem;
   color: var(--muted-text-color);
@@ -419,15 +398,6 @@
   .owner-forest__header { display: block; }
   .owner-forest__actions { margin-top: 0.8rem; }
   .owner-forest__viewport { height: min(68vh, 620px); }
-  .owner-forest__hud-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: min(380px, calc(100% - 1rem));
-    max-width: calc(100% - 1rem);
-    bottom: 0.5rem;
-  }
-  .owner-forest__nearby { grid-column: 1 / -1; text-align: center; }
-  .owner-forest__nearby[hidden] ~ .owner-forest__place-marker { grid-column: 1 / -1; }
   .owner-forest__inspection {
     top: auto;
     right: 0.5rem;
@@ -465,12 +435,12 @@
   .owner-forest__garden ol { padding-left: 1.2rem; }
 }
 .owner-forest__garden-open {
-  position: absolute; right: 12px; top: 52px; min-height: 44px;
+  min-height: 44px;
   border: 1px solid #819b82; border-radius: 8px; padding: 0.5rem 0.8rem;
   background: #243b30; color: #f0dbac; cursor: pointer;
 }
 .owner-forest__garden-preview {
-  position: absolute; left: 12px; top: 62px; width: min(340px, calc(100% - 24px));
+  width: 100%;
   border: 1px solid #819b82; border-radius: 10px; padding: 0.75rem;
   background: #243b30; color: #f6efdb; box-sizing: border-box;
 }
@@ -482,18 +452,19 @@
 .owner-forest__garden-preview[hidden] { display: none; }
 .owner-forest__garden-open[hidden] { display: none; }
 .owner-forest__garden-preview .owner-forest__garden-actions { flex-wrap: nowrap; }
+/* The top edge is reserved for transient feedback and sync errors. */
 .owner-forest__garden-notice {
-  position: absolute; left: 12px; top: 54px; max-width: min(340px, calc(100% - 120px)); box-sizing: border-box;
-  padding: 0.55rem 0.7rem; margin: 0; border-radius: 8px; background: #243b30;
+  width: max-content; max-width: 100%; box-sizing: border-box;
+  padding: 0.5rem 0.75rem; margin: 0; border-radius: 10px; background: #243b30;
   color: #f6efdb; font-size: 0.8rem; line-height: 1.4; pointer-events: none;
 }
 .owner-forest__garden-notice[hidden] { display: none; }
 
 /* Gardening stays inside the forest; only the compact satchel scrolls internally. */
 .owner-forest__garden {
-  position: absolute; z-index: 5; top: 60px; right: 12px; margin: 0;
+  position: absolute; z-index: 5; bottom: 12px; right: 12px; margin: 0;
   width: min(320px, calc(100% - 24px)); box-sizing: border-box;
-  max-height: calc(100% - 145px); overflow-y: auto;
+  max-height: calc(100% - 24px); overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y;
   background: #243b30; color: #f6efdb; padding: 0.85rem;
 }
 .owner-forest__garden-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -506,8 +477,7 @@
 .owner-forest__garden details { margin-top: 0.8rem; }
 .owner-forest__garden details p { font-size: 0.8rem; }
 .owner-forest__garden-near {
-  position: absolute; bottom: 82px; left: 50%; transform: translateX(-50%);
-  width: min(360px, calc(100% - 24px)); box-sizing: border-box;
+  width: 100%; box-sizing: border-box;
   background: #243b30; color: #f6efdb; padding: 0.65rem; border: 1px solid #819b82; border-radius: 10px;
 }
 .owner-forest__garden-near p { margin: 0 0 0.5rem; font-size: 0.85rem; line-height: 1.4; }
@@ -534,7 +504,6 @@
 }
 
 .owner-forest__garden-plant {
-  position: absolute; top: 106px; right: 12px;
   min-height: 44px; border: 1px solid #819b82; border-radius: 8px;
   background: #31513f; color: #f6efdb; font-size: 0.85rem;
 }
@@ -547,4 +516,58 @@
 .owner-forest__garden .owner-forest__garden-header [data-garden-close] {
   font-size: 1.75rem;
   line-height: 1;
+}
+
+/* One shared dock keeps contextual controls in flow instead of stacking overlays. */
+.owner-forest__dock {
+  position: absolute; z-index: 2; bottom: 12px; left: 50%; transform: translateX(-50%);
+  width: min(440px, calc(100% - 24px)); box-sizing: border-box;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 8px;
+  border: 1px solid #819b82; border-radius: 14px;
+  background: #243b30; color: #f6efdb;
+  --forest-control-bg: #31513f;
+  --forest-control-text: #f6efdb;
+  --forest-control-border: #819b82;
+  max-height: calc(100% - 24px); overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y;
+}
+.owner-forest__hud-actions { display: flex; gap: 8px; }
+.owner-forest__hud-actions button { flex: 1 1 0; min-width: 0; padding-inline: 0.6rem; color: inherit; white-space: normal; }
+.owner-forest__hud-actions [data-owner-forest-more] { flex: 0 0 auto; }
+.owner-forest__dock .owner-forest__garden-near button { min-width: 0; flex: 1 1 0; }
+.owner-forest__hud-actions [data-garden-plant] { background: #456944; }
+.owner-forest__tree-context { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.owner-forest__navigation { display: flex; align-items: center; gap: 8px; }
+.owner-forest__navigation p { flex: 1; min-width: 0; margin: 0; font-size: 0.8rem; line-height: 1.4; }
+.owner-forest__navigation-arrow { display: inline-block; width: 28px; flex-shrink: 0; text-align: center; font-size: 1.5rem; }
+.owner-forest__navigation button { flex-shrink: 0; width: 44px; padding: 0; font-size: 1.5rem; }
+.owner-forest__viewport[data-more-open='true'] .owner-forest__navigation { display: none; }
+.owner-forest__tree-context:has([data-owner-forest-nearby][hidden]),
+.owner-forest__viewport[data-hud-garden-nearby='true'] .owner-forest__tree-context,
+.owner-forest__viewport[data-more-open='true'] .owner-forest__tree-context,
+.owner-forest__viewport[data-more-open='true'] .owner-forest__garden-near { display: none; }
+.owner-forest__dock .owner-forest__nearby { color: inherit; padding: 0; }
+.owner-forest__dock :is(.owner-forest__garden-near, .owner-forest__garden-preview, .owner-forest__placement) {
+  position: static; transform: none; width: 100%; max-width: 100%;
+  padding: 0; border: 0; border-radius: 0; background: transparent;
+}
+.owner-forest__dock .owner-forest__placement button { min-height: 44px; flex: 1; }
+.owner-forest__viewport:is([data-placing='true'], [data-hud-garden-placing='true'], [data-inspecting='true'], [data-hud-garden-open='true']) :is(.owner-forest__hud-actions, .owner-forest__tree-context, .owner-forest__more) { display: none; }
+.owner-forest__viewport:is([data-inspecting='true'], [data-hud-garden-open='true']) .owner-forest__dock { display: none; }
+.owner-forest__more { grid-row: 1; border-bottom: 1px solid #819b82; padding-bottom: 8px; font-size: 0.8rem; }
+.owner-forest__more > button { width: 100%; font-size: inherit; }
+.owner-forest__more summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; }
+.owner-forest__more summary::after { content: '+'; margin-left: auto; }
+.owner-forest__more details[open] summary::after { content: '−'; }
+.owner-forest__hud-actions [aria-expanded='true'] { background: #456944; }
+.owner-forest__more p { margin: 0 0 8px; line-height: 1.5; color: inherit; }
+.owner-forest__touch-help { display: none; }
+.owner-forest__status-stack:has(:not([hidden])[data-failed='true']) .owner-forest__garden-notice { display: none; }
+@media (pointer: coarse) {
+  .owner-forest__key-hint, .owner-forest__more .owner-forest__help { display: none; }
+  .owner-forest__touch-help { display: block; }
+}
+@media (max-width: 700px) {
+  .owner-forest__dock { bottom: 8px; width: calc(100% - 16px); }
+  .owner-forest__key-hint { display: none; }
+  .owner-forest__garden { bottom: 8px; right: 8px; width: calc(100% - 16px); max-height: calc(100% - 16px); }
 }

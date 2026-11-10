@@ -8,9 +8,11 @@ const NOW = '2026-11-09T12:00:00Z';
 const camera = { x: -200, y: -200, width: 400, height: 400 };
 let restore;
 let dom;
-async function garden({ stage = 'rooted', cuttings = 1, ready = false, placements = [] } = {}) {
+async function garden({ stage = 'rooted', cuttings = 1, ready = false, placements = [],
+  player = { worldX: 0, worldY: 0 }, plantPosition = { worldX: 0, worldY: 40 } } = {}) {
   const fields = ['open', 'toolbar', 'close', 'status', 'count', 'plants', 'plant', 'acquire',
     'start', 'save', 'cancel', 'refresh', 'preview', 'guide', 'near', 'harvest', 'move', 'lift',
+    'navigation', 'navigation-copy', 'navigation-arrow', 'navigation-stop',
     'confirm', 'confirm-lift', 'keep', 'notice', 'near-copy', 'near-actions', 'action-help', 'lift-copy'];
   dom = new JSDOM(`<div data-owner-forest-viewport tabindex="0"><section data-forest-garden hidden></section>
     <canvas data-garden-cutting></canvas>${fields.map(f => `<button type="button" data-garden-${f}></button>`).join('')}</div>`);
@@ -26,7 +28,7 @@ async function garden({ stage = 'rooted', cuttings = 1, ready = false, placement
   const ctx = { save() {}, restore() {}, translate() {}, scale() {}, fillRect() {} };
   dom.window.HTMLCanvasElement.prototype.getContext = () => ctx;
   let stored = { version: 1, acquired: true, revision: 1, cuttings, serverNow: NOW,
-    plants: [{ plantId: PLANT, worldX: 0, worldY: 40, plantedAt: NOW,
+    plants: [{ plantId: PLANT, ...plantPosition, plantedAt: NOW,
       readyAt: NOW, stage, ready }] };
   const commands = [];
   globalThis.fetch = async (path, options) => {
@@ -39,7 +41,7 @@ async function garden({ stage = 'rooted', cuttings = 1, ready = false, placement
   };
   const terrain = { ready: () => true, sample: jasmine.createSpy('sample').and.returnValue({ placeable: true }) };
   const controller = createOwnerForestGarden({ terrainToken: null, terrain,
-    requestRender() {}, focusViewport() {}, state: () => ({ player: { worldX: 0, worldY: 0 },
+    requestRender() {}, focusViewport() {}, state: () => ({ player,
       placements, markers: [], facingRadians: Math.PI / 2, available: true }) });
   await setImmediate();
   controller.update(performance.now(), true);
@@ -108,4 +110,65 @@ describe('owner garden move preview and stored cuttings', () => {
     expect(g.find('count').textContent).toContain('1 / 8');
     expect(g.commands.length).toBe(1);
   });
+  it('expires collection feedback while keeping the result in the satchel', async () => {
+    const g = await garden({ stage: 'flowering', ready: true, cuttings: 0 });
+    g.find('harvest').click(); await setImmediate();
+    expect(g.find('notice').hidden).toBeFalse();
+    g.controller.update(performance.now() + 5000, true);
+    expect(g.find('notice').hidden).toBeTrue();
+    expect(g.find('status').textContent).toBe('Cutting collected · +1');
+    expect(g.find('count').textContent).toContain('1 / 8');
+    expect(g.find('plant').hidden).toBeFalse();
+  });
+  it('keeps failure feedback until a successful refresh resolves it', async () => {
+    const g = await garden();
+    const workingFetch = globalThis.fetch;
+    globalThis.fetch = async () => { throw new Error('Unavailable'); };
+    g.find('refresh').click(); await setImmediate();
+    g.controller.update(performance.now() + 5000, true);
+    expect(g.find('notice').hidden).toBeFalse();
+    expect(g.find('notice').textContent).toContain('Garden unavailable');
+    globalThis.fetch = workingFetch;
+    g.find('refresh').click(); await setImmediate();
+    expect(g.find('notice').hidden).toBeTrue();
+    expect(g.find('notice').textContent).toBe('');
+  });
+  it('guides outside the satchel, updates bearing and distance, and clears on arrival', async () => {
+    const player = { worldX: 0, worldY: 0 };
+    const g = await garden({ player, plantPosition: { worldX: 200, worldY: 0 } });
+    g.find('open').click();
+    g.find('plants').querySelector('button').click();
+    expect(document.querySelector('[data-forest-garden]').hidden).toBeTrue();
+    expect(g.find('navigation').hidden).toBeFalse();
+    expect(g.find('navigation-copy').textContent).toBe('Lanternbell 1 · 200 steps east');
+    expect(g.find('navigation-arrow').style.transform).toBe('rotate(90deg)');
+    player.worldX = 100; player.worldY = 100;
+    g.controller.update(performance.now(), true);
+    expect(g.find('navigation-copy').textContent).toBe('Lanternbell 1 · 141 steps northeast');
+    expect(g.find('navigation-arrow').style.transform).toBe('rotate(45deg)');
+    player.worldX = 160; player.worldY = 0;
+    g.controller.update(performance.now(), true);
+    expect(g.find('navigation').hidden).toBeTrue();
+    expect(g.find('near').hidden).toBeFalse();
+    expect(g.find('notice').textContent).toBe('Lanternbell 1 reached.');
+    player.worldX = 0;
+    g.controller.update(performance.now(), true);
+    expect(g.find('navigation').hidden).toBeTrue();
+    expect(g.commands).toEqual([]);
+  });
+  it('pauses the guide behind the satchel and allows dismissing it without changing the garden', async () => {
+    const g = await garden({ plantPosition: { worldX: 200, worldY: 0 } });
+    g.find('plants').querySelector('button').click();
+    expect(g.find('navigation').hidden).toBeFalse();
+    g.find('open').click();
+    expect(g.find('navigation').hidden).toBeTrue();
+    g.find('close').click();
+    expect(g.find('navigation').hidden).toBeFalse();
+    g.find('navigation-stop').click();
+    expect(g.find('navigation').hidden).toBeTrue();
+    g.find('open').click(); g.find('close').click();
+    expect(g.find('navigation').hidden).toBeTrue();
+    expect(g.commands).toEqual([]);
+  });
+
 });

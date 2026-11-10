@@ -39,7 +39,6 @@ block content
         h2= t('forestScene.unavailable.heading')
         p= t('forestScene.unavailable.body')
     else
-      p#owner-forest-help.owner-forest__help= t('forestScene.help')
       .owner-forest__stage(data-owner-forest-stage)
         .owner-forest__viewport(
           tabindex='0'
@@ -74,46 +73,61 @@ block content
                   = t('forestScene.markers.retryPending')
                 button(type='button' data-owner-forest-sync-revert)
                   = t('forestScene.markers.revertPending')
-          .owner-forest__placement(data-owner-forest-placement hidden)
-            section(data-owner-forest-placement-writing hidden)
-              h3(data-owner-forest-placement-writing-title)
-              p(data-owner-forest-placement-writing-help)
-            p(data-owner-forest-placement-status role='status' aria-live='polite')
-            .owner-forest__placement-actions
-              button(type='button' data-owner-forest-placement-save)
-                = t('forestScene.markers.save')
-              button(type='button' data-owner-forest-placement-cancel)
-                = t('forestScene.markers.cancel')
-          .owner-forest__hud-actions
-            .owner-forest__nearby(data-owner-forest-nearby hidden)
-              span(data-owner-forest-nearby-copy)= t('forestScene.treeNearby')
-            button.owner-forest__hud-inspect(type='button' data-owner-forest-inspect)= t('forestScene.inspect.action')
-            button.owner-forest__place-marker(
-              type='button'
-              data-owner-forest-place-marker
-              disabled
-            )= t('forestScene.markers.place')
-          p.owner-forest__garden-notice(data-garden-notice role='status' aria-live='polite' hidden)
-          button.owner-forest__garden-open(type='button' data-garden-open aria-controls='forest-garden-panel' aria-expanded='false') Satchel
-          button.owner-forest__garden-plant(type='button' data-garden-plant aria-keyshortcuts='P' hidden disabled) Plant cutting · P
-          .owner-forest__garden-preview(data-garden-toolbar hidden)
-            p(data-garden-preview role='status' aria-live='polite')
-            .owner-forest__garden-actions
-              button(type='button' data-garden-save) Save here
-              button(type='button' data-garden-cancel) Cancel
-          section.owner-forest__garden-near(data-garden-near hidden aria-label='Nearby lanternbell')
-            p(data-garden-near-copy role='status' aria-live='polite')
-            .owner-forest__garden-actions(data-garden-near-actions)
-              button(type='button' data-garden-acquire disabled) Take a cutting · E
-              button(type='button' data-garden-harvest) Take a cutting · E
-              button(type='button' data-garden-move aria-describedby='garden-action-help') Move
-              button(type='button' data-garden-lift aria-describedby='garden-action-help') Pack up
-            p#garden-action-help.owner-forest__garden-action-help(data-garden-action-help hidden) Move keeps growth. Pack up returns a cutting.
-            section(data-garden-confirm hidden)
-              p(data-garden-lift-copy) Pack this plant as one cutting? Planting it again starts growth over.
+            p.owner-forest__garden-notice(data-garden-notice role='status' aria-live='polite' hidden)
+          .owner-forest__dock(data-owner-forest-dock)
+            .owner-forest__navigation(data-garden-navigation hidden aria-label='Guide to lanternbell')
+              span.owner-forest__navigation-arrow(data-garden-navigation-arrow aria-hidden='true') ↑
+              p(data-garden-navigation-copy)
+              button(type='button' data-garden-navigation-stop aria-label='Stop guiding to lanternbell') ×
+            .owner-forest__placement(data-owner-forest-placement hidden)
+              section(data-owner-forest-placement-writing hidden)
+                h3(data-owner-forest-placement-writing-title)
+                p(data-owner-forest-placement-writing-help)
+              p(data-owner-forest-placement-status role='status' aria-live='polite')
+              .owner-forest__placement-actions
+                button(type='button' data-owner-forest-placement-save)
+                  = t('forestScene.markers.save')
+                button(type='button' data-owner-forest-placement-cancel)
+                  = t('forestScene.markers.cancel')
+            .owner-forest__garden-preview(data-garden-toolbar hidden)
+              p(data-garden-preview role='status' aria-live='polite')
               .owner-forest__garden-actions
-                button(type='button' data-garden-confirm-lift) Pack up plant
-                button(type='button' data-garden-keep) Keep growing
+                button(type='button' data-garden-save) Save here
+                button(type='button' data-garden-cancel) Cancel
+            section.owner-forest__garden-near(data-garden-near hidden aria-label='Nearby lanternbell')
+              p(data-garden-near-copy role='status' aria-live='polite')
+              .owner-forest__garden-actions(data-garden-near-actions)
+                button(type='button' data-garden-acquire disabled) Take a cutting
+                button(type='button' data-garden-harvest) Take a cutting
+                button(type='button' data-garden-move aria-describedby='garden-action-help') Move
+                button(type='button' data-garden-lift aria-describedby='garden-action-help') Pack up
+              p#garden-action-help.owner-forest__garden-action-help(data-garden-action-help hidden) Move keeps growth. Pack up returns a cutting.
+              section(data-garden-confirm hidden)
+                p(data-garden-lift-copy) Pack this plant as one cutting? Planting it again starts growth over.
+                .owner-forest__garden-actions
+                  button(type='button' data-garden-confirm-lift) Pack up plant
+                  button(type='button' data-garden-keep) Keep growing
+            .owner-forest__tree-context
+              .owner-forest__nearby(data-owner-forest-nearby hidden)
+                span(data-owner-forest-nearby-copy)= t('forestScene.treeNearby')
+              button.owner-forest__hud-inspect(type='button' data-owner-forest-inspect)= t('forestScene.inspect.action')
+            .owner-forest__hud-actions
+              button.owner-forest__garden-plant(type='button' data-garden-plant aria-keyshortcuts='P' hidden disabled)
+                | Plant cutting
+                span.owner-forest__key-hint  · P
+              button.owner-forest__garden-open(type='button' data-garden-open aria-controls='forest-garden-panel' aria-expanded='false') Satchel
+              button(type='button' data-owner-forest-more aria-controls='forest-more-panel' aria-expanded='false') More
+            section#forest-more-panel.owner-forest__more(data-owner-forest-more-panel hidden aria-label='More forest actions')
+              button.owner-forest__place-marker(
+                type='button'
+                data-owner-forest-place-marker
+                disabled
+              )= t('forestScene.markers.place')
+              details
+                summary Help & forest info
+                p.owner-forest__touch-help Touch and drag to walk. Tap a nearby plant, tree or marker to interact.
+                p#owner-forest-help.owner-forest__help= t('forestScene.help')
+                p(data-owner-forest-info)
           section#forest-garden-panel.owner-forest__garden(data-forest-garden hidden aria-labelledby='garden-title')
             .owner-forest__garden-header
               h2#garden-title Satchel & garden
