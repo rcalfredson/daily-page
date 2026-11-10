@@ -1,3 +1,4 @@
+import { inspectForestGardenReservation } from './forestGardenStore.js';
 import { assertForestTerrainPlacementReady, inspectForestTerrainPlacement } from './forestOwnerTerrain.js';
 import ForestAuthoredObject from '../db/models/ForestAuthoredObject.js';
 import ForestWritingTree from '../db/models/ForestWritingTree.js';
@@ -264,7 +265,8 @@ export async function inspectForestAuthoredPlacement({
   ForestAuthoredObjectModel = ForestAuthoredObject,
   ForestWritingTreeModel = ForestWritingTree,
   resolveEnvironment = resolveForestOwnerEnvironment,
-  inspectTerrain = inspectForestTerrainPlacement
+  inspectTerrain = inspectForestTerrainPlacement,
+  inspectGarden = inspectForestGardenReservation
 }) {
   if (!session) {
     fail(
@@ -285,6 +287,9 @@ export async function inspectForestAuthoredPlacement({
   if (world.terrain && !await inspectTerrain({ ownerUserId, world, worldX, worldY,
     radius: FOREST_AUTHORED_MARKER_RADIUS + FOREST_AUTHORED_PLACEMENT_GAP, session })) {
     fail('AUTHORED_PLACEMENT_COLLISION', 'The requested placement does not clear forest terrain.');
+  }
+  if (!await inspectGarden({ ownerUserId, world, worldX, worldY, session })) {
+    fail('AUTHORED_PLACEMENT_COLLISION', 'The requested placement does not clear a planting.');
   }
   const { cellXs, cellYs } = queryCells(destinationIndex);
   const scope = {

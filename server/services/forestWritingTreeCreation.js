@@ -1,3 +1,4 @@
+import { inspectForestGardenReservation } from './forestGardenStore.js';
 import { assertForestTerrainPlacementReady, inspectForestTerrainPlacement } from './forestOwnerTerrain.js';
 import crypto from 'node:crypto';
 
@@ -260,6 +261,7 @@ async function reservePlacement({
   inspectCandidate,
   resolveEnvironment,
   inspectTerrain,
+  inspectGarden,
   readNeighborhood,
   allocatePlacements,
 }) {
@@ -309,6 +311,12 @@ async function reservePlacement({
     if (world.terrain && !await inspectTerrain({ ownerUserId, world,
       worldX: candidate.worldX, worldY: candidate.worldY, radius: 24, session, cache: terrainCache })) {
       diagnostics.environmentRejectionCount += 1;
+      continue;
+    }
+    // Reserve a canopy apron before the new writing tree phenotype is resolved.
+    if (!await inspectGarden({ ownerUserId, world, worldX: candidate.worldX,
+      worldY: candidate.worldY, radius: 48, session })) {
+      diagnostics.occupiedRejectionCount += 1;
       continue;
     }
     const neighborhood = await readNeighborhood({
@@ -377,6 +385,7 @@ export function buildForestWritingTreeCreationService({
   inspectCandidate = inspectForestOwnerGrovePlacementCandidate,
   resolveEnvironment = resolveForestOwnerEnvironment,
   inspectTerrain = inspectForestTerrainPlacement,
+  inspectGarden = inspectForestGardenReservation,
   readNeighborhood = readForestOwnerPlacementNeighborhood,
   allocatePlacements = allocateForestOwnerGrovePlacements,
   projectTree = projectPostToForestTree,
@@ -402,6 +411,7 @@ export function buildForestWritingTreeCreationService({
     inspectCandidate,
     resolveEnvironment,
     inspectTerrain,
+    inspectGarden,
     readNeighborhood,
     allocatePlacements,
     projectTree,
@@ -484,6 +494,7 @@ export function buildForestWritingTreeCreationService({
           inspectCandidate,
           resolveEnvironment,
           inspectTerrain,
+          inspectGarden,
           readNeighborhood,
           allocatePlacements,
         });

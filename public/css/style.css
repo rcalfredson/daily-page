@@ -451,8 +451,8 @@ html[data-theme="dark"] .dashboard-list li {
   border-color: var(--border-color);
 }
 
-html[data-theme="dark"] button,
-html[data-theme="dark"] label {
+html[data-theme="dark"] button:not(:where(.owner-forest *)),
+html[data-theme="dark"] label:not(:where(.owner-forest *)) {
   background-color: var(--secondary-bg);
   color: var(--highlight-color);
   border-color: var(--border-color);
@@ -1236,8 +1236,9 @@ html[data-theme="dark"] button.inactive-dismiss {
   padding: 3px;
 }
 
-label,
-button {
+/* The owner forest supplies its own control styles. Keep legacy form chrome outside it. */
+label:not(:where(.owner-forest *)),
+button:not(:where(.owner-forest *)) {
   float: right;
   padding: 0 15px;
   border-radius: 5px;

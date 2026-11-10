@@ -1,3 +1,5 @@
+import { forestGarden } from '../../services/forestGarden.js';
+import { ForestGardenError } from '../../services/forestGardenStore.js';
 import { readForestOwnerTerrainRegion } from '../../services/forestOwnerTerrainRegion.js';
 import { canonicalForestWritingLink } from '../../services/forestAuthoredObjectFormat.js';
 import { forestAuthoredObjectRead, ForestAuthoredObjectReadError } from '../../services/forestAuthoredObjectRead.js';
@@ -785,6 +787,32 @@ export function buildForestOwnerTerrainRegionRouteHandler({ readRegion = readFor
   };
 }
 
+
+export function buildForestGardenRouteHandler({ service = forestGarden } = {}) {
+  return async function gardenRoute(req, res) {
+    if (!req.user?.id) return res.status(401).json({ code: 'AUTHENTICATION_REQUIRED' });
+    try {
+      let result;
+      if (req.method === 'GET') {
+        if (Object.keys(req.query).some(f => f !== 'cells')) {
+          return res.status(400).json({ code: 'GARDEN_INVALID_INPUT' });
+        }
+        result = await service.read({ ownerUserId: req.user.id,
+          cells: req.query.cells === undefined ? null : parseCells(req.query.cells, () => {
+            throw new ForestGardenError('GARDEN_INVALID_INPUT');
+          }) });
+      } else result = await service.mutate({ ownerUserId: req.user.id, command: req.body });
+      return res.status(200).json(result);
+    } catch (error) {
+      const code = error instanceof ForestGardenError ? error.code
+        : error instanceof ForestAuthoredPlacementError && error.code === 'AUTHORED_PLACEMENT_COLLISION'
+          ? 'GARDEN_COLLISION' : 'GARDEN_UNAVAILABLE';
+      return res.status(code === 'GARDEN_INVALID_INPUT' ? 400
+        : code === 'GARDEN_UNAVAILABLE' ? 503 : 409).json({ code });
+    }
+  };
+}
+
 const regionHandler = buildForestOwnerRegionRouteHandler();
 const authoredRegionHandler = buildForestAuthoredRegionRouteHandler();
 const authoredDiagnosticHandler = buildForestAuthoredDiagnosticRouteHandler();
@@ -799,7 +827,10 @@ const useForestAPI = (app) => {
   app.use('/api/v1/forest', router);
   router.use(privateForestApiResponse);
   router.use('/authored-objects', requireForestAuthoredMutationOrigin);
+  router.use('/garden', requireForestAuthoredMutationOrigin);
   router.use(optionalAuth);
+  router.get('/garden', buildForestGardenRouteHandler());
+  router.post('/garden', buildForestGardenRouteHandler());
   router.get('/regions', regionHandler);
   router.get('/terrain-regions', buildForestOwnerTerrainRegionRouteHandler());
   router.get('/authored-regions', authoredRegionHandler);

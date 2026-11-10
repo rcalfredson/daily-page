@@ -1,3 +1,4 @@
+import { createOwnerForestGarden } from './owner-forest-garden.js';
 import { createOwnerForestTerrainScene } from './owner-forest-terrain-scene.js';
 import { forestWritingPostPath, forestMarkerWritingPostPath } from './forest-writing-navigation.js';
 import {
@@ -161,6 +162,15 @@ if (payload && copyPayload && viewport && canvas) {
   const markerConfirm = document.querySelector('[data-owner-forest-marker-confirm]');
   const markerRemoveConfirm = document.querySelector('[data-owner-forest-marker-remove-confirm]');
   const markerRemoveCancel = document.querySelector('[data-owner-forest-marker-remove-cancel]');
+
+  const garden = createOwnerForestGarden({
+    terrainToken: bootstrap.terrain?.token || null,
+    terrain, requestRender, focusViewport: () => viewport.focus({ preventScroll: true }),
+    state: () => ({ player, placements: [...placementsById.values()],
+      markers: [...markersById.values()], facingRadians: playerMotion.targetFacingRadians,
+      available: !returnArrivalPending && !placement.active && !inspectedTreeId && !inspectedMarkerId
+        && currentAuthoredCellsReady() && ['ready', 'notice'].includes(authoredState) })
+  });
 
   function cellQuery(cells) {
     return cells.map(ownerForestCellId).join(',');
@@ -893,6 +903,7 @@ if (payload && copyPayload && viewport && canvas) {
     ));
     const depth = [
       ...terrain.depthItems(camera),
+      ...garden.depthItems(camera),
       ...visible.map(tree => ({ kind: 'tree', id: tree.id, placement: tree, worldY: tree.worldY })),
       ...visibleMarkers.map(marker => ({
         kind: 'marker', id: marker.objectId, marker, worldY: marker.worldY
@@ -906,7 +917,9 @@ if (payload && copyPayload && viewport && canvas) {
     ].sort((a, b) => a.worldY - b.worldY || a.kind.localeCompare(b.kind)
       || a.id.localeCompare(b.id));
     for (const item of depth) {
-      if (item.kind.startsWith('terrain-')) {
+      if (item.kind === 'garden') {
+        garden.paint(context, item, camera);
+      } else if (item.kind.startsWith('terrain-')) {
         terrain.paintDepth(context, item, camera);
       } else if (item.player) {
         paintForestHumanoid(context, Math.round(player.worldX - camera.x),
@@ -976,6 +989,9 @@ if (payload && copyPayload && viewport && canvas) {
     });
     if (placement.preview.valid && !terrain.sample({ ...placement.preview, radius: 17 }).placeable) {
       placement.preview = { ...placement.preview, valid: false, reason: 'terrain-collision' };
+    }
+    if (placement.preview.valid && garden.intersects(placement.preview)) {
+      placement.preview = { ...placement.preview, valid: false, reason: 'marker-collision' };
     }
     placementStatus.textContent = previewMessage(placement.preview.reason);
     if (placement.request
@@ -1343,6 +1359,7 @@ if (payload && copyPayload && viewport && canvas) {
   function tick(time) {
     const elapsed = lastTime === null ? 0 : Math.min(0.05, (time - lastTime) / 1000);
     lastTime = time;
+    garden.update(time);
     const keyboardDirection = normalizedMovement(keys);
     const pointerDirection = pointer.id === null ? { x: 0, y: 0 } : touchMovement(
       pointer.x - pointer.originX,
