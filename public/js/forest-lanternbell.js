@@ -29,7 +29,6 @@ export function paintLanternbell(ctx, plant, camera, { preview = false, valid = 
       if (trimmed) { rect(10, -19, 2, 7, '#91a272'); rect(9, -20, 4, 2, '#d8c599'); }
     } else { rect(-6, -22, 3, 4, '#bd9d68'); rect(5, -25, 3, 4, '#d6b782'); }
   }
-  if (wild) { rect(13, -6, 3, 7, '#d4c092'); rect(11, -10, 7, 5, '#f0d99e'); }
   ctx.restore();
 }
 

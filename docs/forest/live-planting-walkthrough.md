@@ -64,9 +64,13 @@ remaining steps in the dock. The bearing and distance update while walking. The 
 behind menus and placement controls, clears on reaching the plant's interaction range, and can
 be dismissed with its **×** button. It is a directional aid, not an obstacle-aware route.
 
+The wild lanternbell has no decorative sign beside it. Periodic garden reads leave gameplay
+controls enabled; only the Refresh button waits for the read. Saves still disable mutation
+controls. A read started before a command cannot overwrite that command's result or error state.
+
 ## Verification
 
-- Full Jasmine suite: **1,514 specs, 0 failures**, Node 24.15.0. The sandbox's existing subprocess
+- Full Jasmine suite: **1,516 specs, 0 failures**, Node 24.15.0. The sandbox's existing subprocess
   startup tests required running the suite with execution access outside the sandbox.
 - Repository lint passed; new development scripts were linted separately. Native browser modules
   were syntax checked and exercised through Firefox.
