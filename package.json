@@ -87,7 +87,7 @@
     "memory-cache": "^0.2.0",
     "moment-timezone": "^0.5.31",
     "mongodb": "^7.1.0",
-    "mongoose": "^9.7.2",
+    "mongoose": "^9.11.4",
     "multer": "^2.5.0",
     "peer": "^1",
     "pug": "^3.0.1",
