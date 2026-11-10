@@ -171,4 +171,35 @@ describe('owner garden move preview and stored cuttings', () => {
     expect(g.commands).toEqual([]);
   });
 
+  for (const lateResult of ['success', 'failure']) {
+    it(`keeps controls responsive during polling and ignores a late read ${lateResult} after a command`, async () => {
+      const g = await garden({ stage: 'flowering', ready: true, cuttings: 0 });
+      const workingFetch = globalThis.fetch;
+      const snapshot = await (await workingFetch()).json();
+      Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
+      let finishRead;
+      globalThis.fetch = (path, options) => options?.method === 'POST' ? workingFetch(path, options)
+        : new Promise((resolve, reject) => {
+          finishRead = () => lateResult === 'success'
+            ? resolve({ ok: true, json: async () => snapshot }) : reject(new Error('Late read failure'));
+        });
+      g.controller.update(performance.now() + 21000, true);
+      expect(g.find('refresh').disabled).toBeTrue();
+      expect(g.find('harvest').disabled).toBeFalse();
+      expect(g.find('move').disabled).toBeFalse();
+      g.find('harvest').click();
+      expect(g.find('harvest').disabled).toBeTrue();
+      await setImmediate();
+      expect(g.carrying()).toBeTrue();
+      expect(g.find('count').textContent).toContain('1 / 8');
+      finishRead(); await setImmediate();
+      expect(g.carrying()).toBeTrue();
+      expect(g.find('count').textContent).toContain('1 / 8');
+      expect(g.find('status').textContent).toBe('Cutting collected · +1');
+      expect(g.find('refresh').disabled).toBeFalse();
+      expect(g.find('plant').disabled).toBeFalse();
+      expect(g.commands.length).toBe(1);
+    });
+  }
+
 });

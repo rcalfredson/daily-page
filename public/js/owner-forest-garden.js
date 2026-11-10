@@ -38,6 +38,7 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
   const near = find('near'), harvest = find('harvest'), move = find('move'), lift = find('lift');
   const confirm = find('confirm'), confirmLift = find('confirm-lift'), keep = find('keep');
   let data = null, busy = false, stale = true, preview = null, mode = null, selected = null;
+  let reading = false, commandGeneration = 0;
   let carrying = false;
   let nearby = null, collected = null, guideId = null, lastUpdate = 0, lastRead = 0, pending = null;
   const notice = find('notice');
@@ -81,22 +82,28 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
     requestRender(); update(performance.now(), true);
   }
   async function read() {
-    if (busy) return;
-    busy = true; update(performance.now(), true);
+    if (busy || reading) return;
+    const generation = commandGeneration;
+    reading = true; update(performance.now(), true);
     try {
       const response = await fetch('/api/v1/forest/garden', { credentials: 'same-origin', cache: 'no-store' });
       const result = await response.json();
+      if (generation !== commandGeneration) return;
       if (!response.ok || result.version !== 1) throw new Error(result.code);
       data = result; stale = false; pending = null;
       notice.textContent = ''; noticeUntil = 0;
       if (!data.cuttings) carrying = false;
       rebuild();
       say(data.acquired ? 'Garden saved.' : 'Find a cutting on the wild lanternbell.', false);
-    } catch { stale = true; say('Garden unavailable. Your saved work is preserved. Refresh to try again.'); }
-    finally { busy = false; lastRead = performance.now(); update(performance.now(), true); }
+    } catch {
+      if (generation === commandGeneration) {
+        stale = true; say('Garden unavailable. Your saved work is preserved. Refresh to try again.');
+      }
+    } finally { reading = false; lastRead = performance.now(); update(performance.now(), true); }
   }
   async function command(action, extra = {}) {
     if (busy || stale || !data) return;
+    commandGeneration += 1;
     // Retain the exact command through an uncertain response. Refresh resolves durable state.
     pending ||= { action, expectedRevision: data.revision, terrainToken, ...extra };
     const source = action === 'acquire' ? WILD_LANTERNBELL : data.plants.find(p => p.plantId === extra.plantId);
@@ -263,7 +270,7 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
     confirmLift.disabled = blocked || data?.cuttings >= 8;
     find('lift-copy').textContent = data?.cuttings >= 8 ? 'Satchel full. Plant a cutting before packing up.'
       : 'Pack this plant as one cutting? Planting it again starts growth over.';
-    refresh.disabled = busy;
+    refresh.disabled = busy || reading;
     previewCopy.hidden = !mode;
     if (collected && time - collected.startedAt < 900 && !reducedMotion.matches) requestRender();
     if (time - lastRead > 20000 && !busy && !mode && !stale && document.visibilityState === 'visible') {
