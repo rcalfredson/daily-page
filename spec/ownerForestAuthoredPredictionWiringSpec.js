@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 
-const script = fs.readFileSync('public/js/owner-forest.js', 'utf8');
+const script = fs.readFileSync('public/js/owner-forest-runtime.js', 'utf8');
 
 function functionBody(start, end) {
   const startIndex = script.indexOf(start);
