@@ -1,3 +1,4 @@
+import { supportedForestOwnerWorld } from '../db/schemas/ForestOwnerWorldSchema.js';
 import { forestTerrainDescriptor } from './forestOwnerTerrainRegion.js';
 import { forestWritingLinksEnabled } from './forestWritingLinkAvailability.js';
 import { canonicalForestWritingLink, readForestAuthoredObjectFormat } from './forestAuthoredObjectFormat.js';
@@ -200,7 +201,7 @@ function validateWorld(world, ownerUserId, { allowReconciling = false } = {}) {
     fail('AUTHORED_OWNER_UNAVAILABLE', 'The owner forest is unavailable.');
   }
   if (
-    world.schemaVersion !== FOREST_OWNER_WORLD_SCHEMA_VERSION
+    !supportedForestOwnerWorld(world)
     || world.ownerUserId !== ownerUserId
     || !UUID_V4_PATTERN.test(world.forestId || '')
     || world.worldRole !== 'primary'

@@ -1,5 +1,7 @@
 // Isolated owner-template study. No database connection, credentials or persistent mutations.
 import express from 'express';
+import { buildForestHomesteadRouteHandler } from '../../server/api/v1/forestHomestead.js';
+import { requireForestAuthoredMutationOrigin } from '../../server/api/v1/forest.js';
 import pug from 'pug';
 import { once } from 'node:events';
 import { pathToFileURL } from 'node:url';
@@ -21,14 +23,14 @@ const ACTIVATION = 'a9300000-0000-4000-8000-000000000002';
 
 export function createHomeCartStudyApp(options = {}) {
   if (process.env.NODE_ENV === 'production') throw new Error('Home/cart study is development-only.');
-  const fixture = createHomeStudyFixture(options);
-  const plan = planHomeCartSite(fixture);
-  const world = { schemaVersion: 1, ownerUserId: OWNER, forestId: FOREST, worldRole: 'primary',
+  const fixture = options.persistence?.fixture || createHomeStudyFixture(options);
+  const plan = options.persistence?.plan || planHomeCartSite(fixture);
+  const world = options.persistence?.world || { schemaVersion: 1, ownerUserId: OWNER, forestId: FOREST, worldRole: 'primary',
     status: 'active', worldSeed: fixture.seed, placementPolicyVersion: 1, environmentPolicyVersion: 1,
     environmentSchemaVersion: 1, worldGenerationVersion: 1, reconciliation: { state: 'idle' },
     ...(fixture.generation ? { terrain: { schemaVersion: 1, generationVersion: fixture.generation,
       activationId: ACTIVATION, revision: 1, state: 'active', phase: 'ready', cursor: null } } : {}) };
-  const WorldModel = { findOne: () => ({ lean: async () => world }), exists: async () => true };
+  const WorldModel = options.persistence?.WorldModel || { findOne: () => ({ lean: async () => world }), exists: async () => true };
   const readBootstrap = buildForestOwnerSceneBootstrapService({ ForestOwnerWorldModel: WorldModel,
     linkedCreationEnabled: () => false, resolveReturnDestination: async () => null,
     resolveMarkerReturnDestination: async () => null });
@@ -36,6 +38,12 @@ export function createHomeCartStudyApp(options = {}) {
   const trees = fixture.obstacles.filter(o => o.kind === 'tree').map((o, i) => ({ id: o.id,
     worldX: o.x, worldY: o.y, collisionRadius: o.collisionRadius, scale: 1, assetKey: assets[i % assets.length].cacheKey }));
   const app = express();
+  if (options.persistence) {
+    app.use('/api/v1/forest/homestead', express.json({ limit: '8kb' }),
+      (req, res, next) => { req.user = { id: world.ownerUserId }; next(); }, requireForestAuthoredMutationOrigin);
+    const handler = buildForestHomesteadRouteHandler({ service: options.persistence.service });
+    app.get('/api/v1/forest/homestead', handler); app.post('/api/v1/forest/homestead', handler);
+  }
   const delivery = {};
   app.locals.studyDelivery = delivery;
   app.set('views', `${process.cwd()}/views`); app.set('view engine', 'pug');
@@ -61,27 +69,41 @@ export function createHomeCartStudyApp(options = {}) {
   app.get('/__study/style.css', (req, res) => res.sendFile(`${process.cwd()}/scripts/dev/forestHomeCartStudy.css`));
   app.get('/__study/report', (req, res) => res.json({ generation: fixture.generation, occupancy: fixture.occupancy, plan, delivery }));
   app.use(uiPrefixAndLangContext); app.use(initI18n(['layout', 'nav', 'forestScene', 'blockView']));
-  app.use((req, res, next) => { req.user = { id: OWNER, username: 'home_cart_study' }; next(); });
-  app.get('/forest', (req, res, next) => {
+  app.use((req, res, next) => { req.user = { id: world.ownerUserId, username: 'home_cart_study' }; next(); });
+  app.get('/forest', async (req, res, next) => {
+    const saved = options.persistence ? await options.persistence.service.read({ ownerUserId: world.ownerUserId }) : null;
     res.render = (view, model) => {
+      if (saved?.recoveryRequired) {
+        return res.status(200).send(`<h1>Your saved parking needs recovery</h1><p>Your designs and materials are still saved.</p>
+          <button id="recover">Recover at home</button><p id="status" role="status"></p>
+          <script type="module">import { createHomesteadClient } from '/js/forest-homestead-client.js';
+          const client = createHomesteadClient({ initial: ${JSON.stringify(saved).replace(/</g, '\\u003c')},
+            onChange: s => { document.getElementById('status').textContent = s.message; document.getElementById('recover').disabled = s.busy; } });
+          document.getElementById('recover').onclick = async () => {
+            if (client.snapshot().pending) await client.retry();
+            else if (client.snapshot().status === 'stale') await client.refresh();
+            else await client.save('recover');
+            if (client.snapshot().status === 'saved') location.reload();
+          };</script>`);
+      }
       if (plan.status !== 'ready') return res.status(409).send(`<h1>No connected site in this study</h1><p>${plan.reason}</p><p>The existing world was not changed.</p><a href="/__study/report">Study report</a>`);
-      const spawn = { ...model.bootstrap.spawn, worldX: plan.spawn.x, worldY: plan.spawn.y };
+      const spawn = { ...model.bootstrap.spawn, worldX: saved?.arrival?.worldX ?? plan.spawn.x, worldY: saved?.arrival?.worldY ?? plan.spawn.y };
       model.bootstrap.spawn = spawn;
       model.bootstrap.delivery.initialCells = ownerForestCellsAround(spawn, 720);
-      const data = { plan, generation: fixture.generation, extent: 3600 };
+      const data = { plan, generation: fixture.generation, extent: 3600, ...(saved ? { saved } : {}) };
       let html = pug.renderFile(`views/${view}.pug`, { ...res.locals, ...model })
         .replace(/<script>[\s\S]*?<\/script>/g, '')
         .replace(/<script\b[^>]*src="([^"]+)"[^>]*><\/script>/g,
           (tag, src) => src === '/js/owner-forest.js' ? '<script type="module" src="/__study/entry.js"></script>' : '')
         .replace(/<link\b[^>]*href="https?:[^>]*>/g, '');
-      html = html.replace('</head>', '<link rel="stylesheet" href="/__study/style.css"></head>')
+      html = html.replace('</head>', '<link rel="stylesheet" href="/__study/style.css"><link rel="stylesheet" href="/css/forest-companion.css"></head>')
         .replace('</body>', `<script type="application/json" id="home-cart-study">${JSON.stringify(data).replace(/</g, '\\u003c')}</script></body>`);
       res.send(html);
     };
     next();
   }, buildForestRouteHandler({ readBootstrap }));
-  const readTerrain = async ({ bounds }) => queryOwnerTerrain({ seed: fixture.seed, generationVersion: fixture.generation,
-    records: fixture.protections, bounds });
+  const readTerrain = options.persistence?.readTerrain || (async ({ bounds }) => queryOwnerTerrain({ seed: fixture.seed, generationVersion: fixture.generation,
+    records: fixture.protections, bounds }));
   app.get('/api/v1/forest/terrain-regions', buildForestOwnerTerrainRegionRouteHandler({
     readRegion: buildForestOwnerTerrainRegionService({ WorldModel,
       DeletionModel: { exists: () => ({ lean: async () => null }) }, readTerrain }) }));

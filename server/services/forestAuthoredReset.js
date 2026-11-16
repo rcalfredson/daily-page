@@ -1,3 +1,4 @@
+import { supportedForestOwnerWorld } from '../db/schemas/ForestOwnerWorldSchema.js';
 import {
   forestAuthoredResetScope,
   FOREST_AUTHORED_MIXED_RESET_SCHEMA_VERSION,
@@ -101,7 +102,7 @@ async function runInTransaction(work) {
 
 function validateWorld(world, ownerUserId) {
   if (!world
-    || world.schemaVersion !== FOREST_OWNER_WORLD_SCHEMA_VERSION
+    || !supportedForestOwnerWorld(world)
     || world.ownerUserId !== ownerUserId
     || world.worldRole !== 'primary'
     || !UUID_V4_PATTERN.test(world.forestId || '')

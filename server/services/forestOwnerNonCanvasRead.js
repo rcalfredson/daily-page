@@ -1,11 +1,9 @@
+import { supportedForestOwnerWorld } from '../db/schemas/ForestOwnerWorldSchema.js';
 import mongoose from 'mongoose';
 
 import Block from '../db/models/Block.js';
 import ForestOwnerWorld from '../db/models/ForestOwnerWorld.js';
 import ForestWritingTree from '../db/models/ForestWritingTree.js';
-import {
-  FOREST_OWNER_WORLD_SCHEMA_VERSION
-} from '../db/schemas/ForestOwnerWorldSchema.js';
 import {
   FOREST_WRITING_TREE_IDENTITY_VERSION,
   FOREST_WRITING_TREE_SCHEMA_VERSION
@@ -310,7 +308,7 @@ export function buildForestOwnerNonCanvasReadService({
         }
       };
     }
-    if (world.schemaVersion !== FOREST_OWNER_WORLD_SCHEMA_VERSION
+    if (!supportedForestOwnerWorld(world)
       || world.ownerUserId !== ownerUserId
       || world.worldRole !== 'primary'
       || !UUID_V4_PATTERN.test(world.forestId || '')) {

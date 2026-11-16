@@ -1,10 +1,8 @@
+import { supportedForestOwnerWorld } from '../db/schemas/ForestOwnerWorldSchema.js';
 import crypto from 'node:crypto';
 
 import ForestOwnerWorld from '../db/models/ForestOwnerWorld.js';
 import ForestWritingTree from '../db/models/ForestWritingTree.js';
-import {
-  FOREST_OWNER_WORLD_SCHEMA_VERSION,
-} from '../db/schemas/ForestOwnerWorldSchema.js';
 import {
   FOREST_WRITING_TREE_IDENTITY_VERSION,
   FOREST_WRITING_TREE_SCHEMA_VERSION,
@@ -88,7 +86,7 @@ function token() {
 }
 
 function validateWorld(world, ownerUserId) {
-  if (world?.schemaVersion !== FOREST_OWNER_WORLD_SCHEMA_VERSION
+  if (!supportedForestOwnerWorld(world)
     || world?.placementPolicyVersion !== FOREST_OWNER_GROVE_PLACEMENT_VERSION
     || world?.environmentPolicyVersion !== FOREST_OWNER_ENVIRONMENT_POLICY_VERSION
     || world?.environmentSchemaVersion !== FOREST_OWNER_ENVIRONMENT_SCHEMA_VERSION

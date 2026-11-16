@@ -19,7 +19,7 @@ export function cartDefinition(id) {
   return definition;
 }
 
-export function cartFootprint(cart) {
+export function cartFootprint(cart, { animal = true } = {}) {
   const d = cartDefinition(cart);
   if (![cart.worldX, cart.worldY, cart.heading].every(Number.isFinite)) throw new Error('Invalid cart pose.');
   const local = [];
@@ -28,7 +28,7 @@ export function cartFootprint(cart) {
     local.push({ offset: -d.halfLength + d.halfLength * 2 * i / count, radius: d.halfWidth + 2 });
   }
   for (let offset = d.halfLength; offset < d.animalOffset; offset += 8) local.push({ offset, radius: 6 });
-  local.push({ offset: d.animalOffset - 8, radius: 11 }, { offset: d.animalOffset + 8, radius: 10 });
+  if (animal) local.push({ offset: d.animalOffset - 8, radius: 11 }, { offset: d.animalOffset + 8, radius: 10 });
   return local.map(({ offset, radius }) => ({
     worldX: cart.worldX + Math.cos(cart.heading) * offset,
     worldY: cart.worldY + Math.sin(cart.heading) * offset, radius
@@ -65,13 +65,17 @@ export function stepForestCart(cart, input, elapsedSeconds, clearDisc) {
   const dt = Math.max(0, Math.min(0.1, elapsedSeconds));
   const magnitude = Math.min(1, Math.hypot(input.x, input.y));
   if (!magnitude || !dt) return { cart, blocked: false, distance: 0 };
-  const target = Math.atan2(input.y, input.x) + (input.reverse ? Math.PI : 0);
+  // Careful driving keeps a freely chosen heading: left/right steer, up/down roll.
+  // It never snaps to a bridge or relaxes the authoritative collision footprint.
+  const target = input.precision ? cart.heading + Math.max(-1, Math.min(1, input.x)) * .9 * dt
+    : Math.atan2(input.y, input.x) + (input.reverse ? Math.PI : 0);
   const delta = angleDelta(cart.heading, target);
   const turn = Math.max(-CART_TURN_RATE * dt, Math.min(CART_TURN_RATE * dt, delta));
   const turned = { ...cart, heading: cart.heading + turn };
   let next = cartSweepClear(cart, turned, clearDisc) ? turned : cart;
   const alignment = Math.max(0, Math.cos(angleDelta(next.heading, target)));
-  const travel = d.speed * dt * magnitude * alignment * (input.reverse ? -0.6 : 1);
+  const travel = input.precision ? 72 * dt * Math.max(-1, Math.min(1, -input.y)) * (input.reverse ? -1 : 1)
+    : d.speed * dt * magnitude * alignment * (input.reverse ? -0.6 : 1);
   const destination = { ...next,
     worldX: next.worldX + Math.cos(next.heading) * travel,
     worldY: next.worldY + Math.sin(next.heading) * travel

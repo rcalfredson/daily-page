@@ -1,3 +1,5 @@
+import { homeLayoutFromPlan } from '../public/js/forest-home-reservations.js';
+import { createHomeStudyFixture, planHomeCartSite } from '../scripts/lib/forestHomeCartStudy.js';
 import ForestWritingTree from '../server/db/models/ForestWritingTree.js';
 import {
   buildForestWritingTreeCreationService,
@@ -149,6 +151,7 @@ function harness({
   }),
   projectTree = () => projectedTree(),
   inspectGarden = async () => true,
+  readHomestead,
   readGroupEvidence = jasmine.createSpy('readGroupEvidence')
     .and.callFake(async () => groupEvidence(foundingBlock)),
 } = {}) {
@@ -193,6 +196,7 @@ function harness({
   });
   const service = buildForestWritingTreeCreationService({
     inspectGarden,
+    readHomestead,
     models,
     transactionRunner,
     acquireFence,
@@ -218,6 +222,19 @@ function harness({
 }
 
 describe('forest writing-tree transactional creation', () => {
+  it('skips home and confirmed-cart reservations under the transaction fence', async () => {
+    const layout = homeLayoutFromPlan(planHomeCartSite(createHomeStudyFixture({ generation: 0 })));
+    const readHomestead = jasmine.createSpy('home').and.resolveTo({ layout, parking: { worldX: -720, worldY: 1440 } });
+    const test = harness({ world: ownerWorld({ schemaVersion: 2 }), readHomestead,
+      inspectCandidate: ({ placementSlot }) => ({ placementSlot, enabled: true, clearsCenter: true,
+        worldX: placementSlot ? -2000 : -720, worldY: 1440 }),
+      allocatePlacements: ({ nextCandidateSlot }) => ({ placements: [{ placementVersion: 1, placementSlot: nextCandidateSlot, worldX: -2000, worldY: 1440 }] }) });
+    await test.service({ ownerUserId: OWNER_USER_ID, translationGroupId: GROUP_ID, now: NOW });
+    expect(readHomestead).toHaveBeenCalledTimes(1);
+    expect(readHomestead).toHaveBeenCalledWith(jasmine.objectContaining({ session: 'transaction-session' }));
+    expect(test.createdTrees[0].placement.slot).toBe(1);
+    expect(test.acquireFence).toHaveBeenCalled();
+  });
   it('skips a future writing candidate reserved by mature garden space', async () => {
     const inspectGarden = jasmine.createSpy('garden').and.returnValues(false, true);
     const test = harness({ inspectGarden });

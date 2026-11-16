@@ -1,3 +1,4 @@
+import { inspectForestHomesteadReservation } from './forestHomesteadStore.js';
 import { inspectForestGardenReservation } from './forestGardenStore.js';
 import { assertForestTerrainPlacementReady, inspectForestTerrainPlacement } from './forestOwnerTerrain.js';
 import ForestAuthoredObject from '../db/models/ForestAuthoredObject.js';
@@ -150,7 +151,7 @@ function validateEnvironment(environment, world) {
   }
 }
 
-function validateTree(tree, { ownerUserId, forestId }) {
+export function validateTree(tree, { ownerUserId, forestId }) {
   const expectedIndex = storedPlacementIndex(tree, 'writing-tree');
   const phenotype = resolveForestPhenotype(tree?.projection?.phenotypeId);
   const collisionRadius = FOREST_PHENOTYPE_SCENE_TRAITS[phenotype?.id]?.collisionRadius;
@@ -188,7 +189,7 @@ function validateTree(tree, { ownerUserId, forestId }) {
   return collisionRadius;
 }
 
-function validateMarker(marker, { ownerUserId, forestId }) {
+export function validateMarker(marker, { ownerUserId, forestId }) {
   const expectedIndex = storedPlacementIndex(marker, 'authored-object');
   if (
     !forestAuthoredObjectHasSupportedFormat(marker)
@@ -266,7 +267,8 @@ export async function inspectForestAuthoredPlacement({
   ForestWritingTreeModel = ForestWritingTree,
   resolveEnvironment = resolveForestOwnerEnvironment,
   inspectTerrain = inspectForestTerrainPlacement,
-  inspectGarden = inspectForestGardenReservation
+  inspectGarden = inspectForestGardenReservation,
+  inspectHomestead = inspectForestHomesteadReservation
 }) {
   if (!session) {
     fail(
@@ -290,6 +292,9 @@ export async function inspectForestAuthoredPlacement({
   }
   if (!await inspectGarden({ ownerUserId, world, worldX, worldY, session })) {
     fail('AUTHORED_PLACEMENT_COLLISION', 'The requested placement does not clear a planting.');
+  }
+  if (!await inspectHomestead({ ownerUserId, world, worldX, worldY, radius: 26, session })) {
+    fail('AUTHORED_PLACEMENT_COLLISION', 'The requested placement does not clear the home or parked cart.');
   }
   const { cellXs, cellYs } = queryCells(destinationIndex);
   const scope = {

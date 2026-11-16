@@ -1,3 +1,4 @@
+import { supportedForestOwnerWorld } from '../db/schemas/ForestOwnerWorldSchema.js';
 import { forestAuthoredObjectHasSupportedFormat } from './forestAuthoredObjectFormat.js';
 import crypto from 'node:crypto';
 
@@ -165,7 +166,7 @@ async function lean(query) {
 }
 
 function validateWorld(world, ownerUserId) {
-  if (world.schemaVersion !== FOREST_OWNER_WORLD_SCHEMA_VERSION
+  if (!supportedForestOwnerWorld(world)
     || world.ownerUserId !== ownerUserId
     || world.worldRole !== 'primary'
     || !UUID_V4_PATTERN.test(world.forestId || '')
