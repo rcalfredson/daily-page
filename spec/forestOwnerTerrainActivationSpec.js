@@ -1,3 +1,6 @@
+import { homeLayoutFromPlan } from '../public/js/forest-home-reservations.js';
+import { homesteadTerrainProtections } from '../server/services/forestHomesteadStore.js';
+import { createHomeStudyFixture, planHomeCartSite } from '../scripts/lib/forestHomeCartStudy.js';
 import { buildForestOwnerTerrainActivationService } from '../server/services/forestOwnerTerrainActivation.js';
 import { assertForestTerrainPlacementReady, buildForestOwnerTerrainService,
   validateForestOwnerTerrain } from '../server/services/forestOwnerTerrain.js';
@@ -15,7 +18,7 @@ function query(read) {
     lean: async () => read(q.n) };
   return q;
 }
-function harness({ realGeometry = false } = {}) {
+function harness({ realGeometry = false, readHomestead } = {}) {
   const state = { world: { schemaVersion: 1, ownerUserId: OWNER, forestId: FOREST,
     worldRole: 'primary', status: 'active', worldSeed: 'terrain_activation_seed_0123456789abcdef',
     placementPolicyVersion: 1, environmentPolicyVersion: 1, environmentSchemaVersion: 1,
@@ -46,6 +49,7 @@ function harness({ realGeometry = false } = {}) {
   };
   const service = buildForestOwnerTerrainActivationService({
     readGarden: async () => null,
+    readHomestead,
     WorldModel: { findOne: () => query(() => global.structuredClone(state.world)),
       updateOne: async (filter, update) => {
         if (state.failSave) throw new Error('world write failed');
@@ -73,6 +77,24 @@ function harness({ realGeometry = false } = {}) {
 }
 
 describe('owner terrain preparation and private geometry reads', () => {
+  it('captures the home cover only in replacement terrain and rolls back failed capture', async () => {
+    const home = { layoutId: FOREST, layout: homeLayoutFromPlan(planHomeCartSite(createHomeStudyFixture({ generation: 0 }))),
+      parking: { worldX: 2000, worldY: 2000, heading: 0 } };
+    const readHomestead = jasmine.createSpy('home').and.resolveTo(null);
+    const { state, call } = harness({ readHomestead });
+    await activate(call, state);
+    const old = global.structuredClone(state.protections);
+    state.world.schemaVersion = 2; readHomestead.and.resolveTo(home);
+    await call('upgrade', 100, 4); await call('step', 100);
+    state.failSave = true;
+    await expectAsync(call('step', 100)).toBeRejectedWithError('world write failed');
+    expect(state.protections.some(p => p.sourceKey.startsWith('home:'))).toBeFalse();
+    state.failSave = false; await call('step', 100);
+    expect(state.protections.filter(p => p.activationId === ACTIVATION)).toEqual(old);
+    expect(state.protections.filter(p => p.sourceKey.startsWith('home:')).length).toBe(homesteadTerrainProtections(home).length);
+    expect(state.world.terrain.replacement.phase).toBe('verify');
+    expect(readHomestead).toHaveBeenCalledWith(jasmine.objectContaining({ session: { transaction: true } }));
+  });
   async function activate(call, state) {
     await call('start');
     for (let i = 0; i < 12 && state.world.terrain.phase !== 'ready'; i++) await call();

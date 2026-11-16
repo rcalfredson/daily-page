@@ -63,3 +63,12 @@ export function advanceCartPresentation(state, from, to, reducedMotion = false) 
   return { wheel: reducedMotion ? 0 : state.wheel + sign * distance / 10,
     gait: reducedMotion ? 0 : state.gait + sign * distance * Math.PI * 2 / 76 };
 }
+
+// Catalog version 1; server commits these amounts and refunds the stored commitment.
+export function constructionCartCost(design) {
+  if (!validateConstructionDesign('cart', design)) throw new Error('Invalid cart design');
+  return { timber: 12 + (design.length - 36) / 4 + (design.width - 24) / 3
+    + (design.body === 'boards' ? 8 : 4) + (design.wheels === 'solid' ? 6 : 4)
+    + (design.supports === 'bows' ? 6 : 4),
+  cloth: design.canopy === 'none' ? 0 : design.canopy === 'linen' ? 6 : 8 };
+}

@@ -1,3 +1,4 @@
+/* global performance */
 import { gardenIntersects, WILD_LANTERNBELL } from './forest-garden-rules.js';
 import { ownerForestMarkerPreview, createOwnerForestMarkerObjectId } from './owner-forest-scene.js';
 import { paintLanternbell, paintLanternbellCutting } from './forest-lanternbell.js';
@@ -279,7 +280,7 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
   }
   read();
   return { update,
-    intersects: p => gardenIntersects(data?.plants || [], p.worldX, p.worldY),
+    intersects: p => gardenIntersects(data?.plants || [], p.worldX, p.worldY, p.radius),
     depthItems(camera) {
       const { player } = state();
       const plants = data?.plants || [];

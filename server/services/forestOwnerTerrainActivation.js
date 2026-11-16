@@ -1,3 +1,5 @@
+import { readForestHomesteadStore, homesteadTerrainProtections } from './forestHomesteadStore.js';
+import { supportedForestOwnerWorld } from '../db/schemas/ForestOwnerWorldSchema.js';
 import { readForestGardenStore } from './forestGardenStore.js';
 import { validateOwnerTerrainAccess, ownerTerrainAccessBounds } from '../../public/js/owner-forest-terrain-access.js';
 import { readForestOwnerTerrain } from './forestOwnerTerrain.js';
@@ -58,7 +60,7 @@ export function buildForestOwnerTerrainActivationService({
   transactionRunner = transact, acquireFence = acquireForestLedgerFence,
   activationEnabled = forestLiveTerrainActivationEnabled, generateId = () => crypto.randomUUID(),
   readTerrain = readForestOwnerTerrain, validateAccess = validateOwnerTerrainAccess,
-  readGarden = readForestGardenStore
+  readGarden = readForestGardenStore, readHomestead = readForestHomesteadStore
 } = {}) {
   return async function advanceTerrainActivation({ ownerUserId, action = 'step', batchSize = 100,
     generationVersion = 3 }) {
@@ -78,7 +80,7 @@ export function buildForestOwnerTerrainActivationService({
       const world = await WorldModel.findOne({ ownerUserId, worldRole: 'primary' })
         .session(session).lean();
       if (!world || world.status !== 'active' || world.ownerUserId !== ownerUserId
-        || world.schemaVersion !== 1 || world.placementPolicyVersion !== 1
+        || !supportedForestOwnerWorld(world) || world.placementPolicyVersion !== 1
         || world.environmentPolicyVersion !== 1 || world.environmentSchemaVersion !== 1
         || world.worldGenerationVersion !== 1) {
         throw new ForestOwnerTerrainError('FOREST_TERRAIN_UNAVAILABLE');
@@ -209,6 +211,7 @@ export function buildForestOwnerTerrainActivationService({
       await put(records.map(record => protection(record, terrain.phase, scope)), terrain.activationId);
       const complete = records.length < batchSize;
       if (complete && terrain.phase === 'markers') {
+        await put(homesteadTerrainProtections(await readHomestead({ ownerUserId, world, session })), terrain.activationId);
         const garden = await readGarden({ ...scope, session });
         await put((garden?.plants || []).map(p => ({ id: `plant:${p.plantId}`,
           x: p.worldX, y: p.worldY, radius: 45 })), terrain.activationId);

@@ -1,8 +1,8 @@
+import { supportedForestOwnerWorld } from '../db/schemas/ForestOwnerWorldSchema.js';
 import { forestTerrainDescriptor } from './forestOwnerTerrainRegion.js';
 import { forestWritingLinksEnabled } from './forestWritingLinkAvailability.js';
 import { resolveForestAuthoredReturnDestination } from './forestAuthoredReturnDestination.js';
 import ForestOwnerWorld from '../db/models/ForestOwnerWorld.js';
-import { FOREST_OWNER_WORLD_SCHEMA_VERSION } from '../db/schemas/ForestOwnerWorldSchema.js';
 import {
   FOREST_OWNER_ENVIRONMENT_GRAMMAR_ID,
   FOREST_OWNER_ENVIRONMENT_POLICY_VERSION,
@@ -104,7 +104,7 @@ function emptyBootstrap(status, writingLinkCreationEnabled) {
 }
 
 function validateWorld(world, ownerUserId) {
-  if (world.schemaVersion !== FOREST_OWNER_WORLD_SCHEMA_VERSION
+  if (!supportedForestOwnerWorld(world)
     || world.ownerUserId !== ownerUserId
     || world.worldRole !== 'primary'
     || !UUID_V4_PATTERN.test(world.forestId || '')

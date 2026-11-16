@@ -1,10 +1,10 @@
+import { supportedForestOwnerWorld } from '../db/schemas/ForestOwnerWorldSchema.js';
 import mongoose from 'mongoose';
 
 import AccountDeletionRequest from '../db/models/AccountDeletionRequest.js';
 import ForestOwnerWorld from '../db/models/ForestOwnerWorld.js';
 import ForestWritingTree from '../db/models/ForestWritingTree.js';
 import User from '../db/models/User.js';
-import { FOREST_OWNER_WORLD_SCHEMA_VERSION } from '../db/schemas/ForestOwnerWorldSchema.js';
 import {
   FOREST_WRITING_TREE_IDENTITY_VERSION,
   FOREST_WRITING_TREE_SCHEMA_VERSION
@@ -133,7 +133,7 @@ export function buildForestOwnerTreeInclusionService({
         worldRole: 'primary'
       }).session(session));
       if (!world
-        || world.schemaVersion !== FOREST_OWNER_WORLD_SCHEMA_VERSION
+        || !supportedForestOwnerWorld(world)
         || world.ownerUserId !== ownerUserId
         || world.worldRole !== 'primary'
         || world.status !== 'active'

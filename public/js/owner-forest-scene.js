@@ -134,10 +134,11 @@ export function moveOwnerForestPlayer(player, direction, elapsedSeconds, placeme
 }
 
 export function ownerForestCamera(player, viewport) {
+  const bottomInset = Math.max(0, Math.min(viewport.height * .65, viewport.bottomInset || 0));
   return {
     ...viewport,
     x: Math.round(player.worldX - (viewport.width / 2)),
-    y: Math.round(player.worldY - (viewport.height / 2))
+    y: Math.round(player.worldY - ((viewport.height - bottomInset) / 2))
   };
 }
 

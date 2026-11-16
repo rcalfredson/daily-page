@@ -11,6 +11,7 @@ const OBJECT = '22222222-2222-4222-8222-222222222222';
 
 function world() {
   return {
+    schemaVersion: 1,
     forestId: FOREST,
     worldSeed: 'owner_world_seed_0123456789abcdef',
     environmentPolicyVersion: 1,
@@ -141,6 +142,13 @@ async function rejectedError(promise) {
 }
 
 describe('forest authored placement authority', () => {
+  it('enforces home reservations even when gardening bypasses its own planting check', async () => {
+    const test = harness(), inspectHomestead = jasmine.createSpy('home').and.resolveTo(false);
+    await expectAsync(test.inspect({ inspectHomestead, inspectGarden: async () => true }))
+      .toBeRejectedWithError('The requested placement does not clear the home or parked cart.');
+    expect(inspectHomestead).toHaveBeenCalledWith(jasmine.objectContaining({ radius: 26, session: 'transaction-session' }));
+    expect(test.ForestWritingTreeModel.find).not.toHaveBeenCalled();
+  });
   it('blocks new placement while terrain protection is preparing, before reading live neighborhoods', async () => {
     const test = harness();
     await expectAsync(test.inspect({ world: { ...world(), terrain: {

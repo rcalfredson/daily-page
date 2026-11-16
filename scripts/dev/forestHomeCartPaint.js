@@ -1,3 +1,4 @@
+import { paintForestCompanion } from '/js/forest-companion-paint.js';
 import { cartDefinition } from '/js/forest-cart-motion.js';
 import { constructionHomeFootprint } from '/js/forest-construction-design.js';
 import { paintForestHumanoid } from '/js/forest-humanoid.js';
@@ -103,20 +104,124 @@ export function paintStudyHome(ctx, home, design, camera) {
   ctx.restore();
 }
 
-export function paintStudyCart(ctx, cart, camera, mounted, elevation = 0, motion = { wheel: 0, gait: 0 }) {
+// Draw the seated avatar once into a small cached sprite, then interleave its pixel
+// rows with supports and scenery at their actual heights.
+export function paintStudyCartRider(ctx, cart, camera, elevation = 0) {
+  const d = cartDefinition(cart), c = Math.cos(cart.heading), s = Math.sin(cart.heading);
+  const p = (x, y, z = 0) => ({ x: Math.round(cart.worldX + c * x - s * y - camera.x),
+    y: Math.round(cart.worldY + s * x + c * y - camera.y - z - elevation) });
+  const seat = p(d.halfLength - 4, 0, 27);
+  // Use the ordinary avatar at 1:1 scale. Clip its standing legs below the seat and add bent legs.
+  for (const side of [-4, 4]) {
+    line(ctx, p(d.halfLength - 4, side, 26), p(d.halfLength + 4, side, 22), '#303139', 4);
+    line(ctx, p(d.halfLength + 4, side, 22), p(d.halfLength + 5, side, 15), '#303139', 4);
+    line(ctx, p(d.halfLength + 4, side, 15), p(d.halfLength + 8, side, 15), '#a63f38', 3);
+  }
+  ctx.save(); ctx.beginPath(); ctx.rect(seat.x - 25, seat.y - 45, 50, 46); ctx.clip();
+  paintForestHumanoid(ctx, seat.x, seat.y + 10, { resting: true,
+    motion: { facingRadians: cart.heading, speed: 0, stepPhase: 0 } }); ctx.restore();
+  for (const side of [-6, 6]) line(ctx, p(d.halfLength, side, 28), p(d.animalOffset + 8, side, 26), '#695b3f', 1);
+}
+
+let riderCache = null;
+function cartRiderSprite(cart) {
+  const d = cartDefinition(cart), key = `${JSON.stringify(cart.design)}:${cart.heading}`;
+  if (riderCache?.key === key) return riderCache;
+  const canvas = new globalThis.OffscreenCanvas(128, 128);
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  const seat = d.halfLength - 4;
+  paintStudyCart(ctx, { ...cart, worldX: 64 - Math.cos(cart.heading) * seat,
+    worldY: 90 - Math.sin(cart.heading) * seat }, { x: 0, y: 0 }, true, 0, undefined, 'rider');
+  const pixels = ctx.getImageData(0, 0, 128, 128).data, rows = [];
+  for (let y = 0; y < 128; y++) {
+    let left = 128, right = -1;
+    for (let x = 0; x < 128; x++) if (pixels[(y * 128 + x) * 4 + 3]) { left = Math.min(left, x); right = x; }
+    if (right >= left) rows.push({ y, left, width: right - left + 1 });
+  }
+  riderCache = { key, canvas, rows }; return riderCache;
+}
+export function paintStudyCartRiderRow(ctx, item, camera) {
+  const x = Math.round(item.seatX - camera.x), y = Math.round(item.seatY - camera.y - item.elevation - 27);
+  ctx.drawImage(item.sprite, item.left, item.row, item.width, 1,
+    x - 64 + item.left, y - 63 + item.row, item.width, 1);
+}
+
+const cartRoofDepth = (cart, elevation) => cart.worldY + elevation - 6.5 * Math.sin(cart.heading) + 56;
+
+// Small support segments let a near rail obscure a foot without erasing the post above it.
+export function studyCartSupportItems(cart, elevation = 0) {
+  if (cart.design.canopy === 'none') return [];
+  const d = cartDefinition(cart), c = Math.cos(cart.heading), s = Math.sin(cart.heading), wood = WOOD[cart.design.wood];
+  const point = (x, y, z) => ({ x: cart.worldX + c * x - s * y,
+    y: cart.worldY + s * x + c * y, z: z + elevation });
+  const items = [];
+  const add = (from, to, color, width) => items.push({ kind: 'extension', type: 'cart-support',
+    id: `study-cart-support-${items.length}`, from, to, color, width,
+    // The fabric covers its own frame even at the near canopy edge.
+    worldY: Math.min((from.y + to.y + from.z + to.z) / 2, cartRoofDepth(cart, elevation) - .001) });
+  for (const x of [-d.halfLength + 1, d.halfLength - 13]) {
+    for (const y of [-d.halfWidth, d.halfWidth]) for (let z = 26; z < 50; z++) {
+      add(point(x, y, z), point(x, y, z + 1), wood[2], 3);
+    }
+    if (cart.design.supports === 'bows') {
+      for (let i = 0; i < 8; i++) {
+        const a = -Math.PI / 2 + i * Math.PI / 8, b = a + Math.PI / 8;
+        add(point(x, Math.sin(a) * d.halfWidth, 50 + Math.cos(a) * 13),
+          point(x, Math.sin(b) * d.halfWidth, 50 + Math.cos(b) * 13), wood[3], 2);
+      }
+    } else add(point(x, -d.halfWidth, 51), point(x, d.halfWidth, 51), wood[3], 3);
+  }
+  return items;
+}
+
+export function paintStudyCartSupport(ctx, item, camera) {
+  const project = p => ({ x: Math.round(p.x - camera.x), y: Math.round(p.y - camera.y - p.z) });
+  ctx.save(); ctx.lineCap = 'butt';
+  line(ctx, project(item.from), project(item.to), item.color, item.width);
+  ctx.restore();
+}
+
+// Keep low cart geometry interleaved with bridge rails; fabric sits above its supports.
+export function studyCartDepthItems(cart, elevation = 0, mounted = false) {
+  const items = [{ kind: 'extension', id: 'study-cart', worldY: cart.worldY + elevation, type: 'cart' }];
+  if (cart.design.canopy !== 'none') items.push({ kind: 'extension', id: 'study-cart-roof', type: 'cart-roof',
+    worldY: cartRoofDepth(cart, elevation) });
+  if (mounted) {
+    const d = cartDefinition(cart), sprite = cartRiderSprite(cart);
+    const seatX = cart.worldX + Math.cos(cart.heading) * (d.halfLength - 4);
+    const seatY = cart.worldY + Math.sin(cart.heading) * (d.halfLength - 4);
+    for (const row of sprite.rows) items.push({ kind: 'extension', id: `study-cart-rider-${row.y}`,
+      type: 'cart-rider', sprite: sprite.canvas, row: row.y, left: row.left, width: row.width, seatX, seatY, elevation,
+      worldY: Math.max(cart.worldY + elevation + .001, seatY + elevation + 27 - (row.y - 63) - .5) });
+  }
+  return [...items, ...studyCartSupportItems(cart, elevation)];
+}
+
+export function paintStudyCart(ctx, cart, camera, mounted, elevation = 0, motion = { wheel: 0, gait: 0 }, layer = 'all') {
+  if (layer === 'all') {
+    const items = studyCartDepthItems(cart, elevation, mounted)
+      .sort((a, b) => a.worldY - b.worldY || a.id.localeCompare(b.id));
+    for (const item of items) {
+      if (item.type === 'cart-support') paintStudyCartSupport(ctx, item, camera);
+      else if (item.type === 'cart-rider') paintStudyCartRiderRow(ctx, item, camera);
+      else paintStudyCart(ctx, cart, camera, mounted, elevation, motion, item.type === 'cart-roof' ? 'roof' : 'body');
+    }
+    return;
+  }
   const d = cartDefinition(cart), design = cart.design;
   const c = Math.cos(cart.heading), s = Math.sin(cart.heading), wood = WOOD[design.wood], cloth = CLOTH[design.cloth];
   const p = (x, y, z = 0) => ({ x: Math.round(cart.worldX + c * x - s * y - camera.x),
     y: Math.round(cart.worldY + s * x + c * y - camera.y - z - elevation) });
   const hasCanopy = design.canopy !== 'none';
   ctx.save(); ctx.lineJoin = 'round';
-  polygon(ctx, [p(-d.halfLength - 8, -d.halfWidth - 7), p(d.animalOffset + 19, -13),
-    p(d.animalOffset + 19, 15), p(-d.halfLength - 8, d.halfWidth + 9)], 'rgba(18,30,22,.2)', null);
+  const shadowEnd = motion.detached ? d.halfLength + 10 : d.animalOffset + 19;
+  if (layer === 'all' || layer === 'body') polygon(ctx, [p(-d.halfLength - 8, -d.halfWidth - 7), p(shadowEnd, -13),
+    p(shadowEnd, 15), p(-d.halfLength - 8, d.halfWidth + 9)], 'rgba(18,30,22,.2)', null);
   const parts = [];
   // The bed/seat supports its occupants at every heading. Ground depth alone can put
   // that floor over the rider or canopy when the front of the cart points away.
   // Sort the undercarriage first, then the above-bed parts relative to one another.
-  const add = (x, y, draw, aboveBed = false) => parts.push({ depth: s * x + c * y, aboveBed, draw });
+  const add = (x, y, draw, aboveBed = false, partLayer = 'body') => parts.push({ depth: s * x + c * y, aboveBed, draw, layer: partLayer });
   for (const y of [-8, 8]) add((d.halfLength + d.animalOffset) / 2, y, () => {
     line(ctx, p(d.halfLength - 4, y, 11), p(d.animalOffset, y, 15), wood[2], 4);
     line(ctx, p(d.halfLength - 4, y, 12), p(d.animalOffset, y, 16), wood[3], 1);
@@ -148,19 +253,7 @@ export function paintStudyCart(ctx, cart, camera, mounted, elevation = 0, motion
       } else line(ctx, p(0, y, 14), p(0, y, 29), wood[2], 3);
     }
   }, true);
-  if (mounted) add(d.halfLength - 4, 0, () => {
-    const seat = p(d.halfLength - 4, 0, 27);
-    // Use the ordinary avatar at 1:1 scale. Clip its standing legs below the seat and add bent legs.
-    for (const side of [-4, 4]) {
-      line(ctx, p(d.halfLength - 4, side, 26), p(d.halfLength + 4, side, 22), '#303139', 4);
-      line(ctx, p(d.halfLength + 4, side, 22), p(d.halfLength + 5, side, 15), '#303139', 4);
-      line(ctx, p(d.halfLength + 4, side, 15), p(d.halfLength + 8, side, 15), '#a63f38', 3);
-    }
-    ctx.save(); ctx.beginPath(); ctx.rect(seat.x - 25, seat.y - 45, 50, 46); ctx.clip();
-    paintForestHumanoid(ctx, seat.x, seat.y + 10, { resting: true,
-      motion: { facingRadians: cart.heading, speed: 0, stepPhase: 0 } }); ctx.restore();
-    for (const side of [-6, 6]) line(ctx, p(d.halfLength, side, 28), p(d.animalOffset + 8, side, 26), '#695b3f', 1);
-  }, true);
+  if (mounted) add(d.halfLength - 4, 0, () => paintStudyCartRider(ctx, cart, camera, elevation), true, 'rider');
   if (hasCanopy) add(-8, 0, () => {
     const front = d.halfLength - 13, rear = -d.halfLength + 1;
     for (const x of [rear, front]) {
@@ -173,6 +266,9 @@ export function paintStudyCart(ctx, cart, camera, mounted, elevation = 0, motion
         }
       } else line(ctx, p(x, -d.halfWidth, 51), p(x, d.halfWidth, 51), wood[3], 3);
     }
+  }, true, 'supports');
+  if (hasCanopy) add(-8, 0, () => {
+    const front = d.halfLength - 13, rear = -d.halfLength + 1;
     const lift = t => design.supports === 'bows' ? Math.sin(t * Math.PI) * 13 : (1 - Math.abs(t * 2 - 1)) * 4;
     for (let i = 0; i < 6; i++) {
       const a = i / 6, b = (i + 1) / 6;
@@ -184,36 +280,21 @@ export function paintStudyCart(ctx, cart, camera, mounted, elevation = 0, motion
           p(rear + 10, yb - 1, 51 + lift(b)), p(rear + 2, yb - 1, 51 + lift(b))], cloth[2], '#bda87e');
       }
     }
-  }, true);
-  // A jointed, distance-driven diagonal gait keeps the mule's feet tied to travel.
-  add(d.animalOffset, 0, () => {
-    const legs = [];
-    for (const x of [-9, 8]) for (const y of [-5, 5]) legs.push({ x, y });
-    legs.sort((a, b) => s * (a.x - b.x) + c * (a.y - b.y));
-    for (const { x, y } of legs) {
-      const phase = motion.gait + (x * y < 0 ? Math.PI : 0);
-      const stride = motion.walking ? Math.sin(phase) * 6 : 0;
-      const lift = motion.walking ? Math.max(0, Math.cos(phase)) * 4 : 0;
-      const hip = p(d.animalOffset + x, y, 18), knee = p(d.animalOffset + x - stride * .3, y, 9);
-      const foot = p(d.animalOffset + x + stride, y, 2 + lift);
-      line(ctx, hip, knee, '#686756', 4); line(ctx, knee, foot, '#8d8871', 3);
-      ctx.fillStyle = '#494b40'; ctx.fillRect(foot.x - 2, foot.y - 1, 5, 3);
+  }, true, 'roof');
+  if (!motion.detached) add(d.animalOffset, 0, () => paintForestCompanion(ctx,
+    (x, y, z = 0) => p(d.animalOffset + x, y, z), cart.heading, motion), true);
+  parts.sort((a, b) => Number(a.aboveBed) - Number(b.aboveBed) || a.depth - b.depth);
+  if (layer === 'rider') {
+    // Preserve the existing bed/near-side occlusion within the cart before inserting
+    // the visible rider rows into the world ordering with canopy posts and bridge rails.
+    let drawn = false;
+    for (const part of parts) {
+      if (part.layer === 'rider') { part.draw(); drawn = true; }
+      else if (drawn && part.layer === 'body') {
+        ctx.globalCompositeOperation = 'destination-out'; part.draw();
+      }
     }
-    box(ctx, p, d.animalOffset - 1, 0, 13, 7, 12, ['#afa58a', '#938e76', '#716f5d'], 16);
-    for (let x = -9; x < 9; x += 5) line(ctx, p(d.animalOffset + x, -2, 29), p(d.animalOffset + x + 3, -2, 28), '#c6ba9a', 2);
-    box(ctx, p, d.animalOffset + 11, 0, 5, 5, 14, ['#bcb095', '#9d957d', '#787c68'], 23);
-    box(ctx, p, d.animalOffset + 16, 0, 5, 4, 6, ['#d6c5a5', '#b6a78d', '#948a72'], 24);
-    for (const y of [-3, 3]) {
-      line(ctx, p(d.animalOffset + 10, y, 36), p(d.animalOffset + 6, y, 48), '#615f4e', 4);
-      line(ctx, p(d.animalOffset + 10, y, 37), p(d.animalOffset + 7, y, 46), '#c3a88b', 1);
-      const eye = p(d.animalOffset + 13, y * 1.8, 34); ctx.fillStyle = '#343d33'; ctx.fillRect(eye.x, eye.y, 2, 2);
-    }
-    line(ctx, p(d.animalOffset - 13, 0, 26), p(d.animalOffset - 20, 0, 10), '#514f40', 3);
-    line(ctx, p(d.animalOffset - 4, -8, 28), p(d.animalOffset - 4, 8, 28), '#765235', 3);
-    line(ctx, p(d.animalOffset + 15, -5, 29), p(d.animalOffset + 15, 5, 29), '#765235', 2);
-  }, true);
-  parts.sort((a, b) => Number(a.aboveBed) - Number(b.aboveBed) || a.depth - b.depth)
-    .forEach(part => part.draw());
+  } else parts.filter(part => part.layer === layer).forEach(part => part.draw());
   ctx.restore();
 }
 

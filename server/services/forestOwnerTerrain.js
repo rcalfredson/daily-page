@@ -1,3 +1,4 @@
+import { supportedForestOwnerWorld } from '../db/schemas/ForestOwnerWorldSchema.js';
 import ForestTerrainProtection from '../db/models/ForestTerrainProtection.js';
 import { OWNER_TERRAIN_PROOF_CONFIG }
   from '../../public/js/owner-forest-terrain.js';
@@ -67,7 +68,7 @@ export function buildForestOwnerTerrainService({ ProtectionModel = ForestTerrain
     if (!terrain) return null;
     if (terrain.state !== 'active') throw new ForestOwnerTerrainError('FOREST_TERRAIN_PREPARING');
     if (ownerUserId !== world.ownerUserId || !/^[a-f0-9]{24}$/.test(ownerUserId || '')
-      || world.status !== 'active' || world.schemaVersion !== 1 || world.worldRole !== 'primary'
+      || world.status !== 'active' || !supportedForestOwnerWorld(world) || world.worldRole !== 'primary'
       || world.placementPolicyVersion !== 1 || world.environmentPolicyVersion !== 1
       || world.environmentSchemaVersion !== 1 || world.worldGenerationVersion !== 1) throw new ForestOwnerTerrainError('FOREST_TERRAIN_UNAVAILABLE');
     // Validate coordinates, region work, and seed before issuing any database read.

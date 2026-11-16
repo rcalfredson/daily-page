@@ -1,6 +1,9 @@
 import { Schema } from 'mongoose';
 
+// Version 1 remains the historical marker evidence/default for worlds without homes.
 export const FOREST_OWNER_WORLD_SCHEMA_VERSION = 1;
+export const FOREST_HOMESTEAD_WORLD_SCHEMA_VERSION = 2;
+export const supportedForestOwnerWorld = world => [1, 2].includes(world?.schemaVersion);
 export const FOREST_OWNER_WORLD_ROLES = Object.freeze(['primary']);
 export const FOREST_OWNER_WORLD_STATUSES = Object.freeze(['active', 'deleting']);
 export const FOREST_OWNER_RECONCILIATION_STATES = Object.freeze(['idle', 'running']);
@@ -117,9 +120,8 @@ const forestOwnerWorldSchema = new Schema({
   schemaVersion: {
     type: Number,
     required: true,
-    enum: [FOREST_OWNER_WORLD_SCHEMA_VERSION],
-    default: FOREST_OWNER_WORLD_SCHEMA_VERSION,
-    immutable: true
+    enum: [FOREST_OWNER_WORLD_SCHEMA_VERSION, FOREST_HOMESTEAD_WORLD_SCHEMA_VERSION],
+    default: FOREST_OWNER_WORLD_SCHEMA_VERSION
   },
   forestId: {
     type: String,

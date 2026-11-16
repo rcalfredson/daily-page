@@ -89,6 +89,7 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
   let focusedMarker = null;
   let frame = null;
   let lastTime = null;
+  let lastPaintTime = -Infinity;
   let loading = false;
   let loadFailure = false;
   let authoredLoading = false;
@@ -207,6 +208,8 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
       busy: Boolean(inspectedTreeId || inspectedMarkerId || placement.active || returnArrivalPending)
         || !document.querySelector('[data-forest-garden]').hidden
         || !document.querySelector('[data-garden-toolbar]').hidden }),
+    occupied: p => garden.intersects(p) || [...markersById.values()].some(m =>
+      Math.hypot(m.worldX - p.worldX, m.worldY - p.worldY) <= 9 + p.radius),
     regionLoaded: p => {
       const radius = p.radius || 0;
       return [-radius, radius].every(dx => [-radius, radius].every(dy => {
@@ -948,7 +951,10 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
   }
 
   function render(time = window.performance.now()) {
+    if (frame !== null) window.cancelAnimationFrame(frame);
     frame = null;
+    if (document.hidden) return;
+    lastPaintTime = time;
     context.imageSmoothingEnabled = false;
     paintGround();
     terrain.paintGround(context, camera, time, reducedMotion.matches);
@@ -987,6 +993,7 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
           Math.round(player.worldY - camera.y - terrain.elevation(player)), {
             profile: FOREST_HUMANOID_PROFILES.player,
             motion: playerMotion,
+            gesture: extension?.playerGesture?.() || null,
             reducedMotion: reducedMotion.matches
           });
       } else if (item.marker) {
@@ -1418,6 +1425,11 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
   }
 
   function tick(time) {
+    if (document.hidden) {
+      lastTime = null;
+      window.requestAnimationFrame(tick);
+      return;
+    }
     const elapsed = lastTime === null ? 0 : Math.min(0.05, (time - lastTime) / 1000);
     lastTime = time;
     garden.update(time);
@@ -1460,7 +1472,8 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
         reducedMotion: reducedMotion.matches
       });
     }
-    if (direction.x || direction.y || (!reducedMotion.matches && !document.hidden)) render(time);
+    // Keep movement responsive, but ambient foliage/water need only 30 paints per second.
+    if (direction.x || direction.y || (!reducedMotion.matches && time - lastPaintTime >= 1000 / 30 - 1)) render(time);
     window.requestAnimationFrame(tick);
   }
 
@@ -1662,7 +1675,7 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
     returnedTreeId = null;
     returnedMarkerId = null;
     returnArrivalPending = false;
-    extension?.reset?.();
+    if (extension?.reset?.() === true) return;
     player = { ...bootstrap.spawn };
     playerMotion = createForestHumanoidMotion('down');
     Object.assign(camera, ownerForestCamera(player, camera));
@@ -1676,6 +1689,7 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
   window.addEventListener('blur', clearPointer);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) clearPointer();
+    else requestRender();
   });
   reducedMotion.addEventListener?.('change', requestRender);
 

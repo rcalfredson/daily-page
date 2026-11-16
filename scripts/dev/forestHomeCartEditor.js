@@ -1,37 +1,50 @@
 /* global document */
-import { HOME_DESIGN_OPTIONS, CART_DESIGN_OPTIONS, validateConstructionDesign } from '/js/forest-construction-design.js';
+import { HOME_DESIGN_OPTIONS, CART_DESIGN_OPTIONS, validateConstructionDesign, constructionCartCost } from '/js/forest-construction-design.js';
 
 const LABELS = { width: 'Width', depth: 'Depth', walls: 'Wall material', color: 'Wall finish', roof: 'Roof material',
   roofColor: 'Roof finish', length: 'Bed length', body: 'Body', wheels: 'Wheels', supports: 'Supports',
   canopy: 'Canopy', wood: 'Wood finish', cloth: 'Cloth color' };
 
-export function createConstructionEditor({ viewport, preview, apply, close }) {
+export function createConstructionEditor({ viewport, preview, apply, close, saved = false, saveState = () => null, retry = null }) {
   const panel = document.createElement('form');
   panel.className = 'home-study-editor'; panel.hidden = true;
   panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true');
   panel.setAttribute('aria-labelledby', 'study-editor-title');
   panel.innerHTML = `<header><span>THE CLEARING WORKSHOP</span><h2 id="study-editor-title" tabindex="-1"></h2></header>
-    <div class="home-study-editor-scroll"><p>Try your ideas here in the clearing. Apply keeps them for this visit; reloading starts fresh.</p>
+    <div class="home-study-editor-scroll"><p>${saved ? "Preview your changes here, then save them for your next visit." : "Try your ideas here in the clearing. Apply keeps them for this visit; reloading starts fresh."}</p>
     <div data-design-fields></div><p data-design-description></p><p role="status" aria-live="polite" data-design-status></p></div>
-    <footer><button type="button" data-design-cancel>Cancel</button><button type="submit" data-design-apply>Apply design</button></footer>`;
+    <footer><button type="button" data-design-retry hidden>Retry save</button><button type="button" data-design-cancel>Cancel</button><button type="submit" data-design-apply>Apply design</button></footer>`;
   viewport.append(panel);
-  let kind = null, draft = null, opener = null, locked = [];
+  let kind = null, draft = null, opener = null, locked = [], pending = false;
   const fields = panel.querySelector('[data-design-fields]');
   const status = panel.querySelector('[data-design-status]');
   const submit = panel.querySelector('[data-design-apply]');
   const description = panel.querySelector('[data-design-description]');
   function refresh() {
     const error = validateConstructionDesign(kind, draft) ? preview(kind, { ...draft }) : 'Choose supported parts and dimensions.';
-    submit.disabled = Boolean(error); status.textContent = error || 'Fits here. Your doorway and the expedition route remain clear.';
+    const state = saveState();
+    submit.disabled = pending || Boolean(error) || Boolean(state?.pending) || ['stale', 'reload'].includes(state?.status);
+    status.textContent = pending ? 'Saving…' : error || (state && state.status !== 'saved' ? state.message : 'Fits here. Your doorway and the expedition route remain clear.');
+    submit.textContent = saved ? 'Save design' : 'Apply design';
+    panel.querySelector('[data-design-retry]').hidden = !state?.pending && !['stale', 'reload'].includes(state?.status);
+    panel.querySelector('[data-design-retry]').disabled = pending;
+    panel.querySelector('[data-design-retry]').textContent = state?.status === 'reload' ? 'Reload forest' : state?.status === 'stale' ? 'Retry loading' : 'Retry save';
+    panel.querySelector('[data-design-cancel]').disabled = pending;
+    for (const select of fields.querySelectorAll('select')) select.disabled = pending || Boolean(state?.pending);
     status.dataset.invalid = String(Boolean(error));
     description.textContent = kind === 'home'
       ? `${draft.width} × ${draft.depth} footprint. The doorway stays in place as the house grows toward the back.`
       : `${draft.length} × ${draft.width} bed. Supports and axles fit the chosen size. Finishes do not change speed or clearance.`;
+    if (saved && kind === 'home') description.textContent += ' House finishes are freely available.';
+    if (saved && kind === 'cart' && validateConstructionDesign('cart', draft)) {
+      const cost = constructionCartCost(draft), current = state.record;
+      description.textContent += ` Uses ${cost.timber} timber and ${cost.cloth} cloth. Reusing your current cart returns its materials: ${current.holdings.timber + current.cartCommitment.timber - cost.timber} timber and ${current.holdings.cloth + current.cartCommitment.cloth - cost.cloth} cloth will remain.`;
+    }
     const cloth = fields.querySelector('[name="cloth"]');
-    if (cloth) { cloth.disabled = draft.canopy === 'none'; cloth.parentElement.hidden = draft.canopy === 'none'; }
+    if (cloth) { cloth.disabled = pending || Boolean(state?.pending) || draft.canopy === 'none'; cloth.parentElement.hidden = draft.canopy === 'none'; }
   }
   function finish() {
-    if (!kind) return;
+    if (!kind || pending) return;
     panel.hidden = true; kind = null; draft = null;
     delete viewport.dataset.studyEditing;
     for (const [element, inert] of locked) element.inert = inert;
@@ -43,10 +56,18 @@ export function createConstructionEditor({ viewport, preview, apply, close }) {
     draft[event.target.name] = choices.find(([value]) => String(value) === event.target.value)?.[0];
     refresh();
   });
+  async function perform(work) {
+    if (pending) return;
+    pending = true; refresh();
+    let success = false;
+    try { success = await work(); } finally { pending = false; refresh(); }
+    if (success) finish();
+  }
   panel.addEventListener('submit', event => {
     event.preventDefault(); refresh();
-    if (!submit.disabled && apply(kind, { ...draft })) finish();
+    if (!submit.disabled) perform(() => apply(kind, { ...draft }));
   });
+  panel.querySelector('[data-design-retry]').addEventListener('click', () => perform(retry));
   panel.querySelector('[data-design-cancel]').addEventListener('click', finish);
   panel.addEventListener('keydown', event => {
     if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); finish(); return; }
@@ -63,6 +84,7 @@ export function createConstructionEditor({ viewport, preview, apply, close }) {
   }, true);
   return {
     get active() { return Boolean(kind); },
+    refresh() { if (kind) refresh(); },
     snapshot: () => kind ? { kind, draft: { ...draft }, valid: !submit.disabled } : null,
     cancel: finish,
     open(nextKind, design, button) {

@@ -1,0 +1,14 @@
+.forest-companion-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  width: 100%; padding-bottom: 8px; border-bottom: 1px solid #82997d; }
+.forest-companion-actions[hidden], .forest-companion-actions [hidden] { display: none; }
+.forest-companion-actions > span { font-size: 13px; color: #eee5c9; }
+.forest-companion-actions button { min-height: 44px; padding: 8px 12px; }
+.forest-companion-actions [data-companion-action] { background: #e8d6ad; color: #392f25; }
+.forest-companion-actions p { width: 100%; margin: 0; font-size: 12px; }
+.forest-companion-actions p:empty { display: none; }
+.forest-companion-actions :focus-visible { outline: 3px solid #e4ba72; outline-offset: 2px; }
+@media (max-width: 420px) {
+  .forest-companion-actions { gap: 5px; }
+  .forest-companion-actions button { padding: 8px; font-size: 12px; }
+  .forest-companion-actions > span { font-size: 12px; }
+}

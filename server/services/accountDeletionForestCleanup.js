@@ -1,4 +1,5 @@
 import ForestGarden from '../db/models/ForestGarden.js';
+import ForestHomestead from '../db/models/ForestHomestead.js';
 import ForestTerrainProtection from '../db/models/ForestTerrainProtection.js';
 import AccountDeletionRequest from '../db/models/AccountDeletionRequest.js';
 import ForestAuthoredObject from '../db/models/ForestAuthoredObject.js';
@@ -65,6 +66,7 @@ export async function cleanUpAccountDeletionForests({
   ForestWritingTreeModel = ForestWritingTree,
   ForestTerrainProtectionModel = ForestTerrainProtection,
   ForestGardenModel = ForestGarden,
+  ForestHomesteadModel = ForestHomestead,
   scheduleEvidenceExpiry = scheduleAccountDeletionEvidenceExpiry,
   logger = console,
   now = new Date()
@@ -99,6 +101,7 @@ export async function cleanUpAccountDeletionForests({
     deletedAuthoredResetOperations: 0,
     deletedTrees: 0,
     deletedGardens: 0,
+    deletedHomesteads: 0,
     deletedTerrainProtections: 0,
     deletedReconciliationJobs: 0,
     deletedWorlds: 0
@@ -116,6 +119,7 @@ export async function cleanUpAccountDeletionForests({
       );
 
       const boundedCollections = [
+        [ForestHomesteadModel, 'deletedHomesteads'],
         [ForestGardenModel, 'deletedGardens'],
         [ForestAuthoredObjectModel, 'deletedAuthoredObjects'],
         [ForestAuthoredRegionRevisionModel, 'deletedAuthoredRegionRevisions'],
@@ -160,7 +164,8 @@ export async function cleanUpAccountDeletionForests({
         remainingJob,
         remainingWorld,
         remainingTerrainProtection,
-        remainingGarden
+        remainingGarden,
+        remainingHomestead
       ] = await Promise.all([
         ForestAuthoredObjectModel.exists({ ownerUserId: owner }),
         ForestAuthoredRegionRevisionModel.exists({ ownerUserId: owner }),
@@ -169,7 +174,8 @@ export async function cleanUpAccountDeletionForests({
         ForestOwnerGroupReconciliationJobModel.exists({ ownerUserId: owner }),
         ForestOwnerWorldModel.exists({ ownerUserId: owner }),
         ForestTerrainProtectionModel.exists({ ownerUserId: owner }),
-        ForestGardenModel.exists({ ownerUserId: owner })
+        ForestGardenModel.exists({ ownerUserId: owner }),
+        ForestHomesteadModel.exists({ ownerUserId: owner })
       ]);
       if (remainingAuthoredObject
         || remainingAuthoredRegionRevision
@@ -178,7 +184,8 @@ export async function cleanUpAccountDeletionForests({
         || remainingJob
         || remainingWorld
         || remainingTerrainProtection
-        || remainingGarden) {
+        || remainingGarden
+        || remainingHomestead) {
         totals.pending += 1;
         continue;
       }

@@ -131,12 +131,13 @@ export function paintForestHumanoid(context, x, y, {
   profile = FOREST_HUMANOID_PROFILES.player,
   motion = createForestHumanoidMotion(),
   reducedMotion = false,
-  resting = false
+  resting = false,
+  gesture = null
 } = {}) {
-  const gait = forestHumanoidGait(motion, reducedMotion || resting);
+  const gait = forestHumanoidGait(motion, reducedMotion || resting || Boolean(gesture));
   const bob = resting ? 0 : gait.bob;
-  const forwardX = Math.cos(motion.facingRadians);
-  const forwardY = Math.sin(motion.facingRadians);
+  const forwardX = Math.cos(gesture?.facingRadians ?? motion.facingRadians);
+  const forwardY = Math.sin(gesture?.facingRadians ?? motion.facingRadians);
   const lateralX = -forwardY;
   const lateralY = forwardX;
   const frontness = Math.abs(forwardY);
@@ -183,6 +184,19 @@ export function paintForestHumanoid(context, x, y, {
     { side: -1, forward: gait.leftArm },
     { side: 1, forward: gait.rightArm }
   ];
+  const activeSide = forwardX < 0 ? -1 : 1;
+  function paintGestureArm() {
+    const stroke = reducedMotion ? 0 : Math.sin(gesture.phase || 0);
+    const reach = gesture.type === 'scratch' ? 17 + stroke * 2 : gesture.type === 'beckon' ? 10 + stroke * 3 : 14;
+    const shoulderX = x + lateralX * activeSide * (bodyWidth / 2);
+    const shoulderY = footY - 20 + lateralY * activeSide;
+    const handX = x + forwardX * reach + lateralX * activeSide * 3;
+    const handY = footY - (gesture.type === 'scratch' ? 27 : 23) + forwardY * reach;
+    const elbowX = (shoulderX + handX) / 2, elbowY = (shoulderY + handY) / 2 + 2;
+    paintPixelLimb(context, shoulderX, shoulderY, elbowX, elbowY, profile.torso, 4);
+    paintPixelLimb(context, elbowX, elbowY, handX, handY, profile.skinShadow, 3);
+    context.fillStyle = profile.skin; context.fillRect(Math.round(handX) - 2, Math.round(handY) - 2, 5, 4);
+  }
   if (profile.staff) {
     const staffSide = 7;
     const staffX = x + (lateralX * staffSide) + (forwardX * 1.5);
@@ -191,6 +205,7 @@ export function paintForestHumanoid(context, x, y, {
       profile.staff, 2);
   }
   arms.forEach((arm) => {
+    if (gesture && arm.side === activeSide) return;
     const shoulderX = x + (lateralX * arm.side * ((bodyWidth / 2) + 1));
     const shoulderY = footY - 20 + (lateralY * arm.side * 0.4);
     const handX = shoulderX + (forwardX * arm.forward);
@@ -205,6 +220,7 @@ export function paintForestHumanoid(context, x, y, {
     context.fillStyle = profile.skinShadow;
     context.fillRect(Math.round(handX) - 2, Math.round(handY) + 1, 1, 1);
   });
+  if (gesture && rearFacing) paintGestureArm();
 
   const torsoLeft = x - Math.ceil(bodyWidth / 2);
   context.fillStyle = profile.torsoShadow;
@@ -291,5 +307,6 @@ export function paintForestHumanoid(context, x, y, {
   context.fillRect(x - Math.round(forwardX * 2) - 1,
     footY - (profile.id === 'visitor' ? 40 : 39), 3, 1);
 
+  if (gesture && !rearFacing) paintGestureArm();
   return gait;
 }

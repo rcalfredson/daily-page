@@ -1,3 +1,5 @@
+import { readForestHomesteadStore, homesteadPlacementAllowed } from './forestHomesteadStore.js';
+import { supportedForestOwnerWorld } from '../db/schemas/ForestOwnerWorldSchema.js';
 import { inspectForestGardenReservation } from './forestGardenStore.js';
 import { assertForestTerrainPlacementReady, inspectForestTerrainPlacement } from './forestOwnerTerrain.js';
 import crypto from 'node:crypto';
@@ -9,9 +11,6 @@ import Block from '../db/models/Block.js';
 import ForestOwnerWorld from '../db/models/ForestOwnerWorld.js';
 import ForestWritingTree from '../db/models/ForestWritingTree.js';
 import User from '../db/models/User.js';
-import {
-  FOREST_OWNER_WORLD_SCHEMA_VERSION,
-} from '../db/schemas/ForestOwnerWorldSchema.js';
 import {
   FOREST_WRITING_TREE_IDENTITY_VERSION,
   FOREST_WRITING_TREE_SCHEMA_VERSION,
@@ -157,7 +156,7 @@ function selectFoundingVariant(variant, ownerUserId, translationGroupId) {
 
 function validateWorld(world) {
   if (
-    world?.schemaVersion !== FOREST_OWNER_WORLD_SCHEMA_VERSION
+    !supportedForestOwnerWorld(world)
     || world?.placementPolicyVersion !== FOREST_OWNER_GROVE_PLACEMENT_VERSION
     || world?.environmentPolicyVersion
       !== FOREST_OWNER_ENVIRONMENT_POLICY_VERSION
@@ -262,10 +261,12 @@ async function reservePlacement({
   resolveEnvironment,
   inspectTerrain,
   inspectGarden,
+  readHomestead,
   readNeighborhood,
   allocatePlacements,
 }) {
   const terrainCache = new Map();
+  const homestead = await readHomestead({ ownerUserId, world, session });
   const startingCandidateSlot = world.nextCandidateSlot;
   let candidateSlot = startingCandidateSlot;
   const diagnostics = {
@@ -311,6 +312,10 @@ async function reservePlacement({
     if (world.terrain && !await inspectTerrain({ ownerUserId, world,
       worldX: candidate.worldX, worldY: candidate.worldY, radius: 24, session, cache: terrainCache })) {
       diagnostics.environmentRejectionCount += 1;
+      continue;
+    }
+    if (!homesteadPlacementAllowed(homestead, { ...candidate, radius: 48, writer: 'writing' })) {
+      diagnostics.occupiedRejectionCount += 1;
       continue;
     }
     // Reserve a canopy apron before the new writing tree phenotype is resolved.
@@ -386,6 +391,7 @@ export function buildForestWritingTreeCreationService({
   resolveEnvironment = resolveForestOwnerEnvironment,
   inspectTerrain = inspectForestTerrainPlacement,
   inspectGarden = inspectForestGardenReservation,
+  readHomestead = readForestHomesteadStore,
   readNeighborhood = readForestOwnerPlacementNeighborhood,
   allocatePlacements = allocateForestOwnerGrovePlacements,
   projectTree = projectPostToForestTree,
@@ -412,6 +418,7 @@ export function buildForestWritingTreeCreationService({
     resolveEnvironment,
     inspectTerrain,
     inspectGarden,
+    readHomestead,
     readNeighborhood,
     allocatePlacements,
     projectTree,
@@ -495,6 +502,7 @@ export function buildForestWritingTreeCreationService({
           resolveEnvironment,
           inspectTerrain,
           inspectGarden,
+          readHomestead,
           readNeighborhood,
           allocatePlacements,
         });
