@@ -37,6 +37,7 @@
     "forest:terrain-preview": "node scripts/dev/renderForestOwnerTerrainPreview.js",
     "forest:water-study": "node scripts/dev/serveForestWaterStudy.js",
     "forest:terrain-live-review": "FOREST_TERRAIN_SERVE_ONLY=true FOREST_TERRAIN_GENERATION=4 node scripts/dev/checkForestWritingReturn.js",
+    "forest:homestead-application": "node scripts/dev/forestHomesteadApplicationPreview.js --write",
     "forest:home-cart-saved": "node scripts/dev/forestHomesteadPreview.js --write",
     "forest:home-cart-study": "node scripts/dev/forestHomeCartFixture.js serve",
     "forest:home-cart-report": "node scripts/dev/forestHomeCartFixture.js report",

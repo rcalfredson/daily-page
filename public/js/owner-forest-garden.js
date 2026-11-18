@@ -197,7 +197,7 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
   function update(time, force = false) {
     if (!force && time - lastUpdate < 150) return;
     lastUpdate = time;
-    const { player, placements, markers, facingRadians, available } = state();
+    const { player, placements, markers, facingRadians, available, placementAllowed } = state();
     if (mode && !available) { mode = null; preview = null; carrying = false; }
     if (mode) {
       preview = ownerForestMarkerPreview({ player, facingRadians, placements, markers, cellSize: 720 });
@@ -208,6 +208,7 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
         if (!surface.placeable) reason = 'terrain-collision';
       }
       if (gardenIntersects(data.plants, preview.worldX, preview.worldY, 9, selected?.plantId)) reason = 'plant-collision';
+      if (placementAllowed?.(preview) === false) reason = 'home-collision';
       preview.valid = !reason;
       const text = busy ? mode === 'move' ? 'Moving…' : 'Planting…' : reason ? 'Needs more space. Try another spot.'
         : mode === 'move' ? 'Move here?' : 'Room to grow. Plant here?';

@@ -160,6 +160,7 @@ export function buildForestOwnerSceneBootstrapService({
     if (world.reconciliation.state === 'running') return emptyBootstrap('reconciling', creationEnabled);
     const bootstrap = {
       ...emptyBootstrap('ready', creationEnabled),
+      homesteadEstablished: world.schemaVersion === 2,
       environment: {
         policyVersion: FOREST_OWNER_ENVIRONMENT_POLICY_VERSION,
         schemaVersion: FOREST_OWNER_ENVIRONMENT_SCHEMA_VERSION,

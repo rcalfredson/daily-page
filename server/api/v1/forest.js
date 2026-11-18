@@ -1,3 +1,5 @@
+import { buildForestHomesteadRouteHandler } from './forestHomestead.js';
+import { forestHomesteadApplication } from '../../services/forestHomesteadApplication.js';
 import { forestGarden } from '../../services/forestGarden.js';
 import { ForestGardenError } from '../../services/forestGardenStore.js';
 import { readForestOwnerTerrainRegion } from '../../services/forestOwnerTerrainRegion.js';
@@ -828,7 +830,10 @@ const useForestAPI = (app) => {
   router.use(privateForestApiResponse);
   router.use('/authored-objects', requireForestAuthoredMutationOrigin);
   router.use('/garden', requireForestAuthoredMutationOrigin);
+  router.use('/homestead', requireForestAuthoredMutationOrigin);
   router.use(optionalAuth);
+  router.get('/homestead', buildForestHomesteadRouteHandler({ service: forestHomesteadApplication }));
+  router.post('/homestead', buildForestHomesteadRouteHandler({ service: forestHomesteadApplication }));
   router.get('/garden', buildForestGardenRouteHandler());
   router.post('/garden', buildForestGardenRouteHandler());
   router.get('/regions', regionHandler);

@@ -1,3 +1,4 @@
+import { forestHomesteadDevelopmentEnabled, homesteadDevelopmentEnvironment } from '../services/forestHomesteadAvailability.js';
 import express from 'express';
 
 import { isAuthenticated } from '../middleware/auth.js';
@@ -27,6 +28,8 @@ export function buildForestRouteHandler({
         title: t('forestScene.meta.title'),
         description: t('forestScene.meta.description'),
         user: req.user,
+        homesteadEnabled: forestHomesteadDevelopmentEnabled(req.user.id)
+          || bootstrap.homesteadEstablished && homesteadDevelopmentEnvironment(),
         forestStatus: bootstrap.status,
         bootstrap
       });
