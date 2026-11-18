@@ -152,6 +152,24 @@ block content
             details
               summary My lanternbells
               ol(data-garden-plants)
+            details.owner-forest__materials(data-homestead-materials hidden)
+              summary Building materials
+              table(aria-label='Building materials balance')
+                thead
+                  tr
+                    th(scope='col') Material
+                    th(scope='col') Available
+                    th(scope='col') In cart
+                tbody
+                  tr
+                    th(scope='row') Timber
+                    td(data-available-timber)
+                    td(data-cart-timber)
+                  tr
+                    th(scope='row') Cloth
+                    td(data-available-cloth)
+                    td(data-cart-cloth)
+              p Your clearing came with starter supplies. Redesigning the cart lets you reuse the materials in it.
             details
               summary Growing tips
               p Sprout in 2 minutes. Flowers in 20. Later cuttings take 4 hours. No watering needed.
