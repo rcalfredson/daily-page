@@ -22,11 +22,11 @@ else {
         const plan = { ...layout, destination: layout.route.at(-1),
           spawn: { x: layout.parking.x, y: layout.parking.y } };
         start.hidden = true;
-        startOwnerForest({ createExtension: api => createHomesteadExtension(api,
+        startOwnerForest({ unifiedNavigation: true, createExtension: api => createHomesteadExtension(api,
           { saved: record, plan, extent: 999_980_000 }, { integrated: true }) });
       } else {
         // Establishing is an explicit choice. Ordinary entrance and writing returns stay intact.
-        startOwnerForest();
+        startOwnerForest({ unifiedNavigation: true });
         copy.textContent = 'Make a home clearing in your forest?';
         action.textContent = client.snapshot().pending ? 'Retry save' : 'Make my clearing';
         action.hidden = false; action.disabled = false;

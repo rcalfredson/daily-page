@@ -9,7 +9,7 @@ const camera = { x: -200, y: -200, width: 400, height: 400 };
 let restore;
 let dom;
 async function garden({ stage = 'rooted', cuttings = 1, ready = false, placements = [],
-  player = { worldX: 0, worldY: 0 }, plantPosition = { worldX: 0, worldY: 40 } } = {}) {
+  player = { worldX: 0, worldY: 0 }, plantPosition = { worldX: 0, worldY: 40 }, navigation = null } = {}) {
   const fields = ['open', 'toolbar', 'close', 'status', 'count', 'plants', 'plant', 'acquire',
     'start', 'save', 'cancel', 'refresh', 'preview', 'guide', 'near', 'harvest', 'move', 'lift',
     'navigation', 'navigation-copy', 'navigation-arrow', 'navigation-stop',
@@ -40,7 +40,7 @@ async function garden({ stage = 'rooted', cuttings = 1, ready = false, placement
     return { ok: true, json: async () => globalThis.structuredClone(stored) };
   };
   const terrain = { ready: () => true, sample: jasmine.createSpy('sample').and.returnValue({ placeable: true }) };
-  const controller = createOwnerForestGarden({ terrainToken: null, terrain,
+  const controller = createOwnerForestGarden({ navigation, terrainToken: null, terrain,
     requestRender() {}, focusViewport() {}, state: () => ({ player,
       placements, markers: [], facingRadians: Math.PI / 2, available: true }) });
   await setImmediate();
@@ -202,4 +202,18 @@ describe('owner garden move preview and stored cuttings', () => {
     });
   }
 
+});
+
+
+describe('garden contextual shared navigation', () => {
+  afterEach(() => { restore?.(); restore = null; dom?.window.close(); dom = null; });
+  it('registers saved plants and sends Guide me to the shared compass without the legacy compass', async () => {
+    const navigation = { register: jasmine.createSpy('register'), navigate: jasmine.createSpy('navigate') };
+    const h = await garden({ navigation });
+    const provider = navigation.register.calls.mostRecent().args[1];
+    expect(provider()[0].id).toBe(`garden:${PLANT}`);
+    h.find('plants').querySelector('button').click();
+    expect(navigation.navigate).toHaveBeenCalledOnceWith(`garden:${PLANT}`);
+    expect(h.find('navigation-copy').textContent).toBe('');
+  });
 });

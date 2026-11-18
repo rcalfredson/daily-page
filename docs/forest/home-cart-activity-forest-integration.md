@@ -77,3 +77,6 @@ rerun with subprocess access. Both Firefox walkthroughs described above passed, 
 rendering cases**, scoped lint and whitespace checks. Desktop and narrow-screen review images were
 visually inspected. These checks establish local integration behavior; owner playtesting and
 production qualification remain distinct.
+
+November 17 follow-up: [Unified navigation](unified-navigation-increment.md) replaces the independent
+home/cart guides with a shared destination picker and compass, including contextual plant guidance.

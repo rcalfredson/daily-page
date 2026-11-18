@@ -1,3 +1,4 @@
+import { createForestNavigation } from './forest-navigation.js';
 import { createOwnerForestGarden } from './owner-forest-garden.js';
 import { createOwnerForestTerrainScene } from './owner-forest-terrain-scene.js';
 import { forestWritingPostPath, forestMarkerWritingPostPath } from './forest-writing-navigation.js';
@@ -48,7 +49,7 @@ import {
 
 // Optional presentation extension is supplied only by the isolated development entry point.
 // Production starts with no extension and retains its ordinary controls and authority.
-export function startOwnerForest({ createExtension = () => null } = {}) {
+export function startOwnerForest({ createExtension = () => null, unifiedNavigation = false } = {}) {
   const payload = document.getElementById('owner-forest-bootstrap');
   const copyPayload = document.getElementById('owner-forest-copy');
   const viewport = document.querySelector('[data-owner-forest-viewport]');
@@ -194,7 +195,14 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
   }, true);
 
   let extension = null;
+  const navigation = unifiedNavigation ? createForestNavigation({
+    dock: document.querySelector('[data-owner-forest-dock]'), more: morePanel,
+    focus: () => viewport.focus({ preventScroll: true }),
+    state: () => ({ player, available: !returnArrivalPending && !placement.active && !inspectedTreeId && !inspectedMarkerId
+      && document.querySelector('[data-forest-garden]').hidden && document.querySelector('[data-garden-toolbar]').hidden })
+  }) : null;
   const garden = createOwnerForestGarden({
+    navigation,
     terrainToken: bootstrap.terrain?.token || null,
     terrain, requestRender, focusViewport: () => viewport.focus({ preventScroll: true }),
     state: () => ({ player, placements: [...placementsById.values()],
@@ -204,6 +212,7 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
   });
 
   extension = createExtension({
+    navigation,
     state: () => ({ player: { ...player }, camera, terrain, placements: [...placementsById.values()],
       busy: Boolean(inspectedTreeId || inspectedMarkerId || placement.active || returnArrivalPending)
         || !document.querySelector('[data-forest-garden]').hidden
@@ -1475,6 +1484,7 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
         reducedMotion: reducedMotion.matches
       });
     }
+    navigation?.update(time);
     // Keep movement responsive, but ambient foliage/water need only 30 paints per second.
     if (direction.x || direction.y || (!reducedMotion.matches && time - lastPaintTime >= 1000 / 30 - 1)) render(time);
     window.requestAnimationFrame(tick);

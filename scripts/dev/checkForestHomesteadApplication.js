@@ -35,7 +35,7 @@ try {
     await wait(`!document.querySelector('[data-homestead-start-action]').disabled`);
     await click('[data-homestead-start-action]');
   }
-  await wait(`document.querySelector('[data-homestead-guide]') && document.querySelector('[data-homestead-start]').hidden`);
+  await wait(`document.querySelector('[data-forest-navigation-destination]') && document.querySelector('[data-homestead-start]').hidden`);
   const saved = await read(); assert.equal(saved.established, true);
   const compatibility = JSON.parse(await evaluate(`(async()=>{
     const homes=await fetch('/api/v1/forest/homestead').then(r=>r.json());
@@ -62,8 +62,9 @@ try {
   const bootstrap = JSON.parse(await evaluate(`document.querySelector('#owner-forest-bootstrap').textContent`));
   assert.equal(bootstrap.spawn.worldX, 0); assert.equal(bootstrap.spawn.worldY, 0);
   await wait(`document.querySelector('[data-study-edit="home"]').closest('div').hidden`);
-  await click('[data-owner-forest-more]'); await click('[data-homestead-guide]');
-  await wait(`document.querySelector('[data-study-guide]').textContent.includes('Home')`);
+  await click('[data-owner-forest-more]'); await evaluate(`(()=>{document.querySelector('.forest-navigation-picker').open=true;const s=document.querySelector('[data-forest-navigation-destination]');s.value='home';s.dispatchEvent(new Event('change'));return true;})()`);
+  await click('[data-forest-navigation-go]');
+  await wait(`document.querySelector('[data-forest-navigation-copy]').textContent.includes('Home')`);
   let beforeRecovery = (await read()).revision;
   await click('[data-owner-forest-more]'); await click('[data-study-recover]');
   await wait(`document.querySelector('[data-save-status]').textContent===''`);
@@ -84,12 +85,12 @@ try {
   await wait(`document.querySelector('[data-owner-forest-viewport]').dataset.studyMounted==='false'`);
   const parked = await read(); assert.equal(parked.cartId, saved.cartId);
   await navigate();
-  await wait(`document.querySelector('[data-homestead-guide]')`);
+  await wait(`document.querySelector('[data-forest-navigation-destination]')`);
   assert.equal((await read()).homeDesign.color, 'sage');
   assert.deepEqual((await read()).parking, parked.parking);
   console.log('PASS main page: boarding, careful driving, parking and reload through application endpoints');
   await send('browsingContext.navigate', {context,url:base+'/en/forest?returnTree='+compatibility.tree.id,wait:'complete'});
-  await wait(`document.querySelector('[data-homestead-guide]')`);
+  await wait(`document.querySelector('[data-forest-navigation-destination]')`);
   const returned=JSON.parse(await evaluate(`document.querySelector('#owner-forest-bootstrap').textContent`));
   assert.equal(returned.returnDestination.treeId,compatibility.tree.id);
   assert.ok(Math.hypot(returned.returnDestination.spawn.worldX-saved.parking.worldX,returned.returnDestination.spawn.worldY-saved.parking.worldY)>50);
