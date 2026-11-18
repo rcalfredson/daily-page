@@ -34,4 +34,4 @@ window.fetch = async (input, options) => {
   return originalFetch(input, options);
 };
 
-startOwnerForest({ createExtension: api => createHomesteadExtension(api, study) });
+startOwnerForest({ unifiedNavigation: true, createExtension: api => createHomesteadExtension(api, study) });

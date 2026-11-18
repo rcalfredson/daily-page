@@ -11,7 +11,7 @@ const messages = {
   GARDEN_TERRAIN_CHANGED: 'Terrain changed. Reload the forest before gardening.',
   GARDEN_MIGRATION_REQUIRED: 'This garden needs a newer reader. Your saved plants are preserved.'
 };
-export function createOwnerForestGarden({ terrainToken, state, terrain, requestRender, focusViewport }) {
+export function createOwnerForestGarden({ navigation: sharedNavigation = null, terrainToken, state, terrain, requestRender, focusViewport }) {
   const root = document.querySelector('[data-forest-garden]');
   if (!root) return { update() {}, depthItems: () => [], paint() {}, intersects: () => false };
   const find = name => document.querySelector(`[data-garden-${name}]`);
@@ -45,6 +45,10 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
   const notice = find('notice');
   const navigation = find('navigation'), navigationCopy = find('navigation-copy');
   const navigationArrow = find('navigation-arrow');
+  sharedNavigation?.register('garden', () => [
+    ...(!data?.acquired && data ? [{ id: 'garden:wild', label: 'Wild lanternbell', ...WILD_LANTERNBELL }] : []),
+    ...(data?.plants || []).map((p, i) => ({ id: `garden:${p.plantId}`, label: `Lanternbell ${i + 1}`, ...p }))
+  ]);
   find('navigation-stop')?.addEventListener('click', () => {
     guideId = null; update(performance.now(), true); focusViewport();
   });
@@ -76,7 +80,11 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
       const button = document.createElement('button'); button.type = 'button';
       button.dataset.plantId = p.plantId;
       button.textContent = `Lanternbell ${index + 1} · ${p.stage}${p.ready ? ' · cutting ready' : ''} — guide me`;
-      button.addEventListener('click', () => { guideId = p.plantId; panel(false); update(performance.now(), true); focusViewport(); });
+      button.addEventListener('click', () => {
+        if (sharedNavigation) sharedNavigation.navigate(`garden:${p.plantId}`);
+        else guideId = p.plantId;
+        panel(false); update(performance.now(), true); focusViewport();
+      });
       li.append(button); list.append(li);
       if (focusedId === p.plantId) button.focus({ preventScroll: true });
     });
@@ -240,7 +248,7 @@ export function createOwnerForestGarden({ terrainToken, state, terrain, requestR
     find('action-help').hidden = !nearby || Boolean(nearby.wild) || !confirm.hidden;
     const target = guideId ? data?.plants.find(p => p.plantId === guideId) : !data?.acquired ? WILD_LANTERNBELL : null;
     guide.textContent = target ? `${guideId ? 'Your lanternbell' : 'Wild lanternbell'}: ${direction(target, player)}.` : '';
-    if (navigation) {
+    if (navigation && !sharedNavigation) {
       const guiding = guideId && target;
       const label = guiding ? `Lanternbell ${data.plants.findIndex(p => p.plantId === guideId) + 1}` : '';
       const arrived = guiding && nearby?.plantId === guideId && !near.hidden;

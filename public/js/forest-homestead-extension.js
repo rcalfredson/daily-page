@@ -45,20 +45,15 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
   const mountCopy = bar.querySelector('[data-study-mount-copy]');
   const reverseButton = bar.querySelector('[data-study-reverse]');
   const diagnostics = document.querySelector('[data-home-study-state]');
-  let guidingHome = false, guidingCart = false;
+  api.navigation?.register('homestead', () => [
+    { id: 'home', label: 'Home', worldX: plan.parking.x, worldY: plan.parking.y, nearbyRadius: 85 },
+    { id: 'cart', label: 'Parked cart', worldX: cart.worldX, worldY: cart.worldY, nearbyRadius: 75 }
+  ]);
   if (integrated) {
     const more = document.querySelector('[data-owner-forest-more-panel]');
-    const homeGuide = document.createElement('button'); homeGuide.type = 'button';
-    homeGuide.dataset.homesteadGuide = ''; homeGuide.textContent = 'Guide me home';
-    homeGuide.addEventListener('click', () => { guidingHome = !guidingHome; guidingCart = false;
-      homeGuide.textContent = guidingHome ? 'Stop guiding home' : 'Guide me home'; cartGuide.textContent = 'Find my cart'; api.focus(); api.requestRender(); });
     const recoverButton = document.createElement('button'); recoverButton.type = 'button';
     recoverButton.dataset.studyRecover = ''; recoverButton.textContent = 'Recover cart at home';
-    const cartGuide = document.createElement('button'); cartGuide.type = 'button';
-    cartGuide.dataset.homesteadCartGuide = ''; cartGuide.textContent = 'Find my cart';
-    cartGuide.addEventListener('click', () => { guidingCart = !guidingCart; guidingHome = false;
-      cartGuide.textContent = guidingCart ? 'Stop finding cart' : 'Find my cart'; homeGuide.textContent = 'Guide me home'; api.focus(); api.requestRender(); });
-    more.append(homeGuide, cartGuide, recoverButton);
+    more.append(recoverButton);
     const saveNotice = document.createElement('div'); saveNotice.className = 'forest-homestead-save';
     saveNotice.innerHTML = '<span role="status" aria-live="polite" data-save-status></span><button type="button" data-save-retry hidden>Retry save</button>';
     dock.prepend(saveNotice);
@@ -335,14 +330,13 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
       const distance = Math.hypot(player.worldX - plan.destination.x, player.worldY - plan.destination.y);
       if (!mounted && distance < 100) visited = true;
       if (visited && Math.hypot(player.worldX - plan.parking.x, player.worldY - plan.parking.y) < 100) completed = true;
-      const target = integrated && guidingCart ? { x: cart.worldX, y: cart.worldY } : integrated || visited ? plan.parking : plan.destination;
+      const target = visited ? plan.parking : plan.destination;
       const bearing = Math.atan2(target.y - player.worldY, target.x - player.worldX);
       const arrow = ['→', '↘', '↓', '↙', '←', '↖', '↑', '↗'][(Math.round(bearing / (Math.PI / 4)) + 8) % 8];
       let text = time < messageUntil ? message : unloaded && blocked ? 'Waiting for the nearby forest to load.'
         : blocked ? precision ? 'Back up and straighten toward clear ground.' : 'Try careful driving to line up, or reverse.' : completed ? 'Home again. Try another cart or explore on foot.'
           : `${arrow} ${visited ? 'Home' : 'Amber clearing'} · ${Math.round(Math.hypot(target.x - player.worldX, target.y - player.worldY))} steps${distance < 100 && mounted ? ' · Step out to explore' : ''}`;
-      if (integrated && time >= messageUntil && !blocked) text = guidingHome || guidingCart
-        ? `${arrow} ${guidingCart ? 'Cart' : 'Home'} · ${Math.round(Math.hypot(target.x - player.worldX, target.y - player.worldY))} steps` : '';
+      if (time >= messageUntil && !blocked && (integrated || api.navigation)) text = '';
       guide.hidden = !text;
       if (guide.textContent !== text) guide.textContent = text;
       mountCopy.textContent = mounted ? 'Step out' : mountRequested ? 'Cancel boarding' : 'Enter cart';

@@ -572,3 +572,12 @@
   .owner-forest__key-hint { display: none; }
   .owner-forest__garden { bottom: 8px; right: 8px; width: calc(100% - 16px); max-height: calc(100% - 16px); }
 }
+
+.forest-navigation-picker { margin-bottom: 8px; }
+.forest-navigation-picker label { display: block; margin: 4px 0; }
+.forest-navigation-picker select { width: 100%; min-width: 0; min-height: 44px; padding: 0.5rem;
+  border: 1px solid #819b82; border-radius: 8px; background: #25392f; color: #f6efdb; font: inherit; }
+.forest-navigation-picker button { width: 100%; min-height: 44px; padding: 0.65rem; margin-top: 8px; }
+.forest-navigation-picker p:empty { display: none; }
+[data-forest-navigation] button { width: auto; min-width: 54px; padding: 0.4rem 0.65rem; font-size: inherit; }
+.owner-forest__viewport[data-more-open='true'] [data-forest-navigation] { display: none; }
