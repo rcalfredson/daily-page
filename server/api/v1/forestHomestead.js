@@ -1,4 +1,4 @@
-// Installed explicitly by the durable development fixture. No production enablement flag.
+// Shared route adapter; the application service enforces development account availability.
 export function buildForestHomesteadRouteHandler({ service }) {
   return async (req, res) => {
     res.set('Cache-Control', 'private, no-store'); res.vary('Cookie');

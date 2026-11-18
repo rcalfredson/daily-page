@@ -4,6 +4,9 @@ block append head
   link(rel='stylesheet' href='/css/owner-forest.css')
   if forestStatus === 'not-established'
     script(type='module' src='/js/owner-forest-garden-start.js')
+  if homesteadEnabled && forestStatus === 'ready'
+    link(rel='stylesheet' href='/css/forest-homestead.css')
+    link(rel='stylesheet' href='/css/forest-companion.css')
   if forestStatus === 'ready'
     script(type='module' src='/js/owner-forest.js')
 
@@ -47,6 +50,10 @@ block content
           aria-describedby='owner-forest-help'
           data-owner-forest-viewport
         )
+          if homesteadEnabled
+            section.owner-forest__homestead-status(data-homestead-start role='status' aria-live='polite')
+              span(data-homestead-start-copy) Opening your clearing…
+              button(type='button' data-homestead-start-action hidden) Try again
           canvas.owner-forest__canvas(data-owner-forest-canvas)
           .owner-forest__joystick(data-owner-forest-joystick hidden aria-hidden='true')
             .owner-forest__joystick-stick(data-owner-forest-joystick-stick)

@@ -126,3 +126,6 @@ development path in the main Activity Forest, reusing these modules and save aut
 ordinary entrance and writing-return behavior, a discoverable home locator, and coexistence with
 real writing and gardens. Keep production enablement and the traveler/expedition increments separate
 from that first integration pass.
+
+The first development-gated application integration is now recorded in
+[Activity Forest integration](home-cart-activity-forest-integration.md).

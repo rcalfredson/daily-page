@@ -554,7 +554,8 @@
 .owner-forest__viewport:is([data-placing='true'], [data-hud-garden-placing='true'], [data-inspecting='true'], [data-hud-garden-open='true']) :is(.owner-forest__hud-actions, .owner-forest__tree-context, .owner-forest__more) { display: none; }
 .owner-forest__viewport:is([data-inspecting='true'], [data-hud-garden-open='true']) .owner-forest__dock { display: none; }
 .owner-forest__more { grid-row: 1; border-bottom: 1px solid #819b82; padding-bottom: 8px; font-size: 0.8rem; }
-.owner-forest__more > button { width: 100%; font-size: inherit; }
+.owner-forest__more > button { width: 100%; font-size: inherit; min-height: 44px; padding: 0.65rem 0.85rem; }
+.owner-forest__more > button + button { margin-top: 8px; }
 .owner-forest__more summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; }
 .owner-forest__more summary::after { content: '+'; margin-left: auto; }
 .owner-forest__more details[open] summary::after { content: '−'; }

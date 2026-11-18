@@ -198,7 +198,7 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
     terrainToken: bootstrap.terrain?.token || null,
     terrain, requestRender, focusViewport: () => viewport.focus({ preventScroll: true }),
     state: () => ({ player, placements: [...placementsById.values()],
-      markers: [...markersById.values()], facingRadians: playerMotion.targetFacingRadians,
+      markers: [...markersById.values()], placementAllowed: p => extension?.placementAllowed?.(p, 'garden') !== false, facingRadians: playerMotion.targetFacingRadians,
       available: !extension?.hidePlayer?.() && !returnArrivalPending && !placement.active && !inspectedTreeId && !inspectedMarkerId
         && currentAuthoredCellsReady() && ['ready', 'notice'].includes(authoredState) })
   });
@@ -1057,6 +1057,9 @@ export function startOwnerForest({ createExtension = () => null } = {}) {
     });
     if (placement.preview.valid && !terrain.sample({ ...placement.preview, radius: 17 }).placeable) {
       placement.preview = { ...placement.preview, valid: false, reason: 'terrain-collision' };
+    }
+    if (placement.preview.valid && extension?.placementAllowed?.(placement.preview, 'marker') === false) {
+      placement.preview = { ...placement.preview, valid: false, reason: 'marker-collision' };
     }
     if (placement.preview.valid && garden.intersects(placement.preview)) {
       placement.preview = { ...placement.preview, valid: false, reason: 'marker-collision' };
