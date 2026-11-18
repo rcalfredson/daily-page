@@ -476,6 +476,12 @@
 .owner-forest__garden-holding canvas[data-empty='true'] { opacity: 0.25; }
 .owner-forest__garden details { margin-top: 0.8rem; }
 .owner-forest__garden details p { font-size: 0.8rem; }
+.owner-forest__materials table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.owner-forest__materials :is(th, td) { padding: 0.4rem 0; text-align: start; }
+.owner-forest__materials thead { border-bottom: 1px solid #819b82; }
+.owner-forest__materials :is(th, td):not(:first-child) { text-align: end; }
+.owner-forest__materials td { font-variant-numeric: tabular-nums; }
+.owner-forest__materials p { margin: 0.55rem 0 0; }
 .owner-forest__garden-near {
   width: 100%; box-sizing: border-box;
   background: #243b30; color: #f6efdb; padding: 0.65rem; border: 1px solid #819b82; border-radius: 10px;

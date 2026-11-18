@@ -70,6 +70,15 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
   const initialHeading = Math.atan2(plan.route[1].y - plan.route[0].y, plan.route[1].x - plan.route[0].x);
   let cart = { variant: 'canopy', design: studyCartDesign('canopy'), worldX: plan.parking.x, worldY: plan.parking.y, heading: initialHeading };
   if (durable) cart = { ...cart, ...study.saved.parking, design: study.saved.cartDesign };
+  const materials = viewport.querySelector('[data-homestead-materials]');
+  function updateMaterials(record) {
+    if (!materials) return;
+    for (const material of ['timber', 'cloth']) {
+      materials.querySelector(`[data-available-${material}]`).textContent = record.holdings[material];
+      materials.querySelector(`[data-cart-${material}]`).textContent = record.cartCommitment[material];
+    }
+    materials.hidden = false;
+  }
   let appliedRevision = study.saved?.revision;
   const saves = durable ? createHomesteadClient({ initial: study.saved, onChange(state) {
     document.querySelector('[data-save-status]').textContent = integrated && state.status === 'saved' ? '' : state.message;
@@ -80,6 +89,7 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
         JSON.stringify(previousSaved[key]) !== JSON.stringify(state.record[key]));
       appliedRevision = state.record.revision;
       previousSaved = state.record;
+      updateMaterials(state.record);
       companion = state.record.companion || null;
       homeDesign = { ...state.record.homeDesign };
       if (spatialChange || state.record.recoveryRequired) {
@@ -92,6 +102,7 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
     encounter?.refresh();
   } }) : null;
   if (saves) {
+    updateMaterials(saves.snapshot().record);
     document.querySelector('[data-save-status]').textContent = integrated && !saves.snapshot().pending ? '' : saves.snapshot().message;
     document.querySelector('[data-save-retry]').hidden = !saves.snapshot().pending;
     document.querySelector('[data-save-retry]').addEventListener('click', async () => {

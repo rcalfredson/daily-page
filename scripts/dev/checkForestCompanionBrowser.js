@@ -177,6 +177,42 @@ try {
   await capture('05-reduced-motion');
   await send('script.removePreloadScript', { script: preload.script });
   console.log('PASS reduced motion retains physical approach, interaction pose and brief caption');
+
+  // The Satchel shows the confirmed balances before and after a cart redesign.
+  const checkMaterials = async record => {
+    await click('[data-garden-open]');
+    const actual = JSON.parse(await evaluate(`(() => {
+      const section = document.querySelector('[data-homestead-materials]');
+      if (section.hidden) throw new Error('Building materials is missing from the Satchel');
+      section.open = true;
+      return JSON.stringify(['available-timber', 'available-cloth', 'cart-timber', 'cart-cloth']
+        .map(field => Number(section.querySelector('[data-' + field + ']').textContent)));
+    })()`));
+    assert.deepEqual(actual, [record.holdings.timber, record.holdings.cloth,
+      record.cartCommitment.timber, record.cartCommitment.cloth]);
+    await click('[data-garden-close]');
+  };
+  await click('[data-study-recover]');
+  await wait('!homeCartStudy.snapshot().save.busy && !document.querySelector("[data-study-edit=cart]").disabled');
+  const previous = (await snapshot()).save.record;
+  await checkMaterials(previous);
+  const canopy = previous.cartDesign.canopy === 'none' ? 'linen' : 'none';
+  await click('[data-study-edit=cart]');
+  await evaluate(`(() => {
+    const field = document.querySelector('[data-design-field="canopy"]');
+    field.value = ${JSON.stringify(canopy)};
+    field.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+  })()`);
+  await click('[data-design-apply]');
+  await wait('!homeCartStudy.snapshot().editor');
+  const rebuilt = (await snapshot()).save.record;
+  assert.equal(rebuilt.cartDesign.canopy, canopy);
+  assert.notEqual(rebuilt.cartCommitment.cloth, previous.cartCommitment.cloth);
+  await checkMaterials(rebuilt);
+  await reload();
+  await checkMaterials(rebuilt);
+  console.log('PASS Satchel balances update after redesign and persist across reload');
 } catch (error) { await inspectFailure(); throw error; } finally {
   if (started) await send('session.end'); ws.close();
   await new Promise(resolve => server.close(resolve)); await cleanup(); await mongoose.disconnect();
