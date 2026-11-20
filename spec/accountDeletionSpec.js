@@ -103,6 +103,27 @@ describe('account deletion lifecycle', () => {
     expect(models.User.deleteOne).not.toHaveBeenCalled();
   });
 
+  it('refuses an ordinary account when deletion is restricted to disposable test accounts', async () => {
+    const models = makeModels();
+    const deleteAccount = buildAccountDeletionService({ models, transactionRunner });
+    await expectAsync(deleteAccount({
+      userId: 'user-1', disposition: 'delete', requireDisposableTestAccount: true, now
+    })).toBeRejectedWithError(AccountDeletionError, 'NOT_DISPOSABLE_TEST_ACCOUNT');
+    expect(models.AccountDeletionRequest.create).not.toHaveBeenCalled();
+    expect(models.User.deleteOne).not.toHaveBeenCalled();
+  });
+
+  it('keeps disposable account identity on the cleanup request after deletion', async () => {
+    const models = makeModels();
+    models.User.findById.and.resolveTo({ _id: 'user-1', username: 'test-qa', disposableTestAccount: true });
+    const deleteAccount = buildAccountDeletionService({ models, transactionRunner });
+    await deleteAccount({ userId: 'user-1', disposition: 'delete', requireDisposableTestAccount: true, now });
+    expect(models.AccountDeletionRequest.create).toHaveBeenCalledWith([
+      jasmine.objectContaining({ ownerUserId: 'user-1', disposableTestAccount: true })
+    ], { session: 'session' });
+    expect(models.User.deleteOne).toHaveBeenCalledOnceWith({ _id: 'user-1' }, { session: 'session' });
+  });
+
   it('retains eligible posts without ownership and deletes in-progress unlisted posts', async () => {
     const models = makeModels([
       { _id: 'public-post', visibility: 'public', status: 'in-progress' },

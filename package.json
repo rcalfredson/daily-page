@@ -28,6 +28,7 @@
     "trail:import": "node scripts/reading-trails/importReadingTrail.js",
     "trail:audit": "node scripts/reading-trails/auditReadingTrails.js",
     "account-deletion:fixture": "node scripts/dev/accountDeletionFixture.js",
+    "test-account": "node scripts/dev/testAccount.js",
     "audit:tag-queries": "node scripts/audits/tagQueryProfile.js",
     "audit:home-discovery": "node scripts/audits/homeDiscovery.js",
     "audit:reading-trails": "node scripts/audits/readingTrailCandidates.js",
