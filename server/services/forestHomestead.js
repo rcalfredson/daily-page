@@ -13,7 +13,8 @@ import { homeLayoutFromPlan } from '../../public/js/forest-home-reservations.js'
 import { advanceCompanionEncounter, COMPANION_ENCOUNTERS } from '../../public/js/forest-companion.js';
 import { replaceConstructionCommitment, checkConstructionRevision } from './forestConstructionAccounting.js';
 import { validateHomestead, HOMESTEAD_RECEIPT_LIMIT, HOMESTEAD_MATERIAL_CAPACITY,
-  HOMESTEAD_UUID, validHomesteadParking, ForestHomesteadError, homesteadCartCost } from './forestHomesteadRecord.js';
+  HOMESTEAD_UUID, validHomesteadParking, ForestHomesteadError, homesteadCartCost,
+  hasHomesteadCart, canDriveHomesteadCart } from './forestHomesteadRecord.js';
 
 const fail = code => { throw new ForestHomesteadError(code); };
 const unsupported = async () => fail('HOME_INTEGRATION_NOT_READY');
@@ -30,8 +31,9 @@ export function canonicalHomesteadCommand(input) {
   if (['home', 'cart'].includes(input?.action)) fields.push('design');
   if (input?.action === 'park') fields.push('parking');
   if (input?.action === 'companion') fields.push('encounter');
+  if (input?.action === 'establish' && Object.hasOwn(input, 'site')) fields.push('site');
   if (!input || typeof input !== 'object' || Array.isArray(input)
-    || !['establish', 'home', 'cart', 'park', 'recover', 'companion'].includes(input.action)
+    || !['establish', 'supplies', 'home', 'cart', 'park', 'recover', 'companion'].includes(input.action)
     || Object.keys(input).length !== fields.length || fields.some(f => !Object.hasOwn(input, f))
     || !HOMESTEAD_UUID.test(input.operationId) || !HOMESTEAD_UUID.test(input.forestId)
     || !Number.isSafeInteger(input.expectedRevision) || input.expectedRevision < 0 || input.expectedRevision >= Number.MAX_SAFE_INTEGER
@@ -39,17 +41,20 @@ export function canonicalHomesteadCommand(input) {
       && /^[a-f0-9-]{36}:1$/.test(input.terrainToken))
     || fields.includes('design') && !validateConstructionDesign(input.action, input.design)
     || fields.includes('parking') && !validHomesteadParking(input.parking)
+    || fields.includes('site') && (!input.site || Object.keys(input.site).length !== 2
+      || !['x', 'y'].every(key => Number.isSafeInteger(input.site[key]) && Math.abs(input.site[key]) <= 3600))
     || fields.includes('encounter') && !COMPANION_ENCOUNTERS.includes(input.encounter)) fail('HOME_INVALID_INPUT');
   const command = Object.fromEntries(fields.map(f => [f, input[f]]));
   if (command.design) command.design = Object.fromEntries(['version', ...Object.keys(input.action === 'home'
     ? HOME_DESIGN_OPTIONS : CART_DESIGN_OPTIONS)].map(k => [k, input.design[k]]));
   if (command.parking) command.parking = Object.fromEntries(['worldX', 'worldY', 'heading'].map(k => [k, input.parking[k]]));
+  if (command.site) command.site = { x: input.site.x, y: input.site.y };
   return command;
 }
 
 export function buildForestHomesteadService({ HomeModel = ForestHomestead, WorldModel = ForestOwnerWorld,
   DeletionModel = AccountDeletionRequest, transactionRunner = transact, acquireFence = acquireForestLedgerFence,
-  enabled = () => false, planSite = unsupported, validatePlacement = unsupported,
+  enabled = () => false, guidedStart = false, planSite = unsupported, validatePlacement = unsupported,
   clock = () => new Date(), generateId = () => crypto.randomUUID() } = {}) {
   async function authority(ownerUserId, session) {
     if (typeof ownerUserId !== 'string' || !/^[a-f0-9]{24}$/.test(ownerUserId)) fail('HOME_INVALID_INPUT');
@@ -103,11 +108,17 @@ export function buildForestHomesteadService({ HomeModel = ForestHomestead, World
       let next;
       if (command.action === 'establish') {
         if (previous) fail('HOME_ALREADY_ESTABLISHED');
+        if (guidedStart && !command.site) fail('HOME_SITE_CHANGED');
         const layout = homeLayoutFromPlan(await planSite({ ...scope, world, session }));
-        const budget = replaceConstructionCommitment({ holdings: HOMESTEAD_MATERIAL_CAPACITY,
+        if (command.site && (command.site.x !== layout.parking.x || command.site.y !== layout.parking.y)) fail('HOME_SITE_CHANGED');
+        const empty = { timber: 0, cloth: 0 };
+        const budget = guidedStart ? { holdings: empty, commitment: { ...empty } }
+          : replaceConstructionCommitment({ holdings: HOMESTEAD_MATERIAL_CAPACITY,
           previousCommitment: {}, nextCost: homesteadCartCost(DEFAULT_CART_DESIGN), capacity: HOMESTEAD_MATERIAL_CAPACITY });
-        next = { ...scope, schemaVersion: 1, catalogVersion: 1, layoutId: generateId(), homeId: generateId(), cartId: generateId(),
-          layout, homeDesign: { ...DEFAULT_HOME_DESIGN }, cartDesign: { ...DEFAULT_CART_DESIGN },
+        next = { ...scope, schemaVersion: guidedStart ? 3 : 1, catalogVersion: 1,
+          layoutId: generateId(), homeId: generateId(), cartId: generateId(),
+          ...(guidedStart ? { starterSuppliesClaimed: false } : {}),
+          layout, homeDesign: { ...DEFAULT_HOME_DESIGN }, cartDesign: guidedStart ? null : { ...DEFAULT_CART_DESIGN },
           parking: { worldX: layout.parking.x, worldY: layout.parking.y,
             heading: Math.atan2(layout.route[1].y - layout.route[0].y, layout.route[1].x - layout.route[0].x) },
           holdings: budget.holdings, cartCommitment: budget.commitment };
@@ -116,15 +127,25 @@ export function buildForestHomesteadService({ HomeModel = ForestHomestead, World
         next = globalThis.structuredClone(previous); delete next._id;
         if (command.action === 'companion') {
           next.companion = advanceCompanionEncounter(previous.companion, command.encounter, generateId);
-          next.schemaVersion = 2;
+          if (next.schemaVersion === 1) next.schemaVersion = 2;
+        }
+        if (command.action === 'supplies') {
+          if (previous.starterSuppliesClaimed !== false) fail('HOME_SUPPLIES_UNAVAILABLE');
+          next.starterSuppliesClaimed = true;
+          next.holdings = { ...HOMESTEAD_MATERIAL_CAPACITY };
         }
         if (command.action === 'home') next.homeDesign = command.design;
         if (command.action === 'cart') {
+          if (previous.starterSuppliesClaimed === false) fail('HOME_SUPPLIES_REQUIRED');
           const budget = replaceConstructionCommitment({ holdings: previous.holdings,
             previousCommitment: previous.cartCommitment, nextCost: homesteadCartCost(command.design), capacity: HOMESTEAD_MATERIAL_CAPACITY });
           next.cartDesign = command.design; next.holdings = budget.holdings; next.cartCommitment = budget.commitment;
         }
-        if (command.action === 'park') next.parking = command.parking;
+        if (command.action === 'park') {
+          if (!canDriveHomesteadCart(previous)) fail('HOME_CART_NOT_READY');
+          next.parking = command.parking;
+        }
+        if (command.action === 'recover' && !hasHomesteadCart(previous)) fail('HOME_CART_NOT_READY');
         if (command.action === 'recover') next.parking = { worldX: next.layout.parking.x, worldY: next.layout.parking.y,
           heading: Math.atan2(next.layout.route[1].y - next.layout.route[0].y, next.layout.route[1].x - next.layout.route[0].x) };
       }

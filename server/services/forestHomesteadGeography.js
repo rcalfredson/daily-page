@@ -5,7 +5,7 @@ import { readForestGardenStore } from './forestGardenStore.js';
 import { readForestOwnerTerrain } from './forestOwnerTerrain.js';
 import { sampleOwnerTerrain } from '../../public/js/owner-forest-terrain-authority.js';
 import { cartPoseClear, cartDismount, discIntersectsRectangle } from '../../public/js/forest-cart-motion.js';
-import { constructionHomeFootprint } from '../../public/js/forest-construction-design.js';
+import { constructionHomeFootprint, DEFAULT_CART_DESIGN } from '../../public/js/forest-construction-design.js';
 import { planHomeCartSite } from './forestHomeSitePlanner.js';
 import { ForestHomesteadError } from './forestHomesteadRecord.js';
 
@@ -63,7 +63,7 @@ export function buildForestHomesteadGeography({ TreeModel = ForestWritingTree, M
     const clear = p => Math.abs(p.worldX) + p.radius < 999_980_000 && Math.abs(p.worldY) + p.radius < 999_980_000
       && !discIntersectsRectangle(p, house) && landscape.terrainAt(p).walkable
       && landscape.obstacles.every(o => Math.hypot(o.x - p.worldX, o.y - p.worldY) > o.collisionRadius + p.radius);
-    const cart = { ...next.parking, design: next.cartDesign };
+    const cart = { ...next.parking, design: next.cartDesign || DEFAULT_CART_DESIGN };
     return cartPoseClear(cart, clear) ? cartDismount(cart, clear) : null;
   }
   return { planSite, arrival, validatePlacement: async args => Boolean(await arrival(args)) };

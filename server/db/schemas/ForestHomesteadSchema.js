@@ -4,12 +4,13 @@ import { validateHomestead, HOMESTEAD_UUID } from '../../services/forestHomestea
 const identity = { type: String, required: true, match: HOMESTEAD_UUID, immutable: true };
 const data = { type: Schema.Types.Mixed, required: true };
 const schema = new Schema({
-  schemaVersion: { type: Number, required: true, enum: [1, 2] },
+  schemaVersion: { type: Number, required: true, enum: [1, 2, 3] },
   catalogVersion: { type: Number, required: true, enum: [1] },
   ownerUserId: { type: String, required: true, match: /^[a-f0-9]{24}$/, immutable: true },
   forestId: identity, layoutId: identity, homeId: identity, cartId: identity,
-  layout: { ...data, immutable: true }, homeDesign: data, cartDesign: data, parking: data,
+  layout: { ...data, immutable: true }, homeDesign: data, cartDesign: { type: Schema.Types.Mixed }, parking: data,
   holdings: data, cartCommitment: data,
+  starterSuppliesClaimed: { type: Boolean },
   companion: { type: Schema.Types.Mixed },
   revision: { type: Number, required: true, min: 1, validate: Number.isSafeInteger },
   receipts: data, changedAt: { type: Date, required: true }

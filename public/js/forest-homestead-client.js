@@ -18,7 +18,8 @@ export function createHomesteadClient({ initial, request = (...args) => globalTh
         credentials: 'same-origin', cache: 'no-store', ...(body ? { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {}) });
       const result = await response.json();
       if (!response.ok) throw Object.assign(new Error(result.code), { status: response.status });
-      if (!result.established || result.forestId !== initial.forestId || !Number.isSafeInteger(result.revision)) throw new Error('Invalid saved state');
+      if ((method === 'POST' || initial.established) && !result.established
+        || result.forestId !== initial.forestId || !Number.isSafeInteger(result.revision)) throw new Error('Invalid saved state');
       return result;
     } finally { clearTimeout(timer); }
   }
@@ -35,9 +36,10 @@ export function createHomesteadClient({ initial, request = (...args) => globalTh
       status = 'saved'; message = 'Saved. Ready for your next visit.'; checkTerrain(); return true;
     } catch (error) {
       if ([400, 403, 409].includes(error.status)) {
-        const companion = pending.action === 'companion';
+        const action = pending.action;
         pending = null; remember();
-        status = 'conflict'; message = companion ? 'This encounter changed in another visit or could not be saved. Review the current encounter and try again.'
+        status = 'conflict'; message = action === 'establish' ? 'Find the suggested clearing again.'
+          : action === 'companion' ? 'This encounter changed in another visit or could not be saved. Review the current encounter and try again.'
           : error.message === 'CONSTRUCTION_CONFLICT' ? 'Another visit changed this save. Your draft is still here; review it and save again.' : 'The save was declined. Your draft is still here; review it and try again.';
         try { record = await send('GET'); checkTerrain(); }
         catch { status = 'stale'; message = 'Could not load the current save. Retry loading before making another change.'; }

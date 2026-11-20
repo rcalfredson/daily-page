@@ -211,7 +211,7 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
         && currentAuthoredCellsReady() && ['ready', 'notice'].includes(authoredState) })
   });
 
-  extension = createExtension({
+  const extensionApi = {
     navigation,
     state: () => ({ player: { ...player }, camera, terrain, placements: [...placementsById.values()],
       busy: Boolean(inspectedTreeId || inspectedMarkerId || placement.active || returnArrivalPending)
@@ -236,7 +236,8 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
     requestRender,
     reloadRegions: () => { loadedCells.clear(); loadedAuthoredCells.clear(); loadNearbyCells(); loadNearbyAuthoredCells(); },
     focus: () => viewport.focus({ preventScroll: true })
-  });
+  };
+  extension = createExtension(extensionApi);
 
   function cellQuery(cells) {
     return cells.map(ownerForestCellId).join(',');
@@ -1714,4 +1715,5 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
   loadNearbyAuthoredCells();
   window.requestAnimationFrame(tick);
   if (loadFailure) setStatus('The forest could not be loaded.', true);
+  return { installExtension(factory) { extension = factory(extensionApi); requestRender(); } };
 }

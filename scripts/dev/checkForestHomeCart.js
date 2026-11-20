@@ -45,6 +45,7 @@ try {
   const key = key => evaluate(`document.querySelector('[data-owner-forest-viewport]').dispatchEvent(new KeyboardEvent('keydown', {key:${JSON.stringify(key)},bubbles:true})); true`);
   const choose = (selector, value) => evaluate(`(() => { const el=document.querySelector(${JSON.stringify(selector)}); el.value=${JSON.stringify(value)}; el.dispatchEvent(new Event('change', {bubbles:true})); return true; })()`);
   const click = selector => evaluate(`document.querySelector(${JSON.stringify(selector)}).click(); true`);
+  const forestFocused = () => evaluate('document.activeElement.matches("[data-owner-forest-viewport]")');
   const holdKey = async (value, milliseconds) => {
     await key(value); await evaluate(`new Promise(resolve=>setTimeout(resolve,${milliseconds}))`);
     await evaluate(`document.querySelector('[data-owner-forest-viewport]').dispatchEvent(new KeyboardEvent('keyup',{key:${JSON.stringify(value)},bubbles:true}));true`);
@@ -129,24 +130,37 @@ try {
   await capture('07-house-workshop');
   await click('[data-design-cancel]');
   assert.deepEqual((await snapshot()).homeDesign, original.homeDesign, 'Cancel keeps applied house');
-  assert.equal(await evaluate('document.activeElement.matches("[data-study-edit=home]")'), true, 'Cancel returns focus');
+  assert.equal(await forestFocused(), true, 'Cancel returns focus to the forest');
+  await send('input.performActions', { context, actions: [{ type: 'key', id: 'keyboard', actions: [
+    { type: 'keyDown', value: '\uE015' }, { type: 'pause', duration: 140 }, { type: 'keyUp', value: '\uE015' }
+  ] }] });
+  assert.ok((await snapshot()).player.worldY > original.player.worldY, 'Arrow keys move the player immediately after Cancel');
   await click('[data-study-edit=home]');
   await choose('[data-design-field=width]', '150'); await choose('[data-design-field=depth]', '86');
   await choose('[data-design-field=walls]', 'shingles'); await choose('[data-design-field=color]', 'cream');
   await choose('[data-design-field=roof]', 'tiles'); await choose('[data-design-field=roofColor]', 'rust');
   await click('[data-design-apply]');
   assert.equal((await snapshot()).editor, null);
+  assert.equal(await forestFocused(), true, 'Applying a house design returns focus to the forest');
   assert.equal((await snapshot()).homeDesign.width, 150);
   assert.equal((await snapshot()).homeDesign.color, 'cream');
+  await click('[data-study-edit=cart]');
+  await send('input.performActions', { context, actions: [{ type: 'key', id: 'keyboard', actions: [
+    { type: 'keyDown', value: '\uE00C' }, { type: 'keyUp', value: '\uE00C' }
+  ] }] });
+  assert.equal((await snapshot()).editor, null);
+  assert.equal(await forestFocused(), true, 'Escape returns focus to the forest');
   await click('[data-study-edit=cart]');
   await choose('[data-design-field=length]', '44'); await choose('[data-design-field=width]', '30');
   await choose('[data-design-field=body]', 'rails'); await choose('[data-design-field=wheels]', 'solid');
   await choose('[data-design-field=supports]', 'posts'); await choose('[data-design-field=canopy]', 'linen');
   await choose('[data-design-field=wood]', 'walnut'); await choose('[data-design-field=cloth]', 'ochre');
   assert.deepEqual((await snapshot()).cart, original.cart, 'Cart previews leave pose and applied design alone');
+  assert.equal(await evaluate('document.querySelector("[data-design-status]").textContent'), 'The cart fits at its parking spot.');
   await capture('08-cart-workshop');
   await click('[data-design-apply]');
   assert.equal((await snapshot()).editor, null);
+  assert.equal(await forestFocused(), true, 'Applying a cart design returns focus to the forest');
   assert.equal((await snapshot()).cart.design.length, 44);
   assert.equal((await snapshot()).cart.design.wheels, 'solid');
   await key('c'); await wait('window.homeCartStudy.snapshot().mounted');
@@ -208,8 +222,9 @@ try {
     await capture(`10-editor-${width}`);
     await evaluate(`document.querySelector('.home-study-editor h2').dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));true`);
     assert.equal((await snapshot()).editor, null, 'Escape cancels preview');
-    await evaluate(`document.querySelector('[data-study-mount]').click();true`);
-    assert.equal((await snapshot()).mounted, true);
+    assert.equal(await forestFocused(), true, 'Escape returns focus to the forest at narrow widths');
+    await click('[data-study-mount]');
+    await wait('window.homeCartStudy.snapshot().mounted');
     assert.equal(await evaluate(`(() => { const v=document.querySelector('[data-owner-forest-viewport]').getBoundingClientRect();const b=document.querySelector('.home-study-bar').getBoundingClientRect();return b.left>=v.left && b.right<=v.right && b.bottom<=v.bottom && document.documentElement.scrollWidth<=innerWidth; })()`), true);
     // Native touch pointer input through BiDi exercises the ordinary floating joystick.
     await evaluate(`document.querySelector('[data-owner-forest-viewport]').scrollIntoView({block:'center'});true`);

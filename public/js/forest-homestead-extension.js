@@ -15,7 +15,7 @@ import { DEFAULT_HOME_DESIGN, studyCartDesign, constructionHomeFootprint,
   validateConstructionDesign, advanceCartPresentation } from '/js/forest-construction-design.js';
 
 // Shared by the ordinary forest and the isolated construction study.
-export function createHomesteadExtension(api, study, { integrated = false } = {}) {
+export function createHomesteadExtension(api, study, { integrated = false, justEstablished = false } = {}) {
   const { plan } = study;
   const durable = Boolean(study.saved);
   const viewport = document.querySelector('[data-owner-forest-viewport]');
@@ -45,10 +45,6 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
   const mountCopy = bar.querySelector('[data-study-mount-copy]');
   const reverseButton = bar.querySelector('[data-study-reverse]');
   const diagnostics = document.querySelector('[data-home-study-state]');
-  api.navigation?.register('homestead', () => [
-    { id: 'home', label: 'Home', worldX: plan.parking.x, worldY: plan.parking.y, nearbyRadius: 85 },
-    { id: 'cart', label: 'Parked cart', worldX: cart.worldX, worldY: cart.worldY, nearbyRadius: 75 }
-  ]);
   if (integrated) {
     const more = document.querySelector('[data-owner-forest-more-panel]');
     const recoverButton = document.createElement('button'); recoverButton.type = 'button';
@@ -65,11 +61,19 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
   let companion = study.saved?.companion || null, encounter = null, actor = null;
   let mountRequested = false, lastActorTime = null, animalScene = null;
   let previousSaved = study.saved;
+  const guidedStart = study.saved?.schemaVersion === 3;
+  const hasCart = () => !guidedStart || previousSaved.cartDesign !== null;
+  const needsSupplies = () => guidedStart && !previousSaved.starterSuppliesClaimed;
+  const canDrive = () => hasCart() && (!guidedStart || companion?.stage === 'joined');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let blocked = false, unloaded = false, message = '', messageUntil = 0, lastUpdate = 0;
   const initialHeading = Math.atan2(plan.route[1].y - plan.route[0].y, plan.route[1].x - plan.route[0].x);
   let cart = { variant: 'canopy', design: studyCartDesign('canopy'), worldX: plan.parking.x, worldY: plan.parking.y, heading: initialHeading };
-  if (durable) cart = { ...cart, ...study.saved.parking, design: study.saved.cartDesign };
+  if (durable) cart = { ...cart, ...study.saved.parking, design: study.saved.cartDesign || cart.design };
+  const supplies = document.createElement('button');
+  supplies.type = 'button'; supplies.textContent = 'Unpack starter supplies'; supplies.hidden = true;
+  supplies.dataset.homesteadSupplies = '';
+  if (guidedStart) bar.querySelector('.home-study-workshop').prepend(supplies);
   const materials = viewport.querySelector('[data-homestead-materials]');
   function updateMaterials(record) {
     if (!materials) return;
@@ -85,6 +89,7 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
     const retry = document.querySelector('[data-save-retry]');
     retry.hidden = !state.pending && !['stale', 'reload'].includes(state.status); retry.disabled = state.busy; retry.textContent = state.status === 'reload' ? 'Reload forest' : state.status === 'stale' ? 'Retry loading' : 'Retry save';
     if (state.record.revision !== appliedRevision) {
+      const hadCart = hasCart(), neededSupplies = needsSupplies(), wasJoined = companion?.stage === 'joined';
       const spatialChange = ['parking', 'homeDesign', 'cartDesign'].some(key =>
         JSON.stringify(previousSaved[key]) !== JSON.stringify(state.record[key]));
       appliedRevision = state.record.revision;
@@ -93,10 +98,18 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
       companion = state.record.companion || null;
       homeDesign = { ...state.record.homeDesign };
       if (spatialChange || state.record.recoveryRequired) {
-        cart = { ...cart, ...state.record.parking, design: state.record.cartDesign };
-        mounted = false; mountRequested = false; actor?.reset();
-        if (state.record.arrival) api.setPlayer(state.record.arrival);
+        cart = { ...cart, ...state.record.parking, design: state.record.cartDesign || cart.design };
+        mounted = false; mountRequested = false;
+        if (hadCart) {
+          actor?.reset();
+          if (state.record.arrival) api.setPlayer(state.record.arrival);
+        } else if (hasCart() && state.record.arrival && cartOverlapsPlayer(cart, api.state().player)) {
+          api.setPlayer(state.record.arrival);
+        }
       }
+      if (neededSupplies && !needsSupplies()) say(`Starter supplies added to your Satchel. ${state.record.holdings.timber} timber and ${state.record.holdings.cloth} cloth available.`);
+      if (!hadCart && hasCart()) say(canDrive() ? 'Your cart is ready. Mallow can pull it.' : 'Your cart is built. Meet Mallow and invite her along.');
+      if (guidedStart && !wasJoined && companion?.stage === 'joined' && hasCart()) say('Mallow is ready to pull your cart.');
       api.requestRender();
     }
     encounter?.refresh();
@@ -112,11 +125,19 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
     });
   }
   const saveBlocked = () => Boolean(saves && (saves.snapshot().busy || saves.snapshot().pending || ['stale', 'reload'].includes(saves.snapshot().status)));
+  const cartOverlapsPlayer = (candidate, player) => cartFootprint(candidate).some(p =>
+    Math.hypot(p.worldX - player.worldX, p.worldY - player.worldY) < p.radius + player.radius);
   const durations = [], frameTimes = [], travel = { distance: 0, frames: 0, blockedFrames: 0 };
   let lastFrame = 0;
   const percentile = values => values.length ? [...values].sort((a, b) => a - b)[Math.floor(values.length * .95)] : 0;
   const house = () => constructionHomeFootprint(plan.home, homeDesign);
   const companionPosition = () => actor?.snapshot() || companionHarnessPose(cart);
+  api.navigation?.register('homestead', () => [
+    { id: 'home', label: 'Home', worldX: plan.parking.x, worldY: plan.parking.y, nearbyRadius: 85 },
+    ...(hasCart() ? [{ id: 'cart', label: 'Parked cart', worldX: cart.worldX, worldY: cart.worldY, nearbyRadius: 75 }] : []),
+    ...(guidedStart && companion?.stage !== 'joined' ? [{ id: 'mallow', label: companion?.name || 'Mule',
+      ...companionPosition(), nearbyRadius: 110 }] : [])
+  ]);
   const nearCompanion = (player = api.state().player) => {
     const animal = companionPosition();
     return Math.hypot(player.worldX - animal.worldX, player.worldY - animal.worldY) < 120;
@@ -131,7 +152,11 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
       look: attentive && !animal.walking ? Math.max(-.4, Math.min(.4, Math.atan2(Math.sin(look), Math.cos(look)))) : 0,
       greeting: !reduce && !mounted && animal.responding ? .5 + Math.sin(performance.now() / 180) * .5 : 0 };
   }
-  const say = text => { message = text; messageUntil = performance.now() + 3500; };
+  const say = text => { message = text; messageUntil = performance.now() + 4500; api.requestRender(); };
+  if (justEstablished) {
+    if (discIntersectsRectangle(api.state().player, house())) api.setPlayer({ worldX: plan.parking.x, worldY: plan.parking.y });
+    say(needsSupplies() ? 'This clearing is yours. Unpack your starter supplies when you’re ready.' : 'This clearing is yours.');
+  }
   function clear(p) {
     if (!api.regionLoaded(p)) { unloaded = true; return false; }
     if (Math.abs(p.worldX) + p.radius > study.extent || Math.abs(p.worldY) + p.radius > study.extent) return false;
@@ -146,6 +171,7 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
     if (discIntersectsRectangle(p, house()) || api.occupied(p)) return false;
     const { terrain, placements } = animalScene || api.state();
     if (!terrain.sample(p).walkable || placements.some(t => Math.hypot(p.worldX - t.worldX, p.worldY - t.worldY) <= p.radius + t.collisionRadius)) return false;
+    if (!hasCart()) return true;
     const d = cartDefinition(cart), dx = p.worldX - cart.worldX, dy = p.worldY - cart.worldY;
     const local = { worldX: Math.cos(cart.heading) * dx + Math.sin(cart.heading) * dy,
       worldY: -Math.sin(cart.heading) * dx + Math.cos(cart.heading) * dy, radius: p.radius };
@@ -159,6 +185,7 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
     }, notice: text => { encounter?.notice(text); api.requestRender(); }
   });
   function recover() {
+    if (!hasCart()) return true;
     actor.cancel(); mountRequested = false;
     if (saves) {
       if (!editor.active && !saveBlocked()) saves.save('recover').then(done => {
@@ -188,7 +215,9 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
       }
       mounted = false; mountRequested = false; actor.reset(); api.setPlayer(spot); say(saves ? 'Parking saved. See you here next time.' : 'Cart parked. Walk around or enter again.');
     } else {
+      if (!hasCart()) return;
       if (Math.hypot(player.worldX - cart.worldX, player.worldY - cart.worldY) > 85) return;
+      if (!canDrive()) { say('Invite Mallow along before asking her to pull the cart.'); return; }
       if (!cartPoseClear(cart, clear)) { say('Waiting for a clear, loaded place to enter.'); return; }
       if (mountRequested) { mountRequested = false; actor.stop(); }
       else { mountRequested = true; actor.hitch(); say('Mallow is coming to the cart.'); }
@@ -204,13 +233,15 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
     const player = api.state().player;
     if (kind === 'home') {
       const rect = constructionHomeFootprint(plan.home, design);
-      if (discIntersectsRectangle(player, rect) || discIntersectsRectangle({ ...companionPosition(), radius: 22 }, rect) || cartFootprint(cart).some(p => discIntersectsRectangle(p, rect))) {
+      if (discIntersectsRectangle(player, rect) || discIntersectsRectangle({ ...companionPosition(), radius: 22 }, rect)
+        || hasCart() && cartFootprint(cart).some(p => discIntersectsRectangle(p, rect))) {
         return 'Someone is in this footprint. Cancel and move clear before enlarging the house.';
       }
     } else {
+      if (needsSupplies()) return 'Unpack the starter supplies before building.';
       const candidate = { ...cart, design };
       if (!cartPoseClear(candidate, clear)) return 'This cart needs more clear, loaded ground. Cancel and park farther from obstacles.';
-      if (cartFootprint(candidate).some(p => Math.hypot(p.worldX - player.worldX, p.worldY - player.worldY) < p.radius + player.radius)) {
+      if (hasCart() && cartOverlapsPlayer(candidate, player)) {
         return 'Stand a little farther from the cart before changing its size.';
       }
     }
@@ -249,10 +280,14 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
   });
   for (const button of bar.querySelectorAll('[data-study-edit]')) button.addEventListener('click', () => {
     const kind = button.dataset.studyEdit;
-    if (mounted || mountRequested || api.state().busy || !nearHome() || (kind === 'cart' && !cartHome())) return;
+    if (mounted || mountRequested || api.state().busy || !nearHome() || (kind === 'cart' && (!cartHome() || needsSupplies()))) return;
     if (viewport.dataset.moreOpen === 'true') document.querySelector('[data-owner-forest-more]').click();
     api.setPlayer(api.state().player);
-    actor.cancel(); editor.open(kind, kind === 'home' ? homeDesign : cart.design, button);
+    actor.cancel(); editor.open(kind, kind === 'home' ? homeDesign : cart.design);
+  });
+  supplies.addEventListener('click', () => {
+    if (!needsSupplies() || !nearHome() || api.state().busy || saveBlocked() || editor.active) return;
+    api.focus(); saves.save('supplies');
   });
   mount.addEventListener('click', toggleMount); reverseButton.addEventListener('click', reverse);
   document.querySelector('[data-study-recover]').addEventListener('click', recover);
@@ -304,7 +339,7 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
       for (let i = 1; i <= steps; i++) {
         const p = { ...to, worldX: from.worldX + (to.worldX - from.worldX) * i / steps,
           worldY: from.worldY + (to.worldY - from.worldY) * i / steps };
-        if (!clear(p) || cartFootprint(cart, { animal: false }).some(c => Math.hypot(c.worldX - p.worldX,
+        if (!clear(p) || hasCart() && cartFootprint(cart, { animal: false }).some(c => Math.hypot(c.worldX - p.worldX,
           c.worldY - p.worldY) < c.radius + p.radius)) return false;
       }
       return true;
@@ -319,7 +354,7 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
       actor.update({ player: animalScene.player, companion, elapsed, time, mounted,
         paused: animalScene.busy || editor.active || !api.regionLoaded(beforeAnimal) });
       const afterAnimal = actor.snapshot();
-      if (mountRequested && actor.ready && !saveBlocked() && !animalScene.busy && cartPoseClear(cart, clear)) {
+      if (mountRequested && canDrive() && actor.ready && !saveBlocked() && !animalScene.busy && cartPoseClear(cart, clear)) {
         mounted = true; mountRequested = false;
         api.setPlayer({ worldX: cart.worldX, worldY: cart.worldY }); api.requestRender();
       }
@@ -348,22 +383,33 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
         : blocked ? precision ? 'Back up and straighten toward clear ground.' : 'Try careful driving to line up, or reverse.' : completed ? 'Home again. Try another cart or explore on foot.'
           : `${arrow} ${visited ? 'Home' : 'Amber clearing'} · ${Math.round(Math.hypot(target.x - player.worldX, target.y - player.worldY))} steps${distance < 100 && mounted ? ' · Step out to explore' : ''}`;
       if (time >= messageUntil && !blocked && (integrated || api.navigation)) text = '';
+      const nearCart = Math.hypot(player.worldX - cart.worldX, player.worldY - cart.worldY) <= 85;
+      if (time >= messageUntil && guidedStart && hasCart() && !canDrive() && nearCart) text = 'Invite Mallow along to drive your cart.';
       guide.hidden = !text;
       if (guide.textContent !== text) guide.textContent = text;
       mountCopy.textContent = mounted ? 'Step out' : mountRequested ? 'Cancel boarding' : 'Enter cart';
-      mount.disabled = saveBlocked() || busy || (!mounted && Math.hypot(player.worldX - cart.worldX, player.worldY - cart.worldY) > 85);
+      mount.disabled = saveBlocked() || busy || !canDrive() || (!mounted && !nearCart);
       if (integrated) {
-        mount.hidden = !mounted && !mountRequested && Math.hypot(player.worldX - cart.worldX, player.worldY - cart.worldY) > 85;
+        mount.hidden = !canDrive() || !mounted && !mountRequested && !nearCart;
         bar.querySelector('.home-study-workshop').hidden = mounted || !nearHome();
         bar.querySelector('[data-study-workshop-help]').hidden = true;
+        document.querySelector('[data-study-recover]').hidden = !hasCart();
         const recovery = saves?.snapshot().record.recoveryRequired;
         if (recovery && !message) say('Your cart needs a clear parking spot. Choose Recover cart at home in More.');
       }
       careful.hidden = !mounted; careful.disabled = saveBlocked(); carefulHelp.hidden = !mounted || !precision;
       reverseButton.hidden = !mounted; reverseButton.textContent = reversing ? 'Reverse: on' : 'Reverse';
       for (const button of bar.querySelectorAll('[data-study-edit]')) {
-        button.disabled = saveBlocked() || busy || mounted || mountRequested || !nearHome() || (button.dataset.studyEdit === 'cart' && !cartHome());
+        const editingCart = button.dataset.studyEdit === 'cart';
+        if (guidedStart && editingCart) {
+          button.hidden = needsSupplies();
+          const label = hasCart() ? 'Customize cart' : 'Build first cart';
+          if (button.textContent !== label) button.textContent = label;
+        }
+        button.disabled = saveBlocked() || busy || mounted || mountRequested || !nearHome() || (editingCart && (!cartHome() || needsSupplies()));
       }
+      supplies.hidden = !needsSupplies();
+      supplies.disabled = saveBlocked() || busy;
       bar.querySelector('[data-study-workshop-help]').textContent = mounted ? 'Step out to build.'
         : !nearHome() || !cartHome() ? 'The workshop is at home.' : '';
       bar.hidden = busy; viewport.dataset.studyMounted = String(mounted);
@@ -372,7 +418,8 @@ export function createHomesteadExtension(api, study, { integrated = false } = {}
     paintGround: (ctx, camera) => { if (!integrated) paintStudyPaths(ctx, plan, camera); },
     depthItems: () => [
       { kind: 'extension', id: 'study-home', worldY: plan.home.y - 35, type: 'home' },
-      ...studyCartDepthItems({ ...cart, design: previewCart || cart.design }, api.state().terrain.elevation({ ...cart, radius: 11 }), mounted),
+      ...(hasCart() || previewCart ? studyCartDepthItems({ ...cart, design: previewCart || cart.design },
+        api.state().terrain.elevation({ ...cart, radius: 11 }), mounted) : []),
       ...(!mounted ? [{ kind: 'extension', id: 'companion', type: 'companion',
         worldY: companionPosition().worldY + api.state().terrain.elevation({ ...companionPosition(), radius: 11 }) }] : []),
       ...(!integrated ? [{ kind: 'extension', id: 'study-destination', worldY: plan.destination.y - 20, type: 'destination' }] : [])
