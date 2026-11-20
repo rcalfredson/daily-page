@@ -211,6 +211,14 @@ owner world, connected to the existing forest through a usable approach. Save th
 and its access reservations. This preserves the feeling of one place and avoids relocating
 existing trees or personal work. It is not yet a proven allocator.
 
+**Future placement choice.** The first playable homestead offers one suggested clearing. As the
+forest gains more varied biomes and land and water forms, let players look for their own spot
+while keeping a suggested clearing as the quick path. Before confirmation, preview the house,
+doorway and approach, and cart parking and turning space. Explain what needs more room or what
+terrain or existing features prevent placement. Validate and reserve the chosen site on
+confirmation using the same protections as for suggested sites. A small shortlist of distinct
+valid clearings is a possible intermediate step toward player-led placement.
+
 The first technical investigation must answer:
 
 1. Can a bounded search find enough clear land for the largest allowed house, companion resting

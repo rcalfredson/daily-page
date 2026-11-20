@@ -4,6 +4,9 @@ import { validForestCompanion } from '../../public/js/forest-companion.js';
 
 export const HOMESTEAD_RECEIPT_LIMIT = 64;
 export const HOMESTEAD_MATERIAL_CAPACITY = Object.freeze({ timber: 96, cloth: 24 });
+export const hasHomesteadCart = record => record?.cartDesign != null;
+export const canDriveHomesteadCart = record => hasHomesteadCart(record)
+  && (record.schemaVersion !== 3 || record.companion?.stage === 'joined');
 export const HOMESTEAD_UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 const fields = ['schemaVersion', 'ownerUserId', 'forestId', 'layoutId', 'homeId', 'cartId', 'layout',
   'homeDesign', 'cartDesign', 'parking', 'holdings', 'cartCommitment', 'catalogVersion', 'revision', 'receipts', 'changedAt'];
@@ -20,20 +23,26 @@ export class ForestHomesteadError extends Error {
 }
 export function validateHomestead(record, scope) {
   if (!record) return null;
-  if (![1, 2].includes(record.schemaVersion) || record.catalogVersion !== 1) throw new ForestHomesteadError('HOME_MIGRATION_REQUIRED');
-  const expected = record.schemaVersion === 2 ? [...fields, 'companion'] : fields;
+  if (![1, 2, 3].includes(record.schemaVersion) || record.catalogVersion !== 1) throw new ForestHomesteadError('HOME_MIGRATION_REQUIRED');
+  const onboarding = record.schemaVersion === 3;
+  const hasCompanion = record.schemaVersion === 2 || onboarding && Object.hasOwn(record, 'companion');
+  const expected = [...fields, ...(onboarding ? ['starterSuppliesClaimed'] : []), ...(hasCompanion ? ['companion'] : [])];
+  const built = hasHomesteadCart(record);
   if (!exact(Object.fromEntries(Object.entries(record).filter(([k]) => k !== '_id')), expected)
-    || record.schemaVersion === 2 && (!validForestCompanion(record.companion)
+    || onboarding && (typeof record.starterSuppliesClaimed !== 'boolean'
+      || built && !record.starterSuppliesClaimed || !built && record.cartDesign !== null)
+    || hasCompanion && (!validForestCompanion(record.companion)
       || [record.layoutId, record.homeId, record.cartId].includes(record.companion.id))
     || record.ownerUserId !== scope.ownerUserId || record.forestId !== scope.forestId
     || !/^[a-f0-9]{24}$/.test(record.ownerUserId) || !HOMESTEAD_UUID.test(record.forestId)
     || !['layoutId', 'homeId', 'cartId'].every(k => HOMESTEAD_UUID.test(record[k]))
     || new Set([record.layoutId, record.homeId, record.cartId]).size !== 3
     || !validateHomeLayout(record.layout) || !validateConstructionDesign('home', record.homeDesign)
-    || !validateConstructionDesign('cart', record.cartDesign) || !validHomesteadParking(record.parking)
+    || ((!onboarding || built) && !validateConstructionDesign('cart', record.cartDesign)) || !validHomesteadParking(record.parking)
     || !materials(record.holdings) || !materials(record.cartCommitment)
     || !Object.keys(HOMESTEAD_MATERIAL_CAPACITY).every(k =>
-      record.holdings[k] + record.cartCommitment[k] === HOMESTEAD_MATERIAL_CAPACITY[k])
+      (built || record.cartCommitment[k] === 0)
+      && record.holdings[k] + record.cartCommitment[k] === (onboarding && !record.starterSuppliesClaimed ? 0 : HOMESTEAD_MATERIAL_CAPACITY[k]))
     || !Number.isSafeInteger(record.revision) || record.revision < 1
     || !Array.isArray(record.receipts) || !record.receipts.length || record.receipts.length > HOMESTEAD_RECEIPT_LIMIT
     || record.receipts.length > record.revision

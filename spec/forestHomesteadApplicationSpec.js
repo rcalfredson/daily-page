@@ -38,6 +38,29 @@ describe('main forest homestead integration', () => {
     expect(result.revision).toBe(1);
     expect(h.geography.arrival).toHaveBeenCalledWith({ ownerUserId: OWNER, world: h.world, next: h.record, session: null });
   });
+  it('only suggests a clearing for an eligible owner without an established home', async () => {
+    const h = setup(false);
+    const site = { x: 400, y: 90 };
+    h.record.terrainToken = null;
+    h.geography.planSite = jasmine.createSpy('planSite').and.resolveTo({ parking: site });
+    const app = buildForestHomesteadApplication({ ...h, enabled: () => true });
+    const disabled = buildForestHomesteadApplication({ ...h, enabled: () => false });
+    await expectAsync(disabled.suggest({ ownerUserId: OWNER })).toBeRejectedWithError('HOME_DISABLED');
+    expect(await app.suggest({ ownerUserId: OWNER })).toEqual({ site, terrainToken: null, forestId: h.record.forestId });
+    h.record.established = true;
+    await expectAsync(app.suggest({ ownerUserId: OWNER })).toBeRejectedWithError('HOME_ALREADY_ESTABLISHED');
+    expect(h.geography.planSite).toHaveBeenCalledTimes(1);
+    expect(h.service.mutate).not.toHaveBeenCalled();
+  });
+  it('returns an unbuilt homestead without a cart recovery prompt', async () => {
+    const h = setup();
+    Object.assign(h.record, { ownerUserId: OWNER, cartDesign: null });
+    const app = buildForestHomesteadApplication({ ...h, enabled: () => true });
+    expect(await app.read({ ownerUserId: OWNER })).toEqual({
+      ...h.record, arrival: null, recoveryRequired: false
+    });
+    expect(h.geography.arrival).not.toHaveBeenCalled();
+  });
   it('binds an unestablished save retry to the same account/forest across reload', async () => {
     const values = new Map(), storage = { getItem: k => values.get(k), setItem: (k, v) => values.set(k, v), removeItem: k => values.delete(k) };
     const initial = { ownerUserId: OWNER, forestId: 'forest', established: false, revision: 0, terrainToken: null };

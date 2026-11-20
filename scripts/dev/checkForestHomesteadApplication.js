@@ -27,16 +27,82 @@ try {
   const click = selector => evaluate(`document.querySelector(${JSON.stringify(selector)}).click();true`);
   const read = () => evaluate(`fetch('/api/v1/forest/homestead').then(r=>r.text())`).then(JSON.parse);
   const navigate = () => send('browsingContext.navigate', { context, url: `${base}/en/forest`, wait: 'complete' });
+  const enabled = selector => `Boolean(document.querySelector('${selector}')?.getClientRects().length)
+    && !document.querySelector('${selector}').disabled`;
+  async function guideTo(id) {
+    await evaluate(`(()=>{
+      if(document.querySelector('[data-owner-forest-more-panel]').hidden) document.querySelector('[data-owner-forest-more]').click();
+      document.querySelector('.forest-navigation-picker').open=true;
+      const select=document.querySelector('[data-forest-navigation-destination]');
+      select.value='${id}';select.dispatchEvent(new Event('change'));return true;
+    })()`);
+    await click('[data-forest-navigation-go]');
+  }
+  async function walkWithCompass(until) {
+    await evaluate(`document.querySelector('[data-owner-forest-viewport]').focus();true`);
+    for (let step = 0; step < 35 && !await evaluate(until); step++) {
+      const bearing = await evaluate(`document.querySelector('[data-forest-navigation-arrow]').getAttribute('aria-label')`);
+      const keys = [['east', 'd'], ['west', 'a'], ['south', 's'], ['north', 'w']]
+        .filter(([direction]) => bearing.includes(direction)).map(([, key]) => key);
+      assert.ok(keys.length, 'Compass direction is missing');
+      await send('input.performActions', { context, actions: [{ type: 'key', id: 'keyboard', actions: [
+        ...keys.map(value => ({ type: 'keyDown', value })),
+        { type: 'pause', duration: 220 },
+        ...keys.map(value => ({ type: 'keyUp', value }))
+      ] }] });
+    }
+    await wait(until);
+  }
   await send('browsingContext.setViewport', { context, viewport: { width: 1280, height: 880 }, devicePixelRatio: 1 });
   await navigate();
   const initial = await read(); assert.equal(initial.ownerUserId, '64b00000000000000000a097');
   assert.equal(await evaluate(`Boolean(window.homeCartStudy)`), false);
   if (!initial.established) {
-    await wait(`!document.querySelector('[data-homestead-start-action]').disabled`);
+    const start = '[data-homestead-start-action]';
+    await wait(enabled(start));
+    await click(start);
+    await wait(`document.querySelector('[data-forest-navigation-copy]').textContent.includes('Suggested clearing')`);
+    assert.equal((await read()).established, false);
+    await walkWithCompass(`document.querySelector('${start}').textContent==='Make my clearing'`);
     await click('[data-homestead-start-action]');
   }
   await wait(`document.querySelector('[data-forest-navigation-destination]') && document.querySelector('[data-homestead-start]').hidden`);
   const saved = await read(); assert.equal(saved.established, true);
+  if (saved.schemaVersion === 3 && (!saved.cartDesign || saved.companion?.stage !== 'joined')) {
+    if (!saved.cartDesign) {
+      await guideTo('home');
+      await walkWithCompass(enabled('[data-study-edit="home"]'));
+      if (!saved.starterSuppliesClaimed) {
+        await click('[data-homestead-supplies]');
+        await wait(enabled('[data-study-edit="cart"]'));
+        assert.deepEqual((await read()).holdings, { timber: 96, cloth: 24 });
+      }
+      await click('[data-study-edit="cart"]');
+      await wait(enabled('[data-design-apply]'));
+      await click('[data-design-cancel]');
+      assert.equal((await read()).cartDesign, null);
+      await click('[data-study-edit="cart"]');
+      await click('[data-design-apply]');
+      await wait(`document.querySelector('.home-study-editor').hidden`);
+      assert.ok((await read()).cartDesign);
+    }
+    if (saved.companion?.stage !== 'joined') {
+      assert.equal(await evaluate(enabled('[data-study-mount]')), false);
+      await guideTo('mallow');
+      await walkWithCompass(enabled('[data-companion-action]'));
+      if (!saved.companion) {
+        await click('[data-companion-action]');
+        await wait(enabled('[data-companion-follow]'));
+        assert.equal((await read()).companion.stage, 'acquainted');
+      }
+      await click('[data-companion-follow]');
+      await wait(`document.querySelector('[data-companion-follow]').textContent==='Wait here'`);
+      assert.equal((await read()).companion.stage, 'joined');
+    }
+    await navigate();
+    await wait(`document.querySelector('[data-forest-navigation-destination]') && document.querySelector('[data-homestead-start]').hidden`);
+    console.log('PASS starter supplies, free preview cancellation, first assembly and Mallow invitation across reload');
+  }
   const compatibility = JSON.parse(await evaluate(`(async()=>{
     const homes=await fetch('/api/v1/forest/homestead').then(r=>r.json());
     const post=async(path,body)=>{const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return {status:r.status,body:await r.json()};};

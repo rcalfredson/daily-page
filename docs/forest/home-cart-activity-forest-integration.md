@@ -80,3 +80,30 @@ production qualification remain distinct.
 
 November 17 follow-up: [Unified navigation](unified-navigation-increment.md) replaces the independent
 home/cart guides with a shared destination picker and compass, including contextual plant guidance.
+
+## First-time homestead
+
+Use one suggested clearing per search. The site planner already checks the yard, parking space
+and approaches against the owner's world. The shared compass and a ground marker let the player
+inspect the suggestion before confirming it. Multiple sites would add comparison and navigation
+work before playtesting has shown that location choice matters. The server rechecks the same
+site when the player confirms. If it has changed or become unavailable, the player can search
+again.
+
+Player-led placement is a future enhancement. See the [home geography
+design](home-cart-expedition-implementation-brief.md#7-spatial-foundation-home-area-route-and-destination).
+
+| What the player sees and does | Feedback and saved state |
+| --- | --- |
+| Enter at the usual forest entrance or writing return. Choose **Find a home clearing**, follow the compass, and select **Make my clearing** near the marked spot. **Later** puts the invitation in More for the visit. | The house appears, the compass destination becomes Home, and the confirmation saves the chosen site, reservations and editable house. The parking area is empty. |
+| At the workshop, choose **Unpack starter supplies**. **Shape house** is available as soon as the clearing is yours. | The Satchel gains 96 timber and 24 cloth, enough for every basic cart design. A confirmation shows the balance. The supply claim and credit save together. House finishes are free and house edits save independently. |
+| Open **Build first cart**, choose a design and select **Assemble cart**. | The editor previews the parts and costs. Assembly leaves a visible parked cart and updates the Satchel. The design, parking and material commitment save together. Canceling the preview costs nothing, and redesigning refunds the stored commitment for reuse. |
+| Approach the mule and choose **Offer hand**, then **Come along**. These actions can happen before cart assembly. | Mallow physically approaches for the greeting and follows after the invitation. The introduction and invitation save as separate facts. The cart reminds the player to invite Mallow until **Enter cart** becomes available. Parking still saves when the player steps out. |
+
+The increment uses the existing development allowlist, normal forest entrance, workshop, Satchel,
+compass and companion controls. Every saved step can resume after a return. The compass and
+unsaved previews are visit-local. Revisions and operation receipts protect material and encounter
+saves when a response is lost or two tabs act at once. Existing records keep their house, cart,
+parking, material balances, companion stage and prior cart access without a data migration.
+
+The traveler, expedition, additional material sources and earned customization are deferred.

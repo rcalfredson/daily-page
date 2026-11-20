@@ -77,6 +77,50 @@ describe('transactional homestead authority', () => {
     expect(read.cartId).toBe(first.cartId); expect(read.layout).toEqual(first.layout);
     await expectAsync(mutate(h, command('establish', 1))).toBeRejectedWithError('HOME_ALREADY_ESTABLISHED');
   });
+  it('saves each first-visit milestone and requires Mallow’s invitation before accepting parking', async () => {
+    const h = harness({ guidedStart: true });
+    const { parking: site } = await h.options.planSite();
+    await expectAsync(establish(h)).toBeRejectedWithError('HOME_SITE_CHANGED');
+    await expectAsync(mutate(h, command('establish', 0, { site: { ...site, x: site.x + 1 } })))
+      .toBeRejectedWithError('HOME_SITE_CHANGED');
+    expect(h.record()).toBeNull();
+    const clearing = await mutate(h, command('establish', 0, { site }));
+    expect(clearing.schemaVersion).toBe(3);
+    expect(clearing.cartDesign).toBeNull();
+    expect(clearing.holdings).toEqual({ timber: 0, cloth: 0 });
+    expect(clearing.starterSuppliesClaimed).toBeFalse();
+    const design = studyCartDesign('canopy');
+    await expectAsync(mutate(h, command('cart', 1, { design }))).toBeRejectedWithError('HOME_SUPPLIES_REQUIRED');
+    await expectAsync(mutate(h, command('recover', 1))).toBeRejectedWithError('HOME_CART_NOT_READY');
+    const supplies = command('supplies', 1), unpacked = await mutate(h, supplies);
+    expect(unpacked.holdings).toEqual({ timber: 96, cloth: 24 });
+    expect((await mutate(h, supplies)).operation.replayed).toBeTrue();
+    await expectAsync(mutate(h, command('supplies', 2))).toBeRejectedWithError('HOME_SUPPLIES_UNAVAILABLE');
+    const cart = await mutate(h, command('cart', 2, { design }));
+    expect(cart.cartDesign).toEqual(design);
+    expect(cart.cartCommitment).toEqual(homesteadCartCost(design));
+    expect(cart.holdings).toEqual({ timber: 96 - cart.cartCommitment.timber, cloth: 24 - cart.cartCommitment.cloth });
+    const park = revision => command('park', revision, { parking: cart.parking });
+    await expectAsync(mutate(h, park(3))).toBeRejectedWithError('HOME_CART_NOT_READY');
+    const met = await mutate(h, command('companion', 3, { encounter: 'meet' }));
+    expect(met.companion.stage).toBe('acquainted');
+    await expectAsync(mutate(h, park(4))).toBeRejectedWithError('HOME_CART_NOT_READY');
+    await mutate(h, command('companion', 4, { encounter: 'invite' }));
+    const ready = await mutate(h, park(5));
+    expect(ready.companion.stage).toBe('joined');
+    expect(ready.holdings).toEqual(cart.holdings);
+    expect((await buildForestHomesteadService(h.options).read({ ownerUserId: OWNER })).cartId).toBe(clearing.cartId);
+  });
+  it('retains cart access and the saved companion stage on older clearings', async () => {
+    const h = harness(), before = await establish(h);
+    await mutate(h, command('companion', 1, { encounter: 'meet' }));
+    const applicationService = buildForestHomesteadService({ ...h.options, guidedStart: true });
+    const parked = await applicationService.mutate({ ownerUserId: OWNER, command: command('park', 2, { parking: before.parking }) });
+    expect(parked.companion.stage).toBe('acquainted');
+    expect(parked.cartDesign).toEqual(before.cartDesign);
+    expect(parked.holdings).toEqual(before.holdings);
+    expect(parked.cartCommitment).toEqual(before.cartCommitment);
+  });
   it('canonicalizes field order and rejects forged grants, prices, identities and client layouts before transactions', async () => {
     const h = harness();
     const valid = command('home', 1, { design: { ...DEFAULT_HOME_DESIGN } });
@@ -172,7 +216,7 @@ describe('transactional homestead authority', () => {
       { ...good, receipts: [...good.receipts, good.receipts[0]] }]) {
       expect(() => validateHomestead(changed, { ownerUserId: OWNER, forestId: FOREST })).toThrow();
     }
-    h.corrupt(r => ({ ...r, schemaVersion: 3 }));
+    h.corrupt(r => ({ ...r, schemaVersion: 4 }));
     await expectAsync(h.service.read({ ownerUserId: OWNER })).toBeRejectedWithError('HOME_MIGRATION_REQUIRED');
     expect(h.HomeModel.create).toHaveBeenCalledTimes(1);
   });

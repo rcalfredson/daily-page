@@ -14,7 +14,7 @@ export function createConstructionEditor({ viewport, preview, apply, close, save
     <div data-design-fields></div><p data-design-description></p><p role="status" aria-live="polite" data-design-status></p></div>
     <footer><button type="button" data-design-retry hidden>Retry save</button><button type="button" data-design-cancel>Cancel</button><button type="submit" data-design-apply>Apply design</button></footer>`;
   viewport.append(panel);
-  let kind = null, draft = null, opener = null, locked = [], pending = false;
+  let kind = null, draft = null, locked = [], pending = false;
   const fields = panel.querySelector('[data-design-fields]');
   const status = panel.querySelector('[data-design-status]');
   const submit = panel.querySelector('[data-design-apply]');
@@ -23,8 +23,10 @@ export function createConstructionEditor({ viewport, preview, apply, close, save
     const error = validateConstructionDesign(kind, draft) ? preview(kind, { ...draft }) : 'Choose supported parts and dimensions.';
     const state = saveState();
     submit.disabled = pending || Boolean(error) || Boolean(state?.pending) || ['stale', 'reload'].includes(state?.status);
-    status.textContent = pending ? 'Saving…' : error || (state && state.status !== 'saved' ? state.message : 'Fits here. Your doorway and access paths remain clear.');
-    submit.textContent = saved ? 'Save design' : 'Apply design';
+    const fits = kind === 'cart' ? 'The cart fits at its parking spot.' : 'The house fits in your clearing.';
+    status.textContent = pending ? 'Saving…' : error || (state && state.status !== 'saved' ? state.message : fits);
+    const firstCart = kind === 'cart' && state?.record.cartDesign === null;
+    submit.textContent = firstCart ? 'Assemble cart' : saved ? 'Save design' : 'Apply design';
     panel.querySelector('[data-design-retry]').hidden = !state?.pending && !['stale', 'reload'].includes(state?.status);
     panel.querySelector('[data-design-retry]').disabled = pending;
     panel.querySelector('[data-design-retry]').textContent = state?.status === 'reload' ? 'Reload forest' : state?.status === 'stale' ? 'Retry loading' : 'Retry save';
@@ -37,7 +39,9 @@ export function createConstructionEditor({ viewport, preview, apply, close, save
     if (saved && kind === 'home') description.textContent += ' House finishes are freely available.';
     if (saved && kind === 'cart' && validateConstructionDesign('cart', draft)) {
       const cost = constructionCartCost(draft), current = state.record;
-      description.textContent += ` Uses ${cost.timber} timber and ${cost.cloth} cloth. Reusing your current cart returns its materials: ${current.holdings.timber + current.cartCommitment.timber - cost.timber} timber and ${current.holdings.cloth + current.cartCommitment.cloth - cost.cloth} cloth will remain.`;
+      const remaining = `${current.holdings.timber + current.cartCommitment.timber - cost.timber} timber and ${current.holdings.cloth + current.cartCommitment.cloth - cost.cloth} cloth will remain.`;
+      description.textContent += ` Uses ${cost.timber} timber and ${cost.cloth} cloth. ${firstCart
+        ? remaining : `Reusing your current cart returns its materials. ${remaining}`}`;
     }
     const cloth = fields.querySelector('[name="cloth"]');
     if (cloth) { cloth.disabled = pending || Boolean(state?.pending) || draft.canopy === 'none'; cloth.parentElement.hidden = draft.canopy === 'none'; }
@@ -47,7 +51,9 @@ export function createConstructionEditor({ viewport, preview, apply, close, save
     panel.hidden = true; kind = null; draft = null;
     delete viewport.dataset.studyEditing;
     for (const [element, inert] of locked) element.inert = inert;
-    locked = []; close(); opener?.focus({ preventScroll: true });
+    locked = [];
+    close();
+    viewport.focus({ preventScroll: true });
   }
   panel.addEventListener('change', event => {
     const choices = (kind === 'home' ? HOME_DESIGN_OPTIONS : CART_DESIGN_OPTIONS)[event.target.name];
@@ -86,9 +92,9 @@ export function createConstructionEditor({ viewport, preview, apply, close, save
     refresh() { if (kind) refresh(); },
     snapshot: () => kind ? { kind, draft: { ...draft }, valid: !submit.disabled } : null,
     cancel: finish,
-    open(nextKind, design, button) {
+    open(nextKind, design) {
       if (kind) return;
-      kind = nextKind; draft = { ...design }; opener = button;
+      kind = nextKind; draft = { ...design };
       const options = kind === 'home' ? HOME_DESIGN_OPTIONS : CART_DESIGN_OPTIONS;
       panel.querySelector('h2').textContent = kind === 'home' ? 'Make yourself at home' : 'Build your traveling cart';
       fields.replaceChildren();
