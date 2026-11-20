@@ -108,6 +108,7 @@ export function buildAccountDeletionService({
   return async function deleteAccount({
     userId,
     disposition,
+    requireDisposableTestAccount = false,
     now = new Date()
   }) {
     if (!ACCOUNT_WRITING_DISPOSITIONS.includes(disposition)) {
@@ -118,6 +119,9 @@ export function buildAccountDeletionService({
       const user = await db.User.findById(userId, null, { session });
       if (!user) {
         throw new AccountDeletionError('ACCOUNT_NOT_FOUND', { status: 404 });
+      }
+      if (requireDisposableTestAccount && user.disposableTestAccount !== true) {
+        throw new AccountDeletionError('NOT_DISPOSABLE_TEST_ACCOUNT', { status: 403 });
       }
 
       const activeAdminQuestCount = await db.Quest.countDocuments({
@@ -155,6 +159,7 @@ export function buildAccountDeletionService({
 
       await db.AccountDeletionRequest.create([{
         ownerUserId: asId(userId),
+        ...(user.disposableTestAccount === true ? { disposableTestAccount: true } : {}),
         disposition,
         status: 'processing',
         startedAt: now,

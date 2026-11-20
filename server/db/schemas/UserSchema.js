@@ -5,6 +5,7 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   verified: { type: Boolean, default: false },
+  disposableTestAccount: { type: Boolean, immutable: true },
   verificationToken: { type: String, default: null },
   verificationTokenExpires: { type: Date, default: null },
   resetPasswordToken: { type: String, default: null },

@@ -133,6 +133,25 @@ USE_PRODUCTION_DB=true DISABLE_BACKGROUND_JOBS=true npm start
 
 `USE_PRODUCTION_DB` changes only database selection. `DISABLE_BACKGROUND_JOBS` prevents scheduled cleanup, expiry, featured-content, block-lifecycle, and cache-warming jobs from starting. HTTP write routes remain available, so avoid editing content and use read-only database credentials when possible.
 
+### Disposable test accounts
+
+For testing features that do not require an inbox, create a verified login with a generated
+password and a placeholder email address. Creation sends no email.
+
+```sh
+npm run test-account -- create forest
+npm run test-account -- list
+npm run test-account -- delete <account-id>
+```
+
+The label is optional. Sign in locally with the printed username and password. For a fresh
+homestead, put the printed account ID in `FOREST_HOMESTEAD_DEV_OWNER_IDS` when starting the local
+app. The list command shows disposable accounts and their IDs.
+
+Delete permanently removes that disposable account and its writing, revokes its sessions, and
+runs the usual forest and profile cleanup. The command only operates on accounts it created in
+`daily-page-test`. If cleanup is interrupted, repeat the delete command with the same account ID.
+
 ## Database Notes
 
 The app does not currently ship with a one-command seed for a complete demo instance. An empty database can boot, but pages such as the rooms directory and room dashboards become useful after inserting room metadata and creating posts.

@@ -54,6 +54,7 @@ forestCleanupSchema.pre('validate', function validateForestCleanupState() {
 
 const accountDeletionRequestSchema = new Schema({
   ownerUserId: { type: String, required: true, unique: true, index: true },
+  disposableTestAccount: { type: Boolean, immutable: true },
   disposition: {
     type: String,
     required: true,
