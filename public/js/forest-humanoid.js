@@ -4,14 +4,14 @@ export const FOREST_HUMANOID_MAX_RUN_CYCLES_PER_SECOND = 2.8;
 
 export const FOREST_HUMANOID_PROFILES = Object.freeze({
   player: Object.freeze({
-    id: 'player', skin: '#e3b98c', skinShadow: '#b9785d', hair: '#63412f',
+    id: 'player', outline: '#38382f', skin: '#e3b98c', skinShadow: '#b9785d', hair: '#63412f',
     hairHighlight: '#87583a', headwear: '#dc793c', headwearShadow: '#a94e31',
     headwearHighlight: '#f09a4a', torso: '#39749b', torsoShadow: '#28526f',
     torsoHighlight: '#5593b7', legs: '#25282d', legHighlight: '#3b3e46',
     shoes: '#a63f38', shoeHighlight: '#d05a45', patch: null
   }),
   visitor: Object.freeze({
-    id: 'visitor', skin: '#c99572', skinShadow: '#98624f', hair: '#b8afa0',
+    id: 'visitor', outline: '#373b30', skin: '#c99572', skinShadow: '#98624f', hair: '#b8afa0',
     hairHighlight: '#d0c8ba', headwear: '#536947', headwearShadow: '#344938',
     headwearHighlight: '#70835d', torso: '#69784b', torsoShadow: '#485638',
     torsoHighlight: '#879563', legs: '#4b4037', legHighlight: '#66584a',
@@ -110,21 +110,24 @@ export function forestHumanoidGait(motion, reducedMotion = false) {
   };
 }
 
-function paintPixelLimb(context, fromX, fromY, toX, toY, color, thickness = 3) {
+function paintPixelLimb(context, fromX, fromY, toX, toY, color, thickness = 3, border = 0) {
   context.fillStyle = color;
-  for (let step = 0; step <= 3; step += 1) {
-    const progress = step / 3;
+  const steps = Math.max(1, Math.ceil(Math.max(Math.abs(toX - fromX), Math.abs(toY - fromY))));
+  for (let step = 0; step <= steps; step += 1) {
+    const progress = step / steps;
     const x = Math.round(fromX + ((toX - fromX) * progress));
     const y = Math.round(fromY + ((toY - fromY) * progress));
-    context.fillRect(x - Math.floor(thickness / 2), y - 1, thickness, 3);
+    context.fillRect(x - Math.floor(thickness / 2) - border, y - 1 - border, thickness + 2 * border, 3 + 2 * border);
   }
 }
 
-function paintPixelJointedLeg(context, hip, knee, foot, color) {
-  paintPixelLimb(context, hip.x, hip.y, knee.x, knee.y, color, 4);
-  paintPixelLimb(context, knee.x, knee.y, foot.x, foot.y, color, 4);
-  context.fillStyle = color;
-  context.fillRect(Math.round(knee.x) - 2, Math.round(knee.y) - 1, 4, 3);
+function paintPixelArm(context, profile, shoulderX, shoulderY, elbowX, elbowY, handX, handY, sleeve) {
+  paintPixelLimb(context, shoulderX, shoulderY, elbowX, elbowY, profile.outline, 4, 1);
+  paintPixelLimb(context, elbowX, elbowY, handX, handY, profile.outline, 3, 1);
+  paintPixelLimb(context, shoulderX, shoulderY, elbowX, elbowY, sleeve, 4);
+  paintPixelLimb(context, elbowX, elbowY, handX, handY, profile.skinShadow);
+  context.fillStyle = profile.skin;
+  context.fillRect(Math.round(handX) - 1, Math.round(handY) - 1, 3, 3);
 }
 
 export function paintForestHumanoid(context, x, y, {
@@ -165,17 +168,20 @@ export function paintForestHumanoid(context, x, y, {
       x: ((leg.hipX + leg.footX) / 2) - (forwardX * leg.rearBend),
       y: ((leg.hipY + leg.footY) / 2) - (forwardY * leg.rearBend * 0.55)
     };
-    paintPixelJointedLeg(context, { x: leg.hipX, y: leg.hipY }, knee, {
-      x: leg.footX, y: leg.footY
-    }, profile.legs);
+    paintPixelLimb(context, leg.hipX, leg.hipY, knee.x, knee.y, profile.outline, 4, 1);
+    paintPixelLimb(context, knee.x, knee.y, leg.footX, leg.footY, profile.outline, 4, 1);
+    paintPixelLimb(context, leg.hipX, leg.hipY, knee.x, knee.y, profile.legs, 4);
+    paintPixelLimb(context, knee.x, knee.y, leg.footX, leg.footY, profile.legs, 4);
     context.fillStyle = profile.legHighlight;
     context.fillRect(Math.round(knee.x) - 1, Math.round(knee.y) - 1, 2, 2);
     const shoeX = Math.round(leg.footX);
     const shoeY = Math.round(leg.footY);
-    context.fillStyle = profile.shoes;
+    context.fillStyle = profile.outline;
     context.fillRect(shoeX - 2, shoeY - 2, 4, 1);
     context.fillRect(shoeX - 3, shoeY - 1, 6, 2);
     context.fillRect(shoeX - 2, shoeY + 1, 5, 1);
+    context.fillStyle = profile.shoes;
+    context.fillRect(shoeX - 2, shoeY - 1, 4, 2);
     context.fillStyle = profile.shoeHighlight;
     context.fillRect(Math.round(leg.footX + (forwardX * 2)) - 1, shoeY - 1, 2, 1);
   });
@@ -193,16 +199,17 @@ export function paintForestHumanoid(context, x, y, {
     const handX = x + forwardX * reach + lateralX * activeSide * 3;
     const handY = footY - (gesture.type === 'scratch' ? 27 : 23) + forwardY * reach;
     const elbowX = (shoulderX + handX) / 2, elbowY = (shoulderY + handY) / 2 + 2;
-    paintPixelLimb(context, shoulderX, shoulderY, elbowX, elbowY, profile.torso, 4);
-    paintPixelLimb(context, elbowX, elbowY, handX, handY, profile.skinShadow, 3);
-    context.fillStyle = profile.skin; context.fillRect(Math.round(handX) - 2, Math.round(handY) - 2, 5, 4);
+    paintPixelArm(context, profile, shoulderX, shoulderY, elbowX, elbowY, handX, handY, profile.torso);
   }
   if (profile.staff) {
     const staffSide = 7;
     const staffX = x + (lateralX * staffSide) + (forwardX * 1.5);
     const staffTopY = footY - 21 + (lateralY * staffSide * 0.25);
-    paintPixelLimb(context, staffX, staffTopY, staffX + (forwardX * 2), footY - 1,
-      profile.staff, 2);
+    const staffEndX = staffX + forwardX * 2;
+    paintPixelLimb(context, staffX, staffTopY, staffEndX, footY - 1, profile.outline, 2, 1);
+    paintPixelLimb(context, staffX, staffTopY, staffEndX, footY - 1, profile.staff, 2);
+    context.fillStyle = '#b18c5c';
+    context.fillRect(Math.round(staffX) - 1, Math.round(staffTopY), 2, 2);
   }
   arms.forEach((arm) => {
     if (gesture && arm.side === activeSide) return;
@@ -212,26 +219,22 @@ export function paintForestHumanoid(context, x, y, {
     const handY = footY - 13 + (forwardY * arm.forward * 0.45);
     const elbowX = shoulderX + ((handX - shoulderX) * 0.52);
     const elbowY = shoulderY + ((handY - shoulderY) * 0.52);
-    paintPixelLimb(context, shoulderX, shoulderY, elbowX, elbowY, profile.torsoShadow, 4);
-    paintPixelLimb(context, elbowX, elbowY, handX, handY, profile.skinShadow, 3);
-    context.fillStyle = profile.skin;
-    context.fillRect(Math.round(handX) - 1, Math.round(handY) - 2, 3, 5);
-    context.fillRect(Math.round(handX) - 2, Math.round(handY) - 1, 5, 3);
-    context.fillStyle = profile.skinShadow;
-    context.fillRect(Math.round(handX) - 2, Math.round(handY) + 1, 1, 1);
+    paintPixelArm(context, profile, shoulderX, shoulderY, elbowX, elbowY, handX, handY, profile.torsoShadow);
   });
   if (gesture && rearFacing) paintGestureArm();
 
   const torsoLeft = x - Math.ceil(bodyWidth / 2);
-  context.fillStyle = profile.torsoShadow;
+  context.fillStyle = profile.outline;
   context.fillRect(torsoLeft + 1, footY - 22, bodyWidth - 2, 1);
   context.fillRect(torsoLeft, footY - 21, bodyWidth, 3);
   context.fillRect(torsoLeft + 1, footY - 18, bodyWidth - 2, 9);
+  context.fillStyle = profile.torsoShadow;
+  context.fillRect(torsoLeft + 1, footY - 21, bodyWidth - 2, 3);
   context.fillStyle = profile.torso;
   context.fillRect(torsoLeft + 2, footY - 21, bodyWidth - 4, 3);
   context.fillRect(torsoLeft + 2, footY - 18, bodyWidth - 4, 8);
   context.fillStyle = profile.torsoHighlight;
-  context.fillRect(torsoLeft + 3, footY - 20, 2, 7);
+  context.fillRect(torsoLeft + 3, footY - 19, 1, 6);
   context.fillStyle = profile.skinShadow;
   context.fillRect(x - 2, footY - 24, 4, 4);
   context.fillStyle = profile.skin;
@@ -243,19 +246,31 @@ export function paintForestHumanoid(context, x, y, {
   context.fillRect(x - 4, footY - 11, 8, 2);
 
   if (profile.patch) {
-    context.fillStyle = profile.patch;
-    context.fillRect(x + 1, footY - 15, 3, 3);
+    context.fillStyle = profile.outline;
+    context.fillRect(x - 6, footY - 12, 13, 3);
     context.fillStyle = profile.torsoShadow;
-    context.fillRect(x - 6, footY - 10, 3, 2);
-    context.fillRect(x + 3, footY - 10, 4, 2);
+    context.fillRect(x - 5, footY - 12, 11, 2);
+    context.fillStyle = profile.torsoHighlight;
+    context.fillRect(x - 4, footY - 20, 8, 2);
+    context.fillRect(x - 4, footY - 18, 2, 3);
+    context.fillStyle = profile.outline;
+    context.fillRect(x + 1, footY - 16, 4, 4);
+    context.fillStyle = profile.patch;
+    context.fillRect(x + 1, footY - 15, 3, 2);
+    context.fillStyle = '#c3a875';
+    context.fillRect(x + 2, footY - 15, 1, 1);
   }
 
   const headLeft = x - Math.ceil(headWidth / 2);
-  context.fillStyle = profile.hair;
+  context.fillStyle = profile.outline;
   context.fillRect(headLeft + 1, footY - 32, headWidth - 2, 1);
   context.fillRect(headLeft, footY - 31, headWidth, 10);
   context.fillRect(headLeft - 1, footY - 28, 3, 9);
   context.fillRect(headLeft + headWidth - 2, footY - 28, 3, 9);
+  context.fillStyle = profile.hair;
+  context.fillRect(headLeft + 1, footY - 31, headWidth - 2, 10);
+  context.fillRect(headLeft, footY - 28, 2, 8);
+  context.fillRect(headLeft + headWidth - 2, footY - 28, 2, 8);
   context.fillStyle = profile.hairHighlight;
   context.fillRect(headLeft + 2, footY - 31, 4, 2);
   context.fillRect(headLeft + headWidth - 3, footY - 26, 2, 4);
@@ -291,21 +306,32 @@ export function paintForestHumanoid(context, x, y, {
     }
   }
 
-  context.fillStyle = profile.headwearShadow;
-  context.fillRect(x - Math.ceil((headWidth + 2) / 2), footY - 34, headWidth + 2, 4);
-  context.fillStyle = profile.headwear;
-  context.fillRect(x - Math.ceil(headWidth / 2), footY - 37, headWidth, 4);
+  context.fillStyle = profile.outline;
+  context.fillRect(headLeft - 1, footY - 34, headWidth + 2, 4);
+  context.fillRect(headLeft, footY - 37, headWidth, 4);
   if (profile.id === 'visitor') {
-    context.fillRect(x - Math.ceil((headWidth - 4) / 2), footY - 40, headWidth - 4, 3);
+    // The folded hood droops behind her face, above the coat collar and staff.
+    context.fillRect(headLeft + 1, footY - 40, headWidth - 2, 4);
     context.fillRect(x - 2 - Math.round(forwardX), footY - 42, 5, 2);
-    context.fillRect(x - 2 - Math.round(forwardX * 2), footY - 44, 3, 2);
+    context.fillStyle = profile.headwear;
+    context.fillRect(headLeft + 1, footY - 37, headWidth - 2, 4);
+    context.fillRect(headLeft + 2, footY - 39, headWidth - 4, 2);
+    context.fillRect(x - 1 - Math.round(forwardX), footY - 41, 3, 2);
+    context.fillStyle = profile.headwearShadow;
+    context.fillRect(headLeft, footY - 33, headWidth, 2);
+    context.fillStyle = profile.headwearHighlight;
+    context.fillRect(headLeft + 2, footY - 37, 1, 3);
+    context.fillRect(headLeft + 3, footY - 38, 3, 1);
   } else {
-    context.fillRect(x - Math.ceil((headWidth - 4) / 2), footY - 39, headWidth - 4, 2);
+    context.fillRect(headLeft + 2, footY - 39, headWidth - 4, 2);
+    context.fillStyle = profile.headwear;
+    context.fillRect(headLeft + 1, footY - 37, headWidth - 2, 4);
+    context.fillRect(headLeft + 3, footY - 38, headWidth - 6, 1);
+    context.fillStyle = profile.headwearShadow;
+    context.fillRect(headLeft, footY - 33, headWidth, 2);
+    context.fillStyle = profile.headwearHighlight;
+    context.fillRect(headLeft + 2, footY - 36, 4, 1);
   }
-  context.fillStyle = profile.headwearHighlight;
-  context.fillRect(x - Math.floor(headWidth / 2) + 1, footY - 37, 4, 1);
-  context.fillRect(x - Math.round(forwardX * 2) - 1,
-    footY - (profile.id === 'visitor' ? 40 : 39), 3, 1);
 
   if (gesture && !rearFacing) paintGestureArm();
   return gait;
