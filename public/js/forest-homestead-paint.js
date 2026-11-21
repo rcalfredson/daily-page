@@ -1,7 +1,7 @@
-import { paintForestCompanion } from '/js/forest-companion-paint.js';
-import { cartDefinition } from '/js/forest-cart-motion.js';
-import { constructionHomeFootprint } from '/js/forest-construction-design.js';
-import { paintForestHumanoid } from '/js/forest-humanoid.js';
+import { paintForestCompanion } from './forest-companion-paint.js';
+import { cartDefinition } from './forest-cart-motion.js';
+import { constructionHomeFootprint } from './forest-construction-design.js';
+import { paintForestHumanoid } from './forest-humanoid.js';
 
 const WOOD = {
   honey: ['#c6a16b', '#a57a4c', '#795b3c', '#e1be85'],

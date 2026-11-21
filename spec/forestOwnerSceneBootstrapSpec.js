@@ -57,6 +57,15 @@ function response() {
 }
 
 describe('forest owner scene bootstrap', () => {
+  it('only includes traveler memory when requested for the development gate', async () => {
+    const { read } = harness(world({ tansyIntroduced: true }));
+    expect((await read({ ownerUserId: OWNER_USER_ID })).traveler).toBeUndefined();
+    expect((await read({ ownerUserId: OWNER_USER_ID, includeTraveler: true })).traveler)
+      .toEqual({ forestId: FOREST_ID, introduced: true });
+    expect((await harness().read({ ownerUserId: OWNER_USER_ID, includeTraveler: true })).traveler)
+      .toEqual({ forestId: FOREST_ID, introduced: false });
+  });
+
   it('centers initial cells on an authorized destination while keeping the ordinary entrance', async () => {
     const target = {
       treeId: '22222222-2222-4222-8222-222222222222',

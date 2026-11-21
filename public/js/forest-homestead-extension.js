@@ -1,4 +1,4 @@
-import { homePlacementAllowed } from '/js/forest-home-reservations.js';
+import { homeLayoutFromPlan, homePlacementAllowed } from '/js/forest-home-reservations.js';
 import { createHomesteadClient } from '/js/forest-homestead-client.js';
 import { advanceCompanionEncounter } from '/js/forest-companion.js';
 import { createCompanionEncounter } from '/js/forest-companion-encounter.js';
@@ -17,6 +17,7 @@ import { DEFAULT_HOME_DESIGN, studyCartDesign, constructionHomeFootprint,
 // Shared by the ordinary forest and the isolated construction study.
 export function createHomesteadExtension(api, study, { integrated = false, justEstablished = false } = {}) {
   const { plan } = study;
+  const layout = study.saved?.layout || homeLayoutFromPlan(plan);
   const durable = Boolean(study.saved);
   const viewport = document.querySelector('[data-owner-forest-viewport]');
   const dock = document.querySelector('[data-owner-forest-dock]');
@@ -157,7 +158,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
     if (discIntersectsRectangle(api.state().player, house())) api.setPlayer({ worldX: plan.parking.x, worldY: plan.parking.y });
     say(needsSupplies() ? 'This clearing is yours. Unpack your starter supplies when you’re ready.' : 'This clearing is yours.');
   }
-  function clear(p) {
+  function clearGround(p) {
     if (!api.regionLoaded(p)) { unloaded = true; return false; }
     if (Math.abs(p.worldX) + p.radius > study.extent || Math.abs(p.worldY) + p.radius > study.extent) return false;
     if (discIntersectsRectangle(p, house()) || api.occupied(p)) return false;
@@ -166,9 +167,10 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
     if (!sample.walkable) { if (sample.surface === 'unloaded') unloaded = true; return false; }
     return !placements.some(t => Math.hypot(p.worldX - t.worldX, p.worldY - t.worldY) <= p.radius + t.collisionRadius);
   }
+  const clear = p => api.travelerClear(p) && clearGround(p);
   function animalClear(p) {
     if (!api.regionLoaded(p) || Math.abs(p.worldX) + p.radius > study.extent || Math.abs(p.worldY) + p.radius > study.extent) return false;
-    if (discIntersectsRectangle(p, house()) || api.occupied(p)) return false;
+    if (discIntersectsRectangle(p, house()) || api.occupied(p) || !api.travelerClear(p)) return false;
     const { terrain, placements } = animalScene || api.state();
     if (!terrain.sample(p).walkable || placements.some(t => Math.hypot(p.worldX - t.worldX, p.worldY - t.worldY) <= p.radius + t.collisionRadius)) return false;
     if (!hasCart()) return true;
@@ -317,7 +319,15 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
     route: plan.route, travel: { ...travel },
     moveP95Ms: percentile(durations), frameP95Ms: percentile(frameTimes) }) };
   return {
-    placementAllowed: (p, writer) => homePlacementAllowed(plan, { x: p.worldX, y: p.worldY, radius: 17, writer })
+    travelerSiteAllowed(p) {
+      const animal = companionPosition();
+      return homePlacementAllowed(layout, { x: p.worldX, y: p.worldY, radius: p.radius, writer: 'writing' })
+        && (mounted || Math.hypot(animal.worldX - p.worldX, animal.worldY - p.worldY) >= 11 + p.radius)
+        && (!hasCart() || !cartFootprint(cart, { animal: mounted }).some(part =>
+          Math.hypot(part.worldX - p.worldX, part.worldY - p.worldY) < part.radius + p.radius + Number(mounted)));
+    },
+    travelerInteractionAllowed: () => !mounted && !mountRequested && !editor.active,
+    placementAllowed: (p, writer) => homePlacementAllowed(layout, { x: p.worldX, y: p.worldY, radius: 17, writer })
       && Math.hypot(p.worldX - cart.worldX, p.worldY - cart.worldY) > 110 + 17,
     hidePlayer: () => mounted,
     playerGesture: () => mounted ? null : actor.snapshot().gesture,
@@ -339,7 +349,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
       for (let i = 1; i <= steps; i++) {
         const p = { ...to, worldX: from.worldX + (to.worldX - from.worldX) * i / steps,
           worldY: from.worldY + (to.worldY - from.worldY) * i / steps };
-        if (!clear(p) || hasCart() && cartFootprint(cart, { animal: false }).some(c => Math.hypot(c.worldX - p.worldX,
+        if (!clearGround(p) || hasCart() && cartFootprint(cart, { animal: false }).some(c => Math.hypot(c.worldX - p.worldX,
           c.worldY - p.worldY) < c.radius + p.radius)) return false;
       }
       return true;

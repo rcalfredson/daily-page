@@ -51,3 +51,19 @@
 .forest-homestead-save { width: 100%; font-size: 13px; }
 .forest-homestead-save [hidden] { display: none; }
 .forest-homestead-save:has([data-save-status]:empty):has([data-save-retry][hidden]) { display: none; }
+.forest-traveler-dialog {
+  position: absolute; z-index: 5; inset: auto 8px 8px; margin: 0; width: auto;
+  box-sizing: border-box; max-height: 55%; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y;
+  padding: clamp(10px, 3vw, 18px) clamp(12px, 4vw, 24px); border: 2px solid #b99762; border-radius: 12px;
+  background: #f3e5c8; color: #392f25;
+  --forest-control-bg: #31513f; --forest-control-text: #f6efdb; --forest-control-border: #31513f;
+}
+.forest-traveler-dialog h2 { margin: 0 0 4px; font-size: 1rem; color: inherit; }
+.forest-traveler-dialog p { max-width: 72ch; margin: 0 0 10px; line-height: 1.4; color: inherit; }
+.forest-traveler-dialog__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.forest-traveler-dialog__actions button, [data-forest-traveler-talk] { min-height: 44px; }
+.owner-forest__viewport:has(> .forest-traveler-dialog[open]) { touch-action: pan-y; }
+.owner-forest__viewport:has(> .forest-traveler-dialog[open]) :is(.owner-forest__dock, .owner-forest__homestead-status) {
+  visibility: hidden;
+}
+.owner-forest__viewport[data-more-open='true'] [data-forest-traveler-talk] { display: none; }

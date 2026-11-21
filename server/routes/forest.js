@@ -20,15 +20,17 @@ export function buildForestRouteHandler({
     const { t } = res.locals;
     try {
       const locator = forestReturnLocator(req.query);
+      const developmentEnabled = forestHomesteadDevelopmentEnabled(req.user.id);
       const bootstrap = await readBootstrap({
         ownerUserId: req.user.id,
+        ...(developmentEnabled ? { includeTraveler: true } : {}),
         ...(locator ? { ...locator, preferredContentLang: getPreferredContentLang(res) } : {})
       });
       return res.status(200).render('forest/index', {
         title: t('forestScene.meta.title'),
         description: t('forestScene.meta.description'),
         user: req.user,
-        homesteadEnabled: forestHomesteadDevelopmentEnabled(req.user.id)
+        homesteadEnabled: developmentEnabled
           || bootstrap.homesteadEstablished && homesteadDevelopmentEnvironment(),
         forestStatus: bootstrap.status,
         bootstrap

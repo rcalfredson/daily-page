@@ -133,7 +133,8 @@ export function buildForestOwnerSceneBootstrapService({
   linkedCreationEnabled = forestWritingLinksEnabled
 } = {}) {
   return async function readForestOwnerSceneBootstrap({
-    ownerUserId: ownerValue, returnTreeId = null, returnMarkerId = null, preferredContentLang = 'en'
+    ownerUserId: ownerValue, returnTreeId = null, returnMarkerId = null, preferredContentLang = 'en',
+    includeTraveler = false
   }) {
     const ownerUserId = canonicalOwner(ownerValue);
     const creationEnabled = linkedCreationEnabled() === true;
@@ -153,7 +154,8 @@ export function buildForestOwnerSceneBootstrapService({
       environmentSchemaVersion: 1,
       worldGenerationVersion: 1,
       reconciliation: 1,
-      terrain: 1
+      terrain: 1,
+      ...(includeTraveler ? { tansyIntroduced: 1 } : {})
     }));
     if (!world) return emptyBootstrap('not-established', creationEnabled);
     validateWorld(world, ownerUserId);
@@ -171,6 +173,9 @@ export function buildForestOwnerSceneBootstrapService({
       }
     };
     const terrain = forestTerrainDescriptor(world);
+    if (includeTraveler) {
+      bootstrap.traveler = { forestId: world.forestId, introduced: world.tansyIntroduced === true };
+    }
     if (terrain) {
       bootstrap.bootstrapVersion = 4;
       bootstrap.terrain = terrain;
