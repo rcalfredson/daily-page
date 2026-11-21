@@ -13,7 +13,7 @@ else {
     start.hidden = true;
     return createExtension(api, { saved: record, plan, extent: 999_980_000 }, { integrated: true, justEstablished });
   }
-  function offerClearing(record, createExtension) {
+  function offerClearing(record, createExtension, createTraveler) {
     let site = null, api, finding = false, dismissed = false;
     let notice = '';
     const client = createHomesteadClient({ initial: record });
@@ -44,7 +44,7 @@ else {
       if (copy.textContent !== message) copy.textContent = message;
       action.disabled = state.busy || finding || busy;
     }
-    const forest = startOwnerForest({ unifiedNavigation: true, createExtension(extensionApi) {
+    const forest = startOwnerForest({ unifiedNavigation: true, createTraveler, createExtension(extensionApi) {
       api = extensionApi;
       api.navigation.register('suggested-clearing', () => site
         ? [{ id: 'home', label: 'Suggested clearing', worldX: site.x, worldY: site.y, nearbyRadius: 85 }]
@@ -122,10 +122,14 @@ else {
       const response = await fetch('/api/v1/forest/homestead', { credentials: 'same-origin', cache: 'no-store' });
       if (!response.ok) throw new Error('Home unavailable');
       const record = await response.json();
-      const { createHomesteadExtension } = await import('./forest-homestead-extension.js');
+      const [{ createHomesteadExtension }, { createForestTraveler }] = await Promise.all([
+        import('./forest-homestead-extension.js'),
+        document.querySelector('[data-forest-traveler-dialog]') ? import('./forest-traveler.js') : {}
+      ]);
       if (record.established) {
-        startOwnerForest({ unifiedNavigation: true, createExtension: api => install(api, record, createHomesteadExtension) });
-      } else offerClearing(record, createHomesteadExtension);
+        startOwnerForest({ unifiedNavigation: true, createTraveler: createForestTraveler,
+          createExtension: api => install(api, record, createHomesteadExtension) });
+      } else offerClearing(record, createHomesteadExtension, createForestTraveler);
     } catch {
       // Do not let an unread saved house/cart disappear while walking through its footprint.
       copy.textContent = 'Your clearing could not be loaded. Try again to enter the forest.';

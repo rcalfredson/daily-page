@@ -68,8 +68,7 @@ Owner playtesting should assess discovery and control crowding in this ordinary 
 The current preview's terrain is the ordinary terrain-free account configuration; the existing
 river/bridge study remains available for crossing review. Broader qualification on dense and
 terrain-enabled personal forests, full writing-page round trips and an explicit production reader/
-writer rollout remain release work. The traveler, special part, materials expedition and
-making/gifting narrative remain the next gameplay connections after this integration review.
+writer rollout remain release work.
 
 Verification for this pass: **63 focused specs** passed. The full Jasmine run exercised **1,601
 specs**: **1,598 passed** inside the sandbox, and the three subprocess-startup specs passed when
@@ -106,4 +105,32 @@ unsaved previews are visit-local. Revisions and operation receipts protect mater
 saves when a response is lost or two tabs act at once. Existing records keep their house, cart,
 parking, material balances, companion stage and prior cart access without a data migration.
 
-The traveler, expedition, additional material sources and earned customization are deferred.
+## Meet Tansy Rook
+
+Tansy rests off to one side of the ordinary forest entrance. Her hood and joke about burying
+boots come from the development scene. The ochre patchwork canopy is the landmark, and the cart
+stays parked. Tansy and the cart block movement at ground level. The conversation runs along
+the bottom of the forest view and frames the player, Tansy and her cart above it. Tansy looks
+toward the canopy as she talks about its patches.
+Players can find her as soon as they can walk in the forest, including before claiming a home.
+
+The development allowlist enables both the encounter and its save. **Wish her a good road**
+records one introduction fact on the owner’s forest. The open dialogue and campsite coordinates
+are visit-local. The forest checks a bounded set of nearby resting spots against terrain, the
+entrance approach, and existing objects and home reservations. A spot may change if it becomes
+occupied. If none fits, the forest continues without a campsite. The special cart part, expedition
+clue and destination, new materials, and gifting are future increments.
+
+### Local playtest
+
+Run the application preview command above and open `http://127.0.0.1:4185/en/forest`.
+
+1. Walk out from the entrance and look for the patched ochre canopy, or choose **Covered cart**
+   under **More → Navigate**. Approach on foot and select **Talk to Tansy**.
+2. Select **Did you make that canopy?**, then select **Leave** or press Escape. Walk away, return, and
+   check that the opening greeting is still available.
+3. Ask about the cart again and select **Wish her a good road**. Reload the forest, follow
+   **Tansy Rook** in the compass, and talk to her. She should remember your interest in the canopy.
+
+The preview retains the introduction. An already introduced account starts at the recognition
+beat. Use a fresh allowlisted development account to repeat the entire first meeting.

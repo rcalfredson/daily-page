@@ -117,11 +117,73 @@ try {
     const manifest=await fetch('/api/v1/forest/regions?cells=-1:-2,0:-2,1:-2,-1:-1,0:-1,1:-1,-1:0,0:0,1:0').then(r=>r.json());
     const tree=manifest.placements[0]; if(!tree)throw new Error('Real writing tree missing');
     const inspection=await fetch('/api/v1/forest/trees/'+tree.id+'/inspection').then(r=>r.json());
-    return JSON.stringify({forged:forged.status,collision:collision.status,plants:garden.plants,tree,inspection});
+    return JSON.stringify({forged:forged.status,collision:collision.status,gardenRevision:garden.revision,plants:garden.plants,tree,inspection});
   })()`));
   assert.equal(compatibility.forged, 400); assert.equal(compatibility.collision, 409);
   assert.ok(compatibility.plants.length > 0); assert.equal(compatibility.inspection.writing.title, 'A first walk from home');
   console.log('PASS real garden/writing coexistence, reserved-house planting rejection and malformed-command rejection');
+
+  const travelerMemory = () => evaluate(`document.querySelector('#owner-forest-bootstrap').textContent`)
+    .then(payload => JSON.parse(payload).traveler);
+  const talk = '[data-forest-traveler-talk]', dialog = '[data-forest-traveler-dialog]';
+  const line = () => evaluate(`document.querySelector('[data-forest-traveler-line]').textContent`);
+  async function approachTansy() {
+    await wait(`Boolean(document.querySelector('[data-forest-navigation-destination] option[value="tansy"]'))`);
+    await guideTo('tansy');
+    await walkWithCompass(enabled(talk));
+    await click(talk);
+    await wait(`document.querySelector('${dialog}').open`);
+  }
+  const beforeTraveler = await read();
+  const reviewDir = '/tmp/forest-homestead-application-review';
+  fs.mkdirSync(reviewDir, { recursive: true });
+  await send('browsingContext.setViewport', { context, viewport: { width: 320, height: 820 }, devicePixelRatio: 1 });
+  async function checkDialoguePlacement() {
+    assert.equal(await evaluate(`(()=>{
+      const stage=document.querySelector('[data-owner-forest-viewport]').getBoundingClientRect();
+      const panel=document.querySelector('${dialog}').getBoundingClientRect();
+      return panel.left>=stage.left && panel.right<=stage.right && panel.width>=stage.width-24
+        && stage.bottom-panel.bottom<=12 && panel.top-stage.top>=stage.height*.4;
+    })()`), true);
+  }
+  if (!(await travelerMemory()).introduced) {
+    await approachTansy();
+    assert.match(await line(), /That cart’s outlasted every pair/);
+    assert.equal(await evaluate(`document.querySelector('[data-forest-traveler-ask]').textContent`), 'Did you make that canopy?');
+    await click('[data-forest-traveler-ask]');
+    assert.match(await line(), /Every patch/);
+    await checkDialoguePlacement();
+    await evaluate(`document.querySelector('[data-owner-forest-viewport]').scrollIntoView({block:'center'});true`);
+    const shot = await send('browsingContext.captureScreenshot', { context });
+    fs.writeFileSync(`${reviewDir}/tansy-canopy-320.png`, Buffer.from(shot.data, 'base64'));
+    await send('input.performActions', { context, actions: [{ type: 'key', id: 'keyboard', actions: [
+      { type: 'keyDown', value: '\uE00C' }, { type: 'keyUp', value: '\uE00C' }
+    ] }] });
+    await wait(`!document.querySelector('${dialog}').open && document.activeElement.matches('[data-owner-forest-viewport]')`);
+    await navigate();
+    assert.equal((await travelerMemory()).introduced, false);
+    await approachTansy();
+    assert.match(await line(), /Name’s Tansy Rook/);
+    await click('[data-forest-traveler-ask]');
+    await click('[data-forest-traveler-finish]');
+    await wait(`!document.querySelector('${dialog}').open`);
+    await navigate();
+    assert.equal((await travelerMemory()).introduced, true);
+    console.log('PASS Tansy first greeting, cart question, mid-conversation departure and introduction save');
+  }
+  await approachTansy();
+  assert.match(await line(), /canopy inspector/);
+  assert.equal(await evaluate(`document.querySelector('[data-forest-traveler-ask]').hidden`), true);
+  await checkDialoguePlacement();
+  await click('[data-forest-traveler-leave]');
+  assert.deepEqual(await read(), beforeTraveler);
+  const travelerGarden = JSON.parse(await evaluate(`fetch('/api/v1/forest/garden').then(r=>r.text())`));
+  assert.equal(travelerGarden.revision, compatibility.gardenRevision);
+  assert.deepEqual(travelerGarden.plants.map(p => p.plantId), compatibility.plants.map(p => p.plantId));
+  await send('browsingContext.setViewport', { context, viewport: { width: 1280, height: 880 }, devicePixelRatio: 1 });
+  await navigate();
+  await wait(`document.querySelector('[data-homestead-start]').hidden`);
+  console.log('PASS Tansy recognition after reload, 320px dialogue containment, homestead and garden preservation');
 
   assert.equal(await evaluate(`document.querySelector('[data-owner-forest-reset]').textContent`), 'Return to the center');
   assert.equal(await evaluate(`Boolean(document.querySelector('.home-study-note'))`), false);
@@ -164,7 +226,6 @@ try {
   assert.deepEqual(gardenAfter.plants.map(p=>p.plantId),compatibility.plants.map(p=>p.plantId));
   console.log('PASS real writing-return locator remains active beside homestead loading; garden survives reload');
 
-  fs.mkdirSync('/tmp/forest-homestead-application-review', { recursive: true });
   for (const width of [1280, 390, 320]) {
     await send('browsingContext.setViewport', { context, viewport: { width, height: width < 700 ? 820 : 880 }, devicePixelRatio: 1 });
     beforeRecovery = (await read()).revision;

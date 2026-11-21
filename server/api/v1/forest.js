@@ -1,4 +1,5 @@
 import { buildForestHomesteadRouteHandler } from './forestHomestead.js';
+import { buildForestTravelerRouteHandler } from './forestTraveler.js';
 import { forestHomesteadApplication } from '../../services/forestHomesteadApplication.js';
 import { forestGarden } from '../../services/forestGarden.js';
 import { ForestGardenError } from '../../services/forestGardenStore.js';
@@ -831,7 +832,9 @@ const useForestAPI = (app) => {
   router.use('/authored-objects', requireForestAuthoredMutationOrigin);
   router.use('/garden', requireForestAuthoredMutationOrigin);
   router.use('/homestead', requireForestAuthoredMutationOrigin);
+  router.use('/traveler', requireForestAuthoredMutationOrigin);
   router.use(optionalAuth);
+  router.post('/traveler', buildForestTravelerRouteHandler());
   router.get('/homestead', buildForestHomesteadRouteHandler({ service: forestHomesteadApplication }));
   router.post('/homestead', buildForestHomesteadRouteHandler({ service: forestHomesteadApplication }));
   router.get('/garden', buildForestGardenRouteHandler());

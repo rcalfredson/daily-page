@@ -47,9 +47,7 @@ import {
   replaceOwnerForestAuthoredRegion
 } from './owner-forest-scene.js';
 
-// Optional presentation extension is supplied only by the isolated development entry point.
-// Production starts with no extension and retains its ordinary controls and authority.
-export function startOwnerForest({ createExtension = () => null, unifiedNavigation = false } = {}) {
+export function startOwnerForest({ createExtension = () => null, createTraveler, unifiedNavigation = false } = {}) {
   const payload = document.getElementById('owner-forest-bootstrap');
   const copyPayload = document.getElementById('owner-forest-copy');
   const viewport = document.querySelector('[data-owner-forest-viewport]');
@@ -194,7 +192,7 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
     }
   }, true);
 
-  let extension = null;
+  let extension = null, traveler = null;
   const navigation = unifiedNavigation ? createForestNavigation({
     dock: document.querySelector('[data-owner-forest-dock]'), more: morePanel,
     focus: () => viewport.focus({ preventScroll: true }),
@@ -214,11 +212,12 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
   const extensionApi = {
     navigation,
     state: () => ({ player: { ...player }, camera, terrain, placements: [...placementsById.values()],
-      busy: Boolean(inspectedTreeId || inspectedMarkerId || placement.active || returnArrivalPending)
+      busy: Boolean(inspectedTreeId || inspectedMarkerId || placement.active || returnArrivalPending || traveler?.open())
         || !document.querySelector('[data-forest-garden]').hidden
         || !document.querySelector('[data-garden-toolbar]').hidden }),
     occupied: p => garden.intersects(p) || [...markersById.values()].some(m =>
       Math.hypot(m.worldX - p.worldX, m.worldY - p.worldY) <= 9 + p.radius),
+    travelerClear: p => !traveler?.blocksMovement(p),
     regionLoaded: p => {
       const radius = p.radius || 0;
       return [-radius, radius].every(dx => [-radius, radius].every(dy => {
@@ -238,6 +237,11 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
     focus: () => viewport.focus({ preventScroll: true })
   };
   extension = createExtension(extensionApi);
+  traveler = bootstrap.traveler && createTraveler?.({
+    ...extensionApi, spawn: bootstrap.spawn, memory: bootstrap.traveler,
+    canRest: p => extension?.travelerSiteAllowed?.(p) !== false,
+    canTalk: () => extension?.travelerInteractionAllowed?.() !== false
+  });
 
   function cellQuery(cells) {
     return cells.map(ownerForestCellId).join(',');
@@ -831,7 +835,7 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
     context.stroke();
   }
 
-  function paintGround() {
+  function paintGround(camera) {
     const cell = FOREST_OWNER_GROUND_PRESENTATION_CONFIG.tileSize;
     const firstX = Math.floor(camera.x / cell);
     const lastX = Math.ceil((camera.x + camera.width) / cell);
@@ -850,7 +854,7 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
     }
   }
 
-  function paintTree(placement, elapsed) {
+  function paintTree(placement, elapsed, camera) {
     const asset = assetsByKey.get(placement.assetKey);
     const sprites = spritesByKey.get(placement.assetKey);
     if (!asset || !sprites) return;
@@ -880,7 +884,7 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
     }
   }
 
-  function paintMarker(marker, { preview = false, invalid = false, time = 0 } = {}) {
+  function paintMarker(marker, camera, { preview = false, invalid = false, time = 0 } = {}) {
     const x = Math.round(marker.worldX - camera.x);
     const y = Math.round(marker.worldY - camera.y);
     const previousAlpha = context.globalAlpha;
@@ -966,19 +970,21 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
     if (document.hidden) return;
     lastPaintTime = time;
     context.imageSmoothingEnabled = false;
-    paintGround();
-    terrain.paintGround(context, camera, time, reducedMotion.matches);
-    extension?.paintGround?.(context, camera);
+    const view = traveler?.frameConversation(camera, player) || camera;
+    paintGround(view);
+    terrain.paintGround(context, view, time, reducedMotion.matches);
+    extension?.paintGround?.(context, view);
     const placements = [...placementsById.values()];
-    const visible = visibleForestPlacements(placements, assetsByKey, camera, 32);
+    const visible = visibleForestPlacements(placements, assetsByKey, view, 32);
     const visibleMarkers = [...markersById.values()].filter(marker => (
-      marker.worldX >= camera.x - 32 && marker.worldX <= camera.x + camera.width + 32
-      && marker.worldY >= camera.y - 40 && marker.worldY <= camera.y + camera.height + 32
+      marker.worldX >= view.x - 32 && marker.worldX <= view.x + view.width + 32
+      && marker.worldY >= view.y - 40 && marker.worldY <= view.y + view.height + 32
     ));
     const depth = [
-      ...terrain.depthItems(camera),
-      ...garden.depthItems(camera),
-      ...(extension?.depthItems?.(camera) || []),
+      ...terrain.depthItems(view),
+      ...garden.depthItems(view),
+      ...(extension?.depthItems?.(view) || []),
+      ...(traveler?.depthItems(view) || []),
       ...visible.map(tree => ({ kind: 'tree', id: tree.id, placement: tree, worldY: tree.worldY })),
       ...visibleMarkers.map(marker => ({
         kind: 'marker', id: marker.objectId, marker, worldY: marker.worldY
@@ -992,27 +998,29 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
     ].sort((a, b) => a.worldY - b.worldY || a.kind.localeCompare(b.kind)
       || a.id.localeCompare(b.id));
     for (const item of depth) {
-      if (item.kind === 'extension') {
-        extension.paintDepth(context, item, camera, reducedMotion.matches);
+      if (item.kind === 'traveler') {
+        traveler.paint(context, item, view, reducedMotion.matches);
+      } else if (item.kind === 'extension') {
+        extension.paintDepth(context, item, view, reducedMotion.matches);
       } else if (item.kind === 'garden') {
-        garden.paint(context, item, camera);
+        garden.paint(context, item, view);
       } else if (item.kind.startsWith('terrain-')) {
-        terrain.paintDepth(context, item, camera);
+        terrain.paintDepth(context, item, view);
       } else if (item.player) {
-        paintForestHumanoid(context, Math.round(player.worldX - camera.x),
-          Math.round(player.worldY - camera.y - terrain.elevation(player)), {
+        paintForestHumanoid(context, Math.round(player.worldX - view.x),
+          Math.round(player.worldY - view.y - terrain.elevation(player)), {
             profile: FOREST_HUMANOID_PROFILES.player,
             motion: playerMotion,
             gesture: extension?.playerGesture?.() || null,
             reducedMotion: reducedMotion.matches
           });
       } else if (item.marker) {
-        paintMarker(item.marker, {
+        paintMarker(item.marker, view, {
           preview: item.kind === 'preview',
           invalid: item.kind === 'preview' && !placement.preview.valid,
           time: time / 1000
         });
-      } else paintTree(item.placement, time / 1000);
+      } else paintTree(item.placement, time / 1000, view);
     }
   }
 
@@ -1447,13 +1455,14 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
     lastTime = time;
     garden.update(time);
     extension?.update?.(time);
+    traveler?.update(time);
     const keyboardDirection = normalizedMovement(keys);
     const pointerDirection = pointer.id === null ? { x: 0, y: 0 } : touchMovement(
       pointer.x - pointer.originX,
       pointer.y - pointer.originY
     );
     const direction = ownerForestMovementDirection({
-      inspectionOpen: returnArrivalPending || Boolean(inspectedTreeId || inspectedMarkerId),
+      inspectionOpen: returnArrivalPending || Boolean(inspectedTreeId || inspectedMarkerId || traveler?.open()),
       keyboardDirection,
       pointerDirection
     });
@@ -1469,7 +1478,8 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
       }
       const extendedPlayer = extension?.move?.(player, direction, elapsed);
       player = extendedPlayer || moveOwnerForestPlayer(player, direction, elapsed, [...placementsById.values()],
-        (from, to) => terrain.canMove(from, to) && (extension?.canWalk?.(from, to) ?? true));
+        (from, to) => terrain.canMove(from, to) && !traveler?.blocksMovement(to, from)
+          && (extension?.canWalk?.(from, to) ?? true));
       playerMotion = advanceForestHumanoidMotion(playerMotion, {
         from: before, to: player, direction, elapsedSeconds: elapsed,
         reducedMotion: reducedMotion.matches
@@ -1496,6 +1506,10 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
     s: 'down', S: 'down' })[key];
   viewport.addEventListener('keydown', (event) => {
     if (event.target !== viewport) return;
+    if (traveler?.open()) {
+      if (event.key === 'Escape') traveler.close();
+      return;
+    }
     if (event.key === 'Escape' && placement.active) {
       stopPlacement();
       event.preventDefault();
@@ -1525,6 +1539,7 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
   });
   viewport.addEventListener('pointerdown', (event) => {
     if (pointer.id !== null
+      || traveler?.open()
       || inspectedTreeId
       || inspectedMarkerId
       || (event.target !== canvas && event.target !== viewport)) return;
@@ -1685,6 +1700,7 @@ export function startOwnerForest({ createExtension = () => null, unifiedNavigati
   });
   markerRemoveConfirm.addEventListener('click', removeInspectedMarker);
   reset.addEventListener('click', () => {
+    traveler?.close();
     clearPointer();
     returnedTreeId = null;
     returnedMarkerId = null;

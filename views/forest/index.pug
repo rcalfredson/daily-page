@@ -83,6 +83,8 @@ block content
                   = t('forestScene.markers.revertPending')
             p.owner-forest__garden-notice(data-garden-notice role='status' aria-live='polite' hidden)
           .owner-forest__dock(data-owner-forest-dock)
+            if bootstrap.traveler
+              button(type='button' data-forest-traveler-talk hidden) Talk to Tansy
             .owner-forest__navigation(data-garden-navigation hidden aria-label='Guide to lanternbell')
               span.owner-forest__navigation-arrow(data-garden-navigation-arrow aria-hidden='true') ↑
               p(data-garden-navigation-copy)
@@ -136,6 +138,15 @@ block content
                 p.owner-forest__touch-help Touch and drag to walk. Tap a nearby plant, tree or marker to interact.
                 p#owner-forest-help.owner-forest__help= t('forestScene.help')
                 p(data-owner-forest-info)
+          if bootstrap.traveler
+            dialog.forest-traveler-dialog(data-forest-traveler-dialog aria-labelledby='forest-traveler-title')
+              h2#forest-traveler-title Tansy Rook
+              p(data-forest-traveler-line aria-live='polite')
+              p(data-forest-traveler-status role='status' hidden)
+              .forest-traveler-dialog__actions
+                button(type='button' data-forest-traveler-ask) Did you make that canopy?
+                button(type='button' data-forest-traveler-finish hidden) Wish her a good road
+                button(type='button' data-forest-traveler-leave) Leave
           section#forest-garden-panel.owner-forest__garden(data-forest-garden hidden aria-labelledby='garden-title')
             .owner-forest__garden-header
               h2#garden-title Satchel & garden
