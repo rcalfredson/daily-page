@@ -9,6 +9,7 @@ import User from '../../server/db/models/User.js';
 import ForestOwnerWorld from '../../server/db/models/ForestOwnerWorld.js';
 import ForestHomestead from '../../server/db/models/ForestHomestead.js';
 import AccountDeletionRequest from '../../server/db/models/AccountDeletionRequest.js';
+import { buildForestTravelerRouteHandler } from '../../server/api/v1/forestTraveler.js';
 import { buildForestHomesteadService } from '../../server/services/forestHomestead.js';
 import { cleanUpAccountDeletionForests } from '../../server/services/accountDeletionForestCleanup.js';
 import { createHomeStudyFixture, planHomeCartSite } from '../lib/forestHomeCartStudy.js';
@@ -53,10 +54,25 @@ async function run() {
     worldSeed: fixture.seed, placementPolicyVersion: 1, environmentPolicyVersion: 1,
     environmentSchemaVersion: 1, worldGenerationVersion: 1 });
   forestId = world.forestId;
+  const traveler = buildForestTravelerRouteHandler({ enabled: ownerUserId => ownerUserId === OWNER });
+  const acceptFrame = () => traveler({ user: { id: OWNER }, query: {}, body: { forestId, action: 'accept-frame' } }, {
+    status(code) { throw new Error(`Frame acceptance failed with status ${code}`); },
+    json(result) { return result; }
+  });
+  assert.equal((await service.read({ ownerUserId: OWNER })).established, false);
+  const accepted = { introduced: true, frameOwned: true };
+  assert.deepEqual(await Promise.all([acceptFrame(), acceptFrame()]), [accepted, accepted]);
+  await mongoose.disconnect(); await initMongooseConnection({ useProductionDb: false, quiet: true });
+  const beforeHome = await service.read({ ownerUserId: OWNER });
+  assert.equal(beforeHome.established, false);
+  assert.equal(beforeHome.tansyFrameOwned, true);
+  assert.equal((await ForestOwnerWorld.findOne({ ownerUserId: OWNER }).lean()).tansyIntroduced, true);
+  console.log('PASS real Mongo: repeated frame acceptance and restart before making a clearing');
   const initial = cmd('establish', 0);
   const results = await Promise.all([mutate(initial), mutate(initial)]);
   assert.equal(await ForestHomestead.countDocuments({ ownerUserId: OWNER }), 1);
   assert.equal(results[0].homeId, results[1].homeId); assert.equal(results[0].revision, 1);
+  assert.equal(results[0].tansyFrameOwned, true);
   const record = await ForestHomestead.findOne({ ownerUserId: OWNER }).lean();
   const duplicate = { ...record }; delete duplicate._id;
   await assert.rejects(ForestHomestead.create(duplicate), error => error.code === 11000);

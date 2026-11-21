@@ -114,12 +114,22 @@ the bottom of the forest view and frames the player, Tansy and her cart above it
 toward the canopy as she talks about its patches.
 Players can find her as soon as they can walk in the forest, including before claiming a home.
 
-The development allowlist enables both the encounter and its save. **Wish her a good road**
-records one introduction fact on the owner’s forest. The open dialogue and campsite coordinates
-are visit-local. The forest checks a bounded set of nearby resting spots against terrain, the
-entrance approach, and existing objects and home reservations. A spot may change if it becomes
-occupied. If none fits, the forest continues without a campsite. The special cart part, expedition
-clue and destination, new materials, and gifting are future increments.
+The development allowlist enables the encounter and its save. After the canopy story, Tansy offers
+a spare **Ridge frame**. **Maybe later** records the introduction and keeps the offer available.
+**Take the frame** records the introduction and permanent ownership together on the owner’s forest.
+That single ownership fact makes repeated acceptance safe, including before a clearing exists.
+The open dialogue and campsite coordinates are visit-local. The forest checks a bounded set of
+resting spots against terrain, the entrance approach, and existing objects and home reservations.
+A spot may change if it becomes occupied. If none fits, the forest continues without a campsite.
+
+The workshop lists the Ridge frame under **Supports** once it’s owned. It makes a tall, peaked
+canopy or leaves two exposed timber gables and a ridge beam on an open cart. It fits every bed
+size, costs the same timber as bentwood bows, and uses the existing ground clearance, driving,
+and parking rules. The new Supports choice uses the existing version-1 cart design, so saved
+designs load as written. Ownership stays available when switching back to basic supports. Tansy comments
+on the peak when the player talks to her with a saved, fitted cart parked nearby. The response is
+based on the cart present at the visit. The destination clue, expedition, new materials, and
+gifting are future increments.
 
 ### Local playtest
 
@@ -127,10 +137,17 @@ Run the application preview command above and open `http://127.0.0.1:4185/en/for
 
 1. Walk out from the entrance and look for the patched ochre canopy, or choose **Covered cart**
    under **More → Navigate**. Approach on foot and select **Talk to Tansy**.
-2. Select **Did you make that canopy?**, then select **Leave** or press Escape. Walk away, return, and
-   check that the opening greeting is still available.
-3. Ask about the cart again and select **Wish her a good road**. Reload the forest, follow
-   **Tansy Rook** in the compass, and talk to her. She should remember your interest in the canopy.
+2. Select **Did you make that canopy?**, then **Maybe later**. Reload, follow **Tansy Rook** in the
+   compass, and talk to her again. She should remember the conversation and offer the frame again.
+3. Select **Take the frame** and reload. You can do this before making a clearing or after building
+   a cart. If you have no cart yet, claim a clearing and unpack starter supplies at the workshop.
+4. Park at home if you already have a cart. Open **Build first cart** or the cart editor, choose
+   **Supports → Ridge frame**, and toggle the canopy between **Open sky** and a cover. Cancel,
+   reopen the editor, and check that your saved supports are still selected or that you still have
+   an unbuilt cart. Select the Ridge frame again and choose **Assemble cart** or **Save design**.
+5. Invite Mallow if needed, drive toward Tansy, and step out in clear ground within about 100
+   steps of her. Walk over and talk. She should say, “You fitted the ridge frame! Look at that peak.
+   Your cart wears it well.” Reload and talk again to check the parked cart still gets the response.
 
-The preview retains the introduction. An already introduced account starts at the recognition
-beat. Use a fresh allowlisted development account to repeat the entire first meeting.
+The preview retains the introduction, ownership, and saved cart. Use a fresh allowlisted development
+account to repeat the entire first meeting.

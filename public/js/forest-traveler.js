@@ -5,6 +5,7 @@ import { paintStudyCart, paintStudyCartSupport, studyCartDepthItems } from './fo
 import { createForestHumanoidMotion, FOREST_HUMANOID_PROFILES, paintForestHumanoid } from './forest-humanoid.js';
 
 const TALK_RADIUS = 52;
+const RECOGNITION_RADIUS = 120;
 const CAMP_ANGLES = [0, 1, -1, 2, -2, 3, -3, 4].map(step => step * Math.PI / 4);
 const CART_DESIGN = { ...DEFAULT_CART_DESIGN, cloth: 'ochre', wood: 'sage' };
 const distance = (a, b) => Math.hypot(a.worldX - b.worldX, a.worldY - b.worldY);
@@ -43,12 +44,14 @@ export function createForestTraveler(api) {
   const line = dialog.querySelector('[data-forest-traveler-line]');
   const status = dialog.querySelector('[data-forest-traveler-status]');
   const ask = dialog.querySelector('[data-forest-traveler-ask]');
+  const accept = dialog.querySelector('[data-forest-traveler-accept]');
   const finish = dialog.querySelector('[data-forest-traveler-finish]');
   const leave = dialog.querySelector('[data-forest-traveler-leave]');
-  let introduced = api.memory.introduced, site = null, saving = false, lastSiteCheck = -Infinity;
+  const memory = api.memory;
+  let site = null, saving = false, lookingAt = null, lastSiteCheck = -Infinity;
   const idleMotion = createForestHumanoidMotion('down');
   api.navigation.register('traveler', () => site ? [{ ...site.tansy, id: 'tansy',
-    label: introduced ? 'Tansy Rook' : 'Covered cart', nearbyRadius: TALK_RADIUS }] : []);
+    label: memory.introduced ? 'Tansy Rook' : 'Covered cart', nearbyRadius: TALK_RADIUS }] : []);
 
   function update(time) {
     const { player, busy, terrain, placements } = api.state();
@@ -82,11 +85,12 @@ export function createForestTraveler(api) {
   }
 
   function showAnswer() {
-    line.textContent = '“I patched it myself. Every patch is from a different coat. I leave the corners loose so the wind can slip out. Learned that the day I nearly became a kite.”';
+    line.textContent = '“I patched it myself. Every patch is from a different coat. I leave the corners loose so I don’t become a kite again. I’ve got a spare ridge frame. Want it for your cart?”';
+    lookingAt = site.cart;
     ask.hidden = true;
-    finish.hidden = false;
-    finish.disabled = saving;
-    (saving ? leave : finish).focus({ preventScroll: true });
+    accept.hidden = finish.hidden = saving;
+    leave.hidden = !saving;
+    (saving ? leave : accept).focus({ preventScroll: true });
     api.requestRender();
   }
 
@@ -94,14 +98,20 @@ export function createForestTraveler(api) {
     const { player, busy } = api.state();
     if (!site || distance(player, site.tansy) > TALK_RADIUS || busy || !api.canTalk() || dialog.open) return;
     status.hidden = !saving;
-    ask.hidden = introduced || saving;
+    ask.hidden = memory.introduced || saving;
     finish.hidden = true;
-    line.textContent = introduced
-      ? '“Well, there’s my canopy inspector. The patches are still holding. Good to see you again.”'
-      : '“Name’s Tansy Rook. I’ve buried more boots than kin. That cart’s outlasted every pair.”';
+    accept.hidden = !memory.introduced || memory.frameOwned || saving;
+    leave.hidden = false;
+    leave.textContent = accept.hidden ? 'Leave' : 'Maybe later';
+    const fitted = api.fittedCart();
+    lookingAt = fitted && distance(site.tansy, fitted) <= RECOGNITION_RADIUS ? fitted : null;
+    if (lookingAt) line.textContent = '“You fitted the ridge frame! Look at that peak. Your cart wears it well.”';
+    else if (memory.frameOwned) line.textContent = '“The patches are still holding. Good to see you again.”';
+    else if (memory.introduced) line.textContent = '“Well, there’s my canopy inspector. That spare ridge frame is still yours if you want it.”';
+    else line.textContent = '“Name’s Tansy Rook. I’ve buried more boots than kin. That cart’s outlasted every pair.”';
     dialog.show();
     if (saving) showAnswer();
-    else (introduced ? leave : ask).focus({ preventScroll: true });
+    else (!ask.hidden ? ask : !accept.hidden ? accept : leave).focus({ preventScroll: true });
     api.requestRender();
   });
   ask.addEventListener('click', showAnswer);
@@ -118,29 +128,50 @@ export function createForestTraveler(api) {
   });
   const dialogSize = new window.ResizeObserver(api.requestRender);
   dialogSize.observe(dialog);
-  finish.addEventListener('click', async () => {
-    if (saving || introduced) return;
+  async function save(acceptingFrame) {
+    if (saving || (acceptingFrame ? memory.frameOwned : memory.introduced)) return;
     saving = true;
-    finish.disabled = true;
+    accept.disabled = finish.disabled = true;
+    leave.hidden = false;
+    leave.textContent = 'Leave';
     status.hidden = false;
-    status.textContent = 'Saving your introduction…';
+    status.textContent = acceptingFrame ? 'Saving your frame…' : 'Saving your introduction…';
     leave.focus({ preventScroll: true });
     try {
       const response = await fetch('/api/v1/forest/traveler', {
         method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ forestId: api.memory.forestId }), signal: window.AbortSignal.timeout(10000)
+        body: JSON.stringify({ forestId: memory.forestId, ...(acceptingFrame ? { action: 'accept-frame' } : {}) }),
+        signal: window.AbortSignal.timeout(10000)
       });
-      if (!response.ok || (await response.json()).introduced !== true) throw new Error('Traveler save failed');
-      introduced = true;
-      if (dialog.open) dialog.close();
+      const result = await response.json();
+      if (!response.ok || result.introduced !== true || acceptingFrame && result.frameOwned !== true) {
+        throw new Error('Traveler save failed');
+      }
+      memory.introduced = true;
+      if (acceptingFrame) {
+        memory.frameOwned = true;
+        if (dialog.open) {
+          line.textContent = '“It’s yours. Try it under Supports at the workshop and see how it looks on your cart.”';
+          lookingAt = null;
+          accept.hidden = finish.hidden = status.hidden = true;
+        }
+      } else if (dialog.open) dialog.close();
     } catch {
       status.hidden = false;
-      status.textContent = 'Could not confirm the introduction. Try again or leave and come back.';
+      status.textContent = 'Could not confirm the save. Try again, or come back later.';
+      accept.hidden = false;
+      finish.hidden = memory.introduced;
+      leave.hidden = !memory.introduced;
+      leave.textContent = 'Maybe later';
     } finally {
       saving = false;
-      finish.disabled = false;
+      accept.disabled = finish.disabled = false;
+      if (dialog.open && !status.hidden) (acceptingFrame ? accept : finish).focus({ preventScroll: true });
+      api.requestRender();
     }
-  });
+  }
+  accept.addEventListener('click', () => save(true));
+  finish.addEventListener('click', () => save(false));
 
   return {
     update,
@@ -171,7 +202,7 @@ export function createForestTraveler(api) {
       if (item.type === 'tansy') {
         const { player } = api.state();
         const nearby = distance(player, tansy) <= TALK_RADIUS;
-        const facing = dialog.open && !finish.hidden ? cart : player;
+        const facing = dialog.open && lookingAt ? lookingAt : player;
         const motion = nearby ? { ...idleMotion,
           facingRadians: Math.atan2(facing.worldY - tansy.worldY, facing.worldX - tansy.worldX) } : idleMotion;
         paintForestHumanoid(ctx, Math.round(tansy.worldX - camera.x), Math.round(tansy.worldY - camera.y),

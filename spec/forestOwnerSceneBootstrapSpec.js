@@ -61,9 +61,12 @@ describe('forest owner scene bootstrap', () => {
     const { read } = harness(world({ tansyIntroduced: true }));
     expect((await read({ ownerUserId: OWNER_USER_ID })).traveler).toBeUndefined();
     expect((await read({ ownerUserId: OWNER_USER_ID, includeTraveler: true })).traveler)
-      .toEqual({ forestId: FOREST_ID, introduced: true });
+      .toEqual({ forestId: FOREST_ID, introduced: true, frameOwned: false });
     expect((await harness().read({ ownerUserId: OWNER_USER_ID, includeTraveler: true })).traveler)
-      .toEqual({ forestId: FOREST_ID, introduced: false });
+      .toEqual({ forestId: FOREST_ID, introduced: false, frameOwned: false });
+    const accepted = harness(world({ tansyIntroduced: true, tansyFrameAccepted: true }));
+    expect((await accepted.read({ ownerUserId: OWNER_USER_ID, includeTraveler: true })).traveler)
+      .toEqual({ forestId: FOREST_ID, introduced: true, frameOwned: true });
   });
 
   it('centers initial cells on an authorized destination while keeping the ordinary entrance', async () => {

@@ -11,7 +11,7 @@ import { cartDefinition, cartFootprint, cartPoseClear, cartDismount, stepForestC
   discIntersectsRectangle } from '/js/forest-cart-motion.js';
 import { paintStudyHome, paintStudyCart, studyCartDepthItems, paintStudyCartSupport, paintStudyCartRiderRow, paintStudyDestination, paintStudyPaths } from '/js/forest-homestead-paint.js';
 import { createConstructionEditor } from '/js/forest-construction-editor.js';
-import { DEFAULT_HOME_DESIGN, studyCartDesign, constructionHomeFootprint,
+import { DEFAULT_HOME_DESIGN, TANSY_CART_FRAME, studyCartDesign, constructionHomeFootprint,
   validateConstructionDesign, advanceCartPresentation } from '/js/forest-construction-design.js';
 
 // Shared by the ordinary forest and the isolated construction study.
@@ -250,6 +250,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
     return '';
   }
   const editor = createConstructionEditor({ viewport, saved: durable, saveState: () => saves?.snapshot(),
+    ownsTansyFrame: () => saves?.snapshot().record.tansyFrameOwned || api.ownsTansyFrame?.(),
     retry: async () => {
       if (saves.snapshot().status === 'reload') { window.location.reload(); return false; }
       return saves.snapshot().pending ? saves.retry() : (await saves.refresh(), false);
@@ -327,6 +328,9 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
           Math.hypot(part.worldX - p.worldX, part.worldY - p.worldY) < part.radius + p.radius + Number(mounted)));
     },
     travelerInteractionAllowed: () => !mounted && !mountRequested && !editor.active,
+    travelerFittedCart: () => !saveBlocked() && !previousSaved?.recoveryRequired
+      && previousSaved?.cartDesign?.supports === TANSY_CART_FRAME
+      ? previousSaved.parking : null,
     placementAllowed: (p, writer) => homePlacementAllowed(layout, { x: p.worldX, y: p.worldY, radius: 17, writer })
       && Math.hypot(p.worldX - cart.worldX, p.worldY - cart.worldY) > 110 + 17,
     hidePlayer: () => mounted,

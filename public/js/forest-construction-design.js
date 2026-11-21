@@ -1,5 +1,6 @@
 // Versioned design vocabulary for the temporary construction study. No inventory or save authority.
 export const CONSTRUCTION_DESIGN_VERSION = 1;
+export const TANSY_CART_FRAME = 'ridge';
 export const HOME_DESIGN_OPTIONS = Object.freeze({
   width: [[120, 'Small · 120'], [150, 'Medium · 150'], [180, 'Wide · 180']],
   depth: [[72, 'Shallow · 72'], [86, 'Medium · 86'], [100, 'Deep · 100']],
@@ -13,7 +14,7 @@ export const CART_DESIGN_OPTIONS = Object.freeze({
   width: [[24, 'Narrow · 24'], [30, 'Medium · 30'], [36, 'Wide · 36']],
   body: [['rails', 'Open rails'], ['boards', 'Boarded bed']],
   wheels: [['spoked', 'Wooden spokes'], ['solid', 'Iron-bound discs']],
-  supports: [['posts', 'Timber posts'], ['bows', 'Bentwood bows']],
+  supports: [['posts', 'Timber posts'], ['bows', 'Bentwood bows'], [TANSY_CART_FRAME, 'Ridge frame']],
   canopy: [['none', 'Open sky'], ['linen', 'Linen cover'], ['patched', 'Patchwork cover']],
   wood: [['honey', 'Honey wood'], ['walnut', 'Dark walnut'], ['sage', 'Painted sage']],
   cloth: [['ochre', 'Golden ochre'], ['moss', 'Moss green'], ['indigo', 'Faded indigo']]
@@ -69,6 +70,6 @@ export function constructionCartCost(design) {
   if (!validateConstructionDesign('cart', design)) throw new Error('Invalid cart design');
   return { timber: 12 + (design.length - 36) / 4 + (design.width - 24) / 3
     + (design.body === 'boards' ? 8 : 4) + (design.wheels === 'solid' ? 6 : 4)
-    + (design.supports === 'bows' ? 6 : 4),
+    + (design.supports === 'posts' ? 4 : 6),
   cloth: design.canopy === 'none' ? 0 : design.canopy === 'linen' ? 6 : 8 };
 }

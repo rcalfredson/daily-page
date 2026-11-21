@@ -200,6 +200,7 @@ const forestOwnerWorldSchema = new Schema({
   },
   terrain: { type: terrainSchema, default: undefined },
   tansyIntroduced: { type: Boolean, default: undefined },
+  tansyFrameAccepted: { type: Boolean, default: undefined },
   reconciliation: {
     type: reconciliationSchema,
     required: true,
