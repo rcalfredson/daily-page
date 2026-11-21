@@ -1,10 +1,12 @@
-import { HOME_DESIGN_OPTIONS, CART_DESIGN_OPTIONS, validateConstructionDesign, constructionCartCost } from '/js/forest-construction-design.js';
+import { HOME_DESIGN_OPTIONS, CART_DESIGN_OPTIONS, TANSY_CART_FRAME, validateConstructionDesign,
+  constructionCartCost } from '/js/forest-construction-design.js';
 
 const LABELS = { width: 'Width', depth: 'Depth', walls: 'Wall material', color: 'Wall finish', roof: 'Roof material',
   roofColor: 'Roof finish', length: 'Bed length', body: 'Body', wheels: 'Wheels', supports: 'Supports',
   canopy: 'Canopy', wood: 'Wood finish', cloth: 'Cloth color' };
 
-export function createConstructionEditor({ viewport, preview, apply, close, saved = false, saveState = () => null, retry = null }) {
+export function createConstructionEditor({ viewport, preview, apply, close, saved = false, saveState = () => null,
+  ownsTansyFrame = () => false, retry = null }) {
   const panel = document.createElement('form');
   panel.className = 'home-study-editor'; panel.hidden = true;
   panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true');
@@ -37,6 +39,9 @@ export function createConstructionEditor({ viewport, preview, apply, close, save
       ? `${draft.width} × ${draft.depth} footprint. The doorway stays in place as the house grows toward the back.`
       : `${draft.length} × ${draft.width} bed. Supports and axles fit the chosen size. Finishes do not change speed or clearance.`;
     if (saved && kind === 'home') description.textContent += ' House finishes are freely available.';
+    if (kind === 'cart' && draft.supports === TANSY_CART_FRAME) {
+      description.textContent += ' Tansy’s frame raises a peaked ridge above the bed, with or without a canopy.';
+    }
     if (saved && kind === 'cart' && validateConstructionDesign('cart', draft)) {
       const cost = constructionCartCost(draft), current = state.record;
       const remaining = `${current.holdings.timber + current.cartCommitment.timber - cost.timber} timber and ${current.holdings.cloth + current.cartCommitment.cloth - cost.cloth} cloth will remain.`;
@@ -103,6 +108,7 @@ export function createConstructionEditor({ viewport, preview, apply, close, save
         const select = document.createElement('select'); select.name = name;
         select.dataset.designField = name;
         for (const [value, text] of choices) {
+          if (name === 'supports' && value === TANSY_CART_FRAME && !ownsTansyFrame() && draft.supports !== value) continue;
           const option = document.createElement('option'); option.value = value; option.textContent = text;
           select.append(option);
         }

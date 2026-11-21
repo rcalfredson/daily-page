@@ -8,7 +8,7 @@ import { validateForestAuthoredOwnerWorld } from './forestAuthoredObjectMutation
 import { assertForestTerrainPlacementReady } from './forestOwnerTerrain.js';
 import { forestTerrainDescriptor } from './forestOwnerTerrainRegion.js';
 import { DEFAULT_HOME_DESIGN, DEFAULT_CART_DESIGN, validateConstructionDesign,
-  HOME_DESIGN_OPTIONS, CART_DESIGN_OPTIONS } from '../../public/js/forest-construction-design.js';
+  HOME_DESIGN_OPTIONS, CART_DESIGN_OPTIONS, TANSY_CART_FRAME } from '../../public/js/forest-construction-design.js';
 import { homeLayoutFromPlan } from '../../public/js/forest-home-reservations.js';
 import { advanceCompanionEncounter, COMPANION_ENCOUNTERS } from '../../public/js/forest-companion.js';
 import { replaceConstructionCommitment, checkConstructionRevision } from './forestConstructionAccounting.js';
@@ -68,7 +68,8 @@ export function buildForestHomesteadService({ HomeModel = ForestHomestead, World
     return validateHomestead(await HomeModel.findOne(scope).session(session).lean(), scope);
   }
   function view(record, world, receipt = null, replayed = false) {
-    const context = { forestId: world.forestId, terrainToken: forestTerrainDescriptor(world)?.token || null };
+    const context = { forestId: world.forestId, terrainToken: forestTerrainDescriptor(world)?.token || null,
+      ...(world.tansyFrameAccepted === true ? { tansyFrameOwned: true } : {}) };
     if (!record) return { version: 1, established: false, revision: 0, ...context };
     const { _id, receipts, ...visible } = record;
     void _id; void receipts;
@@ -137,6 +138,9 @@ export function buildForestHomesteadService({ HomeModel = ForestHomestead, World
         if (command.action === 'home') next.homeDesign = command.design;
         if (command.action === 'cart') {
           if (previous.starterSuppliesClaimed === false) fail('HOME_SUPPLIES_REQUIRED');
+          if (command.design.supports === TANSY_CART_FRAME && world.tansyFrameAccepted !== true) {
+            fail('HOME_CART_FRAME_NOT_OWNED');
+          }
           const budget = replaceConstructionCommitment({ holdings: previous.holdings,
             previousCommitment: previous.cartCommitment, nextCost: homesteadCartCost(command.design), capacity: HOMESTEAD_MATERIAL_CAPACITY });
           next.cartDesign = command.design; next.holdings = budget.holdings; next.cartCommitment = budget.commitment;

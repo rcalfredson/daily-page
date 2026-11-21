@@ -1,6 +1,6 @@
 import { paintForestCompanion } from './forest-companion-paint.js';
 import { cartDefinition } from './forest-cart-motion.js';
-import { constructionHomeFootprint } from './forest-construction-design.js';
+import { constructionHomeFootprint, TANSY_CART_FRAME } from './forest-construction-design.js';
 import { paintForestHumanoid } from './forest-humanoid.js';
 
 const WOOD = {
@@ -147,10 +147,12 @@ export function paintStudyCartRiderRow(ctx, item, camera) {
 }
 
 const cartRoofDepth = (cart, elevation) => cart.worldY + elevation - 6.5 * Math.sin(cart.heading) + 56;
+const RIDGE_HEIGHT = 32;
 
 // Small support segments let a near rail obscure a foot without erasing the post above it.
 export function studyCartSupportItems(cart, elevation = 0) {
-  if (cart.design.canopy === 'none') return [];
+  const ridge = cart.design.supports === TANSY_CART_FRAME;
+  if (cart.design.canopy === 'none' && !ridge) return [];
   const d = cartDefinition(cart), c = Math.cos(cart.heading), s = Math.sin(cart.heading), wood = WOOD[cart.design.wood];
   const point = (x, y, z) => ({ x: cart.worldX + c * x - s * y,
     y: cart.worldY + s * x + c * y, z: z + elevation });
@@ -159,11 +161,16 @@ export function studyCartSupportItems(cart, elevation = 0) {
     id: `study-cart-support-${items.length}`, from, to, color, width,
     // The fabric covers its own frame even at the near canopy edge.
     worldY: Math.min((from.y + to.y + from.z + to.z) / 2, cartRoofDepth(cart, elevation) - .001) });
-  for (const x of [-d.halfLength + 1, d.halfLength - 13]) {
+  const rear = -d.halfLength + 1, front = d.halfLength - 13;
+  for (const x of [rear, front]) {
     for (const y of [-d.halfWidth, d.halfWidth]) for (let z = 26; z < 50; z++) {
       add(point(x, y, z), point(x, y, z + 1), wood[2], 3);
     }
-    if (cart.design.supports === 'bows') {
+    if (ridge) {
+      for (const y of [-d.halfWidth, d.halfWidth]) {
+        add(point(x, y, 50), point(x, 0, 50 + RIDGE_HEIGHT), wood[3], 3);
+      }
+    } else if (cart.design.supports === 'bows') {
       for (let i = 0; i < 8; i++) {
         const a = -Math.PI / 2 + i * Math.PI / 8, b = a + Math.PI / 8;
         add(point(x, Math.sin(a) * d.halfWidth, 50 + Math.cos(a) * 13),
@@ -171,6 +178,7 @@ export function studyCartSupportItems(cart, elevation = 0) {
       }
     } else add(point(x, -d.halfWidth, 51), point(x, d.halfWidth, 51), wood[3], 3);
   }
+  if (ridge) add(point(rear, 0, 50 + RIDGE_HEIGHT), point(front, 0, 50 + RIDGE_HEIGHT), wood[2], 3);
   return items;
 }
 
@@ -246,7 +254,7 @@ export function paintStudyCart(ctx, cart, camera, mounted, elevation = 0, motion
     }
     for (const x of [-d.halfLength + 2, d.halfLength - 2]) line(ctx, p(x, y, 12), p(x, y, 30), wood[2], 3);
     line(ctx, p(-d.halfLength, y, 29), p(d.halfLength, y, 29), wood[3], 3);
-    if (!hasCanopy) {
+    if (!hasCanopy && design.supports !== TANSY_CART_FRAME) {
       if (design.supports === 'bows') {
         line(ctx, p(-d.halfLength + 3, y, 16), p(0, y, 24), wood[2], 2);
         line(ctx, p(0, y, 24), p(d.halfLength - 3, y, 16), wood[2], 2);
@@ -269,7 +277,8 @@ export function paintStudyCart(ctx, cart, camera, mounted, elevation = 0, motion
   }, true, 'supports');
   if (hasCanopy) add(-8, 0, () => {
     const front = d.halfLength - 13, rear = -d.halfLength + 1;
-    const lift = t => design.supports === 'bows' ? Math.sin(t * Math.PI) * 13 : (1 - Math.abs(t * 2 - 1)) * 4;
+    const rise = design.supports === TANSY_CART_FRAME ? RIDGE_HEIGHT : 4;
+    const lift = t => design.supports === 'bows' ? Math.sin(t * Math.PI) * 13 : (1 - Math.abs(t * 2 - 1)) * rise;
     for (let i = 0; i < 6; i++) {
       const a = i / 6, b = (i + 1) / 6;
       const ya = -d.halfWidth - 3 + (2 * d.halfWidth + 6) * a, yb = -d.halfWidth - 3 + (2 * d.halfWidth + 6) * b;

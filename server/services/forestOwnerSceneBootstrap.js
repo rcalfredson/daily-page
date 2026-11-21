@@ -155,7 +155,7 @@ export function buildForestOwnerSceneBootstrapService({
       worldGenerationVersion: 1,
       reconciliation: 1,
       terrain: 1,
-      ...(includeTraveler ? { tansyIntroduced: 1 } : {})
+      ...(includeTraveler ? { tansyIntroduced: 1, tansyFrameAccepted: 1 } : {})
     }));
     if (!world) return emptyBootstrap('not-established', creationEnabled);
     validateWorld(world, ownerUserId);
@@ -174,7 +174,8 @@ export function buildForestOwnerSceneBootstrapService({
     };
     const terrain = forestTerrainDescriptor(world);
     if (includeTraveler) {
-      bootstrap.traveler = { forestId: world.forestId, introduced: world.tansyIntroduced === true };
+      bootstrap.traveler = { forestId: world.forestId, introduced: world.tansyIntroduced === true,
+        frameOwned: world.tansyFrameAccepted === true };
     }
     if (terrain) {
       bootstrap.bootstrapVersion = 4;

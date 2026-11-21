@@ -218,6 +218,7 @@ export function startOwnerForest({ createExtension = () => null, createTraveler,
     occupied: p => garden.intersects(p) || [...markersById.values()].some(m =>
       Math.hypot(m.worldX - p.worldX, m.worldY - p.worldY) <= 9 + p.radius),
     travelerClear: p => !traveler?.blocksMovement(p),
+    ownsTansyFrame: () => bootstrap.traveler?.frameOwned === true,
     regionLoaded: p => {
       const radius = p.radius || 0;
       return [-radius, radius].every(dx => [-radius, radius].every(dy => {
@@ -240,7 +241,8 @@ export function startOwnerForest({ createExtension = () => null, createTraveler,
   traveler = bootstrap.traveler && createTraveler?.({
     ...extensionApi, spawn: bootstrap.spawn, memory: bootstrap.traveler,
     canRest: p => extension?.travelerSiteAllowed?.(p) !== false,
-    canTalk: () => extension?.travelerInteractionAllowed?.() !== false
+    canTalk: () => extension?.travelerInteractionAllowed?.() !== false,
+    fittedCart: () => extension?.travelerFittedCart?.()
   });
 
   function cellQuery(cells) {

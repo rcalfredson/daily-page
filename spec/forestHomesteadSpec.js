@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import ForestHomestead from '../server/db/models/ForestHomestead.js';
 import { buildForestHomesteadService, canonicalHomesteadCommand } from '../server/services/forestHomestead.js';
 import { validateHomestead, homesteadCartCost, HOMESTEAD_RECEIPT_LIMIT } from '../server/services/forestHomesteadRecord.js';
-import { DEFAULT_HOME_DESIGN, studyCartDesign } from '../public/js/forest-construction-design.js';
+import { DEFAULT_HOME_DESIGN, TANSY_CART_FRAME, studyCartDesign } from '../public/js/forest-construction-design.js';
 import { createHomeStudyFixture, planHomeCartSite } from '../scripts/lib/forestHomeCartStudy.js';
 
 const OWNER = '64b00000000000000000a094';
@@ -120,6 +120,27 @@ describe('transactional homestead authority', () => {
     expect(parked.cartDesign).toEqual(before.cartDesign);
     expect(parked.holdings).toEqual(before.holdings);
     expect(parked.cartCommitment).toEqual(before.cartCommitment);
+  });
+  it('requires ownership to fit the ridge frame and validates placement and parking as for basic supports', async () => {
+    const authority = world();
+    const h = harness({ WorldModel: { findOne: () => query(authority), updateOne: async () => ({ matchedCount: 1 }) } });
+    const original = await establish(h);
+    const design = { ...original.cartDesign, supports: TANSY_CART_FRAME };
+    const fit = command('cart', original.revision, { design });
+    await expectAsync(mutate(h, fit)).toBeRejectedWithError('HOME_CART_FRAME_NOT_OWNED');
+    expect(h.record().cartDesign).toEqual(original.cartDesign);
+    authority.tansyFrameAccepted = true;
+    h.validatePlacement.and.resolveTo(false);
+    await expectAsync(mutate(h, fit)).toBeRejectedWithError('HOME_PLACEMENT_COLLISION');
+    h.validatePlacement.and.resolveTo(true);
+    const fitted = await mutate(h, fit);
+    expect(fitted.cartDesign).toEqual(design);
+    expect(fitted.holdings).toEqual(original.holdings);
+    const parked = await mutate(h, command('park', fitted.revision, { parking: original.parking }));
+    expect(parked.cartDesign).toEqual(design);
+    const read = await buildForestHomesteadService(h.options).read({ ownerUserId: OWNER });
+    expect(read.cartDesign).toEqual(design);
+    expect(read.tansyFrameOwned).toBeTrue();
   });
   it('canonicalizes field order and rejects forged grants, prices, identities and client layouts before transactions', async () => {
     const h = harness();
