@@ -16,6 +16,9 @@ describe('Tansy’s offer after a save error', () => {
       <dialog data-forest-traveler-dialog>
         <p data-forest-traveler-line></p><p data-forest-traveler-status hidden></p>
         <button data-forest-traveler-ask>Did you make that canopy?</button>
+        <button data-forest-traveler-road>Know any good roads?</button>
+        <button data-forest-traveler-remember hidden>Remember the clearing</button>
+        <button data-forest-traveler-back hidden>Back</button>
         <button data-forest-traveler-accept hidden>Take the frame</button>
         <button data-forest-traveler-finish hidden>Maybe later</button>
         <button data-forest-traveler-leave>Leave</button>
@@ -77,6 +80,22 @@ describe('Tansy’s offer after a save error', () => {
       if (frameOwned) expect(choices()).toEqual(['Leave']);
     });
   }
+
+  it('lets a first-time visitor remember the clearing independently of the frame', async () => {
+    const request = spyOn(globalThis, 'fetch').and.resolveTo({ ok: true, json: async () => ({ amberClearingClue: true }) });
+    control('talk').click();
+    control('road').click();
+    expect(control('line').textContent).toContain('split stone');
+    expect(choices()).toEqual(['Remember the clearing', 'Back']);
+    control('remember').click();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(JSON.parse(request.calls.mostRecent().args[1].body)).toEqual({ forestId: FOREST, action: 'remember-amber-clearing' });
+    expect(memory).toEqual({ forestId: FOREST, introduced: false, frameOwned: false, amberClearingClue: true });
+    control('back').click();
+    expect(choices()).toContain('Did you make that canopy?');
+    control('road').click();
+    expect(choices()).toEqual(['Back']);
+  });
 });
 
 describe('Tansy’s resting spot', () => {
@@ -169,5 +188,15 @@ describe('Tansy’s introduction save', () => {
       { ownerUserId: OWNER, forestId: FOREST, status: 'active', worldRole: 'primary', schemaVersion: { $in: [1, 2] } },
       { $set: { tansyIntroduced: true, tansyFrameAccepted: true } }, { timestamps: false, runValidators: true }
     ]));
+  });
+
+  it('remembers only the clearing clue and accepts retries independently of the frame', async () => {
+    const body = { forestId: FOREST, action: 'remember-amber-clearing' };
+    for (let retry = 0; retry < 2; retry++) {
+      expect(await post({ body })).toEqual({ status: 200, body: { amberClearingClue: true } });
+    }
+    expect(updateOne.calls.allArgs().map(([, update]) => update)).toEqual([
+      { $set: { tansyAmberClearingClue: true } }, { $set: { tansyAmberClearingClue: true } }
+    ]);
   });
 });

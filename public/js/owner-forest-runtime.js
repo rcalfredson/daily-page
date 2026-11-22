@@ -219,6 +219,8 @@ export function startOwnerForest({ createExtension = () => null, createTraveler,
       Math.hypot(m.worldX - p.worldX, m.worldY - p.worldY) <= 9 + p.radius),
     travelerClear: p => !traveler?.blocksMovement(p),
     ownsTansyFrame: () => bootstrap.traveler?.frameOwned === true,
+    amberClearingEnabled: Boolean(bootstrap.traveler),
+    knowsAmberClearing: () => bootstrap.traveler?.amberClearingClue === true,
     regionLoaded: p => {
       const radius = p.radius || 0;
       return [-radius, radius].every(dx => [-radius, radius].every(dy => {
@@ -1003,7 +1005,7 @@ export function startOwnerForest({ createExtension = () => null, createTraveler,
       if (item.kind === 'traveler') {
         traveler.paint(context, item, view, reducedMotion.matches);
       } else if (item.kind === 'extension') {
-        extension.paintDepth(context, item, view, reducedMotion.matches);
+        extension.paintDepth(context, item, view, reducedMotion.matches, time);
       } else if (item.kind === 'garden') {
         garden.paint(context, item, view);
       } else if (item.kind.startsWith('terrain-')) {
@@ -1519,6 +1521,12 @@ export function startOwnerForest({ createExtension = () => null, createTraveler,
     }
     if (['Enter', ' '].includes(event.key) && placement.active) {
       savePlacement();
+      event.preventDefault();
+      return;
+    }
+    if ((event.key === 't' || event.key === 'T') && !event.repeat && !event.ctrlKey && !event.altKey && !event.metaKey
+      && traveler?.startConversation()) {
+      closeMore();
       event.preventDefault();
       return;
     }

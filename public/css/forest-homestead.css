@@ -35,6 +35,9 @@
   .home-study-editor h2 { font-size: 16px; }
 }
 .home-study-bar [hidden] { display: none; }
+.amber-clearing-inspection { flex-basis: 100%; min-height: 44px; display: flex; align-items: center; }
+.amber-clearing-inspection p { line-height: 1.4; }
+.amber-clearing-inspection p:empty { flex: none; }
 [data-study-mounted='true'] .owner-forest__tree-context,
 [data-study-mounted='true'] [data-garden-plant],
 [data-study-mounted='true'] [data-owner-forest-place-marker] { display: none; }

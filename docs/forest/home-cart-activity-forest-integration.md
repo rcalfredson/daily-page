@@ -128,15 +128,14 @@ size, costs the same timber as bentwood bows, and uses the existing ground clear
 and parking rules. The new Supports choice uses the existing version-1 cart design, so saved
 designs load as written. Ownership stays available when switching back to basic supports. Tansy comments
 on the peak when the player talks to her with a saved, fitted cart parked nearby. The response is
-based on the cart present at the visit. The destination clue, expedition, new materials, and
-gifting are future increments.
+based on the cart present at the visit.
 
 ### Local playtest
 
 Run the application preview command above and open `http://127.0.0.1:4185/en/forest`.
 
 1. Walk out from the entrance and look for the patched ochre canopy, or choose **Covered cart**
-   under **More → Navigate**. Approach on foot and select **Talk to Tansy**.
+   under **More → Navigate**. Approach on foot and press **T** or select **Talk to Tansy**.
 2. Select **Did you make that canopy?**, then **Maybe later**. Reload, follow **Tansy Rook** in the
    compass, and talk to her again. She should remember the conversation and offer the frame again.
 3. Select **Take the frame** and reload. You can do this before making a clearing or after building
@@ -151,3 +150,40 @@ Run the application preview command above and open `http://127.0.0.1:4185/en/for
 
 The preview retains the introduction, ownership, and saved cart. Use a fresh allowlisted development
 account to repeat the entire first meeting.
+
+## First expedition to Amber Clearing
+
+Tansy’s **Know any good roads?** choice is available before or after cart assembly and frame
+acceptance. Choose **Remember the clearing** to save the tip. Once you have a homestead,
+**Amber Clearing** appears in **More → Navigate**, including after reload. This saves one
+fact on the owner world. The compass selection and the inspection stay visit-local.
+
+1. Start the [application preview](#availability-and-local-review), find Tansy, and remember the
+   clearing. Reload, then check the destination picker. If you still need a home, claim a clearing,
+   build a cart with the starter supplies, and invite Mallow.
+2. Board at home and choose **Amber Clearing → Guide me**. Drive along the pale trail. When the
+   compass shows **Bend in … steps**, follow the trail into the turn.
+3. Look for the split gray stone with amber reeds. Stop near the end of the trail and **Step out**.
+   Walk over and choose **Listen at the split stone**. The description replaces the button while
+   you’re nearby, and movement works immediately. Step away and come back to listen again.
+4. Reboard and choose **Home → Guide me**. Follow the same trail back and step out in the yard.
+   Repeat with the Ridge frame fitted. **Recover cart at home** remains available in More.
+
+The original planner samples an 84-step half-width corridor, a turning square at the bend and
+a 210-by-210 endpoint square. Version 1 saves only the axis-aligned route centerline from home
+parking, with up to one bend, and uses its last point as the destination. Placement protects the
+rounded 84-step buffer around the route. The stone sits on that protected shoulder. The original
+sampled squares are larger than the saved buffer in places, and the route is walking-clearance
+evidence rather than a fresh check of every cart pose. Live collision, loading, parking and
+dismount checks still govern the trip. The stone’s base blocks walking and carts. Old parking
+that overlaps the stone can be cleared with **Recover cart at home**.
+
+While mounted near the route, the compass can point to the saved bend in either direction and
+then to the destination. Away from the route it gives a direct bearing. On foot, Amber Clearing
+guides to the stone. Steering remains manual. Harvesting, new materials and finishes, and
+lanternbell crafting and gifting are later work.
+
+The application Firefox checker completed the bent route in both directions with bentwood bows
+and with the Ridge frame, including a saved park, dismount and inspection at the clearing.
+It also checked clue persistence on reload independently of the rest of the save. These round
+trips used the terrain-free test owner.

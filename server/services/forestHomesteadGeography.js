@@ -6,12 +6,13 @@ import { readForestOwnerTerrain } from './forestOwnerTerrain.js';
 import { sampleOwnerTerrain } from '../../public/js/owner-forest-terrain-authority.js';
 import { cartPoseClear, cartDismount, discIntersectsRectangle } from '../../public/js/forest-cart-motion.js';
 import { constructionHomeFootprint, DEFAULT_CART_DESIGN } from '../../public/js/forest-construction-design.js';
+import { amberClearingStone, amberClearingStoneFootprint } from '../../public/js/forest-amber-clearing.js';
 import { planHomeCartSite } from './forestHomeSitePlanner.js';
 import { ForestHomesteadError } from './forestHomesteadRecord.js';
 
 const fail = () => { throw new ForestHomesteadError('HOME_GEOGRAPHY_UNAVAILABLE'); };
 export function buildForestHomesteadGeography({ TreeModel = ForestWritingTree, MarkerModel = ForestAuthoredObject,
-  readGarden = readForestGardenStore, readTerrain = readForestOwnerTerrain } = {}) {
+  readGarden = readForestGardenStore, readTerrain = readForestOwnerTerrain, amberClearingEnabled = () => false } = {}) {
   async function geography({ ownerUserId, world, session }, bounds) {
     const scope = { ownerUserId, forestId: world.forestId };
     const filter = { ...scope,
@@ -60,8 +61,10 @@ export function buildForestHomesteadGeography({ TreeModel = ForestWritingTree, M
     const { worldX: x, worldY: y } = next.parking;
     const landscape = await geography(args, { minX: x - 160, maxX: x + 160, minY: y - 160, maxY: y + 160 });
     const house = constructionHomeFootprint(next.layout.home, next.homeDesign);
+    const stone = amberClearingEnabled(args.ownerUserId)
+      ? amberClearingStoneFootprint(amberClearingStone(next.layout.route)) : null;
     const clear = p => Math.abs(p.worldX) + p.radius < 999_980_000 && Math.abs(p.worldY) + p.radius < 999_980_000
-      && !discIntersectsRectangle(p, house) && landscape.terrainAt(p).walkable
+      && !discIntersectsRectangle(p, house) && (!stone || !discIntersectsRectangle(p, stone)) && landscape.terrainAt(p).walkable
       && landscape.obstacles.every(o => Math.hypot(o.x - p.worldX, o.y - p.worldY) > o.collisionRadius + p.radius);
     const cart = { ...next.parking, design: next.cartDesign || DEFAULT_CART_DESIGN };
     return cartPoseClear(cart, clear) ? cartDismount(cart, clear) : null;

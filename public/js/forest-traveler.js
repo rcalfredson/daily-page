@@ -44,11 +44,14 @@ export function createForestTraveler(api) {
   const line = dialog.querySelector('[data-forest-traveler-line]');
   const status = dialog.querySelector('[data-forest-traveler-status]');
   const ask = dialog.querySelector('[data-forest-traveler-ask]');
+  const road = dialog.querySelector('[data-forest-traveler-road]');
+  const remember = dialog.querySelector('[data-forest-traveler-remember]');
+  const back = dialog.querySelector('[data-forest-traveler-back]');
   const accept = dialog.querySelector('[data-forest-traveler-accept]');
   const finish = dialog.querySelector('[data-forest-traveler-finish]');
   const leave = dialog.querySelector('[data-forest-traveler-leave]');
   const memory = api.memory;
-  let site = null, saving = false, lookingAt = null, lastSiteCheck = -Infinity;
+  let site = null, saving = false, showingClue = false, lookingAt = null, lastSiteCheck = -Infinity;
   const idleMotion = createForestHumanoidMotion('down');
   api.navigation.register('traveler', () => site ? [{ ...site.tansy, id: 'tansy',
     label: memory.introduced ? 'Tansy Rook' : 'Covered cart', nearbyRadius: TALK_RADIUS }] : []);
@@ -87,17 +90,18 @@ export function createForestTraveler(api) {
   function showAnswer() {
     line.textContent = '“I patched it myself. Every patch is from a different coat. I leave the corners loose so I don’t become a kite again. I’ve got a spare ridge frame. Want it for your cart?”';
     lookingAt = site.cart;
-    ask.hidden = true;
+    ask.hidden = road.hidden = true;
     accept.hidden = finish.hidden = saving;
     leave.hidden = !saving;
     (saving ? leave : accept).focus({ preventScroll: true });
     api.requestRender();
   }
 
-  talk.addEventListener('click', () => {
-    const { player, busy } = api.state();
-    if (!site || distance(player, site.tansy) > TALK_RADIUS || busy || !api.canTalk() || dialog.open) return;
+  function showGreeting() {
+    showingClue = false;
     status.hidden = !saving;
+    road.hidden = saving;
+    remember.hidden = back.hidden = true;
     ask.hidden = memory.introduced || saving;
     finish.hidden = true;
     accept.hidden = !memory.introduced || memory.frameOwned || saving;
@@ -109,12 +113,37 @@ export function createForestTraveler(api) {
     else if (memory.frameOwned) line.textContent = '“The patches are still holding. Good to see you again.”';
     else if (memory.introduced) line.textContent = '“Well, there’s my canopy inspector. That spare ridge frame is still yours if you want it.”';
     else line.textContent = '“Name’s Tansy Rook. I’ve buried more boots than kin. That cart’s outlasted every pair.”';
-    dialog.show();
     if (saving) showAnswer();
     else (!ask.hidden ? ask : !accept.hidden ? accept : leave).focus({ preventScroll: true });
     api.requestRender();
-  });
+  }
+
+  function showClue() {
+    showingClue = true;
+    lookingAt = null;
+    ask.hidden = road.hidden = accept.hidden = finish.hidden = true;
+    leave.hidden = !saving;
+    remember.hidden = memory.amberClearingClue === true;
+    back.hidden = false;
+    status.hidden = !saving && !memory.amberClearingClue;
+    if (memory.amberClearingClue) status.textContent = 'Look for Amber Clearing in Navigate once you have a home clearing.';
+    line.textContent = '“I rest at Amber Clearing when the road’s been long. Follow the pale trail from your home clearing to the split stone with the amber reeds. Get down and listen when the wind eases. You can hear the stems tapping the stone.”';
+    (saving ? leave : remember.hidden ? back : remember).focus({ preventScroll: true });
+    api.requestRender();
+  }
+
+  function startConversation() {
+    const { player, busy } = api.state();
+    if (!site || distance(player, site.tansy) > TALK_RADIUS || busy || !api.canTalk() || dialog.open) return false;
+    dialog.show();
+    if (saving && showingClue) showClue();
+    else showGreeting();
+    return true;
+  }
+  talk.addEventListener('click', startConversation);
   ask.addEventListener('click', showAnswer);
+  road.addEventListener('click', showClue);
+  back.addEventListener('click', showGreeting);
   leave.addEventListener('click', () => dialog.close());
   dialog.addEventListener('keydown', event => {
     if (event.key === 'Escape') {
@@ -128,24 +157,31 @@ export function createForestTraveler(api) {
   });
   const dialogSize = new window.ResizeObserver(api.requestRender);
   dialogSize.observe(dialog);
-  async function save(acceptingFrame) {
-    if (saving || (acceptingFrame ? memory.frameOwned : memory.introduced)) return;
+  async function save(action) {
+    const acceptingFrame = action === 'accept-frame';
+    const savingClue = action === 'remember-amber-clearing';
+    if (saving || (savingClue ? memory.amberClearingClue : acceptingFrame ? memory.frameOwned : memory.introduced)) return;
     saving = true;
-    accept.disabled = finish.disabled = true;
+    accept.disabled = finish.disabled = remember.disabled = back.disabled = true;
     leave.hidden = false;
     leave.textContent = 'Leave';
-    status.hidden = false;
-    status.textContent = acceptingFrame ? 'Saving your frame…' : 'Saving your introduction…';
     leave.focus({ preventScroll: true });
+    status.hidden = false;
+    status.textContent = savingClue ? 'Saving the clearing…' : acceptingFrame ? 'Saving your frame…' : 'Saving your introduction…';
     try {
       const response = await fetch('/api/v1/forest/traveler', {
         method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ forestId: memory.forestId, ...(acceptingFrame ? { action: 'accept-frame' } : {}) }),
+        body: JSON.stringify({ forestId: memory.forestId, ...(action ? { action } : {}) }),
         signal: window.AbortSignal.timeout(10000)
       });
       const result = await response.json();
-      if (!response.ok || result.introduced !== true || acceptingFrame && result.frameOwned !== true) {
+      if (!response.ok || (savingClue ? result.amberClearingClue !== true
+        : result.introduced !== true || acceptingFrame && result.frameOwned !== true)) {
         throw new Error('Traveler save failed');
+      }
+      if (savingClue) {
+        memory.amberClearingClue = true;
+        return;
       }
       memory.introduced = true;
       if (acceptingFrame) {
@@ -159,22 +195,28 @@ export function createForestTraveler(api) {
     } catch {
       status.hidden = false;
       status.textContent = 'Could not confirm the save. Try again, or come back later.';
-      accept.hidden = false;
-      finish.hidden = memory.introduced;
-      leave.hidden = !memory.introduced;
-      leave.textContent = 'Maybe later';
+      if (savingClue) leave.hidden = true;
+      else {
+        accept.hidden = false;
+        finish.hidden = memory.introduced;
+        leave.hidden = !memory.introduced;
+        leave.textContent = 'Maybe later';
+      }
     } finally {
       saving = false;
-      accept.disabled = finish.disabled = false;
-      if (dialog.open && !status.hidden) (acceptingFrame ? accept : finish).focus({ preventScroll: true });
+      accept.disabled = finish.disabled = remember.disabled = back.disabled = false;
+      if (dialog.open && savingClue && memory.amberClearingClue) showClue();
+      else if (dialog.open && !status.hidden) (savingClue ? remember : acceptingFrame ? accept : finish).focus({ preventScroll: true });
       api.requestRender();
     }
   }
-  accept.addEventListener('click', () => save(true));
-  finish.addEventListener('click', () => save(false));
+  accept.addEventListener('click', () => save('accept-frame'));
+  finish.addEventListener('click', () => save());
+  remember.addEventListener('click', () => save('remember-amber-clearing'));
 
   return {
     update,
+    startConversation,
     blocksMovement: (to, from) => travelerBlocksMovement(site, to, from),
     open: () => dialog.open,
     close: () => { if (dialog.open) dialog.close(); },
