@@ -1,4 +1,4 @@
-// Visit-local destinations. Providers resolve current positions rather than copying a route.
+// Visit-local destinations. Providers may supply a waypoint for the current position.
 export function createForestNavigationState() {
   const groups = new Map();
   let active = null;
@@ -15,11 +15,13 @@ export function createForestNavigationState() {
       const removed = Boolean(active && !target);
       if (removed) active = null;
       if (!target) return { active: null, removed };
-      const distance = Math.hypot(target.worldX - player.worldX, target.worldY - player.worldY);
-      const bearing = Math.atan2(target.worldY - player.worldY, target.worldX - player.worldX);
+      const waypoint = target.waypoint?.(player);
+      const aim = waypoint || target;
+      const distance = Math.hypot(aim.worldX - player.worldX, aim.worldY - player.worldY);
+      const bearing = Math.atan2(aim.worldY - player.worldY, aim.worldX - player.worldX);
       const direction = ['east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'north', 'northeast'][(Math.round(bearing / (Math.PI / 4)) + 8) % 8];
       return { active, target, distance, direction, degrees: bearing * 180 / Math.PI + 90,
-        nearby: distance <= (target.nearbyRadius ?? 56), removed: false };
+        waypoint, nearby: !waypoint && distance <= (target.nearbyRadius ?? 56), removed: false };
     }
   };
 }
@@ -57,7 +59,7 @@ export function createForestNavigation({ dock, more, state, focus }) {
     }
     compass.hidden = !current.active || !available;
     if (current.active) {
-      const text = `${current.target.label} · ${current.nearby ? 'Nearby' : `${Math.round(current.distance)} steps`}`;
+      const text = `${current.target.label} · ${current.waypoint ? 'Bend in ' : ''}${current.nearby ? 'Nearby' : `${Math.round(current.distance)} steps`}`;
       if (copy.textContent !== text) copy.textContent = text;
       arrow.setAttribute('aria-label', `Direction: ${current.direction}`);
       arrow.style.transform = `rotate(${current.degrees}deg)`;

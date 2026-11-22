@@ -34,6 +34,20 @@ try {
   const navigate = () => send('browsingContext.navigate', { context, url: `${base}/en/forest`, wait: 'complete' });
   const enabled = selector => `Boolean(document.querySelector('${selector}')?.getClientRects().length)
     && !document.querySelector('${selector}').disabled`;
+  async function recoverForCart() {
+    const revision = (await read()).revision;
+    await click('[data-owner-forest-more]'); await click('[data-study-recover]');
+    assert.equal(await evaluate(`(async () => {
+      const deadline = Date.now() + 10000;
+      while (Date.now() < deadline) {
+        const save = await fetch('/api/v1/forest/homestead').then(r => r.json());
+        if (save.revision > ${revision}) return true;
+        await new Promise(resolve => setTimeout(resolve, 150));
+      }
+      return false;
+    })()`), true, 'Recovery saved before using the workshop');
+    await wait(`document.querySelector('[data-save-status]').textContent === '' && ${enabled('[data-study-edit="cart"]')}`);
+  }
   const holdKeys = (keys, duration) => send('input.performActions', { context, actions: [{ type: 'key', id: 'keyboard', actions: [
     ...keys.map(value => ({ type: 'keyDown', value })),
     { type: 'pause', duration },
@@ -48,9 +62,9 @@ try {
     })()`);
     await click('[data-forest-navigation-go]');
   }
-  async function followCompass(until, duration = 220) {
+  async function followCompass(until, duration = 220, maxSteps = 35) {
     await evaluate(`document.querySelector('[data-owner-forest-viewport]').focus();true`);
-    for (let step = 0; step < 35 && !await evaluate(until); step++) {
+    for (let step = 0; step < maxSteps && !await evaluate(until); step++) {
       const bearing = await evaluate(`document.querySelector('[data-forest-navigation-arrow]').getAttribute('aria-label')`);
       const keys = [['east', 'd'], ['west', 'a'], ['south', 's'], ['north', 'w']]
         .filter(([direction]) => bearing.includes(direction)).map(([, key]) => key);
@@ -71,7 +85,7 @@ try {
     await wait(`Boolean(document.querySelector('[data-forest-navigation-destination] option[value="tansy"]'))`);
     await guideTo('tansy');
     await followCompass(enabled(talk));
-    await click(talk);
+    await holdKeys(['t'], 40);
     await wait(`document.querySelector('${dialog}').open`);
   }
   const beforeTraveler = await read();
@@ -87,6 +101,21 @@ try {
     })()`), true);
   }
   const initialMemory = await travelerMemory();
+  await evaluate(`document.querySelector('[data-owner-forest-viewport]').focus();true`);
+  await holdKeys(['t'], 40);
+  assert.equal(await evaluate(`document.querySelector('${dialog}').open`), false);
+  await approachTansy();
+  await click('[data-forest-traveler-road]');
+  assert.match(await line(), /Amber Clearing.*split stone/);
+  await checkDialoguePlacement();
+  if (!initialMemory.amberClearingClue) {
+    await click('[data-forest-traveler-remember]');
+    await wait(`document.querySelector('[data-forest-traveler-remember]').hidden`);
+  }
+  await navigate();
+  assert.deepEqual(await travelerMemory(), { ...initialMemory, amberClearingClue: true });
+  assert.deepEqual(await read(), beforeTraveler);
+  console.log('PASS Amber Clearing clue survives reload independently of frame and homestead state');
   if (!initialMemory.introduced) {
     await approachTansy();
     assert.match(await line(), /That cart’s outlasted every pair/);
@@ -159,6 +188,18 @@ try {
   assert.ok(coveredRidgeTop > 0 && coveredRidgeTop < bowsTop - 8, `Covered silhouettes: ${bowsTop}, ${coveredRidgeTop}`);
   assert.ok(openRidgeTop > 0 && openRidgeTop < postsTop - 15, `Open silhouettes: ${postsTop}, ${openRidgeTop}`);
   fs.writeFileSync(`${reviewDir}/tansy-frame.png`, Buffer.from(silhouettes.image, 'base64'));
+  assert.equal(await evaluate(`(async () => {
+    const { paintAmberClearingStone } = await import('/js/forest-homestead-paint.js');
+    const canvas = document.createElement('canvas');
+    canvas.width = 150; canvas.height = 150;
+    const ctx = canvas.getContext('2d');
+    const frame = time => {
+      ctx.clearRect(0, 0, 150, 150);
+      paintAmberClearingStone(ctx, { x: 75, y: 95 }, { x: 0, y: 0 }, time);
+      return canvas.toDataURL();
+    };
+    return frame(350) !== frame(1100) && frame() === frame(0);
+  })()`), true, 'Reeds sway with time and have a stable still pose');
 
   if (!initial.established) {
     const start = '[data-homestead-start-action]';
@@ -254,6 +295,98 @@ try {
     await wait(`document.querySelector('.home-study-editor').hidden`);
   }
   const beforeDrive = await read();
+  async function expedition(supports) {
+    const mounted = `document.querySelector('[data-owner-forest-viewport]').dataset.studyMounted`;
+    const compass = `document.querySelector('[data-forest-navigation-copy]').textContent`;
+    const mount = '[data-study-mount]';
+    const viewport = '[data-owner-forest-viewport]';
+    const listen = '[data-amber-clearing-listen]';
+    const listening = `document.querySelector('${listen}')`;
+    const result = `document.querySelector('[data-amber-clearing-result]')`;
+    const start = await read();
+    assert.equal(start.cartDesign.supports, supports);
+    const { route, parking } = start.layout;
+    const end = route.at(-1);
+    await click(mount);
+    await wait(`${mounted}==='true'`);
+    await guideTo('amber-clearing');
+    if (route.length === 3) await wait(`${compass}.includes('Bend in')`);
+    await followCompass(`${compass}.includes('Nearby')`, 140, 90);
+    assert.equal(await evaluate(enabled(listen)), false);
+    await click(mount);
+    await wait(`${mounted}==='false'`);
+    const parked = await read();
+    assert.ok(Math.hypot(parked.parking.worldX - end.x, parked.parking.worldY - end.y) <= 34);
+    assert.equal(parked.recoveryRequired, false);
+    const walk = JSON.parse(await evaluate(`(async()=>{
+      const { cartDismount, discIntersectsRectangle } = await import('/js/forest-cart-motion.js');
+      const { amberClearingStone, amberClearingStoneFootprint } = await import('/js/forest-amber-clearing.js');
+      const stone = amberClearingStone(${JSON.stringify(route)}), footprint = amberClearingStoneFootprint(stone);
+      const p = cartDismount({ ...${JSON.stringify(parked.parking)}, design: ${JSON.stringify(parked.cartDesign)} },
+        disc => !discIntersectsRectangle(disc, footprint));
+      return JSON.stringify({ p, stone });
+    })()`));
+    const { p, stone } = walk;
+    if (Math.hypot(stone.x - p.worldX, stone.y - p.worldY) > 42) {
+      const walkAxis = (delta, positive, negative) => Math.abs(delta) > 6
+        ? holdKeys([delta > 0 ? positive : negative], Math.round(Math.abs(delta) / 108 * 1000)) : Promise.resolve();
+      // Go around the paused cart if the landing is on the opposite shoulder.
+      if (end.x === route.at(-2).x) {
+        const detourY = parked.parking.worldY + (p.worldY < parked.parking.worldY ? -88 : 88);
+        const opposite = p.worldX < parked.parking.worldX;
+        if (opposite) await walkAxis(detourY - p.worldY, 's', 'w');
+        await walkAxis(stone.x - p.worldX, 'd', 'a');
+        await walkAxis(stone.y - (opposite ? detourY : p.worldY), 's', 'w');
+      } else {
+        const detourX = parked.parking.worldX + (p.worldX < parked.parking.worldX ? -88 : 88);
+        const opposite = p.worldY > parked.parking.worldY;
+        if (opposite) await walkAxis(detourX - p.worldX, 'd', 'a');
+        await walkAxis(stone.y - p.worldY, 's', 'w');
+        await walkAxis(stone.x - (opposite ? detourX : p.worldX), 'd', 'a');
+      }
+    }
+    await wait(enabled(listen));
+    await evaluate(`${listening}.focus();true`);
+    await holdKeys(['\uE007'], 40);
+    await wait(`${result}.textContent.includes('a loose stem ticks against the stone')`);
+    assert.equal(await evaluate(enabled(listen)), false);
+    assert.equal(await evaluate(`document.activeElement.matches('${viewport}')`), true);
+    await evaluate(`document.querySelector('[data-owner-forest-viewport]').scrollIntoView({block:'center'});true`);
+    const shot = await send('browsingContext.captureScreenshot', { context });
+    fs.writeFileSync(`${reviewDir}/amber-clearing-${supports}.png`, Buffer.from(shot.data, 'base64'));
+    if (supports === 'ridge') {
+      await send('browsingContext.setViewport', { context, viewport: { width: 320, height: 820 }, devicePixelRatio: 1 });
+      await evaluate(`document.querySelector('${viewport}').scrollIntoView({block:'center'});true`);
+      await wait(`getComputedStyle(document.querySelector('#main-menu')).visibility === 'hidden'`);
+      assert.equal(await evaluate(`(() => {
+        const text = ${result}, dock = text.closest('[data-owner-forest-dock]');
+        return text.getBoundingClientRect().width === text.parentElement.getBoundingClientRect().width
+          && dock.scrollWidth <= dock.clientWidth;
+      })()`), true);
+      const narrowShot = await send('browsingContext.captureScreenshot', { context });
+      fs.writeFileSync(`${reviewDir}/amber-clearing-320.png`, Buffer.from(narrowShot.data, 'base64'));
+      await send('browsingContext.setViewport', { context, viewport: { width: 1280, height: 880 }, devicePixelRatio: 1 });
+    }
+    // Walk without refocusing the viewport to catch keyboard focus regressions.
+    const [away, back] = end.x === route.at(-2).x ? ['d', 'a'] : ['w', 's'];
+    await holdKeys([away], 770);
+    await wait(`${result}.textContent === '' && !(${enabled(listen)})`);
+    await holdKeys([back], 770);
+    await wait(enabled(listen));
+    await guideTo('cart');
+    await followCompass(enabled(mount), 160);
+    await click(mount);
+    await wait(`${mounted}==='true'`);
+    await guideTo('home');
+    if (route.length === 3) await wait(`${compass}.includes('Bend in')`);
+    await followCompass(`${compass}.includes('Nearby')`, 140, 95);
+    await click(mount);
+    await wait(`${mounted}==='false'`);
+    const returned = await read();
+    assert.ok(Math.hypot(returned.parking.worldX - parking.x, returned.parking.worldY - parking.y) <= 88);
+    assert.deepEqual(returned.layout, start.layout);
+    console.log(`PASS ${supports} cart round trip to Amber Clearing, including parking, dismount and listening`);
+  }
   await click('[data-study-mount]');
   await wait(`document.querySelector('[data-owner-forest-viewport]').dataset.studyMounted==='true'`);
   await click('[data-study-careful]');
@@ -268,8 +401,9 @@ try {
   assert.equal((await read()).homeDesign.color, 'sage');
   assert.deepEqual((await read()).parking, parked.parking);
   console.log('PASS main page: boarding, careful driving, parking and reload through application endpoints');
-  await click('[data-owner-forest-more]'); await click('[data-study-recover]');
-  await wait(enabled('[data-study-edit="cart"]'));
+  await recoverForCart();
+  await expedition((await read()).cartDesign.supports);
+  await recoverForCart();
   const basic = await read();
   await click('[data-study-edit="cart"]');
   assert.equal(await choose('supports', 'ridge'), 'ridge');
@@ -281,6 +415,8 @@ try {
   await click('[data-design-apply]');
   await wait(`document.querySelector('.home-study-editor').hidden`);
   assert.equal((await read()).cartDesign.supports, 'ridge');
+  await expedition('ridge');
+  await recoverForCart();
   await click('[data-study-mount]');
   await wait(`document.querySelector('[data-owner-forest-viewport]').dataset.studyMounted==='true'`);
   // Back out along the yard first. Turning west toward Tansy from the workshop

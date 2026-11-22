@@ -10,22 +10,25 @@ export function buildForestTravelerRouteHandler({
     if (!enabled(ownerUserId)) return res.status(403).json({ code: 'TRAVELER_DISABLED' });
     const { forestId, action } = req.body || {};
     const acceptingFrame = action === 'accept-frame';
+    const savingClue = action === 'remember-amber-clearing';
     if (Object.keys(req.query).length
-      || Object.keys(req.body || {}).length !== (acceptingFrame ? 2 : 1)
-      || action !== undefined && !acceptingFrame
+      || Object.keys(req.body || {}).length !== (acceptingFrame || savingClue ? 2 : 1)
+      || action !== undefined && !acceptingFrame && !savingClue
       || typeof forestId !== 'string'
       || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(forestId)) {
       return res.status(400).json({ code: 'TRAVELER_INVALID_INPUT' });
     }
     try {
-      // Acceptance is the unique ownership fact. Set it with the introduction in one write,
-      // including before homestead creation. Repeating either action cannot revoke or duplicate it.
+      // Each choice sets a durable fact on the forest, including before homestead creation.
+      const facts = savingClue ? { tansyAmberClearingClue: true }
+        : { tansyIntroduced: true, ...(acceptingFrame ? { tansyFrameAccepted: true } : {}) };
       const result = await WorldModel.updateOne({
         ownerUserId, forestId, worldRole: 'primary', status: 'active', schemaVersion: { $in: [1, 2] }
-      }, { $set: { tansyIntroduced: true, ...(acceptingFrame ? { tansyFrameAccepted: true } : {}) } },
+      }, { $set: facts },
       { timestamps: false, runValidators: true });
       if (!result.matchedCount) return res.status(409).json({ code: 'TRAVELER_FOREST_CHANGED' });
-      return res.json({ introduced: true, ...(acceptingFrame ? { frameOwned: true } : {}) });
+      return res.json(savingClue ? { amberClearingClue: true }
+        : { introduced: true, ...(acceptingFrame ? { frameOwned: true } : {}) });
     } catch {
       return res.status(503).json({ code: 'TRAVELER_UNAVAILABLE' });
     }

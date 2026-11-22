@@ -9,23 +9,37 @@ import { paintForestCompanion } from '/js/forest-companion-paint.js';
 import { ownerForestCamera } from '/js/owner-forest-scene.js';
 import { cartDefinition, cartFootprint, cartPoseClear, cartDismount, stepForestCart,
   discIntersectsRectangle } from '/js/forest-cart-motion.js';
-import { paintStudyHome, paintStudyCart, studyCartDepthItems, paintStudyCartSupport, paintStudyCartRiderRow, paintStudyDestination, paintStudyPaths } from '/js/forest-homestead-paint.js';
+import { paintStudyHome, paintStudyCart, studyCartDepthItems, paintStudyCartSupport, paintStudyCartRiderRow,
+  paintStudyDestination, paintStudyPaths, paintAmberTrail, paintAmberClearingStone } from '/js/forest-homestead-paint.js';
+import { amberClearingBend, amberClearingStone, amberClearingStoneFootprint } from '/js/forest-amber-clearing.js';
 import { createConstructionEditor } from '/js/forest-construction-editor.js';
 import { DEFAULT_HOME_DESIGN, TANSY_CART_FRAME, studyCartDesign, constructionHomeFootprint,
   validateConstructionDesign, advanceCartPresentation } from '/js/forest-construction-design.js';
+
+const AMBER_INSPECTION_RADIUS = 42;
 
 // Shared by the ordinary forest and the isolated construction study.
 export function createHomesteadExtension(api, study, { integrated = false, justEstablished = false } = {}) {
   const { plan } = study;
   const layout = study.saved?.layout || homeLayoutFromPlan(plan);
+  const stone = integrated && api.amberClearingEnabled ? amberClearingStone(plan.route) : null;
+  const stoneFootprint = stone && amberClearingStoneFootprint(stone);
   const durable = Boolean(study.saved);
   const viewport = document.querySelector('[data-owner-forest-viewport]');
   const dock = document.querySelector('[data-owner-forest-dock]');
-  // Reserve the touch dock's space without taking control away from the player.
-  const dockObserver = new window.ResizeObserver(() => {
-    const { camera, player } = api.state();
-    camera.bottomInset = camera.width < 700 ? dock.offsetHeight + 20 : 0;
+  let dockInset = 0;
+  // Keep the split stone visible above the dock as its contextual actions appear.
+  function updateDockInset({ camera, player }) {
+    const distance = stone ? Math.hypot(player.worldX - stone.x, player.worldY - stone.y) : Infinity;
+    const clearingInset = Math.max(0, Math.min(1, (180 - distance) / 80));
+    const inset = Math.round(dockInset * (camera.width < 700 ? 1 : clearingInset));
+    if (camera.bottomInset === inset) return;
+    camera.bottomInset = inset;
     Object.assign(camera, ownerForestCamera(player, camera)); api.requestRender();
+  }
+  const dockObserver = new window.ResizeObserver(() => {
+    dockInset = dock.offsetHeight + 20;
+    updateDockInset(api.state());
   });
   dockObserver.observe(dock);
   const bar = document.createElement('section'); bar.className = 'home-study-bar';
@@ -43,6 +57,14 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
   });
   dock.prepend(bar);
   const guide = bar.querySelector('[data-study-guide]'), mount = bar.querySelector('[data-study-mount]');
+  const inspection = stone ? document.createElement('div') : null;
+  if (inspection) {
+    inspection.className = 'amber-clearing-inspection';
+    inspection.hidden = true;
+    inspection.innerHTML = '<button type="button" data-amber-clearing-listen>Listen at the split stone</button><p data-amber-clearing-result role="status"></p>';
+    bar.append(inspection);
+  }
+  const listen = inspection?.querySelector('button'), listenResult = inspection?.querySelector('p');
   const mountCopy = bar.querySelector('[data-study-mount-copy]');
   const reverseButton = bar.querySelector('[data-study-reverse]');
   const diagnostics = document.querySelector('[data-home-study-state]');
@@ -134,7 +156,12 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
   const house = () => constructionHomeFootprint(plan.home, homeDesign);
   const companionPosition = () => actor?.snapshot() || companionHarnessPose(cart);
   api.navigation?.register('homestead', () => [
-    { id: 'home', label: 'Home', worldX: plan.parking.x, worldY: plan.parking.y, nearbyRadius: 85 },
+    { id: 'home', label: 'Home', worldX: plan.parking.x, worldY: plan.parking.y, nearbyRadius: 85,
+      waypoint: player => stone && mounted ? amberClearingBend(plan.route, player, true) : null },
+    ...(stone && api.knowsAmberClearing() ? [{ id: 'amber-clearing', label: 'Amber Clearing',
+      worldX: mounted ? plan.destination.x : stone.x, worldY: mounted ? plan.destination.y : stone.y,
+      nearbyRadius: mounted ? 30 : AMBER_INSPECTION_RADIUS,
+      waypoint: player => mounted ? amberClearingBend(plan.route, player, false) : null }] : []),
     ...(hasCart() ? [{ id: 'cart', label: 'Parked cart', worldX: cart.worldX, worldY: cart.worldY, nearbyRadius: 75 }] : []),
     ...(guidedStart && companion?.stage !== 'joined' ? [{ id: 'mallow', label: companion?.name || 'Mule',
       ...companionPosition(), nearbyRadius: 110 }] : [])
@@ -154,6 +181,18 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
       greeting: !reduce && !mounted && animal.responding ? .5 + Math.sin(performance.now() / 180) * .5 : 0 };
   }
   const say = text => { message = text; messageUntil = performance.now() + 4500; api.requestRender(); };
+  function canListen({ player, busy }) {
+    return stone && !busy && !mounted && !mountRequested && !editor.active
+      && api.regionLoaded(player) && Math.hypot(player.worldX - stone.x, player.worldY - stone.y) <= AMBER_INSPECTION_RADIUS;
+  }
+  listen?.addEventListener('click', () => {
+    if (listen.hidden || !canListen(api.state())) return;
+    api.focus();
+    listen.hidden = true;
+    messageUntil = 0;
+    guide.hidden = true;
+    listenResult.textContent = 'The dry seed heads rattle in the wind. In the lulls, a loose stem ticks against the stone.';
+  });
   if (justEstablished) {
     if (discIntersectsRectangle(api.state().player, house())) api.setPlayer({ worldX: plan.parking.x, worldY: plan.parking.y });
     say(needsSupplies() ? 'This clearing is yours. Unpack your starter supplies when you’re ready.' : 'This clearing is yours.');
@@ -161,7 +200,8 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
   function clearGround(p) {
     if (!api.regionLoaded(p)) { unloaded = true; return false; }
     if (Math.abs(p.worldX) + p.radius > study.extent || Math.abs(p.worldY) + p.radius > study.extent) return false;
-    if (discIntersectsRectangle(p, house()) || api.occupied(p)) return false;
+    if (discIntersectsRectangle(p, house()) || stoneFootprint && discIntersectsRectangle(p, stoneFootprint)
+      || api.occupied(p)) return false;
     const { terrain, placements } = api.state();
     const sample = terrain.sample(p);
     if (!sample.walkable) { if (sample.surface === 'unloaded') unloaded = true; return false; }
@@ -170,7 +210,8 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
   const clear = p => api.travelerClear(p) && clearGround(p);
   function animalClear(p) {
     if (!api.regionLoaded(p) || Math.abs(p.worldX) + p.radius > study.extent || Math.abs(p.worldY) + p.radius > study.extent) return false;
-    if (discIntersectsRectangle(p, house()) || api.occupied(p) || !api.travelerClear(p)) return false;
+    if (discIntersectsRectangle(p, house()) || stoneFootprint && discIntersectsRectangle(p, stoneFootprint)
+      || api.occupied(p) || !api.travelerClear(p)) return false;
     const { terrain, placements } = animalScene || api.state();
     if (!terrain.sample(p).walkable || placements.some(t => Math.hypot(p.worldX - t.worldX, p.worldY - t.worldY) <= p.radius + t.collisionRadius)) return false;
     if (!hasCart()) return true;
@@ -215,7 +256,8 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
         const parking = { worldX: cart.worldX, worldY: cart.worldY, heading: Math.atan2(Math.sin(cart.heading), Math.cos(cart.heading)) };
         if (!await saves.save('park', { parking })) return;
       }
-      mounted = false; mountRequested = false; actor.reset(); api.setPlayer(spot); say(saves ? 'Parking saved. See you here next time.' : 'Cart parked. Walk around or enter again.');
+      mounted = false; mountRequested = false; blocked = unloaded = false;
+      actor.reset(); api.setPlayer(spot); say(saves ? 'Parking saved. See you here next time.' : 'Cart parked. Walk around or enter again.');
     } else {
       if (!hasCart()) return;
       if (Math.hypot(player.worldX - cart.worldX, player.worldY - cart.worldY) > 85) return;
@@ -361,6 +403,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
     update(time) {
       const elapsed = lastActorTime === null ? 0 : Math.min(.05, (time - lastActorTime) / 1000);
       lastActorTime = time; animalScene = api.state();
+      if (stone) updateDockInset(animalScene);
       if (mountRequested && Math.hypot(animalScene.player.worldX - cart.worldX, animalScene.player.worldY - cart.worldY) > 90) {
         mountRequested = false; actor.stop();
       }
@@ -386,6 +429,13 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
       lastFrame = time; if (frameTimes.length > 600) frameTimes.shift();
       if (time - lastUpdate < 180) return; lastUpdate = time;
       const { player, busy } = api.state();
+      if (inspection) {
+        inspection.hidden = !canListen({ player, busy });
+        if (inspection.hidden && listen.hidden) {
+          listenResult.textContent = '';
+          listen.hidden = false;
+        }
+      }
       encounter.refresh();
       const distance = Math.hypot(player.worldX - plan.destination.x, player.worldY - plan.destination.y);
       if (!mounted && distance < 100) visited = true;
@@ -397,6 +447,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
         : blocked ? precision ? 'Back up and straighten toward clear ground.' : 'Try careful driving to line up, or reverse.' : completed ? 'Home again. Try another cart or explore on foot.'
           : `${arrow} ${visited ? 'Home' : 'Amber clearing'} · ${Math.round(Math.hypot(target.x - player.worldX, target.y - player.worldY))} steps${distance < 100 && mounted ? ' · Step out to explore' : ''}`;
       if (time >= messageUntil && !blocked && (integrated || api.navigation)) text = '';
+      if (!text && stone && mounted && distance < 56) text = 'Amber Clearing · Stop here and step out to visit the split stone.';
       const nearCart = Math.hypot(player.worldX - cart.worldX, player.worldY - cart.worldY) <= 85;
       if (time >= messageUntil && guidedStart && hasCart() && !canDrive() && nearCart) text = 'Invite Mallow along to drive your cart.';
       guide.hidden = !text;
@@ -429,16 +480,22 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
       bar.hidden = busy; viewport.dataset.studyMounted = String(mounted);
       if (diagnostics) diagnostics.textContent = durable ? `Saved revision ${saves.snapshot().record.revision} · Materials: ${saves.snapshot().record.holdings.timber} timber, ${saves.snapshot().record.holdings.cloth} cloth available` : `Terrain ${study.generation || 'off'} · ${plan.metrics.homeAttempts} site attempts · ${plan.metrics.terrainSamples} samples · ${plan.metrics.elapsedMs}ms allocation · traveled ${Math.round(travel.distance)} · ${blocked ? 'blocked' : 'clear'}`;
     },
-    paintGround: (ctx, camera) => { if (!integrated) paintStudyPaths(ctx, plan, camera); },
-    depthItems: () => [
+    paintGround(ctx, camera) {
+      if (stone) paintAmberTrail(ctx, plan.route, camera);
+      else if (!integrated) paintStudyPaths(ctx, plan, camera);
+    },
+    depthItems: camera => [
       { kind: 'extension', id: 'study-home', worldY: plan.home.y - 35, type: 'home' },
       ...(hasCart() || previewCart ? studyCartDepthItems({ ...cart, design: previewCart || cart.design },
         api.state().terrain.elevation({ ...cart, radius: 11 }), mounted) : []),
       ...(!mounted ? [{ kind: 'extension', id: 'companion', type: 'companion',
         worldY: companionPosition().worldY + api.state().terrain.elevation({ ...companionPosition(), radius: 11 }) }] : []),
+      ...(stone && stone.x >= camera.x - 40 && stone.x <= camera.x + camera.width + 40
+        && stone.y >= camera.y - 16 && stone.y <= camera.y + camera.height + 56
+        ? [{ kind: 'extension', id: 'amber-clearing-stone', worldY: stone.y, type: 'amber-stone' }] : []),
       ...(!integrated ? [{ kind: 'extension', id: 'study-destination', worldY: plan.destination.y - 20, type: 'destination' }] : [])
     ],
-    paintDepth(ctx, item, camera, reduce) {
+    paintDepth(ctx, item, camera, reduce, time) {
       if (item.type === 'home') paintStudyHome(ctx, plan.home, previewHome || homeDesign, camera);
       else if (item.type === 'companion') {
         const animal = companionPosition(), elevation = api.state().terrain.elevation({ ...animal, radius: 11 });
@@ -455,6 +512,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
         paintStudyCart(ctx, { ...cart, design: previewCart || cart.design }, camera, mounted,
           api.state().terrain.elevation({ ...cart, radius: 11 }), companionMotion(reduce), item.type === 'cart-roof' ? 'roof' : 'body');
       }
+      else if (item.type === 'amber-stone') paintAmberClearingStone(ctx, stone, camera, reduce ? 0 : time);
       else paintStudyDestination(ctx, plan.destination, camera);
     }
   };

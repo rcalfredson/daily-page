@@ -84,7 +84,9 @@ block content
             p.owner-forest__garden-notice(data-garden-notice role='status' aria-live='polite' hidden)
           .owner-forest__dock(data-owner-forest-dock)
             if bootstrap.traveler
-              button(type='button' data-forest-traveler-talk hidden) Talk to Tansy
+              button(type='button' data-forest-traveler-talk aria-keyshortcuts='T' hidden)
+                | Talk to Tansy
+                span.owner-forest__key-hint(aria-hidden='true')  · T
             .owner-forest__navigation(data-garden-navigation hidden aria-label='Guide to lanternbell')
               span.owner-forest__navigation-arrow(data-garden-navigation-arrow aria-hidden='true') ↑
               p(data-garden-navigation-copy)
@@ -145,6 +147,9 @@ block content
               p(data-forest-traveler-status role='status' hidden)
               .forest-traveler-dialog__actions
                 button(type='button' data-forest-traveler-ask) Did you make that canopy?
+                button(type='button' data-forest-traveler-road) Know any good roads?
+                button(type='button' data-forest-traveler-remember hidden) Remember the clearing
+                button(type='button' data-forest-traveler-back hidden) Back
                 button(type='button' data-forest-traveler-accept hidden) Take the frame
                 button(type='button' data-forest-traveler-finish hidden) Maybe later
                 button(type='button' data-forest-traveler-leave) Leave

@@ -12,6 +12,10 @@ any previous target. **Stop** dismisses guidance. Close proximity is labeled **N
 remains available until stopped or replaced. This is a bearing toward a destination, not a route
 around obstacles, automatic movement, or a teleport.
 
+The later [Amber Clearing expedition](home-cart-activity-forest-integration.md#first-expedition-to-amber-clearing)
+adds one waypoint when a mounted player guides to Amber Clearing or Home near the saved trail.
+Other destinations continue to use a direct bearing.
+
 Destination identity is stable while its position and display label are resolved from the latest
 local authoritative view. The cart target follows its physical position during a drive. Plant moves
 update the bearing/distance; packing a plant removes its target and stops guidance rather than

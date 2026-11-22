@@ -1,5 +1,9 @@
 import { forestHomesteadDevelopmentEnabled, homesteadDevelopmentEnvironment } from '../server/services/forestHomesteadAvailability.js';
 import { buildForestHomesteadApplication } from '../server/services/forestHomesteadApplication.js';
+import { buildForestHomesteadGeography } from '../server/services/forestHomesteadGeography.js';
+import { amberClearingStone, amberClearingStoneFootprint } from '../public/js/forest-amber-clearing.js';
+import { discIntersectsRectangle } from '../public/js/forest-cart-motion.js';
+import { DEFAULT_HOME_DESIGN, DEFAULT_CART_DESIGN } from '../public/js/forest-construction-design.js';
 import { createHomesteadClient } from '../public/js/forest-homestead-client.js';
 const OWNER = '64b00000000000000000a097';
 describe('main forest homestead integration', () => {
@@ -37,6 +41,25 @@ describe('main forest homestead integration', () => {
     expect(result.recoveryRequired).toBeTrue(); expect(result.arrival).toBeNull();
     expect(result.revision).toBe(1);
     expect(h.geography.arrival).toHaveBeenCalledWith({ ownerUserId: OWNER, world: h.world, next: h.record, session: null });
+  });
+  it('keeps the centerline usable and refuses parking in the solid stone only when the expedition is enabled', async () => {
+    const empty = { find: () => ({ sort: () => ({ limit: () => ({ session: () => ({ lean: async () => [] }) }) }) }) };
+    const options = { TreeModel: empty, MarkerModel: empty, readGarden: async () => null };
+    const geography = buildForestHomesteadGeography({ ...options, amberClearingEnabled: id => id === OWNER });
+    const route = [{ x: 400, y: 90 }, { x: 1600, y: 90 }, { x: 1600, y: 990 }];
+    const stone = amberClearingStone(route), footprint = amberClearingStoneFootprint(stone);
+    const args = { ownerUserId: OWNER, world: { forestId: 'forest' }, next: {
+      layout: { home: { x: 400, y: 0 }, route }, homeDesign: DEFAULT_HOME_DESIGN, cartDesign: DEFAULT_CART_DESIGN,
+      parking: { worldX: 1600, worldY: 990, heading: Math.PI / 2 }
+    } };
+    const spot = await geography.arrival(args);
+    expect(spot).not.toBeNull();
+    expect(discIntersectsRectangle(spot, footprint)).toBeFalse();
+    expect(discIntersectsRectangle({ worldX: stone.x, worldY: stone.y + 10, radius: 11 }, footprint)).toBeTrue();
+    expect(discIntersectsRectangle({ worldX: stone.x, worldY: stone.y + 25, radius: 11 }, footprint)).toBeFalse();
+    args.next.parking = { worldX: stone.x, worldY: stone.y, heading: Math.PI / 2 };
+    expect(await geography.arrival(args)).toBeNull();
+    expect(await buildForestHomesteadGeography(options).arrival(args)).not.toBeNull();
   });
   it('only suggests a clearing for an eligible owner without an established home', async () => {
     const h = setup(false);

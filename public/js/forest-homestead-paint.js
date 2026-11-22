@@ -334,3 +334,97 @@ export function paintStudyPaths(ctx, plan, camera) {
   }
   ctx.restore();
 }
+
+export function paintAmberTrail(ctx, route, camera) {
+  ctx.save();
+  // The ground widens where carts come to rest at the end of the trail.
+  const end = route.at(-1), previous = route.at(-2);
+  const vertical = end.x === previous.x;
+  polygon(ctx, [[-28, -13], [-12, -22], [11, -19], [29, -12], [36, -2], [27, 12], [11, 19],
+    [-15, 17], [-33, 8]].map(([x, y]) => ({
+    x: end.x - camera.x + (vertical ? x : y),
+    y: end.y - camera.y + (vertical ? y : x)
+  })), 'rgba(182,160,113,.34)', null);
+  ctx.lineCap = ctx.lineJoin = 'round';
+  ctx.beginPath();
+  route.forEach((p, i) => i ? ctx.lineTo(p.x - camera.x, p.y - camera.y)
+    : ctx.moveTo(p.x - camera.x, p.y - camera.y));
+  ctx.lineWidth = 24;
+  ctx.strokeStyle = 'rgba(196,174,126,.48)';
+  ctx.stroke();
+  ctx.lineWidth = 12;
+  ctx.strokeStyle = 'rgba(228,208,158,.23)';
+  ctx.stroke();
+  ctx.restore();
+}
+
+const AMBER_REEDS = [
+  // Root x/y, height, lean, seed-head color. The tall stalks grow from one side of the split.
+  [5, -3, 34, -8, '#bc9654'], [7, -4, 47, 1, '#dcb16b'], [9, -3, 42, 10, '#c9a062'],
+  [12, -2, 36, 14, '#d7b47a'], [7, 0, 25, -4, '#a87f48'],
+  [18, 4, 19, 8, '#bd985c'], [21, 6, 26, 7, '#caa065'],
+  [-20, 4, 13, -8, '#a68851'], [-18, 5, 18, -5, '#ba9959']
+];
+
+function paintAmberReed(ctx, project, [x, y, height, lean, color], wind) {
+  const base = project(x, y);
+  const bend = project(x + (lean + wind) * .23, y - height * .53);
+  const tip = project(x + lean + wind, y - height);
+  ctx.beginPath();
+  ctx.moveTo(base.x, base.y);
+  ctx.quadraticCurveTo(bend.x, bend.y, tip.x, tip.y);
+  ctx.strokeStyle = '#a18b54'; ctx.lineWidth = 1.25; ctx.stroke();
+
+  const leafRoot = project(x + (lean + wind) * .12, y - height * .34);
+  const leafTip = project(x + lean * .65 + wind * .35 + (lean > 6 ? 5 : -5), y - height * .59);
+  ctx.beginPath();
+  ctx.moveTo(leafRoot.x, leafRoot.y);
+  ctx.quadraticCurveTo(leafTip.x + 1, leafRoot.y - 2, leafTip.x, leafTip.y);
+  ctx.quadraticCurveTo(leafRoot.x - 4, leafRoot.y - 4, leafRoot.x, leafRoot.y);
+  ctx.fillStyle = '#9a8b52'; ctx.fill();
+
+  const angle = Math.atan2(tip.y - bend.y, tip.x - bend.x);
+  ctx.beginPath();
+  ctx.ellipse(tip.x, tip.y, height > 30 ? 4.8 : 3, 1.8, angle, 0, Math.PI * 2);
+  ctx.fillStyle = color; ctx.fill();
+  line(ctx, { x: tip.x, y: tip.y - .8 },
+    { x: tip.x + 2.8 * Math.cos(angle), y: tip.y + 2.8 * Math.sin(angle) - .8 }, '#ebc58a', .65);
+}
+
+export function paintAmberClearingStone(ctx, stone, camera, time = 0) {
+  const p = (x, y) => ({ x: stone.x + x - camera.x, y: stone.y + y - camera.y });
+  const facet = (points, color, outline = null) => polygon(ctx, points.map(([x, y]) => p(x, y)), color, outline);
+  ctx.save();
+  ctx.lineJoin = 'round';
+  facet([[-31, 2], [-24, -5], [19, -8], [28, -2], [27, 6], [15, 11], [-14, 10]], 'rgba(26,36,23,.25)');
+  facet([[-29, 4], [-26, 1], [-21, 3], [-24, 7]], '#7d806d');
+  facet([[13, 9], [17, 6], [22, 8], [19, 11]], '#8b8c76');
+  facet([[23, 5], [27, 3], [28, 6], [25, 7]], '#989780');
+
+  facet([[-25, 1], [-30, -11], [-26, -24], [-19, -35], [-10, -41], [-1, -40], [6, -35],
+    [2, -26], [4, -21], [-3, -12], [0, -6], [-3, 3], [-16, 6]], '#888b7c', '#53594e');
+  facet([[-26, -24], [-19, -35], [-10, -41], [-1, -40], [0, -34], [-10, -29], [-17, -28], [-22, -20]],
+    '#aeb09a');
+  facet([[-1, -40], [6, -35], [2, -26], [4, -21], [-3, -12], [0, -6], [-3, 3],
+    [-9, -5], [-9, -13], [-3, -21], [-6, -28], [0, -34]], '#626a60');
+  facet([[-30, -11], [-23, -14], [-19, -8], [-21, -4], [-13, 1], [-3, 3], [-16, 6], [-25, 1]], '#70786a');
+  facet([[4, 4], [2, -6], [-1, -11], [6, -19], [6, -23], [14, -24], [22, -18], [26, -8], [23, 0], [16, 6]],
+    '#777e72', '#53594e');
+  facet([[6, -23], [14, -24], [22, -18], [19, -12], [13, -14], [9, -10], [0, -10]], '#9da18d');
+  facet([[9, -10], [13, -14], [19, -12], [20, -4], [16, 6], [4, 4], [7, -2]], '#848a7a');
+
+  // A chalky vein and a few low patches of lichen break up the exposed faces.
+  line(ctx, p(-27, -15), p(-21, -18), '#bbb8a2', .9);
+  line(ctx, p(-21, -18), p(-12, -17), '#aaa993', .9);
+  line(ctx, p(-12, -17), p(-7, -21), '#a5a48f', .8);
+  facet([[-24, -7], [-20, -9], [-18, -7], [-15, -7], [-14, -4], [-18, -3], [-20, -5], [-23, -4]], '#899266');
+  facet([[-13, -7], [-10, -8], [-9, -6], [-12, -5]], '#a0a47a');
+  facet([[12, 0], [14, -3], [18, -4], [19, -1], [16, 2], [12, 3]], '#9a9f73');
+  facet([[19, -7], [22, -8], [22, -6], [20, -5]], '#a1a882');
+
+  for (const [index, reed] of AMBER_REEDS.entries()) {
+    const wind = time ? (Math.sin(time / 540 - index * .25) * 3 + Math.sin(time / 1220) * 2) * reed[2] / 36 : 0;
+    paintAmberReed(ctx, p, reed, wind);
+  }
+  ctx.restore();
+}

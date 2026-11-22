@@ -1,5 +1,6 @@
 import { JSDOM } from 'jsdom';
 import { createForestNavigationState, createForestNavigation } from '../public/js/forest-navigation.js';
+import { amberClearingBend } from '../public/js/forest-amber-clearing.js';
 const player = { worldX: 0, worldY: 0 };
 describe('shared forest destination authority', () => {
   it('selects exactly one destination and uses the latest moving target position', () => {
@@ -28,6 +29,26 @@ describe('shared forest destination authority', () => {
     const nav = createForestNavigationState(); nav.register('invalid', () => [{ id: 'bad', label: 'Bad', worldX: NaN, worldY: 0 }]);
     expect(nav.destinations()).toEqual([]); expect(nav.select('bad')).toBeFalse();
     expect(createForestNavigationState().snapshot(player).active).toBeNull();
+  });
+  it('guides around the saved bend in both directions and uses a direct bearing away from the corridor', () => {
+    const route = [{ x: 0, y: 0 }, { x: 1200, y: 0 }, { x: 1200, y: 900 }];
+    const nav = createForestNavigationState();
+    nav.register('expedition', () => [
+      { id: 'amber', label: 'Amber Clearing', worldX: 1200, worldY: 900,
+        waypoint: p => amberClearingBend(route, p, false) },
+      { id: 'home', label: 'Home', ...player, waypoint: p => amberClearingBend(route, p, true) }
+    ]);
+    nav.select('amber');
+    expect(nav.snapshot(player).direction).toBe('east');
+    expect(nav.snapshot({ worldX: 1160, worldY: 0 }).nearby).toBeFalse();
+    expect(nav.snapshot({ worldX: 1180, worldY: 0 }).direction).toBe('south');
+    expect(nav.snapshot({ worldX: 1230, worldY: 270 }).waypoint).toBeNull();
+    expect(nav.snapshot({ worldX: 0, worldY: -180 }).waypoint).toBeNull();
+    nav.select('home');
+    expect(nav.snapshot({ worldX: 1200, worldY: 900 }).direction).toBe('north');
+    expect(nav.snapshot({ worldX: 1200, worldY: 20 }).direction).toBe('west');
+    expect(nav.snapshot(player).nearby).toBeTrue();
+    expect(amberClearingBend([route[0], route[1]], player, false)).toBeNull();
   });
 });
 describe('shared forest navigation controls', () => {

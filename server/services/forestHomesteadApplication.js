@@ -6,9 +6,10 @@ import { ForestHomesteadError } from './forestHomesteadRecord.js';
 import { forestTerrainDescriptor } from './forestOwnerTerrainRegion.js';
 import { assertForestTerrainPlacementReady } from './forestOwnerTerrain.js';
 
-export function buildForestHomesteadApplication({ geography = buildForestHomesteadGeography(),
+export function buildForestHomesteadApplication({ enabled = forestHomesteadDevelopmentEnabled,
+  geography = buildForestHomesteadGeography({ amberClearingEnabled: enabled }),
   service = buildForestHomesteadService({ ...geography, enabled: () => true, guidedStart: true }),
-  enabled = forestHomesteadDevelopmentEnabled, WorldModel = ForestOwnerWorld } = {}) {
+  WorldModel = ForestOwnerWorld } = {}) {
   async function decorate(ownerUserId, record) {
     if (!record.established) return { ...record, ownerUserId };
     if (record.cartDesign === null) return { ...record, arrival: null, recoveryRequired: false };
