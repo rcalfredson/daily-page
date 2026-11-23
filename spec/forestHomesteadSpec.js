@@ -4,6 +4,10 @@ import { buildForestHomesteadService, canonicalHomesteadCommand } from '../serve
 import { validateHomestead, homesteadCartCost, HOMESTEAD_RECEIPT_LIMIT } from '../server/services/forestHomesteadRecord.js';
 import { DEFAULT_HOME_DESIGN, TANSY_CART_FRAME, studyCartDesign } from '../public/js/forest-construction-design.js';
 import { createHomeStudyFixture, planHomeCartSite } from '../scripts/lib/forestHomeCartStudy.js';
+import { availableOrchardDyes, orchardPlotApproach, orchardRoad, orchardStonePassage, orchardTreeBlocks,
+  orchardVariety } from '../public/js/forest-orchard.js';
+import { planForestOrchard } from '../server/services/forestOrchardPlanner.js';
+import { homesteadPlacementAllowed } from '../server/services/forestHomesteadStore.js';
 
 const OWNER = '64b00000000000000000a094';
 const FOREST = 'a9400000-0000-4000-8000-000000000001';
@@ -76,6 +80,68 @@ describe('transactional homestead authority', () => {
     const read = await buildForestHomesteadService(h.options).read({ ownerUserId: OWNER });
     expect(read.cartId).toBe(first.cartId); expect(read.layout).toEqual(first.layout);
     await expectAsync(mutate(h, command('establish', 1))).toBeRejectedWithError('HOME_ALREADY_ESTABLISHED');
+  });
+  it('adds a bounded orchard to an existing home and unlocks only a locally harvested canopy dye', async () => {
+    const clear = { obstacles: [], terrainAt: () => ({ walkable: true, placeable: true }) };
+    const h = harness({ orchardEnabled: () => true,
+      planOrchard: async ({ record }) => planForestOrchard(record.layout, record.parking, clear, clear) });
+    const initial = await establish(h);
+    const opened = await mutate(h, command('orchard-survey', initial.revision));
+    expect(opened.layout).toEqual(initial.layout);
+    const { fork, branches } = orchardRoad(opened.layout, opened.orchard.site);
+    expect(new Set(branches.map(({ tree }) => `${tree.x}:${tree.y}`)).size).toBe(2);
+    expect(homesteadPlacementAllowed(opened, { worldX: fork.x, worldY: fork.y })).toBeFalse();
+    const [quince, damson] = [orchardVariety(FOREST, 0), orchardVariety(FOREST, 1)];
+    const paint = (revision, dye) => mutate(h, command('cart', revision, { design: { ...initial.cartDesign, cloth: dye } }));
+    await expectAsync(paint(opened.revision, quince.dye)).toBeRejectedWithError('HOME_ORCHARD_DYE_LOCKED');
+    await expectAsync(mutate(h, command('orchard-plant', opened.revision, { branch: 0 }))).toBeRejectedWithError('HOME_ORCHARD_CHANGED');
+    const collect = command('orchard-collect', opened.revision, { branch: 0 });
+    const seed = await mutate(h, collect);
+    expect((await mutate(h, collect)).operation.replayed).toBeTrue();
+    const planted = await mutate(h, command('orchard-plant', seed.revision, { branch: 0 }));
+    const harvested = await mutate(h, command('orchard-harvest', planted.revision, { branch: 0 }));
+    expect(availableOrchardDyes(harvested)).toEqual([quince.dye]);
+    await expectAsync(paint(harvested.revision, damson.dye)).toBeRejectedWithError('HOME_ORCHARD_DYE_LOCKED');
+    const cart = await paint(harvested.revision, quince.dye);
+    expect(cart.cartDesign.cloth).toBe(quince.dye);
+    expect(cart.holdings).toEqual(initial.holdings);
+    expect((await h.service.read({ ownerUserId: OWNER })).orchard.stages).toEqual(['harvested', 'undiscovered']);
+  });
+
+  it('does not add an orchard when either branch or the home plots lack safe ground', async () => {
+    const clear = { obstacles: [], terrainAt: () => ({ walkable: true, placeable: true }) };
+    const blocked = { obstacles: [], terrainAt: () => ({ walkable: false, placeable: false }) };
+    const h = harness();
+    const { layout, parking } = await establish(h);
+    expect(planForestOrchard(layout, parking, blocked, clear)).toBeNull();
+    expect(planForestOrchard(layout, parking, clear, blocked)).toBeNull();
+    await expectAsync(mutate(h, command('orchard-survey', 1))).toBeRejectedWithError('HOME_DISABLED');
+  });
+
+  it('guides a cart to the open side on each approach to the split stone', () => {
+    const road = { end: { x: 1600, y: 990 }, fork: { x: 1600, y: 1830 } };
+    expect(orchardStonePassage(road, { worldX: 1640, worldY: 820 }, false))
+      .toEqual({ worldX: 1563, worldY: 850, label: 'Trail' });
+    expect(orchardStonePassage(road, { worldX: 1640, worldY: 1150 }, true))
+      .toEqual({ worldX: 1563, worldY: 1120, label: 'Trail' });
+    expect(orchardStonePassage(road, { worldX: 1555, worldY: 820 }, false))
+      .toEqual({ worldX: 1555, worldY: 895, label: 'Trail' });
+  });
+  it('lets a walker step out of a newly planted tree while keeping its trunk solid', () => {
+    const tree = { x: 0, y: 0 }, next = { worldX: 12, worldY: 0, radius: 11 };
+    expect(orchardTreeBlocks(tree, next, { worldX: 10, worldY: 0 })).toBeFalse();
+    expect(orchardTreeBlocks(tree, next, { worldX: 14, worldY: 0 })).toBeTrue();
+    expect(orchardTreeBlocks(tree, next)).toBeTrue();
+  });
+  it('guides a walker around the first tree to the farther orchard plot', () => {
+    const home = { x: 400, y: 0 }, plot = { x: 525, y: -106 };
+    expect(orchardPlotApproach(home, plot, { worldX: 503, worldY: -34 }))
+      .toEqual({ worldX: 503, worldY: 22, label: 'Yard edge' });
+    expect(orchardPlotApproach(home, plot, { worldX: 503, worldY: 22 }))
+      .toEqual({ worldX: 587, worldY: 22, label: 'Yard edge' });
+    expect(orchardPlotApproach(home, plot, { worldX: 583, worldY: 22 }))
+      .toEqual({ worldX: 583, worldY: -106, label: 'Yard edge' });
+    expect(orchardPlotApproach(home, plot, { worldX: 583, worldY: -91 })).toBeNull();
   });
   it('saves each first-visit milestone and requires Mallow’s invitation before accepting parking', async () => {
     const h = harness({ guidedStart: true });

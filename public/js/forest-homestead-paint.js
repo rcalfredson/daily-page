@@ -2,6 +2,7 @@ import { paintForestCompanion } from './forest-companion-paint.js';
 import { cartDefinition } from './forest-cart-motion.js';
 import { constructionHomeFootprint, TANSY_CART_FRAME } from './forest-construction-design.js';
 import { paintForestHumanoid } from './forest-humanoid.js';
+import { ORCHARD_DYE_PALETTES } from './forest-orchard.js';
 
 const WOOD = {
   honey: ['#c6a16b', '#a57a4c', '#795b3c', '#e1be85'],
@@ -13,7 +14,7 @@ const WOOD = {
 const ROOF = { moss: ['#667451', '#506348', '#8c9870'], rust: ['#ac7552', '#86553f', '#c39465'],
   slate: ['#6e8790', '#4f6975', '#97a8a6'] };
 const CLOTH = { ochre: ['#d3ae61', '#b88a43', '#ecd393'], moss: ['#8fa17a', '#637e5e', '#b7c19a'],
-  indigo: ['#879da9', '#587786', '#b1c2c2'] };
+  indigo: ['#879da9', '#587786', '#b1c2c2'], ...ORCHARD_DYE_PALETTES };
 function polygon(ctx, points, color, stroke = '#4d4b37') {
   ctx.beginPath(); points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
   ctx.closePath(); ctx.fillStyle = color; ctx.fill();
@@ -287,6 +288,15 @@ export function paintStudyCart(ctx, cart, camera, mounted, elevation = 0, motion
       if (design.canopy === 'patched' && i % 2 === 0) {
         polygon(ctx, [p(rear + 2, ya + 1, 51 + lift(a)), p(rear + 10, ya + 1, 51 + lift(a)),
           p(rear + 10, yb - 1, 51 + lift(b)), p(rear + 2, yb - 1, 51 + lift(b))], cloth[2], '#bda87e');
+      }
+    }
+    if (design.cloth === 'damson-silver') {
+      // The pale edge follows the fabric's shape and gives the cloth a restrained sheen.
+      const width = 2 * d.halfWidth + 6;
+      for (let i = 0; i < 6; i++) {
+        const a = i / 6, b = (i + 1) / 6;
+        line(ctx, p(front, -width / 2 + width * a, 50.7 + lift(a)),
+          p(front, -width / 2 + width * b, 50.7 + lift(b)), cloth[2], 1);
       }
     }
   }, true, 'roof');

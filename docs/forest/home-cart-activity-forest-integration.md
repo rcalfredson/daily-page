@@ -187,3 +187,42 @@ The application Firefox checker completed the bent route in both directions with
 and with the Ridge frame, including a saved park, dismount and inspection at the clearing.
 It also checked clue persistence on reload independently of the rest of the save. These round
 trips used the terrain-free test owner.
+
+## Orchard Fork prototype
+
+The orchard uses the ordinary forest and the existing development allowlist. Tansy describes a
+quince tree beyond a cairn, and **Mark the orchard fork** checks and saves an extension to the
+homestead road. The planner checks the yard plots, fork, branch corridors, and parking aprons
+against the forest’s terrain and existing objects. An unavailable site leaves the save intact.
+Published homesteads keep their original layout and Amber Clearing.
+
+The ready-to-drive preview uses its own reserved test owner and retains your playtest progress.
+
+```bash
+FOREST_APPLICATION_ORCHARD_REVIEW=true FOREST_APPLICATION_PREVIEW_PORT=4177 npm run forest:homestead-application
+```
+
+Open `http://127.0.0.1:4177/en/forest` with Node 24.15.0 and the local test database configured as
+described above.
+
+1. With a homestead, cart, and Mallow ready, ask Tansy **Seen any fruit trees?** and **Mark the
+   orchard fork**. Board at home and follow the pale road past Amber Clearing. **Orchard Fork**
+   is in **More → Navigate** if you want the compass.
+2. At the cairn, take the left branch for quince, or investigate the blue flowers by the right
+   branch for damson. The wheel tracks fade near the fork. Look for a worn parking patch and a
+   fruit tree beyond it. Step out and collect a seed.
+3. Choose **Home** or **Orchard plot at home**. While mounted, the compass can lead back through
+   the fork and the bend. Small stones mark the spot for each seed you bring back. The soil
+   appears when you plant. Pick the tree’s first fruit.
+4. Open **Customize cart** at the workshop, choose a cover and the new option under **Cloth
+   color**, and save. Reload to check the tree and the canopy. The other branch stays open
+   for another trip.
+
+A forest’s stable seed identity picks one variety from each of two tree families. The choices
+vary fruit shade, tree silhouette, and cloth color. First fruit is available at planting for
+this playtest, and the resulting dye remains reusable. Seasons, markets, and trading are outside
+this prototype.
+
+The bounded layout search found an orchard in 8 of 24 synthetic cases with valid homestead
+layouts across terrain-free and terrain generation 3 and 4 fixtures. The review account uses
+terrain-free ground. Wider terrain coverage is still a live-release question.

@@ -148,7 +148,9 @@ block content
               .forest-traveler-dialog__actions
                 button(type='button' data-forest-traveler-ask) Did you make that canopy?
                 button(type='button' data-forest-traveler-road) Know any good roads?
+                button(type='button' data-forest-traveler-orchard) Seen any fruit trees?
                 button(type='button' data-forest-traveler-remember hidden) Remember the clearing
+                button(type='button' data-forest-traveler-map-orchard hidden) Mark the orchard fork
                 button(type='button' data-forest-traveler-back hidden) Back
                 button(type='button' data-forest-traveler-accept hidden) Take the frame
                 button(type='button' data-forest-traveler-finish hidden) Maybe later
@@ -170,6 +172,8 @@ block content
             details
               summary My lanternbells
               ol(data-garden-plants)
+            if homesteadEnabled
+              p(data-orchard-satchel hidden)
             details.owner-forest__materials(data-homestead-materials hidden)
               summary Building materials
               table(aria-label='Building materials balance')

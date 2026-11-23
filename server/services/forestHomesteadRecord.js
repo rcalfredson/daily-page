@@ -1,6 +1,8 @@
 import { validateConstructionDesign, constructionCartCost } from '../../public/js/forest-construction-design.js';
 import { validateHomeLayout } from '../../public/js/forest-home-reservations.js';
 import { validForestCompanion } from '../../public/js/forest-companion.js';
+import { ORCHARD_STAGES, ORCHARD_FORK_DISTANCES, ORCHARD_BRANCH_DISTANCES, ORCHARD_DYE_PALETTES,
+  availableOrchardDyes } from '../../public/js/forest-orchard.js';
 
 export const HOMESTEAD_RECEIPT_LIMIT = 64;
 export const HOMESTEAD_MATERIAL_CAPACITY = Object.freeze({ timber: 96, cloth: 24 });
@@ -18,6 +20,17 @@ export const validHomesteadParking = o => exact(o, ['worldX', 'worldY', 'heading
   && [o.worldX, o.worldY, o.heading].every(Number.isFinite)
   && Math.abs(o.worldX) <= 1e9 && Math.abs(o.worldY) <= 1e9 && Math.abs(o.heading) <= Math.PI;
 
+function validOrchard(orchard, home) {
+  const site = orchard?.site;
+  return exact(orchard, ['site', 'stages']) && exact(site, ['version', 'forkDistance', 'branchDistance', 'plots'])
+    && site.version === 1 && ORCHARD_FORK_DISTANCES.includes(site.forkDistance)
+    && ORCHARD_BRANCH_DISTANCES.includes(site.branchDistance) && Array.isArray(site.plots) && site.plots.length === 2
+    && site.plots.every(p => exact(p, ['x', 'y']) && Number.isSafeInteger(p.x) && Number.isSafeInteger(p.y)
+      && Math.abs(p.x - home.x) <= 140 && Math.abs(p.y - home.y) <= 106)
+    && Math.hypot(site.plots[0].x - site.plots[1].x, site.plots[0].y - site.plots[1].y) >= 52
+    && Array.isArray(orchard.stages) && orchard.stages.length === 2 && orchard.stages.every(stage => ORCHARD_STAGES.includes(stage));
+}
+
 export class ForestHomesteadError extends Error {
   constructor(code) { super(code); this.name = 'ForestHomesteadError'; this.code = code; }
 }
@@ -26,7 +39,9 @@ export function validateHomestead(record, scope) {
   if (![1, 2, 3].includes(record.schemaVersion) || record.catalogVersion !== 1) throw new ForestHomesteadError('HOME_MIGRATION_REQUIRED');
   const onboarding = record.schemaVersion === 3;
   const hasCompanion = record.schemaVersion === 2 || onboarding && Object.hasOwn(record, 'companion');
-  const expected = [...fields, ...(onboarding ? ['starterSuppliesClaimed'] : []), ...(hasCompanion ? ['companion'] : [])];
+  const hasOrchard = Object.hasOwn(record, 'orchard');
+  const expected = [...fields, ...(onboarding ? ['starterSuppliesClaimed'] : []), ...(hasCompanion ? ['companion'] : []),
+    ...(hasOrchard ? ['orchard'] : [])];
   const built = hasHomesteadCart(record);
   if (!exact(Object.fromEntries(Object.entries(record).filter(([k]) => k !== '_id')), expected)
     || onboarding && (typeof record.starterSuppliesClaimed !== 'boolean'
@@ -39,6 +54,8 @@ export function validateHomestead(record, scope) {
     || new Set([record.layoutId, record.homeId, record.cartId]).size !== 3
     || !validateHomeLayout(record.layout) || !validateConstructionDesign('home', record.homeDesign)
     || ((!onboarding || built) && !validateConstructionDesign('cart', record.cartDesign)) || !validHomesteadParking(record.parking)
+    || hasOrchard && !validOrchard(record.orchard, record.layout.home)
+    || built && Object.hasOwn(ORCHARD_DYE_PALETTES, record.cartDesign.cloth) && !availableOrchardDyes(record).includes(record.cartDesign.cloth)
     || !materials(record.holdings) || !materials(record.cartCommitment)
     || !Object.keys(HOMESTEAD_MATERIAL_CAPACITY).every(k =>
       (built || record.cartCommitment[k] === 0)

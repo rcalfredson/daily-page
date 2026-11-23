@@ -1,4 +1,6 @@
-// Versioned design vocabulary for the temporary construction study. No inventory or save authority.
+import { ORCHARD_DYE_OPTIONS } from './forest-orchard.js';
+
+// Versioned design vocabulary. No inventory or save authority.
 export const CONSTRUCTION_DESIGN_VERSION = 1;
 export const TANSY_CART_FRAME = 'ridge';
 export const HOME_DESIGN_OPTIONS = Object.freeze({
@@ -17,7 +19,7 @@ export const CART_DESIGN_OPTIONS = Object.freeze({
   supports: [['posts', 'Timber posts'], ['bows', 'Bentwood bows'], [TANSY_CART_FRAME, 'Ridge frame']],
   canopy: [['none', 'Open sky'], ['linen', 'Linen cover'], ['patched', 'Patchwork cover']],
   wood: [['honey', 'Honey wood'], ['walnut', 'Dark walnut'], ['sage', 'Painted sage']],
-  cloth: [['ochre', 'Golden ochre'], ['moss', 'Moss green'], ['indigo', 'Faded indigo']]
+  cloth: [['ochre', 'Golden ochre'], ['moss', 'Moss green'], ['indigo', 'Faded indigo'], ...ORCHARD_DYE_OPTIONS]
 });
 export const DEFAULT_HOME_DESIGN = Object.freeze({ version: 1, width: 180, depth: 100,
   walls: 'planks', color: 'honey', roof: 'shakes', roofColor: 'moss' });

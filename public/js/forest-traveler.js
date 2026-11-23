@@ -45,6 +45,8 @@ export function createForestTraveler(api) {
   const status = dialog.querySelector('[data-forest-traveler-status]');
   const ask = dialog.querySelector('[data-forest-traveler-ask]');
   const road = dialog.querySelector('[data-forest-traveler-road]');
+  const orchard = dialog.querySelector('[data-forest-traveler-orchard]');
+  const mapOrchard = dialog.querySelector('[data-forest-traveler-map-orchard]');
   const remember = dialog.querySelector('[data-forest-traveler-remember]');
   const back = dialog.querySelector('[data-forest-traveler-back]');
   const accept = dialog.querySelector('[data-forest-traveler-accept]');
@@ -91,6 +93,7 @@ export function createForestTraveler(api) {
     line.textContent = '“I patched it myself. Every patch is from a different coat. I leave the corners loose so I don’t become a kite again. I’ve got a spare ridge frame. Want it for your cart?”';
     lookingAt = site.cart;
     ask.hidden = road.hidden = true;
+    if (orchard) orchard.hidden = true;
     accept.hidden = finish.hidden = saving;
     leave.hidden = !saving;
     (saving ? leave : accept).focus({ preventScroll: true });
@@ -101,6 +104,8 @@ export function createForestTraveler(api) {
     showingClue = false;
     status.hidden = !saving;
     road.hidden = saving;
+    if (orchard) orchard.hidden = saving;
+    if (mapOrchard) mapOrchard.hidden = true;
     remember.hidden = back.hidden = true;
     ask.hidden = memory.introduced || saving;
     finish.hidden = true;
@@ -122,6 +127,7 @@ export function createForestTraveler(api) {
     showingClue = true;
     lookingAt = null;
     ask.hidden = road.hidden = accept.hidden = finish.hidden = true;
+    if (orchard) orchard.hidden = true;
     leave.hidden = !saving;
     remember.hidden = memory.amberClearingClue === true;
     back.hidden = false;
@@ -129,6 +135,22 @@ export function createForestTraveler(api) {
     if (memory.amberClearingClue) status.textContent = 'Look for Amber Clearing in Navigate once you have a home clearing.';
     line.textContent = '“I rest at Amber Clearing when the road’s been long. Follow the pale trail from your home clearing to the split stone with the amber reeds. Get down and listen when the wind eases. You can hear the stems tapping the stone.”';
     (saving ? leave : remember.hidden ? back : remember).focus({ preventScroll: true });
+    api.requestRender();
+  }
+
+  function showOrchard() {
+    showingClue = false;
+    lookingAt = null;
+    ask.hidden = road.hidden = orchard.hidden = remember.hidden = accept.hidden = finish.hidden = leave.hidden = true;
+    back.hidden = false;
+    const mapStatus = api.orchardStatus();
+    mapOrchard.hidden = !['ready', 'mapped'].includes(mapStatus);
+    mapOrchard.textContent = mapStatus === 'mapped' ? 'Guide me to Orchard Fork' : 'Mark the orchard fork';
+    status.hidden = !mapOrchard.hidden;
+    status.textContent = mapStatus === 'blocked' ? 'Finish the pending forest save before marking the fork.'
+      : 'Claim a home clearing first, then come back and I’ll point you there.';
+    line.textContent = '“Keep going past the split stone till you see a low cairn. Take the left branch as you come up the road. The quince tree is beyond a worn patch where you can leave the cart. Bring a seed home. Quince makes a fine cloth dye.”';
+    (mapOrchard.hidden ? back : mapOrchard).focus({ preventScroll: true });
     api.requestRender();
   }
 
@@ -143,6 +165,12 @@ export function createForestTraveler(api) {
   talk.addEventListener('click', startConversation);
   ask.addEventListener('click', showAnswer);
   road.addEventListener('click', showClue);
+  orchard?.addEventListener('click', showOrchard);
+  mapOrchard?.addEventListener('click', () => {
+    if (mapOrchard.hidden || !['ready', 'mapped'].includes(api.orchardStatus())) return;
+    dialog.close();
+    api.surveyOrchard();
+  });
   back.addEventListener('click', showGreeting);
   leave.addEventListener('click', () => dialog.close());
   dialog.addEventListener('keydown', event => {
