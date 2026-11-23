@@ -1,6 +1,7 @@
 import ForestHomestead from '../db/models/ForestHomestead.js';
 import { validateHomestead, ForestHomesteadError } from './forestHomesteadRecord.js';
 import { homePlacementAllowed } from '../../public/js/forest-home-reservations.js';
+import { orchardPaths, orchardPlacementAllowed, orchardPlotLane } from '../../public/js/forest-orchard.js';
 
 export async function readForestHomesteadStore({ ownerUserId, world, session = null, HomeModel = ForestHomestead }) {
   if (world.schemaVersion === 1) return null;
@@ -17,7 +18,8 @@ export function homesteadPlacementAllowed(home, { worldX, worldY, radius = 17, w
   if (!home) return true;
   // This apron covers the entire compound cart AND every supported dismount path.
   return Math.hypot(worldX - home.parking.worldX, worldY - home.parking.worldY) > 110 + radius
-    && homePlacementAllowed(home.layout, { x: worldX, y: worldY, radius, writer });
+    && homePlacementAllowed(home.layout, { x: worldX, y: worldY, radius, writer })
+    && (!home.orchard || orchardPlacementAllowed(home.layout, home.orchard.site, { x: worldX, y: worldY }, radius));
 }
 
 export async function inspectForestHomesteadReservation({ ownerUserId, world, session, ...candidate }) {
@@ -32,7 +34,9 @@ export function homesteadTerrainProtections(home) {
   const points = [], { layout } = home;
   const add = (x, y) => points.push({ id: `home:${home.layoutId}:${points.length}`, x, y, radius: 120 });
   for (let x = -160; x <= 160; x += 80) for (let y = -180; y <= 180; y += 90) add(layout.home.x + x, layout.home.y + y);
-  for (const path of [layout.approach, layout.route]) for (let i = 1; i < path.length; i++) {
+  const orchard = home.orchard ? [...orchardPaths(layout, home.orchard.site),
+    ...home.orchard.site.plots.map(plot => orchardPlotLane(layout.home, plot))] : [];
+  for (const path of [layout.approach, layout.route, ...orchard]) for (let i = 1; i < path.length; i++) {
     const a = path[i - 1], b = path[i], n = Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 120);
     for (let j = 0; j <= n; j++) add(Math.round(a.x + (b.x - a.x) * j / n), Math.round(a.y + (b.y - a.y) * j / n));
   }

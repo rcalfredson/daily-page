@@ -244,7 +244,9 @@ export function startOwnerForest({ createExtension = () => null, createTraveler,
     ...extensionApi, spawn: bootstrap.spawn, memory: bootstrap.traveler,
     canRest: p => extension?.travelerSiteAllowed?.(p) !== false,
     canTalk: () => extension?.travelerInteractionAllowed?.() !== false,
-    fittedCart: () => extension?.travelerFittedCart?.()
+    fittedCart: () => extension?.travelerFittedCart?.(),
+    orchardStatus: () => extension?.orchardSurveyStatus?.(),
+    surveyOrchard: () => extension?.surveyOrchard?.()
   });
 
   function cellQuery(cells) {

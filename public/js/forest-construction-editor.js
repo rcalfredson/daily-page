@@ -1,5 +1,6 @@
 import { HOME_DESIGN_OPTIONS, CART_DESIGN_OPTIONS, TANSY_CART_FRAME, validateConstructionDesign,
   constructionCartCost } from '/js/forest-construction-design.js';
+import { ORCHARD_DYE_PALETTES, availableOrchardDyes } from '/js/forest-orchard.js';
 
 const LABELS = { width: 'Width', depth: 'Depth', walls: 'Wall material', color: 'Wall finish', roof: 'Roof material',
   roofColor: 'Roof finish', length: 'Bed length', body: 'Body', wheels: 'Wheels', supports: 'Supports',
@@ -109,6 +110,8 @@ export function createConstructionEditor({ viewport, preview, apply, close, save
         select.dataset.designField = name;
         for (const [value, text] of choices) {
           if (name === 'supports' && value === TANSY_CART_FRAME && !ownsTansyFrame() && draft.supports !== value) continue;
+          if (name === 'cloth' && Object.hasOwn(ORCHARD_DYE_PALETTES, value)
+            && !availableOrchardDyes(saveState()?.record).includes(value)) continue;
           const option = document.createElement('option'); option.value = value; option.textContent = text;
           select.append(option);
         }

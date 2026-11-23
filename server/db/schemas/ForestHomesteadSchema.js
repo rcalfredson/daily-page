@@ -12,6 +12,7 @@ const schema = new Schema({
   holdings: data, cartCommitment: data,
   starterSuppliesClaimed: { type: Boolean },
   companion: { type: Schema.Types.Mixed },
+  orchard: { type: Schema.Types.Mixed },
   revision: { type: Number, required: true, min: 1, validate: Number.isSafeInteger },
   receipts: data, changedAt: { type: Date, required: true }
 }, { strict: 'throw', versionKey: false, minimize: false });

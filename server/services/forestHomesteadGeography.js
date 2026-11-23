@@ -7,6 +7,8 @@ import { sampleOwnerTerrain } from '../../public/js/owner-forest-terrain-authori
 import { cartPoseClear, cartDismount, discIntersectsRectangle } from '../../public/js/forest-cart-motion.js';
 import { constructionHomeFootprint, DEFAULT_CART_DESIGN } from '../../public/js/forest-construction-design.js';
 import { amberClearingStone, amberClearingStoneFootprint } from '../../public/js/forest-amber-clearing.js';
+import { orchardRoad, orchardTreeBlocks, ORCHARD_FORK_DISTANCES, ORCHARD_BRANCH_DISTANCES } from '../../public/js/forest-orchard.js';
+import { planForestOrchard } from './forestOrchardPlanner.js';
 import { planHomeCartSite } from './forestHomeSitePlanner.js';
 import { ForestHomesteadError } from './forestHomesteadRecord.js';
 
@@ -57,17 +59,37 @@ export function buildForestHomesteadGeography({ TreeModel = ForestWritingTree, M
     if (plan.status !== 'ready') throw new ForestHomesteadError('HOME_SITE_UNAVAILABLE');
     return plan;
   }
+  async function planOrchard({ record, ...args }) {
+    const end = record.layout.route.at(-1), home = record.layout.home;
+    const reach = Math.max(...ORCHARD_FORK_DISTANCES) + 120;
+    const across = Math.max(...ORCHARD_BRANCH_DISTANCES) + 240;
+    const previous = record.layout.route.at(-2);
+    const dx = Math.sign(end.x - previous.x), dy = Math.sign(end.y - previous.y);
+    const road = await geography(args, {
+      minX: Math.min(end.x - dx * 120, end.x + dx * reach) - Math.abs(dy) * across,
+      maxX: Math.max(end.x - dx * 120, end.x + dx * reach) + Math.abs(dy) * across,
+      minY: Math.min(end.y - dy * 120, end.y + dy * reach) - Math.abs(dx) * across,
+      maxY: Math.max(end.y - dy * 120, end.y + dy * reach) + Math.abs(dx) * across
+    });
+    const yard = await geography(args, { minX: home.x - 220, maxX: home.x + 220, minY: home.y - 180, maxY: home.y + 180 });
+    return planForestOrchard(record.layout, record.parking, road, yard);
+  }
   async function arrival({ next, ...args }) {
     const { worldX: x, worldY: y } = next.parking;
     const landscape = await geography(args, { minX: x - 160, maxX: x + 160, minY: y - 160, maxY: y + 160 });
     const house = constructionHomeFootprint(next.layout.home, next.homeDesign);
     const stone = amberClearingEnabled(args.ownerUserId)
       ? amberClearingStoneFootprint(amberClearingStone(next.layout.route)) : null;
+    const orchardTrees = next.orchard ? [
+      ...orchardRoad(next.layout, next.orchard.site).branches.map(branch => branch.tree),
+      ...next.orchard.site.plots.filter((_, index) => ['planted', 'harvested'].includes(next.orchard.stages[index]))
+    ] : [];
     const clear = p => Math.abs(p.worldX) + p.radius < 999_980_000 && Math.abs(p.worldY) + p.radius < 999_980_000
       && !discIntersectsRectangle(p, house) && (!stone || !discIntersectsRectangle(p, stone)) && landscape.terrainAt(p).walkable
-      && landscape.obstacles.every(o => Math.hypot(o.x - p.worldX, o.y - p.worldY) > o.collisionRadius + p.radius);
+      && landscape.obstacles.every(o => Math.hypot(o.x - p.worldX, o.y - p.worldY) > o.collisionRadius + p.radius)
+      && orchardTrees.every(tree => !orchardTreeBlocks(tree, p));
     const cart = { ...next.parking, design: next.cartDesign || DEFAULT_CART_DESIGN };
     return cartPoseClear(cart, clear) ? cartDismount(cart, clear) : null;
   }
-  return { planSite, arrival, validatePlacement: async args => Boolean(await arrival(args)) };
+  return { planSite, planOrchard, arrival, validatePlacement: async args => Boolean(await arrival(args)) };
 }

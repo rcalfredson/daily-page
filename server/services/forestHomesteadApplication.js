@@ -8,7 +8,7 @@ import { assertForestTerrainPlacementReady } from './forestOwnerTerrain.js';
 
 export function buildForestHomesteadApplication({ enabled = forestHomesteadDevelopmentEnabled,
   geography = buildForestHomesteadGeography({ amberClearingEnabled: enabled }),
-  service = buildForestHomesteadService({ ...geography, enabled: () => true, guidedStart: true }),
+  service = buildForestHomesteadService({ ...geography, enabled: () => true, guidedStart: true, orchardEnabled: enabled }),
   WorldModel = ForestOwnerWorld } = {}) {
   async function decorate(ownerUserId, record) {
     if (!record.established) return { ...record, ownerUserId };

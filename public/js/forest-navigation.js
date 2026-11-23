@@ -59,7 +59,7 @@ export function createForestNavigation({ dock, more, state, focus }) {
     }
     compass.hidden = !current.active || !available;
     if (current.active) {
-      const text = `${current.target.label} · ${current.waypoint ? 'Bend in ' : ''}${current.nearby ? 'Nearby' : `${Math.round(current.distance)} steps`}`;
+      const text = `${current.target.label} · ${current.waypoint ? `${current.waypoint.label || 'Bend'} in ` : ''}${current.nearby ? 'Nearby' : `${Math.round(current.distance)} steps`}`;
       if (copy.textContent !== text) copy.textContent = text;
       arrow.setAttribute('aria-label', `Direction: ${current.direction}`);
       arrow.style.transform = `rotate(${current.degrees}deg)`;
