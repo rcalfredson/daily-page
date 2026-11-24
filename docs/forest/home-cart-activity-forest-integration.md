@@ -199,21 +199,24 @@ Published homesteads keep their original layout and Amber Clearing.
 The ready-to-drive preview uses its own reserved test owner and retains your playtest progress.
 
 ```bash
-FOREST_APPLICATION_ORCHARD_REVIEW=true FOREST_APPLICATION_PREVIEW_PORT=4177 npm run forest:homestead-application
+FOREST_APPLICATION_ORCHARD_REVIEW=true FOREST_APPLICATION_PREVIEW_PORT=4173 npm run forest:homestead-application
 ```
 
-Open `http://127.0.0.1:4177/en/forest` with Node 24.15.0 and the local test database configured as
+Open `http://127.0.0.1:4173/en/forest` with Node 24.15.0 and the local test database configured as
 described above.
 
 1. With a homestead, cart, and Mallow ready, ask Tansy **Seen any fruit trees?** and **Mark the
-   orchard fork**. Board at home and follow the pale road past Amber Clearing. **Orchard Fork**
+   orchard fork**. Board at home and follow the pale road to the cairn. **Orchard Fork**
    is in **More → Navigate** if you want the compass.
 2. At the cairn, take the left branch for quince, or investigate the blue flowers by the right
-   branch for damson. The wheel tracks fade near the fork. Look for a worn parking patch and a
-   fruit tree beyond it. Step out and collect a seed.
-3. Choose **Home** or **Orchard plot at home**. While mounted, the compass can lead back through
-   the fork and the bend. Small stones mark the spot for each seed you bring back. The soil
-   appears when you plant. Pick the tree’s first fruit.
+   branch for damson. The cairn is solid and sits off the cart's turning area. The wheel tracks
+   fade near the fork. Look for a worn parking patch and a fruit tree beyond it. Step out and
+   collect a seed.
+3. Choose **Home** or **Suggested orchard spot**. While mounted, the compass can lead back
+   through the fork and the bend. In the yard, select **Choose spot** for the seed you want to
+   plant. Walk or turn to move the tree preview. Small stones mark the suggested spot, and
+   **Suggested spot** snaps the preview there when you’re close. Choose **Plant here** or press
+   **Enter** to confirm. **Cancel** or **Escape** puts the seed away. Pick the tree’s first fruit.
 4. Open **Customize cart** at the workshop, choose a cover and the new option under **Cloth
    color**, and save. Reload to check the tree and the canopy. The other branch stays open
    for another trip.
@@ -223,6 +226,12 @@ vary fruit shade, tree silhouette, and cloth color. First fruit is available at 
 this playtest, and the resulting dye remains reusable. Seasons, markets, and trading are outside
 this prototype.
 
-The bounded layout search found an orchard in 8 of 24 synthetic cases with valid homestead
-layouts across terrain-free and terrain generation 3 and 4 fixtures. The review account uses
-terrain-free ground. Wider terrain coverage is still a live-release question.
+The updated bounded layout search found an orchard in 22 of 24 synthetic cases with valid
+homesteads, up from 8 in the previous version. It can choose different lengths for the two
+branches and put the fork before Amber Clearing on an already reserved stretch when clear
+ground beyond the stone is scarce. The counts by terrain were 8 of 9 terrain-free, 7 of 8
+generation 3, and 7 of 7 generation 4. Three additional fixtures lacked a valid starting
+homestead. All 22 selected routes passed swept clearance checks with the largest Ridge cart,
+including the branch turns and dismounts. These are synthetic coverage checks. The review
+account uses terrain-free ground.
+Existing mapped routes, planted trees, and dye unlocks keep their saved state.

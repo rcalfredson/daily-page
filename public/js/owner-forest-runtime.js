@@ -205,13 +205,13 @@ export function startOwnerForest({ createExtension = () => null, createTraveler,
     terrain, requestRender, focusViewport: () => viewport.focus({ preventScroll: true }),
     state: () => ({ player, placements: [...placementsById.values()],
       markers: [...markersById.values()], placementAllowed: p => extension?.placementAllowed?.(p, 'garden') !== false, facingRadians: playerMotion.targetFacingRadians,
-      available: !extension?.hidePlayer?.() && !returnArrivalPending && !placement.active && !inspectedTreeId && !inspectedMarkerId
+      available: !extension?.hidePlayer?.() && !extension?.plantingActive?.() && !returnArrivalPending && !placement.active && !inspectedTreeId && !inspectedMarkerId
         && currentAuthoredCellsReady() && ['ready', 'notice'].includes(authoredState) })
   });
 
   const extensionApi = {
     navigation,
-    state: () => ({ player: { ...player }, camera, terrain, placements: [...placementsById.values()],
+    state: () => ({ player: { ...player }, camera, terrain, facingRadians: playerMotion.targetFacingRadians, placements: [...placementsById.values()],
       busy: Boolean(inspectedTreeId || inspectedMarkerId || placement.active || returnArrivalPending || traveler?.open())
         || !document.querySelector('[data-forest-garden]').hidden
         || !document.querySelector('[data-garden-toolbar]').hidden }),
@@ -1512,6 +1512,7 @@ export function startOwnerForest({ createExtension = () => null, createTraveler,
     s: 'down', S: 'down' })[key];
   viewport.addEventListener('keydown', (event) => {
     if (event.target !== viewport) return;
+    if (extension?.plantingKey?.(event)) { event.preventDefault(); return; }
     if (traveler?.open()) {
       if (event.key === 'Escape') traveler.close();
       return;
@@ -1582,7 +1583,7 @@ export function startOwnerForest({ createExtension = () => null, createTraveler,
     updatePointer(event);
     const wasTap = forestTouchGestureIntent(pointer.maximumDistance) === 'tap';
     clearPointer();
-    if (wasTap && !placement.active) {
+    if (wasTap && !placement.active && !extension?.plantingActive?.()) {
       const bounds = viewport.getBoundingClientRect();
       const point = {
         worldX: event.clientX - bounds.left + camera.x,

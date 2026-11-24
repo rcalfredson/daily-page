@@ -5,6 +5,7 @@ import { amberClearingStone, amberClearingStoneFootprint } from '../public/js/fo
 import { discIntersectsRectangle } from '../public/js/forest-cart-motion.js';
 import { DEFAULT_HOME_DESIGN, DEFAULT_CART_DESIGN } from '../public/js/forest-construction-design.js';
 import { createHomesteadClient } from '../public/js/forest-homestead-client.js';
+import { orchardRoad } from '../public/js/forest-orchard.js';
 const OWNER = '64b00000000000000000a097';
 describe('main forest homestead integration', () => {
   it('requires an exact account allowlist and refuses production mode/database flags', () => {
@@ -60,6 +61,13 @@ describe('main forest homestead integration', () => {
     args.next.parking = { worldX: stone.x, worldY: stone.y, heading: Math.PI / 2 };
     expect(await geography.arrival(args)).toBeNull();
     expect(await buildForestHomesteadGeography(options).arrival(args)).not.toBeNull();
+    const site = { forkDistance: 840, branchDistance: 490, plots: [] };
+    args.next.orchard = { site, stages: ['undiscovered', 'undiscovered'] };
+    const { cairn, fork } = orchardRoad(args.next.layout, site);
+    args.next.parking = { worldX: cairn.x, worldY: cairn.y, heading: 0 };
+    expect(await geography.arrival(args)).toBeNull();
+    args.next.parking = { worldX: fork.x, worldY: fork.y, heading: 0 };
+    expect(await geography.arrival(args)).not.toBeNull();
   });
   it('only suggests a clearing for an eligible owner without an established home', async () => {
     const h = setup(false);

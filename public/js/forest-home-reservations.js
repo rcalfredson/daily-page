@@ -1,5 +1,6 @@
 // Shared spatial contract. Publication/ownership/terrain checks belong to the server transaction.
 import { constructionHomeFootprint, DEFAULT_HOME_DESIGN } from './forest-construction-design.js';
+import { orchardPlacementAllowed, orchardYardContains, ORCHARD_PLANTING_RADIUS } from './forest-orchard.js';
 
 export const HOME_LAYOUT_VERSION = 1;
 const point = p => p && Object.keys(p).length === 2 && ['x', 'y'].every(k =>
@@ -62,4 +63,12 @@ export function homeTerrainBounds(layout) {
     maxX: Math.max(layout.home.x + 160, ...points.map(p => p.x + 84)),
     minY: Math.min(layout.home.y - 180, ...points.map(p => p.y - 84)),
     maxY: Math.max(layout.home.y + 180, ...points.map(p => p.y + 84)) };
+}
+
+export function orchardPlantingSpace(layout, parking, orchard, point) {
+  const radius = ORCHARD_PLANTING_RADIUS;
+  return orchardYardContains(layout.home, point)
+    && homePlacementAllowed(layout, { ...point, radius, writer: 'garden' })
+    && Math.hypot(point.x - parking.worldX, point.y - parking.worldY) > 110 + radius
+    && (!orchard || orchardPlacementAllowed(layout, orchard, point, radius));
 }

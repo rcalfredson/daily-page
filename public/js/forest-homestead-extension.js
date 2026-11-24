@@ -252,7 +252,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
   }
   async function toggleMount() {
     const { player, busy } = api.state();
-    if (busy || editor.active || saveBlocked()) return;
+    if (busy || editor.active || orchard?.plantingActive() || saveBlocked()) return;
     if (mounted) {
       const spot = cartDismount(cart, clear);
       if (!spot) { say('No clear place to step out. Move to open ground.'); return; }
@@ -318,7 +318,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
     canAct: () => !mounted && !mountRequested && !editor.active && !api.state().busy,
     blocked: saveBlocked, save: (action, extra) => saves.save(action, extra), say }) : null;
   const companionAction = kind => {
-    if (mounted || mountRequested || editor.active || api.state().busy || saveBlocked() || !nearCompanion()) return;
+    if (mounted || mountRequested || editor.active || orchard?.plantingActive() || api.state().busy || saveBlocked() || !nearCompanion()) return;
     api.setPlayer(api.state().player);
     actor.act(kind, api.state().player, companion); api.requestRender();
   };
@@ -332,7 +332,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
   });
   for (const button of bar.querySelectorAll('[data-study-edit]')) button.addEventListener('click', () => {
     const kind = button.dataset.studyEdit;
-    if (mounted || mountRequested || api.state().busy || !nearHome() || (kind === 'cart' && (!cartHome() || needsSupplies()))) return;
+    if (mounted || mountRequested || orchard?.plantingActive() || api.state().busy || !nearHome() || (kind === 'cart' && (!cartHome() || needsSupplies()))) return;
     if (viewport.dataset.moreOpen === 'true') document.querySelector('[data-owner-forest-more]').click();
     api.setPlayer(api.state().player);
     actor.cancel(); editor.open(kind, kind === 'home' ? homeDesign : cart.design);
@@ -377,7 +377,9 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
         && (!hasCart() || !cartFootprint(cart, { animal: mounted }).some(part =>
           Math.hypot(part.worldX - p.worldX, part.worldY - p.worldY) < part.radius + p.radius + Number(mounted)));
     },
-    travelerInteractionAllowed: () => !mounted && !mountRequested && !editor.active,
+    plantingActive: () => orchard?.plantingActive(),
+    plantingKey: event => orchard?.plantingKey(event),
+    travelerInteractionAllowed: () => !mounted && !mountRequested && !editor.active && !orchard?.plantingActive(),
     orchardSurveyStatus: () => orchard?.surveyStatus(),
     surveyOrchard: () => orchard?.survey(),
     travelerFittedCart: () => !saveBlocked() && !previousSaved?.recoveryRequired
@@ -388,7 +390,11 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
       && Math.hypot(p.worldX - cart.worldX, p.worldY - cart.worldY) > 110 + 17,
     hidePlayer: () => mounted,
     playerGesture: () => mounted ? null : actor.snapshot().gesture,
-    reset: integrated ? () => { if (mounted || mountRequested) { say('Step out before returning to the entrance.'); return true; } actor.cancel(); return false; } : recover,
+    reset: integrated ? () => {
+      if (mounted || mountRequested) { say('Step out before returning to the entrance.'); return true; }
+      if (orchard?.plantingActive()) orchard.stopPlanting();
+      actor.cancel(); return false;
+    } : recover,
     move(player, direction, elapsed) {
       if (api.state().busy || document.hidden || editor.active || mounted && saveBlocked()) return player;
       if (!mounted) { actor.walkAway(); return null; }

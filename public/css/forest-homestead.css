@@ -35,6 +35,10 @@
   .home-study-editor h2 { font-size: 16px; }
 }
 .home-study-bar [hidden] { display: none; }
+.orchard-planting { flex-basis: 100%; }
+.owner-forest__garden-preview.orchard-planting .owner-forest__garden-actions { flex-wrap: wrap; }
+[data-orchard-planting] :is(.home-study-workshop, [data-study-mount], [data-companion-action],
+  .owner-forest__tree-context, .owner-forest__hud-actions, .owner-forest__more, [data-garden-near]) { display: none; }
 .amber-clearing-inspection { flex-basis: 100%; min-height: 44px; display: flex; align-items: center; }
 .amber-clearing-inspection p { line-height: 1.4; }
 .amber-clearing-inspection p:empty { flex: none; }

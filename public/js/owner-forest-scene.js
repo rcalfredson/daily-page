@@ -182,6 +182,12 @@ export function ownerForestPlacementAtPoint({
   ))[0]?.placement || null;
 }
 
+export function ownerForestPlacementPoint(player, facingRadians) {
+  const direction = Number.isFinite(facingRadians) ? facingRadians : Math.PI / 2;
+  return { worldX: Math.round(player.worldX + Math.cos(direction) * OWNER_FOREST_MARKER_PREVIEW_DISTANCE),
+    worldY: Math.round(player.worldY + Math.sin(direction) * OWNER_FOREST_MARKER_PREVIEW_DISTANCE) };
+}
+
 export function ownerForestMarkerPreview({
   player,
   facingRadians,
@@ -191,13 +197,7 @@ export function ownerForestMarkerPreview({
   movingObjectId = null,
   writingOrigin = null
 }) {
-  const direction = Number.isFinite(facingRadians) ? facingRadians : Math.PI / 2;
-  const worldX = Math.round(
-    player.worldX + (Math.cos(direction) * OWNER_FOREST_MARKER_PREVIEW_DISTANCE)
-  );
-  const worldY = Math.round(
-    player.worldY + (Math.sin(direction) * OWNER_FOREST_MARKER_PREVIEW_DISTANCE)
-  );
+  const { worldX, worldY } = ownerForestPlacementPoint(player, facingRadians);
   let reason = null;
   if (Math.abs(worldX) > OWNER_FOREST_COORDINATE_LIMIT
     || Math.abs(worldY) > OWNER_FOREST_COORDINATE_LIMIT) {

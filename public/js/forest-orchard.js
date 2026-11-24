@@ -3,7 +3,15 @@ import { terrainPointSegmentDistance } from './owner-forest-terrain.js';
 export const ORCHARD_FORK_DISTANCES = [840, 1060, 680];
 export const ORCHARD_BRANCH_DISTANCES = [490, 660, 390];
 export const ORCHARD_ROAD_WIDTH = 84;
+export const ORCHARD_FORK_CANDIDATES = [...ORCHARD_FORK_DISTANCES, 560, 440, 740, 940, 1180, 620, 500, 380,
+  -240, -360, -480, -600, -720];
+export const ORCHARD_BRANCH_CANDIDATES = [...ORCHARD_BRANCH_DISTANCES, 320, 250];
+export const ORCHARD_BRANCH_WIDTH = 52;
+export const ORCHARD_TRUNK_WIDTH = 64;
 export const ORCHARD_TREE_RADIUS = 16;
+export const ORCHARD_CAIRN_RADIUS = 16;
+export const ORCHARD_CAIRN_ADVANCE = 140;
+export const ORCHARD_PLANTING_RADIUS = 24;
 export const ORCHARD_STAGES = ['undiscovered', 'seed', 'planted', 'harvested'];
 export const ORCHARD_ACTIONS = ['orchard-survey', 'orchard-collect', 'orchard-plant', 'orchard-harvest'];
 
@@ -49,46 +57,70 @@ export function availableOrchardDyes(record) {
 
 const offset = (point, direction, length) => ({ x: point.x + direction.x * length, y: point.y + direction.y * length });
 
-export function orchardRoad(layout, { forkDistance, branchDistance }) {
+export function orchardRoad(layout, { forkDistance, branchDistance, branchDistances }) {
   const end = layout.route.at(-1), before = layout.route.at(-2);
   const direction = { x: Math.sign(end.x - before.x), y: Math.sign(end.y - before.y) };
   const fork = offset(end, direction, forkDistance);
-  const branches = [1, -1].map(sign => {
+  // The far shoulder keeps the cairn visible without putting it in the cart's turn.
+  const cairn = offset(offset(fork, direction, ORCHARD_CAIRN_ADVANCE), { x: direction.y, y: -direction.x }, 65);
+  const branches = [1, -1].map((sign, index) => {
     const side = { x: sign * direction.y, y: -sign * direction.x };
-    return { cue: offset(offset(fork, side, 123), direction, 37), apron: offset(fork, side, branchDistance),
-      tree: offset(fork, side, branchDistance + 113) };
+    const distance = branchDistances?.[index] ?? branchDistance;
+    return { cue: offset(offset(fork, side, 123), direction, 37), apron: offset(fork, side, distance),
+      tree: offset(fork, side, distance + 113) };
   });
-  return { end, fork, branches, route: [...layout.route.slice(0, -1), fork] };
+  return { end, fork, cairn, branches, extendsAmber: forkDistance > 0, route: [...layout.route.slice(0, -1), fork] };
 }
 
 export function orchardPaths(layout, site) {
-  const { end, fork, branches } = orchardRoad(layout, site);
-  return [[end, fork], ...branches.map(({ tree }) => [fork, tree])];
+  const { end, fork, branches, extendsAmber } = orchardRoad(layout, site);
+  return [...(extendsAmber ? [[end, fork]] : []), ...branches.map(({ tree }) => [fork, tree])];
 }
 
-export function orchardPlotLane(home, plot) {
-  const side = Math.sign(plot.x - home.x), edge = plot.x + side * 54;
-  return [{ x: home.x + side * 92, y: home.y + 90 }, { x: edge, y: home.y + 90 }, { x: edge, y: plot.y }];
+export function orchardForkFits(layout, forkDistance) {
+  if (forkDistance > 0) return true;
+  const a = layout.route.at(-2), b = layout.route.at(-1);
+  return Math.hypot(a.x - b.x, a.y - b.y) >= 220 - forkDistance;
 }
 
-export function orchardPlacementAllowed(layout, site, point, radius) {
-  return site.plots.every(plot => {
-    const lane = orchardPlotLane(layout.home, plot);
-    return Math.hypot(plot.x - point.x, plot.y - point.y) > 25 + radius
-      && lane.slice(1).every((b, i) => terrainPointSegmentDistance(point, lane[i], b) > 18 + radius);
-  })
-    && orchardPaths(layout, site).every(([a, b]) =>
-      terrainPointSegmentDistance(point, a, b) > ORCHARD_ROAD_WIDTH + radius);
+export function orchardPlanting(orchard, index) {
+  if (!['planted', 'harvested'].includes(orchard.stages[index])) return null;
+  return orchard.plantings ? orchard.plantings[index] : orchard.site.plots[index];
 }
 
-export function orchardTreeBlocks(tree, disc, from) {
-  const limit = ORCHARD_TREE_RADIUS + disc.radius;
-  const distance = Math.hypot(tree.x - disc.worldX, tree.y - disc.worldY);
+export function orchardYardContains(home, point) {
+  return Math.abs(point.x - home.x) <= 140
+    && Math.abs(point.y - home.y) <= 180 - ORCHARD_PLANTING_RADIUS;
+}
+
+export function orchardPlacementAllowed(layout, orchard, point, radius) {
+  const { site } = orchard;
+  const road = orchardRoad(layout, site);
+  if (Math.hypot(road.cairn.x - point.x, road.cairn.y - point.y) <= ORCHARD_CAIRN_RADIUS + radius) return false;
+  if (site.plots.some((_, index) => {
+    const tree = orchardPlanting(orchard, index);
+    return tree && Math.hypot(tree.x - point.x, tree.y - point.y) <= ORCHARD_PLANTING_RADIUS + radius;
+  })) return false;
+  if (site.version === 2 && [road.fork, ...road.branches.map(branch => branch.apron)]
+    .some(turn => Math.hypot(point.x - turn.x, point.y - turn.y) <= ORCHARD_ROAD_WIDTH + radius)) return false;
+  return orchardPaths(layout, site).every(([a, b], index) => {
+    const width = site.version === 1 ? ORCHARD_ROAD_WIDTH
+      : road.extendsAmber && index === 0 ? ORCHARD_TRUNK_WIDTH : ORCHARD_BRANCH_WIDTH;
+    return terrainPointSegmentDistance(point, a, b) > width + radius;
+  });
+}
+
+function orchardSolidBlocks(point, radius, disc, from) {
+  const limit = radius + disc.radius;
+  const distance = Math.hypot(point.x - disc.worldX, point.y - disc.worldY);
   if (distance > limit) return false;
-  // A tree may be planted under the player. An overlapping walker may step outward.
-  const before = from ? Math.hypot(tree.x - from.worldX, tree.y - from.worldY) : Infinity;
+  // An overlapping walker can step outward when a solid object appears in a saved scene.
+  const before = from ? Math.hypot(point.x - from.worldX, point.y - from.worldY) : Infinity;
   return before > limit || distance <= before;
 }
+
+export const orchardTreeBlocks = (tree, disc, from) => orchardSolidBlocks(tree, ORCHARD_TREE_RADIUS, disc, from);
+export const orchardCairnBlocks = (cairn, disc, from) => orchardSolidBlocks(cairn, ORCHARD_CAIRN_RADIUS, disc, from);
 
 export function orchardPlotApproach(home, plot, player) {
   if (Math.hypot(plot.x - player.worldX, plot.y - player.worldY) <= 49 || player.worldY < plot.y + 28) return null;
@@ -105,7 +137,7 @@ export function orchardPlotApproach(home, plot, player) {
 export function orchardReturnWaypoint(road, player) {
   const point = { x: player.worldX, y: player.worldY };
   if (Math.hypot(point.x - road.fork.x, point.y - road.fork.y) <= 27) return null;
-  const trunkDistance = terrainPointSegmentDistance(point, road.end, road.fork);
+  const trunkDistance = terrainPointSegmentDistance(point, road.route.at(-2), road.fork);
   return road.branches.some(({ tree }) => {
     const distance = terrainPointSegmentDistance(point, road.fork, tree);
     return distance <= ORCHARD_ROAD_WIDTH && distance < trunkDistance;
@@ -113,6 +145,7 @@ export function orchardReturnWaypoint(road, player) {
 }
 
 export function orchardStonePassage(road, player, returning) {
+  if (road.extendsAmber === false) return null;
   const dx = Math.sign(road.fork.x - road.end.x), dy = Math.sign(road.fork.y - road.end.y);
   const relativeX = player.worldX - road.end.x, relativeY = player.worldY - road.end.y;
   const along = relativeX * dx + relativeY * dy;
