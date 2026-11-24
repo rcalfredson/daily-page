@@ -187,6 +187,7 @@ export function createOwnerForestGarden({ navigation: sharedNavigation = null, t
   });
   viewport.addEventListener('keydown', event => {
     if (event.target !== viewport) return;
+    if (!mode && !state().available) return;
     if (!mode && event.key === 'Escape' && carrying) {
       carrying = false; collected = null; say('Cutting put away.'); requestRender();
       event.preventDefault(); event.stopImmediatePropagation(); return;

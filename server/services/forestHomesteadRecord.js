@@ -1,8 +1,8 @@
 import { validateConstructionDesign, constructionCartCost } from '../../public/js/forest-construction-design.js';
 import { validateHomeLayout } from '../../public/js/forest-home-reservations.js';
 import { validForestCompanion } from '../../public/js/forest-companion.js';
-import { ORCHARD_STAGES, ORCHARD_FORK_DISTANCES, ORCHARD_BRANCH_DISTANCES, ORCHARD_DYE_PALETTES,
-  availableOrchardDyes } from '../../public/js/forest-orchard.js';
+import { ORCHARD_STAGES, ORCHARD_FORK_DISTANCES, ORCHARD_BRANCH_DISTANCES, ORCHARD_FORK_CANDIDATES,
+  ORCHARD_BRANCH_CANDIDATES, ORCHARD_DYE_PALETTES, availableOrchardDyes, orchardForkFits, orchardYardContains } from '../../public/js/forest-orchard.js';
 
 export const HOMESTEAD_RECEIPT_LIMIT = 64;
 export const HOMESTEAD_MATERIAL_CAPACITY = Object.freeze({ timber: 96, cloth: 24 });
@@ -20,15 +20,27 @@ export const validHomesteadParking = o => exact(o, ['worldX', 'worldY', 'heading
   && [o.worldX, o.worldY, o.heading].every(Number.isFinite)
   && Math.abs(o.worldX) <= 1e9 && Math.abs(o.worldY) <= 1e9 && Math.abs(o.heading) <= Math.PI;
 
-function validOrchard(orchard, home) {
+export const validOrchardPoint = point => exact(point, ['x', 'y']) && [point.x, point.y]
+  .every(n => Number.isSafeInteger(n) && Math.abs(n) <= 1e9);
+
+function validOrchard(orchard, layout) {
+  const { home } = layout;
   const site = orchard?.site;
-  return exact(orchard, ['site', 'stages']) && exact(site, ['version', 'forkDistance', 'branchDistance', 'plots'])
-    && site.version === 1 && ORCHARD_FORK_DISTANCES.includes(site.forkDistance)
-    && ORCHARD_BRANCH_DISTANCES.includes(site.branchDistance) && Array.isArray(site.plots) && site.plots.length === 2
-    && site.plots.every(p => exact(p, ['x', 'y']) && Number.isSafeInteger(p.x) && Number.isSafeInteger(p.y)
-      && Math.abs(p.x - home.x) <= 140 && Math.abs(p.y - home.y) <= 106)
+  const legacy = site?.version === 1, hasPlantings = Object.hasOwn(orchard || {}, 'plantings');
+  return exact(orchard, ['site', 'stages', ...(hasPlantings ? ['plantings'] : [])])
+    && exact(site, ['version', 'forkDistance', legacy ? 'branchDistance' : 'branchDistances', 'plots'])
+    && (legacy ? ORCHARD_FORK_DISTANCES.includes(site.forkDistance) && ORCHARD_BRANCH_DISTANCES.includes(site.branchDistance)
+      : site.version === 2 && ORCHARD_FORK_CANDIDATES.includes(site.forkDistance) && orchardForkFits(layout, site.forkDistance)
+        && Array.isArray(site.branchDistances) && site.branchDistances.length === 2
+        && [...site.branchDistances].every(distance => ORCHARD_BRANCH_CANDIDATES.includes(distance)))
+    && Array.isArray(site.plots) && site.plots.length === 2
+    && [...site.plots].every(p => validOrchardPoint(p) && orchardYardContains(home, p))
     && Math.hypot(site.plots[0].x - site.plots[1].x, site.plots[0].y - site.plots[1].y) >= 52
-    && Array.isArray(orchard.stages) && orchard.stages.length === 2 && orchard.stages.every(stage => ORCHARD_STAGES.includes(stage));
+    && Array.isArray(orchard.stages) && orchard.stages.length === 2 && [...orchard.stages].every(stage => ORCHARD_STAGES.includes(stage))
+    && (hasPlantings ? Array.isArray(orchard.plantings) && orchard.plantings.length === 2
+      && [...orchard.plantings].every((p, i) => ['planted', 'harvested'].includes(orchard.stages[i])
+        ? validOrchardPoint(p) && orchardYardContains(home, p) : p === null)
+      : legacy || orchard.stages.every(stage => stage === 'undiscovered' || stage === 'seed'));
 }
 
 export class ForestHomesteadError extends Error {
@@ -54,7 +66,7 @@ export function validateHomestead(record, scope) {
     || new Set([record.layoutId, record.homeId, record.cartId]).size !== 3
     || !validateHomeLayout(record.layout) || !validateConstructionDesign('home', record.homeDesign)
     || ((!onboarding || built) && !validateConstructionDesign('cart', record.cartDesign)) || !validHomesteadParking(record.parking)
-    || hasOrchard && !validOrchard(record.orchard, record.layout.home)
+    || hasOrchard && !validOrchard(record.orchard, record.layout)
     || built && Object.hasOwn(ORCHARD_DYE_PALETTES, record.cartDesign.cloth) && !availableOrchardDyes(record).includes(record.cartDesign.cloth)
     || !materials(record.holdings) || !materials(record.cartCommitment)
     || !Object.keys(HOMESTEAD_MATERIAL_CAPACITY).every(k =>

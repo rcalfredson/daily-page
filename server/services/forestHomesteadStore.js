@@ -1,7 +1,7 @@
 import ForestHomestead from '../db/models/ForestHomestead.js';
 import { validateHomestead, ForestHomesteadError } from './forestHomesteadRecord.js';
 import { homePlacementAllowed } from '../../public/js/forest-home-reservations.js';
-import { orchardPaths, orchardPlacementAllowed, orchardPlotLane } from '../../public/js/forest-orchard.js';
+import { orchardPaths, orchardPlacementAllowed, orchardPlanting, orchardRoad } from '../../public/js/forest-orchard.js';
 
 export async function readForestHomesteadStore({ ownerUserId, world, session = null, HomeModel = ForestHomestead }) {
   if (world.schemaVersion === 1) return null;
@@ -19,7 +19,7 @@ export function homesteadPlacementAllowed(home, { worldX, worldY, radius = 17, w
   // This apron covers the entire compound cart AND every supported dismount path.
   return Math.hypot(worldX - home.parking.worldX, worldY - home.parking.worldY) > 110 + radius
     && homePlacementAllowed(home.layout, { x: worldX, y: worldY, radius, writer })
-    && (!home.orchard || orchardPlacementAllowed(home.layout, home.orchard.site, { x: worldX, y: worldY }, radius));
+    && (!home.orchard || orchardPlacementAllowed(home.layout, home.orchard, { x: worldX, y: worldY }, radius));
 }
 
 export async function inspectForestHomesteadReservation({ ownerUserId, world, session, ...candidate }) {
@@ -32,14 +32,21 @@ export async function inspectForestHomesteadReservation({ ownerUserId, world, se
 export function homesteadTerrainProtections(home) {
   if (!home) return [];
   const points = [], { layout } = home;
-  const add = (x, y) => points.push({ id: `home:${home.layoutId}:${points.length}`, x, y, radius: 120 });
+  const add = (x, y, radius = 120) => points.push({ id: `home:${home.layoutId}:${points.length}`, x, y, radius });
   for (let x = -160; x <= 160; x += 80) for (let y = -180; y <= 180; y += 90) add(layout.home.x + x, layout.home.y + y);
-  const orchard = home.orchard ? [...orchardPaths(layout, home.orchard.site),
-    ...home.orchard.site.plots.map(plot => orchardPlotLane(layout.home, plot))] : [];
+  const orchard = home.orchard ? orchardPaths(layout, home.orchard.site) : [];
   for (const path of [layout.approach, layout.route, ...orchard]) for (let i = 1; i < path.length; i++) {
     const a = path[i - 1], b = path[i], n = Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 120);
     for (let j = 0; j <= n; j++) add(Math.round(a.x + (b.x - a.x) * j / n), Math.round(a.y + (b.y - a.y) * j / n));
   }
+  if (home.orchard) for (const index of [0, 1]) {
+    const tree = orchardPlanting(home.orchard, index);
+    if (tree) add(tree.x, tree.y);
+  }
   add(Math.round(home.parking.worldX), Math.round(home.parking.worldY));
+  if (home.orchard) {
+    const { cairn } = orchardRoad(layout, home.orchard.site);
+    add(cairn.x, cairn.y, 24);
+  }
   return points;
 }

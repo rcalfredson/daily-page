@@ -11,10 +11,10 @@ import { DEFAULT_HOME_DESIGN, DEFAULT_CART_DESIGN, validateConstructionDesign,
   HOME_DESIGN_OPTIONS, CART_DESIGN_OPTIONS, TANSY_CART_FRAME } from '../../public/js/forest-construction-design.js';
 import { homeLayoutFromPlan } from '../../public/js/forest-home-reservations.js';
 import { advanceCompanionEncounter, COMPANION_ENCOUNTERS } from '../../public/js/forest-companion.js';
-import { ORCHARD_ACTIONS, ORCHARD_STAGES, ORCHARD_DYE_PALETTES, availableOrchardDyes } from '../../public/js/forest-orchard.js';
+import { ORCHARD_ACTIONS, ORCHARD_STAGES, ORCHARD_DYE_PALETTES, availableOrchardDyes, orchardPlanting } from '../../public/js/forest-orchard.js';
 import { replaceConstructionCommitment, checkConstructionRevision } from './forestConstructionAccounting.js';
 import { validateHomestead, HOMESTEAD_RECEIPT_LIMIT, HOMESTEAD_MATERIAL_CAPACITY,
-  HOMESTEAD_UUID, validHomesteadParking, ForestHomesteadError, homesteadCartCost,
+  HOMESTEAD_UUID, validHomesteadParking, validOrchardPoint, ForestHomesteadError, homesteadCartCost,
   hasHomesteadCart, canDriveHomesteadCart } from './forestHomesteadRecord.js';
 
 const fail = code => { throw new ForestHomesteadError(code); };
@@ -33,6 +33,7 @@ export function canonicalHomesteadCommand(input) {
   if (input?.action === 'park') fields.push('parking');
   if (input?.action === 'companion') fields.push('encounter');
   if (ORCHARD_ACTIONS.slice(1).includes(input?.action)) fields.push('branch');
+  if (input?.action === 'orchard-plant' && Object.hasOwn(input, 'plot')) fields.push('plot');
   if (input?.action === 'establish' && Object.hasOwn(input, 'site')) fields.push('site');
   if (!input || typeof input !== 'object' || Array.isArray(input)
     || !['establish', 'supplies', 'home', 'cart', 'park', 'recover', 'companion', ...ORCHARD_ACTIONS].includes(input.action)
@@ -44,6 +45,7 @@ export function canonicalHomesteadCommand(input) {
     || fields.includes('design') && !validateConstructionDesign(input.action, input.design)
     || fields.includes('parking') && !validHomesteadParking(input.parking)
     || fields.includes('branch') && ![0, 1].includes(input.branch)
+    || fields.includes('plot') && !validOrchardPoint(input.plot)
     || fields.includes('site') && (!input.site || Object.keys(input.site).length !== 2
       || !['x', 'y'].every(key => Number.isSafeInteger(input.site[key]) && Math.abs(input.site[key]) <= 3600))
     || fields.includes('encounter') && !COMPANION_ENCOUNTERS.includes(input.encounter)) fail('HOME_INVALID_INPUT');
@@ -52,13 +54,14 @@ export function canonicalHomesteadCommand(input) {
     ? HOME_DESIGN_OPTIONS : CART_DESIGN_OPTIONS)].map(k => [k, input.design[k]]));
   if (command.parking) command.parking = Object.fromEntries(['worldX', 'worldY', 'heading'].map(k => [k, input.parking[k]]));
   if (command.site) command.site = { x: input.site.x, y: input.site.y };
+  if (command.plot) command.plot = { x: input.plot.x, y: input.plot.y };
   return command;
 }
 
 export function buildForestHomesteadService({ HomeModel = ForestHomestead, WorldModel = ForestOwnerWorld,
   DeletionModel = AccountDeletionRequest, transactionRunner = transact, acquireFence = acquireForestLedgerFence,
   enabled = () => false, guidedStart = false, planSite = unsupported, validatePlacement = unsupported,
-  orchardEnabled = () => false, planOrchard = unsupported,
+  orchardEnabled = () => false, planOrchard = unsupported, validateOrchardPlanting = unsupported,
   clock = () => new Date(), generateId = () => crypto.randomUUID() } = {}) {
   async function authority(ownerUserId, session) {
     if (typeof ownerUserId !== 'string' || !/^[a-f0-9]{24}$/.test(ownerUserId)) fail('HOME_INVALID_INPUT');
@@ -150,6 +153,13 @@ export function buildForestHomesteadService({ HomeModel = ForestHomestead, World
         if (command.branch !== undefined) {
           const stage = ORCHARD_ACTIONS.indexOf(command.action) - 1;
           if (previous.orchard?.stages[command.branch] !== ORCHARD_STAGES[stage]) fail('HOME_ORCHARD_CHANGED');
+          if (command.action === 'orchard-plant') {
+            // Old queued requests still target the saved suggestion.
+            const point = command.plot || previous.orchard.site.plots[command.branch];
+            if (!await validateOrchardPlanting({ ...scope, world, record: previous, point, session })) fail('HOME_ORCHARD_PLANTING_BLOCKED');
+            next.orchard.plantings ||= [0, 1].map(index => orchardPlanting(previous.orchard, index));
+            next.orchard.plantings[command.branch] = point;
+          }
           next.orchard.stages[command.branch] = ORCHARD_STAGES[stage + 1];
         }
         if (command.action === 'cart') {

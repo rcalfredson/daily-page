@@ -149,7 +149,7 @@ export function createForestTraveler(api) {
     status.hidden = !mapOrchard.hidden;
     status.textContent = mapStatus === 'blocked' ? 'Finish the pending forest save before marking the fork.'
       : 'Claim a home clearing first, then come back and I’ll point you there.';
-    line.textContent = '“Keep going past the split stone till you see a low cairn. Take the left branch as you come up the road. The quince tree is beyond a worn patch where you can leave the cart. Bring a seed home. Quince makes a fine cloth dye.”';
+    line.textContent = '“Follow the pale road till you see a low cairn. Take the left branch as you come up the road. The quince tree is beyond a worn patch where you can leave the cart. Bring a seed home. Quince makes a fine cloth dye.”';
     (mapOrchard.hidden ? back : mapOrchard).focus({ preventScroll: true });
     api.requestRender();
   }
