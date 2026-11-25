@@ -12,6 +12,7 @@ import { DEFAULT_HOME_DESIGN, DEFAULT_CART_DESIGN, validateConstructionDesign,
 import { homeLayoutFromPlan } from '../../public/js/forest-home-reservations.js';
 import { advanceCompanionEncounter, COMPANION_ENCOUNTERS } from '../../public/js/forest-companion.js';
 import { ORCHARD_ACTIONS, ORCHARD_STAGES, ORCHARD_DYE_PALETTES, availableOrchardDyes, orchardPlanting } from '../../public/js/forest-orchard.js';
+import { PROVISIONER_SIDES } from '../../public/js/forest-orchard-outing.js';
 import { replaceConstructionCommitment, checkConstructionRevision } from './forestConstructionAccounting.js';
 import { validateHomestead, HOMESTEAD_RECEIPT_LIMIT, HOMESTEAD_MATERIAL_CAPACITY,
   HOMESTEAD_UUID, validHomesteadParking, validOrchardPoint, ForestHomesteadError, homesteadCartCost,
@@ -34,9 +35,10 @@ export function canonicalHomesteadCommand(input) {
   if (input?.action === 'companion') fields.push('encounter');
   if (ORCHARD_ACTIONS.slice(1).includes(input?.action)) fields.push('branch');
   if (input?.action === 'orchard-plant' && Object.hasOwn(input, 'plot')) fields.push('plot');
+  if (input?.action === 'orchard-outing') fields.push('provisionerSide');
   if (input?.action === 'establish' && Object.hasOwn(input, 'site')) fields.push('site');
   if (!input || typeof input !== 'object' || Array.isArray(input)
-    || !['establish', 'supplies', 'home', 'cart', 'park', 'recover', 'companion', ...ORCHARD_ACTIONS].includes(input.action)
+    || !['establish', 'supplies', 'home', 'cart', 'park', 'recover', 'companion', 'orchard-outing', ...ORCHARD_ACTIONS].includes(input.action)
     || Object.keys(input).length !== fields.length || fields.some(f => !Object.hasOwn(input, f))
     || !HOMESTEAD_UUID.test(input.operationId) || !HOMESTEAD_UUID.test(input.forestId)
     || !Number.isSafeInteger(input.expectedRevision) || input.expectedRevision < 0 || input.expectedRevision >= Number.MAX_SAFE_INTEGER
@@ -46,6 +48,7 @@ export function canonicalHomesteadCommand(input) {
     || fields.includes('parking') && !validHomesteadParking(input.parking)
     || fields.includes('branch') && ![0, 1].includes(input.branch)
     || fields.includes('plot') && !validOrchardPoint(input.plot)
+    || fields.includes('provisionerSide') && !PROVISIONER_SIDES.includes(input.provisionerSide)
     || fields.includes('site') && (!input.site || Object.keys(input.site).length !== 2
       || !['x', 'y'].every(key => Number.isSafeInteger(input.site[key]) && Math.abs(input.site[key]) <= 3600))
     || fields.includes('encounter') && !COMPANION_ENCOUNTERS.includes(input.encounter)) fail('HOME_INVALID_INPUT');
@@ -61,7 +64,7 @@ export function canonicalHomesteadCommand(input) {
 export function buildForestHomesteadService({ HomeModel = ForestHomestead, WorldModel = ForestOwnerWorld,
   DeletionModel = AccountDeletionRequest, transactionRunner = transact, acquireFence = acquireForestLedgerFence,
   enabled = () => false, guidedStart = false, planSite = unsupported, validatePlacement = unsupported,
-  orchardEnabled = () => false, planOrchard = unsupported, validateOrchardPlanting = unsupported,
+  orchardEnabled = () => false, planOrchard = unsupported, planOuting = unsupported, validateOrchardPlanting = unsupported,
   clock = () => new Date(), generateId = () => crypto.randomUUID() } = {}) {
   async function authority(ownerUserId, session) {
     if (typeof ownerUserId !== 'string' || !/^[a-f0-9]{24}$/.test(ownerUserId)) fail('HOME_INVALID_INPUT');
@@ -95,7 +98,7 @@ export function buildForestHomesteadService({ HomeModel = ForestHomestead, World
     const command = canonicalHomesteadCommand(input);
     if (typeof ownerUserId !== 'string' || !/^[a-f0-9]{24}$/.test(ownerUserId)) fail('HOME_INVALID_INPUT');
     if (enabled() !== true && command.action !== 'recover') fail('HOME_DISABLED');
-    if (ORCHARD_ACTIONS.includes(command.action) && !orchardEnabled(ownerUserId)) fail('HOME_DISABLED');
+    if ((command.action === 'orchard-outing' || ORCHARD_ACTIONS.includes(command.action)) && !orchardEnabled(ownerUserId)) fail('HOME_DISABLED');
     const digest = crypto.createHash('sha256').update(JSON.stringify(command)).digest('base64url');
     return transactionRunner(async session => {
       await acquireFence({ ownerUserId, session });
@@ -149,6 +152,17 @@ export function buildForestHomesteadService({ HomeModel = ForestHomestead, World
           const site = await planOrchard({ ...scope, world, record: previous, session });
           if (!site) fail('HOME_ORCHARD_UNAVAILABLE');
           next.orchard = { site, stages: ['undiscovered', 'undiscovered'] };
+        }
+        if (command.action === 'orchard-outing') {
+          if (!canDriveHomesteadCart(previous)) fail('HOME_CART_NOT_READY');
+          if (previous.orchard?.outing) fail('HOME_ORCHARD_CHANGED');
+          const geography = { ...scope, world, record: previous, session };
+          const site = previous.orchard?.site || await planOrchard(geography);
+          const provisionerSide = command.provisionerSide;
+          const spurLength = site && await planOuting({ ...geography, site, provisionerSide });
+          if (!spurLength) fail('HOME_OUTING_UNAVAILABLE');
+          next.orchard ||= { site, stages: ['undiscovered', 'undiscovered'] };
+          next.orchard.outing = { version: 1, provisionerSide, spurLength };
         }
         if (command.branch !== undefined) {
           const stage = ORCHARD_ACTIONS.indexOf(command.action) - 1;

@@ -3,13 +3,15 @@ import ForestHomestead from '../server/db/models/ForestHomestead.js';
 import { buildForestHomesteadService, canonicalHomesteadCommand } from '../server/services/forestHomestead.js';
 import { validateHomestead, homesteadCartCost, HOMESTEAD_RECEIPT_LIMIT } from '../server/services/forestHomesteadRecord.js';
 import { DEFAULT_HOME_DESIGN, DEFAULT_CART_DESIGN, TANSY_CART_FRAME, studyCartDesign } from '../public/js/forest-construction-design.js';
-import { stepForestCart } from '../public/js/forest-cart-motion.js';
+import { cartDismount, cartPoseClear, cartSweepClear, stepForestCart } from '../public/js/forest-cart-motion.js';
 import { createHomeStudyFixture, planHomeCartSite } from '../scripts/lib/forestHomeCartStudy.js';
 import { availableOrchardDyes, orchardCairnBlocks, orchardPlotApproach, orchardRoad, orchardStonePassage, orchardTreeBlocks,
   orchardVariety } from '../public/js/forest-orchard.js';
 import { orchardGroundAllows, planForestOrchard } from '../server/services/forestOrchardPlanner.js';
-import { homesteadPlacementAllowed } from '../server/services/forestHomesteadStore.js';
+import { planWalledOrchard, provisionerFits } from '../server/services/forestOrchardOutingPlanner.js';
+import { homesteadPlacementAllowed, homesteadTerrainProtections } from '../server/services/forestHomesteadStore.js';
 import { orchardPlantingSpace } from '../public/js/forest-home-reservations.js';
+import { outingBlocks, provisionerSite, walledOrchardSite, worldPoint } from '../public/js/forest-orchard-outing.js';
 
 const OWNER = '64b00000000000000000a094';
 const FOREST = 'a9400000-0000-4000-8000-000000000001';
@@ -146,6 +148,69 @@ describe('transactional homestead authority', () => {
     expect(read.orchard.site).toEqual(site);
     expect(homesteadPlacementAllowed(read, { worldX: site.plots[0].x, worldY: site.plots[0].y })).toBeFalse();
     expect(orchardRoad(read.layout, site).extendsAmber).toBeTrue();
+  });
+
+  it('adds a reserved outing to an unmapped home, with one quince claim shared by both sources', async () => {
+    const clear = { obstacles: [], terrainAt: () => ({ walkable: true, placeable: true }) };
+    const h = harness({ orchardEnabled: () => true,
+      planOrchard: async ({ record }) => planForestOrchard(record.layout, record.parking, clear, clear),
+      planOuting: async ({ record: { layout }, site, provisionerSide }) => {
+        const stall = provisionerSite(layout, provisionerSide);
+        return provisionerFits(stall, clear) && planWalledOrchard(layout, site, stall, clear);
+      } });
+    const initial = await establish(h);
+    const remember = command('orchard-outing', initial.revision, { provisionerSide: -1 });
+    const opened = await mutate(h, remember);
+    expect(opened.layout).toEqual(initial.layout);
+    expect(opened.parking).toEqual(initial.parking);
+    expect((await mutate(h, remember)).operation.replayed).toBeTrue();
+    const { site, outing } = opened.orchard;
+    const stall = provisionerSite(opened.layout, outing.provisionerSide);
+    const wall = walledOrchardSite(opened.layout, site, outing.spurLength);
+    for (const point of [stall.bay, wall.apron, wall.tree, wall.opening]) {
+      expect(homesteadPlacementAllowed(opened, worldPoint(point))).toBeFalse();
+      expect(homesteadTerrainProtections(opened).some(p => Math.hypot(p.x - point.x, p.y - point.y) <= p.radius)).toBeTrue();
+    }
+    const cart = { ...DEFAULT_CART_DESIGN, supports: TANSY_CART_FRAME };
+    const drive = ({ a, b }, solids) => {
+      const heading = Math.atan2(b.y - a.y, b.x - a.x);
+      const from = { ...worldPoint(a), heading, design: cart }, to = { ...worldPoint(b), heading, design: cart };
+      const passable = p => !outingBlocks(solids, p);
+      const midpoint = { ...from, worldX: (a.x + b.x) / 2, worldY: (a.y + b.y) / 2 };
+      expect(cartPoseClear(to, passable)).toBeTrue();
+      expect(cartSweepClear(from, midpoint, passable)).toBeTrue();
+      expect(cartSweepClear(midpoint, to, passable)).toBeTrue();
+      expect(cartDismount(to, passable)).not.toBeNull();
+      expect(cartSweepClear(to, { ...to, heading: heading + Math.PI }, passable)).toBeTrue();
+    };
+    drive(stall.road, stall.solids);
+    drive(wall.road, wall.solids);
+    expect(outingBlocks(wall.solids, worldPoint(wall.opening, 11))).toBeFalse();
+    expect(outingBlocks(wall.solids, worldPoint(wall.stones[0], 11))).toBeTrue();
+    const collected = await mutate(h, command('orchard-collect', opened.revision, { branch: 0 }));
+    await expectAsync(mutate(h, command('orchard-collect', collected.revision, { branch: 0 })))
+      .toBeRejectedWithError('HOME_ORCHARD_CHANGED');
+    expect((await h.service.read({ ownerUserId: OWNER })).orchard).toEqual(collected.orchard);
+  });
+
+  it('keeps a saved orchard and its harvest when an outing cannot fit or is disabled', async () => {
+    const h = harness({ orchardEnabled: () => true, planOuting: async () => null });
+    const initial = await establish(h);
+    const site = { version: 1, forkDistance: 840, branchDistance: 490,
+      plots: [{ x: initial.layout.home.x + 125, y: initial.layout.home.y - 54 },
+        { x: initial.layout.home.x + 125, y: initial.layout.home.y - 106 }] };
+    h.corrupt(record => ({ ...record, orchard: { site, stages: ['harvested', 'seed'] } }));
+    const before = h.record();
+    const remember = command('orchard-outing', initial.revision, { provisionerSide: -1 });
+    await expectAsync(mutate(h, remember)).toBeRejectedWithError('HOME_OUTING_UNAVAILABLE');
+    expect(h.record()).toEqual(before);
+    const gated = buildForestHomesteadService({ ...h.options, orchardEnabled: () => false });
+    await expectAsync(gated.mutate({ ownerUserId: OWNER, command: remember })).toBeRejectedWithError('HOME_DISABLED');
+    const open = buildForestHomesteadService({ ...h.options, planOuting: async () => 580 });
+    const saved = await open.mutate({ ownerUserId: OWNER, command: remember });
+    expect(saved.orchard.site).toEqual(site);
+    expect(saved.orchard.stages).toEqual(before.orchard.stages);
+    expect(availableOrchardDyes(saved)).toEqual(availableOrchardDyes(before));
   });
 
   it('does not add an orchard when either branch or the home plots lack safe ground', async () => {

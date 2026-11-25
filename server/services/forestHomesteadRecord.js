@@ -3,6 +3,7 @@ import { validateHomeLayout } from '../../public/js/forest-home-reservations.js'
 import { validForestCompanion } from '../../public/js/forest-companion.js';
 import { ORCHARD_STAGES, ORCHARD_FORK_DISTANCES, ORCHARD_BRANCH_DISTANCES, ORCHARD_FORK_CANDIDATES,
   ORCHARD_BRANCH_CANDIDATES, ORCHARD_DYE_PALETTES, availableOrchardDyes, orchardForkFits, orchardYardContains } from '../../public/js/forest-orchard.js';
+import { ORCHARD_SPUR_LENGTHS, PROVISIONER_SIDES, provisionerSite } from '../../public/js/forest-orchard-outing.js';
 
 export const HOMESTEAD_RECEIPT_LIMIT = 64;
 export const HOMESTEAD_MATERIAL_CAPACITY = Object.freeze({ timber: 96, cloth: 24 });
@@ -27,7 +28,11 @@ function validOrchard(orchard, layout) {
   const { home } = layout;
   const site = orchard?.site;
   const legacy = site?.version === 1, hasPlantings = Object.hasOwn(orchard || {}, 'plantings');
-  return exact(orchard, ['site', 'stages', ...(hasPlantings ? ['plantings'] : [])])
+  const hasOuting = Object.hasOwn(orchard || {}, 'outing');
+  return exact(orchard, ['site', 'stages', ...(hasPlantings ? ['plantings'] : []), ...(hasOuting ? ['outing'] : [])])
+    && (!hasOuting || exact(orchard.outing, ['version', 'provisionerSide', 'spurLength'])
+      && orchard.outing.version === 1 && PROVISIONER_SIDES.includes(orchard.outing.provisionerSide)
+      && provisionerSite(layout, orchard.outing.provisionerSide) && ORCHARD_SPUR_LENGTHS.includes(orchard.outing.spurLength))
     && exact(site, ['version', 'forkDistance', legacy ? 'branchDistance' : 'branchDistances', 'plots'])
     && (legacy ? ORCHARD_FORK_DISTANCES.includes(site.forkDistance) && ORCHARD_BRANCH_DISTANCES.includes(site.branchDistance)
       : site.version === 2 && ORCHARD_FORK_CANDIDATES.includes(site.forkDistance) && orchardForkFits(layout, site.forkDistance)

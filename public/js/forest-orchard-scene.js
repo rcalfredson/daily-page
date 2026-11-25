@@ -5,6 +5,8 @@ import { orchardPlantingSpace } from './forest-home-reservations.js';
 import { ownerForestPlacementPoint } from './owner-forest-scene.js';
 import { amberClearingBend } from './forest-amber-clearing.js';
 import { paintAmberTrail } from './forest-homestead-paint.js';
+import { outingBlocks, outingPlacementAllowed, provisionerSite, walledOrchardSite } from './forest-orchard-outing.js';
+import { terrainPointSegmentDistance } from './owner-forest-terrain.js';
 
 const range = (point, pose) => Math.hypot(point.x - pose.worldX, point.y - pose.worldY);
 const nearby = point => ({ worldX: point.x, worldY: point.y });
@@ -17,7 +19,7 @@ function ellipse(ctx, x, y, width, height, color, angle = 0) {
   ctx.fillStyle = color; ctx.fill();
 }
 
-function paintTree(ctx, x, y, { palette, leaf, variant }, form, index, garden) {
+function paintTree(ctx, x, y, { palette, leaf, variant }, form, index, garden, bare) {
   const size = garden ? .76 : 1;
   ctx.save(); ctx.translate(x, y); ctx.scale(size, size);
   ellipse(ctx, 6, 2, 34, 11, 'rgba(20,30,21,.23)', -.08);
@@ -37,14 +39,14 @@ function paintTree(ctx, x, y, { palette, leaf, variant }, form, index, garden) {
     .forEach(([cx, cy, w], i) => ellipse(ctx, cx * spread, cy, w * spread, 5 + i % 3, leaf[(i + 1) % 3], -.32));
   [[-29, -51], [-20, -42], [-7, -top + 2], [12, -top - 5], [24, -top + 17], [15, -47],
     [5, -36], [-31, -60], [31, -43]].forEach(([fx, fy], i) => {
-    if (garden && i % 2) return;
+    if (bare || garden && i % 2) return;
     ellipse(ctx, fx * spread, fy, index ? 3.6 : 4.7, index ? 4.6 : 5, palette[i % 2]);
     ellipse(ctx, fx * spread - 1, fy - 1.6, 1.6, 1.2, palette[2]);
   });
   ctx.restore();
 }
 
-function paintGroveFloor(ctx, x, y, variety, index) {
+function paintGroveFloor(ctx, x, y, variety, index, bare = false) {
   ellipse(ctx, x - 6, y - 4, 69, 32, index ? 'rgba(80,106,66,.31)' : 'rgba(168,153,92,.23)', -.12);
   for (const [dx, dy, lean] of [[-49, -8, -3], [-40, 12, 2], [-30, -19, -2], [29, 17, 4], [42, -8, 2], [55, 5, 4]]) {
     const px = x + dx, py = y + dy;
@@ -52,6 +54,7 @@ function paintGroveFloor(ctx, x, y, variety, index) {
     ctx.lineTo(px + 6, py - 8); ctx.lineTo(px + 4, py); ctx.closePath();
     ctx.fillStyle = variety.leaf[1]; ctx.fill();
   }
+  if (bare) return;
   for (const [dx, dy] of [[-23, 7], [19, 9], [36, -5]]) {
     ellipse(ctx, x + dx + 1, y + dy + 1, 3, 1.8, 'rgba(25,27,18,.28)');
     ellipse(ctx, x + dx, y + dy, 2.6, 2.1, variety.palette[0]);
@@ -65,6 +68,37 @@ function paintCairn(ctx, x, y) {
       ellipse(ctx, x + dx, y + dy, w, h, index % 2 ? '#969884' : '#767d70', -.1);
       ellipse(ctx, x + dx - 2, y + dy - 2, w * .73, h * .48, '#b2af96', -.16);
     });
+}
+
+function paintProvisioner(ctx, x, y) {
+  ctx.save(); ctx.translate(x, y);
+  ellipse(ctx, 2, 1, 37, 12, 'rgba(29,35,24,.29)');
+  ctx.fillStyle = '#5b4434'; ctx.fillRect(-27, -56, 5, 58); ctx.fillRect(23, -56, 5, 56);
+  ctx.fillStyle = '#9b744c'; ctx.fillRect(-30, -31, 60, 31);
+  ctx.fillStyle = '#c7a172'; ctx.fillRect(-33, -34, 66, 6);
+  ctx.fillStyle = '#664d38'; ctx.fillRect(-26, -18, 52, 5);
+  ctx.fillStyle = '#c2b59a';
+  for (const dx of [-17, -7, 13]) {
+    ctx.fillRect(dx, -43, 7, 9);
+    ctx.fillStyle = '#e1d6b6'; ctx.fillRect(dx + 1, -44, 6, 2); ctx.fillStyle = '#c2b59a';
+  }
+  ctx.fillStyle = '#97603f'; ctx.fillRect(-33, -64, 66, 12);
+  for (const dx of [-28, -13, 2, 17]) ctx.fillRect(dx, -53, 9, 5);
+  ctx.fillStyle = '#c48759'; ctx.fillRect(-33, -64, 66, 3);
+  ctx.restore();
+}
+
+function paintWallStone(ctx, x, y) {
+  ellipse(ctx, x + 2, y, 12, 5, 'rgba(32,34,25,.24)');
+  ellipse(ctx, x, y - 5, 11, 8, '#6e7165', -.12);
+  ellipse(ctx, x - 1, y - 12, 11, 7, '#8e9080', .16);
+  ellipse(ctx, x - 2, y - 17, 9, 4, '#a6a28b', .08);
+}
+
+function paintJarSign(ctx, x, y) {
+  ctx.fillStyle = '#604631'; ctx.fillRect(x - 2, y - 24, 4, 25);
+  ctx.fillStyle = '#a9784e'; ctx.fillRect(x - 11, y - 30, 22, 17);
+  ctx.fillStyle = '#e0c89b'; ctx.fillRect(x - 4, y - 25, 8, 9); ctx.fillRect(x - 3, y - 27, 6, 1);
 }
 
 export function createForestOrchardScene({ api, dock, layout, read, canAct, blocked, save, say }) {
@@ -85,6 +119,18 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
   if (api.amberClearingEnabled) dock.append(action, ...choose, toolbar);
   const satchel = document.querySelector('[data-orchard-satchel]');
   let lastRecord, cached, activeAction, planting = null, preview = null;
+  let lastOutingRecord, stall, wall, walledTree;
+  function refreshOuting() {
+    const record = read();
+    if (record === lastOutingRecord) return;
+    lastOutingRecord = record;
+    const outing = record?.orchard?.outing;
+    const side = outing?.provisionerSide ?? record?.provisionerSide;
+    stall = side == null ? null : provisionerSite(layout, side);
+    wall = outing ? walledOrchardSite(layout, record.orchard.site, outing.spurLength) : null;
+    walledTree = wall && { point: wall.tree, index: 0, variety: orchardVariety(record.forestId, 0),
+      form: orchardTreeForm(record.forestId, 0, wall.tree) };
+  }
   function scene() {
     const record = read(), site = record?.orchard?.site;
     if (!site) return null;
@@ -102,22 +148,45 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
     if (!api.amberClearingEnabled || !canAct() || !api.regionLoaded(player)) return null;
     const orchard = read()?.orchard, data = scene();
     if (!data) return null;
+    refreshOuting();
     const choices = orchard.stages.flatMap((stage, branch) => {
       const name = data.varieties[branch].name;
-      if (stage === 'undiscovered') return [{ branch, kind: 'collect', label: `Collect the ${name.toLowerCase()} seed`,
-        at: data.road.branches[branch].tree, notice: `${name} seed in your Satchel. At home, choose its planting spot.` }];
-      if (stage === 'planted') return [{ branch, kind: 'harvest', label: `Pick first ${name.toLowerCase()}`, at: data.trees[branch],
-        notice: `${name} dye is now available under Cloth color at the workshop.` }];
-      return [];
+      const oldQuince = wall && branch === 0;
+      const wild = stage === 'undiscovered' && !oldQuince ? collection(branch, data.road.branches[branch].tree)
+        : { branch, kind: 'inspect', label: oldQuince ? 'Look at the old quince' : `Look at the wild ${name.toLowerCase()}`,
+          at: data.road.branches[branch].tree, notice: oldQuince
+            ? 'There’s no fruit on the old quince. The track beyond the cairn leads to the tree inside the wall.'
+            : wildTreeNotice(branch, stage) };
+      const yard = stage === 'planted' ? { branch, kind: 'harvest', label: `Pick first ${name.toLowerCase()}`, at: data.trees[branch],
+        notice: `${name} dye unlocked. At the workshop, fit a cover and look under Cloth color.` }
+        : { branch, kind: 'inspect', label: `Check your ${name.toLowerCase()} tree`, at: data.trees[branch],
+          notice: 'You’ve picked the first fruit. Its dye is available whenever you fit a cloth cover at the workshop.' };
+      return data.trees[branch] ? [wild, yard] : [wild];
     });
+    if (wall?.inside(player)) {
+      choices.push(orchard.stages[0] === 'undiscovered' ? collection(0, wall.tree) : {
+        branch: 0, kind: 'inspect', label: 'Look at the walled quince', at: wall.tree,
+        notice: wildTreeNotice(0, orchard.stages[0]) });
+    }
     return choices.filter(option => range(option.at, player) <= 52)
       .sort((a, b) => range(a.at, player) - range(b.at, player))[0];
   }
+  function collection(branch, at) {
+    const name = scene().varieties[branch].name;
+    return { branch, kind: 'collect', label: `Collect the ${name.toLowerCase()} seed`, at,
+      notice: `${name} seed in your Satchel. Choose a planting spot at home, or ask Tansy about it on the way back.` };
+  }
+  function wildTreeNotice(branch, stage) {
+    const kind = branch === 0 ? 'quince' : 'damson';
+    if (stage === 'seed') return `You can smell the ${kind} here. Its seed is in your Satchel, ready to plant at home.`;
+    if (stage === 'planted') return `The wild ${kind} is still here. The tree you planted at home has its first fruit.`;
+    return `The wild ${kind} is still here. The fruit from your own tree has given you a dye for your cart cover.`;
+  }
   action.addEventListener('click', async () => {
     const current = nextAction(api.state().player);
-    if (!current || current.branch !== activeAction?.branch || current.kind !== activeAction.kind || blocked()) return;
+    if (!current || current.at !== activeAction?.at || current.kind !== activeAction.kind || current.kind !== 'inspect' && blocked()) return;
     api.focus();
-    if (await save(`orchard-${current.kind}`, { branch: current.branch })) say(current.notice);
+    if (current.kind === 'inspect' || await save(`orchard-${current.kind}`, { branch: current.branch })) say(current.notice);
   });
   const canChoose = () => canAct() && range(layout.home, api.state().player) <= 205;
   function stopPlanting(restoreFocus = true) {
@@ -194,7 +263,7 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
       updatePreview();
       activeAction = planting ? null : nextAction(player);
       action.hidden = !activeAction;
-      action.disabled = Boolean(activeAction && blocked());
+      action.disabled = Boolean(activeAction && activeAction.kind !== 'inspect' && blocked());
       if (activeAction && action.textContent !== activeAction.label) action.textContent = activeAction.label;
       const canPlant = !planting && api.amberClearingEnabled && canChoose(), data = scene(), record = read();
       choose.forEach((button, index) => {
@@ -215,43 +284,91 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
         if (satchel.textContent !== text) satchel.textContent = text;
       }
     },
-    surveyStatus() {
+    provisioner() {
+      refreshOuting();
+      return stall;
+    },
+    progress() {
+      const data = scene(), stages = read()?.orchard?.stages;
+      if (!data) return null;
+      const stage = ['seed', 'planted', 'harvested'].find(value => stages.includes(value));
+      const branch = stages.indexOf(stage);
+      if (branch < 0) return null;
+      return { stage, names: data.varieties.filter((_, i) => stages[i] === stage).map(variety => variety.name),
+        destination: stage === 'harvested' ? 'home' : `orchard-plot-${branch}` };
+    },
+    surveyStatus(walled = false) {
       if (!api.amberClearingEnabled) return null;
+      if (walled) return read()?.orchard?.outing ? 'mapped' : blocked() ? 'blocked' : 'ready';
       return read()?.orchard ? 'mapped' : blocked() ? 'blocked' : 'ready';
     },
-    async survey() {
-      if (this.surveyStatus() === 'ready' && !await save('orchard-survey')) return;
+    async survey(walled = false) {
+      if (this.surveyStatus(walled) === 'ready') {
+        const saved = walled ? await save('orchard-outing', { provisionerSide: read()?.provisionerSide })
+          : await save('orchard-survey');
+        if (!saved) return;
+      }
       if (scene()) {
         api.navigation.navigate('orchard-fork');
-        say('Orchard Fork is in Navigate. The pale road leads as far as the cairn.');
+        say(walled ? 'Follow the compass to the cairn. Look for the road that carries on beyond it.'
+          : 'Orchard Fork is in Navigate. The pale road leads as far as the cairn.');
       }
     },
     destinations(mounted) {
+      refreshOuting();
       const data = scene();
-      if (!data) return [];
+      const provisioner = stall ? [{ id: 'provisioner', label: 'Provisioner’s stall',
+        ...(mounted ? nearby(stall.bay) : stall.tansy), nearbyRadius: mounted ? 42 : 48,
+        waypoint: player => mounted && range(stall.turn, player) > 62 && range(stall.bay, player) > 58
+          ? this.wayHome(player, true) || amberClearingBend(layout.route, player, true)
+            || { ...nearby(stall.turn), label: 'Turn at the stall' } : null }] : [];
+      if (!data) return provisioner;
       const { road } = data, orchard = read().orchard;
-      const slot = orchard.stages.findIndex(stage => stage === 'seed' || stage === 'planted');
-      const plot = data.trees[slot] || orchard.site.plots[slot];
-      const isSuggested = plot === orchard.site.plots[slot] || orchard.site.plots[slot]?.x === plot?.x
-        && orchard.site.plots[slot]?.y === plot?.y;
-      return [{ id: 'orchard-fork', label: 'Orchard Fork', ...nearby(road.fork), nearbyRadius: 64,
-        waypoint: player => mounted ? orchardReturnWaypoint(road, player) || orchardStonePassage(road, player, false)
+      const plots = orchard.stages.flatMap((stage, branch) => {
+        if (!['seed', 'planted'].includes(stage)) return [];
+        const suggested = orchard.site.plots[branch], plot = data.trees[branch] || suggested;
+        const isSuggested = suggested.x === plot.x && suggested.y === plot.y;
+        return [{ id: `orchard-plot-${branch}`,
+          label: stage === 'seed' ? `Plant ${data.varieties[branch].name.toLowerCase()}` : `${data.varieties[branch].name} tree at home`,
+          ...nearby(plot), nearbyRadius: 49,
+          waypoint: player => mounted ? this.wayHome(player, true)
+            : isSuggested && range(layout.home, player) <= 280 ? orchardPlotApproach(layout.home, plot, player) : null }];
+      });
+      return [...provisioner, { id: 'orchard-fork', label: 'Orchard Fork', ...nearby(road.fork), nearbyRadius: 64,
+        waypoint: player => mounted ? this.stallExit(player) || orchardReturnWaypoint(road, player) || orchardStonePassage(road, player, false)
           || amberClearingBend(road.route, player, false) : null },
-      ...(slot < 0 ? [] : [{ id: 'orchard-plot', label: orchard.stages[slot] === 'seed' ? 'Suggested orchard spot' : 'Fruit tree at home',
-        ...nearby(plot), nearbyRadius: 49,
-        waypoint: player => mounted ? this.wayHome(player, true)
-          : isSuggested && range(layout.home, player) <= 280 ? orchardPlotApproach(layout.home, plot, player) : null }])];
+      ...(wall ? [{ id: 'walled-orchard', label: 'Orchard wall pull-off', ...nearby(wall.apron), nearbyRadius: 42,
+          waypoint: player => {
+            if (!mounted || this.onSpur(player) || range(road.fork, player) <= 60) return null;
+            return this.stallExit(player) || orchardStonePassage(road, player, false) || amberClearingBend(road.route, player, false)
+              || { ...nearby(road.fork), label: 'Fork' };
+          } }] : []),
+      ...plots];
+    },
+    onSpur(player) {
+      return wall && terrainPointSegmentDistance({ x: player.worldX, y: player.worldY }, wall.fork, wall.apron) <= 80;
+    },
+    stallExit(player) {
+      if (!stall || range(stall.bay, player) > 95) return null;
+      const lateral = terrainPointSegmentDistance({ x: player.worldX, y: player.worldY }, ...layout.route.slice(0, 2));
+      return lateral > 40 ? { ...nearby(stall.turn), label: 'Road' } : null;
     },
     wayHome(player, mounted) {
+      refreshOuting();
       const data = scene();
-      return data && mounted ? orchardReturnWaypoint(data.road, player) || orchardStonePassage(data.road, player, true)
-        || amberClearingBend(data.road.route, player, true) : null;
+      if (!mounted) return null;
+      return this.stallExit(player) || (data ? (this.onSpur(player) && range(wall.fork, player) > 48 ? { ...nearby(wall.fork), label: 'Fork' } : null)
+        || orchardReturnWaypoint(data.road, player) || orchardStonePassage(data.road, player, true)
+        || amberClearingBend(data.road.route, player, true) : null);
     },
     placementAllowed(point, radius) {
       const orchard = read()?.orchard;
-      return !orchard || orchardPlacementAllowed(layout, orchard, point, radius);
+      return (!orchard || orchardPlacementAllowed(layout, orchard, point, radius))
+        && (!orchard?.outing || outingPlacementAllowed(layout, orchard, point, radius));
     },
     blocks(disc, from) {
+      refreshOuting();
+      if (stall && outingBlocks(stall.solids.slice(0, 1), disc, from) || wall && outingBlocks(wall.solids, disc, from)) return true;
       const data = scene();
       if (!data) return false;
       return orchardCairnBlocks(data.road.cairn, disc, from)
@@ -259,13 +376,30 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
         || data.trees.some(tree => tree && orchardTreeBlocks(tree, disc, from));
     },
     distance(player) {
+      refreshOuting();
+      const outingDistance = Math.min(stall ? range(stall.stall, player) : Infinity,
+        wall ? Math.min(range(wall.apron, player), range(wall.tree, player)) : Infinity);
       const data = scene();
-      if (!data) return Infinity;
+      if (!data) return outingDistance;
       const { site, stages } = read().orchard;
       const revealed = site.plots.flatMap((plot, index) => data.trees[index] || (stages[index] === 'seed' ? [plot] : []));
-      return Math.min(...data.road.branches.map(branch => range(branch.tree, player)), ...revealed.map(p => range(p, player)));
+      return Math.min(outingDistance, ...data.road.branches.map(branch => range(branch.tree, player)), ...revealed.map(p => range(p, player)));
     },
     paintGround(ctx, camera) {
+      refreshOuting();
+      if (stall) {
+        paintAmberTrail(ctx, [stall.turn, stall.bay], camera);
+        ctx.save();
+        ctx.strokeStyle = 'rgba(182,160,113,.24)'; ctx.lineWidth = 12; ctx.lineCap = 'round'; ctx.setLineDash([9, 13]);
+        ctx.beginPath(); ctx.moveTo(stall.bay.x - camera.x, stall.bay.y - camera.y);
+        ctx.lineTo(stall.footpath.b.x - camera.x, stall.footpath.b.y - camera.y); ctx.stroke();
+        ctx.restore();
+      }
+      if (wall) {
+        paintAmberTrail(ctx, [wall.fork, wall.apron], camera);
+        ellipse(ctx, wall.opening.x - camera.x, wall.opening.y - camera.y, 12, 8, 'rgba(194,172,126,.3)');
+        if (visible(wall.tree, camera)) paintGroveFloor(ctx, wall.tree.x - camera.x, wall.tree.y - camera.y, walledTree.variety, 0);
+      }
       const data = scene();
       if (!data) return;
       const { end, fork, branches, extendsAmber } = data.road;
@@ -278,7 +412,8 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
         ellipse(ctx, apron.x - camera.x, apron.y - camera.y, 31, 19, 'rgba(177,166,116,.24)');
       }
       branches.forEach(({ tree }, index) => {
-        if (visible(tree, camera)) paintGroveFloor(ctx, tree.x - camera.x, tree.y - camera.y, data.varieties[index], index);
+        if (visible(tree, camera)) paintGroveFloor(ctx, tree.x - camera.x, tree.y - camera.y, data.varieties[index], index,
+          Boolean(wall && index === 0));
       });
       const { site, stages } = read().orchard;
       site.plots.forEach((suggested, index) => {
@@ -302,21 +437,30 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
       ctx.restore();
     },
     depthItems(camera) {
+      refreshOuting();
+      const outing = [...(stall ? [{ point: stall.stall, stall: true }, { point: stall.sign, sign: true }] : []),
+        ...(wall ? [walledTree, ...wall.stones.map(point => ({ point, stone: true }))] : [])];
+      const items = list => list.filter(item => visible(item.point, camera)).map(item => ({
+        ...item, kind: 'extension', type: 'orchard', id: `orchard-${item.point.x}:${item.point.y}`, worldY: item.point.y
+      }));
       const data = scene();
-      if (!data) return [];
+      if (!data) return items(outing);
       const { road, varieties, wildForms, yardForms } = data;
-      const trees = road.branches.map(({ tree }, index) => ({ point: tree, index, variety: varieties[index], form: wildForms[index] }));
+      const trees = road.branches.map(({ tree }, index) => ({ point: tree, index, variety: varieties[index],
+        form: wildForms[index], bare: Boolean(wall && index === 0) }));
       const planted = data.trees.flatMap((point, index) => point
-        ? [{ point, index, variety: varieties[index], form: yardForms[index], garden: true }] : []);
+        ? [{ point, index, variety: varieties[index], form: yardForms[index], garden: true,
+          bare: read().orchard.stages[index] === 'harvested' }] : []);
       const ghost = preview && planting ? [{ point: { x: preview.worldX, y: preview.worldY }, garden: true, ghost: true,
         index: planting.branch, variety: varieties[planting.branch], form: preview.form }] : [];
-      return [{ point: road.cairn, cairn: true }, { point: road.branches[1].cue, cue: true }, ...trees, ...planted, ...ghost]
-        .filter(item => visible(item.point, camera)).map(item => ({ ...item, kind: 'extension', type: 'orchard',
-          id: `orchard-${item.point.x}:${item.point.y}`, worldY: item.point.y }));
+      return items([{ point: road.cairn, cairn: true }, { point: road.branches[1].cue, cue: true }, ...trees, ...planted, ...ghost, ...outing]);
     },
     paint(ctx, item, camera) {
       const x = item.point.x - camera.x, y = item.point.y - camera.y;
-      if (item.cairn) paintCairn(ctx, x, y);
+      if (item.stall) paintProvisioner(ctx, x, y);
+      else if (item.sign) paintJarSign(ctx, x, y);
+      else if (item.stone) paintWallStone(ctx, x, y);
+      else if (item.cairn) paintCairn(ctx, x, y);
       else if (item.cue) {
         for (let i = 0; i < 7; i++) {
           const dx = i * 5 - 17, dy = (i * 7 % 13) - 5;
@@ -326,7 +470,7 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
       } else {
         ctx.save();
         if (item.ghost) ctx.globalAlpha = .55;
-        paintTree(ctx, x, y, item.variety, item.form, item.index, item.garden);
+        paintTree(ctx, x, y, item.variety, item.form, item.index, item.garden, item.bare);
         ctx.restore();
       }
     }

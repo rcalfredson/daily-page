@@ -11,6 +11,8 @@ import { orchardCairnBlocks, orchardRoad, orchardTreeBlocks, orchardPlanting, OR
   ORCHARD_BRANCH_CANDIDATES, ORCHARD_CAIRN_ADVANCE, ORCHARD_CAIRN_RADIUS } from '../../public/js/forest-orchard.js';
 import { orchardPlantingSpace } from '../../public/js/forest-home-reservations.js';
 import { orchardGroundAllows, planForestOrchard } from './forestOrchardPlanner.js';
+import { planWalledOrchard, provisionerBounds, provisionerFits, walledOrchardBounds } from './forestOrchardOutingPlanner.js';
+import { outingBlocks, PROVISIONER_SIDES, provisionerSite, walledOrchardSite } from '../../public/js/forest-orchard-outing.js';
 import { planHomeCartSite } from './forestHomeSitePlanner.js';
 import { ForestHomesteadError } from './forestHomesteadRecord.js';
 
@@ -82,6 +84,33 @@ export function buildForestHomesteadGeography({ TreeModel = ForestWritingTree, M
     const land = await geography(args, { minX: point.x - 40, maxX: point.x + 40, minY: point.y - 40, maxY: point.y + 40 });
     return orchardGroundAllows(land, point);
   }
+  async function checkProvisioner(args, layout, side) {
+    const bounds = provisionerBounds(layout, side);
+    if (!bounds) return false;
+    try {
+      return provisionerFits(provisionerSite(layout, side), await geography(args, bounds));
+    } catch (error) {
+      if (error.code === 'HOME_GEOGRAPHY_UNAVAILABLE') return false;
+      throw error;
+    }
+  }
+  async function suggestProvisioner({ record, ...args }) {
+    for (const side of PROVISIONER_SIDES) {
+      if (await checkProvisioner(args, record.layout, side)) return side;
+    }
+    return null;
+  }
+  async function planOuting({ record, site, provisionerSide, ...args }) {
+    const { layout } = record;
+    if (!await checkProvisioner(args, layout, provisionerSide)) return null;
+    const stall = provisionerSite(layout, provisionerSide);
+    try {
+      return planWalledOrchard(layout, site, stall, await geography(args, walledOrchardBounds(layout, site)));
+    } catch (error) {
+      if (error.code === 'HOME_GEOGRAPHY_UNAVAILABLE') return null;
+      throw error;
+    }
+  }
   async function arrival({ next, ...args }) {
     const { worldX: x, worldY: y } = next.parking;
     const landscape = await geography(args, { minX: x - 160, maxX: x + 160, minY: y - 160, maxY: y + 160 });
@@ -93,13 +122,20 @@ export function buildForestHomesteadGeography({ TreeModel = ForestWritingTree, M
       ...orchardRoadLayout.branches.map(branch => branch.tree),
       ...[0, 1].map(index => orchardPlanting(next.orchard, index)).filter(Boolean)
     ] : [];
+    const outing = next.orchard?.outing;
+    const stall = outing && provisionerSite(next.layout, outing.provisionerSide);
+    const outingSolids = outing ? [
+      ...(amberClearingEnabled(args.ownerUserId) ? stall.solids : stall.solids.slice(0, 1)),
+      ...walledOrchardSite(next.layout, next.orchard.site, outing.spurLength).solids
+    ] : [];
     const clear = p => Math.abs(p.worldX) + p.radius < 999_980_000 && Math.abs(p.worldY) + p.radius < 999_980_000
       && !discIntersectsRectangle(p, house) && (!stone || !discIntersectsRectangle(p, stone)) && landscape.terrainAt(p).walkable
       && (!orchardRoadLayout || !orchardCairnBlocks(orchardRoadLayout.cairn, p))
       && landscape.obstacles.every(o => Math.hypot(o.x - p.worldX, o.y - p.worldY) > o.collisionRadius + p.radius)
-      && orchardTrees.every(tree => !orchardTreeBlocks(tree, p));
+      && orchardTrees.every(tree => !orchardTreeBlocks(tree, p)) && !outingBlocks(outingSolids, p);
     const cart = { ...next.parking, design: next.cartDesign || DEFAULT_CART_DESIGN };
     return cartPoseClear(cart, clear) ? cartDismount(cart, clear) : null;
   }
-  return { planSite, planOrchard, validateOrchardPlanting, arrival, validatePlacement: async args => Boolean(await arrival(args)) };
+  return { planSite, planOrchard, planOuting, suggestProvisioner, validateOrchardPlanting, arrival,
+    validatePlacement: async args => Boolean(await arrival(args)) };
 }
