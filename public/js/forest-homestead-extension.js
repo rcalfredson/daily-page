@@ -380,8 +380,10 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
     plantingActive: () => orchard?.plantingActive(),
     plantingKey: event => orchard?.plantingKey(event),
     travelerInteractionAllowed: () => !mounted && !mountRequested && !editor.active && !orchard?.plantingActive(),
-    orchardSurveyStatus: () => orchard?.surveyStatus(),
-    surveyOrchard: () => orchard?.survey(),
+    provisioner: () => orchard?.provisioner(),
+    orchardProgress: () => orchard?.progress(),
+    orchardSurveyStatus: walled => orchard?.surveyStatus(walled),
+    surveyOrchard: walled => orchard?.survey(walled),
     travelerFittedCart: () => !saveBlocked() && !previousSaved?.recoveryRequired
       && previousSaved?.cartDesign?.supports === TANSY_CART_FRAME
       ? previousSaved.parking : null,

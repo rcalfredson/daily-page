@@ -72,7 +72,7 @@ export function createOwnerForestGarden({ navigation: sharedNavigation = null, t
   function rebuild() {
     count.textContent = `${data.cuttings} / 8 cuttings · ${data.plants.length} / 24 planted`;
     cuttingCanvas.dataset.empty = String(data.cuttings === 0);
-    open.textContent = `Satchel · ${data.cuttings}`;
+    open.textContent = `Satchel · ${data.cuttings} ${data.cuttings === 1 ? 'cutting' : 'cuttings'}`;
     const focusedId = list.contains(document.activeElement) ? document.activeElement.dataset.plantId : null;
     list.replaceChildren();
     data.plants.forEach((p, index) => {

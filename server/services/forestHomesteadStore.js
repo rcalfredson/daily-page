@@ -2,6 +2,7 @@ import ForestHomestead from '../db/models/ForestHomestead.js';
 import { validateHomestead, ForestHomesteadError } from './forestHomesteadRecord.js';
 import { homePlacementAllowed } from '../../public/js/forest-home-reservations.js';
 import { orchardPaths, orchardPlacementAllowed, orchardPlanting, orchardRoad } from '../../public/js/forest-orchard.js';
+import { outingPlacementAllowed, outingReservations, provisionerSite, walledOrchardSite } from '../../public/js/forest-orchard-outing.js';
 
 export async function readForestHomesteadStore({ ownerUserId, world, session = null, HomeModel = ForestHomestead }) {
   if (world.schemaVersion === 1) return null;
@@ -19,7 +20,8 @@ export function homesteadPlacementAllowed(home, { worldX, worldY, radius = 17, w
   // This apron covers the entire compound cart AND every supported dismount path.
   return Math.hypot(worldX - home.parking.worldX, worldY - home.parking.worldY) > 110 + radius
     && homePlacementAllowed(home.layout, { x: worldX, y: worldY, radius, writer })
-    && (!home.orchard || orchardPlacementAllowed(home.layout, home.orchard, { x: worldX, y: worldY }, radius));
+    && (!home.orchard || orchardPlacementAllowed(home.layout, home.orchard, { x: worldX, y: worldY }, radius))
+    && (!home.orchard?.outing || outingPlacementAllowed(home.layout, home.orchard, { x: worldX, y: worldY }, radius));
 }
 
 export async function inspectForestHomesteadReservation({ ownerUserId, world, session, ...candidate }) {
@@ -47,6 +49,17 @@ export function homesteadTerrainProtections(home) {
   if (home.orchard) {
     const { cairn } = orchardRoad(layout, home.orchard.site);
     add(cairn.x, cairn.y, 24);
+  }
+  if (home.orchard?.outing) {
+    const { provisionerSide, spurLength } = home.orchard.outing;
+    for (const { a, b, width } of outingReservations(provisionerSite(layout, provisionerSide),
+      walledOrchardSite(layout, home.orchard.site, spurLength))) {
+      const n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 120));
+      for (let j = 0; j <= (a === b ? 0 : n); j++) {
+        add(Math.round(a.x + (b.x - a.x) * j / n), Math.round(a.y + (b.y - a.y) * j / n),
+          a === b ? Math.max(24, width) : Math.ceil(Math.hypot(60, width)) + 1);
+      }
+    }
   }
   return points;
 }

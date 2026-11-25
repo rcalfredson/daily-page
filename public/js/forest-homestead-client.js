@@ -41,6 +41,7 @@ export function createHomesteadClient({ initial, request = (...args) => globalTh
         status = 'conflict'; message = action === 'establish' ? 'Find the suggested clearing again.'
           : action === 'companion' ? 'This encounter changed in another visit or could not be saved. Review the current encounter and try again.'
           : error.message === 'HOME_ORCHARD_UNAVAILABLE' ? 'There’s no clear orchard road and planting space off this homestead.'
+          : error.message === 'HOME_OUTING_UNAVAILABLE' ? 'There’s no clear way from this road to the walled orchard.'
           : error.message === 'HOME_ORCHARD_PLANTING_BLOCKED' ? 'That spot is blocked. Your seed is still in the Satchel. Try another spot.'
           : error.message === 'HOME_ORCHARD_CHANGED' ? 'The orchard changed in another visit. Review what’s available and try again.'
           : error.message === 'CONSTRUCTION_CONFLICT' ? 'Another visit changed this save. Your draft is still here; review it and save again.' : 'The save was declined. Your draft is still here; review it and try again.';

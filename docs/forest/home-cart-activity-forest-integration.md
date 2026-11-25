@@ -235,3 +235,41 @@ homestead. All 22 selected routes passed swept clearance checks with the largest
 including the branch turns and dismounts. These are synthetic coverage checks. The review
 account uses terrain-free ground.
 Existing mapped routes, planted trees, and dye unlocks keep their saved state.
+
+## Walled orchard outing
+
+The provisioner’s stall tests the outward trip in the ordinary development-gated forest. A
+ready-to-drive homestead can get a stall beside the road toward Amber Clearing. If the stall is
+available when you enter the forest, Tansy stays there for the visit and still offers the frame
+and the Amber Clearing tip. Otherwise, look for her cart near the entrance.
+
+```bash
+source /home/robert/.nvm/nvm.sh
+nvm use 24.15.0
+FOREST_APPLICATION_OUTING_REVIEW=true FOREST_APPLICATION_PREVIEW_PORT=44317 npm run forest:homestead-application
+```
+
+1. Open `http://127.0.0.1:44317/en/forest`. The reserved preview owner starts with a cart and
+   Mallow. Head along the pale road toward Amber Clearing, or select **Provisioner’s stall** in
+   **More → Navigate**.
+2. Pull off beside the stall, step out, and ask Tansy **Seen any fruit trees?** Choose
+   **Remember the orchard road**. The compass points toward Orchard Fork. Stop at the split
+   stone if the route takes you there and you feel like exploring.
+3. At the cairn, look for the track that carries on beyond the original two branches. Use
+   **Orchard wall pull-off** in Navigate if you want a bearing to the parking patch.
+4. Step out and explore the wall on foot. If you find quince and have yet to collect a seed for
+   that family, take one home and choose a planting spot. You can also bring it past the stall
+   and ask Tansy for directions to a suggested spot. You can inspect the wild trees again after
+   collecting. Reload to check the saved outing and seed or tree.
+
+The preview retains progress. Existing Orchard Fork saves may add the spur without changing
+their fork, trees, or dyes. With the spur mapped, the original quince is a landmark and the
+walled quince supplies the family’s seed. Damson still grows on its own branch. An existing
+quince seed, planting, or dye counts as the same family discovery. The server checks and reserves
+the new space when you remember the road. If there’s no clear layout, the original forest and
+its saved routes remain available. The shelf is scenery in this increment. Repeat harvests and
+preserves are the next part of the playtest.
+
+The Firefox walkthrough exercised Tansy’s stall clue, parking and leaving the lay-by, driving to
+the wall, entering on foot, picking up a seed, and reloading. The reserved walkthrough used
+terrain-free ground. It also checked containment at 390px with keyboard input.

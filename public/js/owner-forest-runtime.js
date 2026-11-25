@@ -245,8 +245,10 @@ export function startOwnerForest({ createExtension = () => null, createTraveler,
     canRest: p => extension?.travelerSiteAllowed?.(p) !== false,
     canTalk: () => extension?.travelerInteractionAllowed?.() !== false,
     fittedCart: () => extension?.travelerFittedCart?.(),
-    orchardStatus: () => extension?.orchardSurveyStatus?.(),
-    surveyOrchard: () => extension?.surveyOrchard?.()
+    provisioner: () => extension?.provisioner?.(),
+    orchardProgress: () => extension?.orchardProgress?.(),
+    orchardStatus: walled => extension?.orchardSurveyStatus?.(walled),
+    surveyOrchard: walled => extension?.surveyOrchard?.(walled)
   });
 
   function cellQuery(cells) {

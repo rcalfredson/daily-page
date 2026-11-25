@@ -1,5 +1,6 @@
 import { JSDOM } from 'jsdom';
 import { createForestTraveler, findTravelerRestSite, travelerBlocksMovement } from '../public/js/forest-traveler.js';
+import { provisionerSite } from '../public/js/forest-orchard-outing.js';
 import { moveOwnerForestPlayer } from '../public/js/owner-forest-scene.js';
 import { buildForestTravelerRouteHandler } from '../server/api/v1/forestTraveler.js';
 
@@ -7,9 +8,27 @@ const OWNER = '507f1f77bcf86cd799439011';
 const FOREST = '11111111-1111-4111-8111-111111111111';
 
 describe('Tansy’s offer after a save error', () => {
-  let dom, previous, memory;
+  let dom, previous, memory, traveler, destinations, player;
+  const spawn = { worldX: 0, worldY: 0, radius: 11 };
   const control = name => document.querySelector(`[data-forest-traveler-${name}]`);
   const choices = () => [...control('dialog').querySelectorAll('button:not([hidden])')].map(button => button.textContent);
+
+  function startTraveler(provisioner, orchardProgress, navigate) {
+    traveler = createForestTraveler({
+      memory, spawn, provisioner, orchardProgress, navigation: { navigate, register(_group, provider) { destinations = provider; } },
+      state: () => ({ player, busy: false, placements: [],
+        terrain: { sample: () => ({ placeable: true }), canMove: () => true } }),
+      regionLoaded: () => true, canRest: () => true, occupied: () => false,
+      canTalk: () => true, fittedCart: () => null, requestRender() {}, focus() {}
+    });
+    traveler.update(0);
+  }
+
+  function approachTansy(time) {
+    const [tansy] = destinations();
+    player = { ...spawn, worldX: tansy.worldX - 40, worldY: tansy.worldY };
+    traveler.update(time);
+  }
 
   beforeEach(() => {
     dom = new JSDOM(`<button data-forest-traveler-talk>Talk to Tansy</button>
@@ -17,6 +36,9 @@ describe('Tansy’s offer after a save error', () => {
         <p data-forest-traveler-line></p><p data-forest-traveler-status hidden></p>
         <button data-forest-traveler-ask>Did you make that canopy?</button>
         <button data-forest-traveler-road>Know any good roads?</button>
+        <button data-forest-traveler-orchard>Seen any fruit trees?</button>
+        <button data-forest-traveler-orchard-progress hidden></button>
+        <button data-forest-traveler-map-orchard hidden></button>
         <button data-forest-traveler-remember hidden>Remember the clearing</button>
         <button data-forest-traveler-back hidden>Back</button>
         <button data-forest-traveler-accept hidden>Take the frame</button>
@@ -31,19 +53,7 @@ describe('Tansy’s offer after a save error', () => {
     dialog.show = () => { dialog.open = true; };
     dialog.close = () => { dialog.open = false; };
     memory = { forestId: FOREST, introduced: false, frameOwned: false };
-    const spawn = { worldX: 0, worldY: 0, radius: 11 };
-    let player = spawn, destinations;
-    const traveler = createForestTraveler({
-      memory, spawn, navigation: { register(_group, provider) { destinations = provider; } },
-      state: () => ({ player, busy: false, placements: [],
-        terrain: { sample: () => ({ placeable: true }), canMove: () => true } }),
-      regionLoaded: () => true, canRest: () => true, occupied: () => false,
-      canTalk: () => true, fittedCart: () => null, requestRender() {}, focus() {}
-    });
-    traveler.update(0);
-    const [tansy] = destinations();
-    player = { ...spawn, worldX: tansy.worldX - 40, worldY: tansy.worldY };
-    traveler.update(1);
+    player = spawn;
   });
 
   afterEach(() => {
@@ -57,6 +67,8 @@ describe('Tansy’s offer after a save error', () => {
     ['accept', 'Take the frame', true], ['finish', 'Maybe later', false]
   ]) {
     it(`restores both choices and lets the player retry ${action}`, async () => {
+      startTraveler();
+      approachTansy(1);
       const request = spyOn(globalThis, 'fetch').and.returnValues(
         Promise.reject(new TypeError('Simulated network failure')),
         Promise.resolve({ ok: true, json: async () => ({ introduced: true, frameOwned }) })
@@ -82,6 +94,8 @@ describe('Tansy’s offer after a save error', () => {
   }
 
   it('lets a first-time visitor remember the clearing independently of the frame', async () => {
+    startTraveler();
+    approachTansy(1);
     const request = spyOn(globalThis, 'fetch').and.resolveTo({ ok: true, json: async () => ({ amberClearingClue: true }) });
     control('talk').click();
     control('road').click();
@@ -95,6 +109,42 @@ describe('Tansy’s offer after a save error', () => {
     expect(choices()).toContain('Did you make that canopy?');
     control('road').click();
     expect(choices()).toEqual(['Back']);
+  });
+
+  it('keeps Tansy at the stall through an approach and return to the entrance', () => {
+    const stall = provisionerSite({ route: [{ x: 400, y: 90 }, { x: 1600, y: 90 }] }, -1);
+    startTraveler(() => stall);
+    const [destination] = destinations();
+    expect(destination).toEqual(jasmine.objectContaining({ ...stall.tansy, label: 'Tansy at the stall' }));
+    expect(traveler.depthItems({ x: -160, y: -150, width: 500, height: 400 })).toEqual([]);
+    expect(control('talk').hidden).toBeTrue();
+
+    approachTansy(600);
+    expect(control('talk').hidden).toBeFalse();
+    expect(traveler.startConversation()).toBeTrue();
+    expect(control('line').textContent).toContain('Name’s Tansy Rook');
+    expect(choices()).toContain('Did you make that canopy?');
+    traveler.close();
+
+    player = spawn;
+    traveler.update(1200);
+    expect(destinations()).toEqual([destination]);
+    expect(control('talk').hidden).toBeTrue();
+  });
+
+  it('recognizes a collected seed and offers optional planting guidance', () => {
+    const navigate = jasmine.createSpy('navigate').and.returnValue(true);
+    startTraveler(null, () => ({ stage: 'seed', names: ['Honey quince'], destination: 'orchard-plot-0' }), navigate);
+    approachTansy(1);
+    expect(traveler.startConversation()).toBeTrue();
+    expect(control('line').textContent).toContain('where to plant it');
+    expect(choices()).toContain('I brought back a seed');
+    control('orchard-progress').click();
+    expect(control('line').textContent).toContain('Honey quince');
+    expect(choices()).toContain('Guide me to a planting spot');
+    control('map-orchard').click();
+    expect(navigate).toHaveBeenCalledOnceWith('orchard-plot-0');
+    expect(control('dialog').open).toBeFalse();
   });
 });
 

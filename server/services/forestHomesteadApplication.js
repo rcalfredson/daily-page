@@ -2,7 +2,7 @@ import ForestOwnerWorld from '../db/models/ForestOwnerWorld.js';
 import { buildForestHomesteadService } from './forestHomestead.js';
 import { buildForestHomesteadGeography } from './forestHomesteadGeography.js';
 import { forestHomesteadDevelopmentEnabled, homesteadDevelopmentEnvironment } from './forestHomesteadAvailability.js';
-import { ForestHomesteadError } from './forestHomesteadRecord.js';
+import { canDriveHomesteadCart, ForestHomesteadError } from './forestHomesteadRecord.js';
 import { forestTerrainDescriptor } from './forestOwnerTerrainRegion.js';
 import { assertForestTerrainPlacementReady } from './forestOwnerTerrain.js';
 
@@ -15,7 +15,10 @@ export function buildForestHomesteadApplication({ enabled = forestHomesteadDevel
     if (record.cartDesign === null) return { ...record, arrival: null, recoveryRequired: false };
     const world = await WorldModel.findOne({ ownerUserId, worldRole: 'primary' }).lean();
     const arrival = await geography.arrival({ ownerUserId, world, next: record, session: null });
-    return { ...record, arrival, recoveryRequired: !arrival };
+    const provisionerSide = enabled(ownerUserId) && canDriveHomesteadCart(record) && !record.orchard?.outing
+      ? await geography.suggestProvisioner?.({ ownerUserId, world, record, session: null }) : null;
+    return { ...record, arrival, recoveryRequired: !arrival,
+      ...(provisionerSide != null ? { provisionerSide } : {}) };
   }
   async function authorize(ownerUserId) {
     if (!enabled(ownerUserId) && !(homesteadDevelopmentEnvironment()

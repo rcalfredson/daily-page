@@ -46,6 +46,7 @@ export function createForestTraveler(api) {
   const ask = dialog.querySelector('[data-forest-traveler-ask]');
   const road = dialog.querySelector('[data-forest-traveler-road]');
   const orchard = dialog.querySelector('[data-forest-traveler-orchard]');
+  const orchardProgress = dialog.querySelector('[data-forest-traveler-orchard-progress]');
   const mapOrchard = dialog.querySelector('[data-forest-traveler-map-orchard]');
   const remember = dialog.querySelector('[data-forest-traveler-remember]');
   const back = dialog.querySelector('[data-forest-traveler-back]');
@@ -53,14 +54,17 @@ export function createForestTraveler(api) {
   const finish = dialog.querySelector('[data-forest-traveler-finish]');
   const leave = dialog.querySelector('[data-forest-traveler-leave]');
   const memory = api.memory;
-  let site = null, saving = false, showingClue = false, lookingAt = null, lastSiteCheck = -Infinity;
+  const provisioner = api.provisioner?.();
+  const atProvisioner = Boolean(provisioner);
+  let site = provisioner || null, saving = false, showingClue = false, lookingAt = null, lastSiteCheck = -Infinity;
+  let progressDestination = null;
   const idleMotion = createForestHumanoidMotion('down');
   api.navigation.register('traveler', () => site ? [{ ...site.tansy, id: 'tansy',
-    label: memory.introduced ? 'Tansy Rook' : 'Covered cart', nearbyRadius: TALK_RADIUS }] : []);
+    label: atProvisioner ? 'Tansy at the stall' : memory.introduced ? 'Tansy Rook' : 'Covered cart', nearbyRadius: TALK_RADIUS }] : []);
 
   function update(time) {
     const { player, busy, terrain, placements } = api.state();
-    if (!busy && distance(player, api.spawn) < 350 && time - lastSiteCheck >= 500) {
+    if (!atProvisioner && !busy && distance(player, api.spawn) < 350 && time - lastSiteCheck >= 500) {
       lastSiteCheck = time;
       const treeClear = p => placements.every(tree => distance(p, tree) > p.radius + tree.collisionRadius);
       const clear = p => api.regionLoaded(p) && terrain.sample(p).placeable && api.canRest(p)
@@ -94,6 +98,7 @@ export function createForestTraveler(api) {
     lookingAt = site.cart;
     ask.hidden = road.hidden = true;
     if (orchard) orchard.hidden = true;
+    if (orchardProgress) orchardProgress.hidden = true;
     accept.hidden = finish.hidden = saving;
     leave.hidden = !saving;
     (saving ? leave : accept).focus({ preventScroll: true });
@@ -106,6 +111,14 @@ export function createForestTraveler(api) {
     road.hidden = saving;
     if (orchard) orchard.hidden = saving;
     if (mapOrchard) mapOrchard.hidden = true;
+    progressDestination = null;
+    const progress = api.orchardProgress?.();
+    if (orchardProgress) {
+      orchardProgress.hidden = !progress || saving;
+      if (progress) orchardProgress.textContent = progress.stage === 'seed'
+        ? progress.names.length === 1 ? 'I brought back a seed' : 'I brought back seeds'
+        : progress.stage === 'planted' ? 'I planted a fruit tree' : 'I picked the first fruit';
+    }
     remember.hidden = back.hidden = true;
     ask.hidden = memory.introduced || saving;
     finish.hidden = true;
@@ -115,6 +128,8 @@ export function createForestTraveler(api) {
     const fitted = api.fittedCart();
     lookingAt = fitted && distance(site.tansy, fitted) <= RECOGNITION_RADIUS ? fitted : null;
     if (lookingAt) line.textContent = '“You fitted the ridge frame! Look at that peak. Your cart wears it well.”';
+    else if (progress?.stage === 'seed') line.textContent = '“You found something worth bringing home. Want a hand finding where to plant it?”';
+    else if (atProvisioner && memory.frameOwned) line.textContent = '“Mind where you leave your wheels. I keep this bend clear for carts coming home.”';
     else if (memory.frameOwned) line.textContent = '“The patches are still holding. Good to see you again.”';
     else if (memory.introduced) line.textContent = '“Well, there’s my canopy inspector. That spare ridge frame is still yours if you want it.”';
     else line.textContent = '“Name’s Tansy Rook. I’ve buried more boots than kin. That cart’s outlasted every pair.”';
@@ -128,6 +143,7 @@ export function createForestTraveler(api) {
     lookingAt = null;
     ask.hidden = road.hidden = accept.hidden = finish.hidden = true;
     if (orchard) orchard.hidden = true;
+    if (orchardProgress) orchardProgress.hidden = true;
     leave.hidden = !saving;
     remember.hidden = memory.amberClearingClue === true;
     back.hidden = false;
@@ -142,15 +158,43 @@ export function createForestTraveler(api) {
     showingClue = false;
     lookingAt = null;
     ask.hidden = road.hidden = orchard.hidden = remember.hidden = accept.hidden = finish.hidden = leave.hidden = true;
+    if (orchardProgress) orchardProgress.hidden = true;
+    progressDestination = null;
     back.hidden = false;
-    const mapStatus = api.orchardStatus();
+    const mapStatus = api.orchardStatus(atProvisioner);
     mapOrchard.hidden = !['ready', 'mapped'].includes(mapStatus);
-    mapOrchard.textContent = mapStatus === 'mapped' ? 'Guide me to Orchard Fork' : 'Mark the orchard fork';
+    mapOrchard.textContent = mapStatus === 'mapped' ? 'Guide me to Orchard Fork'
+      : atProvisioner ? 'Remember the orchard road' : 'Mark the orchard fork';
     status.hidden = !mapOrchard.hidden;
     status.textContent = mapStatus === 'blocked' ? 'Finish the pending forest save before marking the fork.'
       : 'Claim a home clearing first, then come back and I’ll point you there.';
-    line.textContent = '“Follow the pale road till you see a low cairn. Take the left branch as you come up the road. The quince tree is beyond a worn patch where you can leave the cart. Bring a seed home. Quince makes a fine cloth dye.”';
+    line.textContent = atProvisioner
+      ? '“Past the cairn, look for a low wall. There’s a wide patch where you can leave the cart. I’ve smelled quince there. Bring a seed by on your way home if you’d like help finding where to plant it.”'
+      : '“Follow the pale road till you see a low cairn. Take the left branch as you come up the road. The quince tree is beyond a worn patch where you can leave the cart. Bring a seed home. Quince makes a fine cloth dye.”';
     (mapOrchard.hidden ? back : mapOrchard).focus({ preventScroll: true });
+    api.requestRender();
+  }
+
+  function showOrchardProgress() {
+    const progress = api.orchardProgress?.();
+    if (!progress) return;
+    lookingAt = null;
+    ask.hidden = road.hidden = orchard.hidden = orchardProgress.hidden = true;
+    remember.hidden = accept.hidden = finish.hidden = leave.hidden = status.hidden = true;
+    back.hidden = mapOrchard.hidden = false;
+    progressDestination = progress.destination;
+    const names = progress.names.join(' and ').toLowerCase();
+    if (progress.stage === 'seed') {
+      line.textContent = `“${names[0].toUpperCase() + names.slice(1)}! Good find. Look for Choose spot when you’re in your yard. Try somewhere you’ll see the tree from your door.”`;
+      mapOrchard.textContent = 'Guide me to a planting spot';
+    } else if (progress.stage === 'planted') {
+      line.textContent = `“So you planted ${names}. Look among the leaves when you get home. You can pick the first fruit when you’re ready.”`;
+      mapOrchard.textContent = 'Guide me to a fruit tree';
+    } else {
+      line.textContent = `“You picked ${names}. Try the new dye on a cloth cover at your workshop. Each time you fit a cover, that color will be there for you.”`;
+      mapOrchard.textContent = 'Guide me home';
+    }
+    mapOrchard.focus({ preventScroll: true });
     api.requestRender();
   }
 
@@ -166,10 +210,16 @@ export function createForestTraveler(api) {
   ask.addEventListener('click', showAnswer);
   road.addEventListener('click', showClue);
   orchard?.addEventListener('click', showOrchard);
+  orchardProgress?.addEventListener('click', showOrchardProgress);
   mapOrchard?.addEventListener('click', () => {
-    if (mapOrchard.hidden || !['ready', 'mapped'].includes(api.orchardStatus())) return;
+    if (!mapOrchard.hidden && progressDestination) {
+      const destination = api.orchardProgress?.()?.destination;
+      if (destination && api.navigation.navigate(destination)) dialog.close();
+      return;
+    }
+    if (mapOrchard.hidden || !['ready', 'mapped'].includes(api.orchardStatus(atProvisioner))) return;
     dialog.close();
-    api.surveyOrchard();
+    api.surveyOrchard(atProvisioner);
   });
   back.addEventListener('click', showGreeting);
   leave.addEventListener('click', () => dialog.close());
