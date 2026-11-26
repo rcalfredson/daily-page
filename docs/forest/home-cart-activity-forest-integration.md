@@ -267,9 +267,25 @@ their fork, trees, or dyes. With the spur mapped, the original quince is a landm
 walled quince supplies the family’s seed. Damson still grows on its own branch. An existing
 quince seed, planting, or dye counts as the same family discovery. The server checks and reserves
 the new space when you remember the road. If there’s no clear layout, the original forest and
-its saved routes remain available. The shelf is scenery in this increment. Repeat harvests and
-preserves are the next part of the playtest.
+its saved routes remain available.
 
 The Firefox walkthrough exercised Tansy’s stall clue, parking and leaving the lay-by, driving to
 the wall, entering on foot, picking up a seed, and reloading. The reserved walkthrough used
 terrain-free ground. It also checked containment at 390px with keyboard input.
+
+### Preserving hearth
+
+Use the same outing preview. Pull into the stall bay and walk the short path around the counter.
+At the hearth, choose **Set out a clean jar**. The jar stays on the workbench across visits, even
+if the orchard road is still unmapped.
+
+Inside the orchard wall, **Pick a quince** adds fruit to the Satchel. The tree supplies one quince
+per day (the day changes at midnight UTC), and you can carry one at a time. Picking and collecting
+a seed are separate actions. Back at the hearth, **Keep the quince** leaves it in the Satchel.
+**Make a jar to share** spends it and puts the latest batch on the stall shelf. You can see the
+jar on later visits. A subsequent batch takes its place on the shelf.
+
+The hearth fits alongside the existing stall when the ground, walking approach, and saved
+parking allow it. Other saves can still use the stall and orchard. When a player first uses the
+hearth or picks a quince, the server rechecks and reserves the site. The existing development
+allowlist gates the actions and the hearth.

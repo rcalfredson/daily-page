@@ -15,10 +15,17 @@ export function buildForestHomesteadApplication({ enabled = forestHomesteadDevel
     if (record.cartDesign === null) return { ...record, arrival: null, recoveryRequired: false };
     const world = await WorldModel.findOne({ ownerUserId, worldRole: 'primary' }).lean();
     const arrival = await geography.arrival({ ownerUserId, world, next: record, session: null });
-    const provisionerSide = enabled(ownerUserId) && canDriveHomesteadCart(record) && !record.orchard?.outing
-      ? await geography.suggestProvisioner?.({ ownerUserId, world, record, session: null }) : null;
-    return { ...record, arrival, recoveryRequired: !arrival,
-      ...(provisionerSide != null ? { provisionerSide } : {}) };
+    const { village, ...existing } = record;
+    const context = { ownerUserId, world, record, session: null };
+    const available = enabled(ownerUserId) && canDriveHomesteadCart(record);
+    const outing = record.orchard?.outing;
+    const provisionerSide = available ? outing?.provisionerSide ?? village?.provisionerSide
+      ?? await geography.suggestProvisioner?.(context) : null;
+    const hasHearth = provisionerSide != null
+      && (Boolean(village) || await geography.villageAvailable?.({ ...context, provisionerSide }));
+    return { ...existing, arrival, recoveryRequired: !arrival,
+      ...(!outing && provisionerSide != null ? { provisionerSide } : {}),
+      ...(hasHearth ? { preservingHearthAvailable: true, ...(village ? { village } : {}) } : {}) };
   }
   async function authorize(ownerUserId) {
     if (!enabled(ownerUserId) && !(homesteadDevelopmentEnvironment()

@@ -136,6 +136,9 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
       if (!hadCart && hasCart()) say(canDrive() ? 'Your cart is ready. Mallow can pull it.' : 'Your cart is built. Meet Mallow and invite her along.');
       if (guidedStart && !wasJoined && companion?.stage === 'joined' && hasCart()) say('Mallow is ready to pull your cart.');
       api.requestRender();
+    } else if (previousSaved.preservingHearthAvailable !== state.record.preservingHearthAvailable) {
+      previousSaved = state.record;
+      api.requestRender();
     }
     encounter?.refresh();
   } }) : null;

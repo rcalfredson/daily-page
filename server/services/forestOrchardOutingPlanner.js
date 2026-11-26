@@ -31,6 +31,22 @@ export function provisionerFits(stall, land) {
     && [stall.turn, stall.bay].every(p => areaClear(land, { a: p, b: p, width: OUTING_TURN_RADIUS }));
 }
 
+export function hearthFits(hearth, stall, land) {
+  const stalls = stall.solids.map(({ worldX: x, worldY: y, radius }) => ({ x, y, radius }));
+  return placesSolids(land, [hearth.solid])
+    && hearth.reservations.every(reservation => areaClear(land, reservation, stalls));
+}
+
+export function hearthObstacleDiscs({ reservations }) {
+  return reservations.flatMap(({ a, b, width }) => {
+    if (a === b) return [{ ...a, radius: width }];
+    const steps = Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 16);
+    return Array.from({ length: steps + 1 }, (_, i) => ({
+      x: a.x + (b.x - a.x) * i / steps, y: a.y + (b.y - a.y) * i / steps, radius: width + 2
+    }));
+  });
+}
+
 export function planWalledOrchard(layout, site, stall, land) {
   const road = orchardRoad(layout, site);
   const authored = [{ ...amberClearingStone(layout.route), radius: 27 }, { ...road.cairn, radius: 16 },
