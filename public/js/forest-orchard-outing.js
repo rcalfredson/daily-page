@@ -8,15 +8,24 @@ export const ORCHARD_SPUR_LENGTHS = [580, 460, 720];
 export const OUTING_TURN_RADIUS = 84;
 const BAY_WIDTH = 56, SPUR_WIDTH = 52, FOOT_WIDTH = 18;
 export const worldPoint = ({ x, y }, radius) => ({ worldX: x, worldY: y, radius });
+export const VILLAGE_ACTIONS = ['village-set-jar', 'village-pick-quince', 'village-make-preserves'];
+export const quincePickingDay = (time = Date.now()) => Math.floor(time / 86_400_000);
+export const quinceIsRipe = (village, time) => village?.pickedDay == null || village.pickedDay < quincePickingDay(time);
 
-export function provisionerSite(layout, side) {
+function provisionerCoordinates(layout, side) {
   const [home, next] = layout.route;
   const length = Math.hypot(next.x - home.x, next.y - home.y);
   if (length < 550) return null;
   const dx = Math.sign(next.x - home.x), dy = Math.sign(next.y - home.y);
   const along = Math.min(Math.round(length * .68), length - 180);
-  const point = (forward, across) => ({ x: home.x + dx * (along + forward) - dy * across * side,
-    y: home.y + dy * (along + forward) + dx * across * side });
+  return { dx, dy, point: (forward, across) => ({ x: home.x + dx * (along + forward) - dy * across * side,
+    y: home.y + dy * (along + forward) + dx * across * side }) };
+}
+
+export function provisionerSite(layout, side) {
+  const coordinates = provisionerCoordinates(layout, side);
+  if (!coordinates) return null;
+  const { dx, dy, point } = coordinates;
   const turn = point(0, 0), bay = point(0, 104), stall = point(-52, 256);
   const tansy = worldPoint(point(42, 240), 12);
   const cart = { ...worldPoint(point(105, 258)), heading: Math.atan2(dy, dx),
@@ -25,6 +34,17 @@ export function provisionerSite(layout, side) {
   return { turn, bay, stall, sign: point(-34, 104), tansy, cart, footprint,
     road: { a: turn, b: bay, width: BAY_WIDTH }, footpath: { a: bay, b: point(0, 236), width: FOOT_WIDTH },
     solids: [worldPoint(stall, 24), ...footprint] };
+}
+
+export function preservingHearth(layout, side) {
+  const coordinates = provisionerCoordinates(layout, side);
+  if (!coordinates) return null;
+  const { point } = coordinates;
+  const hearth = point(-116, 309), walk = [point(0, 207), point(-116, 207), point(-116, 266)];
+  const solid = worldPoint(hearth, 30);
+  const reservations = [...walk.slice(1).map((b, index) => ({ a: walk[index], b, width: 16 })),
+    { a: hearth, b: hearth, width: solid.radius }];
+  return { hearth, walk, solid, reservations };
 }
 
 export function walledOrchardSite(layout, site, spurLength) {
@@ -47,9 +67,10 @@ export function walledOrchardSite(layout, site, spurLength) {
 }
 
 export function outingReservations(stall, orchard) {
-  return [stall.road, stall.footpath, orchard.road, ...orchard.footpath,
-    ...[stall.turn, stall.bay, orchard.apron].map(p => ({ a: p, b: p, width: OUTING_TURN_RADIUS })),
-    ...[...stall.solids, ...orchard.solids].map(({ worldX: x, worldY: y, radius }) => {
+  return [...(stall ? [stall.road, stall.footpath] : []), ...(orchard ? [orchard.road, ...orchard.footpath] : []),
+    ...[...(stall ? [stall.turn, stall.bay] : []), ...(orchard ? [orchard.apron] : [])]
+      .map(p => ({ a: p, b: p, width: OUTING_TURN_RADIUS })),
+    ...[...(stall?.solids || []), ...(orchard?.solids || [])].map(({ worldX: x, worldY: y, radius }) => {
       const p = { x, y };
       return { a: p, b: p, width: radius };
     })];
@@ -57,9 +78,17 @@ export function outingReservations(stall, orchard) {
 
 export function outingPlacementAllowed(layout, orchard, point, radius) {
   const { provisionerSide, spurLength } = orchard.outing;
-  return outingReservations(provisionerSite(layout, provisionerSide), walledOrchardSite(layout, orchard.site, spurLength))
-    .every(({ a, b, width }) => (a === b ? Math.hypot(point.x - a.x, point.y - a.y)
-      : terrainPointSegmentDistance(point, a, b)) > radius + width);
+  return reservationsAllow(outingReservations(provisionerSite(layout, provisionerSide),
+    walledOrchardSite(layout, orchard.site, spurLength)), point, radius);
+}
+
+export function reservationsAllow(reservations, point, radius) {
+  return reservations.every(({ a, b, width }) => terrainPointSegmentDistance(point, a, b) > radius + width);
+}
+
+export function villageReservations(layout, side, hasOuting) {
+  const hearth = preservingHearth(layout, side);
+  return [...hearth.reservations, ...(hasOuting ? [] : outingReservations(provisionerSite(layout, side)))];
 }
 
 export function outingBlocks(solids, disc, from) {

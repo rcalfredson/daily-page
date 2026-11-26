@@ -6,6 +6,7 @@ import { discIntersectsRectangle } from '../public/js/forest-cart-motion.js';
 import { DEFAULT_HOME_DESIGN, DEFAULT_CART_DESIGN } from '../public/js/forest-construction-design.js';
 import { createHomesteadClient } from '../public/js/forest-homestead-client.js';
 import { orchardRoad } from '../public/js/forest-orchard.js';
+import { preservingHearth, provisionerSite } from '../public/js/forest-orchard-outing.js';
 const OWNER = '64b00000000000000000a097';
 describe('main forest homestead integration', () => {
   it('requires an exact account allowlist and refuses production mode/database flags', () => {
@@ -82,6 +83,39 @@ describe('main forest homestead integration', () => {
     await expectAsync(app.suggest({ ownerUserId: OWNER })).toBeRejectedWithError('HOME_ALREADY_ESTABLISHED');
     expect(h.geography.planSite).toHaveBeenCalledTimes(1);
     expect(h.service.mutate).not.toHaveBeenCalled();
+  });
+  it('offers the hearth on clear ground and keeps a legacy stall when its neighbor cannot fit', async () => {
+    const h = setup();
+    const empty = { find: () => ({ sort: () => ({ limit: () => ({ session: () => ({ lean: async () => [] }) }) }) }) };
+    let plants = [];
+    const geography = buildForestHomesteadGeography({ TreeModel: empty, MarkerModel: empty,
+      readGarden: async () => ({ plants }), amberClearingEnabled: () => true });
+    const parking = { x: 400, y: 90 };
+    const layout = { version: 1, home: { x: 400, y: 0 }, parking, approach: [{ x: 0, y: 90 }, parking],
+      route: [parking, { x: 1600, y: 90 }, { x: 1600, y: 990 }] };
+    Object.assign(h.record, { cartDesign: DEFAULT_CART_DESIGN, homeDesign: DEFAULT_HOME_DESIGN, layout,
+      parking: { worldX: parking.x, worldY: parking.y, heading: 0 },
+      orchard: { site: { version: 2, forkDistance: 840, branchDistances: [490, 490],
+        plots: [{ x: 525, y: -54 }, { x: 275, y: -54 }] }, stages: ['harvested', 'seed'],
+      outing: { version: 1, provisionerSide: -1, spurLength: 580 } } });
+    const app = buildForestHomesteadApplication({ ...h, geography, enabled: () => true });
+    const { hearth } = preservingHearth(layout, -1);
+    const { bay } = provisionerSite(layout, -1);
+    expect((await app.read({ ownerUserId: OWNER })).preservingHearthAvailable).toBeTrue();
+    h.record.parking = { worldX: bay.x, worldY: bay.y, heading: -Math.PI / 2 };
+    expect((await app.read({ ownerUserId: OWNER })).preservingHearthAvailable).toBeTrue();
+    h.record.parking = { worldX: hearth.x, worldY: hearth.y, heading: 0 };
+    const parked = await app.read({ ownerUserId: OWNER });
+    expect(parked.preservingHearthAvailable).toBeUndefined();
+    expect(parked.recoveryRequired).toBeFalse();
+    h.record.parking = { worldX: parking.x, worldY: parking.y, heading: 0 };
+    plants = [{ plantId: 'garden-plant', worldX: hearth.x, worldY: hearth.y }];
+    const blocked = await app.read({ ownerUserId: OWNER });
+    expect(blocked.preservingHearthAvailable).toBeUndefined();
+    expect(blocked.orchard).toEqual(h.record.orchard);
+    const disabled = buildForestHomesteadApplication({ ...h, geography, enabled: () => false });
+    plants = [];
+    expect((await disabled.read({ ownerUserId: OWNER })).preservingHearthAvailable).toBeUndefined();
   });
   it('returns an unbuilt homestead without a cart recovery prompt', async () => {
     const h = setup();

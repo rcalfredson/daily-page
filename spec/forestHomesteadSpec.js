@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import ForestHomestead from '../server/db/models/ForestHomestead.js';
 import { buildForestHomesteadService, canonicalHomesteadCommand } from '../server/services/forestHomestead.js';
+import { buildForestHomesteadGeography } from '../server/services/forestHomesteadGeography.js';
 import { validateHomestead, homesteadCartCost, HOMESTEAD_RECEIPT_LIMIT } from '../server/services/forestHomesteadRecord.js';
 import { DEFAULT_HOME_DESIGN, DEFAULT_CART_DESIGN, TANSY_CART_FRAME, studyCartDesign } from '../public/js/forest-construction-design.js';
 import { cartDismount, cartPoseClear, cartSweepClear, stepForestCart } from '../public/js/forest-cart-motion.js';
@@ -11,7 +12,8 @@ import { orchardGroundAllows, planForestOrchard } from '../server/services/fores
 import { planWalledOrchard, provisionerFits } from '../server/services/forestOrchardOutingPlanner.js';
 import { homesteadPlacementAllowed, homesteadTerrainProtections } from '../server/services/forestHomesteadStore.js';
 import { orchardPlantingSpace } from '../public/js/forest-home-reservations.js';
-import { outingBlocks, provisionerSite, walledOrchardSite, worldPoint } from '../public/js/forest-orchard-outing.js';
+import { outingBlocks, preservingHearth, provisionerSite, quincePickingDay, walledOrchardSite,
+  worldPoint } from '../public/js/forest-orchard-outing.js';
 
 const OWNER = '64b00000000000000000a094';
 const FOREST = 'a9400000-0000-4000-8000-000000000001';
@@ -211,6 +213,60 @@ describe('transactional homestead authority', () => {
     expect(saved.orchard.site).toEqual(site);
     expect(saved.orchard.stages).toEqual(before.orchard.stages);
     expect(availableOrchardDyes(saved)).toEqual(availableOrchardDyes(before));
+  });
+
+  it('saves a hearth before mapping, then turns one daily quince into a visible batch without spending the seed', async () => {
+    const empty = { find: () => ({ sort: () => ({ limit: () => ({ session: () => query([]) }) }) }) };
+    const geography = buildForestHomesteadGeography({ TreeModel: empty, MarkerModel: empty,
+      readGarden: async () => null, amberClearingEnabled: () => true });
+    let now = new Date('2026-11-24T23:45:00Z');
+    const h = harness({ ...geography, orchardEnabled: () => true, clock: () => now,
+      planSite: async () => planHomeCartSite(createHomeStudyFixture({ generation: 0 })) });
+    const initial = await establish(h), side = { provisionerSide: -1 };
+    const setJar = command('village-set-jar', initial.revision, side);
+    const prepared = await mutate(h, setJar);
+    expect(prepared.orchard).toBeUndefined();
+    expect((await h.service.read({ ownerUserId: OWNER })).village.cleanJar).toBeTrue();
+    expect((await mutate(h, setJar)).operation.replayed).toBeTrue();
+    const hearth = preservingHearth(initial.layout, side.provisionerSide);
+    expect(homesteadPlacementAllowed(prepared, worldPoint(hearth.hearth))).toBeFalse();
+    expect(homesteadPlacementAllowed(prepared, worldPoint(hearth.walk.at(-1)))).toBeFalse();
+    expect(homesteadTerrainProtections(prepared).some(p => p.x === hearth.hearth.x && p.y === hearth.hearth.y)).toBeTrue();
+    const stall = provisionerSite(initial.layout, side.provisionerSide);
+    const heading = Math.atan2(stall.bay.y - stall.turn.y, stall.bay.x - stall.turn.x);
+    const ridge = { ...DEFAULT_CART_DESIGN, supports: TANSY_CART_FRAME };
+    const turn = { ...worldPoint(stall.turn), heading, design: ridge };
+    const bay = { ...turn, ...worldPoint(stall.bay) };
+    const clear = p => !outingBlocks([...stall.solids, hearth.solid], p);
+    expect(cartSweepClear(turn, bay, clear)).toBeTrue();
+    expect(cartSweepClear(bay, { ...bay, heading: heading + Math.PI }, clear)).toBeTrue();
+    expect(cartDismount(bay, clear)).not.toBeNull();
+    await expectAsync(mutate(h, command('village-pick-quince', prepared.revision, side)))
+      .toBeRejectedWithError('HOME_VILLAGE_CHANGED');
+    await expectAsync(mutate(h, command('orchard-outing', prepared.revision, { provisionerSide: 1 })))
+      .toBeRejectedWithError('HOME_OUTING_UNAVAILABLE');
+    const mapped = await mutate(h, command('orchard-outing', prepared.revision, side));
+    const picked = await mutate(h, command('village-pick-quince', mapped.revision, side));
+    expect(picked.village).toEqual(jasmine.objectContaining({ carryingQuince: true, cleanJar: true, pickedDay: quincePickingDay(now) }));
+    expect(picked.orchard).toEqual(mapped.orchard);
+    const make = command('village-make-preserves', picked.revision, side);
+    const first = await mutate(h, make);
+    expect((await mutate(h, make)).village.batches).toBe(1);
+    expect(first.village).toEqual(jasmine.objectContaining({ carryingQuince: false, cleanJar: false, batches: 1 }));
+    await expectAsync(mutate(h, command('village-pick-quince', first.revision, side)))
+      .toBeRejectedWithError('HOME_VILLAGE_CHANGED');
+    now = new Date('2026-11-25T00:00:00Z');
+    const secondPicking = await mutate(h, command('village-pick-quince', first.revision, side));
+    now = new Date('2026-11-26T00:00:00Z');
+    await expectAsync(mutate(h, command('village-pick-quince', secondPicking.revision, side)))
+      .toBeRejectedWithError('HOME_VILLAGE_CHANGED');
+    const second = await mutate(h, command('village-make-preserves', secondPicking.revision, side));
+    expect(second.village.batches).toBe(2);
+    expect(second.orchard).toEqual(mapped.orchard);
+    expect(second.parking).toEqual(initial.parking);
+    const disabled = buildForestHomesteadService({ ...h.options, orchardEnabled: () => false });
+    await expectAsync(disabled.mutate({ ownerUserId: OWNER, command: command('village-set-jar', second.revision, side) }))
+      .toBeRejectedWithError('HOME_DISABLED');
   });
 
   it('does not add an orchard when either branch or the home plots lack safe ground', async () => {

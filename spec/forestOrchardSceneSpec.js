@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom';
 import { createForestOrchardScene } from '../public/js/forest-orchard-scene.js';
 import { orchardRoad } from '../public/js/forest-orchard.js';
-import { walledOrchardSite } from '../public/js/forest-orchard-outing.js';
+import { preservingHearth, quincePickingDay, walledOrchardSite } from '../public/js/forest-orchard-outing.js';
 
 const layout = { home: { x: 400, y: 0 }, route: [{ x: 400, y: 90 }, { x: 1600, y: 90 }, { x: 1600, y: 990 }] };
 const site = { forkDistance: 840, branchDistances: [490, 490],
@@ -89,5 +89,47 @@ describe('Orchard tree interactions', () => {
       ['orchard-plot-1', jasmine.stringMatching(/^Plant .*damson$/)]
     ]);
     expect(scene.progress()).toEqual(jasmine.objectContaining({ stage: 'seed', destination: 'orchard-plot-0' }));
+  });
+
+  it('shows the hearth before the orchard is mapped, and offers a choice when a quince is carried', async () => {
+    const orchard = record.orchard, hearth = preservingHearth(layout, -1);
+    const button = document.querySelector('[data-village-action]');
+    const keep = document.querySelector('[data-keep-quince]');
+    const satchel = document.querySelector('[data-orchard-satchel]');
+    const bench = { x: hearth.walk.at(-1).x - 28, y: hearth.walk.at(-1).y };
+    record = { forestId: record.forestId, provisionerSide: -1, preservingHearthAvailable: true };
+    save.and.callFake(async () => true);
+    approach(bench);
+    expect(button.hidden).toBeFalse();
+    expect(button.textContent).toBe('Set out a clean jar');
+    button.click();
+    await Promise.resolve();
+    expect(save).toHaveBeenCalledOnceWith('village-set-jar', { provisionerSide: -1 });
+    expect(say).toHaveBeenCalledWith(jasmine.stringContaining('ready by the pot'));
+    record = { ...record, orchard, village: { cleanJar: true } };
+    approach(wall.tree);
+    expect(button.textContent).toBe('Pick a quince');
+    expect(action.textContent).toMatch(/^Collect the .*quince seed$/);
+    button.click();
+    await Promise.resolve();
+    expect(save.calls.mostRecent().args).toEqual(['village-pick-quince', { provisionerSide: -1 }]);
+    record = { ...record, village: { cleanJar: true, carryingQuince: true, pickedDay: quincePickingDay() } };
+    approach(bench);
+    expect(satchel.textContent).toContain('1 quince');
+    expect(button.textContent).toBe('Make a jar to share');
+    expect(keep.hidden).toBeFalse();
+    keep.click();
+    expect(button.hidden).toBeTrue();
+    expect(save.calls.count()).toBe(2);
+    approach(wall.tree);
+    expect(button.hidden).toBeTrue();
+    approach(bench);
+    button.click();
+    await Promise.resolve();
+    expect(save.calls.mostRecent().args).toEqual(['village-make-preserves', { provisionerSide: -1 }]);
+    record = { ...record, village: { cleanJar: false, carryingQuince: false, batches: 1, pickedDay: quincePickingDay() } };
+    approach(wall.tree);
+    expect(button.hidden).toBeTrue();
+    expect(satchel.textContent).not.toContain('1 quince');
   });
 });

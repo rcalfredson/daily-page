@@ -5,7 +5,8 @@ import { orchardPlantingSpace } from './forest-home-reservations.js';
 import { ownerForestPlacementPoint } from './owner-forest-scene.js';
 import { amberClearingBend } from './forest-amber-clearing.js';
 import { paintAmberTrail } from './forest-homestead-paint.js';
-import { outingBlocks, outingPlacementAllowed, provisionerSite, walledOrchardSite } from './forest-orchard-outing.js';
+import { outingBlocks, outingPlacementAllowed, preservingHearth, provisionerSite, quinceIsRipe,
+  reservationsAllow, villageReservations, walledOrchardSite } from './forest-orchard-outing.js';
 import { terrainPointSegmentDistance } from './owner-forest-terrain.js';
 
 const range = (point, pose) => Math.hypot(point.x - pose.worldX, point.y - pose.worldY);
@@ -70,7 +71,14 @@ function paintCairn(ctx, x, y) {
     });
 }
 
-function paintProvisioner(ctx, x, y) {
+function paintJar(ctx, x, y, contents, lid) {
+  ctx.fillStyle = '#342b23'; ctx.fillRect(x - 7, y - 13, 14, 13);
+  ctx.fillStyle = contents; ctx.fillRect(x - 6, y - 12, 12, 10);
+  ctx.fillStyle = '#f2dfb7'; ctx.fillRect(x - 4, y - 11, 2, 5);
+  ctx.fillStyle = lid; ctx.fillRect(x - 7, y - 15, 14, 4);
+}
+
+function paintProvisioner(ctx, x, y, batches) {
   ctx.save(); ctx.translate(x, y);
   ellipse(ctx, 2, 1, 37, 12, 'rgba(29,35,24,.29)');
   ctx.fillStyle = '#5b4434'; ctx.fillRect(-27, -56, 5, 58); ctx.fillRect(23, -56, 5, 56);
@@ -82,9 +90,27 @@ function paintProvisioner(ctx, x, y) {
     ctx.fillRect(dx, -43, 7, 9);
     ctx.fillStyle = '#e1d6b6'; ctx.fillRect(dx + 1, -44, 6, 2); ctx.fillStyle = '#c2b59a';
   }
+  if (batches) paintJar(ctx, 9, -13, '#e8a83d', batches % 2 ? '#faf0c9' : '#b6bf85');
   ctx.fillStyle = '#97603f'; ctx.fillRect(-33, -64, 66, 12);
   for (const dx of [-28, -13, 2, 17]) ctx.fillRect(dx, -53, 9, 5);
   ctx.fillStyle = '#c48759'; ctx.fillRect(-33, -64, 66, 3);
+  ctx.restore();
+}
+
+function paintPreservingHearth(ctx, x, y, cleanJar) {
+  ctx.save(); ctx.translate(x, y);
+  ellipse(ctx, 3, 1, 34, 12, 'rgba(30,35,25,.25)');
+  ctx.fillStyle = '#614b39'; ctx.fillRect(-27, -20, 5, 21); ctx.fillRect(-3, -20, 5, 19);
+  ctx.fillStyle = '#b99466'; ctx.fillRect(-31, -24, 37, 5);
+  ctx.fillStyle = '#d6c8a0'; ctx.fillRect(-26, -26, 15, 6); ctx.fillRect(-14, -22, 3, 8);
+  ellipse(ctx, 15, -3, 16, 7, '#686a60');
+  ellipse(ctx, 15, -9, 16, 7, '#9a9985');
+  ellipse(ctx, 15, -10, 10, 5, '#594c3d');
+  ctx.fillStyle = '#46382f'; ctx.fillRect(0, -22, 5, 3); ctx.fillRect(26, -22, 5, 3);
+  ellipse(ctx, 15, -20, 12, 9, '#965534');
+  ellipse(ctx, 15, -26, 12, 4, '#cf8854');
+  ellipse(ctx, 15, -26, 9, 2.5, '#564136');
+  if (cleanJar) paintJar(ctx, -6, -24, '#cfceb4', '#f1dab0');
   ctx.restore();
 }
 
@@ -105,6 +131,12 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
   const viewport = dock.closest('[data-owner-forest-viewport]');
   const action = document.createElement('button');
   action.type = 'button'; action.hidden = true; action.dataset.orchardAction = '';
+  const villageAction = document.createElement('button'), keepQuince = document.createElement('button');
+  villageAction.type = keepQuince.type = 'button';
+  villageAction.hidden = keepQuince.hidden = true;
+  villageAction.dataset.villageAction = '';
+  keepQuince.dataset.keepQuince = '';
+  keepQuince.textContent = 'Keep the quince';
   const choose = [0, 1].map(index => {
     const button = document.createElement('button');
     button.type = 'button'; button.hidden = true; button.dataset.orchardChoose = index;
@@ -116,17 +148,19 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
   toolbar.innerHTML = '<p role="status" aria-live="polite" data-orchard-preview></p><div class="owner-forest__garden-actions"><button type="button" data-orchard-confirm>Plant here</button><button type="button" data-orchard-suggest>Suggested spot</button><button type="button" data-orchard-cancel>Cancel</button></div>';
   const copy = toolbar.querySelector('p'), confirm = toolbar.querySelector('[data-orchard-confirm]');
   const suggest = toolbar.querySelector('[data-orchard-suggest]');
-  if (api.amberClearingEnabled) dock.append(action, ...choose, toolbar);
+  if (api.amberClearingEnabled) dock.append(action, villageAction, keepQuince, ...choose, toolbar);
   const satchel = document.querySelector('[data-orchard-satchel]');
   let lastRecord, cached, activeAction, planting = null, preview = null;
-  let lastOutingRecord, stall, wall, walledTree;
+  let lastOutingRecord, stall, wall, walledTree, hearth, provisionerSide, activeVillage, keptQuinceHere = false;
   function refreshOuting() {
     const record = read();
     if (record === lastOutingRecord) return;
     lastOutingRecord = record;
     const outing = record?.orchard?.outing;
-    const side = outing?.provisionerSide ?? record?.provisionerSide;
-    stall = side == null ? null : provisionerSite(layout, side);
+    provisionerSide = outing?.provisionerSide ?? record?.provisionerSide;
+    stall = provisionerSide == null ? null : provisionerSite(layout, provisionerSide);
+    hearth = stall && api.amberClearingEnabled && record?.preservingHearthAvailable
+      ? preservingHearth(layout, provisionerSide) : null;
     wall = outing ? walledOrchardSite(layout, record.orchard.site, outing.spurLength) : null;
     walledTree = wall && { point: wall.tree, index: 0, variety: orchardVariety(record.forestId, 0),
       form: orchardTreeForm(record.forestId, 0, wall.tree) };
@@ -166,7 +200,7 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
     if (wall?.inside(player)) {
       choices.push(orchard.stages[0] === 'undiscovered' ? collection(0, wall.tree) : {
         branch: 0, kind: 'inspect', label: 'Look at the walled quince', at: wall.tree,
-        notice: wildTreeNotice(0, orchard.stages[0]) });
+        notice: walledTreeNotice(orchard.stages[0]) });
     }
     return choices.filter(option => range(option.at, player) <= 52)
       .sort((a, b) => range(a.at, player) - range(b.at, player))[0];
@@ -182,6 +216,46 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
     if (stage === 'planted') return `The wild ${kind} is still here. The tree you planted at home has its first fruit.`;
     return `The wild ${kind} is still here. The fruit from your own tree has given you a dye for your cart cover.`;
   }
+  function walledTreeNotice(stage) {
+    const village = read()?.village;
+    if (hearth && village?.carryingQuince) return 'There’s already a quince in your Satchel. The hearth by Tansy’s stall is ready for it.';
+    if (hearth && !quinceIsRipe(village)) return 'The quince has been picked today. Check the tree again tomorrow.';
+    return wildTreeNotice(0, stage);
+  }
+  function nextVillageAction(player) {
+    refreshOuting();
+    if (!hearth || planting || !canAct() || !api.regionLoaded(player)) return null;
+    const village = read()?.village;
+    if (range(hearth.walk.at(-1), player) <= 32) {
+      if (village?.carryingQuince) return keptQuinceHere ? null : {
+        kind: 'village-make-preserves', label: 'Make a jar to share',
+        notice: village.batches ? 'The new jar is on the stall shelf. Tansy puts the last one with the provisions for travelers.'
+          : 'A jar of quince preserves is on Tansy’s shelf for travelers.'
+      };
+      if (!village?.cleanJar) return { kind: 'village-set-jar', label: 'Set out a clean jar',
+        notice: 'The clean jar is ready by the pot. Anyone with a quince can put up a jar for travelers.' };
+      return null;
+    }
+    if (wall?.inside(player) && range(wall.tree, player) <= 52
+      && !village?.carryingQuince && quinceIsRipe(village)) {
+      return { kind: 'village-pick-quince', label: 'Pick a quince',
+        notice: 'A quince is in your Satchel. You can bring it to the hearth by Tansy’s stall.' };
+    }
+    return null;
+  }
+  villageAction.addEventListener('click', async () => {
+    const current = nextVillageAction(api.state().player);
+    if (!current || current.kind !== activeVillage?.kind || blocked()) return;
+    api.focus();
+    if (await save(current.kind, { provisionerSide })) say(current.notice);
+  });
+  keepQuince.addEventListener('click', () => {
+    if (nextVillageAction(api.state().player)?.kind !== 'village-make-preserves' || blocked()) return;
+    keptQuinceHere = true;
+    villageAction.hidden = keepQuince.hidden = true;
+    api.focus();
+    say('You keep the quince in your Satchel.');
+  });
   action.addEventListener('click', async () => {
     const current = nextAction(api.state().player);
     if (!current || current.at !== activeAction?.at || current.kind !== activeAction.kind || current.kind !== 'inspect' && blocked()) return;
@@ -265,6 +339,12 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
       action.hidden = !activeAction;
       action.disabled = Boolean(activeAction && activeAction.kind !== 'inspect' && blocked());
       if (activeAction && action.textContent !== activeAction.label) action.textContent = activeAction.label;
+      if (hearth && range(hearth.walk.at(-1), player) > 32) keptQuinceHere = false;
+      activeVillage = nextVillageAction(player);
+      villageAction.hidden = !activeVillage;
+      keepQuince.hidden = activeVillage?.kind !== 'village-make-preserves';
+      villageAction.disabled = keepQuince.disabled = blocked();
+      if (activeVillage && villageAction.textContent !== activeVillage.label) villageAction.textContent = activeVillage.label;
       const canPlant = !planting && api.amberClearingEnabled && canChoose(), data = scene(), record = read();
       choose.forEach((button, index) => {
         button.hidden = !canPlant || record?.orchard?.stages[index] !== 'seed';
@@ -278,6 +358,7 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
         const seeds = data?.varieties.filter((_, i) => record.orchard.stages[i] === 'seed').map(v => v.name) || [];
         const dyes = availableOrchardDyes(record);
         const lines = [seeds.length ? `Seeds to plant in your yard: ${seeds.join(', ')}.` : '',
+          hearth && record?.village?.carryingQuince ? 'Fruit to share: 1 quince.' : '',
           dyes.length ? `Workshop dyes: ${data.varieties.filter(v => dyes.includes(v.dye)).map(v => v.name).join(', ')}.` : ''].filter(Boolean);
         satchel.hidden = !lines.length;
         const text = lines.join(' ');
@@ -362,13 +443,16 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
         || amberClearingBend(data.road.route, player, true) : null);
     },
     placementAllowed(point, radius) {
+      refreshOuting();
       const orchard = read()?.orchard;
       return (!orchard || orchardPlacementAllowed(layout, orchard, point, radius))
-        && (!orchard?.outing || outingPlacementAllowed(layout, orchard, point, radius));
+        && (!orchard?.outing || outingPlacementAllowed(layout, orchard, point, radius))
+        && (!hearth || reservationsAllow(villageReservations(layout, provisionerSide, Boolean(orchard?.outing)), point, radius));
     },
     blocks(disc, from) {
       refreshOuting();
       if (stall && outingBlocks(stall.solids.slice(0, 1), disc, from) || wall && outingBlocks(wall.solids, disc, from)) return true;
+      if (hearth && outingBlocks([hearth.solid], disc, from)) return true;
       const data = scene();
       if (!data) return false;
       return orchardCairnBlocks(data.road.cairn, disc, from)
@@ -378,6 +462,7 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
     distance(player) {
       refreshOuting();
       const outingDistance = Math.min(stall ? range(stall.stall, player) : Infinity,
+        hearth ? range(hearth.hearth, player) : Infinity,
         wall ? Math.min(range(wall.apron, player), range(wall.tree, player)) : Infinity);
       const data = scene();
       if (!data) return outingDistance;
@@ -393,12 +478,19 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
         ctx.strokeStyle = 'rgba(182,160,113,.24)'; ctx.lineWidth = 12; ctx.lineCap = 'round'; ctx.setLineDash([9, 13]);
         ctx.beginPath(); ctx.moveTo(stall.bay.x - camera.x, stall.bay.y - camera.y);
         ctx.lineTo(stall.footpath.b.x - camera.x, stall.footpath.b.y - camera.y); ctx.stroke();
+        if (hearth) {
+          ctx.beginPath();
+          ctx.moveTo(hearth.walk[0].x - camera.x, hearth.walk[0].y - camera.y);
+          for (const p of hearth.walk.slice(1)) ctx.lineTo(p.x - camera.x, p.y - camera.y);
+          ctx.stroke();
+        }
         ctx.restore();
       }
       if (wall) {
         paintAmberTrail(ctx, [wall.fork, wall.apron], camera);
         ellipse(ctx, wall.opening.x - camera.x, wall.opening.y - camera.y, 12, 8, 'rgba(194,172,126,.3)');
-        if (visible(wall.tree, camera)) paintGroveFloor(ctx, wall.tree.x - camera.x, wall.tree.y - camera.y, walledTree.variety, 0);
+        if (visible(wall.tree, camera)) paintGroveFloor(ctx, wall.tree.x - camera.x, wall.tree.y - camera.y,
+          walledTree.variety, 0, Boolean(hearth && !quinceIsRipe(read()?.village)));
       }
       const data = scene();
       if (!data) return;
@@ -438,8 +530,11 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
     },
     depthItems(camera) {
       refreshOuting();
+      const village = read()?.village;
       const outing = [...(stall ? [{ point: stall.stall, stall: true }, { point: stall.sign, sign: true }] : []),
-        ...(wall ? [walledTree, ...wall.stones.map(point => ({ point, stone: true }))] : [])];
+        ...(hearth ? [{ point: hearth.hearth, hearth: true }] : []),
+        ...(wall ? [{ ...walledTree, bare: Boolean(hearth && !quinceIsRipe(village)) },
+          ...wall.stones.map(point => ({ point, stone: true }))] : [])];
       const items = list => list.filter(item => visible(item.point, camera)).map(item => ({
         ...item, kind: 'extension', type: 'orchard', id: `orchard-${item.point.x}:${item.point.y}`, worldY: item.point.y
       }));
@@ -457,7 +552,8 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
     },
     paint(ctx, item, camera) {
       const x = item.point.x - camera.x, y = item.point.y - camera.y;
-      if (item.stall) paintProvisioner(ctx, x, y);
+      if (item.stall) paintProvisioner(ctx, x, y, hearth && read()?.village?.batches);
+      else if (item.hearth) paintPreservingHearth(ctx, x, y, read()?.village?.cleanJar);
       else if (item.sign) paintJarSign(ctx, x, y);
       else if (item.stone) paintWallStone(ctx, x, y);
       else if (item.cairn) paintCairn(ctx, x, y);
