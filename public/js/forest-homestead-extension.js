@@ -13,6 +13,7 @@ import { paintStudyHome, paintStudyCart, studyCartDepthItems, paintStudyCartSupp
   paintStudyDestination, paintStudyPaths, paintAmberTrail, paintAmberClearingStone } from '/js/forest-homestead-paint.js';
 import { amberClearingBend, amberClearingStone, amberClearingStoneFootprint } from '/js/forest-amber-clearing.js';
 import { createForestOrchardScene } from '/js/forest-orchard-scene.js';
+import { CART_WORKSHOP_RADIUS, hasWovenTrim, itemCount, quickStepMultiplier, WOVEN_TRIM } from '/js/forest-village-goods.js';
 import { createConstructionEditor } from '/js/forest-construction-editor.js';
 import { DEFAULT_HOME_DESIGN, TANSY_CART_FRAME, studyCartDesign, constructionHomeFootprint,
   validateConstructionDesign, advanceCartPresentation } from '/js/forest-construction-design.js';
@@ -99,6 +100,9 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
   supplies.type = 'button'; supplies.textContent = 'Unpack starter supplies'; supplies.hidden = true;
   supplies.dataset.homesteadSupplies = '';
   if (guidedStart) bar.querySelector('.home-study-workshop').prepend(supplies);
+  const fitTrim = document.createElement('button');
+  fitTrim.type = 'button'; fitTrim.hidden = true; fitTrim.dataset.studyTrim = '';
+  if (integrated && api.amberClearingEnabled) bar.querySelector('.home-study-workshop').append(fitTrim);
   const materials = viewport.querySelector('[data-homestead-materials]');
   function updateMaterials(record) {
     if (!materials) return;
@@ -277,7 +281,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
   }
   function reverse() { reversing = !reversing; reverseButton.setAttribute('aria-pressed', String(reversing)); api.focus(); }
   const nearHome = () => Math.hypot(api.state().player.worldX - plan.parking.x, api.state().player.worldY - plan.parking.y) < 210;
-  const cartHome = () => Math.hypot(cart.worldX - plan.parking.x, cart.worldY - plan.parking.y) < 100;
+  const cartHome = () => Math.hypot(cart.worldX - plan.parking.x, cart.worldY - plan.parking.y) < CART_WORKSHOP_RADIUS;
   function designError(kind, design) {
     if (!validateConstructionDesign(kind, design)) return 'Choose supported parts and dimensions.';
     if (mounted || mountRequested || !nearHome() || (kind === 'cart' && !cartHome())) return 'Park at home and step out before building.';
@@ -317,9 +321,23 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
     },
     close() { previewHome = null; previewCart = null; api.setPlayer(api.state().player); api.requestRender(); }
   });
+  const canActOnFoot = () => !mounted && !mountRequested && !editor.active;
   const orchard = integrated && saves ? createForestOrchardScene({ api, dock: bar, layout, read: () => previousSaved,
-    canAct: () => !mounted && !mountRequested && !editor.active && !api.state().busy,
+    canAct: () => canActOnFoot() && !api.state().busy, canEat: () => canActOnFoot() && !orchard?.plantingActive(),
     blocked: saveBlocked, save: (action, extra) => saves.save(action, extra), say }) : null;
+  const canFitTrim = () => canActOnFoot() && !orchard?.plantingActive() && !api.state().busy
+    && !saveBlocked() && hasCart() && nearHome() && cartHome();
+  fitTrim.addEventListener('click', async () => {
+    const { village } = previousSaved;
+    if (!village || !canFitTrim()) return;
+    const fitted = hasWovenTrim(village);
+    if (!fitted && !itemCount(village, 'satchel', WOVEN_TRIM)) return;
+    api.focus();
+    if (await saves.save('village-move-item', { item: WOVEN_TRIM, provisionerSide: village.provisionerSide,
+      from: fitted ? 'cart-trim' : 'satchel', to: fitted ? 'satchel' : 'cart-trim' })) {
+      say(fitted ? 'The woven trim is back in your Satchel.' : 'The woven trim is fitted to your cart.');
+    }
+  });
   const companionAction = kind => {
     if (mounted || mountRequested || editor.active || orchard?.plantingActive() || api.state().busy || saveBlocked() || !nearCompanion()) return;
     api.setPlayer(api.state().player);
@@ -394,6 +412,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
       && orchard?.placementAllowed({ x: p.worldX, y: p.worldY }, 17) !== false
       && Math.hypot(p.worldX - cart.worldX, p.worldY - cart.worldY) > 110 + 17,
     hidePlayer: () => mounted,
+    footSpeedMultiplier: () => api.amberClearingEnabled ? quickStepMultiplier(previousSaved?.village) : 1,
     playerGesture: () => mounted ? null : actor.snapshot().gesture,
     reset: integrated ? () => {
       if (mounted || mountRequested) { say('Step out before returning to the entrance.'); return true; }
@@ -498,6 +517,13 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
       }
       supplies.hidden = !needsSupplies();
       supplies.disabled = saveBlocked() || busy;
+      if (fitTrim.isConnected) {
+        const village = previousSaved?.village, fitted = hasWovenTrim(village);
+        fitTrim.hidden = !fitted && !itemCount(village, 'satchel', WOVEN_TRIM);
+        fitTrim.disabled = !canFitTrim();
+        const label = fitted ? 'Remove woven trim' : 'Fit woven trim';
+        if (fitTrim.textContent !== label) fitTrim.textContent = label;
+      }
       bar.querySelector('[data-study-workshop-help]').textContent = mounted ? 'Step out to build.'
         : !nearHome() || !cartHome() ? 'The workshop is at home.' : '';
       bar.hidden = busy; viewport.dataset.studyMounted = String(mounted);
@@ -534,7 +560,7 @@ export function createHomesteadExtension(api, study, { integrated = false, justE
       else if (item.type === 'cart-rider') paintStudyCartRiderRow(ctx, item, camera);
       else if (item.type === 'cart-support') paintStudyCartSupport(ctx, item, camera);
       else if (item.type === 'cart' || item.type === 'cart-roof') {
-        paintStudyCart(ctx, { ...cart, design: previewCart || cart.design }, camera, mounted,
+        paintStudyCart(ctx, { ...cart, design: previewCart || cart.design, wovenTrim: hasWovenTrim(previousSaved?.village) }, camera, mounted,
           api.state().terrain.elevation({ ...cart, radius: 11 }), companionMotion(reduce), item.type === 'cart-roof' ? 'roof' : 'body');
       }
       else if (item.type === 'amber-stone') paintAmberClearingStone(ctx, stone, camera, reduce ? 0 : time);

@@ -1487,7 +1487,7 @@ export function startOwnerForest({ createExtension = () => null, createTraveler,
       const extendedPlayer = extension?.move?.(player, direction, elapsed);
       player = extendedPlayer || moveOwnerForestPlayer(player, direction, elapsed, [...placementsById.values()],
         (from, to) => terrain.canMove(from, to) && !traveler?.blocksMovement(to, from)
-          && (extension?.canWalk?.(from, to) ?? true));
+          && (extension?.canWalk?.(from, to) ?? true), extension?.footSpeedMultiplier?.());
       playerMotion = advanceForestHumanoidMotion(playerMotion, {
         from: before, to: player, direction, elapsedSeconds: elapsed,
         reducedMotion: reducedMotion.matches

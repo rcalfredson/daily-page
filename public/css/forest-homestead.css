@@ -36,6 +36,10 @@
 }
 .home-study-bar [hidden] { display: none; }
 .orchard-planting { flex-basis: 100%; }
+.forest-village-stand { width: 100%; display: grid; gap: 5px; }
+.forest-village-stand [aria-pressed='true'] { outline: 2px solid #ddbd79; outline-offset: -3px; }
+.forest-satchel-provisions p { margin: .4rem 0; }
+.forest-satchel-provisions [data-eat-status]:empty { display: none; }
 .owner-forest__garden-preview.orchard-planting .owner-forest__garden-actions { flex-wrap: wrap; }
 [data-orchard-planting] :is(.home-study-workshop, [data-study-mount], [data-companion-action],
   .owner-forest__tree-context, .owner-forest__hud-actions, .owner-forest__more, [data-garden-near]) { display: none; }

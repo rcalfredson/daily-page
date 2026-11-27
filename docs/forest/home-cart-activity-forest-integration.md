@@ -282,10 +282,46 @@ if the orchard road is still unmapped.
 Inside the orchard wall, **Pick a quince** adds fruit to the Satchel. The tree supplies one quince
 per day (the day changes at midnight UTC), and you can carry one at a time. Picking and collecting
 a seed are separate actions. Back at the hearth, **Keep the quince** leaves it in the Satchel.
-**Make a jar to share** spends it and puts the latest batch on the stall shelf. You can see the
-jar on later visits. A subsequent batch takes its place on the shelf.
+**Make quince jam** spends it and puts a jar in your Satchel. Each new batch adds its own jar.
+If an older save showed a jar on Tansy’s stall shelf, walk to the counter and choose
+**Take your jar from Tansy’s shelf**. It stays claimable even after you make another batch.
 
 The hearth fits alongside the existing stall when the ground, walking approach, and saved
 parking allow it. Other saves can still use the stall and orchard. When a player first uses the
 hearth or picks a quince, the server rechecks and reserves the site. The existing development
 allowlist gates the actions and the hearth.
+
+### Your stand and the two-jar playtest
+
+The barter preview uses the ordinary forest with the development allowlist. On its first run,
+the reserved local test owner has Mallow, a cart, the orchard route, and two jars already in the
+Satchel. The preview retains what you do across reloads and restarts.
+
+```bash
+source /home/robert/.nvm/nvm.sh
+nvm use 24.15.0
+FOREST_APPLICATION_BARTER_REVIEW=true FOREST_APPLICATION_PREVIEW_PORT=44317 npm run forest:homestead-application
+```
+
+1. Open `http://127.0.0.1:44317/en/forest`. Use **More → Navigate → Provisioner’s stall** to find
+   the lay-by. Park, step out, and follow the path around the counter to the hearth.
+2. Open **Your stand** and **Set out quince jam** on the **Shelf**. Read what Tansy says. Switch
+   to **Barter mat** and watch the jar move forward. Try taking it back into the Satchel and
+   setting it down again. The trade appears when quince jam is on the mat.
+3. Open the **Satchel** and **Eat quince jam** while on foot. Walk with the usual controls and
+   watch the countdown. The boost is 25% for 20 seconds. The displayed jar is still on the stand.
+4. Choose **Trade one jar for woven trim**. Bring the cart home, step out, and choose **Fit woven
+   trim** by the workshop. Look for the woven band on the cart rails. You can remove it and fit
+   it again from the same spot.
+5. Reload. The cart should still have its trim. Revisit the stand to see the empty barter mat
+   and Tansy’s completed trade. The trade spends one jar. If you kept the other, the stand shows
+   that it’s still in your Satchel, and you can display it and take it back. Any time left on the
+   boost follows the original expiry time.
+
+After trying both uses, ask what you want your next batch for. Would you take a jar on a trip,
+keep one on the stand, or look for someone else to trade with?
+
+Player-run shops can reuse item locations, capacity-limited display slots, and the ability to
+offer or reclaim displayed goods. A common market can reuse item-based offers and confirmed
+exchanges. Exchanges between owners would also need authority over both inventories and a
+transaction that commits both sides together.

@@ -113,8 +113,8 @@ export function ownerForestReturnSpawn(player, target, placements, isWalkable = 
   return null;
 }
 
-export function moveOwnerForestPlayer(player, direction, elapsedSeconds, placements, canMove = () => true) {
-  const distance = player.movementSpeed * Math.max(0, elapsedSeconds);
+export function moveOwnerForestPlayer(player, direction, elapsedSeconds, placements, canMove = () => true, speedMultiplier = 1) {
+  const distance = player.movementSpeed * speedMultiplier * Math.max(0, elapsedSeconds);
   const next = { ...player };
   const candidateX = {
     ...next,

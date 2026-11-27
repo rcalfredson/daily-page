@@ -13,12 +13,14 @@ import { homeLayoutFromPlan } from '../../public/js/forest-home-reservations.js'
 import { advanceCompanionEncounter, COMPANION_ENCOUNTERS } from '../../public/js/forest-companion.js';
 import { ORCHARD_ACTIONS, ORCHARD_STAGES, ORCHARD_DYE_PALETTES, availableOrchardDyes, orchardPlanting } from '../../public/js/forest-orchard.js';
 import { PROVISIONER_SIDES, VILLAGE_ACTIONS, quinceIsRipe, quincePickingDay } from '../../public/js/forest-orchard-outing.js';
+import { addPreserves, applyVillageGoodsCommand, GOODS_ARGUMENTS, validGoodsCommand, villageGoodsView } from './forestVillageGoods.js';
 import { replaceConstructionCommitment, checkConstructionRevision } from './forestConstructionAccounting.js';
 import { validateHomestead, HOMESTEAD_RECEIPT_LIMIT, HOMESTEAD_MATERIAL_CAPACITY,
   HOMESTEAD_UUID, validHomesteadParking, validOrchardPoint, ForestHomesteadError, homesteadCartCost,
   hasHomesteadCart, canDriveHomesteadCart } from './forestHomesteadRecord.js';
 
 const fail = code => { throw new ForestHomesteadError(code); };
+const goodsChanged = () => fail('HOME_GOODS_CHANGED');
 const unsupported = async () => fail('HOME_INTEGRATION_NOT_READY');
 async function transact(work) {
   const session = await mongoose.startSession();
@@ -36,10 +38,12 @@ export function canonicalHomesteadCommand(input) {
   if (ORCHARD_ACTIONS.slice(1).includes(input?.action)) fields.push('branch');
   if (input?.action === 'orchard-plant' && Object.hasOwn(input, 'plot')) fields.push('plot');
   if (input?.action === 'orchard-outing' || VILLAGE_ACTIONS.includes(input?.action)) fields.push('provisionerSide');
+  const goodsAction = Object.hasOwn(GOODS_ARGUMENTS, input?.action);
+  if (goodsAction) fields.push('provisionerSide', ...GOODS_ARGUMENTS[input.action]);
   if (input?.action === 'establish' && Object.hasOwn(input, 'site')) fields.push('site');
   if (!input || typeof input !== 'object' || Array.isArray(input)
     || !['establish', 'supplies', 'home', 'cart', 'park', 'recover', 'companion', 'orchard-outing', ...ORCHARD_ACTIONS,
-      ...VILLAGE_ACTIONS].includes(input.action)
+      ...VILLAGE_ACTIONS].includes(input.action) && !goodsAction
     || Object.keys(input).length !== fields.length || fields.some(f => !Object.hasOwn(input, f))
     || !HOMESTEAD_UUID.test(input.operationId) || !HOMESTEAD_UUID.test(input.forestId)
     || !Number.isSafeInteger(input.expectedRevision) || input.expectedRevision < 0 || input.expectedRevision >= Number.MAX_SAFE_INTEGER
@@ -50,6 +54,7 @@ export function canonicalHomesteadCommand(input) {
     || fields.includes('branch') && ![0, 1].includes(input.branch)
     || fields.includes('plot') && !validOrchardPoint(input.plot)
     || fields.includes('provisionerSide') && !PROVISIONER_SIDES.includes(input.provisionerSide)
+    || goodsAction && !validGoodsCommand(input)
     || fields.includes('site') && (!input.site || Object.keys(input.site).length !== 2
       || !['x', 'y'].every(key => Number.isSafeInteger(input.site[key]) && Math.abs(input.site[key]) <= 3600))
     || fields.includes('encounter') && !COMPANION_ENCOUNTERS.includes(input.encounter)) fail('HOME_INVALID_INPUT');
@@ -85,6 +90,7 @@ export function buildForestHomesteadService({ HomeModel = ForestHomestead, World
     if (!record) return { version: 1, established: false, revision: 0, ...context };
     const { _id, receipts, ...visible } = record;
     void _id; void receipts;
+    if (visible.village) visible.village = villageGoodsView(visible.village);
     return { version: 1, established: true, ...globalThis.structuredClone(visible), ...context,
       operation: receipt ? { operationId: receipt.operationId, revision: receipt.revision, replayed } : null };
   }
@@ -100,7 +106,8 @@ export function buildForestHomesteadService({ HomeModel = ForestHomestead, World
     const command = canonicalHomesteadCommand(input);
     if (typeof ownerUserId !== 'string' || !/^[a-f0-9]{24}$/.test(ownerUserId)) fail('HOME_INVALID_INPUT');
     if (enabled() !== true && command.action !== 'recover') fail('HOME_DISABLED');
-    const villageAction = VILLAGE_ACTIONS.includes(command.action);
+    const goodsAction = Object.hasOwn(GOODS_ARGUMENTS, command.action);
+    const villageAction = VILLAGE_ACTIONS.includes(command.action) || goodsAction;
     if ((villageAction || command.action === 'orchard-outing' || ORCHARD_ACTIONS.includes(command.action))
       && !orchardEnabled(ownerUserId)) fail('HOME_DISABLED');
     const digest = crypto.createHash('sha256').update(JSON.stringify(command)).digest('base64url');
@@ -188,9 +195,12 @@ export function buildForestHomesteadService({ HomeModel = ForestHomestead, World
             || !previous.village && !await villageAvailable({ ...scope, world, record: previous, session, provisionerSide })) {
             fail('HOME_VILLAGE_UNAVAILABLE');
           }
-          next.village ||= { version: 1, provisionerSide, cleanJar: false, batches: 0, carryingQuince: false, pickedDay: null };
+          next.village = villageGoodsView(next.village || { version: 1, provisionerSide, cleanJar: false, batches: 0,
+            carryingQuince: false, pickedDay: null });
           const village = next.village;
-          if (action === 'village-set-jar') {
+          if (goodsAction) {
+            applyVillageGoodsCommand(next, command, time, goodsChanged);
+          } else if (action === 'village-set-jar') {
             if (village.cleanJar || village.carryingQuince) fail('HOME_VILLAGE_CHANGED');
             village.cleanJar = true;
           } else if (action === 'village-pick-quince') {
@@ -204,6 +214,7 @@ export function buildForestHomesteadService({ HomeModel = ForestHomestead, World
             village.carryingQuince = false;
             village.cleanJar = false;
             village.batches++;
+            addPreserves(village, goodsChanged);
           }
         }
         if (command.action === 'cart') {

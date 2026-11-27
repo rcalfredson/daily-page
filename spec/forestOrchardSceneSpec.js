@@ -2,6 +2,7 @@ import { JSDOM } from 'jsdom';
 import { createForestOrchardScene } from '../public/js/forest-orchard-scene.js';
 import { orchardRoad } from '../public/js/forest-orchard.js';
 import { preservingHearth, quincePickingDay, walledOrchardSite } from '../public/js/forest-orchard-outing.js';
+import { QUINCE_JAM, TANSY_OFFER, WOVEN_TRIM } from '../public/js/forest-village-goods.js';
 
 const layout = { home: { x: 400, y: 0 }, route: [{ x: 400, y: 90 }, { x: 1600, y: 90 }, { x: 1600, y: 990 }] };
 const site = { forkDistance: 840, branchDistances: [490, 490],
@@ -12,7 +13,7 @@ describe('Orchard tree interactions', () => {
   let dom, previous, player, record, scene, save, say, action;
 
   beforeEach(() => {
-    dom = new JSDOM('<div data-owner-forest-viewport><div id="dock"></div></div><p data-orchard-satchel></p>');
+    dom = new JSDOM('<div data-owner-forest-viewport><div id="dock"></div></div><section data-forest-garden hidden><button data-garden-close></button><p data-orchard-satchel></p></section>');
     previous = Object.getOwnPropertyDescriptor(globalThis, 'document');
     globalThis.document = dom.window.document;
     record = { forestId: '11111111-1111-4111-8111-111111111111', orchard: { site,
@@ -26,7 +27,7 @@ describe('Orchard tree interactions', () => {
     });
     scene = createForestOrchardScene({ api: { amberClearingEnabled: true, regionLoaded: () => true,
       state: () => ({ player }), focus() {} }, dock: document.getElementById('dock'), layout, read: () => record,
-    canAct: () => true, blocked: () => false, save, say });
+    canAct: () => true, canEat: () => true, blocked: () => false, save, say });
     action = document.querySelector('[data-orchard-action]');
   });
 
@@ -116,7 +117,7 @@ describe('Orchard tree interactions', () => {
     record = { ...record, village: { cleanJar: true, carryingQuince: true, pickedDay: quincePickingDay() } };
     approach(bench);
     expect(satchel.textContent).toContain('1 quince');
-    expect(button.textContent).toBe('Make a jar to share');
+    expect(button.textContent).toBe('Make quince jam');
     expect(keep.hidden).toBeFalse();
     keep.click();
     expect(button.hidden).toBeTrue();
@@ -131,5 +132,33 @@ describe('Orchard tree interactions', () => {
     approach(wall.tree);
     expect(button.hidden).toBeTrue();
     expect(satchel.textContent).not.toContain('1 quince');
+  });
+
+  it('shows where the remaining jar is after Tansy’s one trade and lets the player display it', async () => {
+    const approachPoint = preservingHearth(layout, -1).walk.at(-1);
+    record = { ...record, preservingHearthAvailable: true, village: { standArrangement: 'barter-mat',
+      acceptedOffers: [TANSY_OFFER.id], goods: { satchel: { [QUINCE_JAM]: 1 }, 'cart-trim': { [WOVEN_TRIM]: 1 } } } };
+    const put = document.querySelector('[data-display-jar]'), take = document.querySelector('[data-pack-item]');
+    const trade = document.querySelector('[data-barter-jar]'), display = document.querySelector('[data-display-item]');
+    save.and.callFake(async (_action, { item, from, to }) => {
+      const goods = { ...record.village.goods, [to]: { [item]: 1 } };
+      delete goods[from];
+      record = { ...record, village: { ...record.village, goods } };
+      return true;
+    });
+    approach({ x: approachPoint.x - 28, y: approachPoint.y });
+    document.querySelector('[aria-controls="forest-village-stand"]').click();
+    expect(display.textContent).toBe('The barter mat is empty. 1 jar in your Satchel.');
+    expect(document.querySelector('[data-customer]').textContent).toContain('Anything you display here stays yours.');
+    expect(trade.hidden).toBeTrue();
+    expect(put.textContent).toBe('Display quince jam');
+    put.click();
+    await Promise.resolve();
+    expect(save).toHaveBeenCalledOnceWith('village-move-item', { provisionerSide: -1, item: QUINCE_JAM, from: 'satchel', to: 'stand' });
+    expect(display.textContent).toBe('Quince jam on the barter mat. 0 jars in your Satchel.');
+    expect(trade.hidden).toBeTrue();
+    take.click();
+    await Promise.resolve();
+    expect(display.textContent).toBe('The barter mat is empty. 1 jar in your Satchel.');
   });
 });
