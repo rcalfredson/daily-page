@@ -8,6 +8,8 @@ import { paintAmberTrail } from './forest-homestead-paint.js';
 import { outingBlocks, outingPlacementAllowed, preservingHearth, provisionerSite, quinceIsRipe,
   reservationsAllow, villageReservations, walledOrchardSite } from './forest-orchard-outing.js';
 import { terrainPointSegmentDistance } from './owner-forest-terrain.js';
+import { displayedItem, itemCount, QUINCE_JAM, WOVEN_TRIM } from './forest-village-goods.js';
+import { createVillageStand } from './forest-village-stand.js';
 
 const range = (point, pose) => Math.hypot(point.x - pose.worldX, point.y - pose.worldY);
 const nearby = point => ({ worldX: point.x, worldY: point.y });
@@ -78,7 +80,7 @@ function paintJar(ctx, x, y, contents, lid) {
   ctx.fillStyle = lid; ctx.fillRect(x - 7, y - 15, 14, 4);
 }
 
-function paintProvisioner(ctx, x, y, batches) {
+function paintProvisioner(ctx, x, y, hasJar) {
   ctx.save(); ctx.translate(x, y);
   ellipse(ctx, 2, 1, 37, 12, 'rgba(29,35,24,.29)');
   ctx.fillStyle = '#5b4434'; ctx.fillRect(-27, -56, 5, 58); ctx.fillRect(23, -56, 5, 56);
@@ -90,7 +92,7 @@ function paintProvisioner(ctx, x, y, batches) {
     ctx.fillRect(dx, -43, 7, 9);
     ctx.fillStyle = '#e1d6b6'; ctx.fillRect(dx + 1, -44, 6, 2); ctx.fillStyle = '#c2b59a';
   }
-  if (batches) paintJar(ctx, 9, -13, '#e8a83d', batches % 2 ? '#faf0c9' : '#b6bf85');
+  if (hasJar) paintJar(ctx, 9, -13, '#e8a83d', '#faf0c9');
   ctx.fillStyle = '#97603f'; ctx.fillRect(-33, -64, 66, 12);
   for (const dx of [-28, -13, 2, 17]) ctx.fillRect(dx, -53, 9, 5);
   ctx.fillStyle = '#c48759'; ctx.fillRect(-33, -64, 66, 3);
@@ -114,6 +116,27 @@ function paintPreservingHearth(ctx, x, y, cleanJar) {
   ctx.restore();
 }
 
+function paintPlayerStand(ctx, x, y, village) {
+  const mat = village?.standArrangement === 'barter-mat';
+  const item = displayedItem(village, 'stand');
+  ctx.save(); ctx.translate(x - 14, y + 11);
+  ctx.fillStyle = '#624632'; ctx.fillRect(-14, -15, 4, 15); ctx.fillRect(10, -15, 4, 15);
+  ctx.fillStyle = '#a77750'; ctx.fillRect(-17, -17, 34, 5);
+  ctx.fillStyle = '#d6ad7b'; ctx.fillRect(-17, -23, 34, 7);
+  if (mat) {
+    ctx.fillStyle = '#477b77'; ctx.fillRect(-11, -22, 22, 12);
+    ctx.fillStyle = '#f0d6a0'; ctx.fillRect(-11, -12, 22, 1);
+  } else {
+    ctx.fillStyle = '#bb8a60'; ctx.fillRect(-14, -26, 28, 5);
+  }
+  if (item === QUINCE_JAM) paintJar(ctx, mat ? 0 : -8, mat ? -17 : -25, '#e8a83d', '#faf0c9');
+  else if (item === WOVEN_TRIM) {
+    ctx.fillStyle = '#477b77'; ctx.fillRect(-9, -28, 18, 5);
+    ctx.fillStyle = '#f0d6a0'; ctx.fillRect(-9, -26, 18, 1);
+  }
+  ctx.restore();
+}
+
 function paintWallStone(ctx, x, y) {
   ellipse(ctx, x + 2, y, 12, 5, 'rgba(32,34,25,.24)');
   ellipse(ctx, x, y - 5, 11, 8, '#6e7165', -.12);
@@ -127,7 +150,7 @@ function paintJarSign(ctx, x, y) {
   ctx.fillStyle = '#e0c89b'; ctx.fillRect(x - 4, y - 25, 8, 9); ctx.fillRect(x - 3, y - 27, 6, 1);
 }
 
-export function createForestOrchardScene({ api, dock, layout, read, canAct, blocked, save, say }) {
+export function createForestOrchardScene({ api, dock, layout, read, canAct, canEat, blocked, save, say }) {
   const viewport = dock.closest('[data-owner-forest-viewport]');
   const action = document.createElement('button');
   action.type = 'button'; action.hidden = true; action.dataset.orchardAction = '';
@@ -152,6 +175,8 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
   const satchel = document.querySelector('[data-orchard-satchel]');
   let lastRecord, cached, activeAction, planting = null, preview = null;
   let lastOutingRecord, stall, wall, walledTree, hearth, provisionerSide, activeVillage, keptQuinceHere = false;
+  const stand = api.amberClearingEnabled && satchel ? createVillageStand({ dock, satchel, read: () => read()?.village,
+    blocked, canEat, save: (action, args) => save(action, { provisionerSide, ...args }), focus: () => api.focus(), say }) : null;
   function refreshOuting() {
     const record = read();
     if (record === lastOutingRecord) return;
@@ -228,12 +253,11 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
     const village = read()?.village;
     if (range(hearth.walk.at(-1), player) <= 32) {
       if (village?.carryingQuince) return keptQuinceHere ? null : {
-        kind: 'village-make-preserves', label: 'Make a jar to share',
-        notice: village.batches ? 'The new jar is on the stall shelf. Tansy puts the last one with the provisions for travelers.'
-          : 'A jar of quince preserves is on Tansy’s shelf for travelers.'
+        kind: 'village-make-preserves', label: 'Make quince jam',
+        notice: 'A jar of quince jam is in your Satchel.'
       };
       if (!village?.cleanJar) return { kind: 'village-set-jar', label: 'Set out a clean jar',
-        notice: 'The clean jar is ready by the pot. Anyone with a quince can put up a jar for travelers.' };
+        notice: 'The clean jar is ready by the pot.' };
       return null;
     }
     if (wall?.inside(player) && range(wall.tree, player) <= 52
@@ -345,6 +369,9 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
       keepQuince.hidden = activeVillage?.kind !== 'village-make-preserves';
       villageAction.disabled = keepQuince.disabled = blocked();
       if (activeVillage && villageAction.textContent !== activeVillage.label) villageAction.textContent = activeVillage.label;
+      const villageNearby = hearth && !planting && canAct() && api.regionLoaded(player);
+      stand?.update({ nearStand: villageNearby && range(hearth.walk.at(-1), player) <= 32,
+        nearShelf: villageNearby && range(stall.stall, player) <= 62 });
       const canPlant = !planting && api.amberClearingEnabled && canChoose(), data = scene(), record = read();
       choose.forEach((button, index) => {
         button.hidden = !canPlant || record?.orchard?.stages[index] !== 'seed';
@@ -358,7 +385,7 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
         const seeds = data?.varieties.filter((_, i) => record.orchard.stages[i] === 'seed').map(v => v.name) || [];
         const dyes = availableOrchardDyes(record);
         const lines = [seeds.length ? `Seeds to plant in your yard: ${seeds.join(', ')}.` : '',
-          hearth && record?.village?.carryingQuince ? 'Fruit to share: 1 quince.' : '',
+          hearth && record?.village?.carryingQuince ? 'Fruit: 1 quince.' : '',
           dyes.length ? `Workshop dyes: ${data.varieties.filter(v => dyes.includes(v.dye)).map(v => v.name).join(', ')}.` : ''].filter(Boolean);
         satchel.hidden = !lines.length;
         const text = lines.join(' ');
@@ -552,8 +579,11 @@ export function createForestOrchardScene({ api, dock, layout, read, canAct, bloc
     },
     paint(ctx, item, camera) {
       const x = item.point.x - camera.x, y = item.point.y - camera.y;
-      if (item.stall) paintProvisioner(ctx, x, y, hearth && read()?.village?.batches);
-      else if (item.hearth) paintPreservingHearth(ctx, x, y, read()?.village?.cleanJar);
+      if (item.stall) paintProvisioner(ctx, x, y, hearth && itemCount(read()?.village, 'stall-shelf', QUINCE_JAM));
+      else if (item.hearth) {
+        paintPreservingHearth(ctx, x, y, read()?.village?.cleanJar);
+        paintPlayerStand(ctx, x, y, read()?.village);
+      }
       else if (item.sign) paintJarSign(ctx, x, y);
       else if (item.stone) paintWallStone(ctx, x, y);
       else if (item.cairn) paintCairn(ctx, x, y);

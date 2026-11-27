@@ -261,6 +261,13 @@ export function paintStudyCart(ctx, cart, camera, mounted, elevation = 0, motion
         line(ctx, p(0, y, 24), p(d.halfLength - 3, y, 16), wood[2], 2);
       } else line(ctx, p(0, y, 14), p(0, y, 29), wood[2], 3);
     }
+    if (cart.wovenTrim) {
+      const edge = y + Math.sign(y) * .65;
+      line(ctx, p(-d.halfLength + 3, edge, 27), p(d.halfLength - 3, edge, 27), '#477b77', 5);
+      for (let x = -d.halfLength + 6; x <= d.halfLength - 6; x += 6) {
+        line(ctx, p(x - 1, edge, 26), p(x + 1, edge, 28), '#f0d6a0', 1.5);
+      }
+    }
   }, true);
   if (mounted) add(d.halfLength - 4, 0, () => paintStudyCartRider(ctx, cart, camera, elevation), true, 'rider');
   if (hasCanopy) add(-8, 0, () => {

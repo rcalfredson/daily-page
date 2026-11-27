@@ -4,6 +4,7 @@ import { validForestCompanion } from '../../public/js/forest-companion.js';
 import { ORCHARD_STAGES, ORCHARD_FORK_DISTANCES, ORCHARD_BRANCH_DISTANCES, ORCHARD_FORK_CANDIDATES,
   ORCHARD_BRANCH_CANDIDATES, ORCHARD_DYE_PALETTES, availableOrchardDyes, orchardForkFits, orchardYardContains } from '../../public/js/forest-orchard.js';
 import { ORCHARD_SPUR_LENGTHS, PROVISIONER_SIDES, preservingHearth, provisionerSite } from '../../public/js/forest-orchard-outing.js';
+import { validVillageGoods } from './forestVillageGoods.js';
 
 export const HOMESTEAD_RECEIPT_LIMIT = 64;
 export const HOMESTEAD_MATERIAL_CAPACITY = Object.freeze({ timber: 96, cloth: 24 });
@@ -53,8 +54,10 @@ export class ForestHomesteadError extends Error {
 }
 function validVillage(record) {
   const { village, orchard, layout } = record;
-  return exact(village, ['version', 'provisionerSide', 'cleanJar', 'batches', 'carryingQuince', 'pickedDay'])
-    && village.version === 1 && PROVISIONER_SIDES.includes(village.provisionerSide)
+  const goods = village?.version === 2;
+  return exact(village, ['version', 'provisionerSide', 'cleanJar', 'batches', 'carryingQuince', 'pickedDay',
+    ...(goods ? ['goods', 'standArrangement', 'acceptedOffers', 'effects'] : [])])
+    && (goods ? validVillageGoods(village) : village.version === 1) && PROVISIONER_SIDES.includes(village.provisionerSide)
     && preservingHearth(layout, village.provisionerSide) && canDriveHomesteadCart(record)
     && typeof village.cleanJar === 'boolean' && typeof village.carryingQuince === 'boolean'
     && Number.isSafeInteger(village.batches) && village.batches >= 0 && village.batches <= record.revision

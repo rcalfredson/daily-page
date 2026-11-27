@@ -14,6 +14,7 @@ import { homesteadPlacementAllowed, homesteadTerrainProtections } from '../serve
 import { orchardPlantingSpace } from '../public/js/forest-home-reservations.js';
 import { outingBlocks, preservingHearth, provisionerSite, quincePickingDay, walledOrchardSite,
   worldPoint } from '../public/js/forest-orchard-outing.js';
+import { itemCount, QUINCE_JAM, quickStepMultiplier, TANSY_OFFER, WOVEN_TRIM } from '../public/js/forest-village-goods.js';
 
 const OWNER = '64b00000000000000000a094';
 const FOREST = 'a9400000-0000-4000-8000-000000000001';
@@ -215,7 +216,7 @@ describe('transactional homestead authority', () => {
     expect(availableOrchardDyes(saved)).toEqual(availableOrchardDyes(before));
   });
 
-  it('saves a hearth before mapping, then turns one daily quince into a visible batch without spending the seed', async () => {
+  it('saves a hearth before mapping, then keeps each daily batch in the Satchel without spending the seed', async () => {
     const empty = { find: () => ({ sort: () => ({ limit: () => ({ session: () => query([]) }) }) }) };
     const geography = buildForestHomesteadGeography({ TreeModel: empty, MarkerModel: empty,
       readGarden: async () => null, amberClearingEnabled: () => true });
@@ -262,11 +263,62 @@ describe('transactional homestead authority', () => {
       .toBeRejectedWithError('HOME_VILLAGE_CHANGED');
     const second = await mutate(h, command('village-make-preserves', secondPicking.revision, side));
     expect(second.village.batches).toBe(2);
+    expect(itemCount(second.village, 'satchel', QUINCE_JAM)).toBe(2);
     expect(second.orchard).toEqual(mapped.orchard);
     expect(second.parking).toEqual(initial.parking);
     const disabled = buildForestHomesteadService({ ...h.options, orchardEnabled: () => false });
     await expectAsync(disabled.mutate({ ownerUserId: OWNER, command: command('village-set-jar', second.revision, side) }))
       .toBeRejectedWithError('HOME_DISABLED');
+  });
+
+  it('lets an old shelf jar and a new batch be eaten and traded in one visit, with duplicate-safe saves', async () => {
+    const clear = { obstacles: [], terrainAt: () => ({ walkable: true, placeable: true }) };
+    let now = new Date('2026-11-25T14:00:00Z');
+    const h = harness({ orchardEnabled: () => true, villageAvailable: async () => true, planOuting: async () => 580,
+      clock: () => now, planOrchard: async ({ record }) => planForestOrchard(record.layout, record.parking, clear, clear) });
+    const initial = await establish(h), side = { provisionerSide: -1 };
+    await mutate(h, command('orchard-outing', initial.revision, side));
+    h.corrupt(record => ({ ...record, village: { version: 1, ...side, batches: 2, cleanJar: false,
+      carryingQuince: false, pickedDay: quincePickingDay(now) - 1 } }));
+    let saved = await h.service.read({ ownerUserId: OWNER });
+    expect(itemCount(saved.village, 'stall-shelf', QUINCE_JAM)).toBe(1);
+    expect(itemCount(saved.village, 'satchel', QUINCE_JAM)).toBe(0);
+    const next = async (action, extra = {}) => { saved = await mutate(h, command(action, saved.revision, { ...side, ...extra })); };
+    const move = (item, from, to) => next('village-move-item', { item, from, to });
+    await next('village-pick-quince');
+    await next('village-make-preserves');
+    expect(itemCount(saved.village, 'stall-shelf', QUINCE_JAM)).toBe(1);
+    await move(QUINCE_JAM, 'stall-shelf', 'satchel');
+    expect(itemCount(saved.village, 'satchel', QUINCE_JAM)).toBe(2);
+    await expectAsync(move(QUINCE_JAM, 'stall-shelf', 'satchel')).toBeRejectedWithError('HOME_GOODS_CHANGED');
+    await move(QUINCE_JAM, 'satchel', 'stand');
+    await expectAsync(move(QUINCE_JAM, 'satchel', 'stand')).toBeRejectedWithError('HOME_GOODS_CHANGED');
+    const offer = { offer: TANSY_OFFER.id };
+    await expectAsync(next('village-barter', offer)).toBeRejectedWithError('HOME_GOODS_CHANGED');
+    await next('village-arrange', { arrangement: 'barter-mat' });
+    expect((await h.service.read({ ownerUserId: OWNER })).village.goods.stand).toEqual({ [QUINCE_JAM]: 1 });
+    await move(QUINCE_JAM, 'stand', 'satchel');
+    await expectAsync(next('village-barter', offer)).toBeRejectedWithError('HOME_GOODS_CHANGED');
+    await move(QUINCE_JAM, 'satchel', 'stand');
+    const eat = command('village-eat', saved.revision, { ...side, item: QUINCE_JAM });
+    saved = await mutate(h, eat);
+    const expiry = now.getTime() + 20_000;
+    now = new Date(now.getTime() + 5000);
+    expect((await mutate(h, eat)).village.effects['quick-step']).toBe(expiry);
+    await expectAsync(next('village-eat', { item: QUINCE_JAM })).toBeRejectedWithError('HOME_GOODS_CHANGED');
+    const barter = command('village-barter', saved.revision, { ...side, ...offer });
+    saved = await mutate(h, barter);
+    expect((await mutate(h, barter)).operation.replayed).toBeTrue();
+    expect(itemCount(saved.village, 'satchel', WOVEN_TRIM)).toBe(1);
+    await expectAsync(next('village-barter', offer)).toBeRejectedWithError('HOME_GOODS_CHANGED');
+    await move(WOVEN_TRIM, 'satchel', 'cart-trim');
+    await move(WOVEN_TRIM, 'cart-trim', 'satchel');
+    await move(WOVEN_TRIM, 'satchel', 'cart-trim');
+    const reloaded = await buildForestHomesteadService(h.options).read({ ownerUserId: OWNER });
+    expect(reloaded.village).toEqual(jasmine.objectContaining({ goods: { 'cart-trim': { [WOVEN_TRIM]: 1 } },
+      standArrangement: 'barter-mat', acceptedOffers: [TANSY_OFFER.id], effects: { 'quick-step': expiry } }));
+    expect(quickStepMultiplier(reloaded.village, expiry - 1)).toBe(1.25);
+    expect(quickStepMultiplier(reloaded.village, expiry)).toBe(1);
   });
 
   it('does not add an orchard when either branch or the home plots lack safe ground', async () => {
