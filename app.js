@@ -68,7 +68,7 @@ import { renderMarkdownContent } from './server/utils/markdownHelper.js';
 import { titleOnlyMeta } from './server/utils/unfinished.js';
 import * as viewHelper from './server/utils/view.js'; // Utils
 
-import { initMongooseConnection } from './server/db/mongoose.js';
+import { initMongooseConnection, STAGING_DATABASE } from './server/db/mongoose.js';
 import { corsOptionsDelegate } from './server/services/corsPolicy.js';
 import {
   getBlocksByRoomWithFallback,
@@ -173,11 +173,11 @@ async function getSupportFundingViewModel() {
 
 (async () => {
   try {
-    await initMongooseConnection();
+    const database = await initMongooseConnection();
     await warmRoomDirectoryCache('en').catch(error => {
       console.error('Failed to warm room directory cache:', error);
     });
-    google.init();
+    if (database !== STAGING_DATABASE) google.init();
 
     app.set('trust proxy', true);
 
@@ -862,7 +862,8 @@ async function getSupportFundingViewModel() {
       });
     });
   } catch (error) {
-    console.log(`Server startup failed: ${error.message}`);  
+    console.log(`Server startup failed: ${error.message}`);
     console.log(error.stack);
+    process.exitCode = 1;
   }
 })();

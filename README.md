@@ -123,7 +123,9 @@ For a personal dev instance, MongoDB Atlas is the path of least resistance becau
 
 6. Open [http://localhost:3000](http://localhost:3000).
 
-The app will connect to `daily-page-test` by default. Set `NODE_ENV=production` only for a real deployment, because that changes database selection, cookie security behavior, compression/view caching, and dotenv loading.
+The app connects to `daily-page-test` by default. `NODE_ENV=production` changes cookie security,
+compression, view caching, and dotenv loading, and selects `daily-page` by default. Use the explicit
+staging target below to run those settings against an isolated database.
 
 For read-only local diagnostics against the production database, keep development mode and disable scheduled jobs:
 
@@ -150,6 +152,59 @@ At minimum, create documents in the `rooms` collection shaped like:
 
 Then visit `/rooms/general/blocks/new` to create posts through the UI, or use the room-scoped block API. The block schema requires title, room, creator, language, group ID, and other fields; using the app/API is easier than hand-writing block documents.
 
+## Staging with Production Settings
+
+Provision a `daily-page-staging` database on a MongoDB deployment that supports transactions.
+Give the staging application a dedicated MongoDB user with `readWrite` access scoped to
+`daily-page-staging`. Store the connection string as `MONGODB_STAGING_URI` in the staging service's
+secrets. Its database path must be `/daily-page-staging`. The staging target requires that URI
+and rejects conflicting database settings before connecting.
+
+Build with `npm run build`. Set `NODE_ENV=production`, `MONGODB_TARGET=staging`, and
+`DISABLE_BACKGROUND_JOBS=true`, then start the normal app with `npm start`. Production mode reads
+these settings from the process environment. Serve it over HTTPS and use the staging origin for
+`BASE_URL` and `BACKEND_URL`. Google Drive initialization is skipped on staging. Use separate test
+credentials for optional services you exercise, such as email or file uploads.
+
+### Local HTTPS with Caddy
+
+Production mode sets secure sign-in cookies. Use HTTPS for the browser smoke test. A hosted
+staging service can terminate TLS at its ingress. For local testing, Caddy can serve HTTPS in
+front of the app. [Caddy local HTTPS](https://caddyserver.com/docs/automatic-https#local-https)
+
+With `MONGODB_STAGING_URI` exported, start Daily Page on port 3001.
+
+```sh
+NODE_ENV=production USE_PRODUCTION_DB=false MONGODB_TARGET=staging \
+  DISABLE_BACKGROUND_JOBS=true PORT=3001 \
+  BASE_URL=https://localhost:3443 BACKEND_URL=https://localhost:3443 \
+  npm run local
+```
+
+In a second terminal, start the HTTPS proxy.
+
+```sh
+caddy reverse-proxy --from https://localhost:3443 --to 127.0.0.1:3001
+```
+
+Trust Caddy's local certificate authority in your browser and open `https://localhost:3443`.
+
+### Forest smoke test
+
+With the same staging URI in the environment, create a synthetic account and writing room.
+
+```sh
+NODE_ENV=production MONGODB_TARGET=staging npm run staging:seed
+```
+
+The command creates a verified synthetic login and reuses a staging writing room. For the full
+writing-to-tree check, restart the staging app with `DISABLE_BACKGROUND_JOBS=false`. Saving a
+post queues tree reconciliation, and the background worker runs once a minute. Sign in with
+the printed credentials, create a few public placeholder posts in `/en/rooms/forest-smoke`, and
+open `/en/forest`. Choose **Enter my forest** if it appears. After the worker runs, refresh and
+check that you can open a post from its tree and return to it, and that garden and marker
+changes survive a reload.
+
 ## Environment Variables
 
 ### Required for the core app
@@ -159,6 +214,8 @@ Then visit `/rooms/general/blocks/new` to create posts through the UI, or use th
 | `MONGO_DB_ADDR` | MongoDB Atlas host, for example `cluster0.example.mongodb.net`. |
 | `MONGO_DB_PW` | Password for the hard-coded Mongo user `daily-page-admin`. |
 | `USE_PRODUCTION_DB` | Selects `daily-page` instead of `daily-page-test` without requiring production mode. |
+| `MONGODB_TARGET` | Set to `staging` explicitly to select `daily-page-staging` regardless of `NODE_ENV`. |
+| `MONGODB_STAGING_URI` | Dedicated MongoDB connection string for the staging target. |
 
 ### Strongly recommended
 
