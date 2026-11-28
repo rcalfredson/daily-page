@@ -16,6 +16,7 @@
     "build": "esbuild lib/main.js --bundle --platform=browser --format=iife --outfile=public/js/bundle.js && esbuild lib/clearSelection.js --bundle --platform=browser --format=iife --outfile=public/js/clearSelection.js && esbuild lib/iPod.js --bundle --platform=browser --format=iife --outfile=public/js/iPod.js",
     "postinstall": "npm run build",
     "local": "npm run build && npm start",
+    "staging:seed": "node scripts/staging/seed.js",
     "perform": "babel-node performance/script.js",
     "perform-linear": "babel-node performance/scriptLinear.js",
     "room-i18n:export": "node scripts/migrations/exportRoomI18nSource.js",
